@@ -3,33 +3,25 @@ package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.RemoteException;
 import android.os.SystemClock;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +35,6 @@ import androidx.media.session.MediaButtonReceiver;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
@@ -59,10 +50,8 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.ScreenReceiver;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.FragmentTransparentPlayerBinding;
 import com.bumptech.glide.Glide;
@@ -76,10 +65,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Observable;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -91,10 +77,9 @@ import static android.content.Context.POWER_SERVICE;
 import static android.media.session.PlaybackState.STATE_PAUSED;
 import static android.media.session.PlaybackState.STATE_PLAYING;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO;
-import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_PAUSE;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
@@ -120,11 +105,12 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.Utility.MusicService.transportControls;
 import static com.brainwellnessspa.Utility.MusicService.mMediaControllerCompatCallback;
 import static com.brainwellnessspa.Utility.MusicService.mCurrentState;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener*/ {
-    public static int isDisclaimer = 0;
-    public static String addToRecentPlayId = "", myAudioId = "";
     public static boolean isPlaying = false, isplaywellClick = false;
     public ArrayList<MainPlayModel> mainPlayModelList;
     public FragmentTransparentPlayerBinding binding;
@@ -271,7 +257,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
                 }
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
-                if (player == 1) {
+                if (miniPlayer == 1) {
                     if (currentDuration == 0 && isCompleteStop) {
                         binding.progressBar.setVisibility(View.GONE);
 //                        binding.llProgress.setVisibility(View.VISIBLE);
@@ -442,7 +428,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
 
             setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
-            player = 1;
+            miniPlayer = 1;
             localIntent.putExtra("MyData", "play");
             localBroadcastManager.sendBroadcast(localIntent);
             handler12.postDelayed(UpdateSongTime12, 100);
@@ -1003,7 +989,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                             }
                         }
 
-                        if (player == 1) {
+                        if (miniPlayer == 1) {
                             binding.progressBar.setVisibility(View.GONE);
 //                    binding.llProgress.setVisibility(View.GONE);
                             if (isPause) {
@@ -1140,8 +1126,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mLastClickTime = SystemClock.elapsedRealtime();
                 isplaywellClick = true;
                 handler12.removeCallbacks(UpdateSongTime12);
-                if (player == 0) {
-                    player = 1;
+                if (miniPlayer == 0) {
+                    miniPlayer = 1;
                 }
                 if (!isPause && binding.progressBar.getVisibility() == View.GONE) {
                     isPause = false;

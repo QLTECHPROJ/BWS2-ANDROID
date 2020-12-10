@@ -16,16 +16,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Utility.MusicService;
 import com.bumptech.glide.Glide;
@@ -36,7 +34,6 @@ import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -50,12 +47,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
-import static com.brainwellnessspa.Utility.MusicService.getStartTime;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -222,7 +218,7 @@ public class ViewAllSearchFragment extends Fragment {
             SharedPreferences shareda = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shareda.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
-                Fragment fragment = new TransparentPlayerFragment();
+                Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
                         .add(R.id.flContainer, fragment)
@@ -332,7 +328,7 @@ public class ViewAllSearchFragment extends Fragment {
                 } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     try {
-                        player = 1;
+                        miniPlayer = 1;
                         if (isPrepare || isMediaStart || isPause) {
                             MusicService.stopMedia();
                         }
@@ -366,7 +362,7 @@ public class ViewAllSearchFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                         editor.commit();
-                        Fragment fragment = new TransparentPlayerFragment();
+                        Fragment fragment = new MiniPlayerFragment();
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)

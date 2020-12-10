@@ -38,6 +38,7 @@ import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -88,7 +89,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 
 public class AudioPlayerActivity extends AppCompatActivity {
     private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
@@ -151,12 +153,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_player);
 
-        bytesDownloaded = new ArrayList<>();
         ctx = AudioPlayerActivity.this;
         activity = AudioPlayerActivity.this;
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
+        bytesDownloaded = new ArrayList<>();
         GetAllMedia();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -248,6 +250,39 @@ public class AudioPlayerActivity extends AppCompatActivity {
        /* IsRegisters = "false";
         IsRegisters1 = "false";*/
 
+    }
+
+    @Override
+    public void onResume() {
+//        callRepeatShuffle();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        Assertions.checkNotNull(binding.playerControlView).setPlayer(null);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+      /*  if (isOwner && isFinishing()) {
+            if (surfaceControl != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    surfaceControl.release();
+                }
+                surfaceControl = null;
+            }
+            if (videoSurface != null) {
+                videoSurface.release();
+                videoSurface = null;
+            }
+            if (player != null) {
+                player.release();
+                player = null;
+            }
+        }*/
     }
 
     public void InitNotificationAudioPLayer() {
@@ -483,39 +518,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onResume() {
-//        callRepeatShuffle();
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-//        Assertions.checkNotNull(binding.playerControlView).setPlayer(null);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-      /*  if (isOwner && isFinishing()) {
-            if (surfaceControl != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    surfaceControl.release();
-                }
-                surfaceControl = null;
-            }
-            if (videoSurface != null) {
-                videoSurface.release();
-                videoSurface = null;
-            }
-            if (player != null) {
-                player.release();
-                player = null;
-            }
-        }*/
-    }
-
     private void initializePlayer() {
         player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
@@ -683,56 +685,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         });
     }
 
-    private void epAllClicks() {
-        binding.llDownload.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                callDownload();
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-            }
-        });
-        exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
-        exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
-        exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
-        exoBinding.llBackWordSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() - 30000));
-        binding.llLike.setOnClickListener(view -> {
-//            handler1.removeCallbacks(UpdateSongTime1);
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            callLike();
-        });
-        binding.llRepeat.setOnClickListener(view -> callRepeat());
-        binding.llShuffle.setOnClickListener(view -> callShuffle());
-        binding.llViewQueue.setOnClickListener(view -> {
-//            handler1.removeCallbacks(UpdateSongTime1);
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-//            if (binding.llPause.getVisibility() == View.VISIBLE) {
-//                isPause = false;
-//            }
-            SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = ViewQueue.edit();
-            Gson gsonx = new Gson();
-            String jsonx = gsonx.toJson(addToQueueModelList);
-            if (queuePlay) {
-                editor.putString(CONSTANTS.PREF_KEY_queueList, jsonx);
-            }
-            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-            editor.commit();
-            Intent i = new Intent(ctx, ViewQueueActivity.class);
-            i.putExtra("ComeFromQueue", "0");
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            finish();
-        });
-        exoBinding.llNext.setOnClickListener(view -> player.next());
-        exoBinding.llPrev.setOnClickListener(view -> player.previous());
-    }
-
     private void initializePlayerDisclaimer() {
         player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         player.addListener(new ExoPlayer.EventListener() {
@@ -795,6 +747,56 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         player.setVideoSurface(videoSurface);
         AudioPlayerActivity.player = player;
+    }
+
+    private void epAllClicks() {
+        binding.llDownload.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                callDownload();
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            }
+        });
+        exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
+        exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
+        exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
+        exoBinding.llBackWordSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() - 30000));
+        binding.llLike.setOnClickListener(view -> {
+//            handler1.removeCallbacks(UpdateSongTime1);
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            callLike();
+        });
+        binding.llRepeat.setOnClickListener(view -> callRepeat());
+        binding.llShuffle.setOnClickListener(view -> callShuffle());
+        binding.llViewQueue.setOnClickListener(view -> {
+//            handler1.removeCallbacks(UpdateSongTime1);
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+//            if (binding.llPause.getVisibility() == View.VISIBLE) {
+//                isPause = false;
+//            }
+            SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = ViewQueue.edit();
+            Gson gsonx = new Gson();
+            String jsonx = gsonx.toJson(addToQueueModelList);
+            if (queuePlay) {
+                editor.putString(CONSTANTS.PREF_KEY_queueList, jsonx);
+            }
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            Intent i = new Intent(ctx, ViewQueueActivity.class);
+            i.putExtra("ComeFromQueue", "0");
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            finish();
+        });
+        exoBinding.llNext.setOnClickListener(view -> player.next());
+        exoBinding.llPrev.setOnClickListener(view -> player.previous());
     }
 
     private void callRepeatShuffle() {
@@ -1222,6 +1224,33 @@ public class AudioPlayerActivity extends AppCompatActivity {
         st.execute();
     }
 
+    private void addToRecentPlay() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+//            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    try {
+                        if (response.isSuccessful()) {
+//                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+                            SucessModel model = response.body();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+//                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+//            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
     private void getMediaByPer() {
         class getMediaByPer extends AsyncTask<Void, Void, Void> {
 
@@ -1358,6 +1387,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
         } else {
             binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+        }
+        if (!url.equalsIgnoreCase("")) {
+            if (!id.equalsIgnoreCase(addToRecentPlayId)) {
+                addToRecentPlay();
+                Log.e("Api call recent", id);
+            }
         }
         GetMedia2();
 //            binding.gridLayout.addView(view);

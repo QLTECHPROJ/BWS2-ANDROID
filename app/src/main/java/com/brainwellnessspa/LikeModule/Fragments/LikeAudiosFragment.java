@@ -41,7 +41,7 @@ import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
@@ -65,10 +65,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -434,7 +434,7 @@ public class LikeAudiosFragment extends Fragment {
 
     private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Audio> listModelList) {
         try {
-            player = 1;
+            miniPlayer = 1;
             if (isPrepare || isMediaStart || isPause) {
                 stopMedia();
             }
@@ -442,7 +442,7 @@ public class LikeAudiosFragment extends Fragment {
             isMediaStart = false;
             isPrepare = false;
             isCompleteStop = false;
-            Fragment fragment = new TransparentPlayerFragment();
+            Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.flContainer, fragment)
@@ -478,7 +478,7 @@ public class LikeAudiosFragment extends Fragment {
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
         editor.commit();
-        Fragment fragment = new TransparentPlayerFragment();
+        Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
                 .add(R.id.flContainer, fragment)

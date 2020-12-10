@@ -115,7 +115,7 @@
                         android:layout_weight="0.24"
                         android:gravity="center_horizontal"
                         android:padding="@dimen/_2sdp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/ivplay"
@@ -147,7 +147,7 @@
                         android:layout_weight="0.24"
                         android:gravity="center"
                         android:padding="@dimen/_2sdp"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <ProgressBar
                             android:id="@+id/progressBar"

@@ -54,7 +54,13 @@ public class ResourceActivity extends AppCompatActivity {
     String UserID, Category = "";
     Activity activity;
     int CurruntTab = 0;
+    Dialog dialogBox;
     private long mLastClickTime = 0;
+    RecyclerView rvFilterList;
+    ImageView ivFilter;
+    TextView tvAll;
+    LayoutInflater li;
+    View promptsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +99,8 @@ public class ResourceActivity extends AppCompatActivity {
         });
 
         setAdapter();
-        LayoutInflater li = LayoutInflater.from(activity);
-        View promptsView = li.inflate(R.layout.resource_filter_menu, null);
-        Dialog dialogBox;
+        li = LayoutInflater.from(activity);
+        promptsView = li.inflate(R.layout.resource_filter_menu, null);
         dialogBox = new Dialog(activity, R.style.AppCompatAlertDialogStyle);
         Window window = dialogBox.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
@@ -117,9 +122,9 @@ public class ResourceActivity extends AppCompatActivity {
             return false;
         });
 
-        RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
-        ImageView ivFilter = promptsView.findViewById(R.id.ivFilter);
-        TextView tvAll = promptsView.findViewById(R.id.tvAll);
+        rvFilterList = promptsView.findViewById(R.id.rvFilterList);
+        ivFilter = promptsView.findViewById(R.id.ivFilter);
+        tvAll = promptsView.findViewById(R.id.tvAll);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         rvFilterList.setLayoutManager(mLayoutManager);
         rvFilterList.setItemAnimator(new DefaultItemAnimator());
