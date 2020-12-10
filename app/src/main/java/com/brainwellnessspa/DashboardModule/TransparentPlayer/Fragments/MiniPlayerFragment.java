@@ -14,8 +14,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -92,10 +90,6 @@ public class MiniPlayerFragment extends Fragment {
     private static final String OWNER_EXTRA = "owner";
     @Nullable
     private static SimpleExoPlayer player;
-    @Nullable
-    private static SurfaceControl surfaceControl;
-    @Nullable
-    private static Surface videoSurface;
     FragmentMiniPlayerBinding binding;
     FragmentMiniExoCustomBinding exoBinding;
     Context ctx;
@@ -118,28 +112,6 @@ public class MiniPlayerFragment extends Fragment {
     private SurfaceView nonFullScreenView;
     @Nullable
     private SurfaceView currentOutputView;
-
-    private static void reparent(@Nullable SurfaceView surfaceView) {
-        SurfaceControl surfaceControl = Assertions.checkNotNull(MiniPlayerFragment.surfaceControl);
-        if (surfaceView == null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                new SurfaceControl.Transaction()
-                        .reparent(surfaceControl, /* newParent= */ null)
-                        .setBufferSize(surfaceControl, /* w= */ 0, /* h= */ 0)
-                        .setVisibility(surfaceControl, /* visible= */ false)
-                        .apply();
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                SurfaceControl newParentSurfaceControl = surfaceView.getSurfaceControl();
-                new SurfaceControl.Transaction()
-                        .reparent(surfaceControl, newParentSurfaceControl)
-                        .setBufferSize(surfaceControl, surfaceView.getWidth(), surfaceView.getHeight())
-                        .setVisibility(surfaceControl, /* visible= */ true)
-                        .apply();
-            }
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -414,7 +386,7 @@ public class MiniPlayerFragment extends Fragment {
         player.prepare();
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setPlayWhenReady(true);
-        player.setVideoSurface(videoSurface);
+
         callRepeatShuffle();
         exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
             @Override
@@ -435,13 +407,6 @@ public class MiniPlayerFragment extends Fragment {
         });
         epAllClicks();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            surfaceControl = new SurfaceControl.Builder()
-                    .setName(SURFACE_CONTROL_NAME)
-                    .setBufferSize(/* width= */ 0, /* height= */ 0)
-                    .build();
-            videoSurface = new Surface(surfaceControl);
-        }
         player.addListener(new ExoPlayer.EventListener() {
 
             @Override
@@ -526,14 +491,6 @@ public class MiniPlayerFragment extends Fragment {
         callAllDisable(false);
         player.setPlayWhenReady(true);
         player.prepare();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            surfaceControl = new SurfaceControl.Builder()
-                    .setName(SURFACE_CONTROL_NAME)
-                    .setBufferSize(/* width= */ 0, /* height= */ 0)
-                    .build();
-            videoSurface = new Surface(surfaceControl);
-        }
-        player.setVideoSurface(videoSurface);
     }
 
     private void epAllClicks() {
@@ -627,11 +584,6 @@ public class MiniPlayerFragment extends Fragment {
         }
         myBitmap = getMediaBitmap(mainPlayModelList.get(ps).getImageFile());
 
-       /* MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                1, 1, 0.92f, 0);
-        exoBinding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        exoBinding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        exoBinding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);*/
         if (url.equalsIgnoreCase("")) {
             Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                     .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
@@ -649,36 +601,6 @@ public class MiniPlayerFragment extends Fragment {
                 Log.e("Api call recent", id);
             }
         }
-    }
-
-    private void setCurrentOutputView(@Nullable SurfaceView surfaceView) {
-        currentOutputView = surfaceView;
-        if (surfaceView != null && surfaceView.getHolder().getSurface() != null) {
-            reparent(surfaceView);
-        }
-    }
-
-    private void attachSurfaceListener(SurfaceView surfaceView) {
-        surfaceView
-                .getHolder()
-                .addCallback(
-                        new SurfaceHolder.Callback() {
-                            @Override
-                            public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                                if (surfaceView == currentOutputView) {
-                                    reparent(surfaceView);
-                                }
-                            }
-
-                            @Override
-                            public void surfaceChanged(
-                                    SurfaceHolder surfaceHolder, int format, int width, int height) {
-                            }
-
-                            @Override
-                            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-                            }
-                        });
     }
 
     public List<DownloadAudioDetails> GetAllMedia() {
@@ -1341,14 +1263,12 @@ public class MiniPlayerFragment extends Fragment {
     private void getPrepareShowData() {
         myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
-//        if (isOwner && player == null) {
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
 
         } else {
             initializePlayer();
         }
-        setCurrentOutputView(nonFullScreenView);
         PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         playerControlView.setPlayer(player);
         playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {

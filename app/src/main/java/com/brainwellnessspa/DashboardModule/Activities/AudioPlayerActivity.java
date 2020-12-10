@@ -15,8 +15,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -97,10 +95,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private static final String OWNER_EXTRA = "owner";
     @Nullable
     private static SimpleExoPlayer player;
-    @Nullable
-    private static SurfaceControl surfaceControl;
-    @Nullable
-    private static Surface videoSurface;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     AudioPlayerCustomLayoutBinding exoBinding;
     byte[] descriptor;
@@ -125,28 +119,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private SurfaceView currentOutputView;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
-
-    private static void reparent(@Nullable SurfaceView surfaceView) {
-        SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
-        if (surfaceView == null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                new SurfaceControl.Transaction()
-                        .reparent(surfaceControl, /* newParent= */ null)
-                        .setBufferSize(surfaceControl, /* w= */ 0, /* h= */ 0)
-                        .setVisibility(surfaceControl, /* visible= */ false)
-                        .apply();
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                SurfaceControl newParentSurfaceControl = surfaceView.getSurfaceControl();
-                new SurfaceControl.Transaction()
-                        .reparent(surfaceControl, newParentSurfaceControl)
-                        .setBufferSize(surfaceControl, surfaceView.getWidth(), surfaceView.getHeight())
-                        .setVisibility(surfaceControl, /* visible= */ true)
-                        .apply();
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,16 +240,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
       /*  if (isOwner && isFinishing()) {
-            if (surfaceControl != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    surfaceControl.release();
-                }
-                surfaceControl = null;
-            }
-            if (videoSurface != null) {
-                videoSurface.release();
-                videoSurface = null;
-            }
             if (player != null) {
                 player.release();
                 player = null;
@@ -609,7 +571,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         player.prepare();
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setPlayWhenReady(true);
-        player.setVideoSurface(videoSurface);
         callRepeatShuffle();
         exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
             @Override
@@ -632,13 +593,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         });
         epAllClicks();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            surfaceControl = new SurfaceControl.Builder()
-                    .setName(SURFACE_CONTROL_NAME)
-                    .setBufferSize(/* width= */ 0, /* height= */ 0)
-                    .build();
-            videoSurface = new Surface(surfaceControl);
-        }
         player.addListener(new ExoPlayer.EventListener() {
 
             @Override
@@ -738,14 +692,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         player.setPlayWhenReady(true);
         player.prepare();
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            surfaceControl = new SurfaceControl.Builder()
-                    .setName(SURFACE_CONTROL_NAME)
-                    .setBufferSize(/* width= */ 0, /* height= */ 0)
-                    .build();
-            videoSurface = new Surface(surfaceControl);
-        }
-        player.setVideoSurface(videoSurface);
         AudioPlayerActivity.player = player;
     }
 
@@ -1232,10 +1178,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     try {
-                        if (response.isSuccessful()) {
 //                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                            SucessModel model = response.body();
-                        }
+                        SucessModel model = response.body();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1253,7 +1197,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void getMediaByPer() {
         class getMediaByPer extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 downloadPercentage = DatabaseClient.getInstance(ctx)
@@ -1266,7 +1209,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 if (downloadAudioDetailsList1.size() != 0) {
                     if (downloadPercentage <= 100) {
                         if (downloadPercentage == 100) {
@@ -1373,14 +1315,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         exoBinding.tvSongTime.setText(mainPlayModelList.get(ps).getAudioDuration());
-        if (url.equalsIgnoreCase("")) {
-            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        } else {
-            Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
-                    .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+        try {
+            if (url.equalsIgnoreCase("")) {
+                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            } else {
+                Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
+                        .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
         } else if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("0")) {
@@ -1395,49 +1342,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }
         GetMedia2();
-//            binding.gridLayout.addView(view);
-//            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-//            layoutParams.width = 0;
-//            layoutParams.height = 0;
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
-//                layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
-//            }
-//            layoutParams.bottomMargin = 10;
-//            layoutParams.leftMargin = 10;
-//            layoutParams.topMargin = 10;
-//            layoutParams.rightMargin = 10;
-//            view.setLayoutParams(layoutParams);
-    }
-
-    private void setCurrentOutputView(@Nullable SurfaceView surfaceView) {
-        currentOutputView = surfaceView;
-        if (surfaceView != null && surfaceView.getHolder().getSurface() != null) {
-            reparent(surfaceView);
-        }
-    }
-
-    private void attachSurfaceListener(SurfaceView surfaceView) {
-        surfaceView
-                .getHolder()
-                .addCallback(
-                        new SurfaceHolder.Callback() {
-                            @Override
-                            public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                                if (surfaceView == currentOutputView) {
-                                    reparent(surfaceView);
-                                }
-                            }
-
-                            @Override
-                            public void surfaceChanged(
-                                    SurfaceHolder surfaceHolder, int format, int width, int height) {
-                            }
-
-                            @Override
-                            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-                            }
-                        });
     }
 
     public List<DownloadAudioDetails> GetAllMedia() {
@@ -1893,7 +1797,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1924,7 +1827,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1955,7 +1857,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -2106,14 +2007,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void getPrepareShowData() {
         myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
-//        if (isOwner && player == null) {
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
 
         } else {
             initializePlayer();
         }
-        setCurrentOutputView(nonFullScreenView);
         PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         playerControlView.setPlayer(player);
         playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
@@ -2123,9 +2022,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
                     TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
         });
-//        playerControlView.set
         playerControlView.show();
         InitNotificationAudioPLayer();
     }
-
 }
