@@ -168,12 +168,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.19"
                         android:gravity="center"
+                        android:visibility="visible"
                         android:paddingRight="@dimen/_6sdp">
 
                         <ImageView
                             android:id="@+id/ivnext"
                             android:layout_width="@dimen/_31sdp"
                             android:layout_height="@dimen/_31sdp"
+                            android:visibility="visible"
                             android:src="@drawable/ic_forward_icon" />
                     </LinearLayout>
                 </LinearLayout>
