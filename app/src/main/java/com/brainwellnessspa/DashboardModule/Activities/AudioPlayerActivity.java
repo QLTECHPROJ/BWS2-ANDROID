@@ -2085,6 +2085,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
         });
         playerControlView.show();
-        InitNotificationAudioPLayer();
+//        InitNotificationAudioPLayer();
     }
 }
