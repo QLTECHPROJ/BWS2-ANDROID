@@ -64,6 +64,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -76,6 +77,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 public class SearchFragment extends Fragment {
     FragmentSearchBinding binding;
     String UserID, AudioFlag;
@@ -552,6 +554,10 @@ public class SearchFragment extends Fragment {
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         try {
                             miniPlayer = 1;
+                            audioClick = true;
+                            if(player!=null){
+                                player.release();
+                            }
                             if (isPrepare || isMediaStart || isPause) {
                                 MusicService.stopMedia();
                             }
@@ -736,6 +742,10 @@ public class SearchFragment extends Fragment {
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
                 try {
                     miniPlayer = 1;
+                    audioClick = true;
+                    if(player!=null){
+                        player.release();
+                    }
                     if (isPrepare || isMediaStart || isPause) {
                         MusicService.stopMedia();
                     }

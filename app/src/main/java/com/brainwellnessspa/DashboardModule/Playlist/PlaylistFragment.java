@@ -500,6 +500,10 @@ public class PlaylistFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 player = 1;
+                        audioClick = true;
+                        if(player!=null){
+                            player.release();
+                        }
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();
                 }

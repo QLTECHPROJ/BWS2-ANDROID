@@ -56,9 +56,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -491,6 +493,10 @@ public class AddAudioActivity extends AppCompatActivity {
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         try {
                             miniPlayer = 1;
+                            audioClick = true;
+                            if(player!=null){
+                                player.release();
+                            }
                             if (isPrepare || isMediaStart || isPause) {
                                 MusicService.stopMedia();
                             }
@@ -799,6 +805,10 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         try {
                             miniPlayer = 1;
+                            audioClick = true;
+                            if(player!=null){
+                                player.release();
+                            }
                             if (isPrepare || isMediaStart || isPause) {
                                 MusicService.stopMedia();
                             }
@@ -854,6 +864,10 @@ public class AddAudioActivity extends AppCompatActivity {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     try {
                         miniPlayer = 1;
+                        audioClick = true;
+                        if(player!=null){
+                            player.release();
+                        }
                         if (isPrepare || isMediaStart || isPause) {
                             MusicService.stopMedia();
                         }

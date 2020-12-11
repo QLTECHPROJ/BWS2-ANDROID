@@ -71,6 +71,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
@@ -84,6 +85,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 public class AudioFragment extends Fragment {
     public static boolean exit = false;
     public static String IsLock = "0";
@@ -758,6 +760,10 @@ public class AudioFragment extends Fragment {
         private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
             try {
                 miniPlayer = 1;
+                audioClick = true;
+                if(player!=null){
+                    player.release();
+                }
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();
                 }

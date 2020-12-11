@@ -78,20 +78,10 @@ import static com.brainwellnessspa.Services.GlobleInItExoPlayer.GlobleInItPlayer
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.myBitmap;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.InitNotificationAudioPLayer;
-import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
 
 public class MiniPlayerFragment extends Fragment {
-    private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
-    private static final String OWNER_EXTRA = "owner";
     public static int isDisclaimer = 0;
     public static String addToRecentPlayId = "", myAudioId = "";
-//    @Nullable
-//    private static SimpleExoPlayer player;
-    @Nullable
-    private static SurfaceControl surfaceControl;
-    @Nullable
-    private static Surface videoSurface;
     FragmentMiniPlayerBinding binding;
     FragmentMiniExoCustomBinding exoBinding;
     Context ctx;
@@ -170,13 +160,10 @@ public class MiniPlayerFragment extends Fragment {
             }
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
-            if (mediaPlayer != null) {
-                mediaPlayer.stop();
-                mediaPlayer.release();
-            }
 //            handler12.removeCallbacks(UpdateSongTime12);
 //                Intent i = new Intent(ctx, PlayWellnessActivity.class);
             /* TODO : MY COM*/
+            audioClick = false;
             Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);
@@ -324,9 +311,6 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
-                    exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
-                    exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                    exoBinding.exoProgress.setDuration(player.getDuration());
                 }
 
                 @Override
@@ -361,13 +345,6 @@ public class MiniPlayerFragment extends Fragment {
             });
             callRepeatShuffle();
 
-            PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
-            playerControlView.setPlayer(player);
-            playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-                exoBinding.exoProgress.setPosition(position);
-                exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-            });
-            playerControlView.show();
         }
        /* if (downloadAudioDetailsList.size() != 0) {
             for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
@@ -485,14 +462,6 @@ public class MiniPlayerFragment extends Fragment {
                     exoBinding.exoProgress.setDuration(player.getDuration());
                 }
             });
-
-            PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
-            playerControlView.setPlayer(player);
-            playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-                exoBinding.exoProgress.setPosition(position);
-                exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-            });
-            playerControlView.show();
         }
         exoBinding.llPause.setOnClickListener(view -> {
             player.setPlayWhenReady(false);
@@ -510,6 +479,13 @@ public class MiniPlayerFragment extends Fragment {
                 audioClick = true;
                 miniPlayer = 1;
                 initializePlayerDisclaimer();
+                PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
+                playerControlView.setPlayer(player);
+                playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
+                    exoBinding.exoProgress.setPosition(position);
+                    exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+                });
+                playerControlView.show();
             }
         });
         if (miniPlayer == 0) {
@@ -557,6 +533,13 @@ public class MiniPlayerFragment extends Fragment {
                 audioClick = true;
                 miniPlayer = 1;
                 initializePlayer();
+                PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
+                playerControlView.setPlayer(player);
+                playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
+                    exoBinding.exoProgress.setPosition(position);
+                    exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+                });
+                playerControlView.show();
             }
         });
     }
@@ -1331,5 +1314,13 @@ public class MiniPlayerFragment extends Fragment {
         } else {
             initializePlayer();
         }
+
+        PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
+        playerControlView.setPlayer(player);
+        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
+            exoBinding.exoProgress.setPosition(position);
+            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+        });
+        playerControlView.show();
     }
 }

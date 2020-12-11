@@ -87,15 +87,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.GlobleInItDisclaimer;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.GlobleInItPlayer;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
 public class AudioPlayerActivity extends AppCompatActivity {
-    private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
-    private static final String OWNER_EXTRA = "owner";
-    @Nullable
-    private static SimpleExoPlayer player;
+
     List<DownloadAudioDetails> downloadAudioDetailsList;
     AudioPlayerCustomLayoutBinding exoBinding;
     byte[] descriptor;
@@ -113,11 +115,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     int notificationId = 1234;
     List<DownloadAudioDetails> downloadAudioDetailsList1;
     private long mLastClickTime = 0;
-    private boolean isOwner;
-    @Nullable
-    private SurfaceView nonFullScreenView;
-    @Nullable
-    private SurfaceView currentOutputView;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
 
@@ -157,6 +154,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
             startActivity(i);
 //            finish();
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        callBack();
+        super.onBackPressed();
     }
 
     private void showTooltiop() {
@@ -240,12 +243,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isFinishing()) {
-            if (player != null) {
-                player.release();
-                player = null;
-            }
-        }
     }
 
     public void InitNotificationAudioPLayer() {
@@ -335,6 +332,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //                isPause = false;
 //            }
 //        pauseMedia();
+            audioClick = false;
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
             Gson gson = new Gson();
@@ -483,11 +481,96 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void initializePlayer() {
-        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-        binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
+//        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         isDisclaimer = 0;
+         if(audioClick) {
+            GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
+        }if(player!=null) {
+            player.addListener(new ExoPlayer.EventListener() {
+
+                @Override
+                public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+                    Log.v("TAG", "Listener-onTracksChanged... ");
+                    myBitmap = getMediaBitmap(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                    callButtonText(player.getCurrentWindowIndex());
+                }
+
+                @Override
+                public void onIsPlayingChanged(boolean isPlaying) {
+                    if (isPlaying) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.VISIBLE);
+                        exoBinding.llProgressBar.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
+                    } else if (!isPlaying) {
+                        exoBinding.llPlay.setVisibility(View.VISIBLE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
+                    }
+                    exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
+                    exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+                    exoBinding.exoProgress.setDuration(player.getDuration());
+                    exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
+                            TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
+                }
+
+                @Override
+                public void onPlaybackStateChanged(int state) {
+                    if (state == ExoPlayer.STATE_READY) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.VISIBLE);
+                        exoBinding.llProgressBar.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
+                    } else if (state == ExoPlayer.STATE_BUFFERING) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onPlayerError(ExoPlaybackException error) {
+                    Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                }
+            });
+            exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
+                @Override
+                public void onScrubStart(TimeBar timeBar, long position) {
+                    exoBinding.exoProgress.setPosition(position);
+                }
+
+                @Override
+                public void onScrubMove(TimeBar timeBar, long position) {
+
+                }
+
+                @Override
+                public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
+                    player.seekTo(position);
+                    exoBinding.exoProgress.setPosition(position);
+                    exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
+                            TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
+                }
+            });
+            callRepeatShuffle();
+            if(player.getPlayWhenReady()){
+                exoBinding.llPlay.setVisibility(View.GONE);
+                exoBinding.llPause.setVisibility(View.VISIBLE);
+                exoBinding.progressBar.setVisibility(View.GONE);
+            }else if(!player.getPlayWhenReady()){
+                exoBinding.llPlay.setVisibility(View.VISIBLE);
+                exoBinding.llPause.setVisibility(View.GONE);
+                exoBinding.progressBar.setVisibility(View.GONE);
+            }
+            exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
+            exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+            exoBinding.exoProgress.setDuration(player.getDuration());
+
+        }
         callAllDisable(true);
-        if (downloadAudioDetailsList.size() != 0) {
+        /*if (downloadAudioDetailsList.size() != 0) {
             for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
                 if (downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(0).getAudioFile())) {
 //                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
@@ -539,7 +622,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                 player.addMediaItem(mediaItem);
             }
-        }
+        }*/
        /* BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
@@ -572,142 +655,106 @@ public class AudioPlayerActivity extends AppCompatActivity {
         MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
                 : new ConcatenatingMediaSource(mediaSources);*/
 //        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
-        player.prepare();
+  /*      player.prepare();
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setPlayWhenReady(true);
-        player.setWakeMode(2);
-        callRepeatShuffle();
-        exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
-            @Override
-            public void onScrubStart(TimeBar timeBar, long position) {
-                exoBinding.exoProgress.setPosition(position);
-            }
-
-            @Override
-            public void onScrubMove(TimeBar timeBar, long position) {
-
-            }
-
-            @Override
-            public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
-                player.seekTo(position);
-                exoBinding.exoProgress.setPosition(position);
-                exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
-                        TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
-            }
-        });
-        epAllClicks();
-
-        player.addListener(new ExoPlayer.EventListener() {
-
-            @Override
-            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-                Log.v("TAG", "Listener-onTracksChanged... ");
-                myBitmap = getMediaBitmap(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                callButtonText(player.getCurrentWindowIndex());
-            }
-
-            @Override
-            public void onIsPlayingChanged(boolean isPlaying) {
-                if (isPlaying) {
-                    exoBinding.llPlay.setVisibility(View.GONE);
-                    exoBinding.llPause.setVisibility(View.VISIBLE);
-                    exoBinding.llProgressBar.setVisibility(View.GONE);
-                    exoBinding.progressBar.setVisibility(View.GONE);
-                } else if (!isPlaying) {
-                    exoBinding.llPlay.setVisibility(View.VISIBLE);
-                    exoBinding.llPause.setVisibility(View.GONE);
-                    exoBinding.llProgressBar.setVisibility(View.GONE);
-                    exoBinding.progressBar.setVisibility(View.GONE);
-                }
-                exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
-                exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                exoBinding.exoProgress.setDuration(player.getDuration());
-                exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
-                        TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
-            }
-
-            @Override
-            public void onPlaybackStateChanged(int state) {
-                if (state == ExoPlayer.STATE_READY) {
-                    exoBinding.llPlay.setVisibility(View.GONE);
-                    exoBinding.llPause.setVisibility(View.VISIBLE);
-                    exoBinding.llProgressBar.setVisibility(View.GONE);
-                    exoBinding.progressBar.setVisibility(View.GONE);
-                } else if (state == ExoPlayer.STATE_BUFFERING) {
-                    exoBinding.llPlay.setVisibility(View.GONE);
-                    exoBinding.llPause.setVisibility(View.GONE);
-                    exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                    exoBinding.progressBar.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-                Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
-            }
-        });
+        player.setWakeMode(2);*/
+            epAllClicks();
     }
 
     private void initializePlayerDisclaimer() {
-        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-        player.addListener(new ExoPlayer.EventListener() {
-            @Override
-            public void onPlaybackStateChanged(int state) {
-                if (state == ExoPlayer.STATE_ENDED) {
-                    //player back ended
-                    removeArray();
-                }
-                if (state == ExoPlayer.STATE_READY) {
-                    exoBinding.llPlay.setVisibility(View.GONE);
-                    exoBinding.llPause.setVisibility(View.VISIBLE);
-                    exoBinding.llProgressBar.setVisibility(View.GONE);
-                    exoBinding.progressBar.setVisibility(View.GONE);
-                } else if (state == ExoPlayer.STATE_BUFFERING) {
-                    exoBinding.llPlay.setVisibility(View.GONE);
-                    exoBinding.llPause.setVisibility(View.GONE);
-                    exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                    exoBinding.progressBar.setVisibility(View.VISIBLE);
+//        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
+        if(audioClick) {
+            GlobleInItDisclaimer(ctx, mainPlayModelList);
+        }if(player!=null) {
+            player.addListener(new ExoPlayer.EventListener() {
+                @Override
+                public void onPlaybackStateChanged(int state) {
+                    if (state == ExoPlayer.STATE_ENDED) {
+                        //player back ended
+                        removeArray();
+                    }
+                    if (state == ExoPlayer.STATE_READY) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.VISIBLE);
+                        exoBinding.llProgressBar.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
+                    } else if (state == ExoPlayer.STATE_BUFFERING) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
+                    }
+
                 }
 
-            }
+                @Override
+                public void onIsPlayingChanged(boolean isPlaying) {
+                    if (isPlaying) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.VISIBLE);
+                        exoBinding.llProgressBar.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
+                    } else {
+                        exoBinding.llPlay.setVisibility(View.VISIBLE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
+                    }
+                    exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
+                    exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+                    exoBinding.exoProgress.setDuration(player.getDuration());
+                    exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
+                            TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
+                }
 
-            @Override
-            public void onIsPlayingChanged(boolean isPlaying) {
-                if (isPlaying) {
+                @Override
+                public void onPlayerError(ExoPlaybackException error) {
+                    Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                }
+            });
+            if(player!=null){
+                if(player.isPlaying()){
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
-                    exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
-                } else {
-                    exoBinding.llPlay.setVisibility(View.VISIBLE);
-                    exoBinding.llPause.setVisibility(View.GONE);
-                    exoBinding.llProgressBar.setVisibility(View.GONE);
+                }else if(!player.isPlaying()){
+                    exoBinding.llPlay.setVisibility(View.GONE);
+                    exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
+
                 }
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                 exoBinding.exoProgress.setDuration(player.getDuration());
-                exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
-                        TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
             }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-                Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
+        }
+        exoBinding.llPause.setOnClickListener(view -> {
+            player.setPlayWhenReady(false);
+            exoBinding.llPlay.setVisibility(View.VISIBLE);
+            exoBinding.llPause.setVisibility(View.GONE);
+            exoBinding.progressBar.setVisibility(View.GONE);
+        });
+        exoBinding.llPlay.setOnClickListener(view -> {
+            if(player!=null) {
+                exoBinding.llPlay.setVisibility(View.GONE);
+                exoBinding.llPause.setVisibility(View.VISIBLE);
+                exoBinding.progressBar.setVisibility(View.GONE);
+                player.setPlayWhenReady(true);
+            }else{
+                audioClick = true;
+                miniPlayer = 1;
+                initializePlayerDisclaimer();
             }
         });
-        exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
-        exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
-        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
-        player.setMediaItem(mediaItem1);
+//        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
+//        player.setMediaItem(mediaItem1);
         callAllDisable(false);
-        binding.tvNowPlaying.setText("");
 //        player.setMediaItems(mediaItemList, position, 0);
-        player.setPlayWhenReady(true);
-        player.prepare();
+//        player.setPlayWhenReady(true);
+//        player.prepare();
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-        AudioPlayerActivity.player = player;
+//        AudioPlayerActivity.player = player;
     }
 
     private void epAllClicks() {

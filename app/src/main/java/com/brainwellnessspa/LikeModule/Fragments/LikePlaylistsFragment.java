@@ -47,6 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity.RefreshLikePlaylist;
@@ -55,6 +56,8 @@ import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class LikePlaylistsFragment extends Fragment {
     FragmentLikesBinding binding;
@@ -259,6 +262,10 @@ public class LikePlaylistsFragment extends Fragment {
     private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Playlist.Audiolist> listModelList2) {
         try {
             miniPlayer = 1;
+            audioClick = true;
+            if(player!=null){
+                player.release();
+            }
             if (isPrepare || isMediaStart || isPause) {
                 stopMedia();
             }

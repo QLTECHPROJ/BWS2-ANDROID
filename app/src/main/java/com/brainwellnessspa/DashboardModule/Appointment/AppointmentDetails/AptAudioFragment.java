@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
@@ -59,6 +60,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 
 public class AptAudioFragment extends Fragment {
@@ -348,6 +350,10 @@ public class AptAudioFragment extends Fragment {
                 comeRefreshData = 1;
                 try {
                     miniPlayer = 1;
+                    audioClick = true;
+                    if(player!=null){
+                        player.release();
+                    }
                     if (isPrepare || isMediaStart || isPause) {
                         stopMedia();
                     }

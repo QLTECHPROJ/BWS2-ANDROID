@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -77,6 +78,7 @@ import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 public class DownloadPlaylistActivity extends AppCompatActivity {
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
@@ -816,6 +818,10 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
 
     private void callTransparentFrag(int position, Context ctx, List<DownloadAudioDetails> listModelList, String s, String playlistID) {
         miniPlayer = 1;
+        audioClick = true;
+        if(player!=null){
+            player.release();
+        }
         if (isPrepare || isMediaStart || isPause) {
             stopMedia();
         }

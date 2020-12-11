@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
@@ -71,6 +72,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     List<DownloadAudioDetails> audioList;
@@ -452,6 +454,10 @@ public class AudioDownloadsFragment extends Fragment {
         private void callTransFrag(int position, List<DownloadAudioDetails> listModelList) {
             try {
                 miniPlayer = 1;
+                audioClick = true;
+                if(player!=null){
+                    player.release();
+                }
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();
                 }

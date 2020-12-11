@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
@@ -58,6 +59,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class ViewAllSearchFragment extends Fragment {
     FragmentViewAllSearchBinding binding;
@@ -329,6 +331,10 @@ public class ViewAllSearchFragment extends Fragment {
                         || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     try {
                         miniPlayer = 1;
+                        audioClick = true;
+                        if(player!=null){
+                            player.release();
+                        }
                         if (isPrepare || isMediaStart || isPause) {
                             MusicService.stopMedia();
                         }

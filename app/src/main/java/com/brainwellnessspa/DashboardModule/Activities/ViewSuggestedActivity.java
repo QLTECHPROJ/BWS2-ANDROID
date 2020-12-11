@@ -50,6 +50,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -62,6 +63,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.a
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
 
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;
     Activity activity;
@@ -351,6 +353,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         holder.binds.ivLock.setVisibility(View.GONE);
                         try {
                             miniPlayer = 1;
+                            audioClick = true;
+                            if(player!=null){
+                                player.release();
+                            }
                             if (isPrepare || isMediaStart || isPause) {
                                 MusicService.stopMedia();
                             }
@@ -404,6 +410,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     holder.binds.ivLock.setVisibility(View.GONE);
                     try {
                         miniPlayer = 1;
+                        audioClick = true;
+                        if(player!=null){
+                            player.release();
+                        }
                         if (isPrepare || isMediaStart || isPause) {
                             MusicService.stopMedia();
                         }
