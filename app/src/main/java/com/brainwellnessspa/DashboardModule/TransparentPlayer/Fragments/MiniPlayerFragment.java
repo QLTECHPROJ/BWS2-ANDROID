@@ -282,7 +282,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                   /* if (isPlaying) {
+                    if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
@@ -290,13 +290,13 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    }*/
+                    }
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
                 }
 
-                @Override
+              /*  @Override
                 public void onPlayWhenReadyChanged(boolean playWhenReady, int state) {
                     if (state == ExoPlayer.STATE_READY && !playWhenReady) {
                             exoBinding.llPlay.setVisibility(View.VISIBLE);
@@ -311,15 +311,15 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
-                }
+                }*/
 
                 @Override
                 public void onPlaybackStateChanged(int state) {
-                    /*if (state == ExoPlayer.STATE_READY) {
+                    if (state == ExoPlayer.STATE_READY) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    } else*/ if (state == ExoPlayer.STATE_BUFFERING) {
+                    } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);

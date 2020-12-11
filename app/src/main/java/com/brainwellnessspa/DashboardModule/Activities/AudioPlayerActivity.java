@@ -492,6 +492,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                     Log.v("TAG", "Listener-onTracksChanged... ");
                     myBitmap = getMediaBitmap(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                    player.setPlayWhenReady(true);
                     callButtonText(player.getCurrentWindowIndex());
                 }
 
