@@ -54,6 +54,7 @@ import com.brainwellnessspa.databinding.AudioPlayerCustomLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -366,6 +367,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             }
+
                             SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                             boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -502,7 +504,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     MediaItem mediaItem = MediaItem.fromUri(uri);
                     player.setMediaItem(mediaItem);
-                }else if(f == downloadAudioDetailsList.size()-1){
+                } else if (f == downloadAudioDetailsList.size() - 1) {
                     MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
                     player.setMediaItem(mediaItem1);
                 }
@@ -639,6 +641,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.progressBar.setVisibility(View.VISIBLE);
                 }
             }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
+            }
         });
     }
 
@@ -683,6 +690,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 exoBinding.exoProgress.setDuration(player.getDuration());
                 exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
                         TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
             }
         });
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));

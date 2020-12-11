@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     FancyShowCaseQueue queue;
     public static String comeBack = "";
     RemiderDetailsModel listReminderModel;
+//    CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +132,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }).closeOnTouch(false)
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
+                /*.focusOn(checkBox)*/.closeOnTouch(false)
                 .build();
 
         fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
@@ -178,7 +180,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvReminderDetails.setVisibility(View.VISIBLE);
-
                                 queue.show();
                             }
 
@@ -284,6 +285,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             holder.bind.view.setClickable(false);
             holder.bind.view.setEnabled(false);
 
+//            checkBox = holder.bind.cbChecked;
             /*holder.bind.llChecked.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

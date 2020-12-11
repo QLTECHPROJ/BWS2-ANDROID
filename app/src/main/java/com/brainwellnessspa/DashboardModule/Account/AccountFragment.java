@@ -113,12 +113,11 @@ public class AccountFragment extends Fragment {
                 1, 1, 0.2f, 10);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
-//        profileViewData(getActivity());
         /*Properties p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);*/
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
-//        showTooltiop();
+
         binding.llDownloads.setOnClickListener(view12 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -270,6 +269,7 @@ public class AccountFragment extends Fragment {
         super.onResume();
         ComeScreenAccount = 1;
         comefromDownload = "0";
+        //        showTooltiop();
         profileViewData(getActivity());
     }
 

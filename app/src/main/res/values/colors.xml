@@ -23,6 +23,7 @@
     <color name="transparent_white">#0000000F</color>
     <color name="dim_light_gray">#dddddd</color>
     <color name="seek_bar_background">#ababab</color>
+    <color name="buffer_seek_bar_background">#858484</color>
     <color name="seek_bar_secondary_progress">#A6B0CF</color>
     <color name="yellow">#FFC00F</color>
     <color name="green">#28A745</color>

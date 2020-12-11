@@ -31,7 +31,7 @@
                 android:id="@+id/exoProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:buffered_color="@color/dark_yellow"
+                app:buffered_color="@color/buffer_seek_bar_background"
                 app:played_color="@color/blue"
                 app:unplayed_color="@color/seek_bar_background" />
         </FrameLayout>
