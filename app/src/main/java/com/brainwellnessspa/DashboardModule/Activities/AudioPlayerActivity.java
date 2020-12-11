@@ -573,7 +573,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         player.prepare();
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setPlayWhenReady(true);
-//        player.setWakeMode(2);
+        player.setWakeMode(2);
         callRepeatShuffle();
         exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
             @Override
