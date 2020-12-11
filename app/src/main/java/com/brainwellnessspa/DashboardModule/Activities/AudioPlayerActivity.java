@@ -502,7 +502,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     MediaItem mediaItem = MediaItem.fromUri(uri);
                     player.setMediaItem(mediaItem);
-                    break;
+                }else if(f == downloadAudioDetailsList.size()-1){
+                    MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+                    player.setMediaItem(mediaItem1);
                 }
             }
         } else {
@@ -571,6 +573,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         player.prepare();
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setPlayWhenReady(true);
+//        player.setWakeMode(2);
         callRepeatShuffle();
         exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
             @Override

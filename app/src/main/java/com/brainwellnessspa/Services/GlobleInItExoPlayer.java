@@ -95,6 +95,7 @@ public class GlobleInItExoPlayer {
            }
        }
        player.prepare();
+//        player.setWakeMode(2);
        player.seekTo(position, C.CONTENT_TYPE_MUSIC);
        if (miniPlayer == 1) {
            player.setPlayWhenReady(true);
