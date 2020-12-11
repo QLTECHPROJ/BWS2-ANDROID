@@ -239,12 +239,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-      /*  if (isOwner && isFinishing()) {
+        if (isFinishing()) {
             if (player != null) {
                 player.release();
                 player = null;
             }
-        }*/
+        }
     }
 
     public void InitNotificationAudioPLayer() {

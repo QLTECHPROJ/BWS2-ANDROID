@@ -14,9 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/llPlayearMain"
-            android:layout_marginLeft="-16dp"
-            android:layout_marginRight="-16dp"
-            android:layout_marginBottom="-9dp"
+            android:layout_marginBottom="-11dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
@@ -35,8 +33,6 @@
                 android:layout_height="wrap_content"
                 app:buffered_color="@color/dark_yellow"
                 app:played_color="@color/blue"
-                app:scrubber_color="@color/seek_bar_background"
-                app:scrubber_drawable="@null"
                 app:unplayed_color="@color/seek_bar_background" />
         </FrameLayout>
 

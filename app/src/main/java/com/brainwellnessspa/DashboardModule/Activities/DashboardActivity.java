@@ -58,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     TelephonyManager mTelephonyMgr;
     AudioManager mAudioManager;
     BroadcastReceiver broadcastReceiver;
-    public static boolean audioPause = false;
+    public static boolean audioPause = false,audioClick = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
