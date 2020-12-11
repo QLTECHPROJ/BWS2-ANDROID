@@ -667,7 +667,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         if(audioClick) {
             GlobleInItDisclaimer(ctx, mainPlayModelList);
-        }if(player!=null) {
+        }
+        if(player!=null) {
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
                 public void onPlaybackStateChanged(int state) {
@@ -720,10 +721,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
                 }else if(!player.isPlaying()){
-                    exoBinding.llPlay.setVisibility(View.GONE);
-                    exoBinding.llPause.setVisibility(View.VISIBLE);
+                    exoBinding.llPlay.setVisibility(View.VISIBLE);
+                    exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
-
                 }
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
@@ -2072,7 +2072,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
-
+            audioClick = true;
         } else {
             initializePlayer();
         }

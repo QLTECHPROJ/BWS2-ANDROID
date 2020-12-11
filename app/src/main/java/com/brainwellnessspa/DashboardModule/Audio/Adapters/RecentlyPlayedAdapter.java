@@ -187,7 +187,9 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             miniPlayer = 1;
             audioClick = true;
             if(player!=null){
+                player.stop();
                 player.release();
+                player = null;
             }
             if (isPrepare || isMediaStart || isPause) {
                 MusicService.stopMedia();

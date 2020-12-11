@@ -352,7 +352,9 @@ public class AptAudioFragment extends Fragment {
                     miniPlayer = 1;
                     audioClick = true;
                     if(player!=null){
+                        player.stop();
                         player.release();
+                        player = null;
                     }
                     if (isPrepare || isMediaStart || isPause) {
                         stopMedia();

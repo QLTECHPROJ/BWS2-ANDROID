@@ -190,7 +190,9 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             miniPlayer = 1;
             audioClick = true;
             if(player!=null){
+                player.stop();
                 player.release();
+                player = null;
             }
             if (isPrepare || isMediaStart || isPause) {
                 MusicService.stopMedia();
