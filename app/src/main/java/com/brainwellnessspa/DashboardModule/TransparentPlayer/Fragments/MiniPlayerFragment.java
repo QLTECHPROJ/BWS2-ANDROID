@@ -674,7 +674,7 @@ public class MiniPlayerFragment extends Fragment {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .geAllData1();
+                        .geAllDataBYDownloaded("Complete");
                 return null;
             }
 

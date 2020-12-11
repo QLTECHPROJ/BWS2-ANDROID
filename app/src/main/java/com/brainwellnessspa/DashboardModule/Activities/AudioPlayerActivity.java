@@ -1367,7 +1367,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .geAllData1();
+                        .geAllDataBYDownloaded("Complete");
                 return null;
             }
 

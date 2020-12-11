@@ -15,6 +15,9 @@ public interface AudioDetailsDao {
     @Query("SELECT * FROM audio_table  ORDER BY uid DESC")// ORDER BY uid ASC
     List<DownloadAudioDetails> geAllData1();
 
+    @Query("SELECT * FROM audio_table WHERE IsDownload =:IsDownload")// ORDER BY uid ASC
+    List<DownloadAudioDetails> geAllDataBYDownloaded(String IsDownload);
+
     @Insert
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
 //    void insertMedia(DownloadAudioDetails downloadAudioDetails);  download
