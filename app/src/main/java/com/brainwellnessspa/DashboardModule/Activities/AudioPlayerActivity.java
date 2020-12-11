@@ -721,10 +721,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 if(player.isPlaying()){
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
+                    exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
                 }else if(!player.isPlaying()){
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
+                    exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
                 }
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
@@ -736,12 +738,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
             player.setPlayWhenReady(false);
             exoBinding.llPlay.setVisibility(View.VISIBLE);
             exoBinding.llPause.setVisibility(View.GONE);
+            exoBinding.llProgressBar.setVisibility(View.GONE);
             exoBinding.progressBar.setVisibility(View.GONE);
         });
         exoBinding.llPlay.setOnClickListener(view -> {
             if(player!=null) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
+                exoBinding.llProgressBar.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.GONE);
                 player.setPlayWhenReady(true);
             }else{
