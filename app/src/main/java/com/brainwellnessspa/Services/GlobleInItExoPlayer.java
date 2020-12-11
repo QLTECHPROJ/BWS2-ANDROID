@@ -40,6 +40,11 @@ public class GlobleInItExoPlayer {
 
     public static void GlobleInItPlayer(Context ctx, int position, List<DownloadAudioDetails> downloadAudioDetailsList,
                                         ArrayList<MainPlayModel> mainPlayModelList, List<File> bytesDownloaded) {
+        if(player!=null){
+            player.stop();
+            player.release();
+            player = null;
+        }
        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
        if (downloadAudioDetailsList.size() != 0) {
            for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
@@ -104,15 +109,21 @@ public class GlobleInItExoPlayer {
    }
 
    public static void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
+       if(player!=null){
+           player.stop();
+           player.release();
+           player = null;
+       }
        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
+       MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
+       player.setMediaItem(mediaItem1);
+//       player.setPlayWhenReady(true);
+       player.prepare();
+       player.setWakeMode(2);
+       InitNotificationAudioPLayer(ctx,mainPlayModelList);
        if (miniPlayer == 1) {
            player.setPlayWhenReady(true);
        }
-       MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
-       player.setMediaItem(mediaItem1);
-       player.setPlayWhenReady(true);
-       player.prepare();
-       InitNotificationAudioPLayer(ctx,mainPlayModelList);
    }
 
     public static void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
