@@ -8,15 +8,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -57,17 +54,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.ui.TimeBar;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.FileDataSource;
-import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -89,13 +81,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.GlobleInItDisclaimer;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.GlobleInItPlayer;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
 public class AudioPlayerActivity extends AppCompatActivity {
 
@@ -115,9 +105,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
     PlayerNotificationManager playerNotificationManager;
     int notificationId = 1234;
     List<DownloadAudioDetails> downloadAudioDetailsList1;
-    private long mLastClickTime = 0;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,9 +120,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         mainPlayModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         bytesDownloaded = new ArrayList<>();
-        if(audioClick) {
+        if (audioClick) {
             GetAllMedia();
-        }else{
+        } else {
             MakeArray2();
         }
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -160,7 +150,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            finish();
         });
     }
-
 
 
     @Override
@@ -495,7 +484,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         isDisclaimer = 0;
         if (audioClick) {
-            GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
+            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
+            globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
             try {
                 Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
                 startService(playbackServiceIntent);
@@ -531,6 +521,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                    }else if(player.isLoading()){
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     } else if (!isPlaying) {
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -696,7 +691,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         if (audioClick) {
-            GlobleInItDisclaimer(ctx, mainPlayModelList);
+            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
+            globleInItExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
         }
 
         if (player != null) {
@@ -805,8 +801,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
         exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
         exoBinding.llBackWordSec.setOnClickListener(view -> {
-                    if (player.getCurrentPosition() > 0)
+                    if (player.getCurrentPosition() > 30000) {
                         player.seekTo(player.getCurrentPosition() - 30000);
+                    }else if(player.getCurrentPosition()<30000){
+                        player.seekTo(0);
+                    }
                 }
         );
         binding.llLike.setOnClickListener(view -> {
@@ -1536,7 +1535,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit(); 
+            editor.commit();
         } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
@@ -1563,7 +1562,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
             Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
             }.getType();
@@ -1591,7 +1590,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
             Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
             }.getType();
@@ -1619,7 +1618,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
@@ -1647,7 +1646,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
@@ -1675,7 +1674,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -1703,7 +1702,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -1731,7 +1730,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -1759,7 +1758,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -1791,10 +1790,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         }
         getPrepareShowData();
     }
+
     private void MakeArray2() {
         View viewed = LayoutInflater.from(ctx).inflate(R.layout.audio_player_custom_layout, null, false);
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
@@ -1851,7 +1851,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
 
         } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
@@ -1879,7 +1879,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
             Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
             }.getType();
@@ -1907,7 +1907,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
             Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
             }.getType();
@@ -1935,7 +1935,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
@@ -1963,7 +1963,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
@@ -1991,7 +1991,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -2019,7 +2019,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -2047,7 +2047,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -2075,7 +2075,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -2107,7 +2107,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         }
         getPrepareShowData();
     }
@@ -2432,7 +2432,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
-            audioClick = true;
+
         } else {
             initializePlayer();
         }

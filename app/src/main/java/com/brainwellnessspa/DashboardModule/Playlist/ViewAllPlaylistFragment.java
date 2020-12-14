@@ -51,9 +51,7 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 
 
 public class ViewAllPlaylistFragment extends Fragment {
@@ -200,10 +198,8 @@ public class ViewAllPlaylistFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if (isMediaStart) {
-                        stopMedia();
-                        releasePlayer();
-                    }
+                    callNewPlayerRelease();
+
                 }
 
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -219,10 +215,8 @@ public class ViewAllPlaylistFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if (isMediaStart) {
-                    stopMedia();
-                    releasePlayer();
-                }
+                callNewPlayerRelease();
+
             }
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -422,14 +416,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                             player.release();
                                 player = null;
                         }
-                if (isPrepare || isMediaStart || isPause) {
-                    stopMedia();
-                }
-                isPause = false;
-                isMediaStart = false;
-                isPrepare = false;
 
-                isCompleteStop = false;
 
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();

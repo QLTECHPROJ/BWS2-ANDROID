@@ -65,10 +65,7 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.UserCreated;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.Isclose;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
@@ -89,7 +86,6 @@ public class PlaylistFragment extends Fragment {
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
-        deleteCache(getActivity());
         downloadPlaylistDetailsList = new ArrayList<>();
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
@@ -164,10 +160,7 @@ public class PlaylistFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if (isMediaStart) {
-                        stopMedia();
-                        releasePlayer();
-                    }
+                    callNewPlayerRelease();
                 }
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -182,10 +175,8 @@ public class PlaylistFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if (isMediaStart) {
-                    stopMedia();
-                    releasePlayer();
-                }
+                callNewPlayerRelease();
+
             }
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -506,13 +497,7 @@ public class PlaylistFragment extends Fragment {
                             player.release();
                                 player = null;
                         }
-                if (isPrepare || isMediaStart || isPause) {
-                    stopMedia();
-                }
-                isPause = false;
-                isMediaStart = false;
-                isPrepare = false;
-                isCompleteStop = false;
+
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();

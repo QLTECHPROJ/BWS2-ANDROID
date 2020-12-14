@@ -36,9 +36,7 @@ import retrofit2.Callback;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 
 public class LikeActivity extends AppCompatActivity {
     ActivityLikeBinding binding;
@@ -46,6 +44,7 @@ public class LikeActivity extends AppCompatActivity {
     String AudioFlag, UserID;
     Context ctx;
     public static boolean ComeFrom_LikePlaylist = false;
+    public static int RefreshLikePlaylist = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,10 +116,8 @@ public class LikeActivity extends AppCompatActivity {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if (isMediaStart) {
-                        stopMedia();
-                        releasePlayer();
-                    }
+
+                    callNewPlayerRelease();
                 }
 
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -136,10 +133,8 @@ public class LikeActivity extends AppCompatActivity {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if (isMediaStart) {
-                    stopMedia();
-                    releasePlayer();
-                }
+
+                callNewPlayerRelease();
             }
             SharedPreferences shared22 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

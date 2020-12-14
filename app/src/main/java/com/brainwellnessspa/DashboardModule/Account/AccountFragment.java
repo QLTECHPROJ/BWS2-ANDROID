@@ -53,7 +53,6 @@ import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -75,13 +74,10 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 
 public class AccountFragment extends Fragment {
     public static String IsLock = "";
@@ -108,8 +104,7 @@ public class AccountFragment extends Fragment {
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 
-        deleteCache(getActivity());
-        MeasureRatio measureRatios = BWSApplication.measureRatio(getActivity(), 10,
+         MeasureRatio measureRatios = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
@@ -234,10 +229,7 @@ public class AccountFragment extends Fragment {
                             break;
                         }
                         case MotionEvent.ACTION_UP:
-                            if (isMediaStart) {
-                                stopMedia();
-                                releasePlayer();
-                            }
+                            callNewPlayerRelease();
                             clearData(dialog);
                         case MotionEvent.ACTION_CANCEL: {
                             Button views = (Button) view1;
@@ -388,10 +380,8 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall() {
-        if (isMediaStart) {
-            stopMedia();
-            releasePlayer();
-        }
+
+        callNewPlayerRelease();
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
         SharedPreferences.Editor editorcv = shared.edit();
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, UserID);

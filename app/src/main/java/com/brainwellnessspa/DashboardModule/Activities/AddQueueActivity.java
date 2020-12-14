@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -25,13 +24,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.exoplayer2.offline.DownloadRequest;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
@@ -42,12 +34,17 @@ import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityQueueBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -59,10 +56,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class AddQueueActivity extends AppCompatActivity {
     public static boolean comeFromAddToQueue = false;
@@ -183,7 +178,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                 }.getType();
                 mDataDownload = gson.fromJson(js1, type);
-            }else if(comeFrom.equalsIgnoreCase("myLikeAudioList")){
+            } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
                 String js1 = getIntent().getStringExtra("data");
                 Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
                 }.getType();
@@ -559,20 +554,12 @@ public class AddQueueActivity extends AppCompatActivity {
                                             if (mData.size() != 0) {
                                                 if (pos == position && position < mData.size() - 1) {
                                                     pos = pos;
-                                                    if (isPrepare || isMediaStart || isPause) {
-                                                        stopMedia();
-                                                    }
-                                                    isPause = false;
-                                                    isMediaStart = false;
-                                                    isPrepare = false;
+
+                                                    callNewPlayerRelease();
                                                 } else if (pos == position && position == mData.size() - 1) {
                                                     pos = 0;
-                                                    if (isPrepare || isMediaStart || isPause) {
-                                                        stopMedia();
-                                                    }
-                                                    isPause = false;
-                                                    isMediaStart = false;
-                                                    isPrepare = false;
+
+                                                    callNewPlayerRelease();
                                                 } else if (pos < position && pos < mData.size() - 1) {
                                                     pos = pos;
                                                 } else if (pos > position && pos == mData.size()) {
@@ -632,12 +619,8 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 } else if (pos > mainPlayModelList.size()) {
                                                     pos = pos - 1;
                                                 }
-                                                if (isPrepare || isMediaStart || isPause) {
-                                                    stopMedia();
-                                                }
-                                                isPause = false;
-                                                isMediaStart = false;
-                                                isPrepare = false;
+
+                                                callNewPlayerRelease();
                                                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = new ArrayList<>();
                                                 for (int i = 0; i < mainPlayModelList.size(); i++) {
                                                     SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();

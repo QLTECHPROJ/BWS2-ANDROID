@@ -33,11 +33,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHolder> {
@@ -186,19 +182,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         try {
             miniPlayer = 1;
             audioClick = true;
-            if(player!=null){
-                player.stop();
-                player.release();
-                player = null;
-            }
-            if (isPrepare || isMediaStart || isPause) {
-                stopMedia();
-            }
-            isPause = false;
-            isMediaStart = false;
-            isPrepare = false;
-            isCompleteStop = false;
-
+            callNewPlayerRelease();
 
             /*Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = activity.getSupportFragmentManager();

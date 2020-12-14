@@ -32,11 +32,9 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 
 public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
@@ -168,10 +166,8 @@ public class DownloadsActivity extends AppCompatActivity {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if (isMediaStart) {
-                        stopMedia();
-                        releasePlayer();
-                    }
+
+                    callNewPlayerRelease();
                 }
 
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -187,10 +183,8 @@ public class DownloadsActivity extends AppCompatActivity {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if (isMediaStart) {
-                    stopMedia();
-                    releasePlayer();
-                }
+
+                callNewPlayerRelease();
             }
             SharedPreferences shared22 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

@@ -60,12 +60,9 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
@@ -96,7 +93,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (isMediaStart) {
+                    if (player!=null) {
                         if (listSize != 0) {
                             serachListAdpater.notifyDataSetChanged();
                         }
@@ -389,10 +386,14 @@ public class AddAudioActivity extends AppCompatActivity {
                         && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                         songId = myAudioId;
-                        if (isPause || !isMediaStart) {
-                            holder.binding.equalizerview.stopBars();
+                        if (player!=null) {
+                            if(!player.getPlayWhenReady()) {
+                                holder.binding.equalizerview.stopBars();
+                            }else{
+                                holder.binding.equalizerview.animateBars();
+                            }
                         } else
-                            holder.binding.equalizerview.animateBars();
+                            holder.binding.equalizerview.stopBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -494,18 +495,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         try {
                             miniPlayer = 1;
                             audioClick = true;
-                            if(player!=null){
-                                player.stop();
-                                player.release();
-                                player = null;
-                            }
-                            if (isPrepare || isMediaStart || isPause) {
-                                MusicService.stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            isCompleteStop = false;
+
+                            callNewPlayerRelease();
                             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
@@ -772,10 +763,13 @@ public class AddAudioActivity extends AppCompatActivity {
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(listModel.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause || !isMediaStart) {
-                        holder.binding.equalizerview.stopBars();
+                    if (player!=null) {
+                        if(!player.getPlayWhenReady()) {
+                            holder.binding.equalizerview.stopBars();
+                        }else
+                            holder.binding.equalizerview.animateBars();
                     } else
-                        holder.binding.equalizerview.animateBars();
+                        holder.binding.equalizerview.stopBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -808,18 +802,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         try {
                             miniPlayer = 1;
                             audioClick = true;
-                            if(player!=null){
-                                player.stop();
-                                player.release();
-                                player = null;
-                            }
-                            if (isPrepare || isMediaStart || isPause) {
-                                MusicService.stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            isCompleteStop = false;
+
+                            callNewPlayerRelease();
                             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
@@ -869,18 +853,8 @@ public class AddAudioActivity extends AppCompatActivity {
                     try {
                         miniPlayer = 1;
                         audioClick = true;
-                        if(player!=null){
-                            player.stop();
-                            player.release();
-                            player = null;
-                        }
-                        if (isPrepare || isMediaStart || isPause) {
-                            MusicService.stopMedia();
-                        }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        isCompleteStop = false;
+
+                        callNewPlayerRelease();
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         Gson gson = new Gson();

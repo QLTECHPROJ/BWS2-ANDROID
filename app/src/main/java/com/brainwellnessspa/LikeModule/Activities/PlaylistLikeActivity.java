@@ -65,16 +65,9 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
-
+import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.RefreshLikePlaylist;
 public class PlaylistLikeActivity extends AppCompatActivity {
     ActivityPlaylistLikeBinding binding;
     String UserID, AudioFlag, PlaylistID, PlaylistName, SearchFlag, PlaylistImage;
@@ -83,7 +76,6 @@ public class PlaylistLikeActivity extends AppCompatActivity {
     Activity activity;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     EditText searchEditText;
-    public static int RefreshLikePlaylist = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,10 +138,8 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if (isMediaStart) {
-                        stopMedia();
-                        releasePlayer();
-                    }
+
+                    callNewPlayerRelease();
                 }
 
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -165,10 +155,8 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if (isMediaStart) {
-                    stopMedia();
-                    releasePlayer();
-                }
+
+                callNewPlayerRelease();
             }
             SharedPreferences shared22 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -198,7 +186,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-            if (isMediaStart) {
+            if (player!=null) {
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             } else {
@@ -415,11 +403,11 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 if (isPlayPlaylist == 1) {
-                    pauseMedia();
+                    player.setPlayWhenReady(false);
                     isPlayPlaylist = 2;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                 } else if (isPlayPlaylist == 2) {
-                    resumeMedia();
+                   player.setPlayWhenReady(true);
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 } else {
@@ -429,8 +417,8 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
-                            if (isPause) {
-                                resumeMedia();
+                            if (!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
@@ -591,19 +579,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, String s, String playlistID) {
         miniPlayer = 1;
         audioClick = true;
-        if(player!=null){
-            player.stop();
-            player.release();
-            player = null;
-        }
-        if (isPrepare || isMediaStart || isPause) {
-            stopMedia();
-        }
-        isPause = false;
-        isMediaStart = false;
-        isPrepare = false;
-        isCompleteStop = false;
-
+        callNewPlayerRelease();
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();

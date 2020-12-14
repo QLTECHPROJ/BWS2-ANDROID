@@ -35,7 +35,6 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.ActivityViewSuggestedBinding;
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding;
 import com.bumptech.glide.Glide;
@@ -50,20 +49,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
-import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
-import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
-
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+
 public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;
     Activity activity;
@@ -73,8 +69,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
     int startTime;
     AudiosListAdpater adpater;
-    private long currentDuration = 0;
     long myProgress = 0, diff = 0;
+    private long currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -88,7 +84,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
                         !AudioFlag.equalsIgnoreCase("SubPlayList") &&
                         !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (isMediaStart) {
+                    if (player != null) {
                         adpater.notifyDataSetChanged();
                     }
                 }
@@ -280,8 +276,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     }
 
     public class AudiosListAdpater extends RecyclerView.Adapter<AudiosListAdpater.MyViewHolder> {
-        private ArrayList<SuggestedModel.ResponseData> AudiolistsModel;
         String songId;
+        private ArrayList<SuggestedModel.ResponseData> AudiolistsModel;
 
         public AudiosListAdpater(ArrayList<SuggestedModel.ResponseData> AudiolistsModel) {
             this.AudiolistsModel = AudiolistsModel;
@@ -316,10 +312,13 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(AudiolistsModel.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause || !isMediaStart) {
-                        holder.binds.equalizerview.stopBars();
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
+                            holder.binds.equalizerview.stopBars();
+                        } else
+                            holder.binds.equalizerview.animateBars();
                     } else
-                        holder.binds.equalizerview.animateBars();
+                        holder.binds.equalizerview.stopBars();
                     holder.binds.equalizerview.setVisibility(View.VISIBLE);
                     holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -354,18 +353,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         try {
                             miniPlayer = 1;
                             audioClick = true;
-                            if(player!=null){
-                                player.stop();
-                                player.release();
-                                player = null;
-                            }
-                            if (isPrepare || isMediaStart || isPause) {
-                                MusicService.stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            isCompleteStop = false;
+                            callNewPlayerRelease();
                             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
@@ -413,18 +401,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     try {
                         miniPlayer = 1;
                         audioClick = true;
-                        if(player!=null){
-                            player.stop();
-                            player.release();
-                            player = null;
-                        }
-                        if (isPrepare || isMediaStart || isPause) {
-                            MusicService.stopMedia();
-                        }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        isCompleteStop = false;
+                        callNewPlayerRelease();
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         Gson gson = new Gson();
@@ -529,6 +506,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 }
             });
         }
+
         @Override
         public int getItemCount() {
             return AudiolistsModel.size();

@@ -53,14 +53,9 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class ViewAllAudioFragment extends Fragment {
@@ -248,10 +243,8 @@ public class ViewAllAudioFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if (isMediaStart) {
-                        stopMedia();
-                        releasePlayer();
-                    }
+                    callNewPlayerRelease();
+
                 }
 
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -267,10 +260,7 @@ public class ViewAllAudioFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if (isMediaStart) {
-                    stopMedia();
-                    releasePlayer();
-                }
+                callNewPlayerRelease();
             }
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -571,13 +561,8 @@ public class ViewAllAudioFragment extends Fragment {
                 editor.commit();
 //                openMyFragment();
                 miniPlayer = 1;
-                if (isPrepare || isMediaStart || isPause) {
-                    stopMedia();
-                }
-                isPause = false;
-                isMediaStart = false;
-                isPrepare = false;
-                isCompleteStop = false;
+                callNewPlayerRelease();
+
                 Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 getActivity().startActivity(i);
@@ -591,18 +576,7 @@ public class ViewAllAudioFragment extends Fragment {
     private void openMyFragment() {
         miniPlayer = 1;
         audioClick = true;
-        if(player!=null){
-            player.stop();
-            player.release();
-            player = null;
-        }
-        if (isPrepare || isMediaStart || isPause) {
-            stopMedia();
-        }
-        isPause = false;
-        isMediaStart = false;
-        isPrepare = false;
-        isCompleteStop = false;
+        callNewPlayerRelease();
         Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()

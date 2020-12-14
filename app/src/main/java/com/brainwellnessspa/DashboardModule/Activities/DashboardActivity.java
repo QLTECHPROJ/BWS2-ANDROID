@@ -1,22 +1,14 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
-import android.app.ActivityManager;
-import android.app.AppOpsManager;
-import android.app.NotificationManager;
-import android.app.admin.DeviceAdminInfo;
-import android.app.admin.DevicePolicyManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -37,32 +29,40 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.PlayerJobService;
-import com.brainwellnessspa.Services.ScreenReceiver;
-import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
-import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
-import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
-import static com.brainwellnessspa.Utility.MusicService.oTime;
-import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
-import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 
 public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener, SensorEventListener {
     public static int miniPlayer = 0;
+    public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "";
     TelephonyManager mTelephonyMgr;
     AudioManager mAudioManager;
     BroadcastReceiver broadcastReceiver;
-    public static boolean audioPause = false,audioClick = false;
+    private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
+               /* if(player!=null){
+                    if(mediaPlayer!=null) {
+                        if (isMediaStart && !audioPause) {
+                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
+                            pauseMedia();
+                            audioPause = true;
+                        }
+                    }
+                } */ // Put here the code to stop your music
+            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+            }
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         }catch (Exception e){
             e.printStackTrace();
         }*/
-        ComponentName componentName = new ComponentName(this, PlayerJobService.class);
+       /* ComponentName componentName = new ComponentName(this, PlayerJobService.class);
         JobInfo info = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             info = new JobInfo.Builder(123, componentName)
@@ -98,13 +98,13 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         JobScheduler scheduler = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        int resultCode = scheduler.schedule(info);
-        if (resultCode == JobScheduler.RESULT_SUCCESS) {
-            Log.e("TAG", "Job scheduled");
-        } else {
-            Log.e("TAG", "Job scheduling failed");
-        }
-    }
+            int resultCode = scheduler.schedule(info);
+            if (resultCode == JobScheduler.RESULT_SUCCESS) {
+                Log.e("TAG", "Job scheduled");
+            } else {
+                Log.e("TAG", "Job scheduling failed");
+            }
+        }*/
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
@@ -119,7 +119,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             PlaylistName = getIntent().getStringExtra("PlaylistName");
             PlaylistImage = getIntent().getStringExtra("PlaylistImage");
         }
-         if (Goplaylist.equalsIgnoreCase("1")) {
+        if (Goplaylist.equalsIgnoreCase("1")) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
             Bundle bundle = new Bundle();
@@ -179,25 +179,6 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
 //        }
     }
 
-    private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                if(!isPause){
-                    if(mediaPlayer!=null) {
-                        if (isMediaStart && !audioPause) {
-                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
-                            pauseMedia();
-                            audioPause = true;
-                        }
-                    }
-                }  // Put here the code to stop your music
-            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-            }
-            super.onCallStateChanged(state, incomingNumber);
-        }
-    };
-
     @Override
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
@@ -231,9 +212,9 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         JobScheduler scheduler = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        scheduler.cancel(123);
-        Log.d("TAG", "Job cancelled");
-    }
+            scheduler.cancel(123);
+            Log.d("TAG", "Job cancelled");
+        }
     }
 
     @Override
@@ -242,23 +223,23 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             case AudioManager.AUDIOFOCUS_GAIN:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // Resume your media player here
-                if (audioPause)
-                    resumeMedia();
-                audioPause = false;
+//                if (audioPause)
+//                    resumeMedia();
+//                audioPause = false;
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if(!isPause) {
-                    if (mediaPlayer != null) {
-                        if (isMediaStart && !audioPause) {
-                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
-                            pauseMedia();
-                            audioPause = true;
-//                    binding.ivPlay.setVisibility(View.VISIBLE);
-//                    binding.ivPause.setVisibility(View.GONE);
-                        }
-                    }
-                }
+//                if(!isPause) {
+//                    if (mediaPlayer != null) {
+//                        if (isMediaStart && !audioPause) {
+//                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
+//                            pauseMedia();
+//                            audioPause = true;
+////                    binding.ivPlay.setVisibility(View.VISIBLE);
+////                    binding.ivPause.setVisibility(View.GONE);
+//                        }
+//                    }
+//                }
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }

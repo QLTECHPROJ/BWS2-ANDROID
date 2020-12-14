@@ -1,8 +1,10 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
@@ -39,6 +42,7 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.GlobleInItExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentMiniExoCustomBinding;
@@ -74,8 +78,6 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.GlobleInItDisclaimer;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.GlobleInItPlayer;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.myBitmap;
@@ -97,6 +99,20 @@ public class MiniPlayerFragment extends Fragment {
     int position, listSize;
     Boolean queuePlay, audioPlay;
     private long mLastClickTime = 0;
+    LocalBroadcastManager localBroadcastManager;
+    Intent localIntent;
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        super.onPause();
+    }
+    private BroadcastReceiver listener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,6 +127,9 @@ public class MiniPlayerFragment extends Fragment {
         bytesDownloaded = new ArrayList<>();
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
                 , R.layout.fragment_mini_exo_custom, binding.playerControlView, false);
+
+        localIntent = new Intent("play_pause_Action");
+        localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if(audioClick) {
             GetAllMedia();
         }else{
@@ -268,7 +287,8 @@ public class MiniPlayerFragment extends Fragment {
         isDisclaimer = 0;
         callAllDisable(true);
         if (audioClick) {
-            GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
+            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
+            globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
         }
         if (player != null) {
             player.setWakeMode(C.WAKE_MODE_NETWORK);
@@ -366,7 +386,6 @@ public class MiniPlayerFragment extends Fragment {
                 }
             });
             callRepeatShuffle();
-
         }
        /* if (downloadAudioDetailsList.size() != 0) {
             for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
@@ -425,16 +444,23 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.progressBar.setVisibility(View.GONE);
             exoBinding.llPlay.setVisibility(View.VISIBLE);
             exoBinding.llPause.setVisibility(View.GONE);
+            localIntent.putExtra("MyData", "pause");
+            localBroadcastManager.sendBroadcast(localIntent);
         } else {
             if (player != null) {
                 if (player.getPlayWhenReady()) {
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
+
+                    localIntent.putExtra("MyData", "play");
+                    localBroadcastManager.sendBroadcast(localIntent);
                 } else if (!player.getPlayWhenReady()) {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
+                    localIntent.putExtra("MyData", "pause");
+                    localBroadcastManager.sendBroadcast(localIntent);
                 }
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
@@ -447,7 +473,8 @@ public class MiniPlayerFragment extends Fragment {
     private void initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         if (audioClick) {
-            GlobleInItDisclaimer(ctx, mainPlayModelList);
+            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
+            globleInItExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
         }
         if (player != null) {
             player.addListener(new ExoPlayer.EventListener() {
@@ -475,10 +502,14 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                        localIntent.putExtra("MyData", "play");
+                        localBroadcastManager.sendBroadcast(localIntent);
                     } else if (!isPlaying) {
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                        localIntent.putExtra("MyData", "pause");
+                        localBroadcastManager.sendBroadcast(localIntent);
                     }
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
@@ -491,6 +522,8 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.llPlay.setVisibility(View.VISIBLE);
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.progressBar.setVisibility(View.GONE);
+            localIntent.putExtra("MyData", "pause");
+            localBroadcastManager.sendBroadcast(localIntent);
         });
         exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
@@ -510,21 +543,33 @@ public class MiniPlayerFragment extends Fragment {
                 });
                 playerControlView.show();
             }
+
+            localIntent.putExtra("MyData", "play");
+            localBroadcastManager.sendBroadcast(localIntent);
         });
         if (miniPlayer == 0) {
             exoBinding.progressBar.setVisibility(View.GONE);
             exoBinding.llPlay.setVisibility(View.VISIBLE);
             exoBinding.llPause.setVisibility(View.GONE);
+
+            localIntent.putExtra("MyData", "pause");
+            localBroadcastManager.sendBroadcast(localIntent);
         } else {
             if (player != null) {
                 if (player.isPlaying()) {
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
+
+                    localIntent.putExtra("MyData", "play");
+                    localBroadcastManager.sendBroadcast(localIntent);
                 } else if (!player.isPlaying()) {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
+
+                    localIntent.putExtra("MyData", "pause");
+                    localBroadcastManager.sendBroadcast(localIntent);
 
                 }
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
@@ -545,6 +590,8 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.llPlay.setVisibility(View.VISIBLE);
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.progressBar.setVisibility(View.GONE);
+            localIntent.putExtra("MyData", "pause");
+            localBroadcastManager.sendBroadcast(localIntent);
         });
         exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
@@ -564,6 +611,9 @@ public class MiniPlayerFragment extends Fragment {
                 });
                 playerControlView.show();
             }
+
+            localIntent.putExtra("MyData", "play");
+            localBroadcastManager.sendBroadcast(localIntent);
         });
     }
 
@@ -643,6 +693,7 @@ public class MiniPlayerFragment extends Fragment {
 //        simpleSeekbar.setMax(100);
         url = mainPlayModelList.get(ps).getAudioFile();
         id = mainPlayModelList.get(ps).getID();
+        myAudioId = id;
         if (url.equalsIgnoreCase("") || url.isEmpty()) {
             isDisclaimer = 1;
         } else {
@@ -1015,6 +1066,7 @@ public class MiniPlayerFragment extends Fragment {
         }
         getPrepareShowData();
     }
+
     private void MakeArray2() {
         Gson gson = new Gson();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -1325,6 +1377,7 @@ public class MiniPlayerFragment extends Fragment {
         }
         getPrepareShowData();
     }
+
     private void removeArray() {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

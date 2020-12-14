@@ -26,18 +26,13 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
-import com.brainwellnessspa.Utility.AppUtils;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
-import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 
 public class CancelMembershipActivity extends YouTubeBaseActivity implements
         YouTubePlayer.OnInitializedListener {
@@ -65,8 +60,9 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
         binding.youtubeView.initialize(API_KEY, this);
 
-        if (isMediaStart) {
-            pauseMedia();
+        if (player!=null) {
+            if(player.getPlayWhenReady())
+            player.setPlayWhenReady(false);
         } else {
         }
 
@@ -110,8 +106,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         });
 
         binding.btnCancelSubscrible.setOnClickListener(view -> {
-            if (isMediaStart) {
-                pauseMedia();
+            if (player!=null) {
+                player.setPlayWhenReady(false);
             } else {
 
             }
@@ -130,10 +126,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();
-                        if (isMediaStart) {
-                            pauseMedia();
-                        } else {
-
+                        if (player!=null) {
+                            player.setPlayWhenReady(false);
                         }
                         return true;
                     }
@@ -159,8 +153,9 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                                 CancelPlanModel model = response.body();
                                                 BWSApplication.showToast(model.getResponseMessage(), ctx);
                                                 dialog.dismiss();
-                                                resumeMedia();
-                                                isPause = false;
+                                                if(player!=null){
+                                                    player.setPlayWhenReady(true);
+                                                }
                                                 finish();
                                             }
                                         } catch (Exception e) {
@@ -187,8 +182,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
                 tvGoBack.setOnClickListener(v -> {
                     dialog.dismiss();
-                    if (isMediaStart) {
-                        pauseMedia();
+                    if (player!=null) {
+                        player.setPlayWhenReady(false);
                     } else {
 
                     }

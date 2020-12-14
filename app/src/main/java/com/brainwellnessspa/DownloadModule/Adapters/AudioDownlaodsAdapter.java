@@ -26,15 +26,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.downloader.PRDownloader;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -42,6 +37,11 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.downloader.PRDownloader;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -54,16 +54,11 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
-
-import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     FragmentActivity ctx;
@@ -246,10 +241,14 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
                 songId = myAudioId;
-                if (isPause) {
-                    holder.binding.equalizerview.stopBars();
+                if (player!=null) {
+                    if (!player.getPlayWhenReady()) {
+                        holder.binding.equalizerview.stopBars();
+                    } else {
+                        holder.binding.equalizerview.animateBars();
+                    }
                 } else
-                    holder.binding.equalizerview.animateBars();
+                    holder.binding.equalizerview.stopBars();
                 holder.binding.equalizerview.setVisibility(View.VISIBLE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -352,18 +351,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         try {
             miniPlayer = 1;
             audioClick = true;
-            if(player!=null){
-                player.stop();
-                player.release();
-                player = null;
-            }
-            if (isPrepare || isMediaStart || isPause) {
-                stopMedia();
-            }
-            isPause = false;
-            isMediaStart = false;
-            isPrepare = false;
-            isCompleteStop = false;
+
+            callNewPlayerRelease();
+
             Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
             fragmentManager1.beginTransaction()

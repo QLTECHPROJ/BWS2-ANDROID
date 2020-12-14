@@ -146,7 +146,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             } else {
                 binding.ivPause.setVisibility(View.VISIBLE);
                 binding.ivPlay.setVisibility(View.GONE);
-                localIntent.putExtra("MyData", "pause");
+                localIntent.putExtra("MyData", "play");
                 localBroadcastManager.sendBroadcast(localIntent);
                 buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList, addToQueueModelList, playFrom, position);
             }

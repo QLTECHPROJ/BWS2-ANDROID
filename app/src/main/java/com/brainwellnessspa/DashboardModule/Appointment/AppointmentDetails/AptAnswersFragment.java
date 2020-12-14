@@ -3,13 +3,12 @@ package com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetails;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;

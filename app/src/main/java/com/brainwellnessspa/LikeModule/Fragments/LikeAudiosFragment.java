@@ -71,12 +71,6 @@ import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
-import static com.brainwellnessspa.Utility.MusicService.getStartTime;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class LikeAudiosFragment extends Fragment {
     FragmentLikesBinding binding;
@@ -97,7 +91,7 @@ public class LikeAudiosFragment extends Fragment {
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (isMediaStart) {
+                    if (player!=null) {
                         if (data.equalsIgnoreCase("play")) {
                             adapter.notifyDataSetChanged();
                         } else {
@@ -230,10 +224,14 @@ public class LikeAudiosFragment extends Fragment {
             if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause || !isMediaStart) {
-                        holder.binding.equalizerview.stopBars();
+                    if (player!=null) {
+                        if (!player.getPlayWhenReady()) {
+                            holder.binding.equalizerview.stopBars();
+                        }else
+                            holder.binding.equalizerview.animateBars();
                     } else
-                        holder.binding.equalizerview.animateBars();
+                        holder.binding.equalizerview.stopBars();
+
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -243,7 +241,7 @@ public class LikeAudiosFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
-                GetMedia();
+
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -336,7 +334,7 @@ public class LikeAudiosFragment extends Fragment {
                         callTransFrag(pos, listModelList2);
                     }
 
-                    GetMedia();
+
                     notifyDataSetChanged();
                 }
             });
@@ -388,51 +386,6 @@ public class LikeAudiosFragment extends Fragment {
         }
     }
 
-    public void GetMedia() {
-        try {
-            class GetMedia extends AsyncTask<Void, Void, Void> {
-                int ps = 0;
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    try {
-                        startTime = getStartTime();
-                        myProgress = currentDuration;
-                        currentDuration = getStartTime();
-                        if (currentDuration == 0 && isCompleteStop) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                        } else if (currentDuration >= 1 && !isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                        } else if (currentDuration >= 1 && isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                        }
-
-                        if (currentDuration <= 555) {
-                            ps = 1;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    if (ps == 1) {
-
-                    }
-                    GetMedia();
-                    super.onPostExecute(aVoid);
-
-                }
-            }
-
-            GetMedia st = new GetMedia();
-            st.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Audio> listModelList) {
         try {
@@ -443,13 +396,7 @@ public class LikeAudiosFragment extends Fragment {
                 player.release();
                 player = null;
             }
-            if (isPrepare || isMediaStart || isPause) {
-                stopMedia();
-            }
-            isPause = false;
-            isMediaStart = false;
-            isPrepare = false;
-            isCompleteStop = false;
+
             Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()

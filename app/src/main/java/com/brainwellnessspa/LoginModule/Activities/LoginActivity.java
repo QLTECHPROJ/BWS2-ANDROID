@@ -39,13 +39,8 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.LoginModule.Activities.OtpActivity.comeLogin;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isStop;
-import static com.brainwellnessspa.Utility.MusicService.isrelese;
-import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
@@ -54,18 +49,6 @@ public class LoginActivity extends AppCompatActivity {
     Activity activity;
     Handler handler;
     private long mLastClickTime = 0;
-    private Runnable UpdateSongTime = new Runnable() {
-        @Override
-        public void run() {
-            if (mediaPlayer != null || isMediaStart) {
-                stopMedia();
-                releasePlayer();
-                if (isrelese) {
-                    handler.removeCallbacks(UpdateSongTime);
-                }
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         deleteCache(ctx);
-        if (isMediaStart) {
-            stopMedia();
-            releasePlayer();
-        }
-
-        if (mediaPlayer != null) {
-            handler.postDelayed(UpdateSongTime, 100);
-        }
+        callNewPlayerRelease();
         binding.edtNumber.addTextChangedListener(loginTextWatcher);
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
             binding.tvCountryCode.setText(R.string.code);
@@ -224,7 +200,6 @@ public class LoginActivity extends AppCompatActivity {
                                     i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                                     i.putExtra("Name", binding.tvCountry.getText().toString());
                                     i.putExtra("Code", binding.tvCountryCode.getText().toString());
-                                    handler.removeCallbacks(UpdateSongTime);
                                     startActivity(i);
                                     finish();
                                     BWSApplication.showToast(loginModel.getResponseMessage(), ctx);

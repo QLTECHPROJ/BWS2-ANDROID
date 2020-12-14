@@ -6,15 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +14,14 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity;
@@ -50,14 +49,9 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
-import static com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity.RefreshLikePlaylist;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.RefreshLikePlaylist;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class LikePlaylistsFragment extends Fragment {
     FragmentLikesBinding binding;
@@ -137,9 +131,72 @@ public class LikePlaylistsFragment extends Fragment {
         }
     }
 
+    private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Playlist.Audiolist> listModelList2) {
+        try {
+            miniPlayer = 1;
+            audioClick = true;
+
+            callNewPlayerRelease();
+
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(listModelList2);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void callRemoveLike(String id) {
+        try {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                Call<PlaylistLikeModel> listCall = APIClient.getClient().getPlaylistLike(id, UserID);
+                listCall.enqueue(new Callback<PlaylistLikeModel>() {
+                    @Override
+                    public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                PlaylistLikeModel model = response.body();
+                                prepareData();
+                                BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PlaylistLikeModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public class LikePlaylistsAdapter extends RecyclerView.Adapter<LikePlaylistsAdapter.MyViewHolder> {
-        private List<LikesHistoryModel.ResponseData.Playlist> modelList;
         Context ctx;
+        private List<LikesHistoryModel.ResponseData.Playlist> modelList;
 
         public LikePlaylistsAdapter(List<LikesHistoryModel.ResponseData.Playlist> modelList, Context ctx) {
             this.modelList = modelList;
@@ -256,79 +313,6 @@ public class LikePlaylistsFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Playlist.Audiolist> listModelList2) {
-        try {
-            miniPlayer = 1;
-            audioClick = true;
-            if(player!=null){
-                player.stop();
-                player.release();
-                player = null;
-            }
-            if (isPrepare || isMediaStart || isPause) {
-                stopMedia();
-            }
-            isPause = false;
-            isMediaStart = false;
-            isPrepare = false;
-            isCompleteStop = false;
-
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-
-            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(listModelList2);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-            editor.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void callRemoveLike(String id) {
-        try {
-            if (BWSApplication.isNetworkConnected(getActivity())) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                Call<PlaylistLikeModel> listCall = APIClient.getClient().getPlaylistLike(id, UserID);
-                listCall.enqueue(new Callback<PlaylistLikeModel>() {
-                    @Override
-                    public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
-                        try {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                PlaylistLikeModel model = response.body();
-                                prepareData();
-                                BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PlaylistLikeModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    }
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

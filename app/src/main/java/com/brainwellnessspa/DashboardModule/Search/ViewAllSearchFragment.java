@@ -53,12 +53,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class ViewAllSearchFragment extends Fragment {
@@ -84,7 +79,7 @@ public class ViewAllSearchFragment extends Fragment {
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
                         !AudioFlag.equalsIgnoreCase("SubPlayList") &&
                         !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (isMediaStart) {
+                    if (player!=null) {
                         if (data.equalsIgnoreCase("play")) {
                             adpater.notifyDataSetChanged();
                         } else {
@@ -193,10 +188,7 @@ public class ViewAllSearchFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if (isMediaStart) {
-                        stopMedia();
-                        releasePlayer();
-                    }
+                    callNewPlayerRelease();
                 }
 
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -212,10 +204,7 @@ public class ViewAllSearchFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if (isMediaStart) {
-                    stopMedia();
-                    releasePlayer();
-                }
+                callNewPlayerRelease();
             }
             SharedPreferences shareda = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shareda.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -292,10 +281,13 @@ public class ViewAllSearchFragment extends Fragment {
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(AudiolistModel.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause || !isMediaStart) {
+                    if (player!=null) {
+                        if (!player.getPlayWhenReady()) {
+                            holder.binding.equalizerview.stopBars();
+                        }else
+                            holder.binding.equalizerview.animateBars();
+                    }else
                         holder.binding.equalizerview.stopBars();
-                    } else
-                        holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -332,18 +324,7 @@ public class ViewAllSearchFragment extends Fragment {
                     try {
                         miniPlayer = 1;
                         audioClick = true;
-                        if(player!=null){
-                            player.stop();
-                            player.release();
-                            player = null;
-                        }
-                        if (isPrepare || isMediaStart || isPause) {
-                            MusicService.stopMedia();
-                        }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        isCompleteStop = false;
+                        callNewPlayerRelease();
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         Gson gson = new Gson();

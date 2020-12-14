@@ -66,11 +66,6 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
-import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 public class AudioDownloadsFragment extends Fragment {
@@ -91,7 +86,7 @@ public class AudioDownloadsFragment extends Fragment {
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                    if(isMediaStart) {
+                    if(player!=null) {
                         if (data.equalsIgnoreCase("play")) {
 //                    BWSApplication.showToast("Play", getActivity());
                             adapter.notifyDataSetChanged();
@@ -354,10 +349,14 @@ public class AudioDownloadsFragment extends Fragment {
             if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause || !isMediaStart) {
-                        holder.binding.equalizerview.stopBars();
+                    if (player!=null) {
+                        if(!player.getPlayWhenReady()){
+                            holder.binding.equalizerview.stopBars();
+                        }else{
+                            holder.binding.equalizerview.animateBars();
+                        }
                     } else
-                        holder.binding.equalizerview.animateBars();
+                        holder.binding.equalizerview.stopBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -460,13 +459,7 @@ public class AudioDownloadsFragment extends Fragment {
                     player.release();
                     player = null;
                 }
-                if (isPrepare || isMediaStart || isPause) {
-                    stopMedia();
-                }
-                isPause = false;
-                isMediaStart = false;
-                isPrepare = false;
-                isCompleteStop = false;
+
                 Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
