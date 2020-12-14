@@ -3,7 +3,7 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">https://www.google.com/</domain>
         <domain includeSubdomains="true">https://www.google.co.in/</domain>
-        <base-config cleartextTrafficPermitted="false">
+        <base-config cleartextTrafficPermitted="true">
             <trust-anchors>
             <certificates src="system"/>
             </trust-anchors>

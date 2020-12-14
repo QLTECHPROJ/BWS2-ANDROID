@@ -5,6 +5,8 @@ import android.app.AppOpsManager;
 import android.app.NotificationManager;
 import android.app.admin.DeviceAdminInfo;
 import android.app.admin.DevicePolicyManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,6 +22,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -33,6 +36,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.Services.ScreenReceiver;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
@@ -83,180 +87,24 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             }
         }catch (Exception e){
             e.printStackTrace();
-Android Media plyer stop playing after few min and not buffer that audio in online stream
-            I have an issue with Media player always stopping randomly after some few mins. then I put secondary buffer progress I have check my audio is not buffering after some time that's why it is not play after that buffering min.
-
-is there any solution to over come this issue? please help me for this as soon as possible.
-    if (mediaPlayer == null)
-                mediaPlayer = new MediaPlayer();
-                initMediaplyer();
-                if (mediaPlayer.isPlaying()) {
-                    Log.e("Playinggggg", "stoppppp");
-                    mediaPlayer.stop();
-                    isMediaStart = false;
-                    isPrepare = false;
-                    isPause = false;
-                }
-                mediaPlayer = new MediaPlayer();
-                initMediaplyer();
-                mediaPlayer.setDataSource(url);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mediaPlayer.setAudioAttributes(
-                            new AudioAttributes
-                                    .Builder()
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                                    .build());
-                }
-                mediaPlayer.prepareAsync();
-                isPause = false;
-                isPrepare = true;
-            } catch (IllegalStateException | IOException e) {
-                FileDescriptor fileDescriptor1 = null;
-                setMediaPlayer("0", fileDescriptor1);
-                e.printStackTrace();
-            }
-            if (!mediaPlayer.isPlaying()) {
-                mediaPlayer.setOnPreparedListener(mp -> {
-                    Log.e("Playinggggg", "Startinggg");
-                    mediaPlayer.start();
-                    isMediaStart = true;
-                    isprogressbar = false;
-                    setMediaPlaybackState(STATE_PLAYING);
-                    mediaPlayer.setOnBufferingUpdateListener((mediaPlayer, i) -> {
-                        binding.simpleSeekbar.setSecondaryProgress(i);
-                    });
-                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                        if(mediaPlayer.isPlaying()){
-                            callComplete();
-                        }
-                    });
-                    mediaPlayer.setOnErrorListener((mediaPlayer, i, i1) -> {
-                        switch (i) {
-                            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
-                                Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + i1);
-                                break;
-                            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                                Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED " + i1);
-                                break;
-                            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                                Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + i1);
-                                break;
-                            default:
-                                Log.d("MediaPlayer Error", "not conform " + i1);
-                                break;
-                        }
-
-                        return false;
-                    });
-                });
-            }
+        }*/
+        ComponentName componentName = new ComponentName(this, PlayerJobService.class);
+        JobInfo info = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            info = new JobInfo.Builder(123, componentName)
+                    .setPeriodic(15 * 60 * 1000)
+                    .build();
         }
-
-    if (isPause) {
-            binding.llPlay.setVisibility(View.VISIBLE);
-            binding.llPause.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
+        JobScheduler scheduler = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        int resultCode = scheduler.schedule(info);
+        if (resultCode == JobScheduler.RESULT_SUCCESS) {
+            Log.e("TAG", "Job scheduled");
         } else {
-            binding.llPause.setVisibility(View.VISIBLE);
-            binding.llPlay.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
-        }
-
-    private void initMediaplyer() {
-        try {
-
-            if (mediaSessionManager != null) return; //mediaSessionManager exists
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
-            }
-//        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-//        // Create a new MediaSession
-//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-            mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
-            //Get MediaSessions transport controls
-            transportControls = mediaSession.getController().getTransportControls();
-            //set MediaSession -> ready to receive media commands
-            mediaSession.setActive(true);
-            //indicate that the MediaSession handles transport control commands
-            // through its MediaSessionCompat.Callback.
-            mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-            //Set mediaSession's MetaData
-//        updateMetaData();
-
-            // Attach Callback to receive MediaSession updates
-            mMediaControllerCompatCallback = new MediaControllerCompat.Callback() {
-
-                @Override
-                public void onPlaybackStateChanged(PlaybackStateCompat state) {
-                    super.onPlaybackStateChanged(state);
-                    if( state == null ) {
-                        return;
-                    }
-
-                    switch( state.getState() ) {
-                        case PlaybackStateCompat.STATE_PLAYING: {
-                            mCurrentState = STATE_PLAYING;
-                            break;
-                        }
-                        case PlaybackStateCompat.STATE_PAUSED: {
-                            mCurrentState = STATE_PAUSED;
-                            break;
-                        }
-                    }
-                }
-            };
-            mediaSession.setCallback(new MediaSessionCompat.Callback() {
-                // Implement callbacks
-                @Override
-                public void onPlay() {
-                    super.onPlay();
-                    callPlay();
-                }
-
-                @Override
-                public void onPause() {
-                    super.onPause();
-                    callPause();
-                }
-
-                @Override
-                public void onSkipToNext() {
-                    super.onSkipToNext();
-                    if (!url.equalsIgnoreCase("")) {
-                        callNext();
-                    }
-                }
-
-                @Override
-                public void onSkipToPrevious() {
-                    super.onSkipToPrevious();
-
-                    if (!url.equalsIgnoreCase("")) {
-                        callPrevious();
-                    }
-                }
-
-            @Override
-            public void onStop() {
-                super.onStop();
-            }
-
-//            @Override
-//            public void onSeekTo(long position) {
-//                super.onSeekTo(position);
-//            }
-            });
-        } catch (Exception e) {
-            Log.e("playwell init media err",e.getMessage());
-            e.printStackTrace();
+            Log.e("TAG", "Job scheduling failed");
         }
     }
-        }*/
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
@@ -378,8 +226,14 @@ is there any solution to over come this issue? please help me for this as soon a
         super.onDestroy();
         deleteCache(DashboardActivity.this);
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
+
+
+        JobScheduler scheduler = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        scheduler.cancel(123);
+        Log.d("TAG", "Job cancelled");
+    }
     }
 
     @Override

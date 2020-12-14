@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Services;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -9,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.view.Surface;
 import android.view.SurfaceControl;
@@ -20,10 +23,12 @@ import androidx.core.app.NotificationCompat;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Utility.MusicService;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.FileDataSource;
@@ -40,6 +45,7 @@ public class GlobleInItExoPlayer extends Service {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static Bitmap myBitmap = null;
+    Notification notification;
     public static PlayerNotificationManager playerNotificationManager;
 
     public static void GlobleInItPlayer(Context ctx, int position, List<DownloadAudioDetails> downloadAudioDetailsList,
@@ -109,6 +115,11 @@ public class GlobleInItExoPlayer extends Service {
        if (miniPlayer == 1) {
            player.setPlayWhenReady(true);
        }
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(C.USAGE_MEDIA)
+                .build();
+
+        player.setAudioAttributes(audioAttributes, /* handleAudioFocus= */ true);
         InitNotificationAudioPLayer(ctx,mainPlayModelList);
    }
 
@@ -125,6 +136,12 @@ public class GlobleInItExoPlayer extends Service {
        player.prepare();
        player.setWakeMode(2);
        InitNotificationAudioPLayer(ctx,mainPlayModelList);
+
+       AudioAttributes audioAttributes = new AudioAttributes.Builder()
+               .setUsage(C.USAGE_MEDIA)
+               .build();
+
+       player.setAudioAttributes(audioAttributes, /* handleAudioFocus= */ true);
        if (miniPlayer == 1) {
            player.setPlayWhenReady(true);
        }
@@ -208,11 +225,19 @@ public class GlobleInItExoPlayer extends Service {
         st.execute();
         return myBitmap;
     }
-
+    public class LocalBinder extends Binder {
+        public GlobleInItExoPlayer getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return GlobleInItExoPlayer.this;
+        }
+    }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-//        startForeground(1,playerNotificationManager, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        new LocalBinder();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1,notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        }
         return null;
     }
 }
