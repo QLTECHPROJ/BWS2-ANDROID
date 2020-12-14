@@ -46,6 +46,7 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.GlobleInItExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -236,6 +237,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        if(player!=null){
+            player.setWakeMode(2);
+        }
         super.onPause();
 //        Assertions.checkNotNull(binding.playerControlView).setPlayer(null);
     }
@@ -485,7 +489,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
         isDisclaimer = 0;
          if(audioClick) {
             GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
+             try {
+                 Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
+                 startService(playbackServiceIntent);
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                     startForegroundService(playbackServiceIntent);
+                 }
+             }catch (Exception e) {
+                 e.printStackTrace();
+             }
         }if(player!=null) {
+             player.setWakeMode(2);
             player.addListener(new ExoPlayer.EventListener() {
 
                 @Override
@@ -775,7 +789,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
         exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
-        exoBinding.llBackWordSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() - 30000));
+        exoBinding.llBackWordSec.setOnClickListener(view -> {
+            if(player.getCurrentPosition()>0)
+            player.seekTo(player.getCurrentPosition() - 30000);
+        }
+        );
         binding.llLike.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {

@@ -8,6 +8,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +52,7 @@ import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.NotificationActionService;
+import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
@@ -131,6 +134,23 @@ public class BWSApplication extends Application {
             serviceBound = false;
         }
     };*/
+public static void scheduleJob(Context context) {
+    ComponentName serviceComponent = new ComponentName(context, PlayerJobService.class);
+    JobInfo.Builder builder = null;
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        builder = new JobInfo.Builder(0, serviceComponent);
+    builder.setMinimumLatency(1 * 1000); // wait at least
+    builder.setOverrideDeadline(3 * 1000); // maximum delay
+    //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
+    //builder.setRequiresDeviceIdle(true); // device should be idle
+    //builder.setRequiresCharging(false); // we don't care if the device is charging or not
+        JobScheduler jobScheduler = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            jobScheduler = context.getSystemService(JobScheduler.class);
+        }
+        jobScheduler.schedule(builder.build());
+}
+}
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();

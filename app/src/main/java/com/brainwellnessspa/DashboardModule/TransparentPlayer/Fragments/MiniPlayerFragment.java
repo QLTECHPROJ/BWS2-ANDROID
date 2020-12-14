@@ -260,6 +260,7 @@ public class MiniPlayerFragment extends Fragment {
         if(audioClick) {
             GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
         }if(player!=null){
+                player.setWakeMode(2);
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
                 public void onPositionDiscontinuity(int reason) {

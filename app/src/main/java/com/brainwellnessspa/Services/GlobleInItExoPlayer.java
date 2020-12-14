@@ -1,11 +1,15 @@
 package com.brainwellnessspa.Services;
 
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.view.Surface;
 import android.view.SurfaceControl;
 import android.view.View;
@@ -32,7 +36,7 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
-public class GlobleInItExoPlayer {
+public class GlobleInItExoPlayer extends Service {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static Bitmap myBitmap = null;
@@ -177,6 +181,7 @@ public class GlobleInItExoPlayer {
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
     }
+
     public static Bitmap getMediaBitmap(Context ctx,String songImg) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
@@ -204,4 +209,10 @@ public class GlobleInItExoPlayer {
         return myBitmap;
     }
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+//        startForeground(1,playerNotificationManager, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        return null;
+    }
 }
