@@ -110,7 +110,8 @@ public class GlobleInItExoPlayer extends Service {
            }
        }
        player.prepare();
-       player.setWakeMode(2);
+       player.setWakeMode(C.WAKE_MODE_NETWORK);
+        player.setHandleWakeLock(true);
        player.seekTo(position, C.CONTENT_TYPE_MUSIC);
        if (miniPlayer == 1) {
            player.setPlayWhenReady(true);
@@ -134,7 +135,8 @@ public class GlobleInItExoPlayer extends Service {
        player.setMediaItem(mediaItem1);
 //       player.setPlayWhenReady(true);
        player.prepare();
-       player.setWakeMode(2);
+       player.setWakeMode(C.WAKE_MODE_NETWORK);
+       player.setHandleWakeLock(true);
        InitNotificationAudioPLayer(ctx,mainPlayModelList);
 
        AudioAttributes audioAttributes = new AudioAttributes.Builder()

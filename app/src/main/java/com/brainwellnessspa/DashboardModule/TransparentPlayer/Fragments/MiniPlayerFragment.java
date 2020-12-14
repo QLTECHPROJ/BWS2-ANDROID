@@ -45,6 +45,7 @@ import com.brainwellnessspa.databinding.FragmentMiniExoCustomBinding;
 import com.brainwellnessspa.databinding.FragmentMiniPlayerBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -142,7 +143,7 @@ public class MiniPlayerFragment extends Fragment {
             if (miniPlayer == 0) {
                 miniPlayer = 1;
                 audioClick = true;
-            }else {
+            } else {
                 audioClick = false;
             }
 //            if (!isPause && binding.progressBar.getVisibility() == View.GONE) {
@@ -162,9 +163,14 @@ public class MiniPlayerFragment extends Fragment {
             String json = gson.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
             String json1 = gson.toJson(addToQueueModelList);
-            if (queuePlay) {
-                editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+            try {
+                if (queuePlay) {
+                    editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
 //            handler12.removeCallbacks(UpdateSongTime12);
@@ -261,10 +267,12 @@ public class MiniPlayerFragment extends Fragment {
 //        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         isDisclaimer = 0;
         callAllDisable(true);
-        if(audioClick) {
+        if (audioClick) {
             GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
-        }if(player!=null){
-                player.setWakeMode(2);
+        }
+        if (player != null) {
+            player.setWakeMode(C.WAKE_MODE_NETWORK);
+            player.setHandleWakeLock(true);
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
                 public void onPositionDiscontinuity(int reason) {
@@ -417,13 +425,13 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.progressBar.setVisibility(View.GONE);
             exoBinding.llPlay.setVisibility(View.VISIBLE);
             exoBinding.llPause.setVisibility(View.GONE);
-        }else{
-            if(player!=null){
-                if(player.getPlayWhenReady()){
+        } else {
+            if (player != null) {
+                if (player.getPlayWhenReady()) {
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
-                }else if(!player.getPlayWhenReady()){
+                } else if (!player.getPlayWhenReady()) {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -438,10 +446,10 @@ public class MiniPlayerFragment extends Fragment {
 
     private void initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
-        if(audioClick) {
+        if (audioClick) {
             GlobleInItDisclaimer(ctx, mainPlayModelList);
         }
-        if(player!=null) {
+        if (player != null) {
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
                 public void onPlaybackStateChanged(int state) {
@@ -485,12 +493,12 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.progressBar.setVisibility(View.GONE);
         });
         exoBinding.llPlay.setOnClickListener(view -> {
-            if(player!=null) {
+            if (player != null) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
                 exoBinding.progressBar.setVisibility(View.GONE);
                 player.setPlayWhenReady(true);
-            }else{
+            } else {
                 audioClick = true;
                 miniPlayer = 1;
                 GetAllMedia();
@@ -507,13 +515,13 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.progressBar.setVisibility(View.GONE);
             exoBinding.llPlay.setVisibility(View.VISIBLE);
             exoBinding.llPause.setVisibility(View.GONE);
-        }else{
-            if(player!=null){
-                if(player.isPlaying()){
+        } else {
+            if (player != null) {
+                if (player.isPlaying()) {
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
-                }else if(!player.isPlaying()){
+                } else if (!player.isPlaying()) {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -538,13 +546,13 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.progressBar.setVisibility(View.GONE);
         });
-        exoBinding.llPlay.setOnClickListener(view ->{
-            if(player!=null) {
+        exoBinding.llPlay.setOnClickListener(view -> {
+            if (player != null) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
                 exoBinding.progressBar.setVisibility(View.GONE);
                 player.setPlayWhenReady(true);
-            }else{
+            } else {
                 audioClick = true;
                 miniPlayer = 1;
                 GetAllMedia();
@@ -643,17 +651,22 @@ public class MiniPlayerFragment extends Fragment {
         if (mainPlayModelList.get(ps).getPlaylistID() == null) {
             mainPlayModelList.get(ps).setPlaylistID("");
         }
-        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(ps).getImageFile());
+        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(ps).getImageFile());
 
-        if (url.equalsIgnoreCase("")) {
-            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                    .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
-        } else {
-            Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
-                    .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
+        try {
+            if (url.equalsIgnoreCase("")) {
+                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                        .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
+            } else {
+                Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
+                        .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         exoBinding.tvTitle.setText(mainPlayModelList.get(ps).getName());
         exoBinding.tvSubTitle.setText(mainPlayModelList.get(ps).getAudioDirection());
         if (!url.equalsIgnoreCase("")) {
@@ -1630,7 +1643,7 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void getPrepareShowData() {
-        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(position).getImageFile());
+        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();

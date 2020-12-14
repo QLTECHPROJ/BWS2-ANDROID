@@ -243,8 +243,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        if(player!=null){
-            player.setWakeMode(2);
+        if (player != null) {
+            player.setWakeMode(C.WAKE_MODE_NETWORK);
+            player.setHandleWakeLock(true);
         }
         super.onPause();
 //        Assertions.checkNotNull(binding.playerControlView).setPlayer(null);
@@ -493,19 +494,21 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void initializePlayer() {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         isDisclaimer = 0;
-         if(audioClick) {
+        if (audioClick) {
             GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
-             try {
-                 Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
-                 startService(playbackServiceIntent);
-                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                     startForegroundService(playbackServiceIntent);
-                 }
-             }catch (Exception e) {
-                 e.printStackTrace();
-             }
-        }if(player!=null) {
-             player.setWakeMode(2);
+            try {
+                Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
+                startService(playbackServiceIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(playbackServiceIntent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (player != null) {
+            player.setWakeMode(C.WAKE_MODE_NETWORK);
+            player.setHandleWakeLock(true);
             player.addListener(new ExoPlayer.EventListener() {
 
                 @Override
@@ -581,12 +584,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
             });
             callRepeatShuffle();
-            if(player.getPlayWhenReady()){
+            if (player.getPlayWhenReady()) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
                 exoBinding.llProgressBar.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.GONE);
-            }else if(!player.getPlayWhenReady()){
+            } else if (!player.getPlayWhenReady()) {
                 exoBinding.llPlay.setVisibility(View.VISIBLE);
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.llProgressBar.setVisibility(View.GONE);
@@ -687,15 +690,16 @@ public class AudioPlayerActivity extends AppCompatActivity {
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setPlayWhenReady(true);
         player.setWakeMode(2);*/
-            epAllClicks();
+        epAllClicks();
     }
 
     private void initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-        if(audioClick) {
+        if (audioClick) {
             GlobleInItDisclaimer(ctx, mainPlayModelList);
         }
-        if(player!=null) {
+
+        if (player != null) {
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
                 public void onPlaybackStateChanged(int state) {
@@ -742,13 +746,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
                 }
             });
-            if(player!=null){
-                if(player.isPlaying()){
+            if (player != null) {
+                if (player.isPlaying()) {
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
-                }else if(!player.isPlaying()){
+                } else if (!player.isPlaying()) {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.llProgressBar.setVisibility(View.GONE);
@@ -767,13 +771,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.progressBar.setVisibility(View.GONE);
         });
         exoBinding.llPlay.setOnClickListener(view -> {
-            if(player!=null) {
+            if (player != null) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
                 exoBinding.llProgressBar.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.GONE);
                 player.setPlayWhenReady(true);
-            }else{
+            } else {
                 audioClick = true;
                 miniPlayer = 1;
                 initializePlayerDisclaimer();
@@ -801,9 +805,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
         exoBinding.llBackWordSec.setOnClickListener(view -> {
-            if(player.getCurrentPosition()>0)
-            player.seekTo(player.getCurrentPosition() - 30000);
-        }
+                    if (player.getCurrentPosition() > 0)
+                        player.seekTo(player.getCurrentPosition() - 30000);
+                }
         );
         binding.llLike.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
