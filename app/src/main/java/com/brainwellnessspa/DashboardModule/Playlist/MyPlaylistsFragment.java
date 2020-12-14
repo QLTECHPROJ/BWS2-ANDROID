@@ -560,6 +560,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public void onResume() {
         super.onResume();
         addDisclaimer();
+        if (ComeFindAudio == 1) {
+            binding.searchView.clearFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+            ComeFindAudio = 0;
+        } else if (ComeFindAudio == 2) {
+            binding.searchView.requestFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+            ComeFindAudio = 0;
+        }
 
         if (UserCreated) {
             Isclose = true;
@@ -578,49 +589,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 Isclose = true;
                 Refresback();
             }
-        }
-
-
-       /* searchEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    binding.searchView.clearFocus();
-                    BWSApplication.showToast("Sucess", getActivity());
-                }
-                return false;
-            }
-        });*/
-
-       /* view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (binding.searchView != null) {
-                        binding.searchView.setQuery("", false);
-                        binding.searchView.clearFocus();
-                        binding.searchView.onActionViewCollapsed();
-                    }
-                    callBack();
-                    BWSApplication.showToast("Completed", getActivity());
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });*/
-        if (ComeFindAudio == 1) {
-            binding.searchView.clearFocus();
-            searchEditText.setText("");
-            binding.searchView.setQuery("", false);
-            ComeFindAudio = 0;
-        } else if (ComeFindAudio == 2) {
-            binding.searchView.requestFocus();
-            searchEditText.setText("");
-            binding.searchView.setQuery("", false);
-            ComeFindAudio = 0;
         }
 
         if (deleteFrg == 1) {
@@ -1023,7 +991,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         }
     }
-
 
     private void callAddTransFrag() {
         Fragment fragment = new MiniPlayerFragment();

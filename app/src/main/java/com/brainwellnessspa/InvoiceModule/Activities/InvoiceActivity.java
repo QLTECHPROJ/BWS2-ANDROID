@@ -137,6 +137,7 @@ public class InvoiceActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (ComeFrom.equalsIgnoreCase("1")) {
+            invoiceToDashboard = 1;
             Intent i = new Intent(context, DashboardActivity.class);
             startActivity(i);
             finish();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llLayout"
         android:layout_width="match_parent"
@@ -9,39 +9,13 @@
         android:clickable="true"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/flProgress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/llPlayearMain"
-            android:layout_marginBottom="-11dp"
-            android:layout_marginLeft="-4dp"
-            android:layout_marginRight="-4dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
 
-            <!--<SeekBar
-                android:id="@+id/simpleSeekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:gravity="center|center_vertical|bottom"
-                android:progressDrawable="@drawable/seek_bar"
-                android:textColor="@color/white"
-                android:thumb="@null" />-->
-            <com.google.android.exoplayer2.ui.DefaultTimeBar
-                android:id="@+id/exoProgress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:buffered_color="@color/buffer_seek_bar_background"
-                app:played_color="@color/blue"
-                app:unplayed_color="@color/seek_bar_background" />
-        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/llPlayearMain"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_68sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:background="#DDDDDD"
             android:clickable="true"
             android:orientation="vertical">
@@ -167,6 +141,36 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/flProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-11dp"
+            android:layout_marginLeft="-4dp"
+            android:background="#DDDDDD"
+            android:layout_marginRight="-4dp"
+            android:layout_above="@id/llPlayearMain"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <!--<SeekBar
+                android:id="@+id/simpleSeekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:gravity="center|center_vertical|bottom"
+                android:progressDrawable="@drawable/seek_bar"
+                android:textColor="@color/white"
+                android:thumb="@null" />-->
+            <com.google.android.exoplayer2.ui.DefaultTimeBar
+                android:id="@+id/exoProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:buffered_color="@color/buffer_seek_bar_background"
+                app:played_color="@color/blue"
+                app:unplayed_color="@color/seek_bar_background" />
+        </FrameLayout>
+    </RelativeLayout>
 
 </layout>
