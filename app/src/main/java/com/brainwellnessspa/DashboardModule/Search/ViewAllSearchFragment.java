@@ -264,6 +264,7 @@ public class ViewAllSearchFragment extends Fragment {
             holder.binding.tvTitle.setText(AudiolistModel.get(position).getName());
             holder.binding.tvTime.setText(AudiolistModel.get(position).getAudioDuration());
             holder.binding.pbProgress.setVisibility(View.GONE);
+            holder.binding.equalizerview.setVisibility(View.GONE);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());

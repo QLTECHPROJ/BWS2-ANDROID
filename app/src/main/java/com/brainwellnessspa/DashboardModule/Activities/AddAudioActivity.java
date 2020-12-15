@@ -357,7 +357,7 @@ public class AddAudioActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(modelList.get(position).getName());
-
+            holder.binding.equalizerview.setVisibility(View.GONE);
             if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                 if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
@@ -747,6 +747,7 @@ public class AddAudioActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getName());
             holder.binding.tvTime.setText(listModel.get(position).getAudioDuration());
+            holder.binding.equalizerview.setVisibility(View.GONE);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
