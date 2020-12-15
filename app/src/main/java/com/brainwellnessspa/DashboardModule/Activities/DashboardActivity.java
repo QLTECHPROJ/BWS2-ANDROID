@@ -36,7 +36,7 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 
-public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener, SensorEventListener {
+public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
     public static int miniPlayer = 0;
     public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
@@ -243,15 +243,5 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -12,15 +11,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.SurfaceControl;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -52,14 +46,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.TimeBar;
-import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -79,8 +70,8 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.getMediaBitmap;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.myBitmap;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -98,21 +89,21 @@ public class MiniPlayerFragment extends Fragment {
     String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
     int position, listSize;
     Boolean queuePlay, audioPlay;
-    private long mLastClickTime = 0;
     LocalBroadcastManager localBroadcastManager;
     Intent localIntent;
-
-    @Override
-    public void onPause() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        super.onPause();
-    }
+    private long mLastClickTime = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
         }
     };
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        super.onPause();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,9 +121,9 @@ public class MiniPlayerFragment extends Fragment {
 
         localIntent = new Intent("play_pause_Action");
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-        if(audioClick) {
+        if (audioClick) {
             GetAllMedia();
-        }else{
+        } else {
             MakeArray2();
         }
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -291,7 +282,7 @@ public class MiniPlayerFragment extends Fragment {
             globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
         }
         if (player != null) {
-            player.setWakeMode(C.WAKE_MODE_NETWORK);
+            player.setWakeMode(C.WAKE_MODE_LOCAL);
             player.setHandleWakeLock(true);
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
@@ -329,7 +320,8 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
                     } else if (!isPlaying) {
-                        exoBinding.llPlay.setVisibility(View.VISIBLE);
+                        if (player.getPauseAtEndOfMediaItems())
+                            exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
                     }
@@ -368,7 +360,7 @@ public class MiniPlayerFragment extends Fragment {
                     }
                 }
             });
-            exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
+           /* exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
                 @Override
                 public void onScrubStart(TimeBar timeBar, long position) {
                     exoBinding.exoProgress.setPosition(position);
@@ -384,7 +376,7 @@ public class MiniPlayerFragment extends Fragment {
                     player.seekTo(position);
                     exoBinding.exoProgress.setPosition(position);
                 }
-            });
+            });*/
             callRepeatShuffle();
         }
        /* if (downloadAudioDetailsList.size() != 0) {
@@ -482,6 +474,7 @@ public class MiniPlayerFragment extends Fragment {
                 public void onPlaybackStateChanged(int state) {
                     if (state == ExoPlayer.STATE_ENDED) {
                         //player back ended
+                        audioClick = true;
                         removeArray();
                     }
                     if (state == ExoPlayer.STATE_READY) {
@@ -763,6 +756,9 @@ public class MiniPlayerFragment extends Fragment {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         MainPlayModel mainPlayModel;
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
@@ -834,7 +830,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
             Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
             }.getType();
@@ -862,7 +858,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
             Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
             }.getType();
@@ -890,7 +886,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
@@ -918,7 +914,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
@@ -946,7 +942,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -974,7 +970,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -1002,7 +998,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -1030,7 +1026,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -1062,7 +1058,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         }
         getPrepareShowData();
     }
@@ -1072,6 +1068,9 @@ public class MiniPlayerFragment extends Fragment {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         MainPlayModel mainPlayModel;
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
@@ -1117,7 +1116,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
 
         } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
@@ -1145,7 +1144,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
             Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
             }.getType();
@@ -1173,7 +1172,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
             Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
             }.getType();
@@ -1201,7 +1200,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
@@ -1229,7 +1228,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
@@ -1257,7 +1256,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -1285,7 +1284,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
@@ -1313,7 +1312,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -1341,7 +1340,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -1373,7 +1372,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-            
+
         }
         getPrepareShowData();
     }
@@ -1710,6 +1709,10 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.exoProgress.setPosition(position);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
         });
-        playerControlView.show();
+        playerControlView.setFocusable(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            playerControlView.setFocusedByDefault(true);
+        }
+          playerControlView.show();
     }
 }

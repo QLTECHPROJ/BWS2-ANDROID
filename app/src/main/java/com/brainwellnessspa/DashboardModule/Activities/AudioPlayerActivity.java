@@ -127,9 +127,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
-        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
-        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         binding.llBack.setOnClickListener(view -> callBack());
 
         binding.llMore.setOnClickListener(view -> {
@@ -233,7 +230,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         if (player != null) {
-            player.setWakeMode(C.WAKE_MODE_NETWORK);
+            player.setWakeMode(C.WAKE_MODE_LOCAL);
             player.setHandleWakeLock(true);
         }
         super.onPause();
@@ -497,7 +494,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }
         if (player != null) {
-            player.setWakeMode(C.WAKE_MODE_NETWORK);
+            player.setWakeMode(C.WAKE_MODE_LOCAL);
             player.setHandleWakeLock(true);
             player.addListener(new ExoPlayer.EventListener() {
 
@@ -521,16 +518,16 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    }else if(player.isLoading()){
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     } else if (!isPlaying) {
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                    }else{
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
@@ -701,6 +698,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 public void onPlaybackStateChanged(int state) {
                     if (state == ExoPlayer.STATE_ENDED) {
                         //player back ended
+                        audioClick = true;
                         removeArray();
                     }
                     if (state == ExoPlayer.STATE_READY) {
@@ -861,7 +859,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
-            if (IsShuffle.equalsIgnoreCase("")) {
+           /* if (IsShuffle.equalsIgnoreCase("")) {
                 if (listSize == 1) {
                     binding.llShuffle.setClickable(false);
                     binding.llShuffle.setEnabled(false);
@@ -884,7 +882,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
                 player.setShuffleModeEnabled(true);
             }
-            if (IsRepeat.equalsIgnoreCase("")) {
+*/            if (IsRepeat.equalsIgnoreCase("")) {
                 if (queuePlay) {
                     binding.llRepeat.setEnabled(false);
                     binding.llRepeat.setClickable(false);
@@ -1394,6 +1392,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        simpleSeekbar.setMax(100);
         url = mainPlayModelList.get(ps).getAudioFile();
         id = mainPlayModelList.get(ps).getID();
+        name = mainPlayModelList.get(ps).getName();
         if (url.equalsIgnoreCase("") || url.isEmpty()) {
             isDisclaimer = 1;
             binding.tvNowPlaying.setText("");
@@ -1485,6 +1484,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 , R.layout.audio_player_custom_layout, binding.playerControlView, false);
         binding.playerControlView.addView(exoBinding.getRoot());
 
+        SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 //        showTooltiop();
         Gson gson = new Gson();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -1800,6 +1802,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 , R.layout.audio_player_custom_layout, binding.playerControlView, false);
         binding.playerControlView.addView(exoBinding.getRoot());
 
+        SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 //        showTooltiop();
         Gson gson = new Gson();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -2444,6 +2449,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
                     TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
         });
+        playerControlView.setFocusable(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            playerControlView.setFocusedByDefault(true);
+        }
         playerControlView.show();
 //        InitNotificationAudioPLayer();
     }

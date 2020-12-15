@@ -20,9 +20,10 @@ public class PlayerJobService extends JobService {
         getApplicationContext().startService(service);
         try {
             Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
-            startService(playbackServiceIntent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(playbackServiceIntent);
+            }else{
+                startService(playbackServiceIntent);
             }
 //            bindService(playbackServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
         }catch (Exception e){
