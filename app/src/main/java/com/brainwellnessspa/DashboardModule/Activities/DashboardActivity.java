@@ -106,9 +106,10 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             }
         }*/
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
-        wakeLock.acquire();
+        wakeLock.acquire(600*60*1000L /*600 minutes*/);
+        BWSApplication.turnOffDozeMode(DashboardActivity.this);
 //        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 //        filter.addAction(Intent.ACTION_SCREEN_OFF);
 //        BroadcastReceiver mReceiver = new ScreenReceiver();

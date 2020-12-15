@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.databinding.DataBindingUtil;
@@ -282,8 +283,11 @@ public class MiniPlayerFragment extends Fragment {
             globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
         }
         if (player != null) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             player.setWakeMode(C.WAKE_MODE_LOCAL);
             player.setHandleWakeLock(true);
+            exoBinding.exoProgress.setClickable(false);
+            exoBinding.exoProgress.setEnabled(false);
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
                 public void onPositionDiscontinuity(int reason) {

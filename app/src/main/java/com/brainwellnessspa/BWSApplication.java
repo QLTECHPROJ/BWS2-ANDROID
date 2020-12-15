@@ -21,6 +21,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -77,13 +78,17 @@ import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static java.sql.DriverManager.println;
 
 public class BWSApplication extends Application {
-    private static Context mContext;
-    private static BWSApplication BWSApplication;
-    private static List<DownloadAudioDetails> downloadAudioDetailsList;
+    public static final String CHANNEL_ID = "channel1";
+    public static final String ACTION_PREVIUOS = "actionprevious";
+    public static final String ACTION_PLAY = "actionplay";
+    public static final String ACTION_NEXT = "actionnext";
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
+        }
+    };
     private static final int NOTIFICATION_ID = 101;
-    private static Bitmap myBitmap;
-    private static Service service;
-    private static Bitmap mCurrTrackCover;
     public static MediaSessionCompat mMediaSession = null;
     public static PendingIntent play_pauseAction = null;
     public static boolean usesChronometer = false;
@@ -92,48 +97,37 @@ public class BWSApplication extends Application {
     public static MediaSessionManager mediaSessionManager;
     public static MediaSessionCompat mediaSession;
     public static MediaControllerCompat.TransportControls transportControls;
-    private static Track track;
-    public static final String CHANNEL_ID = "channel1";
-    public static final String ACTION_PREVIUOS = "actionprevious";
-    public static final String ACTION_PLAY = "actionplay";
-    public static final String ACTION_NEXT = "actionnext";
     public static Notification notification;
     public static NotificationManager notificationManager;
+    private static Context mContext;
+    private static BWSApplication BWSApplication;
+    private static List<DownloadAudioDetails> downloadAudioDetailsList;
+    private static Bitmap myBitmap;
+    private static Service service;
+    private static Bitmap mCurrTrackCover;
+    private static Track track;
 
     public static Context getContext() {
         return mContext;
     }
-/*    public static ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
-            player = binder.getService();
-            serviceBound = true;
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            serviceBound = false;
+    public static void scheduleJob(Context context) {
+        ComponentName serviceComponent = new ComponentName(context, PlayerJobService.class);
+        JobInfo.Builder builder = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            builder = new JobInfo.Builder(0, serviceComponent);
+            builder.setMinimumLatency(1 * 1000); // wait at least
+            builder.setOverrideDeadline(3 * 1000); // maximum delay
+            //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
+            //builder.setRequiresDeviceIdle(true); // device should be idle
+            //builder.setRequiresCharging(false); // we don't care if the device is charging or not
+            JobScheduler jobScheduler = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                jobScheduler = context.getSystemService(JobScheduler.class);
+            }
+            jobScheduler.schedule(builder.build());
         }
-    };*/
-public static void scheduleJob(Context context) {
-    ComponentName serviceComponent = new ComponentName(context, PlayerJobService.class);
-    JobInfo.Builder builder = null;
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-        builder = new JobInfo.Builder(0, serviceComponent);
-    builder.setMinimumLatency(1 * 1000); // wait at least
-    builder.setOverrideDeadline(3 * 1000); // maximum delay
-    //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
-    //builder.setRequiresDeviceIdle(true); // device should be idle
-    //builder.setRequiresCharging(false); // we don't care if the device is charging or not
-        JobScheduler jobScheduler = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            jobScheduler = context.getSystemService(JobScheduler.class);
-        }
-        jobScheduler.schedule(builder.build());
-}
-}
+    }
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -152,6 +146,7 @@ public static void scheduleJob(Context context) {
 //        //Log.e("displayMetrics.density...........", "" + context.getClass().getSimpleName()+","+displayMetrics.density);
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
+
     public static void addToSegment(String TagName, Properties properties, String methodName) {
         if (methodName.equalsIgnoreCase("track")) {
             analytics.track(TagName, properties);
@@ -159,12 +154,6 @@ public static void scheduleJob(Context context) {
             analytics.screen(TagName, properties);
         }
     }
-    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
-        }
-    };
 
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
         try {
@@ -353,6 +342,10 @@ public static void scheduleJob(Context context) {
     private static String getBytesToMBString(long bytes) {
         return String.format(Locale.ENGLISH, "%.2fMb", bytes / (1024.00 * 1024.00));
     }
+
+    public static synchronized BWSApplication getInstance() {
+        return BWSApplication;
+    }
 /*    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -379,10 +372,6 @@ public static void scheduleJob(Context context) {
         st.execute();
         return downloadAudioDetailsList;
     }*/
-
-    public static synchronized BWSApplication getInstance() {
-        return BWSApplication;
-    }
 
     public static void hideProgressBar(ProgressBar progressBar, FrameLayout progressBarHolder, Activity ctx) {
         try {
@@ -416,13 +405,6 @@ public static void scheduleJob(Context context) {
             isValid = true;
         }
         return isValid;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mContext = this;
-        BWSApplication = this;
     }
 
     public static boolean isNetworkConnected(Context context) {
@@ -499,6 +481,42 @@ public static void scheduleJob(Context context) {
             e.printStackTrace();
         }
         return cipher;
+    }
+
+    /*    public static ServiceConnection serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                // We've bound to LocalService, cast the IBinder and get LocalService instance
+                MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
+                player = binder.getService();
+                serviceBound = true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                serviceBound = false;
+            }
+        };*/
+    public static void turnOffDozeMode(Context context) {  //you can use with or without passing context
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = context.getPackageName();
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            if (pm.isIgnoringBatteryOptimizations(packageName)) // if you want to desable doze mode for this package
+                intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+            else { // if you want to enable doze mode
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+            }
+            context.startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = this;
+        BWSApplication = this;
     }
 
 

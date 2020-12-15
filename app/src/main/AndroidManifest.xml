@@ -281,8 +281,14 @@
         <service
             android:name=".Services.PlayerJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":externalProcess"
             android:exported="true"/>
-      <!--  <service
+        <service
+            android:name=".Services.GlobleInItExoPlayer"
+            android:process=":externalProcess"
+            android:exported="true"/>
+
+      <!--  <service            android:foregroundServiceType="mediaPlayback"
             android:name=".Utility.MusicService"
             android:enabled="true"
             android:exported="true"

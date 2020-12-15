@@ -149,8 +149,6 @@ public class GlobleInItExoPlayer extends Service {
         player.setHandleWakeLock(true);
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setForegroundMode(true);
-        player.setPauseAtEndOfMediaItems(true);
-        player.setDeviceMuted(false);
 
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
@@ -194,8 +192,6 @@ public class GlobleInItExoPlayer extends Service {
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);
         player.setForegroundMode(true);
-        player.setPauseAtEndOfMediaItems(true);
-        player.setDeviceMuted(false);
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
                 .build();
