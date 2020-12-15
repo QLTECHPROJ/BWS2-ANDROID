@@ -209,12 +209,12 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
 
 
-        JobScheduler scheduler = null;
+/*        JobScheduler scheduler = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             scheduler.cancel(123);
             Log.d("TAG", "Job cancelled");
-        }
+        }*/
     }
 
   /*  @Override

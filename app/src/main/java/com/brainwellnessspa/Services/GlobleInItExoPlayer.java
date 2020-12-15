@@ -54,6 +54,13 @@ public class GlobleInItExoPlayer extends Service {
 
     public static void callNewPlayerRelease() {
         if (player != null) {
+            /*JobScheduler scheduler = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                scheduler = (JobScheduler) ctx.getSystemService(JOB_SCHEDULER_SERVICE);
+                scheduler.cancel(123);
+                Log.d("TAG", "Job cancelled");
+            }*/
+
             player.stop();
             player.release();
             player = null;
@@ -157,7 +164,18 @@ public class GlobleInItExoPlayer extends Service {
         if (miniPlayer == 1) {
             player.setPlayWhenReady(true);
         }
-        ComponentName componentName = new ComponentName(ctx, PlayerJobService.class);
+        try {
+            Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(playbackServiceIntent);
+            }else{
+                startService(playbackServiceIntent);
+            }
+//            bindService(playbackServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        /*ComponentName componentName = new ComponentName(ctx, PlayerJobService.class);
         JobInfo info = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             info = new JobInfo.Builder(123, componentName)
@@ -173,7 +191,7 @@ public class GlobleInItExoPlayer extends Service {
             } else {
                 Log.e("TAG", "Job scheduling failed");
             }
-        }
+        }*/
         InitNotificationAudioPLayer(ctx, mainPlayModelList);
         audioClick = false;
     }
@@ -279,10 +297,12 @@ public class GlobleInItExoPlayer extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(notificationId, notification1, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
-        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(notificationId, notification1);
+        if(intent!=null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(notificationId, notification1, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForeground(notificationId, notification1);
+            }
         }
         return START_STICKY;
     }
