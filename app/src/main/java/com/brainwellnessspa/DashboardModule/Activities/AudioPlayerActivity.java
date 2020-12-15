@@ -797,6 +797,20 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         });
+        if(listSize==1){
+            if (listSize == 1) {
+            exoBinding.llNext.setEnabled(false);
+            exoBinding.llPrev.setEnabled(false);
+//            exoBinding.llShuffle.setEnabled(false);
+            exoBinding.llNext.setClickable(false);
+            exoBinding.llPrev.setClickable(false);
+//            exoBinding.llShuffle.setClickable(false);
+//            IsShuffle = "";
+//            exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            exoBinding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            exoBinding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+         }
+        }
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
         exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));

@@ -286,8 +286,6 @@ public class MiniPlayerFragment extends Fragment {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             player.setWakeMode(C.WAKE_MODE_LOCAL);
             player.setHandleWakeLock(true);
-            exoBinding.exoProgress.setClickable(false);
-            exoBinding.exoProgress.setEnabled(false);
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
                 public void onPositionDiscontinuity(int reason) {
@@ -472,6 +470,9 @@ public class MiniPlayerFragment extends Fragment {
             GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
             globleInItExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
         }
+
+        exoBinding.exoProgress.setClickable(false);
+        exoBinding.exoProgress.setEnabled(false);
         if (player != null) {
             player.addListener(new ExoPlayer.EventListener() {
                 @Override
@@ -633,8 +634,8 @@ public class MiniPlayerFragment extends Fragment {
 
     private void callAllDisable(boolean b) {
         if (b) {
-            exoBinding.exoProgress.setClickable(true);
-            exoBinding.exoProgress.setEnabled(true);
+            exoBinding.exoProgress.setClickable(false);
+            exoBinding.exoProgress.setEnabled(false);
         } else {
             exoBinding.exoProgress.setClickable(false);
             exoBinding.exoProgress.setEnabled(false);

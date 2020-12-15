@@ -36,14 +36,14 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 
-public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
+public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */{
     public static int miniPlayer = 0;
     public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "";
     TelephonyManager mTelephonyMgr;
-    AudioManager mAudioManager;
+//    AudioManager mAudioManager;
     BroadcastReceiver broadcastReceiver;
     private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
@@ -76,9 +76,9 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         NavigationUI.setupWithNavController(binding.navView, navController);
         mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN);
+//        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+//                AudioManager.AUDIOFOCUS_GAIN);
         /*try {
             Intent playbackServiceIntent = new Intent(this, MusicService.class);
             startService(playbackServiceIntent);
@@ -109,7 +109,6 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
         wakeLock.acquire(600*60*1000L /*600 minutes*/);
-        BWSApplication.turnOffDozeMode(DashboardActivity.this);
 //        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 //        filter.addAction(Intent.ACTION_SCREEN_OFF);
 //        BroadcastReceiver mReceiver = new ScreenReceiver();
@@ -218,7 +217,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         }
     }
 
-    @Override
+  /*  @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
@@ -244,5 +243,5 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }
+    }*/
 }

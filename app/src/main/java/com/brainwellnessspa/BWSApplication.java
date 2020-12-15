@@ -510,8 +510,19 @@ public class BWSApplication extends Application {
             }
             context.startActivity(intent);
         }
-    }
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        String packageName = context.getPackageName();
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+            if(!isIgnoringBatteryOptimizations){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, MY_IGNORE_OPTIMIZATION_REQUEST);
+        }
+        }*/
 
+    }
     @Override
     public void onCreate() {
         super.onCreate();

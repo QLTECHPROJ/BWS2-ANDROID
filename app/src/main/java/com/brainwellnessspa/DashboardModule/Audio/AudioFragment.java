@@ -752,13 +752,7 @@ public class AudioFragment extends Fragment {
             try {
                 miniPlayer = 1;
                 audioClick = true;
-                if(player!=null){
-                    player.stop();
-                    player.release();
-                    player = null;
-                }
-
-
+                callNewPlayerRelease();
 
             /*Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = activity.getSupportFragmentManager();

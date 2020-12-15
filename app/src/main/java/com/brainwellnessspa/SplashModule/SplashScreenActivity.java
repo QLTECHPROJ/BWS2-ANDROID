@@ -10,8 +10,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -54,7 +57,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
         key = appSignatureHashHelper.getAppSignatures().get(0);
-
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0));
@@ -63,6 +65,18 @@ public class SplashScreenActivity extends AppCompatActivity {
             key = getKey(SplashScreenActivity.this);
         }
 
+//        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
+            if(!isIgnoringBatteryOptimizations){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivityForResult(intent, 15695);
+            }
+        }
         try {
             analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key))
                     .trackApplicationLifecycleEvents()
@@ -89,7 +103,22 @@ public class SplashScreenActivity extends AppCompatActivity {
         binding.ivBackground.requestFocus();
         binding.ivBackground.start();
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        if (requestCode == 15695) {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            boolean isIgnoringBatteryOptimizations = false;
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+            if (isIgnoringBatteryOptimizations) {
+                // Ignoring battery optimization
+            } else {
+                // Not ignoring battery optimization
+            }
+        }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
     private void callDashboard() {
         if (UserID.equalsIgnoreCase("")) {
             new Handler().postDelayed(() -> {
