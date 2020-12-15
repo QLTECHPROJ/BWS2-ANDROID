@@ -1,6 +1,7 @@
 package com.brainwellnessspa;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Notification;
@@ -46,6 +47,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.GlobleInItExoPlayer;
 import com.brainwellnessspa.Services.NotificationActionService;
 import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
@@ -497,7 +499,16 @@ public class BWSApplication extends Application {
                 serviceBound = false;
             }
         };*/
-    public static void turnOffDozeMode(Context context) {  //you can use with or without passing context
+   /* public boolean isMyServiceRunning(GlobleInItExoPlayer serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }*/
+        public static void turnOffDozeMode(Context context) {  //you can use with or without passing context
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent intent = new Intent();
             String packageName = context.getPackageName();

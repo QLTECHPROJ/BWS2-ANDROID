@@ -3,9 +3,6 @@ package com.brainwellnessspa.Services;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
@@ -16,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -47,12 +43,13 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 public class GlobleInItExoPlayer extends Service {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
+    public static boolean serviceConected = false;
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     Notification notification1;
     GlobleInItExoPlayer globleInItExoPlayer;
 
-    public static void callNewPlayerRelease() {
+    public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
             /*JobScheduler scheduler = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -60,7 +57,8 @@ public class GlobleInItExoPlayer extends Service {
                 scheduler.cancel(123);
                 Log.d("TAG", "Job cancelled");
             }*/
-
+//                Intent intent = new Intent(ctx , GlobleInItExoPlayer.class);
+//                ctx.stopService(intent);
             player.stop();
             player.release();
             player = null;
@@ -96,7 +94,7 @@ public class GlobleInItExoPlayer extends Service {
 
     public void GlobleInItPlayer(Context ctx, int position, List<DownloadAudioDetails> downloadAudioDetailsList,
                                  ArrayList<MainPlayModel> mainPlayModelList, List<File> bytesDownloaded) {
-        callNewPlayerRelease();
+
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         if (downloadAudioDetailsList.size() != 0) {
             for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
@@ -156,7 +154,7 @@ public class GlobleInItExoPlayer extends Service {
         player.setHandleWakeLock(true);
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setForegroundMode(true);
-
+        InitNotificationAudioPLayer(ctx, mainPlayModelList);
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
                 .build();
@@ -164,16 +162,20 @@ public class GlobleInItExoPlayer extends Service {
         if (miniPlayer == 1) {
             player.setPlayWhenReady(true);
         }
-        try {
-            Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(playbackServiceIntent);
-            }else{
-                startService(playbackServiceIntent);
-            }
+        audioClick = false;
+        if (!serviceConected) {
+            try {
+                Intent playbackServiceIntent = new Intent(ctx.getApplicationContext(), GlobleInItExoPlayer.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(playbackServiceIntent);
+                } else {
+                    startService(playbackServiceIntent);
+                }
+                serviceConected = true;
 //            bindService(playbackServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
-        }catch (Exception e){
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         /*ComponentName componentName = new ComponentName(ctx, PlayerJobService.class);
         JobInfo info = null;
@@ -192,8 +194,6 @@ public class GlobleInItExoPlayer extends Service {
                 Log.e("TAG", "Job scheduling failed");
             }
         }*/
-        InitNotificationAudioPLayer(ctx, mainPlayModelList);
-        audioClick = false;
     }
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
@@ -266,6 +266,7 @@ public class GlobleInItExoPlayer extends Service {
                         notification1 = notification;
 
                     }
+
                     @Override
                     public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
                         if (dismissedByUser) {
@@ -297,13 +298,16 @@ public class GlobleInItExoPlayer extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent!=null) {
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 startForeground(notificationId, notification1, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForeground(notificationId, notification1);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        serviceConected = true;
         return START_STICKY;
     }
 
