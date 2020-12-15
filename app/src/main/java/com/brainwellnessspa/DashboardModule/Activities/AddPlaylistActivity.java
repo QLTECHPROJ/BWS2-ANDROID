@@ -211,15 +211,14 @@ public class AddPlaylistActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             PlaylistingModel model = response.body();
-                            if (model.getResponseData().size() == 0) {
-                                binding.llError.setVisibility(View.VISIBLE);
-                                binding.rvPlayLists.setVisibility(View.GONE);
-                            } else {
-                                binding.llError.setVisibility(View.GONE);
-                                binding.rvPlayLists.setVisibility(View.VISIBLE);
-                                AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
-                                binding.rvPlayLists.setAdapter(addPlaylistAdapter);
-                            }
+//                            if (model.getResponseData().size() == 0) {
+//                                binding.llError.setVisibility(View.GONE);
+//                                binding.rvPlayLists.setVisibility(View.GONE);
+//                            } else {
+                            binding.rvPlayLists.setVisibility(View.VISIBLE);
+                            AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
+                            binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+//                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -146,9 +146,9 @@
             android:id="@+id/flProgress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-11dp"
+            android:layout_marginBottom="-16dp"
             android:layout_marginLeft="-4dp"
-            android:background="#DDDDDD"
+
             android:layout_marginRight="-4dp"
             android:layout_above="@id/llPlayearMain"
             app:layout_constraintLeft_toLeftOf="parent"

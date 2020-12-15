@@ -98,7 +98,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     ActivityAudioPlayerBinding binding;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
+    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
     int position, listSize, downloadPercentage = 0;
     Context ctx;
     Activity activity;
@@ -360,7 +360,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                             AudioLikeModel model = response.body();
                             if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                                binding.ivLike.setImageResource(R.drawable.ic_heart_unfill_icon);
                             } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             }
@@ -1438,9 +1438,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
         } else if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("0")) {
-            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            binding.ivLike.setImageResource(R.drawable.ic_heart_unfill_icon);
         } else {
-            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            binding.ivLike.setImageResource(R.drawable.ic_heart_unfill_icon);
         }
         if (!url.equalsIgnoreCase("")) {
             if (!id.equalsIgnoreCase(addToRecentPlayId)) {
@@ -1482,7 +1482,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray() {
-        View viewed = LayoutInflater.from(ctx).inflate(R.layout.audio_player_custom_layout, null, false);
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
                 , R.layout.audio_player_custom_layout, binding.playerControlView, false);
         binding.playerControlView.addView(exoBinding.getRoot());
