@@ -259,7 +259,11 @@ public class AptAudioFragment extends Fragment {
                     handler1.postDelayed(this, 300);
                 }
             };
-
+            holder.binding.llDownload.setClickable(false);
+            holder.binding.llDownload.setEnabled(false);
+            holder.binding.ivDownload.setClickable(false);
+            holder.binding.ivDownload.setEnabled(false);
+            holder.binding.pbProgress.setVisibility(View.GONE);
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

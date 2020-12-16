@@ -1718,7 +1718,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
         addDisclaimer.setID("0");
         addDisclaimer.setName("Disclaimer");
@@ -2378,6 +2378,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             };
             holder.binding.llMainLayout.setVisibility(View.VISIBLE);
             holder.binding.llDownload.setVisibility(View.VISIBLE);
+            holder.binding.llDownload.setClickable(false);
+            holder.binding.llDownload.setEnabled(false);
+            holder.binding.ivDownloads.setClickable(false);
+            holder.binding.ivDownloads.setEnabled(false);
+            holder.binding.pbProgress.setVisibility(View.GONE);
             holder.binding.llRemove.setVisibility(View.VISIBLE);
             holder.binding.llSort.setVisibility(View.GONE);
             searchEditText.setHint(R.string.playlist_or_audio_search);
