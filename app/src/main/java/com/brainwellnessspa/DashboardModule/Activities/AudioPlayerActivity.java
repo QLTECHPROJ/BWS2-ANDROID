@@ -89,6 +89,8 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.getMediaBitmap;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.myBitmap;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class AudioPlayerActivity extends AppCompatActivity {
@@ -317,7 +319,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void InitNotificationAudioPLayer() {
+    /*public void InitNotificationAudioPLayer() {
         playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
                 this,
                 "10001",
@@ -367,9 +369,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
-    }
+    }*/
 
-    public Bitmap getMediaBitmap(String songImg) {
+  /*  public Bitmap getMediaBitmap(String songImg) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -394,7 +396,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         GetMedia st = new GetMedia();
         st.execute();
         return myBitmap;
-    }
+    }*/
 
     private void callBack() {
         try {
@@ -567,7 +569,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 @Override
                 public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                     Log.v("TAG", "Listener-onTracksChanged... ");
-                    myBitmap = getMediaBitmap(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                    myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                     player.setPlayWhenReady(true);
                     position = player.getCurrentWindowIndex();
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -1436,7 +1438,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         if (mainPlayModelList.get(ps).getPlaylistID() == null) {
             mainPlayModelList.get(ps).setPlaylistID("");
         }
-        myBitmap = getMediaBitmap(mainPlayModelList.get(ps).getImageFile());
+        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(ps).getImageFile());
         binding.tvName.setText(mainPlayModelList.get(ps).getName());
         if (mainPlayModelList.get(ps).getAudioDirection().equalsIgnoreCase("")) {
             binding.llDirection.setVisibility(View.GONE);
@@ -1498,7 +1500,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                MakeArray2();
+//                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
@@ -1829,6 +1831,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             editor.commit();
 
         }
+        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        callButtonText(position);
         getPrepareShowData();
     }
 
@@ -2149,15 +2153,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
             editor.commit();
 
         }
-        binding.tvDireName.setText(R.string.Directions);
-        myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
-        callButtonText(position);
-        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
-            initializePlayerDisclaimer();
-        } else {
-            initializePlayer();
-        }
-//        getPrepareShowData();
+//        binding.tvDireName.setText(R.string.Directions);
+//        myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
+//        callButtonText(position);
+//        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+//            initializePlayerDisclaimer();
+//        } else {
+//            initializePlayer();
+//        }
+        getPrepareShowData();
     }
 
     private void removeArray() {
@@ -2476,7 +2480,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void getPrepareShowData() {
         binding.tvDireName.setText(R.string.Directions);
-        myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
+        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();

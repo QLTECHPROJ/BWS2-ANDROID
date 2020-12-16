@@ -738,7 +738,7 @@ public class MiniPlayerFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                MakeArray2();
+//                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
@@ -1064,6 +1064,8 @@ public class MiniPlayerFragment extends Fragment {
             editor.commit();
 
         }
+        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        callButtonText(position);
         getPrepareShowData();
     }
 
@@ -1378,13 +1380,13 @@ public class MiniPlayerFragment extends Fragment {
             editor.commit();
 
         }
-        callButtonText(position);
-        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
-            initializePlayerDisclaimer();
-        } else {
-            initializePlayer();
-        }
-//        getPrepareShowData();
+//        callButtonText(position);
+//        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+//            initializePlayerDisclaimer();
+//        } else {
+//            initializePlayer();
+//        }
+        getPrepareShowData();
     }
 
     private void removeArray() {
