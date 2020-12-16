@@ -73,8 +73,10 @@ public class AudioDownloadsFragment extends Fragment {
     List<DownloadAudioDetails> audioList;
     String UserID, AudioFlag;
     AudioDownlaodsAdapter adapter;
+    private Handler handler1;
+    Runnable UpdateSongTime1;
     public static String comefromDownload = "0";
-
+    View view;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive( Context context, Intent intent ) {
@@ -103,7 +105,7 @@ public class AudioDownloadsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
-        View view = binding.getRoot();
+          view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
         }
@@ -120,10 +122,24 @@ public class AudioDownloadsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                 
+                callBack();
+                return true;
+            }
+            return false;
+        });
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         audioList = GetAllMedia(getActivity());
+    }
+
+    private void callBack() {
+        handler1.removeCallbacks(UpdateSongTime1);
     }
 
     @Override
@@ -202,10 +218,9 @@ public class AudioDownloadsFragment extends Fragment {
         RecyclerView rvDownloadsList;
         TextView tvFound;
         List<DownloadAudioDetails> downloadAudioDetailsList;
-        Runnable UpdateSongTime1;
+
         List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
         private List<DownloadAudioDetails> listModelList;
-        private Handler handler1;
         //    Handler handler3;
         int startTime;
         private long currentDuration = 0;

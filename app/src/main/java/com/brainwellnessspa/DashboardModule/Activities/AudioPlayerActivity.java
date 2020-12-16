@@ -2149,7 +2149,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
             editor.commit();
 
         }
-        getPrepareShowData();
+        binding.tvDireName.setText(R.string.Directions);
+        myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
+        callButtonText(position);
+        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+            initializePlayerDisclaimer();
+        } else {
+            initializePlayer();
+        }
+//        getPrepareShowData();
     }
 
     private void removeArray() {
@@ -2472,7 +2480,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
-
         } else {
             initializePlayer();
         }

@@ -1378,7 +1378,13 @@ public class MiniPlayerFragment extends Fragment {
             editor.commit();
 
         }
-        getPrepareShowData();
+        callButtonText(position);
+        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+            initializePlayerDisclaimer();
+        } else {
+            initializePlayer();
+        }
+//        getPrepareShowData();
     }
 
     private void removeArray() {
