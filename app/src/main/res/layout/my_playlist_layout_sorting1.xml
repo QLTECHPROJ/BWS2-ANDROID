@@ -101,6 +101,7 @@
                 android:layout_weight="0.13"
                 android:gravity="center"
                 android:padding="@dimen/_6sdp"
+                android:clickable="false"
                 android:visibility="visible">
 
                 <ProgressBar
@@ -126,6 +127,7 @@
                         android:layout_width="@dimen/_38sdp"
                         android:layout_height="@dimen/_38sdp"
                         android:padding="@dimen/_10sdp"
+                        android:clickable="false"
                         android:src="@drawable/ic_download_icon" />
 
                 </LinearLayout>
