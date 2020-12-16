@@ -993,7 +993,6 @@ public class AddQueueActivity extends AppCompatActivity {
                                         mainPlayModel.setLike("1");
                                         mainPlayModel.setDownload(mainPlayModelList.get(position).getDownload());
                                         mainPlayModel.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
-
                                         mainPlayModel1.setID(mainPlayModelList.get(position).getID());
                                         mainPlayModel1.setName(mainPlayModelList.get(position).getName());
                                         mainPlayModel1.setAudioFile(mainPlayModelList.get(position).getAudioFile());

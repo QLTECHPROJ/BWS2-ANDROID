@@ -70,12 +70,12 @@ public class InvoiceActivity extends AppCompatActivity {
                 }
             }
         });
+        prepareData();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        prepareData();
     }
 
     public void prepareData() {
