@@ -86,18 +86,22 @@ public class LikeAudiosFragment extends Fragment {
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (player!=null) {
-                        if (data.equalsIgnoreCase("play")) {
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            adapter.notifyDataSetChanged();
+                try {
+                    SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                        if (player != null) {
+                            if (data.equalsIgnoreCase("play")) {
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -224,10 +228,10 @@ public class LikeAudiosFragment extends Fragment {
             if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                     songId = myAudioId;
-                    if (player!=null) {
+                    if (player != null) {
                         if (!player.getPlayWhenReady()) {
                             holder.binding.equalizerview.stopBars();
-                        }else
+                        } else
                             holder.binding.equalizerview.animateBars();
                     } else
                         holder.binding.equalizerview.stopBars();
@@ -391,7 +395,7 @@ public class LikeAudiosFragment extends Fragment {
         try {
             miniPlayer = 1;
             audioClick = true;
-            if(player!=null){
+            if (player != null) {
                 player.stop();
                 player.release();
                 player = null;

@@ -1703,18 +1703,22 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void addDisclaimer() {
-        if (ComeFindAudio == 2) {
-            binding.searchView.requestFocus();
-            searchEditText.setText("");
-            binding.searchView.setQuery("", false);
-            ComeFindAudio = 0;
-        } else if (ComeFindAudio == 1) {
-            binding.searchView.clearFocus();
-            searchEditText.setText("");
-            binding.searchView.setQuery("", false);
-            ComeFindAudio = 0;
+        try {
+            if (ComeFindAudio == 2) {
+                binding.searchView.requestFocus();
+                searchEditText.setText("");
+                binding.searchView.setQuery("", false);
+                ComeFindAudio = 0;
+            } else if (ComeFindAudio == 1) {
+                binding.searchView.clearFocus();
+                searchEditText.setText("");
+                binding.searchView.setQuery("", false);
+                ComeFindAudio = 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
+        
         addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
         addDisclaimer.setID("0");
         addDisclaimer.setName("Disclaimer");

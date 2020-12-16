@@ -235,16 +235,13 @@ public class LikePlaylistsFragment extends Fragment {
             Glide.with(ctx).load(modelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.llMenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
-                    i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
-                    i.putExtra("PlaylistName", modelList.get(position).getPlaylistName());
-                    i.putExtra("PlaylistIDImage", modelList.get(position).getPlaylistImage());
-                    i.putExtra("Liked", "1");
-                    startActivity(i);
-                }
+            holder.binding.llMenu.setOnClickListener(v -> {
+                Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
+                i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
+                i.putExtra("PlaylistName", modelList.get(position).getPlaylistName());
+                i.putExtra("PlaylistIDImage", modelList.get(position).getPlaylistImage());
+                i.putExtra("Liked", "1");
+                startActivity(i);
             });
             holder.binding.llLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
