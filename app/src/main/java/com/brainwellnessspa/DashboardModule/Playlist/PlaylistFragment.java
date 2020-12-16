@@ -63,8 +63,6 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.UserCreated;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.Isclose;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 
 public class PlaylistFragment extends Fragment {
@@ -90,6 +88,8 @@ public class PlaylistFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
+
+        prepareData();
         return view;
     }
 
@@ -119,6 +119,7 @@ public class PlaylistFragment extends Fragment {
         ComeScreenAccount = 0;
         comefromDownload = "0";
         prepareData();
+        openMiniPlayer();
     }
 
     private void prepareData() {
@@ -178,22 +179,6 @@ public class PlaylistFragment extends Fragment {
                 callNewPlayerRelease();
 
             }
-            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 6, 0, 200);
-                binding.llSpace.setLayoutParams(params);
-            } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 6, 0, 0);
-                binding.llSpace.setLayoutParams(params);
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -233,6 +218,25 @@ public class PlaylistFragment extends Fragment {
             responseData.add(listModel);
             downloadPlaylistDetailsList = GetPlaylistDetail(responseData);
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
+
+    public void openMiniPlayer() {
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 6, 0, 200);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 6, 0, 0);
+            binding.llSpace.setLayoutParams(params);
         }
     }
 
@@ -406,8 +410,7 @@ public class PlaylistFragment extends Fragment {
                                                 BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                             } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
                                                     listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
-                                                UserCreated = true;
-                                                Isclose = true;
+
                                                 callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
                                                 dialog.dismiss();
                                             }
@@ -582,13 +585,13 @@ public class PlaylistFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
 //            if(!MyDownloads.equalsIgnoreCase("1")){
-                if (IsLock.equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                } else if (IsLock.equalsIgnoreCase("2")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                }
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equalsIgnoreCase("2")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
 //            }else {
 //                holder.binding.ivLock.setVisibility(View.GONE);
 //            }

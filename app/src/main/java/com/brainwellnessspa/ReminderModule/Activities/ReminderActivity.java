@@ -433,8 +433,8 @@ public class ReminderActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.cbChecked.setTag(model.get(position));
             holder.binding.cbChecked.setChecked(position == mSelectedItem);
+            holder.binding.cbChecked.setTag(model.get(position));
             holder.binding.cbChecked.setText(model.get(position).getName());
         }
 

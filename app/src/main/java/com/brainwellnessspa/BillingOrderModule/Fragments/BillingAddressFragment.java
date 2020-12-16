@@ -28,7 +28,7 @@ import retrofit2.Response;
 public class BillingAddressFragment extends Fragment {
     FragmentBillingAddressBinding binding;
     String UserID, UserName, UserEmail, UserMobileNumber, UserCountry, UserAddressLine1, UserAddressLine2, UserCity, UserState, UserPostCode;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

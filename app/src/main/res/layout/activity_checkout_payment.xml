@@ -115,6 +115,8 @@
                                 android:layout_toRightOf="@+id/ivFname"
                                 android:focusableInTouchMode="true"
                                 app:errorEnabled="true"
+                                android:textColorHint="@color/black"
+                                app:hintTextColor="@color/black"
                                 app:errorTextAppearance="@style/ErrorText">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -177,6 +179,8 @@
                                 android:layout_toRightOf="@+id/ivFname"
                                 android:focusableInTouchMode="true"
                                 app:errorEnabled="true"
+                                android:textColorHint="@color/black"
+                                app:hintTextColor="@color/black"
                                 app:errorTextAppearance="@style/ErrorText">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -250,6 +254,8 @@
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="left"
                                         android:hint="mm / yyyy"
+                                        android:textColorHint="@color/black"
+                                        app:hintTextColor="@color/black"
                                         android:textAllCaps="false"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/_13sdp" />
@@ -293,11 +299,11 @@
                                     android:id="@+id/tlCvv"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_centerVertical="true"
                                     android:layout_marginLeft="@dimen/_10sdp"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:layout_marginRight="@dimen/_10sdp"
-                                    android:layout_toRightOf="@+id/ivFname"
+                                    android:textColorHint="@color/black"
+                                    app:hintTextColor="@color/black"
                                     android:focusableInTouchMode="true"
                                     app:errorEnabled="true"
                                     app:errorTextAppearance="@style/ErrorText">

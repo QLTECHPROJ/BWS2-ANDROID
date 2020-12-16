@@ -22,8 +22,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/_85sdp">
+                    android:layout_marginBottom="@dimen/_85sdp"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -46,8 +46,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etName"
@@ -59,9 +61,9 @@
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Full_Name"
                                     android:imeOptions="actionNext"
-                                    android:nextFocusDown="@id/etEmail"
                                     android:maxLength="25"
                                     android:maxLines="1"
+                                    android:nextFocusDown="@id/etEmail"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp" />
@@ -91,8 +93,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etEmail"
@@ -103,10 +107,10 @@
                                     android:cursorVisible="true"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Email_Address"
-                                    android:inputType="textEmailAddress"
                                     android:imeOptions="actionNext"
-                                    android:nextFocusDown="@id/etMobileNumber"
+                                    android:inputType="textEmailAddress"
                                     android:maxLines="1"
+                                    android:nextFocusDown="@id/etMobileNumber"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp" />
@@ -136,8 +140,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etMobileNumber"
@@ -149,9 +155,9 @@
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Mobile_Number"
                                     android:imeOptions="actionNext"
-                                    android:nextFocusDown="@id/etCountry"
                                     android:inputType="number"
                                     android:maxLines="1"
+                                    android:nextFocusDown="@id/etCountry"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp" />
@@ -182,8 +188,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etCountry"
@@ -195,9 +203,9 @@
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Country"
                                     android:imeOptions="actionNext"
-                                    android:nextFocusDown="@id/etAddressLine1"
                                     android:maxLength="25"
                                     android:maxLines="1"
+                                    android:nextFocusDown="@id/etAddressLine1"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp" />
@@ -228,8 +236,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etAddressLine1"
@@ -240,10 +250,10 @@
                                     android:cursorVisible="true"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Address_Line_One"
-                                    android:maxLength="25"
                                     android:imeOptions="actionNext"
-                                    android:nextFocusDown="@id/etAddressLine2"
+                                    android:maxLength="25"
                                     android:maxLines="1"
+                                    android:nextFocusDown="@id/etAddressLine2"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp" />
@@ -274,8 +284,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etAddressLine2"
@@ -286,10 +298,10 @@
                                     android:cursorVisible="true"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Address_Line_Two"
-                                    android:maxLength="25"
-                                    android:nextFocusDown="@id/etCity"
-                                    android:maxLines="1"
                                     android:imeOptions="actionNext"
+                                    android:maxLength="25"
+                                    android:maxLines="1"
+                                    android:nextFocusDown="@id/etCity"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp" />
@@ -320,8 +332,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etCity"
@@ -332,9 +346,9 @@
                                     android:cursorVisible="true"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/City"
+                                    android:imeOptions="actionNext"
                                     android:maxLength="25"
                                     android:maxLines="1"
-                                    android:imeOptions="actionNext"
                                     android:nextFocusDown="@id/etState"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
@@ -366,8 +380,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etState"
@@ -378,9 +394,9 @@
                                     android:cursorVisible="true"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/State"
+                                    android:imeOptions="actionNext"
                                     android:maxLength="25"
                                     android:maxLines="1"
-                                    android:imeOptions="actionNext"
                                     android:nextFocusDown="@id/etPostCode"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
@@ -413,8 +429,10 @@
                                 android:layout_marginTop="@dimen/_8sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:focusableInTouchMode="true"
+                                android:textColorHint="@color/black"
                                 app:errorEnabled="true"
-                                app:errorTextAppearance="@style/ErrorText">
+                                app:errorTextAppearance="@style/ErrorText"
+                                app:hintTextColor="@color/black">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etPostCode"
@@ -425,10 +443,10 @@
                                     android:cursorVisible="true"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Postcode"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="number"
                                     android:maxLength="25"
                                     android:maxLines="1"
-                                    android:inputType="number"
-                                    android:imeOptions="actionDone"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp" />
@@ -475,10 +493,10 @@
                 android:layout_marginHorizontal="@dimen/_55sdp"
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/gray_round_cornor"
+                android:enabled="false"
                 android:fontFamily="@font/montserrat_bold"
                 android:paddingVertical="@dimen/_2sdp"
                 android:text="@string/Save"
-                android:enabled="false"
                 android:textColor="@color/white" />
 
         </RelativeLayout>

@@ -87,21 +87,25 @@ public class SearchFragment extends Fragment {
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.hasExtra("MyData")) {
-                String data = intent.getStringExtra("MyData");
-                Log.d("play_pause_Action", data);
-                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (player != null) {
-                        if (listSize != 0) {
-                            serachListAdpater.notifyDataSetChanged();
+            try {
+                if (intent.hasExtra("MyData")) {
+                    String data = intent.getStringExtra("MyData");
+                    Log.d("play_pause_Action", data);
+                    SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                        if (player != null) {
+                            if (listSize != 0) {
+                                serachListAdpater.notifyDataSetChanged();
+                            }
+                            suggestionAudiosAdpater.notifyDataSetChanged();
                         }
-                        suggestionAudiosAdpater.notifyDataSetChanged();
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     };

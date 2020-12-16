@@ -5,8 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:clickable="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,8 +56,9 @@
                 android:id="@+id/llViewOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_39sdp"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/rlTabs"
@@ -85,17 +86,10 @@
 
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/llSpace"
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/viewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/_39sdp" />
-                </LinearLayout>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
 
@@ -103,8 +97,8 @@
                 android:id="@+id/llViewTwo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:paddingBottom="@dimen/_42sdp">
+                android:paddingBottom="@dimen/_42sdp"
+                android:visibility="gone">
 
                 <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"

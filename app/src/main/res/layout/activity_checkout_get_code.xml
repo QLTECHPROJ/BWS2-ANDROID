@@ -162,6 +162,8 @@
                                         android:layout_weight="0.82"
                                         android:background="@null"
                                         android:inputType="number"
+                                        android:textColorHint="@color/dark_blue_gray"
+                                        app:hintTextColor="@color/dark_blue_gray"
                                         android:textCursorDrawable="@null"
                                         android:maxLength="10"
                                         android:backgroundTint="@color/dim_light_gray"

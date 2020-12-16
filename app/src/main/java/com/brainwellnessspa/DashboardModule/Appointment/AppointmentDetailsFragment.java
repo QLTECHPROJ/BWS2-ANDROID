@@ -73,7 +73,7 @@ public class AppointmentDetailsFragment extends Fragment {
             appointmentName = getArguments().getString("appointmentName");
             appointmentImage = getArguments().getString("appointmentImage");
         }
-
+        getAppointmentData();
         binding.llBack.setOnClickListener(view1 -> callBack());
         return view;
     }
@@ -81,11 +81,8 @@ public class AppointmentDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getAppointmentData();
+
         RefreshData();
-        if(view == null){
-            return;
-        }
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -172,11 +169,11 @@ public class AppointmentDetailsFragment extends Fragment {
                         .commit();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 280);
-                binding.llSpace.setLayoutParams(params);
+                binding.llViewOne.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 50);
-                binding.llSpace.setLayoutParams(params);
+                binding.llViewOne.setLayoutParams(params);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -266,6 +263,27 @@ public class AppointmentDetailsFragment extends Fragment {
                                     binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
                                     binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
                                 }
+                                binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                                TabAdapter adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getActivity(), binding.tabLayout.getTabCount());
+                                binding.viewPager.setAdapter(adapter);
+                                binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+                                binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                                    @Override
+                                    public void onTabSelected(TabLayout.Tab tab) {
+                                        if (comeRefreshData == 1) {
+                                            RefreshData();
+                                        }
+                                        binding.viewPager.setCurrentItem(tab.getPosition());
+                                    }
+
+                                    @Override
+                                    public void onTabUnselected(TabLayout.Tab tab) {
+                                    }
+
+                                    @Override
+                                    public void onTabReselected(TabLayout.Tab tab) {
+                                    }
+                                });
 
                                 MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
                                         1, 1, 0.24f, 10);
@@ -301,34 +319,11 @@ public class AppointmentDetailsFragment extends Fragment {
                                     i.setData(Uri.parse(globalAppointmentDetailModel.getResponseData().getBookUrl()));
                                     startActivity(i);
                                 });
-
-                                binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-                                TabAdapter adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getActivity(), binding.tabLayout.getTabCount());
-                                binding.viewPager.setAdapter(adapter);
-
-                                binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-                                binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                                    @Override
-                                    public void onTabSelected(TabLayout.Tab tab) {
-                                        if (comeRefreshData == 1) {
-                                            RefreshData();
-                                        }
-                                        binding.viewPager.setCurrentItem(tab.getPosition());
-                                    }
-
-                                    @Override
-                                    public void onTabUnselected(TabLayout.Tab tab) {
-                                    }
-
-                                    @Override
-                                    public void onTabReselected(TabLayout.Tab tab) {
-                                    }
-                                });
                             } else {
                                 BWSApplication.showToast(appointmentDetailModel.getResponseMessage(), getActivity());
                             }
                         }
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

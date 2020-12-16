@@ -170,17 +170,25 @@ public class AptAudioFragment extends Fragment {
     }
 
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownload) {
-        llDownload.setClickable(true);
-        llDownload.setEnabled(true);
-        ivDownload.setColorFilter(getActivity().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-        ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+        try {
+            llDownload.setClickable(true);
+            llDownload.setEnabled(true);
+            ivDownload.setColorFilter(getActivity().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+            ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void disableDownload(RelativeLayout llDownload, ImageView ivDownload) {
-        ivDownload.setImageResource(R.drawable.ic_download_white_icon);
-        ivDownload.setColorFilter(getActivity().getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-        llDownload.setClickable(false);
-        llDownload.setEnabled(false);
+        try {
+            ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+            ivDownload.setColorFilter(getActivity().getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            llDownload.setClickable(false);
+            llDownload.setEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder> {

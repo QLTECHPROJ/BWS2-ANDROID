@@ -310,7 +310,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/button1"
-                                android:focusable="false"
                                 android:iconifiedByDefault="false"
                                 android:singleLine="true"
                                 android:theme="@style/WallSearchView"
