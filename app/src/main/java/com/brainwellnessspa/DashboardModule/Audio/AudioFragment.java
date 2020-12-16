@@ -396,7 +396,7 @@ public class AudioFragment extends Fragment {
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 6, 0, 260);
+            params.setMargins(0, 6, 0, 280);
             binding.llSpace.setLayoutParams(params);
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
