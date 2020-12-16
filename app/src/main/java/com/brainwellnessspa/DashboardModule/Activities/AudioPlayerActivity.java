@@ -798,7 +798,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void epAllClicks() {
         binding.llDownload.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
-                callDownload();
+//                callDownload();
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
@@ -1504,7 +1504,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-//                MakeArray2();
+                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());

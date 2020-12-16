@@ -396,6 +396,7 @@ public class AptAudioFragment extends Fragment {
 
             });
 
+/*
             holder.binding.llDownload.setOnClickListener(view -> {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -443,6 +444,7 @@ public class AptAudioFragment extends Fragment {
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
                 SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
             });
+*/
 
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override

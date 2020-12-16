@@ -271,8 +271,9 @@ public class AddQueueActivity extends AppCompatActivity {
         binding.llLike.setOnClickListener(view ->
                 callLike());
 
-        binding.llDownload.setOnClickListener(view ->
-                callDownload());
+//        binding.llDownload.setOnClickListener(view ->
+////                callDownload()
+//        );
 
 
         binding.llAddQueue.setOnClickListener(view ->

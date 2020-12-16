@@ -120,7 +120,7 @@
                         android:layout_weight="0.13"
                         android:indeterminateTint="@color/blue"
                         android:scaleType="fitXY"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <!--                                </LinearLayout>-->
 
@@ -136,7 +136,7 @@
                         android:padding="@dimen/_13sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_play_icon"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
             </LinearLayout>
