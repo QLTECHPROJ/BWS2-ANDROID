@@ -405,6 +405,29 @@ public class AudioFragment extends Fragment {
         }
     }
 
+/*
+    private void openMiniPlayer() {
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 6, 0, 260);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 6, 0, 50);
+            binding.llSpace.setLayoutParams(params);
+        }
+    }
+*/
+
     private void showTooltiop() {
         Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
         Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
@@ -469,7 +492,7 @@ public class AudioFragment extends Fragment {
         ComeScreenAccount = 0;
         comefromDownload = "0";
         prepareData();
-        openMiniPlayer();
+//        openMiniPlayer();
 //        BWSApplication.getLatasteUpdate(getActivity());
     }
 
