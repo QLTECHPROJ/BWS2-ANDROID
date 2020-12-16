@@ -62,7 +62,7 @@ android {
 
 dependencies {
     def room_version = "1.1.1"
-//    def work_version = "2.4.0"
+// def work_version = "2.4.0"
     implementation 'org.greenrobot:eventbus:3.2.0'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -132,9 +132,9 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.12.0'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.11.5'
     implementation 'com.google.android.gms:play-services-basement:17.4.0'
-//    implementation 'com.google.android.gms:play-services-basement:17.5.0'
-//    implementation "androidx.work:work-runtime:$work_version"
-//    implementation 'com.google.android.exoplayer:library-ui:2.10.8'
+// implementation 'com.google.android.gms:play-services-basement:17.5.0'
+// implementation "androidx.work:work-runtime:$work_version"
+// implementation 'com.google.android.exoplayer:library-ui:2.10.8'
 }
 repositories {
     mavenCentral()

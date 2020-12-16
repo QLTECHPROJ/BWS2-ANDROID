@@ -95,6 +95,7 @@ public class MiniPlayerFragment extends Fragment {
     LocalBroadcastManager localBroadcastManager;
     Intent localIntent;
     private long mLastClickTime = 0;
+    PlayerControlView playerControlView;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -125,10 +126,13 @@ public class MiniPlayerFragment extends Fragment {
         localIntent = new Intent("play_pause_Action");
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if (audioClick) {
+            MakeArray2();
             GetAllMedia();
         } else {
             MakeArray2();
         }
+        playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
+
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -377,6 +381,19 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }else if (state == ExoPlayer.STATE_IDLE) {
+                        GetAllMedia();
+                        audioClick = true;
+
+                        playerControlView.setPlayer(player);
+                        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
+                            exoBinding.exoProgress.setPosition(position);
+                            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+                        });
+                        playerControlView.setFocusable(true);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            playerControlView.setFocusedByDefault(true);
+                        }
+                        playerControlView.show();
                         Log.e("Exoplayer Idle","my Exop in Idle");
                     }
                 }
@@ -562,8 +579,8 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
                 exoBinding.progressBar.setVisibility(View.GONE);
-                /*if(mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size()-1).getID())
-                && exoBinding.tvSubTitle.getText().toString().equalsIgnoreCase(exoBinding.) ){
+                if(mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size()-1).getID())
+                        && (player.getCurrentPosition()-player.getDuration() <= 20)){
                     audioClick = true;
                     miniPlayer = 1;
                     GetAllMedia();
@@ -574,9 +591,9 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
                     });
                     playerControlView.show();
-                }else {*/
+                }else {
                     player.setPlayWhenReady(true);
-//                }
+                }
             } else {
                 audioClick = true;
                 miniPlayer = 1;
@@ -1689,7 +1706,6 @@ public class MiniPlayerFragment extends Fragment {
             initializePlayer();
         }
 
-        PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         playerControlView.setPlayer(player);
         playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(position);
@@ -1699,6 +1715,6 @@ public class MiniPlayerFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             playerControlView.setFocusedByDefault(true);
         }
-          playerControlView.show();
+        playerControlView.show();
     }
 }
