@@ -556,6 +556,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
+                    }else if (state == ExoPlayer.STATE_IDLE) {
+                        Log.e("Exoplayer Idle","my Exop in Idle");
                     }
                 }
 
@@ -601,95 +603,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
         }
         callAllDisable(true);
-        /*if (downloadAudioDetailsList.size() != 0) {
-            for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
-                if (downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(0).getAudioFile())) {
-//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-
-                    Uri uri = Uri.fromFile(bytesDownloaded.get(f));
-                    DataSpec dataSpec = new DataSpec(uri);
-                    final FileDataSource fileDataSource = new FileDataSource();
-                    try {
-                        fileDataSource.open(dataSpec);
-                    } catch (FileDataSource.FileDataSourceException e) {
-                        e.printStackTrace();
-                    }
-
-                    MediaItem mediaItem = MediaItem.fromUri(uri);
-                    player.setMediaItem(mediaItem);
-                } else if (f == downloadAudioDetailsList.size() - 1) {
-                    MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-                    player.setMediaItem(mediaItem1);
-                }
-            }
-        } else {
-            MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-            player.setMediaItem(mediaItem1);
-        }
-        for (int i = 1; i < mainPlayModelList.size(); i++) {
-            if (downloadAudioDetailsList.size() != 0) {
-                for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
-                    if (downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())) {
-//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-                        Uri uri = Uri.fromFile(bytesDownloaded.get(f));
-                        DataSpec dataSpec = new DataSpec(uri);
-                        final FileDataSource fileDataSource = new FileDataSource();
-                        try {
-                            fileDataSource.open(dataSpec);
-                        } catch (FileDataSource.FileDataSourceException e) {
-                            e.printStackTrace();
-                        }
-
-                        MediaItem mediaItem = MediaItem.fromUri(uri);
-                        player.addMediaItem(mediaItem);
-                    } else {
-                        MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                        player.addMediaItem(mediaItem);
-                    }
-                }
-            } else {
-                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                player.addMediaItem(mediaItem);
-            }
-        }*/
-       /* BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
-        DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, getPackageName()), (TransferListener) bandwidthMeter);
-        MediaSource[] mediaSources = new MediaSource[mainPlayModelList.size()];
-        for (int i = 0; i < mediaSources.length; i++) {
-
-            String songUri = mainPlayModelList.get(i).getAudioFile();
-                if (downloadAudioDetailsList.size() != 0) {
-                    for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-                        if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())){
-//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-
-                            Uri uri = Uri.fromFile(bytesDownloaded.get(f));
-                            DataSpec dataSpec = new DataSpec(uri);
-                            final FileDataSource fileDataSource = new FileDataSource();
-                            try {
-                                fileDataSource.open(dataSpec);
-                            } catch (FileDataSource.FileDataSourceException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        }
-                    }
-                }else {
-                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(songUri), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
-                }
-        }
-        MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
-                : new ConcatenatingMediaSource(mediaSources);*/
-//        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
-  /*      player.prepare();
-        player.seekTo(position, C.CONTENT_TYPE_MUSIC);
-        player.setPlayWhenReady(true);
-        player.setWakeMode(2);*/
         epAllClicks();
     }
 
@@ -818,7 +731,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
          }
         }
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
-        exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
+        exoBinding.llPlay.setOnClickListener(view ->{
+
+                    player.setPlayWhenReady(true);
+        });
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
         exoBinding.llBackWordSec.setOnClickListener(view -> {
                     if (player.getCurrentPosition() > 30000) {
@@ -1415,6 +1331,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         url = mainPlayModelList.get(ps).getAudioFile();
         id = mainPlayModelList.get(ps).getID();
         name = mainPlayModelList.get(ps).getName();
+
         if (url.equalsIgnoreCase("") || url.isEmpty()) {
             isDisclaimer = 1;
             binding.tvNowPlaying.setText("");
@@ -1468,6 +1385,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 Log.e("Api call recent", id);
             }
         }
+        addToRecentPlayId = id;
         GetMedia2();
     }
 
