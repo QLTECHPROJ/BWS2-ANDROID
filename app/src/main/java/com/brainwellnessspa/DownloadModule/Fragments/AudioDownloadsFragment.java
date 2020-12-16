@@ -122,7 +122,7 @@ public class AudioDownloadsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        view.setFocusableInTouchMode(true);
+       /* view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
@@ -131,7 +131,7 @@ public class AudioDownloadsFragment extends Fragment {
                 return true;
             }
             return false;
-        });
+        });*/
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
@@ -139,7 +139,7 @@ public class AudioDownloadsFragment extends Fragment {
     }
 
     private void callBack() {
-        handler1.removeCallbacks(UpdateSongTime1);
+//        handler1.removeCallbacks(UpdateSongTime1);
     }
 
     @Override
