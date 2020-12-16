@@ -1,6 +1,7 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
+import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -306,6 +308,18 @@ public class MiniPlayerFragment extends Fragment {
                     SharedPreferences.Editor editor = shared.edit();
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.commit();
+                    if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        Log.e("Nite Mode :",String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+                    }
+                    UiModeManager uiModeManager = (UiModeManager) ctx.getSystemService(Context.UI_MODE_SERVICE);
+                    if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
+                            || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
+                            || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
+                        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+
+                        Log.e("Nite Mode :",String.valueOf(uiModeManager.getNightMode()));
+                    }
                     myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                     callButtonText(player.getCurrentWindowIndex());
                 }
@@ -322,10 +336,13 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
                     } else if (!isPlaying) {
-                        if (player.getPauseAtEndOfMediaItems())
-                            exoBinding.llPlay.setVisibility(View.VISIBLE);
+                        exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                    }else{
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());

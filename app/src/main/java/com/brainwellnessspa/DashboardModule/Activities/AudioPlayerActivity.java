@@ -2,6 +2,7 @@ package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -485,15 +487,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         if (audioClick) {
             GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
             globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
-            try {
-                Intent playbackServiceIntent = new Intent(this, GlobleInItExoPlayer.class);
-                startService(playbackServiceIntent);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(playbackServiceIntent);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         if (player != null) {
             player.setWakeMode(C.WAKE_MODE_LOCAL);
@@ -510,6 +503,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = shared.edit();
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.commit();
+                    if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+                    || AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        Log.e("Nite Mode :",String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+                    }
+                   UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+                    if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
+                            || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
+                            || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
+                        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+
+                        Log.e("Nite Mode :",String.valueOf(uiModeManager.getNightMode()));
+                    }
                     callButtonText(player.getCurrentWindowIndex());
                 }
 

@@ -1,22 +1,21 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
+import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.media.AudioManager;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -28,7 +27,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
@@ -36,15 +34,16 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 
-public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */{
+public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;
     public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "";
     TelephonyManager mTelephonyMgr;
-//    AudioManager mAudioManager;
+    //    AudioManager mAudioManager;
     BroadcastReceiver broadcastReceiver;
+    UiModeManager uiModeManager;
     private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
@@ -76,6 +75,29 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         NavigationUI.setupWithNavController(binding.navView, navController);
         mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            Log.e("Nite Mode :",String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+        }
+        uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+        if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
+                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
+                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
+            uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+
+            Log.e("Nite Mode :",String.valueOf(uiModeManager.getNightMode()));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
+            if (!isIgnoringBatteryOptimizations) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivityForResult(intent, 15695);
+            }
+        }
 //        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 //        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
 //                AudioManager.AUDIOFOCUS_GAIN);
@@ -108,7 +130,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
-        wakeLock.acquire(600*60*1000L /*600 minutes*/);
+        wakeLock.acquire(600 * 60 * 1000L /*600 minutes*/);
 //        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 //        filter.addAction(Intent.ACTION_SCREEN_OFF);
 //        BroadcastReceiver mReceiver = new ScreenReceiver();
@@ -178,7 +200,24 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 //            // Use data as required to perform syncs, downloads, and updates.
 //        }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (requestCode == 15695) {
+                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                boolean isIgnoringBatteryOptimizations = false;
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+                if (isIgnoringBatteryOptimizations) {
+                    // Ignoring battery optimization
 
+                } else {
+                    // Not ignoring battery optimization
+
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
     @Override
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
