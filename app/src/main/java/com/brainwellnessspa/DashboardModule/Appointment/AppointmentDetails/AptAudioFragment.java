@@ -171,8 +171,8 @@ public class AptAudioFragment extends Fragment {
 
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownload) {
         try {
-            llDownload.setClickable(true);
-            llDownload.setEnabled(true);
+            llDownload.setClickable(false);
+            llDownload.setEnabled(false);
             ivDownload.setColorFilter(getActivity().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             ivDownload.setImageResource(R.drawable.ic_download_white_icon);
         } catch (Exception e) {

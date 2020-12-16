@@ -1328,8 +1328,8 @@ public class AddQueueActivity extends AppCompatActivity {
                 } else if (download.equalsIgnoreCase("1")) {
                     callDisableDownload();
                 } else {
-                    binding.llDownload.setClickable(true);
-                    binding.llDownload.setEnabled(true);
+                    binding.llDownload.setClickable(false);
+                    binding.llDownload.setEnabled(false);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                 }
                 super.onPostExecute(aVoid);

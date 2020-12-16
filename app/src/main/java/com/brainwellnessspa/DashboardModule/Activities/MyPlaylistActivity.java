@@ -883,8 +883,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
     private void enableDisableDownload(boolean b, String color) {
         if (b) {
-            binding.llDownload.setClickable(true);
-            binding.llDownload.setEnabled(true);
+            binding.llDownload.setClickable(false);
+            binding.llDownload.setEnabled(false);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             binding.tvDownload.setTextColor(getResources().getColor(R.color.white));

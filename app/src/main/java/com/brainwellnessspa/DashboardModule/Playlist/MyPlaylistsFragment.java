@@ -495,8 +495,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void enableDisableDownload(boolean b, String color) {
         if (b) {
-            binding.llDownloads.setClickable(true);
-            binding.llDownloads.setEnabled(true);
+            binding.llDownloads.setClickable(false);
+            binding.llDownloads.setEnabled(false);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
@@ -1684,8 +1684,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownloads) {
-        llDownload.setClickable(true);
-        llDownload.setEnabled(true);
+        llDownload.setClickable(false);
+        llDownload.setEnabled(false);
         ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
         ivDownloads.setColorFilter(activity.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
     }

@@ -240,17 +240,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
             addToQueueModelList = gson.fromJson(json1, type1);
         }
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-        }.getType();
-        mainPlayModelList = gson.fromJson(json, type);
-        callLLMoreViewQClicks();
+        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+            }.getType();
+            mainPlayModelList = gson.fromJson(json, type);
+        }
+//        callLLMoreViewQClicks();
 
-        /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
-            handler1.postDelayed(UpdateSongTime1, 500);
-        } else {
-            binding.pbProgress.setVisibility(View.GONE);
-            handler1.removeCallbacks(UpdateSongTime1);
-        }*/
+//        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
+//            handler1.postDelayed(UpdateSongTime1, 500);
+//        } else {
+//            binding.pbProgress.setVisibility(View.GONE);
+//            handler1.removeCallbacks(UpdateSongTime1);
+//        }
         GetMedia2();
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -296,9 +298,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            }
         }
         if (comeFromAddToQueue) {
-            player.removeMediaItem(position);
-            player.seekTo(position+1);
-            player.setPlayWhenReady(true);
+            if(player!=null) {
+                player.removeMediaItem(position);
+                player.seekTo(position + 1);
+                player.setPlayWhenReady(true);
+            }
             comeFromAddToQueue = false;
         }
         super.onResume();
@@ -1062,8 +1066,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llBackWordSec.setClickable(true);
             exoBinding.llBackWordSec.setEnabled(true);
             exoBinding.llBackWordSec.setAlpha(1f);
-            binding.llDownload.setClickable(true);
-            binding.llDownload.setEnabled(true);
+            binding.llDownload.setClickable(false);
+            binding.llDownload.setEnabled(false);
             binding.llDownload.setAlpha(1f);
             binding.llRepeat.setClickable(true);
             binding.llRepeat.setEnabled(true);
@@ -1288,14 +1292,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             binding.llDownload.setEnabled(false);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                         } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                            binding.llDownload.setClickable(true);
-                            binding.llDownload.setEnabled(true);
+                            binding.llDownload.setClickable(false);
+                            binding.llDownload.setEnabled(false);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         }
                     } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                        binding.llDownload.setClickable(true);
-                        binding.llDownload.setEnabled(true);
+                        binding.llDownload.setClickable(false);
+                        binding.llDownload.setEnabled(false);
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     }
