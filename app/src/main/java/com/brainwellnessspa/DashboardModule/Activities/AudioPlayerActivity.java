@@ -126,7 +126,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         downloadAudioDetailsList = new ArrayList<>();
         bytesDownloaded = new ArrayList<>();
         if (audioClick) {
-            MakeArray2();
             GetAllMedia();
         } else {
             MakeArray2();
@@ -1498,6 +1497,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+
+                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
@@ -2475,8 +2476,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         } else {
             initializePlayer();
         }
-        PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
+
         playerControlView.setPlayer(player);
+
         playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(position);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);

@@ -123,15 +123,14 @@ public class MiniPlayerFragment extends Fragment {
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
                 , R.layout.fragment_mini_exo_custom, binding.playerControlView, false);
 
+        playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         localIntent = new Intent("play_pause_Action");
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if (audioClick) {
-            MakeArray2();
             GetAllMedia();
         } else {
             MakeArray2();
         }
-        playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
 
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -738,6 +737,8 @@ public class MiniPlayerFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+
+                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
