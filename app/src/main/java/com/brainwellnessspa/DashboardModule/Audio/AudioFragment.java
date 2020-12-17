@@ -80,7 +80,6 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class AudioFragment extends Fragment {
     public static boolean exit = false;
@@ -92,7 +91,6 @@ public class AudioFragment extends Fragment {
     FancyShowCaseQueue queue;
     List<String> audioFile, playlistDownloadId;
     List<DownloadAudioDetails> downloadAudioDetailsList;
-    List<MainAudioModel.ResponseData> model;
     MainAudioListAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,7 +103,9 @@ public class AudioFragment extends Fragment {
         comefromDownload = "0";
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        binding.rvMainAudioList.setLayoutManager(manager);
+        binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
         prepareDisplayData();
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -187,22 +187,12 @@ public class AudioFragment extends Fragment {
                             listModel.get(i).setDetails(details);
                         }
                     }
-                    adapter = new MainAudioListAdapter(getActivity());
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                    binding.rvMainAudioList.setLayoutManager(manager);
-                    binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
+                    adapter = new MainAudioListAdapter(listModel,getActivity());
                     binding.rvMainAudioList.setAdapter(adapter);
-                  /*  model.clear();
-                    model = new ArrayList<>();
-                    model.addAll(listModel);
-                    adapter.notifyDataSetChanged();*/
-                } else {
+                }/* else {
                     adapter = new MainAudioListAdapter(getActivity());
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                    binding.rvMainAudioList.setLayoutManager(manager);
-                    binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
                     binding.rvMainAudioList.setAdapter(adapter);
-                }
+                }*/
                 /*if (downloadAudioDetailsList.size() != 0) {
                     MainAudioListAdapter1 adapter1 = new MainAudioListAdapter1(getActivity(),listModel);
                     RecyclerView.LayoutManager manager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -236,12 +226,8 @@ public class AudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
                         editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
                         editor.commit();
-                        model = listModel.getResponseData();
-                        /*adapter = new MainAudioListAdapter(getActivity());
-                        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                        binding.rvMainAudioList.setLayoutManager(manager);
-                        binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
-                        binding.rvMainAudioList.setAdapter(adapter);*/
+                        adapter = new MainAudioListAdapter(listModel.getResponseData(),getActivity());
+                        binding.rvMainAudioList.setAdapter(adapter);
                         GetAllMedia(getActivity(), listModel.getResponseData());
                     }
                 }
@@ -473,8 +459,10 @@ public class AudioFragment extends Fragment {
 
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {
         FragmentActivity activity;
+        List<MainAudioModel.ResponseData> model;
 
-        public MainAudioListAdapter(FragmentActivity activity) {
+        public MainAudioListAdapter(List<MainAudioModel.ResponseData> model, FragmentActivity activity) {
+            this.model = model;
             this.activity = activity;
         }
 

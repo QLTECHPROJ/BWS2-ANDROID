@@ -137,8 +137,8 @@ public class PlaylistFragment extends Fragment {
                             MainPlayListModel listModel = response.body();
                             binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
                             listModelList = listModel.getResponseData();
-                           /* adapter = new MainPlayListAdapter();
-                            binding.rvMainPlayList.setAdapter(adapter);*/
+                            adapter = new MainPlayListAdapter();
+                            binding.rvMainPlayList.setAdapter(adapter);
                             downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
                         }
                     } catch (Exception e) {
