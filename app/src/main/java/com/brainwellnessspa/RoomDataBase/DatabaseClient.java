@@ -22,8 +22,6 @@ public class DatabaseClient {
         cart = Room.databaseBuilder(Ctx,
                 AudioDatabase.class,
                 "Audio_database")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
                 .addMigrations(MIGRATION_1_2)
                 .build();
     }
