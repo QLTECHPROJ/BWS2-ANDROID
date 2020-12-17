@@ -151,7 +151,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             dialog.dismiss();
                                             prepareData(ctx);
                                             String PlaylistID = listsModel.getResponseData().getId();
-                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                                             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                                             String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
@@ -248,7 +248,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             AddToPlaylist listModels = response.body();
                             if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
 //                                BWSApplication.showToast(listModels.getResponseMessage(), ctx);
-                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                                 int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -435,7 +435,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String PlaylistID = listModel.get(position).getID();
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");

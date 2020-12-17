@@ -305,7 +305,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         });
 
         binding.llDelete.setOnClickListener(view -> {
-            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");

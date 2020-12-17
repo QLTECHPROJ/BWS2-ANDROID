@@ -103,7 +103,7 @@ public class AudioFragment extends Fragment {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         ComeScreenAccount = 0;
         comefromDownload = "0";
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         prepareDisplayData();
@@ -187,15 +187,15 @@ public class AudioFragment extends Fragment {
                             listModel.get(i).setDetails(details);
                         }
                     }
-                    /*adapter = new MainAudioListAdapter(getActivity());
+                    adapter = new MainAudioListAdapter(getActivity());
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
                     binding.rvMainAudioList.setLayoutManager(manager);
                     binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
-                    binding.rvMainAudioList.setAdapter(adapter);*/
-                    model.clear();
+                    binding.rvMainAudioList.setAdapter(adapter);
+                  /*  model.clear();
                     model = new ArrayList<>();
                     model.addAll(listModel);
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();*/
                 } else {
                     adapter = new MainAudioListAdapter(getActivity());
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -237,11 +237,11 @@ public class AudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
                         editor.commit();
                         model = listModel.getResponseData();
-                        adapter = new MainAudioListAdapter(getActivity());
+                        /*adapter = new MainAudioListAdapter(getActivity());
                         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
                         binding.rvMainAudioList.setLayoutManager(manager);
                         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
-                        binding.rvMainAudioList.setAdapter(adapter);
+                        binding.rvMainAudioList.setAdapter(adapter);*/
                         GetAllMedia(getActivity(), listModel.getResponseData());
                     }
                 }
@@ -343,7 +343,7 @@ public class AudioFragment extends Fragment {
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioID = "";
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {
@@ -390,7 +390,7 @@ public class AudioFragment extends Fragment {
                 callNewPlayerRelease();
 
             }
-            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
             if (!AudioFlag.equalsIgnoreCase("0")) {
@@ -717,7 +717,7 @@ public class AudioFragment extends Fragment {
 
         private void callnewTrans(int position) {
 
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");

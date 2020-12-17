@@ -77,7 +77,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -185,7 +185,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             AddToPlaylist listModels = response.body();
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                             int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -304,7 +304,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivRestaurantImage);
             holder.binds.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binds.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -447,7 +447,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binds.ivLock.setVisibility(View.GONE);
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
@@ -470,7 +470,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binds.ivLock.setVisibility(View.GONE);
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
@@ -491,7 +491,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binds.ivLock.setVisibility(View.GONE);
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
@@ -614,7 +614,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
                     comefromDownload = "0";
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");

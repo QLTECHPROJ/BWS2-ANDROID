@@ -115,7 +115,7 @@ public class AppointmentDetailsFragment extends Fragment {
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioID = "";
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {

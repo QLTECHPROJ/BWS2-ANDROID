@@ -234,7 +234,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-        SharedPreferences sharedzw = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences sharedzw = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -281,7 +281,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 comefromDownload = "1";
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
@@ -320,7 +320,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 String AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     String name = "";
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     Gson gson = new Gson();
                     String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                     Type type = new TypeToken<ArrayList<MainPlayModel>>() {

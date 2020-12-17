@@ -234,7 +234,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
@@ -447,15 +447,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             }
 
-                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
                             AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            SharedPreferences sharedq = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences sharedq = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                             Gson gsonq = new Gson();
                             String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonq));
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
                             if (audioPlay) {
@@ -1528,7 +1528,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 //        showTooltiop();
         Gson gson = new Gson();
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         MainPlayModel mainPlayModel;
@@ -1570,7 +1570,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1596,7 +1596,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1624,7 +1624,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1652,7 +1652,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1680,7 +1680,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1708,7 +1708,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1736,7 +1736,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1764,7 +1764,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1792,7 +1792,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1822,7 +1822,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json1 = gson.toJson(arrayList);
@@ -1842,7 +1842,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 //        showTooltiop();
         Gson gson = new Gson();
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         MainPlayModel mainPlayModel;
@@ -1884,7 +1884,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1912,7 +1912,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1940,7 +1940,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1968,7 +1968,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -1996,7 +1996,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -2024,7 +2024,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -2052,7 +2052,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -2080,7 +2080,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -2108,7 +2108,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String jsonz = gsonz.toJson(mainPlayModelList);
@@ -2138,7 +2138,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json1 = gson.toJson(arrayList);
@@ -2160,7 +2160,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void removeArray() {
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
@@ -2189,7 +2189,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2220,7 +2220,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2250,7 +2250,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2280,7 +2280,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2310,7 +2310,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2340,7 +2340,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2371,7 +2371,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2401,7 +2401,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2431,7 +2431,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);
@@ -2461,7 +2461,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
             String json = gson.toJson(arrayList);

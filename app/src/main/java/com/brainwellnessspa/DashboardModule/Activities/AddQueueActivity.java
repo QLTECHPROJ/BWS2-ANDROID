@@ -273,7 +273,7 @@ public class AddQueueActivity extends AppCompatActivity {
         binding.llShuffle.setOnClickListener(view -> callShuffle());
 
         binding.llRemovePlaylist.setOnClickListener(view -> {
-            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -313,7 +313,7 @@ public class AddQueueActivity extends AppCompatActivity {
 //            Intent i = new Intent(ctx, PlayWellnessActivity.class);
 //            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //            startActivity(i);
-      /*      SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+      /*      SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared11.edit();
             Gson gson11 = new Gson();
             String json11 = gson11.toJson(mainPlayModelList);
@@ -536,7 +536,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SucessModel listModel = response.body();
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                             int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -599,7 +599,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                                     mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                                                     mainPlayModelList.add(mainPlayModel);
                                                 }
-                                                SharedPreferences sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                                SharedPreferences sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                                 SharedPreferences.Editor editor1 = sharedz.edit();
                                                 Gson gsonz = new Gson();
                                                 String jsonz = gsonz.toJson(mainPlayModelList);
@@ -830,7 +830,7 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setIsDownload("pending");
                     downloadAudioDetails.setDownloadProgress(0);
                 }
-                SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 int position = sharedx1.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -911,7 +911,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                                 Like = "1";
                             }
-                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
                             AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -919,7 +919,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
 
                                 } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                    SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                    SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                     AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                                     Gson gsonx = new Gson();
                                     String json = sharedx.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
@@ -1041,7 +1041,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 addToQueueModelList.get(position).setLike(Like);
                             } else
                                 mainPlayModelList.get(position).setLike(Like);
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
                             String json = gson.toJson(mainPlayModelList);
@@ -1084,7 +1084,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Log.e("AudioFlag", AudioFlag);
                         Log.e("play", play);
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
 
                         binding.llOptions.setVisibility(View.VISIBLE);
@@ -1166,7 +1166,7 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.tvReadMore.setVisibility(View.GONE);
                         }
 
-                        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                         if (!AudioFlag.equalsIgnoreCase("0")) {
                             binding.llViewQueue.setClickable(true);

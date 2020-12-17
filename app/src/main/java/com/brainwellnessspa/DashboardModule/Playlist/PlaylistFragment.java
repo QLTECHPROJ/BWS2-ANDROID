@@ -137,8 +137,8 @@ public class PlaylistFragment extends Fragment {
                             MainPlayListModel listModel = response.body();
                             binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
                             listModelList = listModel.getResponseData();
-                            adapter = new MainPlayListAdapter();
-                            binding.rvMainPlayList.setAdapter(adapter);
+                           /* adapter = new MainPlayListAdapter();
+                            binding.rvMainPlayList.setAdapter(adapter);*/
                             downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
                         }
                     } catch (Exception e) {
@@ -180,7 +180,7 @@ public class PlaylistFragment extends Fragment {
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioID = "";
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {
@@ -224,7 +224,7 @@ public class PlaylistFragment extends Fragment {
                 callNewPlayerRelease();
 
             }
-            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new MiniPlayerFragment();
@@ -282,11 +282,11 @@ public class PlaylistFragment extends Fragment {
                         }
                     }
 
-                    listModelList.clear();
+                    /*listModelList.clear();
                     listModelList = new ArrayList<>();
-                    listModelList.addAll(responseData);
-                   /* adapter = new MainPlayListAdapter();
-                    binding.rvMainPlayList.setAdapter(adapter);*/
+                    listModelList.addAll(responseData);*/
+                    adapter = new MainPlayListAdapter();
+                    binding.rvMainPlayList.setAdapter(adapter);
                 } else {
                     adapter = new MainPlayListAdapter();
                     binding.rvMainPlayList.setAdapter(adapter);

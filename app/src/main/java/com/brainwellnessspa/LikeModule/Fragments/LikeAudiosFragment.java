@@ -87,7 +87,7 @@ public class LikeAudiosFragment extends Fragment {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
                 try {
-                    SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -114,7 +114,7 @@ public class LikeAudiosFragment extends Fragment {
 //        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvLikesList.setLayoutManager(mLayoutManager);
@@ -139,7 +139,7 @@ public class LikeAudiosFragment extends Fragment {
     }
 
     public void prepareData() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -221,7 +221,7 @@ public class LikeAudiosFragment extends Fragment {
             Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -274,7 +274,7 @@ public class LikeAudiosFragment extends Fragment {
             holder.binding.llLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                  /*  SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                  /*  SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
@@ -314,7 +314,7 @@ public class LikeAudiosFragment extends Fragment {
                     mainPlayModel.setAudioDuration("00:48");
 
                     int pos = holder.getAdapterPosition();
-                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     Log.e("position of play", String.valueOf(position));
@@ -487,7 +487,7 @@ public class LikeAudiosFragment extends Fragment {
 
                         /*if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
                             if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                  AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                                 Gson gsonx = new Gson();
                                 String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
@@ -514,7 +514,7 @@ public class LikeAudiosFragment extends Fragment {
                                 editor.commit();
 
                             } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                 AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                                 Gson gsonx = new Gson();
                                 String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
@@ -578,13 +578,13 @@ public class LikeAudiosFragment extends Fragment {
                                 editor.commit();
                             }
                         }*/
-                            SharedPreferences sharedq = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences sharedq = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                             boolean audioPlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             boolean queuePlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
                             Gson gsonq = new Gson();
                             String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonq));
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
                             ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
