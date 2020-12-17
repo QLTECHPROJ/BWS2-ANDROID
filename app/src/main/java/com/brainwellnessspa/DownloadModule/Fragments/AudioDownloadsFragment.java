@@ -109,6 +109,7 @@ public class AudioDownloadsFragment extends Fragment {
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
         }
+        handler1 = new Handler();
         audioList = new ArrayList<>();
         audioList = GetAllMedia(getActivity());
         binding.tvFound.setText("Your downloaded audios will appear here");
@@ -126,7 +127,7 @@ public class AudioDownloadsFragment extends Fragment {
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-        audioList = GetAllMedia(getActivity());
+//        audioList = GetAllMedia(getActivity());
     }
 
 
@@ -227,7 +228,7 @@ public class AudioDownloadsFragment extends Fragment {
             this.llError = llError;
             this.rvDownloadsList = rvDownloadsList;
             this.tvFound = tvFound;
-            handler1 = new Handler();
+
             downloadAudioDetailsList = new ArrayList<>();
         /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();

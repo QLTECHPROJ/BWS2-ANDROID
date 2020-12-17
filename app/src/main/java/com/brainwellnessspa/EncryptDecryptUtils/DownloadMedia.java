@@ -31,7 +31,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.FileUtils.saveFile;
 public class DownloadMedia implements OnDownloadListener{
     public static int downloadError = 2,downloadIdOne;
     public static String filename = "";
-    public static int downloadProgress = 0;
+    public static int downloadProgress = 0,downloadprog22=0;
     public static boolean isDownloading = false;
     Context context;
     byte[] encodedBytes;
@@ -56,7 +56,10 @@ public class DownloadMedia implements OnDownloadListener{
        downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().setOnProgressListener(progress -> {
             long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
             downloadProgress = (int) progressPercent;
-            updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress,"Start");
+            if(downloadProgress == downloadprog22+5) {
+                updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
+            }
+           downloadprog22 = downloadProgress;
        }).setOnCancelListener(new OnCancelListener() {
            @Override
            public void onCancel() {
@@ -202,7 +205,7 @@ public class DownloadMedia implements OnDownloadListener{
             protected void onPostExecute(Void aVoid) {
                 try{
                     updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
-                    fileNameList.remove(0);
+                   fileNameList.remove(0);
                     audioFile.remove(0);
                     playlistDownloadId.remove(0);
                     SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
