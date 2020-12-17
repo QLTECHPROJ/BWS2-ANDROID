@@ -275,6 +275,9 @@ public class AudioFragment extends Fragment {
                 }
                 adapter = new MainAudioListAdapter(listModel,getActivity());
                 binding.rvMainAudioList.setAdapter(adapter);
+            }else{
+                adapter = new MainAudioListAdapter(listModel,getActivity());
+                binding.rvMainAudioList.setAdapter(adapter);
             }
         });
     }

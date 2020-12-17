@@ -278,8 +278,10 @@ public class PlaylistFragment extends Fragment {
                 adapter = new MainPlayListAdapter();
                 binding.rvMainPlayList.setAdapter(adapter);
             } else {
-                adapter = new MainPlayListAdapter();
-                binding.rvMainPlayList.setAdapter(adapter);
+                if(BWSApplication.isNetworkConnected(getActivity())) {
+                    adapter = new MainPlayListAdapter();
+                    binding.rvMainPlayList.setAdapter(adapter);
+                }
             }
         });
     }

@@ -51,7 +51,10 @@ public interface AudioDetailsDao {
     List<DownloadAudioDetails> getLastIdByuId(String AudioFile);
 
     @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile and PlaylistId =:PlaylistId")
-    List<DownloadAudioDetails> getaudioByPlaylist(String AudioFile, String PlaylistId);
+    LiveData<List<DownloadAudioDetails>> getaudioByPlaylist1(String AudioFile, String PlaylistId);
+
+//    @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile and PlaylistId =:PlaylistId")
+//    List<DownloadAudioDetails> getaudioByPlaylist(String AudioFile, String PlaylistId);
 
     @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
     LiveData<List<DownloadAudioDetails>> getAllAudioByPlaylist1(String PlaylistId);

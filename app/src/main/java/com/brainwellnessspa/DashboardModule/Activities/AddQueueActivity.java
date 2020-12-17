@@ -58,7 +58,6 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class AddQueueActivity extends AppCompatActivity {
     public static boolean comeFromAddToQueue = false;
@@ -1280,34 +1279,21 @@ public class AddQueueActivity extends AppCompatActivity {
     }
 
     public void GetMedia(String AudioFile, Context ctx, String download, String PlayListId) {
-        oneAudioDetailsList = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                oneAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(AudioFile);
-                return null;
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .getLastIdByuId1(AudioFile).observe(this, audioList -> {
+            if (audioList.size() != 0) {
+                callDisableDownload();
+            } else if (download.equalsIgnoreCase("1")) {
+                callDisableDownload();
+            } else {
+                binding.llDownload.setClickable(true);
+                binding.llDownload.setEnabled(true);
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
             }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (oneAudioDetailsList.size() != 0) {
-                    callDisableDownload();
-                } else if (download.equalsIgnoreCase("1")) {
-                    callDisableDownload();
-                } else {
-                    binding.llDownload.setClickable(true);
-                    binding.llDownload.setEnabled(true);
-                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
+        });
     }
 
     private void callDisableDownload() {

@@ -1,3 +1,4 @@
+/*
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
@@ -114,7 +115,9 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.Utility.MusicService.transportControls;
 import static com.brainwellnessspa.Utility.MusicService.mMediaControllerCompatCallback;
 
-public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener*/
+/*, Playable, AudioManager.OnAudioFocusChangeListener, OnProgressListener*//*
+ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
     int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage, audioBufferCapacityMs;
@@ -210,13 +213,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 totalDuration = t.getTime();
             }
 
-            /*if (isMediaStart) {
+            */
+/*if (isMediaStart) {
                 mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                     if (mediaPlayer.isPlaying()) {
                         callComplete();
                     }
                 });
-            }*/
+            }*//*
+
             myProgress = currentDuration;
             currentDuration = getStartTime();
             diff = totalDuration - myProgress;
@@ -244,9 +249,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             }
 
-            /*if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
+            */
+/*if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
-            }*/
+            }*//*
+
             progress = getProgressPercentage(currentDuration, totalDuration);
             if (currentDuration == 0 && isCompleteStop) {
                 binding.progressBar.setVisibility(View.GONE);
@@ -298,6 +305,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         }
     };
+*/
 /*    private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
@@ -319,7 +327,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             handler1.postDelayed(this, 500);
         }
-    };*/
+    };*//*
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -350,19 +359,24 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+*/
 /*        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN);*/
+                AudioManager.AUDIOFOCUS_GAIN);*//*
+
         callLLMoreViewQClicks();
         handler.postDelayed(UpdateSongTime, 100);
         getPrepareShowData(position);
-        /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
+        */
+/*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);
         } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }*/
-  /*      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        }*//*
+
+  */
+/*      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ctx.getApplicationContext().startForegroundService(new Intent(ctx.getApplicationContext(), MusicService.class));
         }else{
             try {
@@ -375,19 +389,26 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }*//*
+
         callRepeatShuffle();
 
 //        showTooltiop();
 
-        /* if (isMediaStart *//*&& !audioFile.equalsIgnoreCase("")*//*) {
+        */
+/* if (isMediaStart *//*
+*/
+/*&& !audioFile.equalsIgnoreCase("")*//*
+*/
+/*) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 if (mediaPlayer.isPlaying()) {
                     callComplete();
                     Log.e("calll complete real", "real");
                 }
             });
-        }*/
+        }*//*
+
         binding.llBack.setOnClickListener(view -> {
             callBack();
         });
@@ -493,7 +514,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 .customView(R.layout.layout_player_menu, view -> {
                     RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                     rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                   */
+/* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -506,7 +528,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         public void onClick(View v) {
                             queue.cancel(true);
                         }
-                    });*/
+                    });*//*
+
 
                 }).closeOnTouch(false)
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
@@ -546,8 +569,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 .add(fancyShowCaseView21)
                 .add(fancyShowCaseView31);
         queue.show();
-       /* IsRegisters = "false";
-        IsRegisters1 = "false";*/
+       */
+/* IsRegisters = "false";
+        IsRegisters1 = "false";*//*
+
 
     }
 
@@ -627,9 +652,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 position = listSize - 1;
                 getPrepareShowData(position);
             }
-        }/* else if (IsRepeat.equalsIgnoreCase("0")) {
+        }*/
+/* else if (IsRepeat.equalsIgnoreCase("0")) {
                 getPrepareShowData(position);
-            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
+            }*//*
+ else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (queuePlay) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
@@ -704,9 +731,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 position = 0;
             }
             getPrepareShowData(position);
-        }/* else if (IsRepeat.equalsIgnoreCase("0")) {
+        }*/
+/* else if (IsRepeat.equalsIgnoreCase("0")) {
                 getPrepareShowData(position);
-            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
+            }*//*
+ else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (queuePlay) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
@@ -1312,14 +1341,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.llPlay.setVisibility(View.GONE);
                     callMedia();
                 }
-                /*if (isMediaStart) {
+                */
+/*if (isMediaStart) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         if (mediaPlayer.isPlaying()) {
                             Log.e("player to go", "::>>>>>callcomplete prepare...");
                             callComplete();  //call....
                         }
                     });
-                }*/
+                }*//*
+
                 super.onPostExecute(aVoid);
 
             }
@@ -1350,13 +1381,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                        } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
+                        } else*/
+/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) *//*
+ {
                             binding.llDownload.setClickable(true);
                             binding.llDownload.setEnabled(true);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         }
-                    } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
+                    } else*/
+/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) *//*
+ {
                         binding.llDownload.setClickable(true);
                         binding.llDownload.setEnabled(true);
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
@@ -1395,7 +1430,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
-        } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
+        } */
+/*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
             binding.llnext.setEnabled(false);
             binding.llnext.setClickable(false);
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -1403,7 +1439,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llprev.setEnabled(false);
             binding.llprev.setClickable(false);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-        }*/ else {
+        }*//*
+ else {
             binding.llnext.setEnabled(true);
             binding.llprev.setEnabled(true);
             binding.llShuffle.setEnabled(true);
@@ -1537,9 +1574,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
 
-       /* BWSApplication.createChannel(ctx);
+       */
+/* BWSApplication.createChannel(ctx);
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*//*
+
     }
 
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
@@ -1590,9 +1629,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     mediaPlayer.setDataSource(fileDescriptor);
                 } else {
                     url = url.replaceAll(" ", "%20");
-                 /*   URL url1 = new URL(url);
+                 */
+/*   URL url1 = new URL(url);
                     URI uri2 = new URI(url1.getProtocol(), url1.getUserInfo(), url1.getHost(), url1.getPort(), url1.getPath(), url1.getQuery(), url1.getRef());
-                    String encodedUrl = uri2.toASCIIString();*/
+                    String encodedUrl = uri2.toASCIIString();*//*
+
                     mediaPlayer.setDataSource("http://vprbbc.streamguys.net/vprbbc24.mp3");
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -1606,7 +1647,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 mediaPlayer.prepareAsync();
                 isPause = false;
                 isPrepare = true;
-            } catch (IllegalStateException | IOException /*| URISyntaxException */e) {
+            } catch (IllegalStateException | IOException */
+/*| URISyntaxException *//*
+e) {
                 FileDescriptor fileDescriptor1 = null;
                 Log.e(":Play from Catch", "async");
                 Log.e("async from Catch", e.getMessage());
@@ -1780,8 +1823,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callMedia() {
-       /* BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);*/
+       */
+/* BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);*//*
+
         FileDescriptor fileDescriptor = null;
         if (url.equalsIgnoreCase("")) {
             setMediaPlayer("2", fileDescriptor);
@@ -1994,7 +2039,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
-        } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
+        } */
+/*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
                 binding.llnext.setEnabled(false);
                 binding.llnext.setClickable(false);
                 binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -2002,7 +2048,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llprev.setEnabled(false);
                 binding.llprev.setClickable(false);
                 binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }*/ else {
+            }*//*
+ else {
             binding.llnext.setEnabled(true);
             binding.llprev.setEnabled(true);
             binding.llnext.setClickable(true);
@@ -2015,9 +2062,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
         callRepeatShuffle();
-       /* BWSApplication.createChannel(ctx);
+       */
+/* BWSApplication.createChannel(ctx);
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*//*
+
     }
 
     private void removeArray() {
@@ -2646,7 +2695,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
     }
 
-  /*  private void MakeArray2() {
+  */
+/*  private void MakeArray2() {
         Gson gson = new Gson();
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         mainPlayModelList = new ArrayList<>();
@@ -2830,7 +2880,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
         }
-    }*/
+    }*//*
+
 
     @Override
     public void onBackPressed() {
@@ -2903,12 +2954,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mainPlayModelList = gson.fromJson(json, type);
         callLLMoreViewQClicks();
 
-        /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
+        */
+/*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);
         } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }*/
+        }*//*
+
         GetMedia2();
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -2964,7 +3017,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         callRepeatShuffle();
-       /* if (isPrepare && !isMediaStart) {
+       */
+/* if (isPrepare && !isMediaStart) {
             callMedia();
         } else if ((isMediaStart && isPlaying()) && !isPause) {
             binding.llPlay.setVisibility(View.GONE);
@@ -2976,7 +3030,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPause.setVisibility(View.GONE);
             binding.llProgressBar.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
-        }*/
+        }*//*
+
         super.onResume();
     }
 
@@ -3093,7 +3148,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-     /*   handler.removeCallbacks(UpdateSongTime);
+     */
+/*   handler.removeCallbacks(UpdateSongTime);
         if (isMediaStart) {
             int totalDuration = getEndTime();
             int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
@@ -3102,7 +3158,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             SeekTo(currentPosition);
         }
         // update timer progress again
-        updateProgressBar();*/
+        updateProgressBar();*//*
+
     }
 
     @Override
@@ -3133,7 +3190,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-   /* public void setAudioBufferCapacityMs(int audioBufferCapacityMs) {
+   */
+/* public void setAudioBufferCapacityMs(int audioBufferCapacityMs) {
         this.audioBufferCapacityMs = audioBufferCapacityMs;
-    }*/
-}
+    }*//*
+
+}*/

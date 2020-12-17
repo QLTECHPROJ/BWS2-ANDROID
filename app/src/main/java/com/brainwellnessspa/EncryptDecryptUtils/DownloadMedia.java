@@ -144,6 +144,7 @@ public class DownloadMedia implements OnDownloadListener{
     }
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
+
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
