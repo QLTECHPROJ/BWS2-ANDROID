@@ -92,6 +92,8 @@ public class AudioFragment extends Fragment {
     FancyShowCaseQueue queue;
     List<String> audioFile, playlistDownloadId;
     List<DownloadAudioDetails> downloadAudioDetailsList;
+    List<MainAudioModel.ResponseData> model;
+    MainAudioListAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_audio, container, false);
@@ -104,6 +106,7 @@ public class AudioFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
+        prepareDisplayData();
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -135,9 +138,17 @@ public class AudioFragment extends Fragment {
                 }
             }
         }
-        prepareData();
 //        showTooltiop();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareDisplayData();
+        prepareData();
+        ComeScreenAccount = 0;
+        comefromDownload = "0";
     }
 
     public void GetAllMedia(FragmentActivity ctx, List<MainAudioModel.ResponseData> listModel) {
@@ -176,13 +187,17 @@ public class AudioFragment extends Fragment {
                             listModel.get(i).setDetails(details);
                         }
                     }
-                    MainAudioListAdapter adapter = new MainAudioListAdapter(listModel, getActivity());
+                    /*adapter = new MainAudioListAdapter(getActivity());
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
                     binding.rvMainAudioList.setLayoutManager(manager);
                     binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
-                    binding.rvMainAudioList.setAdapter(adapter);
+                    binding.rvMainAudioList.setAdapter(adapter);*/
+                    model.clear();
+                    model = new ArrayList<>();
+                    model.addAll(listModel);
+                    adapter.notifyDataSetChanged();
                 } else {
-                    MainAudioListAdapter adapter = new MainAudioListAdapter(listModel, getActivity());
+                    adapter = new MainAudioListAdapter(getActivity());
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
                     binding.rvMainAudioList.setLayoutManager(manager);
                     binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
@@ -205,30 +220,29 @@ public class AudioFragment extends Fragment {
         st.execute();
     }
 
-    private void prepareData() {
+    private void prepareDisplayData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<MainAudioModel> listCall = APIClient.getClient().getMainAudioLists(UserID);
             listCall.enqueue(new Callback<MainAudioModel>() {
                 @Override
                 public void onResponse(Call<MainAudioModel> call, Response<MainAudioModel> response) {
-                    if (response.isSuccessful()) {
+                    MainAudioModel listModel = response.body();
+                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        MainAudioModel listModel = response.body();
-                        try {
-                            IsLock = listModel.getResponseData().get(0).getIsLock();
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
-                            editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
-                            editor.commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+                        IsLock = listModel.getResponseData().get(0).getIsLock();
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
+                        editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
+                        editor.commit();
+                        model = listModel.getResponseData();
+                        adapter = new MainAudioListAdapter(getActivity());
+                        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                        binding.rvMainAudioList.setLayoutManager(manager);
+                        binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
+                        binding.rvMainAudioList.setAdapter(adapter);
                         GetAllMedia(getActivity(), listModel.getResponseData());
-                    } else {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     }
                 }
 
@@ -237,37 +251,34 @@ public class AudioFragment extends Fragment {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
-            if (BWSApplication.isNetworkConnected(getActivity())) {
-                Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID);
-                listCall1.enqueue(new Callback<UnlockAudioList>() {
-                    @Override
-                    public void onResponse(Call<UnlockAudioList> call, Response<UnlockAudioList> response) {
-                        try {
-                            if (response.isSuccessful()) {
-                                UnlockAudioList listModel = response.body();
-                                try {
-                                    IsLock = listModel.getResponseData().getIsLock();
-                                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shared.edit();
-                                    editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
-                                    Gson gson = new Gson();
-                                    editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
-                                    editor.commit();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
 
-                    @Override
-                    public void onFailure(Call<UnlockAudioList> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+    private void prepareData() {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID);
+            listCall1.enqueue(new Callback<UnlockAudioList>() {
+                @Override
+                public void onResponse(Call<UnlockAudioList> call, Response<UnlockAudioList> response) {
+                    UnlockAudioList listModel = response.body();
+                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                        IsLock = listModel.getResponseData().getIsLock();
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
+                        Gson gson = new Gson();
+                        editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
+                        editor.commit();
                     }
-                });
-            }
+                }
+
+                @Override
+                public void onFailure(Call<UnlockAudioList> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                }
+            });
         } else {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             expDate = (shared1.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
@@ -402,50 +413,6 @@ public class AudioFragment extends Fragment {
         }
     }
 
-    /*private void openMiniPlayer() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 6, 0, 280);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 6, 0, 50);
-            binding.llSpace.setLayoutParams(params);
-        }
-    }
-*/
-/*
-    private void openMiniPlayer() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 6, 0, 260);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 6, 0, 50);
-            binding.llSpace.setLayoutParams(params);
-        }
-    }
-*/
-
     private void showTooltiop() {
         Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
         Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
@@ -504,22 +471,10 @@ public class AudioFragment extends Fragment {
         IsRegisters1 = "false";*/
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ComeScreenAccount = 0;
-        comefromDownload = "0";
-        prepareData();
-//        openMiniPlayer();
-//        BWSApplication.getLatasteUpdate(getActivity());
-    }
-
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {
         FragmentActivity activity;
-        private List<MainAudioModel.ResponseData> listModelList;
 
-        public MainAudioListAdapter(List<MainAudioModel.ResponseData> listModelList, FragmentActivity activity) {
-            this.listModelList = listModelList;
+        public MainAudioListAdapter(FragmentActivity activity) {
             this.activity = activity;
         }
 
@@ -540,95 +495,95 @@ public class AudioFragment extends Fragment {
                         .replace(R.id.flContainer, viewAllAudioFragment)
                         .commit();
                 Bundle bundle = new Bundle();
-                bundle.putString("ID", listModelList.get(position).getHomeID());
-                bundle.putString("Name", listModelList.get(position).getView());
+                bundle.putString("ID", model.get(position).getHomeID());
+                bundle.putString("Name", model.get(position).getView());
                 bundle.putString("Category", "");
                 viewAllAudioFragment.setArguments(bundle);
             });
 
-            if (listModelList.get(position).getDetails().size() == 0) {
+            if (model.get(position).getDetails().size() == 0) {
                 holder.binding.llMainLayout.setVisibility(View.GONE);
             } else {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
-                holder.binding.tvTitle.setText(listModelList.get(position).getView());
-                if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
-                    DownloadAdapter myDownloadsAdapter = new DownloadAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock());
-                    IsLock = listModelList.get(position).getIsLock();
+                holder.binding.tvTitle.setText(model.get(position).getView());
+                if (model.get(position).getView().equalsIgnoreCase("My Downloads")) {
+                    DownloadAdapter myDownloadsAdapter = new DownloadAdapter(model.get(position).getDetails(), getActivity(), activity,
+                            model.get(position).getIsLock());
+                    IsLock = model.get(position).getIsLock();
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(myDownloadsAdapter);
-                    if (listModelList.get(position).getDetails() != null &&
-                            listModelList.get(position).getDetails().size() > 4) {
+                    if (model.get(position).getDetails() != null &&
+                            model.get(position).getDetails().size() > 4) {
                         holder.binding.tvViewAll.setVisibility(View.VISIBLE);
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
-                    LibraryAdapter recommendedAdapter = new LibraryAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
-                    IsLock = listModelList.get(position).getIsLock();
+                } else if (model.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
+                    LibraryAdapter recommendedAdapter = new LibraryAdapter(model.get(position).getDetails(), getActivity(), activity,
+                            model.get(position).getIsLock(), model.get(position).getView());
+                    IsLock = model.get(position).getIsLock();
                     RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recommended);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recommendedAdapter);
-                    if (listModelList.get(position).getDetails() != null &&
-                            listModelList.get(position).getDetails().size() > 4) {
+                    if (model.get(position).getDetails() != null &&
+                            model.get(position).getDetails().size() > 4) {
                         holder.binding.tvViewAll.setVisibility(View.VISIBLE);
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.my_like))) {
+                } else if (model.get(position).getView().equalsIgnoreCase(getString(R.string.my_like))) {
                     holder.binding.llMainLayout.setVisibility(View.GONE);
-                    /*RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity());
+                    /*RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(model.get(position).getDetails(), getActivity());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);*/
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.recently_played))) {
-                    RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
+                } else if (model.get(position).getView().equalsIgnoreCase(getString(R.string.recently_played))) {
+                    RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(model.get(position).getDetails(), getActivity(), activity,
+                            model.get(position).getIsLock(), model.get(position).getView());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
-                    if (listModelList.get(position).getDetails() != null &&
-                            listModelList.get(position).getDetails().size() > 6) {
+                    if (model.get(position).getDetails() != null &&
+                            model.get(position).getDetails().size() > 6) {
                         holder.binding.tvViewAll.setVisibility(View.VISIBLE);
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.get_inspired))) {
-                    RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
+                } else if (model.get(position).getView().equalsIgnoreCase(getString(R.string.get_inspired))) {
+                    RecommendedAdapter recommendedAdapter = new RecommendedAdapter(model.get(position).getDetails(), getActivity(), activity,
+                            model.get(position).getIsLock(), model.get(position).getView());
                     RecyclerView.LayoutManager inspired = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(inspired);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recommendedAdapter);
-                    if (listModelList.get(position).getDetails() != null &&
-                            listModelList.get(position).getDetails().size() > 4) {
+                    if (model.get(position).getDetails() != null &&
+                            model.get(position).getDetails().size() > 4) {
                         holder.binding.tvViewAll.setVisibility(View.VISIBLE);
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.popular))) {
-                    PopularPlayedAdapter popularPlayedAdapter = new PopularPlayedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
+                } else if (model.get(position).getView().equalsIgnoreCase(getString(R.string.popular))) {
+                    PopularPlayedAdapter popularPlayedAdapter = new PopularPlayedAdapter(model.get(position).getDetails(), getActivity(), activity,
+                            model.get(position).getIsLock(), model.get(position).getView());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(popularPlayedAdapter);
-                    if (listModelList.get(position).getDetails() != null &&
-                            listModelList.get(position).getDetails().size() > 6) {
+                    if (model.get(position).getDetails() != null &&
+                            model.get(position).getDetails().size() > 6) {
                         holder.binding.tvViewAll.setVisibility(View.VISIBLE);
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.top_categories))) {
+                } else if (model.get(position).getView().equalsIgnoreCase(getString(R.string.top_categories))) {
                     holder.binding.tvViewAll.setVisibility(View.GONE);
-                    TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getHomeID(), listModelList.get(position).getView());
+                    TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(model.get(position).getDetails(), getActivity(), activity,
+                            model.get(position).getHomeID(), model.get(position).getView());
                     RecyclerView.LayoutManager topCategories = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(topCategories);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -639,7 +594,7 @@ public class AudioFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return listModelList.size();
+            return model.size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

@@ -2,9 +2,13 @@ package com.brainwellnessspa.Utility;
 
 import android.provider.Settings;
 
+import com.androidnetworking.AndroidNetworking;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -26,9 +30,9 @@ public class APIClient {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(80, TimeUnit.HOURS)
-                .writeTimeout(80, TimeUnit.HOURS)
-                .readTimeout(80, TimeUnit.HOURS);
+        httpClient.readTimeout(120, TimeUnit.SECONDS)
+                .writeTimeout(120, TimeUnit.SECONDS)
+                .connectTimeout(120, TimeUnit.SECONDS);
 
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
@@ -40,17 +44,20 @@ public class APIClient {
                     .build();
             return chain.proceed(request);
         });
-        Gson gson = new GsonBuilder()
+
+        /*Gson gson = new GsonBuilder()
                 .setLenient()
-                .create();
+                .create();*/
+
         OkHttpClient client = httpClient.addInterceptor(interceptor).build();
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .client(client)
                 .build();
 
+        AndroidNetworking.initialize(getContext(), client);
         APIInterface service = retrofit.create(APIInterface.class);
         return service;
     }

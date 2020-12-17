@@ -71,6 +71,8 @@ public class PlaylistFragment extends Fragment {
     View view;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
+    MainPlayListAdapter adapter;
+    ArrayList<MainPlayListModel.ResponseData> listModelList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
@@ -116,13 +118,56 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        prepareData();
+        openMiniPlayer();
         ComeScreenAccount = 0;
         comefromDownload = "0";
-        prepareData();
-//        openMiniPlayer();
     }
 
     private void prepareData() {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+            Call<MainPlayListModel> listCall = APIClient.getClient().getMainPlayLists(UserID);
+            listCall.enqueue(new Callback<MainPlayListModel>() {
+                @Override
+                public void onResponse(Call<MainPlayListModel> call, Response<MainPlayListModel> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            MainPlayListModel listModel = response.body();
+                            binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
+                            listModelList = listModel.getResponseData();
+                            adapter = new MainPlayListAdapter();
+                            binding.rvMainPlayList.setAdapter(adapter);
+                            downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MainPlayListModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                }
+            });
+        } else {
+            ArrayList<MainPlayListModel.ResponseData> responseData = new ArrayList<>();
+            ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
+            MainPlayListModel.ResponseData listModel = new MainPlayListModel.ResponseData();
+            listModel.setGetLibraryID("2");
+            listModel.setDetails(details);
+            listModel.setUserID(UserID);
+            listModel.setView("My Downloads");
+            listModel.setIsLock(IsLock);
+            responseData.add(listModel);
+            downloadPlaylistDetailsList = GetPlaylistDetail(responseData);
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
+
+
+    public void openMiniPlayer() {
         try {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -198,65 +243,7 @@ public class PlaylistFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<MainPlayListModel> listCall = APIClient.getClient().getMainPlayLists(UserID);
-            listCall.enqueue(new Callback<MainPlayListModel>() {
-                @Override
-                public void onResponse(Call<MainPlayListModel> call, Response<MainPlayListModel> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            MainPlayListModel listModel = response.body();
-                            binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
-                            downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<MainPlayListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                }
-            });
-        } else {
-            ArrayList<MainPlayListModel.ResponseData> responseData = new ArrayList<>();
-            ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
-            MainPlayListModel.ResponseData listModel = new MainPlayListModel.ResponseData();
-            listModel.setGetLibraryID("2");
-            listModel.setDetails(details);
-            listModel.setUserID(UserID);
-            listModel.setView("My Downloads");
-            listModel.setIsLock(IsLock);
-            responseData.add(listModel);
-            downloadPlaylistDetailsList = GetPlaylistDetail(responseData);
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
     }
-
-/*
-    public void openMiniPlayer() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 6, 0, 200);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 6, 0, 0);
-            binding.llSpace.setLayoutParams(params);
-        }
-    }
-*/
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(ArrayList<MainPlayListModel.ResponseData> responseData) {
         ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
@@ -295,10 +282,13 @@ public class PlaylistFragment extends Fragment {
                         }
                     }
 
-                    MainPlayListAdapter adapter = new MainPlayListAdapter(responseData, getActivity());
-                    binding.rvMainPlayList.setAdapter(adapter);
+                    listModelList.clear();
+                    listModelList = new ArrayList<>();
+                    listModelList.addAll(responseData);
+                   /* adapter = new MainPlayListAdapter();
+                    binding.rvMainPlayList.setAdapter(adapter);*/
                 } else {
-                    MainPlayListAdapter adapter = new MainPlayListAdapter(responseData, getActivity());
+                    adapter = new MainPlayListAdapter();
                     binding.rvMainPlayList.setAdapter(adapter);
                 }
                 super.onPostExecute(aVoid);
@@ -310,12 +300,8 @@ public class PlaylistFragment extends Fragment {
     }
 
     public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder> {
-        Context ctx;
-        private ArrayList<MainPlayListModel.ResponseData> listModelList;
 
-        public MainPlayListAdapter(ArrayList<MainPlayListModel.ResponseData> listModelList, Context ctx) {
-            this.listModelList = listModelList;
-            this.ctx = ctx;
+        public MainPlayListAdapter() {
         }
 
         @NonNull

@@ -132,6 +132,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.12.0'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.11.5'
     implementation 'com.google.android.gms:play-services-basement:17.4.0'
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
 // implementation 'com.google.android.gms:play-services-basement:17.5.0'
 // implementation "androidx.work:work-runtime:$work_version"
 // implementation 'com.google.android.exoplayer:library-ui:2.10.8'
