@@ -1285,10 +1285,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         binding.llDownload.setEnabled(false);
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                        binding.llDownload.setClickable(true);
-                        binding.llDownload.setEnabled(true);
-                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        binding.llDownload.setClickable(false);
+                        binding.llDownload.setEnabled(false);
+                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     }
                 } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
                     binding.llDownload.setClickable(true);
