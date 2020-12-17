@@ -1100,15 +1100,15 @@ public class AddQueueActivity extends AppCompatActivity {
                         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
 
                         binding.llOptions.setVisibility(View.VISIBLE);
-                         if(comeFrom.equalsIgnoreCase("myPlayList")) {
-                            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-                        }else {
-                             if (MyPlaylist.equalsIgnoreCase("myPlaylist")) {
-                                 binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-                             } else {
-                                 binding.llRemovePlaylist.setVisibility(View.GONE);
-                             }
-                         }
+                        if (comeFrom.equalsIgnoreCase("myPlayList")) {
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        } else {
+                            if (MyPlaylist.equalsIgnoreCase("myPlaylist")) {
+                                binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                            } else {
+                                binding.llRemovePlaylist.setVisibility(View.GONE);
+                            }
+                        }
                         DirectionModel directionModel = response.body();
                         int ix = position;
                         if (!comeFrom.equalsIgnoreCase("")) {
