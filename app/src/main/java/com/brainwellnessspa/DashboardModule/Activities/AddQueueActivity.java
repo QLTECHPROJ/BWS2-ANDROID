@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -807,7 +808,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         downloadAudioDetails.setImageFile(mDataLike.get(i).getImageFile());
                         downloadAudioDetails.setLike(mDataLike.get(i).getLike());
                         downloadAudioDetails.setAudioDuration(mDataLike.get(i).getAudioDuration());
-                    }else {
+                    } else {
                         downloadAudioDetails.setID(mData.get(i).getID());
                         downloadAudioDetails.setName(mData.get(i).getName());
                         downloadAudioDetails.setAudioFile(mData.get(i).getAudioFile());
@@ -1093,15 +1094,14 @@ public class AddQueueActivity extends AppCompatActivity {
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        Log.e("AudioFlag", AudioFlag);
+                        Log.e("play", play);
                         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
                         } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
                         } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
