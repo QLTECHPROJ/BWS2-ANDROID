@@ -320,25 +320,37 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     }
 
     private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getCountDownloadProgress1("Complete", playlistID).observe(this.ctx, count -> {
-            if (count < Integer.parseInt(totalAudio)) {
-                long progressPercent = count * 100 / Integer.parseInt(totalAudio);
-                int downloadProgress1 = (int) progressPercent;
-                pbProgress.setVisibility(View.VISIBLE);
-                pbProgress.setProgress(downloadProgress1);
-//                    getMediaByPer(playlistID,totalAudio,pbProgress);
-                handler1.postDelayed(UpdateSongTime1, 3000);
-            } else {
-                pbProgress.setVisibility(View.GONE);
-                handler1.removeCallbacks(UpdateSongTime1);
-                notifyDataSetChanged();
+        class getMediaByPer extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                count = DatabaseClient.getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getCountDownloadProgress("Complete", playlistID);
+
+                return null;
             }
 
-        });
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (count < Integer.parseInt(totalAudio)) {
+                    long progressPercent = count * 100 / Integer.parseInt(totalAudio);
+                    int downloadProgress1 = (int) progressPercent;
+                    pbProgress.setVisibility(View.VISIBLE);
+                    pbProgress.setProgress(downloadProgress1);
+//                    getMediaByPer(playlistID,totalAudio,pbProgress);
+                    handler1.postDelayed(UpdateSongTime1, 3000);
+                } else {
+                    pbProgress.setVisibility(View.GONE);
+                    handler1.removeCallbacks(UpdateSongTime1);
+                    notifyDataSetChanged();
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        getMediaByPer st = new getMediaByPer();
+        st.execute();
     }
 
   /*  void getDownloadData() {

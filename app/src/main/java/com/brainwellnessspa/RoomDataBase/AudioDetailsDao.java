@@ -47,8 +47,8 @@ public interface AudioDetailsDao {
     @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile")
     LiveData<List<DownloadAudioDetails>> getLastIdByuId1(String AudioFile);
 
-    @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile")
-    List<DownloadAudioDetails> getLastIdByuId(String AudioFile);
+//    @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile")
+//    List<DownloadAudioDetails> getLastIdByuId(String AudioFile);
 
     @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile and PlaylistId =:PlaylistId")
     LiveData<List<DownloadAudioDetails>> getaudioByPlaylist1(String AudioFile, String PlaylistId);
@@ -65,8 +65,8 @@ public interface AudioDetailsDao {
     @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
     LiveData<List<DownloadPlaylistDetails>> getPlaylist1(String PlaylistId);
 
-    @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
-    List<DownloadPlaylistDetails> getPlaylist(String PlaylistId);
+//    @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
+//    List<DownloadPlaylistDetails> getPlaylist(String PlaylistId);
 
     @Query("SELECT * FROM playlist_table ORDER BY uid DESC")
     LiveData<List<DownloadPlaylistDetails>> getAllPlaylist1();
@@ -83,8 +83,8 @@ public interface AudioDetailsDao {
     @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
     LiveData<Integer> getCountDownloadProgress1(String IsDownload, String PlaylistId);
 
-//    @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
-//    int getCountDownloadProgress(String IsDownload,String PlaylistId);
+    @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
+    int getCountDownloadProgress(String IsDownload,String PlaylistId);
 
     @Query("SELECT DownloadProgress FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
     LiveData<Integer> getDownloadProgress1(String AudioFile, String PlaylistId);

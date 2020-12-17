@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -34,27 +30,19 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
-import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
-import com.brainwellnessspa.Services.OnClearFromRecentService;
-import com.brainwellnessspa.Utility.MusicService;
-import com.brainwellnessspa.Utility.Playable;
-import com.brainwellnessspa.Utility.PlaybackStatus;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
-import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
@@ -62,9 +50,14 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.ItemMoveCallback;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.Utility.StartDragListener;
 import com.brainwellnessspa.databinding.ActivityViewQueueBinding;
 import com.brainwellnessspa.databinding.QueueListLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -74,7 +67,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,7 +84,6 @@ import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPlaying;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.isStop;
 import static com.brainwellnessspa.Utility.MusicService.isprogressbar;
 import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
 import static com.brainwellnessspa.Utility.MusicService.mediaSession;
@@ -104,12 +95,11 @@ import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.Utility.MusicService.transportControls;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener/*, Playable */ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName,playFrom="";
+    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName, playFrom = "";
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -122,9 +112,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     ItemTouchHelper touchHelper;
     int mypos = 0, myCount;
     long totalDuration, currentDuration, myProgress = 0, diff = 0;
+    boolean addSong = false;
     private long mLastClickTime = 0;
     private Handler handler;
-    boolean addSong = false;
     //    boolean isPlaying = false;
 //    BroadcastReceiver broadcastReceiver;
     //    private AudioManager mAudioManager;
@@ -134,11 +124,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (isPause || !isMediaStart) {
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
-                buildNotification(PlaybackStatus.PAUSED, context,mainPlayModelList,addToQueueModelList,playFrom,position);
+                buildNotification(PlaybackStatus.PAUSED, context, mainPlayModelList, addToQueueModelList, playFrom, position);
             } else {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-                buildNotification(PlaybackStatus.PLAYING, context,mainPlayModelList,addToQueueModelList,playFrom,position);
+                buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList, addToQueueModelList, playFrom, position);
             }
         }
     };
@@ -301,11 +291,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        if(queuePlay){
+        if (queuePlay) {
             playFrom = "queuePlay";
-        }else if (audioPlay){
+        } else if (audioPlay) {
             playFrom = "audioPlay";
-        }else{
+        } else {
             playFrom = "audioPlay";
         }
         binding.llBack.setOnClickListener(view -> {
@@ -365,7 +355,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         });
 
         binding.llprev.setOnClickListener(view -> {
-            callPrevious    ();
+            callPrevious();
         });
     }
 
@@ -378,7 +368,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding.llProgressBar.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.GONE);
         oTime = binding.simpleSeekbar.getProgress();
-        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
+        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
     }
 
     private void callPrevious() {
@@ -443,7 +433,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 }
             }
-            buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
@@ -509,7 +499,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 }
             }
-            buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
@@ -542,7 +532,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             resumeMedia();
             isPause = false;
             handler.postDelayed(UpdateSongTime, 500);
-            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         }
     }
 
@@ -568,57 +558,46 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     public void GetMedia(String url, Context ctx, String PlaylistId) {
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .getLastIdByuId1(url).observe(this, audioList -> {
+            downloadAudioDetailsList = new ArrayList<>();
+            downloadAudioDetailsList = audioList;
 
-        downloadAudioDetailsList = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(url);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (isPause) {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.llProgressBar.setVisibility(View.GONE);
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.simpleSeekbar.setProgress(oTime);
+            if (isPause) {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.simpleSeekbar.setProgress(oTime);
 //                    resumeMedia();
-                } else if (isCompleteStop) {
-                    binding.llProgressBar.setVisibility(View.GONE);
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                } else if ((isMediaStart || isPlaying()) && !isPause) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    binding.llProgressBar.setVisibility(View.GONE);
-                    binding.progressBar.setVisibility(View.GONE);
-                } else {
-                    callMedia();
-                }
-                super.onPostExecute(aVoid);
-
+            } else if (isCompleteStop) {
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+            } else if ((isMediaStart || isPlaying()) && !isPause) {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+            } else {
+                callMedia();
             }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
+
+        });
     }
 
     private void getPrepareShowData(int position) {
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        if(queuePlay){
+        if (queuePlay) {
             playFrom = "queuePlay";
-        }else if (audioPlay){
+        } else if (audioPlay) {
             playFrom = "audioPlay";
-        }else{
+        } else {
             playFrom = "audioPlay";
         }
         if (audioPlay) {
@@ -695,7 +674,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                if(mediaPlayer.isPlaying()) {
+                if (mediaPlayer.isPlaying()) {
                     callComplete();
                     Log.e("calll complete trans", "trans");
                 }
@@ -753,21 +732,22 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         if (isPause) {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
+            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         } else {
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llPlay.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         }
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                if(mediaPlayer.isPlaying()) {
+                if (mediaPlayer.isPlaying()) {
                     callComplete();
                     Log.e("calll complete real", "real");
                 }
             });
         }
     }
+
     private void initMediaplyer() {
         if (mediaSessionManager != null) return; //mediaSessionManager exists
 
@@ -1345,11 +1325,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        if(queuePlay){
+        if (queuePlay) {
             playFrom = "queuePlay";
-        }else if (audioPlay){
+        } else if (audioPlay) {
             playFrom = "audioPlay";
-        }else{
+        } else {
             playFrom = "audioPlay";
         }
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
