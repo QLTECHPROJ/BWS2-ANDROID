@@ -1098,40 +1098,17 @@ public class AddQueueActivity extends AppCompatActivity {
                         Log.e("play", play);
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                        if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (play.equalsIgnoreCase("TopCategories")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (play.equalsIgnoreCase("ViewAllAudioList")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (MyPlaylist.equalsIgnoreCase("")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        }else if(MyPlaylist.equalsIgnoreCase("myPlaylist")){
-                            binding.llOptions.setVisibility(View.VISIBLE);
+
+                        binding.llOptions.setVisibility(View.VISIBLE);
+                         if(comeFrom.equalsIgnoreCase("myPlayList")) {
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-                        }else if (play.equalsIgnoreCase("playlist")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        }
+                        }else {
+                             if (MyPlaylist.equalsIgnoreCase("myPlaylist")) {
+                                 binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                             } else {
+                                 binding.llRemovePlaylist.setVisibility(View.GONE);
+                             }
+                         }
                         DirectionModel directionModel = response.body();
                         int ix = position;
                         if (!comeFrom.equalsIgnoreCase("")) {
