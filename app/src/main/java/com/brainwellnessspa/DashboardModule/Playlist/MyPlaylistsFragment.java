@@ -749,6 +749,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             binding.llMore.setVisibility(View.VISIBLE);
                             binding.llReminder.setVisibility(View.VISIBLE);
                             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
+                            binding.tvTag.setVisibility(View.VISIBLE);
                             binding.tvTag.setText(R.string.Audios_in_Playlist);
                             binding.llReminder.setOnClickListener(view -> {
                                 if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
