@@ -697,7 +697,6 @@ public class MiniPlayerFragment extends Fragment {
             mainPlayModelList.get(ps).setPlaylistID("");
         }
         myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(ps).getImageFile());
-
         try {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
@@ -737,8 +736,6 @@ public class MiniPlayerFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
-                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
@@ -1064,7 +1061,6 @@ public class MiniPlayerFragment extends Fragment {
             editor.commit();
 
         }
-        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         getPrepareShowData();
     }

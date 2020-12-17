@@ -1503,8 +1503,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
-                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
@@ -1835,7 +1833,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             editor.commit();
 
         }
-        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         getPrepareShowData();
     }
