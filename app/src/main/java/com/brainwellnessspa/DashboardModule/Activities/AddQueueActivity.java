@@ -1096,6 +1096,8 @@ public class AddQueueActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Log.e("AudioFlag", AudioFlag);
                         Log.e("play", play);
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
                         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
@@ -1117,12 +1119,15 @@ public class AddQueueActivity extends AppCompatActivity {
                         } else if (play.equalsIgnoreCase("ViewAllAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (play.equalsIgnoreCase("playlist")) {
+                        } else if (MyPlaylist.equalsIgnoreCase("")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (play.equalsIgnoreCase("myPlayList")) {
+                        }else if(MyPlaylist.equalsIgnoreCase("myPlaylist")){
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                        }else if (play.equalsIgnoreCase("playlist")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
                         } else {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
