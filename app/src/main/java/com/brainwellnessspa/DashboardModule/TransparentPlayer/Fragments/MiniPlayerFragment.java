@@ -738,7 +738,7 @@ public class MiniPlayerFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-//                MakeArray2();
+                MakeArray2();
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());

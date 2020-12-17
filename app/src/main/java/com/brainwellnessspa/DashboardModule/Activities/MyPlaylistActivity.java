@@ -374,7 +374,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }
         });
 
-        binding.llDownload.setOnClickListener(view -> callDownload());
+        /*binding.llDownload.setOnClickListener(view -> callDownload());*/
     }
 
     @Override

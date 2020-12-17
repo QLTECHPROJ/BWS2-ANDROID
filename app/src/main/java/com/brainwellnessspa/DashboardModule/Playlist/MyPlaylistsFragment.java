@@ -331,7 +331,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.rvPlayLists2.setItemAnimator(new DefaultItemAnimator());
 
         binding.llDownloads.setOnClickListener(view1 -> {
-            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
+//            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
         });
 
         RefreshNew = New;
@@ -2593,7 +2593,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 name = mData.get(position).getName();
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 holder.binding.ivDownloads.setVisibility(View.GONE);
-                callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(), mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads);
+//                callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(), mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads);
             });
             try {
                 holder.binding.llRemove.setOnClickListener(view -> {
