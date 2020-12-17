@@ -41,19 +41,6 @@ public class DownloadMedia implements OnDownloadListener{
         this.context = context;
     }
 
-    /*    public byte[] encrypt(String DOWNLOAD_AUDIO_URL, String FILE_NAME) {
-     *//* downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-        registerReceiver(onComplete,
-                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));*//*
-        fileName = FILE_NAME;
-        loop = false;
-        PRDownloader.download(DOWNLOAD_AUDIO_URL, FileUtils.getDirPath(context), FILE_NAME).build().start(this);
-        BWSApplication.showToast("Downloading file...", context);
-//        encodedBytes = DownloadMedia(context, DOWNLOAD_AUDIO_URL, FILE_NAME);
-        return encodedBytes;
-    }*/
-
-
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
         BWSApplication.showToast("Downloading file...", context);
 
@@ -70,9 +57,6 @@ public class DownloadMedia implements OnDownloadListener{
             long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
             downloadProgress = (int) progressPercent;
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress,"Start");
-//        progressBarOne.setProgress((int) progressPercent);
-//        textViewProgressOne.setText(BWSApplication.getProgressDisplayLine(progress.currentBytes, progress.totalBytes));
-//        progressBarOne.setIndeterminate(false);
        }).setOnCancelListener(new OnCancelListener() {
            @Override
            public void onCancel() {

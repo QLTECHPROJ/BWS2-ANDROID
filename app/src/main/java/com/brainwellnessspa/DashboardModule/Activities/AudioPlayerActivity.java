@@ -123,6 +123,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         ctx = AudioPlayerActivity.this;
         activity = AudioPlayerActivity.this;
         playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
+        exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
+                , R.layout.audio_player_custom_layout, binding.playerControlView, false);
+        binding.playerControlView.addView(exoBinding.getRoot());
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
@@ -1520,10 +1523,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray() {
-        exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
-                , R.layout.audio_player_custom_layout, binding.playerControlView, false);
-        binding.playerControlView.addView(exoBinding.getRoot());
-
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
@@ -1838,11 +1837,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray2() {
-        View viewed = LayoutInflater.from(ctx).inflate(R.layout.audio_player_custom_layout, null, false);
-        exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
-                , R.layout.audio_player_custom_layout, binding.playerControlView, false);
-        binding.playerControlView.addView(exoBinding.getRoot());
-
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
