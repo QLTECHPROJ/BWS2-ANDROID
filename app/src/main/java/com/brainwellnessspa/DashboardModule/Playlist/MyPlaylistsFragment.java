@@ -149,7 +149,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     SubPlayListModel.ResponseData.PlaylistSong songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
     int position = 0, startTime, listSize, myCount;
     long myProgress = 0, diff = 0;
-    private Handler handler1, handler2;
+    private Handler handler2;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41;
     FancyShowCaseQueue queue;
     private long totalDuration, currentDuration = 0;
@@ -624,6 +624,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             prepareData(UserID, PlaylistIDs);
             MyPlaylistIds = "";
         }
+        handler2.removeCallbacks(UpdateSongTime2);
     }
 
     private void searchClear(EditText searchEditText) {
