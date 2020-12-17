@@ -331,7 +331,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.rvPlayLists2.setItemAnimator(new DefaultItemAnimator());
 
         binding.llDownloads.setOnClickListener(view1 -> {
-//            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
+            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
         });
 
         RefreshNew = New;
@@ -495,8 +495,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void enableDisableDownload(boolean b, String color) {
         if (b) {
-            binding.llDownloads.setClickable(false);
-            binding.llDownloads.setEnabled(false);
+            binding.llDownloads.setClickable(true);
+            binding.llDownloads.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
@@ -1684,8 +1684,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownloads) {
-        llDownload.setClickable(false);
-        llDownload.setEnabled(false);
+        llDownload.setClickable(true);
+        llDownload.setEnabled(true);
         ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
         ivDownloads.setColorFilter(activity.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
     }
@@ -2378,11 +2378,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             };
             holder.binding.llMainLayout.setVisibility(View.VISIBLE);
             holder.binding.llDownload.setVisibility(View.VISIBLE);
-            holder.binding.llDownload.setClickable(false);
-            holder.binding.llDownload.setEnabled(false);
-            holder.binding.ivDownloads.setClickable(false);
-            holder.binding.ivDownloads.setEnabled(false);
-            holder.binding.pbProgress.setVisibility(View.GONE);
             holder.binding.llRemove.setVisibility(View.VISIBLE);
             holder.binding.llSort.setVisibility(View.GONE);
             searchEditText.setHint(R.string.playlist_or_audio_search);
@@ -2589,12 +2584,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 notifyDataSetChanged();
             });
+
             holder.binding.llDownload.setOnClickListener(view -> {
                 name = mData.get(position).getName();
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 holder.binding.ivDownloads.setVisibility(View.GONE);
-//                callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(), mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads);
+                callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(), mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads);
             });
+
             try {
                 holder.binding.llRemove.setOnClickListener(view -> {
                     handler2.removeCallbacks(UpdateSongTime2);

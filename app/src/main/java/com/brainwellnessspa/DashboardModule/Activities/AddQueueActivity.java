@@ -257,24 +257,12 @@ public class AddQueueActivity extends AppCompatActivity {
             }
         }
 
-       /* if (mainPlayModelList.get(0).getDownload().equalsIgnoreCase("1")) {
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-            binding.tvDownloads.setTextColor(activity.getResources().getColor(R.color.white));
-            binding.llDownload.setClickable(false);
-            binding.llDownload.setEnabled(false);
-        } else if (mainPlayModelList.get(0).getDownload().equalsIgnoreCase("0") || mainPlayModelList.get(0).getDownload().equalsIgnoreCase("")) {
-            binding.llDownload.setClickable(true);
-            binding.llDownload.setEnabled(true);
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-        } */
-
         binding.llLike.setOnClickListener(view ->
                 callLike());
 
-//        binding.llDownload.setOnClickListener(view ->
-////                callDownload()
-//        );
+        binding.llDownload.setOnClickListener(view ->
+                callDownload()
+        );
 
 
         binding.llAddQueue.setOnClickListener(view ->
@@ -1311,8 +1299,8 @@ public class AddQueueActivity extends AppCompatActivity {
                 } else if (download.equalsIgnoreCase("1")) {
                     callDisableDownload();
                 } else {
-                    binding.llDownload.setClickable(false);
-                    binding.llDownload.setEnabled(false);
+                    binding.llDownload.setClickable(true);
+                    binding.llDownload.setEnabled(true);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                 }
                 super.onPostExecute(aVoid);

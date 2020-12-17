@@ -14,8 +14,8 @@
             android:id="@+id/llMainLayout"
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
-            android:layout_weight="0.74"
             android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_weight="0.74"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -36,13 +36,13 @@
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"/>
+                        android:scaleType="fitXY" />
 
                     <ImageView
                         android:id="@+id/ivBackgroundImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"/>
+                        android:scaleType="fitXY" />
 
                     <es.claucookie.miniequalizerlibrary.EqualizerView
                         android:id="@+id/equalizerview"
@@ -101,7 +101,6 @@
                 android:layout_weight="0.13"
                 android:gravity="center"
                 android:padding="@dimen/_6sdp"
-                android:clickable="false"
                 android:visibility="visible">
 
                 <ProgressBar
@@ -127,11 +126,9 @@
                         android:layout_width="@dimen/_38sdp"
                         android:layout_height="@dimen/_38sdp"
                         android:padding="@dimen/_10sdp"
-                        android:clickable="false"
                         android:src="@drawable/ic_download_icon" />
 
                 </LinearLayout>
-
             </RelativeLayout>
 
             <LinearLayout

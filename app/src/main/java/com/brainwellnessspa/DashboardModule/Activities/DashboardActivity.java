@@ -247,7 +247,6 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         deleteCache(DashboardActivity.this);
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
 
-
 /*        JobScheduler scheduler = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);

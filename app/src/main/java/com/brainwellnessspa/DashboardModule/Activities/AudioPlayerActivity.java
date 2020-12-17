@@ -801,7 +801,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void epAllClicks() {
         binding.llDownload.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
-//                callDownload();
+                callDownload();
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
@@ -1069,8 +1069,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llBackWordSec.setClickable(true);
             exoBinding.llBackWordSec.setEnabled(true);
             exoBinding.llBackWordSec.setAlpha(1f);
-            binding.llDownload.setClickable(false);
-            binding.llDownload.setEnabled(false);
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
             binding.llDownload.setAlpha(1f);
             binding.llRepeat.setClickable(true);
             binding.llRepeat.setEnabled(true);
@@ -1295,14 +1295,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             binding.llDownload.setEnabled(false);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                         } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                            binding.llDownload.setClickable(false);
-                            binding.llDownload.setEnabled(false);
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         }
                     } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                        binding.llDownload.setClickable(false);
-                        binding.llDownload.setEnabled(false);
+                        binding.llDownload.setClickable(true);
+                        binding.llDownload.setEnabled(true);
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     }

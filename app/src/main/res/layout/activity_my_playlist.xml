@@ -293,7 +293,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_13sdp"
                     android:gravity="center_vertical"
-                    android:clickable="false"
                     android:visibility="gone">
 
                     <RelativeLayout
@@ -319,7 +318,6 @@
                             android:layout_width="@dimen/_56sdp"
                             android:layout_height="@dimen/_50sdp"
                             android:padding="@dimen/_15sdp"
-                            android:clickable="true"
                             android:src="@drawable/ic_download_white_icon" />
                     </RelativeLayout>
 
