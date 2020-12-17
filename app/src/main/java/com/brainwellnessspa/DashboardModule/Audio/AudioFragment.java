@@ -20,6 +20,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -151,7 +152,7 @@ public class AudioFragment extends Fragment {
         comefromDownload = "0";
     }
 
-    public void GetAllMedia(FragmentActivity ctx, List<MainAudioModel.ResponseData> listModel) {
+ /*   public void GetAllMedia(FragmentActivity ctx, List<MainAudioModel.ResponseData> listModel) {
         ArrayList<MainAudioModel.ResponseData.Detail> details = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -189,11 +190,11 @@ public class AudioFragment extends Fragment {
                     }
                     adapter = new MainAudioListAdapter(listModel,getActivity());
                     binding.rvMainAudioList.setAdapter(adapter);
-                }/* else {
+                }*//* else {
                     adapter = new MainAudioListAdapter(getActivity());
                     binding.rvMainAudioList.setAdapter(adapter);
-                }*/
-                /*if (downloadAudioDetailsList.size() != 0) {
+                }*//*
+                *//*if (downloadAudioDetailsList.size() != 0) {
                     MainAudioListAdapter1 adapter1 = new MainAudioListAdapter1(getActivity(),listModel);
                     RecyclerView.LayoutManager manager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     binding.rvMainAudioList.setLayoutManager(manager1);
@@ -201,14 +202,14 @@ public class AudioFragment extends Fragment {
                     binding.rvMainAudioList.setAdapter(adapter1);
                 } else {
                     binding.rvMainAudioList.setVisibility(View.GONE);
-                }*/
+                }*//*
                 super.onPostExecute(aVoid);
             }
         }
 
         GetTask st = new GetTask();
         st.execute();
-    }
+    }*/
 
     private void prepareDisplayData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -226,9 +227,11 @@ public class AudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
                         editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
                         editor.commit();
-                        adapter = new MainAudioListAdapter(listModel.getResponseData(),getActivity());
-                        binding.rvMainAudioList.setAdapter(adapter);
-                        GetAllMedia(getActivity(), listModel.getResponseData());
+//                        adapter = new MainAudioListAdapter(listModel.getResponseData(),getActivity());
+//                        binding.rvMainAudioList.setAdapter(adapter);
+//                        GetAllMedia(getActivity(), listModel.getResponseData());
+                        callObserverMethod(listModel.getResponseData());
+
                     }
                 }
 
@@ -240,6 +243,40 @@ public class AudioFragment extends Fragment {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
+    }
+
+    private void callObserverMethod(List<MainAudioModel.ResponseData> listModel) {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData1("").observe(getActivity(), downloadAudioDetails -> {
+            ArrayList<MainAudioModel.ResponseData.Detail> details = new ArrayList<>();
+
+            if (downloadAudioDetails.size() != 0) {
+                for (int i = 0; i < downloadAudioDetails.size(); i++) {
+                    MainAudioModel.ResponseData.Detail detail = new MainAudioModel.ResponseData.Detail();
+                    detail.setID(downloadAudioDetails.get(i).getID());
+                    detail.setName(downloadAudioDetails.get(i).getName());
+                    detail.setAudioFile(downloadAudioDetails.get(i).getAudioFile());
+                    detail.setAudioDirection(downloadAudioDetails.get(i).getAudioDirection());
+                    detail.setAudiomastercat(downloadAudioDetails.get(i).getAudiomastercat());
+                    detail.setAudioSubCategory(downloadAudioDetails.get(i).getAudioSubCategory());
+                    detail.setImageFile(downloadAudioDetails.get(i).getImageFile());
+                    detail.setLike(downloadAudioDetails.get(i).getLike());
+                    detail.setDownload(downloadAudioDetails.get(i).getDownload());
+                    detail.setAudioDuration(downloadAudioDetails.get(i).getAudioDuration());
+                    details.add(detail);
+                }
+                for (int i = 0; i < listModel.size(); i++) {
+                    if (listModel.get(i).getView().equalsIgnoreCase("My Downloads")) {
+                        listModel.get(i).setDetails(details);
+                    }
+                }
+                adapter = new MainAudioListAdapter(listModel,getActivity());
+                binding.rvMainAudioList.setAdapter(adapter);
+            }
+        });
     }
 
     private void prepareData() {
@@ -313,7 +350,8 @@ public class AudioFragment extends Fragment {
             listModel.setUserID(UserID);
             listModel.setIsLock(IsLock);
             responseData.add(listModel);
-            GetAllMedia(getActivity(), responseData);
+//            GetAllMedia(getActivity(), responseData);
+            callObserverMethod(responseData);
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
         try {

@@ -24,15 +24,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
-import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.downloader.PRDownloader;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -40,6 +34,12 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.downloader.PRDownloader;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -79,7 +79,6 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         this.tvFound = tvFound;
         this.rvDownloadsList = rvDownloadsList;
         handler1 = new Handler();
-        playlistWiseAudioDetails = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
         getDownloadData();
     }
@@ -102,14 +101,15 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             public void run() {
                 try {
                     getDownloadData();
-                    if(fileNameList.size()!=0) {
+                    if (fileNameList.size() != 0) {
                         for (int f = 0; f < fileNameList.size(); f++) {
                             if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
                                 getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
                             }
                         }
                     }
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
 
             }
         };
@@ -121,7 +121,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 holder.binding.pbProgress.setVisibility(View.GONE);
             }
         }*/
-        if(fileNameList.size()!=0) {
+        if (fileNameList.size() != 0) {
             for (int f = 0; f < fileNameList.size(); f++) {
                 if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
                     getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
@@ -233,7 +233,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
                 Btn.setOnClickListener(v -> {
                     try {
-                        playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                        GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                     } catch (Exception e) {
                     }
                     dialog.dismiss();
@@ -245,8 +245,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             }
         });
     }
+
     private void getDownloadData(String playlistID) {
-        List<String> fileNameList,fileNameList1, audioFile, playlistDownloadId;
+        List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
         try {
             SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson = new Gson();
@@ -280,9 +281,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                 editor.commit();
-                if(fileNameList.get(0).equalsIgnoreCase(filename) &&playlistDownloadId.get(0).equalsIgnoreCase(playlistID)){
+                if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(playlistID)) {
                     PRDownloader.cancel(downloadIdOne);
-                    filename ="";
+                    filename = "";
                 }
             }
         } catch (Exception e) {
@@ -290,6 +291,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         }
 
     }
+
     private void getDownloadData() {
         try {
             SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
@@ -316,38 +318,27 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             e.printStackTrace();
         }
     }
+
     private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
-        class getMediaByPer extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                count = DatabaseClient.getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getCountDownloadProgress("Complete", playlistID);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (count < Integer.parseInt(totalAudio)) {
-                    long progressPercent = count * 100 / Integer.parseInt(totalAudio);
-                    int downloadProgress1 = (int) progressPercent;
-                    pbProgress.setVisibility(View.VISIBLE);
-                    pbProgress.setProgress(downloadProgress1);
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getCountDownloadProgress1("Complete", playlistID).observe(this.ctx, count -> {
+            if (count < Integer.parseInt(totalAudio)) {
+                long progressPercent = count * 100 / Integer.parseInt(totalAudio);
+                int downloadProgress1 = (int) progressPercent;
+                pbProgress.setVisibility(View.VISIBLE);
+                pbProgress.setProgress(downloadProgress1);
 //                    getMediaByPer(playlistID,totalAudio,pbProgress);
-                    handler1.postDelayed(UpdateSongTime1, 3000);
-                } else {
-                    pbProgress.setVisibility(View.GONE);
-                    handler1.removeCallbacks(UpdateSongTime1);
-                    notifyDataSetChanged();
-                }
-                super.onPostExecute(aVoid);
+                handler1.postDelayed(UpdateSongTime1, 3000);
+            } else {
+                pbProgress.setVisibility(View.GONE);
+                handler1.removeCallbacks(UpdateSongTime1);
+                notifyDataSetChanged();
             }
-        }
 
-        getMediaByPer st = new getMediaByPer();
-        st.execute();
+        });
     }
 
   /*  void getDownloadData() {
@@ -371,7 +362,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     }*/
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
+      /*  class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 oneAudioDetailsList = DatabaseClient
@@ -394,7 +385,18 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             }
         }
         GetMedia sts = new GetMedia();
-        sts.execute();
+        sts.execute();*/
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getLastIdByuId1(AudioFile).observe(this.ctx, audioList -> {
+            if (audioList.size() != 0) {
+                if (audioList.size() == 1) {
+                    FileUtils.deleteDownloadedFile(ctx, audioList.get(0).getName());
+                }
+            }
+        });
     }
 
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
@@ -442,38 +444,40 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     }
 
     private void GetAllMedia(FragmentActivity activity) {
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                playlistList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllPlaylist();
-                return null;
-            }
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getAllPlaylist1().observe(this.ctx, audioList -> {
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (playlistList.size() != 0) {
-                    llError.setVisibility(View.GONE);
-                    tvFound.setVisibility(View.GONE);
-                    PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(playlistList, ctx, UserID, progressBarHolder, ImgV, llError, tvFound, rvDownloadsList);
-                    rvDownloadsList.setAdapter(adapter);
-                } else {
-                    llError.setVisibility(View.VISIBLE);
-                    tvFound.setVisibility(View.VISIBLE);
-                    rvDownloadsList.setVisibility(View.GONE);
-                }
-                super.onPostExecute(aVoid);
+            if (audioList.size() != 0) {
+                llError.setVisibility(View.GONE);
+                tvFound.setVisibility(View.GONE);
+                PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(audioList, ctx, UserID, progressBarHolder, ImgV, llError, tvFound, rvDownloadsList);
+                rvDownloadsList.setAdapter(adapter);
+            } else {
+                llError.setVisibility(View.VISIBLE);
+                tvFound.setVisibility(View.VISIBLE);
+                rvDownloadsList.setVisibility(View.GONE);
             }
-        }
-        GetTask getTask = new GetTask();
-        getTask.execute();
+        });
     }
 
-    public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
-        playlistWiseAudioDetails = new ArrayList<>();
+    public void GetPlaylistMedia(String playlistID) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getAllAudioByPlaylist1(playlistID).observe(this.ctx, audioList -> {
+            deleteDownloadFile(ctx.getApplicationContext(), playlistID);
+            try {
+                for (int i = 0; i < audioList.size(); i++) {
+                    GetSingleMedia(audioList.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
+                }
+            } catch (Exception e) {
+            }
+        });
+     /*   playlistWiseAudioDetails = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -498,8 +502,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         }
         GetMedia st = new GetMedia();
         st.execute();
-        return playlistWiseAudioDetails;
+        return playlistWiseAudioDetails;*/
     }
+
     @Override
     public int getItemViewType(int position) {
         return position;
@@ -509,6 +514,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     public long getItemId(int position) {
         return position;
     }
+
     @Override
     public int getItemCount() {
         return listModelList.size();

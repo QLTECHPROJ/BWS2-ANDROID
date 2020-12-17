@@ -135,7 +135,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     Activity activity;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList, playListSongListForDownload;
-    List<DownloadAudioDetails> oneAudioDetailsList, playlistWiseAudioDetails;
+    //    List<DownloadAudioDetails> playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
     Dialog dialog;
@@ -147,11 +147,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     SubPlayListModel.ResponseData.PlaylistSong songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
-    int position = 0, startTime, listSize, myCount;
-    long myProgress = 0, diff = 0;
-    private Handler handler2;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41;
     FancyShowCaseQueue queue;
+    private Handler handler2;
     private long totalDuration, currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -231,11 +229,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = getActivity();
         downloadAudioDetailsList = new ArrayList<>();
-        oneAudioDetailsList = new ArrayList<>();
         fileNameList = new ArrayList<>();
         playlistDownloadId = new ArrayList<>();
         addDisclaimer();
-        playlistWiseAudioDetails = new ArrayList<>();
+//        playlistWiseAudioDetails = new ArrayList<>();
         downloadPlaylistDetailsList = new ArrayList<>();
         playlistSongsList = new ArrayList<>();
         playListSongListForDownload = new ArrayList<>();
@@ -462,35 +459,31 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         return downloadPlaylistDetailsList;
     }
 
-    private List<DownloadPlaylistDetails> GetPlaylistDetail2() {
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadPlaylistDetailsList = DatabaseClient
-                        .getInstance(activity)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getPlaylist(PlaylistID);
-                return null;
-            }
+    private void GetPlaylistDetail2() {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
+            downloadPlaylistDetailsList = new ArrayList<>();
+            downloadPlaylistDetailsList = audioList;
+            callObserveMethodGetAllMedia();
+//                downloadAudioDetailsList = GetAllMedia();
+            GetMedia();
+        });
+    }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-   /*
-                    "PlaylistDesc": "When life gets tough and you struggle through the days, download the Ultimate Self-development Bundle to help you in finding a new appreciation for life. Everyone can use a little help in all areas of their lives at times. There are 12 programs aimed to help your self-development:",
-                    "PlaylistMastercat": "Self-development",
-                    "PlaylistSubcat": "Self-expression, Focus, Discipline, Self-love, Mindset, Passion, Enthusiasm, Gratitude, Self-doubt, Inner Strength ",
-                    "PlaylistImage": "https://brainwellnessspa.com.au/wp-content/uploads/2018/06/Ultimate self development bundle.jpg",
-                    "PlaylistSongs " */
-                downloadAudioDetailsList = GetAllMedia();
-                playlistWiseAudioDetails = GetMedia();
+    private void callObserveMethodGetAllMedia() {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe(getActivity(), audioList -> {
+            this.downloadAudioDetailsList = audioList;
 
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetTask st = new GetTask();
-        st.execute();
-        return downloadPlaylistDetailsList;
+        });
+
+
     }
 
     private void enableDisableDownload(boolean b, String color) {
@@ -511,7 +504,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
     }
 
-    public List<DownloadAudioDetails> GetAllMedia() {
+   /* public List<DownloadAudioDetails> GetAllMedia() {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -532,7 +525,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
-    }
+    }*/
 
     @Override
     public void onPause() {
@@ -748,9 +741,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 e.printStackTrace();
                             }
                             getDownloadData();
-                            downloadAudioDetailsList = GetAllMedia();
+                            callObserveMethodGetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
-                            playlistWiseAudioDetails = GetMedia();
+                            GetMedia();
                             getMediaByPer(PlaylistId, SongListSize);
                             binding.rlSearch.setVisibility(View.VISIBLE);
                             binding.llMore.setVisibility(View.VISIBLE);
@@ -901,10 +894,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 });
             } else {
-                downloadPlaylistDetailsList = GetPlaylistDetail2();
+                GetPlaylistDetail2();
             }
         } else {
-            downloadPlaylistDetailsList = GetPlaylistDetail2();
+            GetPlaylistDetail2();
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
         SharedPreferences sharedw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -951,46 +944,34 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void getMediaByPer(String playlistID, int totalAudio) {
-        class getMediaByPer extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                count = DatabaseClient.getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getCountDownloadProgress("Complete", playlistID);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                downloadPlaylistDetailsList = GetPlaylistDetail(downloadPlaylistDetails.getDownload());
-                if (downloadPlaylistDetailsList.size() != 0) {
-                    if (count <= totalAudio) {
-                        if (count == totalAudio) {
-                            binding.pbProgress.setVisibility(View.GONE);
-                            binding.ivDownloads.setVisibility(View.VISIBLE);
-//                            handler1.removeCallbacks(UpdateSongTime1);
-                        } else {
-                            long progressPercent = count * 100 / totalAudio;
-                            int downloadProgress1 = (int) progressPercent;
-                            binding.pbProgress.setVisibility(View.VISIBLE);
-                            binding.ivDownloads.setVisibility(View.GONE);
-                            binding.pbProgress.setProgress(downloadProgress1);
-                            getMediaByPer(playlistID, totalAudio);
-//                             handler1.postDelayed(UpdateSongTime1, 500);
-                        }
-                    } else {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getCountDownloadProgress1("Complete", playlistID).observe(getActivity(), count -> {
+            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
+            if (downloadPlaylistDetailsList.size() != 0) {
+                if (count <= totalAudio) {
+                    if (count == totalAudio) {
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
-//                        handler1.removeCallbacks(UpdateSongTime1);
+//                            handler1.removeCallbacks(UpdateSongTime1);
+                    } else {
+                        long progressPercent = count * 100 / totalAudio;
+                        int downloadProgress1 = (int) progressPercent;
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                        binding.ivDownloads.setVisibility(View.GONE);
+                        binding.pbProgress.setProgress(downloadProgress1);
+                        getMediaByPer(playlistID, totalAudio);
+//                             handler1.postDelayed(UpdateSongTime1, 500);
                     }
+                } else {
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+//                        handler1.removeCallbacks(UpdateSongTime1);
                 }
-                super.onPostExecute(aVoid);
             }
-        }
-        getMediaByPer st = new getMediaByPer();
-        st.execute();
+        });
     }
 
     private void getDownloadData() {
@@ -1538,8 +1519,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                 getMediaByPer(PlaylistID, SongListSize);
                 enableDisableDownload(false, "orange");
-                downloadAudioDetailsList = GetAllMedia();
-                playlistWiseAudioDetails = GetMedia();
+                callObserveMethodGetAllMedia();
+                GetMedia();
                 super.onPostExecute(aVoid);
             }
         }
@@ -1576,8 +1557,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                downloadAudioDetailsList = GetAllMedia();
-                playlistWiseAudioDetails = GetMedia();
+                callObserveMethodGetAllMedia();
+                GetMedia();
                 disableDownload(llDownload, ivDownloads);
                 super.onPostExecute(aVoid);
             }
@@ -1588,7 +1569,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     public void GetMedia(String url, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownloads) {
-        oneAudioDetailsList = new ArrayList<>();
+   /*     oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -1617,71 +1598,71 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         GetMedia st = new GetMedia();
-        st.execute();
+        st.execute();*/
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getLastIdByuId1(url).observe(getActivity(), audioList -> {
+            if (audioList.size() != 0) {
+                if (audioList.get(0).getDownload().equalsIgnoreCase("1")) {
+                    disableDownload(llDownload, ivDownloads);
+                }
+            } else if (download.equalsIgnoreCase("1")) {
+                disableDownload(llDownload, ivDownloads);
+            } else {
+                enableDownload(llDownload, ivDownloads);
+            }
+
+        });
     }
 
-    public List<DownloadAudioDetails> GetMedia() {
-        playlistWiseAudioDetails = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                playlistWiseAudioDetails = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist(PlaylistID);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (MyDownloads.equalsIgnoreCase("1")) {
-                    if (downloadPlaylistDetailsList.size() != 0) {
-                        SubPlayListModel responseData = new SubPlayListModel();
-                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();
-                        SubPlayListModel.ResponseData listModel = new SubPlayListModel.ResponseData();
-                        listModel.setPlaylistID(downloadPlaylistDetailsList.get(0).getPlaylistID());
-                        listModel.setPlaylistName(downloadPlaylistDetailsList.get(0).getPlaylistName());
-                        listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
-                        listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
-                        listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
-                        listModel.setPlaylistImageDetail(downloadPlaylistDetailsList.get(0).getPlaylistImage());
-                        listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
-                        listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
-                        listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
-                        listModel.setTotalminute(downloadPlaylistDetailsList.get(0).getTotalminute());
-                        listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
-                        listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
-                        listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
-                        if (playlistWiseAudioDetails.size() != 0) {
-                            for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                                SubPlayListModel.ResponseData.PlaylistSong detail = new SubPlayListModel.ResponseData.PlaylistSong();
-                                detail.setID(playlistWiseAudioDetails.get(i).getID());
-                                detail.setName(playlistWiseAudioDetails.get(i).getName());
-                                detail.setAudioFile(playlistWiseAudioDetails.get(i).getAudioFile());
-                                detail.setAudioDirection(playlistWiseAudioDetails.get(i).getAudioDirection());
-                                detail.setAudiomastercat(playlistWiseAudioDetails.get(i).getAudiomastercat());
-                                detail.setAudioSubCategory(playlistWiseAudioDetails.get(i).getAudioSubCategory());
-                                detail.setImageFile(playlistWiseAudioDetails.get(i).getImageFile());
-                                detail.setLike(playlistWiseAudioDetails.get(i).getLike());
-                                detail.setDownload(playlistWiseAudioDetails.get(i).getDownload());
-                                detail.setAudioDuration(playlistWiseAudioDetails.get(i).getAudioDuration());
-                                details.add(detail);
-                            }
-                            listModel.setPlaylistSongs(details);
+    public void GetMedia() {
+//        playlistWiseAudioDetails = new ArrayList<>();
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getAllAudioByPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
+            if (MyDownloads.equalsIgnoreCase("1")) {
+                if (downloadPlaylistDetailsList.size() != 0) {
+                    SubPlayListModel responseData = new SubPlayListModel();
+                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();
+                    SubPlayListModel.ResponseData listModel = new SubPlayListModel.ResponseData();
+                    listModel.setPlaylistID(downloadPlaylistDetailsList.get(0).getPlaylistID());
+                    listModel.setPlaylistName(downloadPlaylistDetailsList.get(0).getPlaylistName());
+                    listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
+                    listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
+                    listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
+                    listModel.setPlaylistImageDetail(downloadPlaylistDetailsList.get(0).getPlaylistImage());
+                    listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
+                    listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
+                    listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
+                    listModel.setTotalminute(downloadPlaylistDetailsList.get(0).getTotalminute());
+                    listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
+                    listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
+                    listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
+                    if (audioList.size() != 0) {
+                        for (int i = 0; i < audioList.size(); i++) {
+                            SubPlayListModel.ResponseData.PlaylistSong detail = new SubPlayListModel.ResponseData.PlaylistSong();
+                            detail.setID(audioList.get(i).getID());
+                            detail.setName(audioList.get(i).getName());
+                            detail.setAudioFile(audioList.get(i).getAudioFile());
+                            detail.setAudioDirection(audioList.get(i).getAudioDirection());
+                            detail.setAudiomastercat(audioList.get(i).getAudiomastercat());
+                            detail.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
+                            detail.setImageFile(audioList.get(i).getImageFile());
+                            detail.setLike(audioList.get(i).getLike());
+                            detail.setDownload(audioList.get(i).getDownload());
+                            detail.setAudioDuration(audioList.get(i).getAudioDuration());
+                            details.add(detail);
                         }
-                        setData(listModel);
+                        listModel.setPlaylistSongs(details);
                     }
+                    setData(listModel);
                 }
-                super.onPostExecute(aVoid);
             }
-        }
-
-        GetMedia st = new GetMedia();
-        st.execute();
-        return playlistWiseAudioDetails;
+        });
     }
 
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownloads) {
@@ -1733,8 +1714,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         addDisclaimer.setAudioDuration("00:48");
     }
 
-    public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
-        playlistWiseAudioDetails = new ArrayList<>();
+    public void GetPlaylistMedia(String playlistID) {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
+            deleteDownloadFile(getActivity(), playlistID);
+            for (int i = 0; i < audioList.size(); i++) {
+                GetSingleMedia(audioList.get(i).getAudioFile(), getActivity(), playlistID);
+            }
+        });
+        /*playlistWiseAudioDetails = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -1757,7 +1748,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         GetMedia st = new GetMedia();
         st.execute();
-        return playlistWiseAudioDetails;
+        return playlistWiseAudioDetails;*/
     }
 
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
@@ -1783,7 +1774,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
+      /*  class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 oneAudioDetailsList = DatabaseClient
@@ -1809,7 +1800,23 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         }
         GetMedia sts = new GetMedia();
-        sts.execute();
+        sts.execute();*/
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getLastIdByuId1(AudioFile).observe(getActivity(), audioList -> {
+            try {
+                if (audioList.size() != 0) {
+                    if (audioList.size() == 1) {
+                        FileUtils.deleteDownloadedFile(ctx, audioList.get(0).getName());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
     }
 
     public void getDeleteDownloadData() {
@@ -2953,7 +2960,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                     Btn.setOnClickListener(views -> {
                         getDeleteDownloadData();
-                        playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
+                        GetPlaylistMedia(PlaylistID);
                         dialog.dismiss();
                         Fragment fragment = new PlaylistFragment();
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

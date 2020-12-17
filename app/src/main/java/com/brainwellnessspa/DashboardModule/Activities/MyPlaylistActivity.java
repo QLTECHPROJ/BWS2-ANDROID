@@ -31,14 +31,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
-import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
+import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.RenamePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
@@ -52,6 +47,10 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityMyPlaylistBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -76,7 +75,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
     private long mLastClickTime = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails;
-    List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
     List<String> fileNameList, playlistDownloadId, remainAudio;
@@ -147,7 +145,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         playlistSongsList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         playlistWiseAudioDetails = new ArrayList<>();
-        downloadPlaylistDetailsList = new ArrayList<>();
+//        downloadPlaylistDetailsList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
@@ -156,8 +154,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
             Liked = getIntent().getStringExtra("Liked");
         }
 
-        downloadAudioDetailsList = GetAllMedia();
-        downloadPlaylistDetailsList = GetPlaylistDetail();
+//        downloadAudioDetailsList = GetAllMedia();
+        CallObserverMethodGetAllMedia();
+        GetPlaylistDetail();
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +376,17 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.llDownload.setOnClickListener(view -> callDownload());
     }
 
+    private void CallObserverMethodGetAllMedia() {
+       DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe(this,audioList -> {
+           this.downloadAudioDetailsList = audioList;
+
+       });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -463,8 +473,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }
         }
     */
-    public List<DownloadAudioDetails> GetAllMedia() {
-        class GetTask extends AsyncTask<Void, Void, Void> {
+  /*       public List<DownloadAudioDetails> GetAllMedia() {
+   class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 downloadAudioDetailsList = DatabaseClient
@@ -483,7 +493,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
-    }
+    }*/
 
     private void callDownload() {
         List<String> url = new ArrayList<>();
@@ -846,39 +856,26 @@ public class MyPlaylistActivity extends AppCompatActivity {
         }
     }
 
-    private List<DownloadPlaylistDetails> GetPlaylistDetail() {
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadPlaylistDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getPlaylist(PlaylistID);
-                return null;
-            }
+    private void GetPlaylistDetail() {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getPlaylist1(PlaylistID).observe(this, audioList -> {
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (downloadPlaylistDetailsList.size() != 0) {
-                    enableDisableDownload(false, "orange");
-                } else if (RefreshIconData == 0) {
-                    enableDisableDownload(false, "gray");
-                } else if (Download.equalsIgnoreCase("1")) {
-                    enableDisableDownload(false, "orange");
-                } else if (Download.equalsIgnoreCase("0") || Download.equalsIgnoreCase("") ||
-                        RefreshIconData != 0) {
-                    enableDisableDownload(true, "white");
-                } else if (downloadPlaylistDetailsList.size() == 0 && RefreshIconData != 0) {
-                    enableDisableDownload(true, "white");
-                }
-                super.onPostExecute(aVoid);
-
+            if (audioList.size() != 0) {
+                enableDisableDownload(false, "orange");
+            } else if (RefreshIconData == 0) {
+                enableDisableDownload(false, "gray");
+            } else if (Download.equalsIgnoreCase("1")) {
+                enableDisableDownload(false, "orange");
+            } else if (Download.equalsIgnoreCase("0") || Download.equalsIgnoreCase("") ||
+                    RefreshIconData != 0) {
+                enableDisableDownload(true, "white");
+            } else if (audioList.size() == 0 && RefreshIconData != 0) {
+                enableDisableDownload(true, "white");
             }
-        }
-        GetTask st = new GetTask();
-        st.execute();
-        return downloadPlaylistDetailsList;
+        });
     }
 
     private void enableDisableDownload(boolean b, String color) {

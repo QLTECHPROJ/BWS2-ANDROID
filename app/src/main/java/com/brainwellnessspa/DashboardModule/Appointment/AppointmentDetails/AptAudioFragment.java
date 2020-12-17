@@ -65,7 +65,7 @@ public class AptAudioFragment extends Fragment {
     FragmentAptAudioBinding binding;
     String UserID, AudioFlag;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
-    List<DownloadAudioDetails> oneAudioDetailsList;
+
     //    Handler handler3;
     int startTime;
     AudioListAdapter appointmentsAdapter;
@@ -108,7 +108,7 @@ public class AptAudioFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
-        oneAudioDetailsList = new ArrayList<>();
+
         handler1 = new Handler();
 //        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -139,7 +139,7 @@ public class AptAudioFragment extends Fragment {
     }
 
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
-        oneAudioDetailsList = new ArrayList<>();
+      /*  oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -166,7 +166,23 @@ public class AptAudioFragment extends Fragment {
             }
         }
         GetMedia st = new GetMedia();
-        st.execute();
+        st.execute();*/
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getLastIdByuId1(AudioFile).observe(getActivity(),audioList -> {
+            if (audioList.size() != 0) {
+                if (audioList.get(0).getDownload().equalsIgnoreCase("1")) {
+                    disableDownload(llDownload, ivDownload);
+                }
+            } else if (download.equalsIgnoreCase("1")) {
+                disableDownload(llDownload, ivDownload);
+            } else {
+                enableDownload(llDownload, ivDownload);
+            }
+
+        });
     }
 
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownload) {
@@ -329,6 +345,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.ivDownload.setVisibility(View.VISIBLE);
             }
             GetMedia(audiolist.getAudioFile(), getActivity(), audiolist.getDownload(), holder.binding.llDownload, holder.binding.ivDownload);
+
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());

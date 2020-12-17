@@ -82,7 +82,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     List<DownloadAudioDetails> playlistWiseAudiosDetails;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
-    List<DownloadAudioDetails> oneAudioDetailsList;
     //    Handler handler3;
     int startTime;
     long myProgress = 0, diff = 0;
@@ -330,7 +329,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
                     Btn.setOnClickListener(v -> {
                         getDownloadData();
-                        playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
+                        GetPlaylistMedia(PlaylistID);
                         finish();
                         comeDeletePlaylist = 1;
                         dialog.dismiss();
@@ -438,54 +437,32 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     private void getMedia(String playlistID) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                playlistWiseAudioDetails = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist(playlistID);
-                return null;
-            }
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .getAllAudioByPlaylist1(PlaylistID).observe(this,audioList -> {
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                adpater = new PlayListsAdpater(playlistWiseAudioDetails, ctx);
+                adpater = new PlayListsAdpater(audioList, ctx);
                 LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
                 binding.rvPlayLists.setAdapter(adpater);
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
+
+            });
+
     }
 
-    public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
-        playlistWiseAudioDetails = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                playlistWiseAudioDetails = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist(playlistID);
-                return null;
-            }
+    public void GetPlaylistMedia(String playlistID) {
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .getAllAudioByPlaylist1(PlaylistID).observe(this,audioList -> {
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
                 deleteDownloadFile(getApplicationContext(), playlistID);
-                for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
+                for (int i = 0; i < audioList.size(); i++) {
+                    GetSingleMedia(audioList.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
                 }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
-        return playlistWiseAudioDetails;
+            });
     }
 
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
@@ -511,7 +488,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .getLastIdByuId1(AudioFile).observe(this,audioList -> {
+            if (audioList.size() != 0) {
+                if (audioList.size() == 1) {
+                    FileUtils.deleteDownloadedFile(ctx, audioList.get(0).getName());
+                }
+            }
+        });
+       /* class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 oneAudioDetailsList = DatabaseClient
@@ -533,7 +521,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             }
         }
         GetMedia sts = new GetMedia();
-        sts.execute();
+        sts.execute();*/
     }
 
     private void deletePlaylist(String playlistId) {

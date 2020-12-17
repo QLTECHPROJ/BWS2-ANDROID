@@ -230,9 +230,11 @@ public class OtpActivity extends AppCompatActivity implements
 
                                             if (!UserID.equalsIgnoreCase(Logout_UserID)
                                                     && !MobileNO.equalsIgnoreCase(Logout_MobileNo)) {
-                                                GetAllMedia();
+//                                                GetAllMedia();
+                                                callObserve1();
                                             } else {
-                                                GetAllMedia2();
+//                                                GetAllMedia2();
+                                                callObserve2();
                                             }
 
                                             Log.e("New UserId MobileNo", UserID + "....." + MobileNO);
@@ -265,6 +267,65 @@ public class OtpActivity extends AppCompatActivity implements
                     BWSApplication.showToast(getString(R.string.no_server_found), OtpActivity.this);
                 }
             }
+        });
+    }
+
+    private void callObserve2() {
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe(this,audioList -> {
+            List<String> fileNameList = new ArrayList<>();
+            List<String> audioFile = new ArrayList<>();
+            List<String> playlistDownloadId = new ArrayList<>();
+
+            if (audioList.size() != 0) {
+                for (int i = 0; i < audioList.size(); i++) {
+                    if (audioList.get(i).getDownloadProgress() < 100) {
+                        fileNameList.add(audioList.get(i).getName());
+                        audioFile.add(audioList.get(i).getAudioFile());
+                        playlistDownloadId.add(audioList.get(i).getPlaylistId());
+                    }
+                }
+            }
+            Gson gson = new Gson();
+            SharedPreferences sharedxc = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editorxc = sharedxc.edit();
+            String nameJson = gson.toJson(fileNameList);
+            String urlJson = gson.toJson(audioFile);
+            String playlistIdJson = gson.toJson(playlistDownloadId);
+            editorxc.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editorxc.commit();
+            isDownloading = false;
+            Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
+            startActivity(i);
+            finish();
+        });
+    }
+
+    private void callObserve1() {
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe(this,audioList -> {
+            if (audioList.size() != 0) {
+                for (int i = 0; i < audioList.size(); i++) {
+                    FileUtils.deleteDownloadedFile(getApplicationContext(), audioList.get(i).getName());
+                }
+            }
+            SharedPreferences preferences11 = getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit1 = preferences11.edit();
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadName);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadUrl);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId);
+            edit1.clear();
+            edit1.commit();
+            DeletallLocalCart();
+
         });
     }
 
@@ -306,7 +367,7 @@ public class OtpActivity extends AppCompatActivity implements
         finish();
     }
 
-    public void GetAllMedia() {
+   /* public void GetAllMedia() {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -387,7 +448,7 @@ public class OtpActivity extends AppCompatActivity implements
 
         GetTask st = new GetTask();
         st.execute();
-    }
+    }*/
 
     public void DeletallLocalCart() {
         class DeletallCart extends AsyncTask<Void, Void, Void> {

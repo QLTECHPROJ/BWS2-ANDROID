@@ -1,13 +1,11 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,10 +20,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
@@ -70,7 +66,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -90,7 +85,6 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.getMediaBitmap;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.myBitmap;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class AudioPlayerActivity extends AppCompatActivity {
@@ -113,8 +107,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
     List<DownloadAudioDetails> downloadAudioDetailsList1;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
-    private long mLastClickTime = 0;
     PlayerControlView playerControlView;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -301,7 +295,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            }
         }
         if (comeFromAddToQueue) {
-            if(player!=null) {
+            if (player != null) {
                 player.removeMediaItem(position);
                 player.seekTo(position + 1);
                 player.setPlayWhenReady(true);
@@ -576,7 +570,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 @Override
                 public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                     Log.v("TAG", "Listener-onTracksChanged... ");
-                    myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                     player.setPlayWhenReady(true);
                     position = player.getCurrentWindowIndex();
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -586,7 +580,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
                             || AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        Log.e("Nite Mode :",String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+                        Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
                     }
                     UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
                     if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
@@ -594,7 +588,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
                         uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
 
-                        Log.e("Nite Mode :",String.valueOf(uiModeManager.getNightMode()));
+                        Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                     }
                     callButtonText(player.getCurrentWindowIndex());
                 }
@@ -611,7 +605,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.VISIBLE);
@@ -636,7 +630,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }else if (state == ExoPlayer.STATE_IDLE) {
+                    } else if (state == ExoPlayer.STATE_IDLE) {
                         GetAllMedia();
                         audioClick = true;
 
@@ -647,7 +641,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         });
                         playerControlView.show();
 
-                        Log.e("Exoplayer Idle","my Exop in Idle");
+                        Log.e("Exoplayer Idle", "my Exop in Idle");
                     }
                 }
 
@@ -806,7 +800,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         });
-        if(listSize==1){
+        if (listSize == 1) {
             if (listSize == 1) {
                 exoBinding.llNext.setEnabled(false);
                 exoBinding.llPrev.setEnabled(false);
@@ -821,9 +815,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
-        exoBinding.llPlay.setOnClickListener(view ->{
-            if(mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size()-1).getID())
-                    && (player.getCurrentPosition()-player.getDuration() <= 20)){
+        exoBinding.llPlay.setOnClickListener(view -> {
+            if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
+                    && (player.getCurrentPosition() - player.getDuration() <= 20)) {
                 audioClick = true;
                 miniPlayer = 1;
                 GetAllMedia();
@@ -834,7 +828,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
                 });
                 playerControlView.show();
-            }else {
+            } else {
                 player.setPlayWhenReady(true);
             }
         });
@@ -842,7 +836,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         exoBinding.llBackWordSec.setOnClickListener(view -> {
                     if (player.getCurrentPosition() > 30000) {
                         player.seekTo(player.getCurrentPosition() - 30000);
-                    }else if(player.getCurrentPosition()<30000){
+                    } else if (player.getCurrentPosition() < 30000) {
                         player.seekTo(0);
                     }
                 }
@@ -923,7 +917,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
                 player.setShuffleModeEnabled(true);
             }
-*/            if (IsRepeat.equalsIgnoreCase("")) {
+*/
+            if (IsRepeat.equalsIgnoreCase("")) {
                 if (queuePlay) {
                     binding.llRepeat.setEnabled(false);
                     binding.llRepeat.setClickable(false);
@@ -1341,47 +1336,35 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void getMediaByPer() {
-        class getMediaByPer extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadPercentage = DatabaseClient.getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getDownloadProgress(url, "");
+        DatabaseClient.getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getDownloadProgress1(url, "").observe(this, downloadPercentage -> {
 
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (downloadAudioDetailsList1.size() != 0) {
-                    if (downloadPercentage <= 100) {
-                        if (downloadPercentage == 100) {
-                            binding.pbProgress.setVisibility(View.GONE);
-                            binding.ivDownloads.setVisibility(View.VISIBLE);
-//                            handler1.removeCallbacks(UpdateSongTime1);
-                        } else {
-                            binding.pbProgress.setVisibility(View.VISIBLE);
-                            binding.ivDownloads.setVisibility(View.GONE);
-                            binding.pbProgress.setIndeterminate(false);
-                            binding.pbProgress.setProgress(downloadPercentage);
-                            getMediaByPer();
-//                             handler1.postDelayed(UpdateSongTime1, 500);
-                        }
-                    } else {
+            if (downloadAudioDetailsList1.size() != 0) {
+                if (downloadPercentage <= 100) {
+                    if (downloadPercentage == 100) {
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
-//                        handler1.removeCallbacks(UpdateSongTime1);
+//                            handler1.removeCallbacks(UpdateSongTime1);
+                    } else {
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                        binding.ivDownloads.setVisibility(View.GONE);
+                        binding.pbProgress.setIndeterminate(false);
+                        binding.pbProgress.setProgress(downloadPercentage);
+                        getMediaByPer();
+//                             handler1.postDelayed(UpdateSongTime1, 500);
                     }
                 } else {
                     binding.pbProgress.setVisibility(View.GONE);
                     binding.ivDownloads.setVisibility(View.VISIBLE);
+//                        handler1.removeCallbacks(UpdateSongTime1);
                 }
-                super.onPostExecute(aVoid);
+            } else {
+                binding.pbProgress.setVisibility(View.GONE);
+                binding.ivDownloads.setVisibility(View.VISIBLE);
             }
-        }
-        getMediaByPer st = new getMediaByPer();
-        st.execute();
+        });
     }
 
     private void getDownloadMedia(DownloadMedia downloadMedia, String name, int i) {
@@ -1445,7 +1428,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         if (mainPlayModelList.get(ps).getPlaylistID() == null) {
             mainPlayModelList.get(ps).setPlaylistID("");
         }
-        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(ps).getImageFile());
+        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(ps).getImageFile());
         binding.tvName.setText(mainPlayModelList.get(ps).getName());
         if (mainPlayModelList.get(ps).getAudioDirection().equalsIgnoreCase("")) {
             binding.llDirection.setVisibility(View.GONE);
@@ -2475,7 +2458,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void getPrepareShowData() {
         binding.tvDireName.setText(R.string.Directions);
-        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(position).getImageFile());
+        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();

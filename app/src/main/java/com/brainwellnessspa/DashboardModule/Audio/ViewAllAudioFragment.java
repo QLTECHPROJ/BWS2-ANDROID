@@ -121,12 +121,43 @@ public class ViewAllAudioFragment extends Fragment {
         refreshData();
         if (Name.equalsIgnoreCase("My Downloads")) {
             audioList = new ArrayList<>();
-            GetAllMedia(getActivity());
+//            GetAllMedia(getActivity());
+            callObserverMethod();
         } else {
             prepareData();
         }
     }
 
+    private void callObserverMethod() {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData1("").observe(getActivity(),audioList ->{
+            refreshData();
+            binding.tvTitle.setText(Name);
+            ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList = new ArrayList<>();
+            for (int i = 0; i < audioList.size(); i++) {
+                ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+
+                mainPlayModel.setID(audioList.get(i).getID());
+                mainPlayModel.setName(audioList.get(i).getName());
+                mainPlayModel.setAudioFile(audioList.get(i).getAudioFile());
+                mainPlayModel.setAudioDirection(audioList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(audioList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(audioList.get(i).getImageFile());
+                mainPlayModel.setLike(audioList.get(i).getLike());
+                mainPlayModel.setDownload(audioList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(audioList.get(i).getAudioDuration());
+                listModelList.add(mainPlayModel);
+            }
+            AudiolistAdapter adapter = new AudiolistAdapter(listModelList, IsLock);
+            binding.rvMainAudio.setAdapter(adapter);
+        });
+    }
+
+/*
     public List<DownloadAudioDetails> GetAllMedia(Context ctx) {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
@@ -168,6 +199,7 @@ public class ViewAllAudioFragment extends Fragment {
         st.execute();
         return audioList;
     }
+*/
 
     private void prepareData() {
         refreshData();

@@ -31,7 +31,8 @@ import static com.brainwellnessspa.EncryptDecryptUtils.FileUtils.saveFile;
 public class DownloadMedia implements OnDownloadListener{
     public static int downloadError = 2,downloadIdOne;
     public static String filename = "";
-    public static int downloadProgress = 0,downloadprog22=0;
+    public static int downloadProgress = 0;
+    int downloadProgress2=0;
     public static boolean isDownloading = false;
     Context context;
     byte[] encodedBytes;
@@ -41,95 +42,81 @@ public class DownloadMedia implements OnDownloadListener{
         this.context = context;
     }
 
-    public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
+    public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
         BWSApplication.showToast("Downloading file...", context);
 
 // Setting timeout globally for the download network requests:
-  /*      PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .build();
-        PRDownloader.initialize(context, config);*/
+        PRDownloader.initialize(context, config);
         isDownloading = true;
         fileNameList = FILE_NAME;
         audioFile = DOWNLOAD_AUDIO_URL;
         playlistDownloadId = PLAYLIST_ID;
         filename = FILE_NAME.get(0);
-       downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().setOnProgressListener(progress -> {
-            long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
-            downloadProgress = (int) progressPercent;
-            if(downloadProgress == downloadprog22+5) {
-                updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
-            }
-           downloadprog22 = downloadProgress;
-       }).setOnCancelListener(new OnCancelListener() {
-           @Override
-           public void onCancel() {
-               downloadIdOne = 0;
-               filename = "";
-               if(logout){
-                   SharedPreferences preferences11 = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                   SharedPreferences.Editor edit1 = preferences11.edit();
-                   edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
-                   edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
-                   edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
-                   edit1.clear();
-                   edit1.commit();
-               }else {
-                   SharedPreferences sharedy1 = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                   Gson gson = new Gson();
-                   String jsony1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                   String json11 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                   String jsonq1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                   if (!jsony1.equalsIgnoreCase(String.valueOf(gson))) {
-                       Type type = new TypeToken<List<String>>() {
-                       }.getType();
-                       fileNameList = gson.fromJson(jsony1, type);
-                       audioFile = gson.fromJson(json11, type);
-                       playlistDownloadId = gson.fromJson(jsonq1, type);
-                   }
-                   fileNameList.remove(0);
-                   audioFile.remove(0);
-                   playlistDownloadId.remove(0);
-                   SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                   SharedPreferences.Editor editor = shared.edit();
-                   String urlJson = gson.toJson(audioFile);
-                   String nameJson = gson.toJson(fileNameList);
-                   String playlistIdJson = gson.toJson(playlistDownloadId);
-                   editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                   editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                   editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                   editor.commit();
-                   SharedPreferences sharedy = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                   String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                   String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                   String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                   if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                       Type type = new TypeToken<List<String>>() {
-                       }.getType();
-                       fileNameList = gson.fromJson(jsony, type);
-                       audioFile = gson.fromJson(json1, type);
-                       playlistDownloadId = gson.fromJson(jsonq, type);
-                   }
-                   if (fileNameList.size() != 0) {
-                       encrypt1(audioFile, fileNameList, playlistDownloadId);
-                   }
-
+        downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0))
+                .build().setOnProgressListener(progress -> {
+                    long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
+                    downloadProgress = (int) progressPercent;
+                    if(downloadProgress == downloadProgress2 + 10) {
+                        updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
+                    }
+                    downloadProgress2 = downloadProgress;
+       }).setOnCancelListener(() -> {
+           downloadIdOne = 0;
+           filename = "";
+           if(logout){
+               SharedPreferences preferences11 = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+               SharedPreferences.Editor edit1 = preferences11.edit();
+               edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
+               edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
+               edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
+               edit1.clear();
+               edit1.commit();
+           }else {
+               SharedPreferences sharedy1 = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+               Gson gson = new Gson();
+               String jsony1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+               String json11 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+               String jsonq1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+               if (!jsony1.equalsIgnoreCase(String.valueOf(gson))) {
+                   Type type = new TypeToken<List<String>>() {
+                   }.getType();
+                   fileNameList = gson.fromJson(jsony1, type);
+                   audioFile = gson.fromJson(json11, type);
+                   playlistDownloadId = gson.fromJson(jsonq1, type);
                }
+               fileNameList.remove(0);
+               audioFile.remove(0);
+               playlistDownloadId.remove(0);
+               SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+               SharedPreferences.Editor editor = shared.edit();
+               String urlJson = gson.toJson(audioFile);
+               String nameJson = gson.toJson(fileNameList);
+               String playlistIdJson = gson.toJson(playlistDownloadId);
+               editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+               editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+               editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+               editor.commit();
+               SharedPreferences sharedy = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+               String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+               String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+               String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+               if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                   Type type = new TypeToken<List<String>>() {
+                   }.getType();
+                   fileNameList = gson.fromJson(jsony, type);
+                   audioFile = gson.fromJson(json1, type);
+                   playlistDownloadId = gson.fromJson(jsonq, type);
+               }
+               if (fileNameList.size() != 0) {
+                   encrypt1(audioFile, fileNameList, playlistDownloadId);
+               }
+
            }
        }).start(this);
        return encodedBytes;
     }
-
-/*    private void callPauseResume() {
-
-        if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
-            PRDownloader.pause(downloadIdOne);
-        }
-
-        if (Status.PAUSED == PRDownloader.getStatus(downloadIdOne)) {
-            PRDownloader.resume(downloadIdOne);
-        }
-    }*/
-
     public byte[] decrypt(String FILE_NAME) {
         byte[] decryptedBytes = null;
 //        BWSApplication.showToast("Retrieve file...", context);
@@ -205,7 +192,7 @@ public class DownloadMedia implements OnDownloadListener{
             protected void onPostExecute(Void aVoid) {
                 try{
                     updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
-                   fileNameList.remove(0);
+                    fileNameList.remove(0);
                     audioFile.remove(0);
                     playlistDownloadId.remove(0);
                     SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);

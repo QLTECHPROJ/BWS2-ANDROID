@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,17 +27,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.databinding.MainPlaylistLayoutBinding;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
@@ -47,7 +42,11 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentPlaylistBinding;
+import com.brainwellnessspa.databinding.MainPlaylistLayoutBinding;
 import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -58,10 +57,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 
@@ -86,7 +84,6 @@ public class PlaylistFragment extends Fragment {
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
-        downloadPlaylistDetailsList = new ArrayList<>();
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
@@ -137,9 +134,9 @@ public class PlaylistFragment extends Fragment {
                             MainPlayListModel listModel = response.body();
                             binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
                             listModelList = listModel.getResponseData();
-                            adapter = new MainPlayListAdapter();
-                            binding.rvMainPlayList.setAdapter(adapter);
-                            downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
+//                            adapter = new MainPlayListAdapter();
+//                            binding.rvMainPlayList.setAdapter(adapter);
+                            GetPlaylistDetail(listModel.getResponseData());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -161,7 +158,7 @@ public class PlaylistFragment extends Fragment {
             listModel.setView("My Downloads");
             listModel.setIsLock(IsLock);
             responseData.add(listModel);
-            downloadPlaylistDetailsList = GetPlaylistDetail(responseData);
+            GetPlaylistDetail(responseData);
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
@@ -245,58 +242,46 @@ public class PlaylistFragment extends Fragment {
         }
     }
 
-    private List<DownloadPlaylistDetails> GetPlaylistDetail(ArrayList<MainPlayListModel.ResponseData> responseData) {
-        ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadPlaylistDetailsList = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllPlaylist();
-                return null;
-            }
+    private void GetPlaylistDetail(ArrayList<MainPlayListModel.ResponseData> responseData) {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getAllPlaylist1().observe(getActivity(), audioList -> {
+            ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (downloadPlaylistDetailsList.size() != 0) {
-                    for (int i = 0; i < downloadPlaylistDetailsList.size(); i++) {
-                        MainPlayListModel.ResponseData.Detail detail = new MainPlayListModel.ResponseData.Detail();
-                        detail.setTotalAudio(downloadPlaylistDetailsList.get(i).getTotalAudio());
-                        detail.setTotalhour(downloadPlaylistDetailsList.get(i).getTotalhour());
-                        detail.setTotalminute(downloadPlaylistDetailsList.get(i).getTotalminute());
-                        detail.setPlaylistID(downloadPlaylistDetailsList.get(i).getPlaylistID());
-                        detail.setPlaylistDesc(downloadPlaylistDetailsList.get(i).getPlaylistDesc());
-                        detail.setMasterCategory(downloadPlaylistDetailsList.get(i).getPlaylistMastercat());
-                        detail.setSubCategory(downloadPlaylistDetailsList.get(i).getPlaylistSubcat());
-                        detail.setPlaylistName(downloadPlaylistDetailsList.get(i).getPlaylistName());
-                        detail.setPlaylistImage(downloadPlaylistDetailsList.get(i).getPlaylistImage());
-                        detail.setPlaylistImageDetails(downloadPlaylistDetailsList.get(i).getPlaylistImageDetails());
-                        detail.setPlaylistId(downloadPlaylistDetailsList.get(i).getPlaylistID());
-                        details.add(detail);
+            if (audioList.size() != 0) {
+                for (int i = 0; i < audioList.size(); i++) {
+                    MainPlayListModel.ResponseData.Detail detail = new MainPlayListModel.ResponseData.Detail();
+                    detail.setTotalAudio(audioList.get(i).getTotalAudio());
+                    detail.setTotalhour(audioList.get(i).getTotalhour());
+                    detail.setTotalminute(audioList.get(i).getTotalminute());
+                    detail.setPlaylistID(audioList.get(i).getPlaylistID());
+                    detail.setPlaylistDesc(audioList.get(i).getPlaylistDesc());
+                    detail.setMasterCategory(audioList.get(i).getPlaylistMastercat());
+                    detail.setSubCategory(audioList.get(i).getPlaylistSubcat());
+                    detail.setPlaylistName(audioList.get(i).getPlaylistName());
+                    detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
+                    detail.setPlaylistImageDetails(audioList.get(i).getPlaylistImageDetails());
+                    detail.setPlaylistId(audioList.get(i).getPlaylistID());
+                    details.add(detail);
+                }
+                for (int i = 0; i < responseData.size(); i++) {
+                    if (responseData.get(i).getView().equalsIgnoreCase("My Downloads")) {
+                        responseData.get(i).setDetails(details);
                     }
-                    for (int i = 0; i < responseData.size(); i++) {
-                        if (responseData.get(i).getView().equalsIgnoreCase("My Downloads")) {
-                            responseData.get(i).setDetails(details);
-                        }
-                    }
+                }
 
                     /*listModelList.clear();
                     listModelList = new ArrayList<>();
                     listModelList.addAll(responseData);*/
-                    adapter = new MainPlayListAdapter();
-                    binding.rvMainPlayList.setAdapter(adapter);
-                } else {
-                    adapter = new MainPlayListAdapter();
-                    binding.rvMainPlayList.setAdapter(adapter);
-                }
-                super.onPostExecute(aVoid);
+                adapter = new MainPlayListAdapter();
+                binding.rvMainPlayList.setAdapter(adapter);
+            } else {
+                adapter = new MainPlayListAdapter();
+                binding.rvMainPlayList.setAdapter(adapter);
             }
-        }
-        GetTask st = new GetTask();
-        st.execute();
-        return downloadPlaylistDetailsList;
+        });
     }
 
     public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder> {

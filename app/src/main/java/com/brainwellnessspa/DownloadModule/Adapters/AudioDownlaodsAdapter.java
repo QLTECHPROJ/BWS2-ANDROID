@@ -3,6 +3,7 @@ package com.brainwellnessspa.DownloadModule.Adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -24,12 +25,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -68,7 +71,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     LinearLayout llError;
     RecyclerView rvDownloadsList;
     TextView tvFound;
-    List<DownloadAudioDetails> downloadAudioDetailsList;
     Runnable UpdateSongTime1;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
@@ -91,7 +93,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         this.rvDownloadsList = rvDownloadsList;
         this.tvFound = tvFound;
         handler1 = new Handler();
-        downloadAudioDetailsList = new ArrayList<>();
         /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
@@ -480,15 +481,38 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             protected void onPostExecute(Void aVoid) {
                 listModelList = new ArrayList<>();
-                listModelList = GetAllMedia(ctx);
+                CallObserverMethod2();
                 super.onPostExecute(aVoid);
             }
         }
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
+    private void CallObserverMethod2() {
+         DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData1("").observe(ctx,downloadAudioDetailsList -> {
+            if (downloadAudioDetailsList.size() != 0) {
+                if (downloadAudioDetailsList.size() == 0) {
+                    tvFound.setVisibility(View.VISIBLE);
+                } else {
+                    llError.setVisibility(View.GONE);
+                    AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(downloadAudioDetailsList, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound);
+                    rvDownloadsList.setAdapter(adapter);
+                }
+                llError.setVisibility(View.GONE);
+                rvDownloadsList.setVisibility(View.VISIBLE);
+            } else {
+                llError.setVisibility(View.VISIBLE);
+                rvDownloadsList.setVisibility(View.GONE);
+            }
+        });
 
-    public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
+    }
+
+ /*   public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
         downloadAudioDetailsList = new ArrayList<>();
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
@@ -524,7 +548,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
-    }
+    }*/
 
     @Override
     public int getItemViewType(int position) {
