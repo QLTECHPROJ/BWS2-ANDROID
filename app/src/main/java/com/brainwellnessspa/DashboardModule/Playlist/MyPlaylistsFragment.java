@@ -945,34 +945,46 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void getMediaByPer(String playlistID, int totalAudio) {
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getCountDownloadProgress1("Complete", playlistID).observe(getActivity(), count -> {
-            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
-            if (downloadPlaylistDetailsList.size() != 0) {
-                if (count <= totalAudio) {
-                    if (count == totalAudio) {
+        class getMediaByPer extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                count = DatabaseClient.getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getCountDownloadProgress("Complete", playlistID);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                downloadPlaylistDetailsList = GetPlaylistDetail(downloadPlaylistDetails.getDownload());
+                if (downloadPlaylistDetailsList.size() != 0) {
+                    if (count <= totalAudio) {
+                        if (count == totalAudio) {
+                            binding.pbProgress.setVisibility(View.GONE);
+                            binding.ivDownloads.setVisibility(View.VISIBLE);
+//                            handler1.removeCallbacks(UpdateSongTime1);
+                        } else {
+                            long progressPercent = count * 100 / totalAudio;
+                            int downloadProgress1 = (int) progressPercent;
+                            binding.pbProgress.setVisibility(View.VISIBLE);
+                            binding.ivDownloads.setVisibility(View.GONE);
+                            binding.pbProgress.setProgress(downloadProgress1);
+                            getMediaByPer(playlistID, totalAudio);
+//                             handler1.postDelayed(UpdateSongTime1, 500);
+                        }
+                    } else {
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
-//                            handler1.removeCallbacks(UpdateSongTime1);
-                    } else {
-                        long progressPercent = count * 100 / totalAudio;
-                        int downloadProgress1 = (int) progressPercent;
-                        binding.pbProgress.setVisibility(View.VISIBLE);
-                        binding.ivDownloads.setVisibility(View.GONE);
-                        binding.pbProgress.setProgress(downloadProgress1);
-                        getMediaByPer(playlistID, totalAudio);
-//                             handler1.postDelayed(UpdateSongTime1, 500);
-                    }
-                } else {
-                    binding.pbProgress.setVisibility(View.GONE);
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
 //                        handler1.removeCallbacks(UpdateSongTime1);
+                    }
                 }
+                super.onPostExecute(aVoid);
             }
-        });
+        }
+        getMediaByPer st = new getMediaByPer();
+        st.execute();
     }
 
     private void getDownloadData() {
