@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,9 +18,18 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
+import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
+import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
+import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
+import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -29,16 +39,20 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 
 public class GlobleInItExoPlayer extends Service {
     public static SimpleExoPlayer player;
@@ -92,42 +106,18 @@ public class GlobleInItExoPlayer extends Service {
         return myBitmap;
     }
 
-    public void GlobleInItPlayer(Context ctx, int position, List<DownloadAudioDetails> downloadAudioDetailsList,
+    public void GlobleInItPlayer(Context ctx, int position, List<String> downloadAudioDetailsList,
                                  ArrayList<MainPlayModel> mainPlayModelList, List<File> bytesDownloaded) {
-
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         if (downloadAudioDetailsList.size() != 0) {
             for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
-                if (downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(0).getAudioFile())) {
+                if (downloadAudioDetailsList.get(f).equalsIgnoreCase(mainPlayModelList.get(0).getName())) {
 //                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
 //                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
 
-                    Uri uri = Uri.fromFile(bytesDownloaded.get(f));
-                    DataSpec dataSpec = new DataSpec(uri);
-                    final FileDataSource fileDataSource = new FileDataSource();
-                    try {
-                        fileDataSource.open(dataSpec);
-                    } catch (FileDataSource.FileDataSourceException e) {
-                        e.printStackTrace();
-                    }
-
-                    MediaItem mediaItem = MediaItem.fromUri(uri);
-                    player.setMediaItem(mediaItem);
-                } else if (f == downloadAudioDetailsList.size() - 1) {
-                    MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-                    player.setMediaItem(mediaItem1);
-                }
-            }
-        } else {
-            MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-            player.setMediaItem(mediaItem1);
-        }
-        for (int i = 1; i < mainPlayModelList.size(); i++) {
-            if (downloadAudioDetailsList.size() != 0) {
-                for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
-                    if (downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())) {
-//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
+                    if (bytesDownloaded.get(f) != null) {
                         Uri uri = Uri.fromFile(bytesDownloaded.get(f));
                         DataSpec dataSpec = new DataSpec(uri);
                         final FileDataSource fileDataSource = new FileDataSource();
@@ -139,7 +129,54 @@ public class GlobleInItExoPlayer extends Service {
 
                         MediaItem mediaItem = MediaItem.fromUri(uri);
                         player.addMediaItem(mediaItem);
-                    } else {
+                        player.setPlayWhenReady(true);
+                    }else{
+                        if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
+                                AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
+//                            removeArray(ctx,0,mainPlayModelList);
+                        }else{
+                            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+                            player.addMediaItem(mediaItem);
+                        }
+                    }
+                } else if (f == downloadAudioDetailsList.size() - 1) {
+                    MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+                    player.setMediaItem(mediaItem);
+                    break;
+                }
+            }
+        } else {
+            MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+            player.setMediaItem(mediaItem1);
+        }
+        for (int i = 1; i < mainPlayModelList.size(); i++) {
+            if (downloadAudioDetailsList.size() != 0) {
+                for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
+                    if (downloadAudioDetailsList.get(f).equalsIgnoreCase(mainPlayModelList.get(i).getName())) {
+//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
+                        if (bytesDownloaded.get(f) != null) {
+                            Uri uri = Uri.fromFile(bytesDownloaded.get(f));
+                            DataSpec dataSpec = new DataSpec(uri);
+                            final FileDataSource fileDataSource = new FileDataSource();
+                            try {
+                                fileDataSource.open(dataSpec);
+                            } catch (FileDataSource.FileDataSourceException e) {
+                                e.printStackTrace();
+                            }
+
+                            MediaItem mediaItem = MediaItem.fromUri(uri);
+                            player.addMediaItem(mediaItem);
+                        }else{
+                            if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
+                                    AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
+                                removeArray(ctx,i,mainPlayModelList);
+                            }else{
+                                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+                                player.addMediaItem(mediaItem);
+                            }
+                        }
+                    }else {
                         MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                         player.addMediaItem(mediaItem);
                     }
@@ -194,6 +231,57 @@ public class GlobleInItExoPlayer extends Service {
                 Log.e("TAG", "Job scheduling failed");
             }
         }*/
+    }
+
+    private void removeArray(Context ctx,int position,List<MainPlayModel> mainPlayModelList ) {
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+       String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        Gson gson = new Gson();
+        String json1 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
+                arrayList.remove(position);
+                mainPlayModelList.remove(position);
+          /*  if (pos == position && position < mData.size() - 1) {
+
+                    callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+
+            } else if (pos == position && position == mData.size() - 1) {
+                pos = 0;
+
+                    callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+
+            } else if (pos < position && pos < mData.size() - 1) {
+                saveToPref(pos, mData);
+            } else if (pos > position && pos == mData.size()) {
+                pos = pos - 1;
+                saveToPref(pos, mData);
+            }*/
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
+            arrayList.remove(position);
+            mainPlayModelList.remove(position);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        }
     }
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {

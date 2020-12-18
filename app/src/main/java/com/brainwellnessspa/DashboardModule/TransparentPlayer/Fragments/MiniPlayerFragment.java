@@ -84,7 +84,7 @@ public class MiniPlayerFragment extends Fragment {
     Context ctx;
     Activity activity;
     View view;
-    List<DownloadAudioDetails> downloadAudioDetailsList;
+    List<String> downloadAudioDetailsList;
     byte[] descriptor;
     List<File> bytesDownloaded;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -127,6 +127,10 @@ public class MiniPlayerFragment extends Fragment {
         localIntent = new Intent("play_pause_Action");
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if (audioClick) {
+            exoBinding.llPlay.setVisibility(View.GONE);
+            exoBinding.llPause.setVisibility(View.GONE);
+            exoBinding.progressBar.setVisibility(View.VISIBLE);
+            MakeArray2();
             GetAllMedia();
         } else {
             MakeArray2();
@@ -334,7 +338,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
+                  /*  if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
@@ -346,7 +350,7 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }
+                    }*/
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -478,7 +482,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
+                 /*   if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
@@ -490,7 +494,7 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    }
+                    }*/
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -654,6 +658,14 @@ public class MiniPlayerFragment extends Fragment {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    descriptor = downloadMedia.decrypt(name);
+                    try {
+                        if (descriptor != null) {
+                            fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
+                        }
+                    } catch (IOException e1) {
+                        e.printStackTrace();
+                    }
                 }
 
                 return null;
@@ -668,7 +680,7 @@ public class MiniPlayerFragment extends Fragment {
 //                if(i == downloadAudioDetailsList.size()) {
 //                    Log.e("MakeArry Call",String.valueOf(i));
                 if (i < downloadAudioDetailsList.size() - 1) {
-                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i + 1).getName(), i + 1);
+                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i + 1), i + 1);
                     Log.e("DownloadMedia Call", String.valueOf(i + 1));
                 } else {
                     MakeArray();
@@ -685,6 +697,16 @@ public class MiniPlayerFragment extends Fragment {
 
     private void callButtonText(int ps) {
 //        simpleSeekbar.setMax(100);
+        if(!BWSApplication.isNetworkConnected(ctx)){
+            Gson gson = new Gson();
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            String json2 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+            if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type1 = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                mainPlayModelList = gson.fromJson(json2, type1);
+            }
+        }
         url = mainPlayModelList.get(ps).getAudioFile();
         id = mainPlayModelList.get(ps).getID();
         myAudioId = id;
@@ -722,7 +744,7 @@ public class MiniPlayerFragment extends Fragment {
         addToRecentPlayId = id;
     }
 
-    public List<DownloadAudioDetails> GetAllMedia() {
+    public List<String> GetAllMedia() {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -739,7 +761,7 @@ public class MiniPlayerFragment extends Fragment {
                 if (downloadAudioDetailsList.size() != 0) {
 //                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(0).getName(), 0);
+                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(0), 0);
 //                    }
                 } else {
                     MakeArray();
@@ -747,6 +769,7 @@ public class MiniPlayerFragment extends Fragment {
                 super.onPostExecute(aVoid);
             }
         }
+//        MakeArray2();
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;

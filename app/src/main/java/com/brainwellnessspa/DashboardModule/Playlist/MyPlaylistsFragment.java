@@ -142,7 +142,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     List<String> fileNameList, playlistDownloadId, remainAudio;
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
-    int SongListSize = 0, count;
+    int SongListSize = 0,count = 0;
     List<DownloadAudioDetails> playlistWiseAudiosDetails;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
@@ -479,7 +479,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 .getaudioDatabase()
                 .taskDao()
                 .geAllData12().observe(getActivity(), audioList -> {
-            this.downloadAudioDetailsList = audioList;
+            downloadAudioDetailsList = audioList;
 
         });
 
@@ -530,6 +530,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     @Override
     public void onPause() {
 //        handler3.removeCallbacks(UpdateSongTime3);
+
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }
@@ -617,7 +618,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             prepareData(UserID, PlaylistIDs);
             MyPlaylistIds = "";
         }
-        handler2.removeCallbacks(UpdateSongTime2);
     }
 
     private void searchClear(EditText searchEditText) {
@@ -1077,72 +1077,76 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         + listModel.getTotalhour() + "h " + listModel.getTotalminute() + "m");
             }
         }
-        RefreshIcon = listModel.getPlaylistSongs().size();
-        RefreshIconData = listModel.getPlaylistSongs().size();
+        if(listModel.getPlaylistSongs()!=null) {
+            RefreshIcon = listModel.getPlaylistSongs().size();
+            RefreshIconData = listModel.getPlaylistSongs().size();
+        }
         binding.llReminder.setVisibility(View.INVISIBLE);
         binding.llDownloads.setVisibility(View.INVISIBLE);
-        if (listModel.getPlaylistSongs().size() == 0) {
-            binding.llAddAudio.setVisibility(View.VISIBLE);
-            binding.llDownloads.setVisibility(View.VISIBLE);
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.llReminder.setVisibility(View.VISIBLE);
-            binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
-            binding.llListing.setVisibility(View.GONE);
-            binding.btnAddAudio.setOnClickListener(view -> {
-                Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                i.putExtra("PlaylistID", PlaylistID);
-                startActivity(i);
-            });
-        } else {
-            binding.llAddAudio.setVisibility(View.GONE);
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-            binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
-            binding.llListing.setVisibility(View.VISIBLE);
-            try {
-                if (MyDownloads.equalsIgnoreCase("1")) {
-                    binding.llDelete.setVisibility(View.VISIBLE);
-                    binding.llReminder.setVisibility(View.INVISIBLE);
-                    binding.llDownloads.setVisibility(View.INVISIBLE);
-                    binding.llMore.setVisibility(View.GONE);
-                    binding.rlSearch.setVisibility(View.VISIBLE);
-                    adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, "0");
-                    binding.rvPlayLists2.setAdapter(adpater2);
-                    binding.rvPlayLists.setVisibility(View.GONE);
-                    binding.rvPlayLists1.setVisibility(View.GONE);
-                    binding.rvPlayLists2.setVisibility(View.VISIBLE);
-                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                    binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                    enableDisableDownload(false, "orange");
-                    binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.gray), PorterDuff.Mode.SRC_IN);
-                } else {
-                    binding.llDownloads.setVisibility(View.VISIBLE);
-                    binding.llReminder.setVisibility(View.VISIBLE);
-                    if (listModel.getCreated().equalsIgnoreCase("1")) {
-                        binding.rvPlayLists.setVisibility(View.VISIBLE);
-                        binding.rvPlayLists1.setVisibility(View.VISIBLE);
-                        binding.rvPlayLists2.setVisibility(View.GONE);
-                        adpater1 = new PlayListsAdpater1(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
-                        binding.rvPlayLists.setAdapter(adpater1);
-                        adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
-                        ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
-                        touchHelper = new ItemTouchHelper(callback);
-                        touchHelper.attachToRecyclerView(binding.rvPlayLists1);
-                        binding.rvPlayLists1.setAdapter(adpater);
-                    } else {
-                        adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+        if(listModel.getPlaylistSongs()!= null) {
+            if (listModel.getPlaylistSongs().size() == 0) {
+                binding.llAddAudio.setVisibility(View.VISIBLE);
+                binding.llDownloads.setVisibility(View.VISIBLE);
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                binding.llReminder.setVisibility(View.VISIBLE);
+                binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
+                binding.llListing.setVisibility(View.GONE);
+                binding.btnAddAudio.setOnClickListener(view -> {
+                    Intent i = new Intent(getActivity(), AddAudioActivity.class);
+                    i.putExtra("PlaylistID", PlaylistID);
+                    startActivity(i);
+                });
+            } else {
+                binding.llAddAudio.setVisibility(View.GONE);
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+                binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
+                binding.llListing.setVisibility(View.VISIBLE);
+                try {
+                    if (MyDownloads.equalsIgnoreCase("1")) {
+                        binding.llDelete.setVisibility(View.VISIBLE);
+                        binding.llReminder.setVisibility(View.INVISIBLE);
+                        binding.llDownloads.setVisibility(View.INVISIBLE);
+                        binding.llMore.setVisibility(View.GONE);
+                        binding.rlSearch.setVisibility(View.VISIBLE);
+                        adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, "0");
                         binding.rvPlayLists2.setAdapter(adpater2);
                         binding.rvPlayLists.setVisibility(View.GONE);
                         binding.rvPlayLists1.setVisibility(View.GONE);
                         binding.rvPlayLists2.setVisibility(View.VISIBLE);
+                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                        enableDisableDownload(false, "orange");
+                        binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.gray), PorterDuff.Mode.SRC_IN);
+                    } else {
+                        binding.llDownloads.setVisibility(View.VISIBLE);
+                        binding.llReminder.setVisibility(View.VISIBLE);
+                        if (listModel.getCreated().equalsIgnoreCase("1")) {
+                            binding.rvPlayLists.setVisibility(View.VISIBLE);
+                            binding.rvPlayLists1.setVisibility(View.VISIBLE);
+                            binding.rvPlayLists2.setVisibility(View.GONE);
+                            adpater1 = new PlayListsAdpater1(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
+                            binding.rvPlayLists.setAdapter(adpater1);
+                            adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
+                            ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
+                            touchHelper = new ItemTouchHelper(callback);
+                            touchHelper.attachToRecyclerView(binding.rvPlayLists1);
+                            binding.rvPlayLists1.setAdapter(adpater);
+                        } else {
+                            adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                            binding.rvPlayLists2.setAdapter(adpater2);
+                            binding.rvPlayLists.setVisibility(View.GONE);
+                            binding.rvPlayLists1.setVisibility(View.GONE);
+                            binding.rvPlayLists2.setVisibility(View.VISIBLE);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            LocalBroadcastManager.getInstance(getActivity())
-                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
+                LocalBroadcastManager.getInstance(getActivity())
+                        .registerReceiver(listener, new IntentFilter("play_pause_Action"));
+            }
         }
     }
 

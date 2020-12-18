@@ -272,9 +272,8 @@ public class PlaylistFragment extends Fragment {
                     }
                 }
 
-                    /*listModelList.clear();
                     listModelList = new ArrayList<>();
-                    listModelList.addAll(responseData);*/
+                    listModelList.addAll(responseData);
                 adapter = new MainPlayListAdapter();
                 binding.rvMainPlayList.setAdapter(adapter);
             } else {

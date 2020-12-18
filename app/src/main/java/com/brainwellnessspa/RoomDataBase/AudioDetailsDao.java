@@ -24,9 +24,9 @@ public interface AudioDetailsDao {
 //    @Query("SELECT * FROM audio_table  ORDER BY uid DESC")// ORDER BY uid ASC
 //    List<DownloadAudioDetails> geAllData1();
 
-    @Query("SELECT * FROM audio_table WHERE IsDownload =:IsDownload")
+    @Query("SELECT DISTINCT Name FROM audio_table WHERE IsDownload =:IsDownload")
 // ORDER BY uid ASC
-    List<DownloadAudioDetails> geAllDataBYDownloaded(String IsDownload);
+    List<String> geAllDataBYDownloaded(String IsDownload);
 
     @Insert
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
@@ -80,17 +80,20 @@ public interface AudioDetailsDao {
     @Query("UPDATE audio_table SET IsDownload =:IsDownload,DownloadProgress =:DownloadProgress WHERE Name =:Name and PlaylistId =:PlaylistId")
     void updateMediaByDownloadProgress(String IsDownload, int DownloadProgress, String PlaylistId, String Name);
 
-    @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
-    LiveData<Integer> getCountDownloadProgress1(String IsDownload, String PlaylistId);
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
+    LiveData<List<DownloadPlaylistDetails>>  getCountDownloadProgress1(String IsDownload, String PlaylistId);
 
     @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
     int getCountDownloadProgress(String IsDownload,String PlaylistId);
 
-    @Query("SELECT DownloadProgress FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
-    LiveData<Integer> getDownloadProgress1(String AudioFile, String PlaylistId);
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
+        LiveData<List<DownloadAudioDetails>> getDownloadProgress1(String AudioFile, String PlaylistId);
 
-    @Query("SELECT DownloadProgress FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
-    int getDownloadProgress(String AudioFile, String PlaylistId);
+    @Query("SELECT * FROM audio_table WHERE DownloadProgress <=:DownloadProgress")
+        LiveData<List<DownloadAudioDetails>> getDownloadProgressRemain(int DownloadProgress);
+
+//    @Query("SELECT DownloadProgress FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
+//    int getDownloadProgress(String AudioFile, String PlaylistId);
 
 //    @Query("SELECT COUNT(DISTINCT ProductID) FROM item_table")
 //    int getunique();
