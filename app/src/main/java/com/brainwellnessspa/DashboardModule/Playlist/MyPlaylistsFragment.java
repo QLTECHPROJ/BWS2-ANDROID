@@ -255,6 +255,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivMore.setImageResource(R.drawable.ic_menu_icon);
             binding.ivMore.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
+            binding.tvTag.setText(R.string.Audios_in_Playlist);
+            binding.tvTag.setVisibility(View.VISIBLE);
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
@@ -281,7 +283,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchEditText.setTextColor(getResources().getColor(R.color.gray));
+        searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();

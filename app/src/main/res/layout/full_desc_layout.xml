@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:fontFamily="@font/montserrat_medium"
+                        android:fontFamily="@font/montserrat_semi_bold"
                         android:text="Close"
                         android:textAllCaps="true"
                         android:textColor="@color/dark_blue_gray"

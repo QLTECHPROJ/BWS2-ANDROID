@@ -286,7 +286,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         }
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchEditText.setTextColor(getResources().getColor(R.color.gray));
+        searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();
