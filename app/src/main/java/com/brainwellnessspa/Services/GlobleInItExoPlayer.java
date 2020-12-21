@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -30,6 +31,7 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MusicService;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -87,8 +89,12 @@ public class GlobleInItExoPlayer extends Service {
                     if (songImg.equalsIgnoreCase("")) {
                         myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
                     } else {
-                        URL url = new URL(songImg);
-                        myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        if(!BWSApplication.isNetworkConnected(ctx)){
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                        }else {
+                            URL url = new URL(songImg);
+                            myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -126,17 +132,19 @@ public class GlobleInItExoPlayer extends Service {
                         } catch (FileDataSource.FileDataSourceException e) {
                             e.printStackTrace();
                         }
+                        Log.e("Globle Player", mainPlayModelList.get(0).getName());
 
                         MediaItem mediaItem = MediaItem.fromUri(uri);
                         player.addMediaItem(mediaItem);
-                        player.setPlayWhenReady(true);
                     }else{
                         if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                 AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                            removeArray(ctx,0,mainPlayModelList);
+                            Log.e("GloblePlayer else nonet", mainPlayModelList.get(0).getName());
                         }else{
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
                             player.addMediaItem(mediaItem);
+                            Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
                         }
                     }
                 } else if (f == downloadAudioDetailsList.size() - 1) {
@@ -145,9 +153,11 @@ public class GlobleInItExoPlayer extends Service {
                     break;
                 }
             }
+            player.setPlayWhenReady(true);
         } else {
             MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
             player.setMediaItem(mediaItem1);
+            player.setPlayWhenReady(true);
         }
         for (int i = 1; i < mainPlayModelList.size(); i++) {
             if (downloadAudioDetailsList.size() != 0) {
@@ -164,16 +174,19 @@ public class GlobleInItExoPlayer extends Service {
                             } catch (FileDataSource.FileDataSourceException e) {
                                 e.printStackTrace();
                             }
-
+                            Log.e("Globle Player", mainPlayModelList.get(i).getName());
                             MediaItem mediaItem = MediaItem.fromUri(uri);
                             player.addMediaItem(mediaItem);
                         }else{
                             if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                     AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
-                                removeArray(ctx,i,mainPlayModelList);
+//                                removeArray(ctx,i,mainPlayModelList);
+                                Log.e("GloblePlayer else nonet", mainPlayModelList.get(i).getName());
                             }else{
                                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                                 player.addMediaItem(mediaItem);
+                                Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
+
                             }
                         }
                     }else {

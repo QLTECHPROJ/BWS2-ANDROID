@@ -53,7 +53,6 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
-import com.google.android.exoplayer2.ui.TimeBar;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,7 +67,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -85,6 +83,7 @@ public class MiniPlayerFragment extends Fragment {
     Activity activity;
     View view;
     List<String> downloadAudioDetailsList;
+    List<String> downloadAudioDetailsListGloble;
     byte[] descriptor;
     List<File> bytesDownloaded;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -94,8 +93,8 @@ public class MiniPlayerFragment extends Fragment {
     Boolean queuePlay, audioPlay;
     LocalBroadcastManager localBroadcastManager;
     Intent localIntent;
-    private long mLastClickTime = 0;
     PlayerControlView playerControlView;
+    private long mLastClickTime = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -119,6 +118,7 @@ public class MiniPlayerFragment extends Fragment {
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
+        downloadAudioDetailsListGloble = new ArrayList<>();
         bytesDownloaded = new ArrayList<>();
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
                 , R.layout.fragment_mini_exo_custom, binding.playerControlView, false);
@@ -289,7 +289,7 @@ public class MiniPlayerFragment extends Fragment {
         callAllDisable(true);
         if (audioClick) {
             GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
-            globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, bytesDownloaded);
+            globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, bytesDownloaded);
         }
         if (player != null) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -317,7 +317,7 @@ public class MiniPlayerFragment extends Fragment {
                     editor.commit();
                     if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        Log.e("Nite Mode :",String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+                        Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
                     }
                     UiModeManager uiModeManager = (UiModeManager) ctx.getSystemService(Context.UI_MODE_SERVICE);
                     if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
@@ -325,7 +325,7 @@ public class MiniPlayerFragment extends Fragment {
                             || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
                         uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
 
-                        Log.e("Nite Mode :",String.valueOf(uiModeManager.getNightMode()));
+                        Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                     }
                     myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                     callButtonText(player.getCurrentWindowIndex());
@@ -338,19 +338,19 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                  /*  if (isPlaying) {
+                    if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                        localIntent.putExtra("MyData", "play");
+                        localBroadcastManager.sendBroadcast(localIntent);
                     } else if (!isPlaying) {
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    }else{
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }*/
+                        localIntent.putExtra("MyData", "pause");
+                        localBroadcastManager.sendBroadcast(localIntent);
+                    }
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -379,12 +379,14 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                        localIntent.putExtra("MyData", "play");
+                        localBroadcastManager.sendBroadcast(localIntent);
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }else if (state == ExoPlayer.STATE_IDLE) {
-                        GetAllMedia();
+                    } else if (state == ExoPlayer.STATE_IDLE) {
+                      /*GetAllMedia();
                         audioClick = true;
 
                         playerControlView.setPlayer(player);
@@ -397,7 +399,7 @@ public class MiniPlayerFragment extends Fragment {
                             playerControlView.setFocusedByDefault(true);
                         }
                         playerControlView.show();
-                        Log.e("Exoplayer Idle","my Exop in Idle");
+                        Log.e("Exoplayer Idle", "my Exop in Idle");*/
                     }
                 }
             });
@@ -482,7 +484,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                 /*   if (isPlaying) {
+                    if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
@@ -494,7 +496,7 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    }*/
+                    }
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -582,8 +584,8 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
                 exoBinding.progressBar.setVisibility(View.GONE);
-                if(mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size()-1).getID())
-                        && (player.getCurrentPosition()-player.getDuration() <= 20)){
+                if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
+                        && (player.getCurrentPosition() - player.getDuration() <= 20)) {
                     audioClick = true;
                     miniPlayer = 1;
                     GetAllMedia();
@@ -594,7 +596,7 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
                     });
                     playerControlView.show();
-                }else {
+                } else {
                     player.setPlayWhenReady(true);
                 }
             } else {
@@ -646,11 +648,12 @@ public class MiniPlayerFragment extends Fragment {
 
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             File fileDescriptor = null;
-
+            int x;
             @Override
             protected Void doInBackground(Void... voids) {
 //                try {
 
+                downloadAudioDetailsListGloble.add(name);
                 descriptor = downloadMedia.decrypt(name);
                 try {
                     if (descriptor != null) {
@@ -667,6 +670,8 @@ public class MiniPlayerFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
+                Log.e("Download do in bg Call", String.valueOf(x)+ ":-" + name);
+
 
                 return null;
             }
@@ -674,18 +679,38 @@ public class MiniPlayerFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 bytesDownloaded.add(fileDescriptor);
+//                Log.e("filename", fileDescriptor.getName());
 //                Log.e("MakeArry not Call",String.valueOf(i));
                 descriptor = null;
                 fileDescriptor = null;
 //                if(i == downloadAudioDetailsList.size()) {
 //                    Log.e("MakeArry Call",String.valueOf(i));
-                if (i < downloadAudioDetailsList.size() - 1) {
-                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i + 1), i + 1);
-                    Log.e("DownloadMedia Call", String.valueOf(i + 1));
-                } else {
+                x = i;
+                x = x+1;
+                for (int j = 0; j < downloadAudioDetailsList.size(); j++) {
+                    if(x < mainPlayModelList.size()) {
+                        if (downloadAudioDetailsList.get(j).equals(mainPlayModelList.get(x).getName())) {
+                            getDownloadMedia(downloadMedia, mainPlayModelList.get(x).getName(), x);
+                            break;
+                        }
+                    } else {
                     MakeArray();
-                    Log.e("MakeArry Call", String.valueOf(i));
+                        Log.e("MakeArry Call", String.valueOf(x));
+                        break;
+                    }
+                    if(j == downloadAudioDetailsList.size()){
+                        x = x+1;
+                        j = 0;
+                        Log.e("again for Call", String.valueOf(x));
+                    }
                 }
+             /*   if (x < mainPlayModelList.size() - 1) {
+//                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(x), x);
+                    Log.e("DownloadMedia Call", String.valueOf(x));
+                } else {
+//                    MakeArray();
+                    Log.e("MakeArry Call", String.valueOf(x));
+                }*/
 //                }
                 super.onPostExecute(aVoid);
             }
@@ -697,7 +722,7 @@ public class MiniPlayerFragment extends Fragment {
 
     private void callButtonText(int ps) {
 //        simpleSeekbar.setMax(100);
-        if(!BWSApplication.isNetworkConnected(ctx)){
+        if (!BWSApplication.isNetworkConnected(ctx)) {
             Gson gson = new Gson();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             String json2 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -759,10 +784,26 @@ public class MiniPlayerFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 if (downloadAudioDetailsList.size() != 0) {
-//                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                    DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(0), 0);
-//                    }
+                    int x = 0;
+                    downloadAudioDetailsListGloble = new ArrayList<>();
+                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
+                        if(x < mainPlayModelList.size()) {
+                            if (downloadAudioDetailsList.get(i).equals(mainPlayModelList.get(x).getName())) {
+                                DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                                getDownloadMedia(downloadMedia, mainPlayModelList.get(x).getName(), x);
+                                break;
+                            }
+                        } else {
+                            MakeArray();
+                            Log.e("MakeArry Call", String.valueOf(x));
+                            break;
+                        }
+                        if(i == downloadAudioDetailsList.size()){
+                            x = x+1;
+                            i = 0;
+                            Log.e("again for Call", String.valueOf(x));
+                        }
+                    }
                 } else {
                     MakeArray();
                 }

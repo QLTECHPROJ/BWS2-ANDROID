@@ -198,6 +198,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             for (int f = 0; f < fileNameList.size(); f++) {
                                 if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
                                     getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
+                                break;
                                 }
                             }
                         }
@@ -218,6 +219,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 for (int f = 0; f < fileNameList.size(); f++) {
                     if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
                         getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
+                        break;
                     }
                 }
 
@@ -328,6 +330,9 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
                     Btn.setOnClickListener(v -> {
                         try {
+                            if(isMyDownloading){
+                                handler1.removeCallbacks(UpdateSongTime1);
+                            }
                             GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                         } catch (Exception e) {
                         }
@@ -403,11 +408,13 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         handler1.postDelayed(UpdateSongTime1, 3000);
                     } else {
                         fileNameList = new ArrayList<>();
-                        playlistDownloadId = new ArrayList<>();isMyDownloading = false;
+                        playlistDownloadId = new ArrayList<>();
+                        isMyDownloading = false;
                     }
                 } else {
                     fileNameList = new ArrayList<>();
-                    playlistDownloadId = new ArrayList<>();isMyDownloading = false;
+                    playlistDownloadId = new ArrayList<>();
+                    isMyDownloading = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
