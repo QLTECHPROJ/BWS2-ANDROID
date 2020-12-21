@@ -2877,7 +2877,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void getPrepareShowData() {
         binding.tvDireName.setText(R.string.Directions);
-        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();

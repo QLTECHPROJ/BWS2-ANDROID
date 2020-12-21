@@ -140,7 +140,7 @@ public class GlobleInItExoPlayer extends Service {
                         if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                 AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                            removeArray(ctx,0,mainPlayModelList);
-                            Log.e("GloblePlayer else nonet", mainPlayModelList.get(0).getName());
+                            Log.e("GloblePlayer no net", mainPlayModelList.get(0).getName());
                         }else{
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
                             player.addMediaItem(mediaItem);
@@ -181,7 +181,7 @@ public class GlobleInItExoPlayer extends Service {
                             if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                     AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                                removeArray(ctx,i,mainPlayModelList);
-                                Log.e("GloblePlayer else nonet", mainPlayModelList.get(i).getName());
+                                Log.e("GloblePlayer no net", mainPlayModelList.get(i).getName());
                             }else{
                                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                                 player.addMediaItem(mediaItem);
