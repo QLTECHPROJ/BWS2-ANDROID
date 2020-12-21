@@ -142,7 +142,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     List<String> fileNameList, playlistDownloadId, remainAudio;
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
-    int SongListSize = 0,count = 0;
+    int SongListSize = 0, count = 0;
     List<DownloadAudioDetails> playlistWiseAudiosDetails;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
@@ -481,7 +481,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 .getaudioDatabase()
                 .taskDao()
                 .geAllData12().observe(getActivity(), audioList -> {
-            downloadAudioDetailsList = audioList;
+            if (audioList != null) {
+                downloadAudioDetailsList = audioList;
+            } else {
+                downloadAudioDetailsList = new ArrayList<>();
+            }
 
         });
 
@@ -1079,13 +1083,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         + listModel.getTotalhour() + "h " + listModel.getTotalminute() + "m");
             }
         }
-        if(listModel.getPlaylistSongs()!=null) {
+        if (listModel.getPlaylistSongs() != null) {
             RefreshIcon = listModel.getPlaylistSongs().size();
             RefreshIconData = listModel.getPlaylistSongs().size();
         }
         binding.llReminder.setVisibility(View.INVISIBLE);
         binding.llDownloads.setVisibility(View.INVISIBLE);
-        if(listModel.getPlaylistSongs()!= null) {
+        if (listModel.getPlaylistSongs() != null) {
             if (listModel.getPlaylistSongs().size() == 0) {
                 binding.llAddAudio.setVisibility(View.VISIBLE);
                 binding.llDownloads.setVisibility(View.VISIBLE);

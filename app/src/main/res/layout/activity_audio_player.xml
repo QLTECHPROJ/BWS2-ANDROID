@@ -315,7 +315,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_download_play_icon"
-                            app:tint="@color/black" />
+                            app:tint="@color/black"
+                            android:visibility="visible" />
                     </RelativeLayout>
 
 
