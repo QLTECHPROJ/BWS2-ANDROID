@@ -1767,7 +1767,7 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void getPrepareShowData() {
-        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();

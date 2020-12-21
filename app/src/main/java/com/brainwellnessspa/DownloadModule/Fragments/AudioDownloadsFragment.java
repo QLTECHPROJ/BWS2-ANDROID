@@ -293,7 +293,6 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                     }
                     downloadedSingleAudio = getMyMedia();*/
-
 //                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
                         if (fileNameList.size() != 0) {
                             for (int i = 0; i < fileNameList.size(); i++) {

@@ -140,7 +140,8 @@ public class DownloadMedia implements OnDownloadListener {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
-        }try{
+        }
+        try{
             saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
             fileNameList.remove(0);
@@ -230,7 +231,7 @@ public class DownloadMedia implements OnDownloadListener {
         }).start();
     }
 
-    private void SaveDownloadFile() {
+    /*private void SaveDownloadFile(){
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -285,4 +286,5 @@ public class DownloadMedia implements OnDownloadListener {
         SaveMedia st = new SaveMedia();
         st.execute();
     }
+     */
 }
