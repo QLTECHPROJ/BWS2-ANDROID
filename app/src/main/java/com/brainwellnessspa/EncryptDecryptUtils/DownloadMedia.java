@@ -130,6 +130,7 @@ public class DownloadMedia implements OnDownloadListener {
     @Override
     public void onDownloadComplete() {
         try {
+            downloadProgress2 = 0;
             byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
             encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
         } catch (Exception e) {
