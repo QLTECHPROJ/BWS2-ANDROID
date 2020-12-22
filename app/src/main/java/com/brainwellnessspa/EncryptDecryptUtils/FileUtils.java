@@ -59,7 +59,7 @@ public class FileUtils {
     @NonNull
     public static File createTempFile(Context context, byte[] decrypted) throws IOException {
         File tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
-        tempFile.deleteOnExit();
+//        tempFile.deleteOnExit();
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(decrypted);
         fos.close();

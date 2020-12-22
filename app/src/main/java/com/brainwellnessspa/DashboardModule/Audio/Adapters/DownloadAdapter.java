@@ -36,6 +36,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
 
 public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
     Context ctx;
@@ -117,6 +118,9 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (isDisclaimer == 1) {
+                            if(player!=null){
+                                player.setPlayWhenReady(true);
+                            }
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             callTransFrag(position, listModelList);

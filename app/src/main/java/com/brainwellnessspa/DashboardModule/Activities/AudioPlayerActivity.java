@@ -161,6 +161,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray2() {
+        audioClick = false;
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
@@ -963,6 +964,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
+                    }else if (state == ExoPlayer.STATE_ENDED) {
+                         if(mainPlayModelList.get(player.getCurrentWindowIndex()).getID().
+                                 equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())){
+                             Log.e("Last audio End", mainPlayModelList.get(position).getName());
+
+                             player.setPlayWhenReady(false);
+                             exoBinding.llPlay.setVisibility(View.VISIBLE);
+                             exoBinding.llPause.setVisibility(View.GONE);
+                             exoBinding.llProgressBar.setVisibility(View.GONE);
+                             exoBinding.progressBar.setVisibility(View.GONE);
+                         }else{
+                             Log.e("Curr audio End", mainPlayModelList.get(position).getName());
+                         }
                     } else if (state == ExoPlayer.STATE_IDLE) {
                        /* GetAllMedia();
                         audioClick = true;
@@ -1150,20 +1164,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
         exoBinding.llPlay.setOnClickListener(view -> {
             if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
-                    && (player.getCurrentPosition() - player.getDuration() <= 20)) {
-                audioClick = true;
-                miniPlayer = 1;
-                GetAllMedia();
-                PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
-                playerControlView.setPlayer(player);
-                playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-                    exoBinding.exoProgress.setPosition(position);
-                    exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-                });
-                playerControlView.show();
-            } else {
-                player.setPlayWhenReady(true);
+                    && (player.getDuration() - player.getCurrentPosition() <= 20)) {
+                player.seekTo(position);
             }
+            player.setPlayWhenReady(true);
         });
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
         exoBinding.llBackWordSec.setOnClickListener(view -> {
@@ -1950,6 +1954,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray() {
+        audioClick = true;
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");

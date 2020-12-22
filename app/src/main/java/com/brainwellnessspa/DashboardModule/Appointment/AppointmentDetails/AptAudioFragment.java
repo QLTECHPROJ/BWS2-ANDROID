@@ -134,8 +134,13 @@ public class AptAudioFragment extends Fragment {
     @Override
     public void onPause() {
 //        handler3.removeCallbacks(UpdateSongTime3);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+
         super.onPause();
+    }   @Override
+    public void onDestroy() {
+
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        super.onDestroy();
     }
 
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
@@ -307,7 +312,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.ivPlayIcon.setVisibility(View.VISIBLE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                handler3.removeCallbacks(UpdateSongTime3);
+//                handler3.removeCalldobacks(UpdateSongTime3);
             }
             holder.binding.tvTitle.setText(audiolist.getName());
             if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
@@ -408,7 +413,6 @@ public class AptAudioFragment extends Fragment {
 
             });
 
-/*
             holder.binding.llDownload.setOnClickListener(view -> {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -456,8 +460,6 @@ public class AptAudioFragment extends Fragment {
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
                 SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
             });
-*/
-
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

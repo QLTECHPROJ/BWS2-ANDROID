@@ -216,10 +216,14 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        super.onPause();
+         super.onPause();
     }
+    @Override
+    public void onDestroy() {
 
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        super.onDestroy();
+    }
     private void prepareSearchData(String search, EditText searchEditText) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());

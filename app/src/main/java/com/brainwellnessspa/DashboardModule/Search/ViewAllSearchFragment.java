@@ -134,10 +134,14 @@ public class ViewAllSearchFragment extends Fragment {
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }
+    @Override
+    public void onDestroy() {
 
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        super.onDestroy();
+    }
     private void callBack() {
         Fragment fragment = new SearchFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

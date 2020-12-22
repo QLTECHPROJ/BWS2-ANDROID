@@ -129,19 +129,10 @@ public class DownloadMedia implements OnDownloadListener {
 
     @Override
     public void onDownloadComplete() {
+        downloadProgress2 = 0;
         try {
             byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
             encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-        } catch (Exception e) {
-            e.printStackTrace();
-            byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
-            try {
-                encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        }
-        try{
             saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
             fileNameList.remove(0);
@@ -195,7 +186,7 @@ public class DownloadMedia implements OnDownloadListener {
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
 
-       /* class SaveMedia extends AsyncTask<Void, Void, Void> {
+        class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... voids) {
@@ -218,17 +209,17 @@ public class DownloadMedia implements OnDownloadListener {
         }
 
         SaveMedia st = new SaveMedia();
-        st.execute();*/
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DatabaseClient.getInstance(context)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .updateMediaByDownloadProgress(Status, progress, PlaylistId, filename);
-
-            }
-        }).start();
+        st.execute();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                DatabaseClient.getInstance(context)
+//                        .getaudioDatabase()
+//                        .taskDao()
+//                        .updateMediaByDownloadProgress(Status, progress, PlaylistId, filename);
+//
+//            }
+//        }).start();
     }
 
     /*private void SaveDownloadFile(){

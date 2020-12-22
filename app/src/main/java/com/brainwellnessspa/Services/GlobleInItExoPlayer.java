@@ -37,10 +37,23 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
+import com.google.android.exoplayer2.upstream.TransferListener;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -117,6 +130,11 @@ public class GlobleInItExoPlayer extends Service {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
+        DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(ctx, Util.getUserAgent(ctx, ctx.getPackageName()), (TransferListener) bandwidthMeter);
+        MediaSource[] mediaSources = new MediaSource[mainPlayModelList.size()];
         if (downloadAudioDetailsList.size() != 0) {
             for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
                 if (downloadAudioDetailsList.get(f).equalsIgnoreCase(mainPlayModelList.get(0).getName())) {
@@ -134,29 +152,35 @@ public class GlobleInItExoPlayer extends Service {
                         }
                         Log.e("Globle Player", mainPlayModelList.get(0).getName());
 
-                        MediaItem mediaItem = MediaItem.fromUri(uri);
-                        player.addMediaItem(mediaItem);
+//                        MediaItem mediaItem = MediaItem.fromUri(uri);
+//                        player.setMediaItem(mediaItem);
+                        mediaSources[0] = new ExtractorMediaSource(uri, dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                     }else{
                         if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                 AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                            removeArray(ctx,0,mainPlayModelList);
                             Log.e("GloblePlayer no net", mainPlayModelList.get(0).getName());
                         }else{
-                            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-                            player.addMediaItem(mediaItem);
+//                            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+//                            player.setMediaItem(mediaItem);
+                            mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
+
                             Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
                         }
                     }
                 } else if (f == downloadAudioDetailsList.size() - 1) {
-                    MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-                    player.setMediaItem(mediaItem);
+//                    MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+//                    player.setMediaItem(mediaItem);
+                    mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
+
                     break;
                 }
             }
             player.setPlayWhenReady(true);
         } else {
-            MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-            player.setMediaItem(mediaItem1);
+//            MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+//            player.setMediaItem(mediaItem1);
+            mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
             player.setPlayWhenReady(true);
         }
         for (int i = 1; i < mainPlayModelList.size(); i++) {
@@ -175,30 +199,37 @@ public class GlobleInItExoPlayer extends Service {
                                 e.printStackTrace();
                             }
                             Log.e("Globle Player", mainPlayModelList.get(i).getName());
-                            MediaItem mediaItem = MediaItem.fromUri(uri);
-                            player.addMediaItem(mediaItem);
+//                            MediaItem mediaItem = MediaItem.fromUri(uri);
+//                            player.addMediaItem(mediaItem);
+                            mediaSources[i] = new ExtractorMediaSource(uri, dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                         }else{
                             if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                     AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                                removeArray(ctx,i,mainPlayModelList);
                                 Log.e("GloblePlayer no net", mainPlayModelList.get(i).getName());
                             }else{
-                                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                                player.addMediaItem(mediaItem);
+//                                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+//                                player.addMediaItem(mediaItem);
                                 Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
+                                mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 
                             }
                         }
                     }else {
-                        MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                        player.addMediaItem(mediaItem);
+//                        MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+//                        player.addMediaItem(mediaItem);
+                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                     }
                 }
             } else {
-                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                player.addMediaItem(mediaItem);
+                mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
+//                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+//                player.addMediaItem(mediaItem);
             }
         }
+        MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
+                : new ConcatenatingMediaSource(mediaSources);
+        player.setMediaSource(mediaSource);
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);
@@ -316,9 +347,9 @@ public class GlobleInItExoPlayer extends Service {
                 .build();
 
         player.setAudioAttributes(audioAttributes, true);
-        if (miniPlayer == 1) {
+//        if (miniPlayer == 1) {
             player.setPlayWhenReady(true);
-        }
+//        }
 //        InitNotificationAudioPLayer(ctx, mainPlayModelList);
 
 

@@ -128,8 +128,12 @@ public class LikeAudiosFragment extends Fragment {
 
     @Override
     public void onPause() {
+         super.onPause();
+    }   @Override
+    public void onDestroy() {
+
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        super.onPause();
+        super.onDestroy();
     }
 
     @Override

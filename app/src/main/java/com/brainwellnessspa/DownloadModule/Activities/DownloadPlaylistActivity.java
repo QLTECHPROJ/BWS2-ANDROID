@@ -256,9 +256,15 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
         if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
             if (player != null) {
-                isPlayPlaylist = 1;
-//                handler3.postDelayed(UpdateSongTime3,500);
-                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                if(player.getPlayWhenReady()){
+                    isPlayPlaylist = 1;
+//                    handler3.postDelayed(UpdateSongTime3, 500);
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                }else {
+                    isPlayPlaylist = 2;
+//                    handler3.postDelayed(UpdateSongTime3, 500);
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                }
             } else {
                 isPlayPlaylist = 0;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
@@ -664,12 +670,32 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     }
                     isPlayPlaylist = 2;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                    Fragment fragment = new MiniPlayerFragment();
+                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
                 } else if (isPlayPlaylist == 2) {
                     if (player != null) {
-                        player.setPlayWhenReady(true);
+                        if (myAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID())
+                                && (player.getDuration() - player.getCurrentPosition() <= 20)) {
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                            editor.commit();
+                            player.seekTo(0);
+                            player.setPlayWhenReady(true);
+
+                        }else{
+                            player.setPlayWhenReady(true);
+                        }
                     }
                     isPlayPlaylist = 1;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));     Fragment fragment = new MiniPlayerFragment();
+                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
                 } else {
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -678,7 +704,16 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                         if (isDisclaimer == 1) {
                             if (player != null) {
-                                player.setPlayWhenReady(true);
+                                if (!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
+                                } else
+                                    player.setPlayWhenReady(true);
+                                Fragment fragment = new MiniPlayerFragment();
+                                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                fragmentManager1.beginTransaction()
+                                        .add(R.id.flContainer, fragment)
+                                        .commit();
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
@@ -706,7 +741,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                     if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
+                            } else
+                                player.setPlayWhenReady(true);
+                            Fragment fragment = new MiniPlayerFragment();
+                            FragmentManager fragmentManager1 = getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        } else
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
                     }

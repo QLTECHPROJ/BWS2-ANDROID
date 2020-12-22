@@ -158,10 +158,14 @@ public class AudioDownloadsFragment extends Fragment {
         if (isThreadStart) {
             handler1.removeCallbacks(UpdateSongTime1);
         }
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        super.onPause();
+         super.onPause();
     }
+    @Override
+    public void onDestroy() {
 
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        super.onDestroy();
+    }
     public void RefreshData() {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
