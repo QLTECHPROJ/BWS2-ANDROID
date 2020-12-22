@@ -124,7 +124,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                 binding.tlNumber.setError("Please enter a valid card number");
                 binding.txtError.setText("");
             } else if (binding.etName.getText().toString().equalsIgnoreCase("")) {
-                binding.tlName.setError("Card name is required");
+                binding.tlName.setError("Card holder name is required");
                 binding.tlNumber.setError("");
                 binding.txtError.setText("");
             } else if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
