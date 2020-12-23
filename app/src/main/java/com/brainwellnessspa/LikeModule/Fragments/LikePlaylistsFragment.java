@@ -45,6 +45,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
@@ -213,6 +215,7 @@ public class LikePlaylistsFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(modelList.get(position).getPlaylistName());
             holder.binding.equalizerview.setVisibility(View.GONE);
+
             if (modelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                     modelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                             modelList.get(position).getTotalhour().equalsIgnoreCase("")
@@ -227,6 +230,15 @@ public class LikePlaylistsFragment extends Fragment {
                             " Audios | " + modelList.get(position).getTotalhour() + "h " + modelList.get(position).getTotalminute() + "m");
                 }
             }
+
+            if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
+
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -235,13 +247,22 @@ public class LikePlaylistsFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llMenu.setOnClickListener(v -> {
-                Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
-                i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
-                i.putExtra("PlaylistName", modelList.get(position).getPlaylistName());
-                i.putExtra("PlaylistIDImage", modelList.get(position).getPlaylistImage());
-                i.putExtra("Liked", "1");
-                startActivity(i);
+                if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
+                } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
+                    i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
+                    i.putExtra("PlaylistName", modelList.get(position).getPlaylistName());
+                    i.putExtra("PlaylistIDImage", modelList.get(position).getPlaylistImage());
+                    i.putExtra("Liked", "1");
+                    startActivity(i);
+                }
             });
+
             holder.binding.llLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -279,19 +300,30 @@ public class LikePlaylistsFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    comefrom_search = 4;
-                    Bundle bundle = new Bundle();
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    bundle.putString("New", "");
-                    bundle.putString("PlaylistID", modelList.get(position).getPlaylistId());
-                    bundle.putString("PlaylistName", modelList.get(position).getPlaylistName());
-                    bundle.putString("PlaylistImage", modelList.get(position).getPlaylistImage());
-                    bundle.putString("MyDownloads", "");
-                    myPlaylistsFragment.setArguments(bundle);
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, myPlaylistsFragment)
-                            .commit();
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        startActivity(i);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        comefrom_search = 4;
+                        Bundle bundle = new Bundle();
+                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        bundle.putString("New", "");
+                        bundle.putString("PlaylistID", modelList.get(position).getPlaylistId());
+                        bundle.putString("PlaylistName", modelList.get(position).getPlaylistName());
+                        bundle.putString("PlaylistImage", modelList.get(position).getPlaylistImage());
+                        bundle.putString("MyDownloads", "");
+                        myPlaylistsFragment.setArguments(bundle);
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.flContainer, myPlaylistsFragment)
+                                .commit();
+                    }
                 }
             });
 

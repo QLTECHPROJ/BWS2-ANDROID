@@ -49,7 +49,7 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -59,6 +59,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadPro
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     FragmentActivity ctx;
     String UserID, songId, AudioFlag;
@@ -216,8 +217,15 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
+                    .placeholder(R.drawable.ic_music_icon)
+                    .error(R.drawable.ic_music_icon)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+        } else {
+            holder.binding.ivRestaurantImage.setImageResource(R.drawable.ic_music_icon);
+        }
+
         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
         comefromDownload = "1";
         if (IsLock.equalsIgnoreCase("1")) {

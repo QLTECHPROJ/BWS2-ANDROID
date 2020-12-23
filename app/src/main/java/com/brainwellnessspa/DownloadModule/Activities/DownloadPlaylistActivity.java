@@ -256,11 +256,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
         if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
             if (player != null) {
-                if(player.getPlayWhenReady()){
+                if (player.getPlayWhenReady()) {
                     isPlayPlaylist = 1;
 //                    handler3.postDelayed(UpdateSongTime3, 500);
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                }else {
+                } else {
                     isPlayPlaylist = 2;
 //                    handler3.postDelayed(UpdateSongTime3, 500);
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
@@ -280,12 +280,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
-        if (!PlaylistImageDetails.equalsIgnoreCase("")) {
-            try {
-                Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            if (!PlaylistImageDetails.equalsIgnoreCase("")) {
+                try {
+                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
+                            .placeholder(R.drawable.ic_music_icon)
+                            .error(R.drawable.ic_music_icon)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                binding.ivBanner.setImageResource(R.drawable.audio_bg);
             }
         } else {
             binding.ivBanner.setImageResource(R.drawable.audio_bg);
@@ -416,6 +423,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         }
                     }
                 }
+
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 String nameJson = gson.toJson(fileNameList);
@@ -433,7 +441,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -447,14 +454,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .getAllAudioByPlaylist1(PlaylistID).observe(this,audioList -> {
+                .getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
 
-                adpater = new PlayListsAdpater(audioList, ctx);
-                LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                binding.rvPlayLists.setAdapter(adpater);
-
-            });
-
+            adpater = new PlayListsAdpater(audioList, ctx);
+            LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
+            binding.rvPlayLists.setAdapter(adpater);
+        });
     }
 
     public void GetPlaylistMedia(String playlistID) {
@@ -462,13 +467,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .getAllAudioByPlaylist1(PlaylistID).observe(this,audioList -> {
+                .getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
 
-                deleteDownloadFile(getApplicationContext(), playlistID);
-                for (int i = 0; i < audioList.size(); i++) {
-                    GetSingleMedia(audioList.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
-                }
-            });
+            deleteDownloadFile(getApplicationContext(), playlistID);
+            for (int i = 0; i < audioList.size(); i++) {
+                GetSingleMedia(audioList.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
+            }
+        });
     }
 
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
@@ -498,7 +503,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .getLastIdByuId1(AudioFile).observe(this,audioList -> {
+                .getLastIdByuId1(AudioFile).observe(this, audioList -> {
             if (audioList.size() != 0) {
                 if (audioList.size() == 1) {
                     FileUtils.deleteDownloadedFile(ctx, audioList.get(0).getName());
@@ -630,8 +635,15 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
 //            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
 //            holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-//            Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
+                        .placeholder(R.drawable.ic_music_icon)
+                        .error(R.drawable.ic_music_icon)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            } else {
+                holder.binding.ivRestaurantImage.setImageResource(R.drawable.ic_music_icon);
+            }
+
             SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -686,12 +698,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             player.seekTo(0);
                             player.setPlayWhenReady(true);
 
-                        }else{
+                        } else {
                             player.setPlayWhenReady(true);
                         }
                     }
                     isPlayPlaylist = 1;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));     Fragment fragment = new MiniPlayerFragment();
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                    Fragment fragment = new MiniPlayerFragment();
                     FragmentManager fragmentManager1 = getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.flContainer, fragment)

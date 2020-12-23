@@ -51,23 +51,28 @@ public class OrderSummaryActivity extends AppCompatActivity {
         if (getIntent() != null) {
             ComesTrue = getIntent().getStringExtra("ComesTrue");
         }
-        if (!comeFrom.equalsIgnoreCase("")) {
-            binding.tvTrialPeriod.setVisibility(View.GONE);
-            binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
-            binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
-            binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
-            binding.tvSubName.setText(listModelList2.get(position).getSubName());
-            binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
-            binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
-        } else {
-            binding.tvTrialPeriod.setVisibility(View.VISIBLE);
-            binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
-            binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
-            binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
-            binding.tvSubName.setText(listModelList.get(position).getSubName());
-            binding.tvTrialPeriod.setText(TrialPeriod);
-            binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
-            binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
+
+        try {
+            if (!comeFrom.equalsIgnoreCase("")) {
+                binding.tvTrialPeriod.setVisibility(View.GONE);
+                binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
+                binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
+                binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
+                binding.tvSubName.setText(listModelList2.get(position).getSubName());
+                binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+                binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+            } else {
+                binding.tvTrialPeriod.setVisibility(View.VISIBLE);
+                binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
+                binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
+                binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
+                binding.tvSubName.setText(listModelList.get(position).getSubName());
+                binding.tvTrialPeriod.setText(TrialPeriod);
+                binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
+                binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         binding.llBack.setOnClickListener(view -> {

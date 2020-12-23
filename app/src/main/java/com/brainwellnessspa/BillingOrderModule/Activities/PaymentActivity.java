@@ -107,6 +107,11 @@ public class PaymentActivity extends AppCompatActivity {
             if (BWSApplication.isNetworkConnected(context)) {
                 Intent i = new Intent(context, AddPaymentActivity.class);
                 i.putExtra("ComePayment", "2");
+                i.putExtra("ComesTrue", ComesTrue);
+                i.putExtra("comeFrom", "membership");
+                i.putParcelableArrayListExtra("PlanData", listModelList2);
+                i.putExtra("TrialPeriod", "");
+                i.putExtra("position", position);
                 startActivity(i);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), context);

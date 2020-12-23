@@ -45,7 +45,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -326,20 +326,20 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 .getCountDownloadProgress1("Complete", playlistID).observe(this.ctx, audioList -> {
 
 
-                    if(audioList!=null) {
-                        if (audioList.size() < Integer.parseInt(totalAudio)) {
-                            long progressPercent = audioList.size() * 100 / Integer.parseInt(totalAudio);
-                            int downloadProgress1 = (int) progressPercent;
-                            pbProgress.setVisibility(View.VISIBLE);
-                            pbProgress.setProgress(downloadProgress1);
+            if (audioList != null) {
+                if (audioList.size() < Integer.parseInt(totalAudio)) {
+                    long progressPercent = audioList.size() * 100 / Integer.parseInt(totalAudio);
+                    int downloadProgress1 = (int) progressPercent;
+                    pbProgress.setVisibility(View.VISIBLE);
+                    pbProgress.setProgress(downloadProgress1);
 //                    getMediaByPer(playlistID,totalAudio,pbProgress);
-                            handler1.postDelayed(UpdateSongTime1, 3000);
-                        } else {
-                            pbProgress.setVisibility(View.GONE);
-                            handler1.removeCallbacks(UpdateSongTime1);
-                            notifyDataSetChanged();
-                        }
-                    }
+                    handler1.postDelayed(UpdateSongTime1, 3000);
+                } else {
+                    pbProgress.setVisibility(View.GONE);
+                    handler1.removeCallbacks(UpdateSongTime1);
+                    notifyDataSetChanged();
+                }
+            }
         });
     }
 

@@ -37,6 +37,10 @@ import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 
+import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
+import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -45,14 +49,16 @@ import retrofit2.Response;
 
 public class AddPaymentActivity extends AppCompatActivity {
     ActivityAddPaymentBinding binding;
-    String userId;
     Context context;
     Activity activity;
     Dialog d;
     int a = 0;
+    String userId, card_id, TrialPeriod, comeFrom = "", ComesTrue, strToken, ComePayment = "";
     int year, month;
+    int position;
     YeardialogBinding binding1;
-    String strToken, ComePayment = "";
+    ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +70,30 @@ public class AddPaymentActivity extends AppCompatActivity {
             ComePayment = getIntent().getStringExtra("ComePayment");
         }
 
+        if (getIntent() != null) {
+            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            position = getIntent().getIntExtra("position", 0);
+            if (getIntent().hasExtra("comeFrom")) {
+                comeFrom = getIntent().getStringExtra("comeFrom");
+                listModelList2 = getIntent().getParcelableArrayListExtra("PlanData");
+            } else {
+                listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+            }
+        }
+
+        if (getIntent() != null) {
+            ComesTrue = getIntent().getStringExtra("ComesTrue");
+        }
         binding.llBack.setOnClickListener(view -> {
             if (ComePayment.equalsIgnoreCase("1")) {
                 finish();
             } else if (ComePayment.equalsIgnoreCase("2")) {
                 Intent i = new Intent(context, PaymentActivity.class);
+                i.putExtra("ComesTrue", ComesTrue);
+                i.putExtra("comeFrom", "membership");
+                i.putParcelableArrayListExtra("PlanData", listModelList2);
+                i.putExtra("TrialPeriod", "");
+                i.putExtra("position", position);
                 startActivity(i);
                 finish();
             } else {
@@ -268,6 +293,11 @@ public class AddPaymentActivity extends AppCompatActivity {
             finish();
         } else if (ComePayment.equalsIgnoreCase("2")) {
             Intent i = new Intent(context, PaymentActivity.class);
+            i.putExtra("ComesTrue", ComesTrue);
+            i.putExtra("comeFrom", "membership");
+            i.putParcelableArrayListExtra("PlanData", listModelList2);
+            i.putExtra("TrialPeriod", "");
+            i.putExtra("position", position);
             startActivity(i);
             finish();
         } else {
