@@ -62,6 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.RefreshIconData;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
 public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
@@ -546,8 +547,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
         }
 
         if (url.size() != 0) {
-            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-            downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+            if (!isDownloading) {
+                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+            }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();

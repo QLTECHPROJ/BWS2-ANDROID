@@ -86,7 +86,7 @@ public class MiniPlayerFragment extends Fragment {
     List<String> downloadAudioDetailsListGloble;
     byte[] descriptor;
     List<File> bytesDownloaded;
-    ArrayList<MainPlayModel> mainPlayModelList;
+    ArrayList<MainPlayModel> mainPlayModelList,mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
     int position, listSize;
@@ -122,6 +122,7 @@ public class MiniPlayerFragment extends Fragment {
         activity = getActivity();
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
+        mainPlayModelList2 = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         downloadAudioDetailsListGloble = new ArrayList<>();
         bytesDownloaded = new ArrayList<>();
@@ -132,12 +133,11 @@ public class MiniPlayerFragment extends Fragment {
         localIntent = new Intent("play_pause_Action");
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if (audioClick) {
+            audioClick = false;
             exoBinding.llPlay.setVisibility(View.GONE);
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.progressBar.setVisibility(View.VISIBLE);
-            if(BWSApplication.isNetworkConnected(ctx)) {
-                MakeArray2();
-            }
+            MakeArray2();
             GetAllMedia();
         } else {
             MakeArray2();
@@ -493,13 +493,6 @@ public class MiniPlayerFragment extends Fragment {
                 audioClick = true;
                 miniPlayer = 1;
                 GetAllMedia();
-                PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
-                playerControlView.setPlayer(player);
-                playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-                    exoBinding.exoProgress.setPosition(position);
-                    exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-                });
-                playerControlView.show();
             }
 
             localIntent.putExtra("MyData", "play");
@@ -576,13 +569,6 @@ public class MiniPlayerFragment extends Fragment {
                 audioClick = true;
                 miniPlayer = 1;
                 GetAllMedia();
-                PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
-                playerControlView.setPlayer(player);
-                playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-                    exoBinding.exoProgress.setPosition(position);
-                    exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-                });
-                playerControlView.show();
             }
 
             localIntent.putExtra("MyData", "play");
@@ -663,18 +649,8 @@ public class MiniPlayerFragment extends Fragment {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    descriptor = downloadMedia.decrypt(name);
-                    try {
-                        if (descriptor != null) {
-                            fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
-                        }
-                    } catch (IOException e1) {
-                        e.printStackTrace();
-                    }
                 }
                 Log.e("Download do in bg Call", String.valueOf(x)+ ":-" + name);
-
-
                 return null;
             }
 
@@ -690,9 +666,9 @@ public class MiniPlayerFragment extends Fragment {
                 x = i;
                 x = x+1;
                 for (int j = 0; j < downloadAudioDetailsList.size(); j++) {
-                    if(x < mainPlayModelList.size()) {
-                        if (downloadAudioDetailsList.get(j).equals(mainPlayModelList.get(x).getName())) {
-                            getDownloadMedia(downloadMedia, mainPlayModelList.get(x).getName(), x);
+                    if(x < mainPlayModelList2.size()) {
+                        if (downloadAudioDetailsList.get(j).equals(mainPlayModelList2.get(x).getName())) {
+                            getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
                             break;
                         }
                     } else {
@@ -785,14 +761,24 @@ public class MiniPlayerFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                audioClick = true;
+//                if(mainPlayModelList.get(position).getAudioFile().equals("")){
+//                   getPrepareShowData();
+//                }
+                mainPlayModelList2 = new ArrayList<>();
+                mainPlayModelList2 = mainPlayModelList;
                 if (downloadAudioDetailsList.size() != 0) {
+                    if(mainPlayModelList.get(position).getAudioFile().equals("")) {
+                        getPrepareShowData();
+                        mainPlayModelList2.remove(position);
+                    }
                     int x = 0;
                     downloadAudioDetailsListGloble = new ArrayList<>();
                     for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                        if(x < mainPlayModelList.size()) {
-                            if (downloadAudioDetailsList.get(i).equals(mainPlayModelList.get(x).getName())) {
+                        if(x < mainPlayModelList2.size()) {
+                            if (downloadAudioDetailsList.get(i).equals(mainPlayModelList2.get(x).getName())) {
                                 DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                                getDownloadMedia(downloadMedia, mainPlayModelList.get(x).getName(), x);
+                                getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
                                 break;
                             }
                         } else {

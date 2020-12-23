@@ -113,6 +113,7 @@ import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.C
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -1337,8 +1338,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             }
             if (url.size() != 0) {
-                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+                if (!isDownloading) {
+                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                    downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+                }
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
@@ -1407,8 +1410,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 name.add(Name);
                 downloadPlaylistId.add("");
                 if (url.size() != 0) {
-                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                    downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+                    if (!isDownloading) {
+                        DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                        downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+                    }
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
                     Gson gson = new Gson();

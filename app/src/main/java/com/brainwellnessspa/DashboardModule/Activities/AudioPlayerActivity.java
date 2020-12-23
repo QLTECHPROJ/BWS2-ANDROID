@@ -84,6 +84,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -95,7 +96,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Bitmap myBitmap = null;
     List<File> bytesDownloaded;
     ActivityAudioPlayerBinding binding;
-    ArrayList<MainPlayModel> mainPlayModelList;
+    ArrayList<MainPlayModel> mainPlayModelList,mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
     int position, listSize;
@@ -122,10 +123,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
         binding.playerControlView.addView(exoBinding.getRoot());
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
+        mainPlayModelList2 = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         downloadAudioDetailsListGloble = new ArrayList<>();
         bytesDownloaded = new ArrayList<>();
         if (audioClick) {
+            audioClick = false;
             exoBinding.llPlay.setVisibility(View.GONE);
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.llProgressBar.setVisibility(View.VISIBLE);
@@ -1536,9 +1539,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                 editor.commit();
             }
-            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-            downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
-
+            if (!isDownloading) {
+                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+            }
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);
             SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
@@ -1790,7 +1794,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                Log.e("Download do in bg Call", String.valueOf(x) + ":-" + name);
 
 
                 return null;
@@ -1808,9 +1811,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 x = i;
                 x = x + 1;
                 for (int j = 0; j < downloadAudioDetailsList.size(); j++) {
-                    if (x < mainPlayModelList.size()) {
-                        if (downloadAudioDetailsList.get(j).equals(mainPlayModelList.get(x).getName())) {
-                            getDownloadMedia(downloadMedia, mainPlayModelList.get(x).getName(), x);
+                    if (x < mainPlayModelList2.size()) {
+                        if (downloadAudioDetailsList.get(j).equals(mainPlayModelList2.get(x).getName())) {
+                            getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
                             break;
                         }
                     } else {
@@ -1927,14 +1930,24 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                audioClick = true;
+//                if(mainPlayModelList.get(position).getAudioFile().equals("")){
+//                    getPrepareShowData();
+//                }
+                mainPlayModelList2 = new ArrayList<>();
+                mainPlayModelList2 = mainPlayModelList;
                 if (downloadAudioDetailsList.size() != 0) {
+                    if(mainPlayModelList.get(position).getAudioFile().equals("")) {
+                        getPrepareShowData();
+                        mainPlayModelList2.remove(position);
+                    }
                     int x = 0;
                     downloadAudioDetailsListGloble = new ArrayList<>();
                     for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                        if (x < mainPlayModelList.size()) {
-                            if (downloadAudioDetailsList.get(i).equals(mainPlayModelList.get(x).getName())) {
+                        if (x < mainPlayModelList2.size()) {
+                            if (downloadAudioDetailsList.get(i).equals(mainPlayModelList2.get(x).getName())) {
                                 DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                                getDownloadMedia(downloadMedia, mainPlayModelList.get(x).getName(), x);
+                                getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
                                 break;
                             }
                         } else {

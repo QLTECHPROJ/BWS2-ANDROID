@@ -57,6 +57,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class AddQueueActivity extends AppCompatActivity {
@@ -749,8 +750,10 @@ public class AddQueueActivity extends AppCompatActivity {
             editor.commit();
         }
 //        fileNameList = url1;
-        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+        if (!isDownloading) {
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+            downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+        }
 //        MyDownloadService myDownloadService = new MyDownloadService(0);
 //        DownloadRequest downloadRequest =
 //                new DownloadRequest.Builder("1", Uri.parse(audioFile)).build();

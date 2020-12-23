@@ -55,6 +55,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -451,8 +452,10 @@ public class AptAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                     editor.commit();
                 }
-                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                if (!isDownloading) {
+                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                    downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                }
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 holder.binding.ivDownload.setVisibility(View.GONE);
                 fileNameList = url1;
