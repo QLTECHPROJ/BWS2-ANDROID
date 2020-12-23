@@ -49,7 +49,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 
 public class ViewAllPlaylistFragment extends Fragment {

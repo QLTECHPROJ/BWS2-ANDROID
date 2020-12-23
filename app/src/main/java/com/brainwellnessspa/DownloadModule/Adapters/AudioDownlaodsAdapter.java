@@ -3,7 +3,6 @@ package com.brainwellnessspa.DownloadModule.Adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -25,14 +24,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -50,7 +47,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
@@ -61,8 +57,8 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     FragmentActivity ctx;
     String UserID, songId, AudioFlag;

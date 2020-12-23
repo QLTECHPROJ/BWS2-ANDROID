@@ -3,7 +3,6 @@ package com.brainwellnessspa.DashboardModule.Audio;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -48,15 +47,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class ViewAllAudioFragment extends Fragment {
     public static boolean viewallAudio = false;

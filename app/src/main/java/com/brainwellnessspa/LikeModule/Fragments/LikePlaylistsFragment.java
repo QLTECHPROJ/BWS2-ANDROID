@@ -45,12 +45,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.RefreshLikePlaylist;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 
 public class LikePlaylistsFragment extends Fragment {

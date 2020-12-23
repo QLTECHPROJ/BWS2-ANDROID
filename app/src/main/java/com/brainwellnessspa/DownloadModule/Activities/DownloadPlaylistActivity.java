@@ -69,8 +69,8 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class DownloadPlaylistActivity extends AppCompatActivity {
     public static int comeDeletePlaylist = 0;

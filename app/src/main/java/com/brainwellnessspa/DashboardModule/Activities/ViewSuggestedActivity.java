@@ -57,8 +57,8 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;

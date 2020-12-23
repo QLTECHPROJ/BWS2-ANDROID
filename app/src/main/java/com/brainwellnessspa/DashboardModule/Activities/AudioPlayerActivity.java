@@ -42,7 +42,7 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.GlobleInItExoPlayer;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -84,11 +84,10 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.getMediaBitmap;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AudioPlayerActivity extends AppCompatActivity {
-
     List<String> downloadAudioDetailsList;
     List<String> downloadAudioDetailsListGloble;
     AudioPlayerCustomLayoutBinding exoBinding;
@@ -893,8 +892,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         isDisclaimer = 0;
         if (audioClick) {
-            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
-            globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, bytesDownloaded);
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, bytesDownloaded);
         }
         if (player != null) {
             player.setWakeMode(C.WAKE_MODE_LOCAL);
@@ -1040,8 +1039,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         if (audioClick) {
-            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
-            globleInItExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
         }
 
         if (player != null) {
@@ -1161,14 +1160,18 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 exoBinding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         }
+
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
         exoBinding.llPlay.setOnClickListener(view -> {
-            if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
-                    && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-                player.seekTo(position);
+            if (player != null) {
+                if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
+                        && (player.getDuration() - player.getCurrentPosition() <= 20)) {
+                    player.seekTo(position);
+                }
+                player.setPlayWhenReady(true);
             }
-            player.setPlayWhenReady(true);
         });
+
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
         exoBinding.llBackWordSec.setOnClickListener(view -> {
                     if (player.getCurrentPosition() > 30000) {
@@ -1723,7 +1726,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             DatabaseClient.getInstance(ctx)
                                     .getaudioDatabase()
                                     .taskDao()
-                                    .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {});
+                                    .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                            });
                         } else {
                             if (binding.pbProgress.getVisibility() == View.GONE) {
                                 binding.pbProgress.setVisibility(View.VISIBLE);
@@ -1743,7 +1747,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         DatabaseClient.getInstance(ctx)
                                 .getaudioDatabase()
                                 .taskDao()
-                                .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {});
+                                .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                        });
                     }
                 } else {
                     binding.pbProgress.setVisibility(View.GONE);
@@ -1751,7 +1756,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     DatabaseClient.getInstance(ctx)
                             .getaudioDatabase()
                             .taskDao()
-                            .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {});
+                            .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                    });
                 }
             }
         });

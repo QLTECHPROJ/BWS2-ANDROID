@@ -65,7 +65,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";

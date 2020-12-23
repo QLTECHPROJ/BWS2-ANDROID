@@ -1,7 +1,6 @@
 package com.brainwellnessspa;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Notification;
@@ -47,7 +46,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.GlobleInItExoPlayer;
 import com.brainwellnessspa.Services.NotificationActionService;
 import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;

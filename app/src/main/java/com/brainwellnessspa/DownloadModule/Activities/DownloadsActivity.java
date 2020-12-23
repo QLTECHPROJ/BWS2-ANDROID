@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.google.android.material.tabs.TabLayout;
@@ -24,7 +23,6 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityDownloadsBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;

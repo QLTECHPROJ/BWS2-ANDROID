@@ -3,7 +3,6 @@ package com.brainwellnessspa.DashboardModule.Audio;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,7 +79,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class AudioFragment extends Fragment {
     public static boolean exit = false;

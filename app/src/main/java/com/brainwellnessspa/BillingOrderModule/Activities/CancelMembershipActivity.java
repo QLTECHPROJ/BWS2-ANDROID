@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -26,7 +25,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding;
 

@@ -57,7 +57,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class AddQueueActivity extends AppCompatActivity {
     public static boolean comeFromAddToQueue = false;

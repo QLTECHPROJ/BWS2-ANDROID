@@ -43,11 +43,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetailsFragment.ComeFromAppointmentDetail;
 import static com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetailsFragment.ComesessionScreen;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class SessionsFragment extends Fragment {
     FragmentSessionsBinding binding;

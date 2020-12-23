@@ -39,7 +39,7 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.GlobleInItExoPlayer;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentMiniExoCustomBinding;
@@ -70,9 +70,9 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.getMediaBitmap;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.myBitmap;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -295,8 +295,8 @@ public class MiniPlayerFragment extends Fragment {
         isDisclaimer = 0;
         callAllDisable(true);
         if (audioClick) {
-            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
-            globleInItExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, bytesDownloaded);
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, bytesDownloaded);
         }
         if (player != null) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -510,8 +510,8 @@ public class MiniPlayerFragment extends Fragment {
     private void initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         if (audioClick) {
-            GlobleInItExoPlayer globleInItExoPlayer = new GlobleInItExoPlayer();
-            globleInItExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
         }
 
         exoBinding.exoProgress.setClickable(false);

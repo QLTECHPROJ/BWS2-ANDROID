@@ -10,13 +10,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.LikeModule.Fragments.LikeAudiosFragment;
 import com.brainwellnessspa.LikeModule.Fragments.LikePlaylistsFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
@@ -36,7 +32,7 @@ import retrofit2.Callback;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class LikeActivity extends AppCompatActivity {
     ActivityLikeBinding binding;

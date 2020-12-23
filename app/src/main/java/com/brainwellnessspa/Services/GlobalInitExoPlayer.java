@@ -67,16 +67,15 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 
-public class GlobleInItExoPlayer extends Service {
+public class GlobalInitExoPlayer extends Service {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static boolean serviceConected = false;
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     Notification notification1;
-    GlobleInItExoPlayer globleInItExoPlayer;
+    GlobalInitExoPlayer globalInitExoPlayer;
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -129,6 +128,11 @@ public class GlobleInItExoPlayer extends Service {
                                  ArrayList<MainPlayModel> mainPlayModelList, List<File> bytesDownloaded) {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+//        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
+//        DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(ctx, Util.getUserAgent(ctx, getPackageName()));
+//        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
@@ -246,7 +250,7 @@ public class GlobleInItExoPlayer extends Service {
         audioClick = false;
         if (!serviceConected) {
             try {
-                Intent playbackServiceIntent = new Intent(ctx.getApplicationContext(), GlobleInItExoPlayer.class);
+                Intent playbackServiceIntent = new Intent(ctx.getApplicationContext(), GlobalInitExoPlayer.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     startForegroundService(playbackServiceIntent);
                 } else {
@@ -452,9 +456,9 @@ public class GlobleInItExoPlayer extends Service {
     }
 
     public class LocalBinder extends Binder {
-        public GlobleInItExoPlayer getService() {
+        public GlobalInitExoPlayer getService() {
             // Return this instance of LocalService so clients can call public methods
-            return GlobleInItExoPlayer.this;
+            return GlobalInitExoPlayer.this;
         }
     }
 }

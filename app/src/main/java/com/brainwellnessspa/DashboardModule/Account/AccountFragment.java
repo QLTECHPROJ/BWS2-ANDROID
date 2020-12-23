@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -29,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
@@ -54,12 +52,6 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.segment.analytics.Properties;
-
-import java.lang.reflect.Type;
-import java.util.List;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
@@ -69,17 +61,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
 
 public class AccountFragment extends Fragment {

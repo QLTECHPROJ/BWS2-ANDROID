@@ -39,7 +39,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.LoginModule.Activities.OtpActivity.comeLogin;
-import static com.brainwellnessspa.Services.GlobleInItExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 
 public class LoginActivity extends AppCompatActivity {
