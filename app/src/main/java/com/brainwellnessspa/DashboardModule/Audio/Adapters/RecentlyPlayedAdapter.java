@@ -104,9 +104,37 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 return true;
             }
         });
-        holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
+            if (IsLock.equalsIgnoreCase("1")) {
+                if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                    i.putExtra("AudioId", listModelList.get(position).getID());
+                    i.putExtra("PlaylistID", "");
+                    ctx.startActivity(i);
+                } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    ctx.startActivity(i);
+                }
+            } else if (IsLock.equalsIgnoreCase("2")) {
+                if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                    i.putExtra("AudioId", listModelList.get(position).getID());
+                    i.putExtra("PlaylistID", "");
+                    ctx.startActivity(i);
+                } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    ctx.startActivity(i);
+                }
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
                 i.putExtra("PlaylistID", "");
@@ -118,9 +146,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-
                     callnewTrans(position);
-
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);

@@ -95,10 +95,24 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             }
         });
         holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
-            Intent i = new Intent(ctx, AddPlaylistActivity.class);
-            i.putExtra("AudioId", listModelList.get(position).getID());
-            i.putExtra("PlaylistID", "");
-            ctx.startActivity(i);
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                i.putExtra("ComeFrom", "Plan");
+                ctx.startActivity(i);
+            } else if (IsLock.equalsIgnoreCase("2")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                i.putExtra("ComeFrom", "Plan");
+                ctx.startActivity(i);
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+                Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                i.putExtra("AudioId", listModelList.get(position).getID());
+                i.putExtra("PlaylistID", "");
+                ctx.startActivity(i);
+            }
+
         });
         holder.binding.llMainLayout.setOnClickListener(view -> {
             try {

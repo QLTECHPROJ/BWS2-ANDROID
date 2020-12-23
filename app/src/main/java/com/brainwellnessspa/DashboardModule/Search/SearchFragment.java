@@ -872,10 +872,25 @@ public class SearchFragment extends Fragment {
             holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
-                    i.putExtra("AudioId", "");
-                    i.putExtra("PlaylistID", modelList.get(position).getID());
-                    startActivity(i);
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        startActivity(i);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        startActivity(i);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0")
+                            || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
+                        i.putExtra("AudioId", "");
+                        i.putExtra("PlaylistID", modelList.get(position).getID());
+                        startActivity(i);
+                    }
+
                 }
             });
             holder.binding.rlMainLayout.setOnClickListener(view -> {

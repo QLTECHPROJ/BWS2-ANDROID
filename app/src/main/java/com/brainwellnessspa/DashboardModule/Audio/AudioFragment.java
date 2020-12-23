@@ -137,48 +137,48 @@ public class AudioFragment extends Fragment {
                     }
                 }
             }
-        }else{
+        } else {
 //            getRemainDownloads();
         }
 //        showTooltiop();
         return view;
     }
 
-   /* private void getRemainDownloads() {
-        DatabaseClient.getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getDownloadProgressRemain(100).observe(getActivity(), audiolist -> {
-            List<String> url = new ArrayList<>();
-            List<String> name = new ArrayList<>();
-            List<String> downloadPlaylistId = new ArrayList<>();
+    /* private void getRemainDownloads() {
+         DatabaseClient.getInstance(getActivity())
+                 .getaudioDatabase()
+                 .taskDao()
+                 .getDownloadProgressRemain(100).observe(getActivity(), audiolist -> {
+             List<String> url = new ArrayList<>();
+             List<String> name = new ArrayList<>();
+             List<String> downloadPlaylistId = new ArrayList<>();
 
-            for (int x = 0; x < audiolist.size(); x++) {
-                name.add(audiolist.get(x).getName());
-                url.add(audiolist.get(x).getAudioFile());
-                downloadPlaylistId.add(audiolist.get(x).getPlaylistId());
-            }
-            SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-            Gson gson1 = new Gson();
-            String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
-            String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
-            String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
-            if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
-                Type type = new TypeToken<List<String>>() {
-                }.getType();
-                List<String> fileNameList = gson1.fromJson(json, type);
-                List<String> audioFile = gson1.fromJson(json1, type);
-                List<String> playlistId1 = gson1.fromJson(json2, type);
-                if (fileNameList.size() != 0) {
-                    url.addAll(audioFile);
-                    name.addAll(fileNameList);
-                    downloadPlaylistId.addAll(playlistId1);
-                }
-            }
+             for (int x = 0; x < audiolist.size(); x++) {
+                 name.add(audiolist.get(x).getName());
+                 url.add(audiolist.get(x).getAudioFile());
+                 downloadPlaylistId.add(audiolist.get(x).getPlaylistId());
+             }
+             SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+             Gson gson1 = new Gson();
+             String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+             String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+             String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+             if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                 Type type = new TypeToken<List<String>>() {
+                 }.getType();
+                 List<String> fileNameList = gson1.fromJson(json, type);
+                 List<String> audioFile = gson1.fromJson(json1, type);
+                 List<String> playlistId1 = gson1.fromJson(json2, type);
+                 if (fileNameList.size() != 0) {
+                     url.addAll(audioFile);
+                     name.addAll(fileNameList);
+                     downloadPlaylistId.addAll(playlistId1);
+                 }
+             }
 
-            if (url.size() != 0) {
-                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                downloadMedia.encrypt1(url, name, downloadPlaylistId*//*, playlistSongs*//*);
+             if (url.size() != 0) {
+                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                 downloadMedia.encrypt1(url, name, downloadPlaylistId*//*, playlistSongs*//*);
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
@@ -246,7 +246,7 @@ public class AudioFragment extends Fragment {
                     adapter = new MainAudioListAdapter(getActivity());
                     binding.rvMainAudioList.setAdapter(adapter);
                 }*//*
-                *//*if (downloadAudioDetailsList.size() != 0) {
+     *//*if (downloadAudioDetailsList.size() != 0) {
                     MainAudioListAdapter1 adapter1 = new MainAudioListAdapter1(getActivity(),listModel);
                     RecyclerView.LayoutManager manager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     binding.rvMainAudioList.setLayoutManager(manager1);
@@ -271,19 +271,23 @@ public class AudioFragment extends Fragment {
                 @Override
                 public void onResponse(Call<MainAudioModel> call, Response<MainAudioModel> response) {
                     MainAudioModel listModel = response.body();
-                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        IsLock = listModel.getResponseData().get(0).getIsLock();
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
-                        editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
-                        editor.commit();
+                    try {
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            IsLock = listModel.getResponseData().get(0).getIsLock();
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
+                            editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
+                            editor.commit();
 //                        adapter = new MainAudioListAdapter(listModel.getResponseData(),getActivity());
 //                        binding.rvMainAudioList.setAdapter(adapter);
 //                        GetAllMedia(getActivity(), listModel.getResponseData());
-                        callObserverMethod(listModel.getResponseData());
+                            callObserverMethod(listModel.getResponseData());
 
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -325,10 +329,10 @@ public class AudioFragment extends Fragment {
                         listModel.get(i).setDetails(details);
                     }
                 }
-                adapter = new MainAudioListAdapter(listModel,getActivity());
+                adapter = new MainAudioListAdapter(listModel, getActivity());
                 binding.rvMainAudioList.setAdapter(adapter);
-            }else{
-                if(BWSApplication.isNetworkConnected(getActivity())) {
+            } else {
+                if (BWSApplication.isNetworkConnected(getActivity())) {
                     adapter = new MainAudioListAdapter(listModel, getActivity());
                     binding.rvMainAudioList.setAdapter(adapter);
                 }
@@ -765,10 +769,41 @@ public class AudioFragment extends Fragment {
             holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                    i.putExtra("AudioId", listModelList.get(position).getID());
-                    i.putExtra("PlaylistID", "");
-                    ctx.startActivity(i);
+                    if (IsLock.equalsIgnoreCase("1")) {
+                        if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                            holder.binding.ivLock.setVisibility(View.GONE);
+                            Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                            i.putExtra("AudioId", listModelList.get(position).getID());
+                            i.putExtra("PlaylistID", "");
+                            ctx.startActivity(i);
+                        } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                                || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                            holder.binding.ivLock.setVisibility(View.VISIBLE);
+                            Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                            i.putExtra("ComeFrom", "Plan");
+                            ctx.startActivity(i);
+                        }
+                    } else if (IsLock.equalsIgnoreCase("2")) {
+                        if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                            holder.binding.ivLock.setVisibility(View.GONE);
+                            Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                            i.putExtra("AudioId", listModelList.get(position).getID());
+                            i.putExtra("PlaylistID", "");
+                            ctx.startActivity(i);
+                        } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                                || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                            holder.binding.ivLock.setVisibility(View.VISIBLE);
+                            Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                            i.putExtra("ComeFrom", "Plan");
+                            ctx.startActivity(i);
+                        }
+                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", listModelList.get(position).getID());
+                        i.putExtra("PlaylistID", "");
+                        ctx.startActivity(i);
+                    }
                 }
             });
 
@@ -803,7 +838,6 @@ public class AudioFragment extends Fragment {
         }
 
         private void callnewTrans(int position) {
-
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

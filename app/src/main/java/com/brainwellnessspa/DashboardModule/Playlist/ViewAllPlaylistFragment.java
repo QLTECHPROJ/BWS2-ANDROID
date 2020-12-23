@@ -300,23 +300,31 @@ public class ViewAllPlaylistFragment extends Fragment {
             } else
                 holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
             holder.binding.tvAddToPlaylist.setText("Add To Playlist");
-            holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                    index = position;
-                    notifyDataSetChanged();
-                    return true;
-                }
+            holder.binding.rlMainLayout.setOnLongClickListener(v -> {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                index = position;
+                notifyDataSetChanged();
+                return true;
             });
-            holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
+                if (IsLock.equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
+                } else if (IsLock.equalsIgnoreCase("2")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
                     i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                     startActivity(i);
                 }
+
             });
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

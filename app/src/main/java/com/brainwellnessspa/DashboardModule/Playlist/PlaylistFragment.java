@@ -272,12 +272,12 @@ public class PlaylistFragment extends Fragment {
                     }
                 }
 
-                    listModelList = new ArrayList<>();
-                    listModelList.addAll(responseData);
+                listModelList = new ArrayList<>();
+                listModelList.addAll(responseData);
                 adapter = new MainPlayListAdapter();
                 binding.rvMainPlayList.setAdapter(adapter);
             } else {
-                if(BWSApplication.isNetworkConnected(getActivity())) {
+                if (BWSApplication.isNetworkConnected(getActivity())) {
                     adapter = new MainPlayListAdapter();
                     binding.rvMainPlayList.setAdapter(adapter);
                 }
@@ -574,7 +574,6 @@ public class PlaylistFragment extends Fragment {
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-//            if(!MyDownloads.equalsIgnoreCase("1")){
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
             } else if (IsLock.equalsIgnoreCase("2")) {
@@ -582,32 +581,40 @@ public class PlaylistFragment extends Fragment {
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
-//            }else {
-//                holder.binding.ivLock.setVisibility(View.GONE);
-//            }
-
 
             if (index == position) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
             } else
                 holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+
             holder.binding.tvAddToPlaylist.setText("Add To Playlist");
-            holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                    index = position;
-                    notifyDataSetChanged();
-                    return true;
-                }
+            holder.binding.rlMainLayout.setOnLongClickListener(v -> {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                index = position;
+                notifyDataSetChanged();
+                return true;
             });
             holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                    i.putExtra("AudioId", "");
-                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                    ctx.startActivity(i);
+                    if (IsLock.equalsIgnoreCase("1")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        ctx.startActivity(i);
+                    } else if (IsLock.equalsIgnoreCase("2")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        ctx.startActivity(i);
+                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", "");
+                        i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                        ctx.startActivity(i);
+                    }
+
                 }
             });
             holder.binding.rlMainLayout.setOnClickListener(view -> {
