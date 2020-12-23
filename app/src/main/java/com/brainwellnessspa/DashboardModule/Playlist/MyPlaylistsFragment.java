@@ -1660,51 +1660,55 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     public void GetMedia() {
+        try {
 //        playlistWiseAudioDetails = new ArrayList<>();
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getAllAudioByPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
-            if (MyDownloads.equalsIgnoreCase("1")) {
-                if (downloadPlaylistDetailsList.size() != 0) {
-                    SubPlayListModel responseData = new SubPlayListModel();
-                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();
-                    SubPlayListModel.ResponseData listModel = new SubPlayListModel.ResponseData();
-                    listModel.setPlaylistID(downloadPlaylistDetailsList.get(0).getPlaylistID());
-                    listModel.setPlaylistName(downloadPlaylistDetailsList.get(0).getPlaylistName());
-                    listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
-                    listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
-                    listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
-                    listModel.setPlaylistImageDetail(downloadPlaylistDetailsList.get(0).getPlaylistImage());
-                    listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
-                    listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
-                    listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
-                    listModel.setTotalminute(downloadPlaylistDetailsList.get(0).getTotalminute());
-                    listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
-                    listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
-                    listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
-                    if (audioList.size() != 0) {
-                        for (int i = 0; i < audioList.size(); i++) {
-                            SubPlayListModel.ResponseData.PlaylistSong detail = new SubPlayListModel.ResponseData.PlaylistSong();
-                            detail.setID(audioList.get(i).getID());
-                            detail.setName(audioList.get(i).getName());
-                            detail.setAudioFile(audioList.get(i).getAudioFile());
-                            detail.setAudioDirection(audioList.get(i).getAudioDirection());
-                            detail.setAudiomastercat(audioList.get(i).getAudiomastercat());
-                            detail.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
-                            detail.setImageFile(audioList.get(i).getImageFile());
-                            detail.setLike(audioList.get(i).getLike());
-                            detail.setDownload(audioList.get(i).getDownload());
-                            detail.setAudioDuration(audioList.get(i).getAudioDuration());
-                            details.add(detail);
+            DatabaseClient
+                    .getInstance(getActivity())
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getAllAudioByPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
+                if (MyDownloads.equalsIgnoreCase("1")) {
+                    if (downloadPlaylistDetailsList.size() != 0) {
+                        SubPlayListModel responseData = new SubPlayListModel();
+                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();
+                        SubPlayListModel.ResponseData listModel = new SubPlayListModel.ResponseData();
+                        listModel.setPlaylistID(downloadPlaylistDetailsList.get(0).getPlaylistID());
+                        listModel.setPlaylistName(downloadPlaylistDetailsList.get(0).getPlaylistName());
+                        listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
+                        listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
+                        listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
+                        listModel.setPlaylistImageDetail(downloadPlaylistDetailsList.get(0).getPlaylistImage());
+                        listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
+                        listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
+                        listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
+                        listModel.setTotalminute(downloadPlaylistDetailsList.get(0).getTotalminute());
+                        listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
+                        listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
+                        listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
+                        if (audioList.size() != 0) {
+                            for (int i = 0; i < audioList.size(); i++) {
+                                SubPlayListModel.ResponseData.PlaylistSong detail = new SubPlayListModel.ResponseData.PlaylistSong();
+                                detail.setID(audioList.get(i).getID());
+                                detail.setName(audioList.get(i).getName());
+                                detail.setAudioFile(audioList.get(i).getAudioFile());
+                                detail.setAudioDirection(audioList.get(i).getAudioDirection());
+                                detail.setAudiomastercat(audioList.get(i).getAudiomastercat());
+                                detail.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
+                                detail.setImageFile(audioList.get(i).getImageFile());
+                                detail.setLike(audioList.get(i).getLike());
+                                detail.setDownload(audioList.get(i).getDownload());
+                                detail.setAudioDuration(audioList.get(i).getAudioDuration());
+                                details.add(detail);
+                            }
+                            listModel.setPlaylistSongs(details);
                         }
-                        listModel.setPlaylistSongs(details);
+                        setData(listModel);
                     }
-                    setData(listModel);
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownloads) {
