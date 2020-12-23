@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
@@ -131,19 +132,41 @@ public class DownloadMedia implements OnDownloadListener {
     public void onDownloadComplete() {
         downloadProgress2 = 0;
         try {
-            downloadProgress2 = 0;
             byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
             encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
             saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
+            SharedPreferences sharedx = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            Gson gson1 = new Gson();
+            String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+            String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+            String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+            fileNameList.clear();
+            audioFile.clear();
+            playlistDownloadId.clear();
+            fileNameList = new ArrayList<>();
+            audioFile = new ArrayList<>();
+            playlistDownloadId = new ArrayList<>();
+            if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                List<String> fileNameList1 = gson1.fromJson(json, type);
+                List<String> audioFile1 = gson1.fromJson(json1, type);
+                List<String> playlistId1 = gson1.fromJson(json2, type);
+                if (fileNameList1.size() != 0) {
+                    fileNameList.addAll(fileNameList1);
+                    audioFile.addAll(audioFile1);
+                    playlistDownloadId.addAll(playlistId1);
+                }
+            }
             fileNameList.remove(0);
             audioFile.remove(0);
             playlistDownloadId.remove(0);
             SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            String urlJson = gson.toJson(audioFile);
             String nameJson = gson.toJson(fileNameList);
+            String urlJson = gson.toJson(audioFile);
             String playlistIdJson = gson.toJson(playlistDownloadId);
             editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);

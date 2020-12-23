@@ -32,7 +32,6 @@ import com.brainwellnessspa.DashboardModule.Audio.Adapters.LibraryAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.PopularPlayedAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.UnlockAudioList;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -78,7 +77,6 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class AudioFragment extends Fragment {
@@ -119,18 +117,19 @@ public class AudioFragment extends Fragment {
                     }.getType();
                     fileNameList = gson.fromJson(json, type);
                     audioFile = gson.fromJson(json1, type);
-
-            /*if(json2.equalsIgnoreCase(String.valueOf(gson))){
-                playlistDownloadId = new ArrayList<>();
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                String playlistIdJson = gson.toJson(playlistDownloadId);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editor.commit();
-                SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                json2 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-            }*/
                     playlistDownloadId = gson.fromJson(json2, type);
+                   /* fileNameList = new ArrayList<>();
+                    audioFile = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+                    SharedPreferences sharedxxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedxxx.edit();
+                    String nameJson = gson.toJson(fileNameList);
+                    String urlJson = gson.toJson(audioFile);
+                    String playlistIdJson = gson.toJson(playlistDownloadId);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                    editor.commit();*/
                     if (fileNameList.size() != 0) {
                         DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                         downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
@@ -923,10 +922,10 @@ public class AudioFragment extends Fragment {
     }
 
     public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
-        private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
         Context ctx;
         FragmentActivity activity;
         String HomeID, Views;
+        private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
         public TopCategoriesAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
                                     String HomeID, String Views) {
