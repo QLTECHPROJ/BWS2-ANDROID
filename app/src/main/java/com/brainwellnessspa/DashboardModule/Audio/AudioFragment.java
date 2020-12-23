@@ -343,14 +343,18 @@ public class AudioFragment extends Fragment {
                 @Override
                 public void onResponse(Call<UnlockAudioList> call, Response<UnlockAudioList> response) {
                     UnlockAudioList listModel = response.body();
-                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                        IsLock = listModel.getResponseData().getIsLock();
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
-                        Gson gson = new Gson();
-                        editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
-                        editor.commit();
+                    try {
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            IsLock = listModel.getResponseData().getIsLock();
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
+                            Gson gson = new Gson();
+                            editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
+                            editor.commit();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

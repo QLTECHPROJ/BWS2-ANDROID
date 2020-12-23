@@ -476,20 +476,21 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callObserveMethodGetAllMedia() {
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .geAllData12().observe(getActivity(), audioList -> {
-            if (audioList != null) {
-                downloadAudioDetailsList = audioList;
-            } else {
-                downloadAudioDetailsList = new ArrayList<>();
-            }
-
-        });
-
-
+        try {
+            DatabaseClient
+                    .getInstance(getActivity())
+                    .getaudioDatabase()
+                    .taskDao()
+                    .geAllData12().observe(getActivity(), audioList -> {
+                if (audioList != null) {
+                    downloadAudioDetailsList = audioList;
+                } else {
+                    downloadAudioDetailsList = new ArrayList<>();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void enableDisableDownload(boolean b, String color) {
