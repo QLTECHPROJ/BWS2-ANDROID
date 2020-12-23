@@ -405,7 +405,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     fileNameList = gson.fromJson(jsony, type);
                     playlistDownloadId = gson.fromJson(jsonq, type);
                     if (fileNameList.size() != 0) {
-                        handler1.postDelayed(UpdateSongTime1, 3000);
+                        handler1.postDelayed(UpdateSongTime1, 30000);
                     } else {
                         fileNameList = new ArrayList<>();
                         playlistDownloadId = new ArrayList<>();
@@ -437,7 +437,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         pbProgress.setProgress(downloadProgress1);
                         isMyDownloading = true;
 //                    getMediaByPer(playlistID,totalAudio,pbProgress);
-                        handler1.postDelayed(UpdateSongTime1, 3000);
+                        handler1.postDelayed(UpdateSongTime1, 30000);
                     } else {
                         pbProgress.setVisibility(View.GONE);
                         handler1.removeCallbacks(UpdateSongTime1);
