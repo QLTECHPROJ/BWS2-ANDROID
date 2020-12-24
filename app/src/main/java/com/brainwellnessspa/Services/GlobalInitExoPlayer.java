@@ -126,6 +126,20 @@ public class GlobalInitExoPlayer extends Service {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                try {
+                    if (songImg.equalsIgnoreCase("")) {
+                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    } else {
+                        if (!BWSApplication.isNetworkConnected(ctx)) {
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                        } else {
+                            URL url = new URL(songImg);
+                            myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
