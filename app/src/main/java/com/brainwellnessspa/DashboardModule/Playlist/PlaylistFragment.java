@@ -60,13 +60,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
-    String UserID, Check = "", AudioFlag, IsLock;
+    String UserID, Check = "", AudioFlag;
     View view;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();

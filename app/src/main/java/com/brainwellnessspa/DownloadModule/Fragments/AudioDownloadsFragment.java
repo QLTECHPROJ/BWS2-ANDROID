@@ -250,8 +250,7 @@ public class AudioDownloadsFragment extends Fragment {
 
 
         public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
-                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound,
-        String IsLock) {
+                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound, String IsLock) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
@@ -270,7 +269,6 @@ public class AudioDownloadsFragment extends Fragment {
 //            fileNameList = gson.fromJson(json, type);
         }*/
             getDownloadData();
-
         }
 
         @NonNull

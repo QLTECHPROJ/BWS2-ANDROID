@@ -36,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
@@ -46,7 +46,7 @@ public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
     ArrayList<DownloadlistModel.Audio> audioList;
     ArrayList<DownloadlistModel.Playlist> playlistList;
-    String UserID, AudioFlag, IsLock;
+    String UserID, AudioFlag;
     public static boolean ComeFrom_Playlist = false;
     Context ctx;
 
@@ -80,7 +80,7 @@ public class DownloadsActivity extends AppCompatActivity {
     }
 
     public void prepareData() {
-        if (BWSApplication.isNetworkConnected(ctx)) {
+     /*   if (BWSApplication.isNetworkConnected(ctx)) {
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @SuppressLint("SetTextI18n")
@@ -99,7 +99,7 @@ public class DownloadsActivity extends AppCompatActivity {
                 }
             });
         }
-
+*/
         callMembershipMediaPlayer();
 /*        if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
