@@ -277,45 +277,11 @@ public class LikeAudiosFragment extends Fragment {
 
             holder.binding.llMenu.setOnClickListener(v -> {
                 if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        Intent i = new Intent(ctx, AddQueueActivity.class);
-                        if (AudioFlag.equalsIgnoreCase("TopCategories")) {
-                            i.putExtra("play", "TopCategories");
-                        } else
-                            i.putExtra("play", "play");
-                        i.putExtra("ID", modelList.get(position).getID());
-                        i.putExtra("position", position);
-                        i.putExtra("PlaylistAudioId", "");
-                        Gson gson = new Gson();
-                        String json = gson.toJson(modelList);
-                        i.putExtra("data", json);
-                        i.putExtra("comeFrom", "myLikeAudioList");
-                        startActivity(i);
-                    } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        startActivity(i);
-                    }
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        Intent i = new Intent(ctx, AddQueueActivity.class);
-                        if (AudioFlag.equalsIgnoreCase("TopCategories")) {
-                            i.putExtra("play", "TopCategories");
-                        } else
-                            i.putExtra("play", "play");
-                        i.putExtra("ID", modelList.get(position).getID());
-                        i.putExtra("position", position);
-                        i.putExtra("PlaylistAudioId", "");
-                        Gson gson = new Gson();
-                        String json = gson.toJson(modelList);
-                        i.putExtra("data", json);
-                        i.putExtra("comeFrom", "myLikeAudioList");
-                        startActivity(i);
-                    } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    }
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, AddQueueActivity.class);
                     if (AudioFlag.equalsIgnoreCase("TopCategories")) {

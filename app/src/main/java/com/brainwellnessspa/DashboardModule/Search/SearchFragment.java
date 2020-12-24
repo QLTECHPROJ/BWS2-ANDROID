@@ -730,47 +730,54 @@ public class SearchFragment extends Fragment {
             }
 
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
-                try {
-                    miniPlayer = 1;
-                    audioClick = true;
-                    callNewPlayerRelease();
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                    SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(mainPlayModel);
-                    listModelList2.add(modelList.get(position));
-                    String json = gson.toJson(listModelList2);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
-                    editor.commit();
-                    Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 6, 0, 260);
-                    binding.llSpace.setLayoutParams(params);
-                    notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    try {
+                        miniPlayer = 1;
+                        audioClick = true;
+                        callNewPlayerRelease();
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                        SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                        mainPlayModel.setID("0");
+                        mainPlayModel.setName("Disclaimer");
+                        mainPlayModel.setAudioFile("");
+                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                        mainPlayModel.setAudiomastercat("");
+                        mainPlayModel.setAudioSubCategory("");
+                        mainPlayModel.setImageFile("");
+                        mainPlayModel.setLike("");
+                        mainPlayModel.setDownload("");
+                        mainPlayModel.setAudioDuration("00:48");
+                        listModelList2.add(mainPlayModel);
+                        listModelList2.add(modelList.get(position));
+                        String json = gson.toJson(listModelList2);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
+                        editor.commit();
+                        Fragment fragment = new MiniPlayerFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, fragment)
+                                .commit();
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(0, 6, 0, 260);
+                        binding.llSpace.setLayoutParams(params);
+                        notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 

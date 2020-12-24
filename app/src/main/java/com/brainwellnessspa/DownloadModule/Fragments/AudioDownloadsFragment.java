@@ -71,7 +71,7 @@ public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";
     FragmentDownloadsBinding binding;
     List<DownloadAudioDetails> audioList;
-    String UserID, AudioFlag;
+    String UserID, AudioFlag, IsLock;
     AudioDownlaodsAdapter adapter;
     boolean isThreadStart = false;
     Runnable UpdateSongTime1;
@@ -108,6 +108,7 @@ public class AudioDownloadsFragment extends Fragment {
         view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
+            IsLock = getArguments().getString("IsLock");
         }
         handler1 = new Handler();
         audioList = new ArrayList<>();
@@ -129,7 +130,7 @@ public class AudioDownloadsFragment extends Fragment {
                 .geAllData1("").observe(getActivity(), audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
-                    getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList);
+                    getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList, IsLock);
                     binding.llError.setVisibility(View.GONE);
                     binding.rvDownloadsList.setVisibility(View.VISIBLE);
                 }
@@ -158,14 +159,16 @@ public class AudioDownloadsFragment extends Fragment {
         if (isThreadStart) {
             handler1.removeCallbacks(UpdateSongTime1);
         }
-         super.onPause();
+        super.onPause();
     }
+
     @Override
     public void onDestroy() {
 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
+
     public void RefreshData() {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -212,7 +215,7 @@ public class AudioDownloadsFragment extends Fragment {
         return audioList;
     }*/
 
-    private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
+    private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, String IsLock) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
             binding.llError.setVisibility(View.VISIBLE);
@@ -220,7 +223,7 @@ public class AudioDownloadsFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.GONE);
             binding.llSpace.setVisibility(View.VISIBLE);
-            adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound);
+            adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound, IsLock);
             LocalBroadcastManager.getInstance(getActivity())
                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvDownloadsList.setAdapter(adapter);
@@ -229,7 +232,7 @@ public class AudioDownloadsFragment extends Fragment {
 
     public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
         FragmentActivity ctx;
-        String UserID, songId, AudioFlag;
+        String UserID, songId, AudioFlag, IsLock;
         FrameLayout progressBarHolder;
         ProgressBar ImgV;
         LinearLayout llError;
@@ -247,7 +250,8 @@ public class AudioDownloadsFragment extends Fragment {
 
 
         public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
-                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
+                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound,
+        String IsLock) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
@@ -256,6 +260,7 @@ public class AudioDownloadsFragment extends Fragment {
             this.llError = llError;
             this.rvDownloadsList = rvDownloadsList;
             this.tvFound = tvFound;
+            this.IsLock = IsLock;
         /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
@@ -650,7 +655,7 @@ public class AudioDownloadsFragment extends Fragment {
                         llError.setVisibility(View.GONE);
                         LocalBroadcastManager.getInstance(getActivity())
                                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                        adapter = new AudioDownlaodsAdapter(audioList, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound);
+                        adapter = new AudioDownlaodsAdapter(audioList, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound, IsLock);
                         rvDownloadsList.setAdapter(adapter);
                     }
                     llError.setVisibility(View.GONE);

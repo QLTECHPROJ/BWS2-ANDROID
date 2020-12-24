@@ -61,13 +61,14 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.RefreshLikePlaylist;
+
 public class PlaylistLikeActivity extends AppCompatActivity {
     ActivityPlaylistLikeBinding binding;
     String UserID, AudioFlag, PlaylistID, PlaylistName, SearchFlag, PlaylistImage;
@@ -186,7 +187,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-            if (player!=null) {
+            if (player != null) {
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             } else {
@@ -407,7 +408,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     isPlayPlaylist = 2;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                 } else if (isPlayPlaylist == 2) {
-                   player.setPlayWhenReady(true);
+                    player.setPlayWhenReady(true);
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 } else {

@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DownloadModule.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.google.android.material.tabs.TabLayout;
@@ -19,7 +21,9 @@ import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.brainwellnessspa.DownloadModule.Models.DownloadlistModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.databinding.ActivityDownloadsBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -27,6 +31,10 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -38,7 +46,7 @@ public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
     ArrayList<DownloadlistModel.Audio> audioList;
     ArrayList<DownloadlistModel.Playlist> playlistList;
-    String UserID, AudioFlag;
+    String UserID, AudioFlag, IsLock;
     public static boolean ComeFrom_Playlist = false;
     Context ctx;
 
@@ -72,6 +80,26 @@ public class DownloadsActivity extends AppCompatActivity {
     }
 
     public void prepareData() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
+            listCall.enqueue(new Callback<ProfileViewModel>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
+                    try {
+                        ProfileViewModel viewModel = response.body();
+                        IsLock = viewModel.getResponseData().getIsLock();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileViewModel> call, Throwable t) {
+                }
+            });
+        }
+
         callMembershipMediaPlayer();
 /*        if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -222,6 +250,7 @@ public class DownloadsActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     AudioDownloadsFragment audioDownloadsFragment = new AudioDownloadsFragment();
                     bundle.putString("UserID", UserID);
+                    bundle.putString("IsLock", IsLock);
 //                    bundle.putParcelableArrayList("audioDownloadsFragment", audioList);
                     audioDownloadsFragment.setArguments(bundle);
                     return audioDownloadsFragment;
@@ -229,6 +258,7 @@ public class DownloadsActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     PlaylistsDownlaodsFragment playlistsDownlaodsFragment = new PlaylistsDownlaodsFragment();
                     bundle.putString("UserID", UserID);
+                    bundle.putString("IsLock", IsLock);
 //                    bundle.putParcelableArrayList("playlistsDownlaodsFragment", playlistList);
                     playlistsDownlaodsFragment.setArguments(bundle);
                     return playlistsDownlaodsFragment;

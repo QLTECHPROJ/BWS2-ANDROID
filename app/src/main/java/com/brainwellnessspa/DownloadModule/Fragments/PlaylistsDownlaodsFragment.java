@@ -60,7 +60,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     List<DownloadPlaylistDetails> playlistList;
-    String UserID, AudioFlag;
+    String UserID, AudioFlag, IsLock;
     PlaylistsDownloadsAdapter adapter;
     Runnable UpdateSongTime1;
     Handler handler1;
@@ -72,6 +72,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         View view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
+            IsLock = getArguments().getString("IsLock");
         }
         playlistList = new ArrayList<>();
         binding.tvFound.setText("Your downloaded playlists will appear here");
@@ -97,7 +98,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
     @Override
     public void onPause() {
-        if(isMyDownloading){
+        if (isMyDownloading) {
             handler1.removeCallbacks(UpdateSongTime1);
         }
         super.onPause();
@@ -125,7 +126,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 .getAllPlaylist1().observe(getActivity(), audioList -> {
 
             if (audioList.size() != 0) {
-                getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar);
+                getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, IsLock);
                 binding.llError.setVisibility(View.GONE);
                 binding.rvDownloadsList.setVisibility(View.VISIBLE);
             } else {
@@ -135,13 +136,13 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         });
     }
 
-    private void getDataList(List<DownloadPlaylistDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV) {
+    private void getDataList(List<DownloadPlaylistDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, String IsLock) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
             binding.llError.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, binding.llError, binding.tvFound, binding.rvDownloadsList);
+            adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, binding.llError, binding.tvFound, binding.rvDownloadsList, IsLock);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }
@@ -149,7 +150,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
     public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
         FragmentActivity ctx;
-        String UserID;
+        String UserID, IsLock;
         FrameLayout progressBarHolder;
         ProgressBar ImgV;
         List<DownloadAudioDetails> playlistWiseAudioDetails;
@@ -162,7 +163,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         private List<DownloadPlaylistDetails> listModelList;
 
         public PlaylistsDownloadsAdapter(List<DownloadPlaylistDetails> listModelList, FragmentActivity ctx, String UserID,
-                                         FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList) {
+                                         FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList,
+                                         String IsLock) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
@@ -171,6 +173,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             this.llError = llError;
             this.tvFound = tvFound;
             this.rvDownloadsList = rvDownloadsList;
+            this.IsLock = IsLock;
             handler1 = new Handler();
             oneAudioDetailsList = new ArrayList<>();
             getDownloadData();
@@ -198,7 +201,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             for (int f = 0; f < fileNameList.size(); f++) {
                                 if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
                                     getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
-                                break;
+                                    break;
                                 }
                             }
                         }
@@ -223,7 +226,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     }
                 }
 
-            }else{
+            } else {
                 isMyDownloading = false;
             }
             if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
@@ -330,7 +333,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
                     Btn.setOnClickListener(v -> {
                         try {
-                            if(isMyDownloading){
+                            if (isMyDownloading) {
                                 handler1.removeCallbacks(UpdateSongTime1);
                             }
                             GetPlaylistMedia(listModelList.get(position).getPlaylistID());
@@ -429,7 +432,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     .getCountDownloadProgress1("Complete", playlistID).observe(this.ctx, audioList -> {
 
 
-                if(audioList!=null) {
+                if (audioList != null) {
                     if (audioList.size() < Integer.parseInt(totalAudio)) {
                         long progressPercent = audioList.size() * 100 / Integer.parseInt(totalAudio);
                         int downloadProgress1 = (int) progressPercent;

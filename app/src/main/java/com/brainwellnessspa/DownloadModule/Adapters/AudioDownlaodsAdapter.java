@@ -1,5 +1,7 @@
+/*
 package com.brainwellnessspa.DownloadModule.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,8 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -47,9 +52,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -62,7 +70,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     FragmentActivity ctx;
-    String UserID, songId, AudioFlag;
+    String UserID, songId, AudioFlag, IsLock;
     FrameLayout progressBarHolder;
     ProgressBar ImgV;
     LinearLayout llError;
@@ -72,7 +80,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
     private Handler handler1;
-//    Handler handler3;
+    //    Handler handler3;
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0;
@@ -90,14 +98,16 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         this.rvDownloadsList = rvDownloadsList;
         this.tvFound = tvFound;
         handler1 = new Handler();
-        /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+        */
+/*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<List<String>>() {
             }.getType();
 //            fileNameList = gson.fromJson(json, type);
-        }*/
+        }*//*
+
         getDownloadData();
 
     }
@@ -117,7 +127,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             public void run() {
                 try {
-                   /* downloadedSingleAudio = getMyMedia();
+                   */
+/* downloadedSingleAudio = getMyMedia();
                     for (int f = 0; f < listModelList.size(); f++) {
                         if(downloadedSingleAudio.size()!=0) {
                             for (int i = 0; i < downloadedSingleAudio.size(); i++) {
@@ -130,7 +141,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             }
                         }
                     }
-                    downloadedSingleAudio = getMyMedia();*/
+                    downloadedSingleAudio = getMyMedia();*//*
+
 
 //                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
                     if (fileNameList.size() != 0) {
@@ -161,7 +173,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 }
             }
         };
-       /* UpdateSongTime3 = new Runnable() {
+       */
+/* UpdateSongTime3 = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -183,7 +196,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 handler3.postDelayed(this, 500);
             }
         };
-*/
+*//*
+
         if (fileNameList.size() != 0) {
             for (int i = 0; i < fileNameList.size(); i++) {
                 if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -228,6 +242,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
         comefromDownload = "1";
+
         if (IsLock.equalsIgnoreCase("1")) {
             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -246,7 +261,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
                 songId = myAudioId;
-                if (player!=null) {
+                if (player != null) {
                     if (!player.getPlayWhenReady()) {
                         holder.binding.equalizerview.stopBars();
                     } else {
@@ -270,7 +285,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
 //            handler3.removeCallbacks(UpdateSongTime3);
         }
-
         holder.binding.llMainLayout.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -319,7 +333,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             notifyDataSetChanged();
         });
 
-        holder.binding.llRemoveAudio.setOnClickListener(view -> {
+        holder.binding.llRemoveAudio.setOnClickListener(view ->
+
+        {
             try {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 String AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -471,6 +487,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
         FileUtils.deleteDownloadedFile(applicationContext, audioName);
+
         class DeleteMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -492,12 +509,13 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
+
     private void CallObserverMethod2() {
-         DatabaseClient
+        DatabaseClient
                 .getInstance(ctx)
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData1("").observe(ctx,downloadAudioDetailsList -> {
+                .geAllData1("").observe(ctx, downloadAudioDetailsList -> {
             if (downloadAudioDetailsList.size() != 0) {
                 if (downloadAudioDetailsList.size() == 0) {
                     tvFound.setVisibility(View.VISIBLE);
@@ -516,7 +534,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     }
 
- /*   public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
+ */
+/*   public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
         downloadAudioDetailsList = new ArrayList<>();
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
@@ -552,7 +571,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
-    }*/
+    }*//*
+
 
     @Override
     public int getItemViewType(int position) {
@@ -578,3 +598,4 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         }
     }
 }
+*/

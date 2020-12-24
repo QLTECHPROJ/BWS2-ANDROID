@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Playlist;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivi
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
+import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
@@ -58,14 +60,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
-    String UserID, Check = "", AudioFlag;
+    String UserID, Check = "", AudioFlag, IsLock;
     View view;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
@@ -122,6 +123,29 @@ public class PlaylistFragment extends Fragment {
     }
 
     private void prepareData() {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+            Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
+            listCall.enqueue(new Callback<ProfileViewModel>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
+                    try {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        ProfileViewModel viewModel = response.body();
+                        IsLock = viewModel.getResponseData().getIsLock();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileViewModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                }
+            });
+        }
+
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<MainPlayListModel> listCall = APIClient.getClient().getMainPlayLists(UserID);

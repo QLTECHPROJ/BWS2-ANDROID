@@ -379,33 +379,13 @@ public class ViewAllAudioFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (IsLock.equalsIgnoreCase("1")) {
-                        if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                            holder.binding.ivLock.setVisibility(View.GONE);
-                            Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
-                            i.putExtra("AudioId", listModelList.get(position).getID());
-                            i.putExtra("PlaylistID", "");
-                            startActivity(i);
-                        } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                                || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                            holder.binding.ivLock.setVisibility(View.VISIBLE);
-                            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                            i.putExtra("ComeFrom", "Plan");
-                            startActivity(i);
-                        }
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        startActivity(i);
                     } else if (IsLock.equalsIgnoreCase("2")) {
-                        if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                            holder.binding.ivLock.setVisibility(View.GONE);
-                            Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
-                            i.putExtra("AudioId", listModelList.get(position).getID());
-                            i.putExtra("PlaylistID", "");
-                            startActivity(i);
-                        } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                                || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                            holder.binding.ivLock.setVisibility(View.VISIBLE);
-                            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                            i.putExtra("ComeFrom", "Plan");
-                            startActivity(i);
-                        }
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(getActivity(), AddPlaylistActivity.class);

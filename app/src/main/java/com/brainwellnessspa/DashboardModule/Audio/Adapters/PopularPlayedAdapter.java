@@ -109,33 +109,13 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             @Override
             public void onClick(View view) {
                 if (IsLock.equalsIgnoreCase("1")) {
-                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                        i.putExtra("AudioId", listModelList.get(position).getID());
-                        i.putExtra("PlaylistID", "");
-                        ctx.startActivity(i);
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        ctx.startActivity(i);
-                    }
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
-                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                        i.putExtra("AudioId", listModelList.get(position).getID());
-                        i.putExtra("PlaylistID", "");
-                        ctx.startActivity(i);
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        ctx.startActivity(i);
-                    }
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
@@ -147,13 +127,10 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
         });
         holder.binding.llMainLayout.setOnClickListener(view -> {
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
-
             if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-
                     callnewTrans(position);
-
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -178,7 +155,6 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
     }
 
     private void callnewTrans(int position) {
-
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

@@ -94,6 +94,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                 return true;
             }
         });
+
         holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -102,9 +103,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                 ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-                Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                i.putExtra("ComeFrom", "Plan");
-                ctx.startActivity(i);
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
@@ -112,8 +111,8 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                 i.putExtra("PlaylistID", "");
                 ctx.startActivity(i);
             }
-
         });
+
         holder.binding.llMainLayout.setOnClickListener(view -> {
             try {
                 if (IsLock.equalsIgnoreCase("1")) {

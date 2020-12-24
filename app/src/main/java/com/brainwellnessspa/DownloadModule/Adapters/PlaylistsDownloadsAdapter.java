@@ -1,3 +1,4 @@
+/*
 package com.brainwellnessspa.DownloadModule.Adapters;
 
 import android.annotation.SuppressLint;
@@ -33,6 +34,8 @@ import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.bumptech.glide.Glide;
@@ -45,7 +48,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -53,7 +59,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 
 public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
     FragmentActivity ctx;
-    String UserID;
+    String UserID, IsLock;
     FrameLayout progressBarHolder;
     ProgressBar ImgV;
     List<DownloadAudioDetails> playlistWiseAudioDetails;
@@ -112,14 +118,16 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             }
         };
-        /*if(fileNameList.size()!=0){
+        */
+/*if(fileNameList.size()!=0){
             if(playlistDownloadId.contains(listModelList.get(position).getPlaylistID())){
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 handler1.postDelayed(UpdateSongTime1,500);
             }else{
                 holder.binding.pbProgress.setVisibility(View.GONE);
             }
-        }*/
+        }*//*
+
         if (fileNameList.size() != 0) {
             for (int f = 0; f < fileNameList.size(); f++) {
                 if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
@@ -128,6 +136,27 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             }
 
         }
+
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
+            listCall.enqueue(new Callback<ProfileViewModel>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
+                    try {
+                        ProfileViewModel viewModel = response.body();
+                        IsLock = viewModel.getResponseData().getIsLock();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileViewModel> call, Throwable t) {
+                }
+            });
+        }
+
         if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                 listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                         listModelList.get(position).getTotalhour().equalsIgnoreCase("")
@@ -151,26 +180,23 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
         if (IsLock.equalsIgnoreCase("1")) {
-            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
         } else if (IsLock.equalsIgnoreCase("2")) {
-            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
                 Intent i = new Intent(ctx, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
             }
             if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
                 BWSApplication.showToast("Please re-activate your membership plan", ctx);
             } else if (IsLock.equalsIgnoreCase("0")
@@ -190,14 +216,16 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
                 i.putExtra("MyDownloads", "1");
                 ctx.startActivity(i);
-        /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
+        */
+/*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                 i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
                 i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
                 i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
                 ctx.startActivity(i);
-                ctx.finish();*/
+                ctx.finish();*//*
+
             }
         });
 
@@ -343,7 +371,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         });
     }
 
-  /*  void getDownloadData() {
+  */
+/*  void getDownloadData() {
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
@@ -361,10 +390,12 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             playlistDownloadId = new ArrayList<>();
             remainAudio = new ArrayList<>();
         }
-    }*/
+    }*//*
+
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-      /*  class GetMedia extends AsyncTask<Void, Void, Void> {
+      */
+/*  class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 oneAudioDetailsList = DatabaseClient
@@ -387,7 +418,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             }
         }
         GetMedia sts = new GetMedia();
-        sts.execute();*/
+        sts.execute();*//*
+
         DatabaseClient
                 .getInstance(ctx)
                 .getaudioDatabase()
@@ -479,7 +511,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             } catch (Exception e) {
             }
         });
-     /*   playlistWiseAudioDetails = new ArrayList<>();
+     */
+/*   playlistWiseAudioDetails = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -504,7 +537,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         }
         GetMedia st = new GetMedia();
         st.execute();
-        return playlistWiseAudioDetails;*/
+        return playlistWiseAudioDetails;*//*
+
     }
 
     @Override
@@ -531,3 +565,4 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         }
     }
 }
+*/
