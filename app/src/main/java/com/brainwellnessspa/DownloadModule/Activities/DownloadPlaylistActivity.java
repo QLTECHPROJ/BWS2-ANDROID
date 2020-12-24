@@ -284,8 +284,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             if (!PlaylistImageDetails.equalsIgnoreCase("")) {
                 try {
                     Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
-                            .placeholder(R.drawable.ic_music_icon)
-                            .error(R.drawable.ic_music_icon)
+                            .placeholder(R.drawable.audio_bg)
+                            .error(R.drawable.audio_bg)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
 
                 } catch (Exception e) {
