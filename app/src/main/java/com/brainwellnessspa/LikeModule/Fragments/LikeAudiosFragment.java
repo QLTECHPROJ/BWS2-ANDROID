@@ -308,42 +308,7 @@ public class LikeAudiosFragment extends Fragment {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                             holder.binding.ivLock.setVisibility(View.GONE);
-                            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
-                            mainPlayModel.setID("0");
-                            mainPlayModel.setName("Disclaimer");
-                            mainPlayModel.setAudioFile("");
-                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                            mainPlayModel.setAudiomastercat("");
-                            mainPlayModel.setAudioSubCategory("");
-                            mainPlayModel.setImageFile("");
-                            mainPlayModel.setLike("");
-                            mainPlayModel.setDownload("");
-                            mainPlayModel.setAudioDuration("00:48");
-
-                            int pos = holder.getAdapterPosition();
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            Log.e("position of play", String.valueOf(position));
-                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                                if (isDisclaimer == 1) {
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                                } else {
-                                    callTransFrag(pos, modelList);
-                                }
-                            } else {
-                                isDisclaimer = 0;
-                                disclaimerPlayed = 0;
-                                List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
-                                if (position != 0) {
-                                    listModelList2.addAll(modelList);
-                                    listModelList2.add(pos, mainPlayModel);
-                                } else {
-                                    listModelList2.add(mainPlayModel);
-                                    listModelList2.addAll(modelList);
-                                }
-                                callTransFrag(pos, listModelList2);
-                            }
+                            callTransFragss(holder.getAdapterPosition());
                             notifyDataSetChanged();
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -355,42 +320,8 @@ public class LikeAudiosFragment extends Fragment {
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
                         if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                             holder.binding.ivLock.setVisibility(View.GONE);
-                            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
-                            mainPlayModel.setID("0");
-                            mainPlayModel.setName("Disclaimer");
-                            mainPlayModel.setAudioFile("");
-                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                            mainPlayModel.setAudiomastercat("");
-                            mainPlayModel.setAudioSubCategory("");
-                            mainPlayModel.setImageFile("");
-                            mainPlayModel.setLike("");
-                            mainPlayModel.setDownload("");
-                            mainPlayModel.setAudioDuration("00:48");
 
-                            int pos = holder.getAdapterPosition();
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            Log.e("position of play", String.valueOf(position));
-                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                                if (isDisclaimer == 1) {
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                                } else {
-                                    callTransFrag(pos, modelList);
-                                }
-                            } else {
-                                isDisclaimer = 0;
-                                disclaimerPlayed = 0;
-                                List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
-                                if (position != 0) {
-                                    listModelList2.addAll(modelList);
-                                    listModelList2.add(pos, mainPlayModel);
-                                } else {
-                                    listModelList2.add(mainPlayModel);
-                                    listModelList2.addAll(modelList);
-                                }
-                                callTransFrag(pos, listModelList2);
-                            }
+                            callTransFragss(holder.getAdapterPosition());
                             notifyDataSetChanged();
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -399,46 +330,52 @@ public class LikeAudiosFragment extends Fragment {
                         }
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
-                        mainPlayModel.setID("0");
-                        mainPlayModel.setName("Disclaimer");
-                        mainPlayModel.setAudioFile("");
-                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                        mainPlayModel.setAudiomastercat("");
-                        mainPlayModel.setAudioSubCategory("");
-                        mainPlayModel.setImageFile("");
-                        mainPlayModel.setLike("");
-                        mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("00:48");
-
-                        int pos = holder.getAdapterPosition();
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        Log.e("position of play", String.valueOf(position));
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                            if (isDisclaimer == 1) {
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                            } else {
-                                callTransFrag(pos, modelList);
-                            }
-                        } else {
-                            isDisclaimer = 0;
-                            disclaimerPlayed = 0;
-                            List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
-                            if (position != 0) {
-                                listModelList2.addAll(modelList);
-                                listModelList2.add(pos, mainPlayModel);
-                            } else {
-                                listModelList2.add(mainPlayModel);
-                                listModelList2.addAll(modelList);
-                            }
-                            callTransFrag(pos, listModelList2);
-                        }
+                        callTransFragss(holder.getAdapterPosition());
                         notifyDataSetChanged();
                     }
                 }
             });
+
+
+        }
+
+        private void callTransFragss(int adapterPosition) {
+            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
+            mainPlayModel.setID("0");
+            mainPlayModel.setName("Disclaimer");
+            mainPlayModel.setAudioFile("");
+            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+            mainPlayModel.setAudiomastercat("");
+            mainPlayModel.setAudioSubCategory("");
+            mainPlayModel.setImageFile("");
+            mainPlayModel.setLike("");
+            mainPlayModel.setDownload("");
+            mainPlayModel.setAudioDuration("00:48");
+
+            int pos = adapterPosition;
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            Log.e("position of play", String.valueOf(pos));
+            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                if (isDisclaimer == 1) {
+                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                } else {
+                    callTransFrag(pos, modelList);
+                }
+            } else {
+                isDisclaimer = 0;
+                disclaimerPlayed = 0;
+                List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
+                if (pos != 0) {
+                    listModelList2.addAll(modelList);
+                    listModelList2.add(pos, mainPlayModel);
+                } else {
+                    listModelList2.add(mainPlayModel);
+                    listModelList2.addAll(modelList);
+                }
+                callTransFrag(pos, listModelList2);
+            }
         }
 
         private void callAlert(int position) {
@@ -486,7 +423,6 @@ public class LikeAudiosFragment extends Fragment {
             }
         }
     }
-
 
     private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Audio> listModelList) {
         try {

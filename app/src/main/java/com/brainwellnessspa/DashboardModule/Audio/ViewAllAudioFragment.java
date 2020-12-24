@@ -470,6 +470,16 @@ public class ViewAllAudioFragment extends Fragment {
         if (Name.equalsIgnoreCase("My Downloads")) {
             if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 if (isDisclaimer == 1) {
+                    if(player!=null){
+                        if(!player.getPlayWhenReady()) {
+                            player.setPlayWhenReady(true);
+                        }
+                    }else{
+                        audioClick = true;
+                        Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        getActivity().startActivity(i);
+                    }
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if(player!=null){
@@ -507,6 +517,16 @@ public class ViewAllAudioFragment extends Fragment {
         } else {
             if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)) {
                 if (isDisclaimer == 1) {
+                    if(player!=null){
+                        if(!player.getPlayWhenReady()) {
+                            player.setPlayWhenReady(true);
+                        }
+                    }else{
+                        audioClick = true;
+                        Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        getActivity().startActivity(i);
+                    }
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if(player!=null){
@@ -559,7 +579,15 @@ public class ViewAllAudioFragment extends Fragment {
                 String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("TopCategories") && catName.equalsIgnoreCase(Category)) {
                     if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
+                        if(player!=null){
+                            if(!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
+                            }
+                        }else{
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
+                            openMyFragment();
+                        }
+
                     } else {
                         listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);

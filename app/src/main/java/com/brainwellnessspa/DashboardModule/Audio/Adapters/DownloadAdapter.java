@@ -131,7 +131,15 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (isDisclaimer == 1) {
                             if(player!=null){
-                                player.setPlayWhenReady(true);
+                                if(!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
+                                }
+                            }else{
+
+                                audioClick = true;
+                                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                ctx.startActivity(i);
                             }
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {

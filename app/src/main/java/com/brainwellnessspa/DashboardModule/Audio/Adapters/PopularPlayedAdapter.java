@@ -163,6 +163,16 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
         if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") ||
                 AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
+                if(player!=null){
+                    if(!player.getPlayWhenReady()) {
+                        player.setPlayWhenReady(true);
+                    }
+                }else{
+                    audioClick = true;
+                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    ctx.startActivity(i);
+                }
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if(player!=null){

@@ -184,7 +184,7 @@ public class MiniPlayerFragment extends Fragment {
 //            }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
-    /*        Gson gson = new Gson();
+            Gson gson = new Gson();
             String json = gson.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
             String json1 = gson.toJson(addToQueueModelList);
@@ -194,7 +194,7 @@ public class MiniPlayerFragment extends Fragment {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }
 
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
@@ -354,7 +354,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
+/*                    if (isPlaying) {
 //                        exoBinding.llPlay.setVisibility(View.GONE);
 //                        exoBinding.llPause.setVisibility(View.VISIBLE);
 //                        exoBinding.progressBar.setVisibility(View.GONE);
@@ -366,7 +366,7 @@ public class MiniPlayerFragment extends Fragment {
 //                        exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    }
+                    }*/
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -392,11 +392,19 @@ public class MiniPlayerFragment extends Fragment {
                 @Override
                 public void onPlaybackStateChanged(int state) {
                     if (state == ExoPlayer.STATE_READY) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-                        localIntent.putExtra("MyData", "play");
-                        localBroadcastManager.sendBroadcast(localIntent);
+                        if(player.getPlayWhenReady()) {
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.VISIBLE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                            localIntent.putExtra("MyData", "play");
+                            localBroadcastManager.sendBroadcast(localIntent);
+                        }else if(!player.getPlayWhenReady()){
+                            exoBinding.llPlay.setVisibility(View.VISIBLE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                            localIntent.putExtra("MyData", "pause");
+                            localBroadcastManager.sendBroadcast(localIntent);
+                        }
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
