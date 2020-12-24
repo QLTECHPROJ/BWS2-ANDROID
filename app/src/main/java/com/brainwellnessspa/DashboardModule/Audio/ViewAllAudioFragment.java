@@ -54,6 +54,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class ViewAllAudioFragment extends Fragment {
     public static boolean viewallAudio = false;
@@ -471,7 +472,18 @@ public class ViewAllAudioFragment extends Fragment {
                 if (isDisclaimer == 1) {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
-                    callTransFrag(position, listModelList);
+                    if(player!=null){
+                        player.seekTo(position);
+                        SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedxx.edit();
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.commit();
+                        Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        getActivity().startActivity(i);
+                    }else {
+                        callTransFrag(position, listModelList);
+                    }
                 }
             } else {
                 isDisclaimer = 0;
@@ -497,7 +509,18 @@ public class ViewAllAudioFragment extends Fragment {
                 if (isDisclaimer == 1) {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
-                    callTransFrag(position, listModelList);
+                    if(player!=null){
+                        player.seekTo(position);
+                        SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedxx.edit();
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.commit();
+                        Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        getActivity().startActivity(i);
+                    }else {
+                        callTransFrag(position, listModelList);
+                    }
                 }
             } else {
                 isDisclaimer = 0;
@@ -550,7 +573,16 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                         editor.commit();
-                        openMyFragment();
+                        if(player!=null){
+                            player.seekTo(position);
+                            SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editord = sharedxx.edit();
+                            editord.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editord.commit();
+                            openOnlyFragment();
+                        }else {
+                            openMyFragment();
+                        }
                     }
                 } else {
                     listModelList2 = new ArrayList<>();
@@ -611,6 +643,14 @@ public class ViewAllAudioFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void openOnlyFragment() {
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
     }
 
     private void openMyFragment() {

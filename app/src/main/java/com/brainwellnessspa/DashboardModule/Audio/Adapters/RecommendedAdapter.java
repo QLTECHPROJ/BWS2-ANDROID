@@ -17,6 +17,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
+import com.brainwellnessspa.DashboardModule.Audio.AudioFragment;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -35,15 +36,15 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
-public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHolder> {
+public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
     Context ctx;
-    int index = -1;
     FragmentActivity activity;
     String IsLock, HomeView;
+    int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
-    public LibraryAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                          String IsLock, String HomeView) {
+    public RecommendedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
+                              String IsLock, String HomeView) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
@@ -103,6 +104,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                 return true;
             }
         });
+
         holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,7 +166,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if(player!=null){
-
                     player.seekTo(position);
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();

@@ -135,7 +135,18 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                             }
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                            callTransFrag(position, listModelList);
+                            if(player!=null){
+                                player.seekTo(position);
+                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                ctx.startActivity(i);
+                            }else {
+                                callTransFrag(position, listModelList);
+                            }
                         }
                     } else {
                         isDisclaimer = 0;

@@ -32,6 +32,7 @@ import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -42,8 +43,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -199,9 +202,9 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                     ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
                                     mainPlayModelListold = gsonx.fromJson(json, type);
                                     String id = mainPlayModelListold.get(pos).getID();
+                                    int size = mainPlayModelListold.size();
                                     ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
                                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs = new ArrayList<>();
-
                                     for (int i = 0; i < listModels.getResponseData().size(); i++) {
                                         MainPlayModel mainPlayModel = new MainPlayModel();
                                         mainPlayModel.setID(listModels.getResponseData().get(i).getID());
@@ -232,7 +235,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                         mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
                                         playlistSongs.add(mainPlayModel);
                                     }
-
                                     for (int i = 0; i < mainPlayModelList.size(); i++) {
                                         if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
                                             pos = i;
@@ -253,6 +255,17 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                     editor.commit();
+                                    List<File> filesDownloaded = new ArrayList<>();
+                                    List<String> downloadAudioDetailsList = new ArrayList<>();
+                                    GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                                    ge.AddAudioToPlayer(size,mainPlayModelList,filesDownloaded,downloadAudioDetailsList);
+                                    if(player!=null){
+                                        Fragment fragment = new MiniPlayerFragment();
+                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                        fragmentManager1.beginTransaction()
+                                                .add(R.id.flContainer, fragment)
+                                                .commit();
+                                    }
                                 }
                             }
                             BWSApplication.showToast(listModels.getResponseMessage(), ctx);

@@ -29,6 +29,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
+import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,13 +46,11 @@ import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 import com.brainwellnessspa.ResourceModule.Activities.ResourceActivity;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.UserModule.Activities.UserProfileActivity;
 import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.databinding.FragmentAccountBinding;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;

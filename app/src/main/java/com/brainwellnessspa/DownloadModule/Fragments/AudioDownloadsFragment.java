@@ -477,7 +477,6 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                     } else {
                         deleteAudio(holder.getAdapterPosition());
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

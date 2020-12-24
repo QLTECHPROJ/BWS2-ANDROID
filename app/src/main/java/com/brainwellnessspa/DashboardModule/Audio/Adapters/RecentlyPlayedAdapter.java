@@ -35,6 +35,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
     Context ctx;
@@ -160,7 +161,18 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             if (isDisclaimer == 1) {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
-                callTransFrag(position, listModelList);
+                if(player!=null){
+                    player.seekTo(position);
+                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedxx.edit();
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.commit();
+                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    ctx.startActivity(i);
+                }else {
+                    callTransFrag(position, listModelList);
+                }
             }
         } else {
             isDisclaimer = 0;

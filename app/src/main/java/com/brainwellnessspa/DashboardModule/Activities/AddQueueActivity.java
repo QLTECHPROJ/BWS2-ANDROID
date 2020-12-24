@@ -39,6 +39,7 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityQueueBinding;
@@ -47,6 +48,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,6 +61,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AddQueueActivity extends AppCompatActivity {
     public static boolean comeFromAddToQueue = false;
@@ -553,6 +556,9 @@ public class AddQueueActivity extends AppCompatActivity {
                                         mData.remove(position);
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
+                                            if(player!=null){
+                                                player.removeMediaItem(pos);
+                                            }
                                             if (mData.size() != 0) {
                                                 if (pos == position && position < mData.size() - 1) {
                                                     pos = pos;
@@ -611,6 +617,9 @@ public class AddQueueActivity extends AppCompatActivity {
                                     } else {
                                         mainPlayModelList.remove(pos);
                                         arrayList1.remove(pos);
+                                        if(player!=null){
+                                            player.removeMediaItem(pos);
+                                        }
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
                                             if (mainPlayModelList.size() != 0) {
@@ -1021,6 +1030,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                         mainPlayModel1.setDownload(mainPlayModelList.get(position).getDownload());
                                         mainPlayModel1.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
                                     }
+                                    int size = mainPlayModelList.size();
                                     arrayList.add(arrayList.size(), mainPlayModel);
                                     mainPlayModelList.add(mainPlayModelList.size(), mainPlayModel1);
                                     SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -1037,6 +1047,10 @@ public class AddQueueActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
                                     editor.commit();
+                                    List<File> filesDownloaded = new ArrayList<>();
+                                    List<String> downloadAudioDetailsList = new ArrayList<>();
+                                    GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                                    ge.AddAudioToPlayer(size,mainPlayModelList,filesDownloaded,downloadAudioDetailsList);
                                 }
                             }
                             if (queuePlay) {

@@ -85,7 +85,7 @@ public class MiniPlayerFragment extends Fragment {
     List<String> downloadAudioDetailsList;
     List<String> downloadAudioDetailsListGloble;
     byte[] descriptor;
-    List<File> bytesDownloaded;
+    List<File> filesDownloaded;
     ArrayList<MainPlayModel> mainPlayModelList,mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
@@ -104,6 +104,7 @@ public class MiniPlayerFragment extends Fragment {
 
     @Override
     public void onPause() {
+//        player.removeListener(player.);
         super.onPause();
     }
 
@@ -125,7 +126,7 @@ public class MiniPlayerFragment extends Fragment {
         mainPlayModelList2 = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         downloadAudioDetailsListGloble = new ArrayList<>();
-        bytesDownloaded = new ArrayList<>();
+        filesDownloaded = new ArrayList<>();
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
                 , R.layout.fragment_mini_exo_custom, binding.playerControlView, false);
 
@@ -134,9 +135,6 @@ public class MiniPlayerFragment extends Fragment {
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if (audioClick) {
             audioClick = false;
-            exoBinding.llPlay.setVisibility(View.GONE);
-            exoBinding.llPause.setVisibility(View.GONE);
-            exoBinding.progressBar.setVisibility(View.VISIBLE);
             MakeArray2();
             GetAllMedia();
         } else {
@@ -186,7 +184,7 @@ public class MiniPlayerFragment extends Fragment {
 //            }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
-            Gson gson = new Gson();
+    /*        Gson gson = new Gson();
             String json = gson.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
             String json1 = gson.toJson(addToQueueModelList);
@@ -196,7 +194,7 @@ public class MiniPlayerFragment extends Fragment {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
@@ -296,7 +294,7 @@ public class MiniPlayerFragment extends Fragment {
         callAllDisable(true);
         if (audioClick) {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, bytesDownloaded);
+            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, filesDownloaded);
         }
         if (player != null) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -318,9 +316,17 @@ public class MiniPlayerFragment extends Fragment {
                     Log.v("TAG", "Listener-onTracksChanged... ");
                     player.setPlayWhenReady(true);
                     position = player.getCurrentWindowIndex();
-                    myAudioId = mainPlayModelList.get(position).getID();
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                    if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                        }.getType();
+                        mainPlayModelList = gson.fromJson(json, type);
+                    }
+                    myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
+                    SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedz.edit();
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.commit();
                     if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
@@ -656,7 +662,7 @@ public class MiniPlayerFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                bytesDownloaded.add(fileDescriptor);
+                filesDownloaded.add(fileDescriptor);
 //                Log.e("filename", fileDescriptor.getName());
 //                Log.e("MakeArry not Call",String.valueOf(i));
                 descriptor = null;
@@ -676,7 +682,7 @@ public class MiniPlayerFragment extends Fragment {
                         Log.e("MakeArry Call", String.valueOf(x));
                         break;
                     }
-                    if(j == downloadAudioDetailsList.size()){
+                    if(j == downloadAudioDetailsList.size()-1){
                         x = x+1;
                         j = 0;
                         Log.e("again for Call", String.valueOf(x));
@@ -786,9 +792,13 @@ public class MiniPlayerFragment extends Fragment {
                             Log.e("MakeArry Call", String.valueOf(x));
                             break;
                         }
-                        if(i == downloadAudioDetailsList.size()){
+                        if(i == downloadAudioDetailsList.size()-1){
                             x = x+1;
-                            i = 0;
+                            if(downloadAudioDetailsList.size()>1) {
+                                i = 0;
+                            }else{
+                                MakeArray();
+                            }
                             Log.e("again for Call", String.valueOf(x));
                         }
                     }

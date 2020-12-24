@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.job.JobInfo;
@@ -98,7 +96,7 @@ public class BWSApplication extends Application {
     public static MediaSessionCompat mediaSession;
     public static MediaControllerCompat.TransportControls transportControls;
     public static Notification notification;
-    public static NotificationManager notificationManager;
+//    public static NotificationManager notificationManager;
     private static Context mContext;
     private static BWSApplication BWSApplication;
     private static List<DownloadAudioDetails> downloadAudioDetailsList;
@@ -241,7 +239,7 @@ public class BWSApplication extends Application {
         st.execute();
     }
 
-    public static void createChannel(Context ctx) {
+  /*  public static void createChannel(Context ctx) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -262,7 +260,7 @@ public class BWSApplication extends Application {
     public static void cancelNotification(Context ctx) {
         notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID); // Notification ID to cancel
-    }
+    }*/
 
     public static void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
