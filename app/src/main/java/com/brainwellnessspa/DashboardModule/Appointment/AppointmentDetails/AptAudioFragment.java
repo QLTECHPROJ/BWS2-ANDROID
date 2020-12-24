@@ -542,6 +542,7 @@ public class AptAudioFragment extends Fragment {
                     Gson gson1 = new Gson();
                     ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(jsonw, type1);
                     ArrayList<MainPlayModel> arrayList2 = gson1.fromJson(json11, type1);
+                    int size= arrayList2.size();
                     int position = sharedx1.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         arrayList.add(downloadAudioDetails);
@@ -557,7 +558,6 @@ public class AptAudioFragment extends Fragment {
                         mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
                         mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
                         arrayList2.add(mainPlayModel1);
-                    }
                     SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedd.edit();
                     Gson gson = new Gson();
@@ -572,6 +572,12 @@ public class AptAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                     editor.commit();
+                       /*List<File> filesDownloaded = new ArrayList<>();
+                List<String> downloadAudioDetailsList = new ArrayList<>();
+                GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                ge.AddAudioToPlayer(size,arrayList2,filesDownloaded,downloadAudioDetailsList);
+                callAddTransFrag();*/
+                }
                     DatabaseClient.getInstance(getActivity().getApplicationContext())
                             .getaudioDatabase()
                             .taskDao()

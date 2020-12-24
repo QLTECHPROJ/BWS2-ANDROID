@@ -240,7 +240,7 @@ public class GlobalInitExoPlayer extends Service {
 
 //                            }
                         }
-                    } else if (f == downloadAudioDetailsList.size()-1) {
+                    } else if (f == downloadAudioDetailsList.size()) {
                         MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                         player.addMediaItem(mediaItem);
 //                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);

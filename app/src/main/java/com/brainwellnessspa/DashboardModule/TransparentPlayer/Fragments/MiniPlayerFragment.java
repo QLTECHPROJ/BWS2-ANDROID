@@ -95,6 +95,7 @@ public class MiniPlayerFragment extends Fragment {
     Intent localIntent;
     PlayerControlView playerControlView;
     private long mLastClickTime = 0;
+//    boolean ismyDes = false;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -784,6 +785,7 @@ public class MiniPlayerFragment extends Fragment {
                 if (downloadAudioDetailsList.size() != 0) {
                     if(mainPlayModelList.get(position).getAudioFile().equals("")) {
                         getPrepareShowData();
+//                        ismyDes = true;
                         mainPlayModelList2.remove(position);
                     }
                     int x = 0;
@@ -1776,7 +1778,9 @@ public class MiniPlayerFragment extends Fragment {
 //        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
-            initializePlayerDisclaimer();
+//            if(!ismyDes) {
+                initializePlayerDisclaimer();
+//            }
         } else {
             initializePlayer();
         }

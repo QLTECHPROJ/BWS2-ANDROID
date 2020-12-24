@@ -110,6 +110,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     FancyShowCaseQueue queue;
     PlayerControlView playerControlView;
     private long mLastClickTime = 0;
+//    boolean ismyDes = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1255,6 +1256,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            if(position == mainPlayModelList.size()-1) {
 //                position = 0;
 //            }
+            /*DatabaseClient.getInstance(ctx)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+            });*/
             if(player!=null) {
              if(player.hasNext()) {
                  player.next();
@@ -1262,6 +1268,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         });
         exoBinding.llPrev.setOnClickListener(view -> {
+         /*   DatabaseClient.getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                });*/
          if(player!=null) {
              if(player.hasPrevious()) {
                  player.previous();
@@ -1864,7 +1875,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         Log.e("MakeArry Call", String.valueOf(x));
                         break;
                     }
-                    if (j == downloadAudioDetailsList.size()) {
+                    if (j == downloadAudioDetailsList.size()-1) {
                         x = x + 1;
                         j = 0;
                         Log.e("again for Call", String.valueOf(x));
@@ -1981,6 +1992,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModelList2 = mainPlayModelList;
                 if (downloadAudioDetailsList.size() != 0) {
                     if(mainPlayModelList.get(position).getAudioFile().equals("")) {
+//                        ismyDes = true;
                         getPrepareShowData();
                         mainPlayModelList2.remove(position);
                     }
@@ -2652,7 +2664,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
-            initializePlayerDisclaimer();
+//            if(!ismyDes) {
+                initializePlayerDisclaimer();
+//            }
         } else {
             initializePlayer();
         }

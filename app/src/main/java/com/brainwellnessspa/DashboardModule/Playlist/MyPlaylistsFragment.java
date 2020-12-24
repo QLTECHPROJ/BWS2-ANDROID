@@ -64,6 +64,7 @@ import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.ItemMoveCallback;
@@ -79,6 +80,7 @@ import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1442,6 +1444,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             String jsonw = sharedx.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
             ArrayList<DownloadAudioDetails> arrayList = new ArrayList<>();
             ArrayList<MainPlayModel> arrayList2 = new ArrayList<>();
+            int size=0;
             if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
                 Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                 }.getType();
@@ -1451,6 +1454,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 Gson gson1 = new Gson();
                 arrayList = gson1.fromJson(jsonw, type1);
                 arrayList2 = gson1.fromJson(json, type0);
+                size = arrayList2.size();
             }
 
             if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
@@ -1492,7 +1496,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                 editor.commit();
-                callAddTransFrag();
+
+                /*List<File> filesDownloaded = new ArrayList<>();
+                List<String> downloadAudioDetailsList = new ArrayList<>();
+                GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                ge.AddAudioToPlayer(size,arrayList2,filesDownloaded,downloadAudioDetailsList);
+                callAddTransFrag();*/
             }
             handler2.postDelayed(UpdateSongTime2, 2000);
         }

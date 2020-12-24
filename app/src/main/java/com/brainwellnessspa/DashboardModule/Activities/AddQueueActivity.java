@@ -856,6 +856,7 @@ public class AddQueueActivity extends AppCompatActivity {
                     Gson gson1 = new Gson();
                     arrayList = gson1.fromJson(jsonw, type1);
                     arrayList2 = gson1.fromJson(json11, type1);
+                    int size= arrayList2.size();
                 }
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     arrayList.add(downloadAudioDetails);
@@ -885,6 +886,11 @@ public class AddQueueActivity extends AppCompatActivity {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                     editor.commit();
+                    /*List<File> filesDownloaded = new ArrayList<>();
+                List<String> downloadAudioDetailsList = new ArrayList<>();
+                GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                ge.AddAudioToPlayer(size,arrayList2,filesDownloaded,downloadAudioDetailsList);
+                callAddTransFrag();*/
                 }
                 DatabaseClient.getInstance(activity)
                         .getaudioDatabase()
