@@ -75,6 +75,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.isprogressbar;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -88,13 +89,14 @@ public class MiniPlayerFragment extends Fragment {
     List<String> downloadAudioDetailsListGloble;
     byte[] descriptor;
     List<File> filesDownloaded;
-    ArrayList<MainPlayModel> mainPlayModelList,mainPlayModelList2;
+    ArrayList<MainPlayModel> mainPlayModelList, mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
     int position, listSize;
     Boolean queuePlay, audioPlay;
     LocalBroadcastManager localBroadcastManager;
     Intent localIntent;
+    boolean isPrepared = false;
     PlayerControlView playerControlView;
     private long mLastClickTime = 0;
     Handler handler1,handler2;
@@ -127,12 +129,6 @@ public class MiniPlayerFragment extends Fragment {
     public void onPause() {
 //        player.removeListener(player.);
         super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        super.onDestroy();
     }
 
     @Override
@@ -253,58 +249,6 @@ public class MiniPlayerFragment extends Fragment {
         }
     }
 
-    /*public void InitNotificationAudioPLayer() {
-        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
-                ctx,
-                "10001",
-                R.string.playback_channel_name,
-                notificationId,
-                new PlayerNotificationManager.MediaDescriptionAdapter() {
-                    @Override
-                    public String getCurrentContentTitle(Player player) {
-                        return mainPlayModelList.get(player.getCurrentWindowIndex()).getName();
-                    }
-
-                    @Nullable
-                    @Override
-                    public PendingIntent createCurrentContentIntent(Player player) {
-                        return null;
-                    }
-
-                    @Nullable
-                    @Override
-                    public String getCurrentContentText(Player player) {
-                        return mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioDirection();
-                    }
-
-                    @Nullable
-                    @Override
-                    public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-                        getMediaBitmap(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                        return myBitmap;
-                    }
-                }
-        );
-        if (!mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioFile().equalsIgnoreCase("")) {
-            playerNotificationManager.setFastForwardIncrementMs(30000);
-            playerNotificationManager.setRewindIncrementMs(30000);
-            playerNotificationManager.setUseNavigationActions(true);
-            playerNotificationManager.setUseNavigationActionsInCompactView(true);
-        } else {
-            playerNotificationManager.setFastForwardIncrementMs(0);
-            playerNotificationManager.setRewindIncrementMs(0);
-            playerNotificationManager.setUseNavigationActions(false);
-            playerNotificationManager.setUseNavigationActionsInCompactView(false);
-        }
-        playerNotificationManager.setSmallIcon(R.drawable.logo_design);
-        playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
-        playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
-        playerNotificationManager.setUsePlayPauseActions(true);
-        playerNotificationManager.setPlayer(player);
-    }*/
-
     private void initializePlayer() {
 //        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         isDisclaimer = 0;
@@ -333,6 +277,9 @@ public class MiniPlayerFragment extends Fragment {
                     Log.v("TAG", "Listener-onTracksChanged... ");
                     player.setPlayWhenReady(true);
                     position = player.getCurrentWindowIndex();
+                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     Gson gson = new Gson();
                     String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -341,6 +288,7 @@ public class MiniPlayerFragment extends Fragment {
                         }.getType();
                         mainPlayModelList = gson.fromJson(json, type);
                     }
+
                     myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
                     SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedz.edit();
@@ -358,7 +306,6 @@ public class MiniPlayerFragment extends Fragment {
 
                         Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                     }
-                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                     localIntent.putExtra("MyData", "play");
                     localBroadcastManager.sendBroadcast(localIntent);
                     callButtonText(player.getCurrentWindowIndex());
@@ -366,56 +313,46 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsLoadingChanged(boolean isLoading) {
-
+                    isPrepared = isLoading;
+                    if (isLoading) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
+                        Log.e("Isloading", "MiniLoadingggggggggggggggggg");
+                    }
                 }
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-/*                    if (isPlaying) {
-//                        exoBinding.llPlay.setVisibility(View.GONE);
-//                        exoBinding.llPause.setVisibility(View.VISIBLE);
-//                        exoBinding.progressBar.setVisibility(View.GONE);
+                    if (isPlaying) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "play");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    } else if (!isPlaying) {
-//                        exoBinding.llPlay.setVisibility(View.VISIBLE);
-//                        exoBinding.llPause.setVisibility(View.GONE);
-//                        exoBinding.progressBar.setVisibility(View.GONE);
+                    } else if (!isPlaying && !isPrepared) {
+                        exoBinding.llPlay.setVisibility(View.VISIBLE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    }*/
+                    }
+
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
                 }
 
-              /*  @Override
-                public void onPlayWhenReadyChanged(boolean playWhenReady, int state) {
-                    if (state == ExoPlayer.STATE_READY && !playWhenReady) {
-                            exoBinding.llPlay.setVisibility(View.VISIBLE);
-                            exoBinding.llPause.setVisibility(View.GONE);
-                            exoBinding.progressBar.setVisibility(View.GONE);
-                    } else if (state == ExoPlayer.STATE_READY && playWhenReady) {
-                            exoBinding.llPlay.setVisibility(View.VISIBLE);
-                            exoBinding.llPause.setVisibility(View.GONE);
-                            exoBinding.progressBar.setVisibility(View.GONE);
-                    } else if (state == ExoPlayer.STATE_BUFFERING) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }
-                }*/
-
                 @Override
                 public void onPlaybackStateChanged(int state) {
                     if (state == ExoPlayer.STATE_READY) {
-                        if(player.getPlayWhenReady()) {
+                        if (player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.VISIBLE);
                             exoBinding.progressBar.setVisibility(View.GONE);
                             localIntent.putExtra("MyData", "play");
                             localBroadcastManager.sendBroadcast(localIntent);
-                        }else if(!player.getPlayWhenReady()){
+                        } else if (!player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.VISIBLE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.GONE);
@@ -428,17 +365,20 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                     } else if (state == ExoPlayer.STATE_ENDED) {
-                        if(mainPlayModelList.get(player.getCurrentWindowIndex()).getID().
-                                equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())){
+                        if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().
+                                equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())) {
                             Log.e("Last audio End", mainPlayModelList.get(position).getName());
                             player.setPlayWhenReady(false);
                             exoBinding.llPlay.setVisibility(View.VISIBLE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             Log.e("Curr audio End", mainPlayModelList.get(position).getName());
                         }
-                    } else if (state == ExoPlayer.STATE_IDLE) {
+                        new Handler().postDelayed(() -> {
+                            playerNotificationManager.setPlayer(null);
+                        }, 2 * 1000);
+                    }  else if (state == ExoPlayer.STATE_IDLE) {
                       /*GetAllMedia();
                         audioClick = true;
 
@@ -457,6 +397,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 }
             });
+
            /* exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
                 @Override
                 public void onScrubStart(TimeBar timeBar, long position) {
@@ -474,6 +415,7 @@ public class MiniPlayerFragment extends Fragment {
                     exoBinding.exoProgress.setPosition(position);
                 }
             });*/
+
             callRepeatShuffle();
         }
         if (miniPlayer == 0) {
@@ -523,6 +465,7 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.progressBar.setVisibility(View.GONE);
                 if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
                         && (player.getDuration() - player.getCurrentPosition() <= 20)) {
+                    playerNotificationManager.setPlayer(player);
                     player.seekTo(position);
                 }
                 player.setPlayWhenReady(true);
@@ -681,6 +624,7 @@ public class MiniPlayerFragment extends Fragment {
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             File fileDescriptor = null;
             int x;
+
             @Override
             protected Void doInBackground(Void... voids) {
 //                try {
@@ -694,7 +638,7 @@ public class MiniPlayerFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Log.e("Download do in bg Call", String.valueOf(x)+ ":-" + name);
+                Log.e("Download do in bg Call", String.valueOf(x) + ":-" + name);
                 return null;
             }
 
@@ -708,20 +652,20 @@ public class MiniPlayerFragment extends Fragment {
 //                if(i == downloadAudioDetailsList.size()) {
 //                    Log.e("MakeArry Call",String.valueOf(i));
                 x = i;
-                x = x+1;
+                x = x + 1;
                 for (int j = 0; j < downloadAudioDetailsList.size(); j++) {
-                    if(x < mainPlayModelList2.size()) {
+                    if (x < mainPlayModelList2.size()) {
                         if (downloadAudioDetailsList.get(j).equals(mainPlayModelList2.get(x).getName())) {
                             getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
                             break;
                         }
                     } else {
-                    MakeArray();
+                        MakeArray();
                         Log.e("MakeArry Call", String.valueOf(x));
                         break;
                     }
-                    if(j == downloadAudioDetailsList.size()-1){
-                        x = x+1;
+                    if (j == downloadAudioDetailsList.size() - 1) {
+                        x = x + 1;
                         j = 0;
                         Log.e("again for Call", String.valueOf(x));
                     }
@@ -812,7 +756,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModelList2 = new ArrayList<>();
                 mainPlayModelList2 = mainPlayModelList;
                 if (downloadAudioDetailsList.size() != 0) {
-                    if(mainPlayModelList.get(position).getAudioFile().equals("")) {
+                    if (mainPlayModelList.get(position).getAudioFile().equals("")) {
 //                        getPrepareShowData();
 //                        ismyDes = true;
                         mainPlayModelList2.remove(position);
@@ -820,7 +764,7 @@ public class MiniPlayerFragment extends Fragment {
                     int x = 0;
                     downloadAudioDetailsListGloble = new ArrayList<>();
                     for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                        if(x < mainPlayModelList2.size()) {
+                        if (x < mainPlayModelList2.size()) {
                             if (downloadAudioDetailsList.get(i).equals(mainPlayModelList2.get(x).getName())) {
                                 DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                                 getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
@@ -831,11 +775,11 @@ public class MiniPlayerFragment extends Fragment {
                             Log.e("MakeArry Call", String.valueOf(x));
                             break;
                         }
-                        if(i == downloadAudioDetailsList.size()-1){
-                            x = x+1;
-                            if(downloadAudioDetailsList.size()>1) {
+                        if (i == downloadAudioDetailsList.size() - 1) {
+                            x = x + 1;
+                            if (downloadAudioDetailsList.size() > 1) {
                                 i = 0;
-                            }else{
+                            } else {
                                 MakeArray();
                             }
                             Log.e("again for Call", String.valueOf(x));
@@ -1501,6 +1445,7 @@ public class MiniPlayerFragment extends Fragment {
             if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
+
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
@@ -1524,7 +1469,6 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-
         } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
@@ -1808,7 +1752,7 @@ public class MiniPlayerFragment extends Fragment {
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
 //            if(!ismyDes) {
-                initializePlayerDisclaimer();
+            initializePlayerDisclaimer();
 //            }
         } else {
             initializePlayer();

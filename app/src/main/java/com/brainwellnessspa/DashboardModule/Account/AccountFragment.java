@@ -178,6 +178,7 @@ public class AccountFragment extends Fragment {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
+
         binding.llFaq.setOnClickListener(view18 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

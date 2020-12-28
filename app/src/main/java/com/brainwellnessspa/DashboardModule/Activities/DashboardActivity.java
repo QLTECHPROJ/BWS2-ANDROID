@@ -33,7 +33,9 @@ import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;
@@ -78,7 +80,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            Log.e("Nite Mode :",String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+            Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
         }
         uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
         if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
@@ -86,7 +88,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
                 || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
             uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
 
-            Log.e("Nite Mode :",String.valueOf(uiModeManager.getNightMode()));
+            Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
@@ -201,6 +203,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 //            // Use data as required to perform syncs, downloads, and updates.
 //        }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -219,6 +222,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
@@ -245,8 +249,20 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        playerNotificationManager.setPlayer(null);
+        player.release();
+        player = null;
+        Log.e("Destroyyyyyyyyyyyyyyyyyyyyyy","Destroyyyyyyyyyyyyyyyyyyyyyy");
+//        if (playerNotificationManager != null) {
+//            playerNotificationManager.setPlayer(null);
+//        }
+//        if (player != null) {
+//            player.release();
+//        }
         deleteCache(DashboardActivity.this);
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+
+
 
 /*        JobScheduler scheduler = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {

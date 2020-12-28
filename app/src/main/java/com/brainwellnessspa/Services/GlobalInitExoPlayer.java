@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -86,6 +87,8 @@ public class GlobalInitExoPlayer extends Service {
     public static PlayerNotificationManager playerNotificationManager;
     Notification notification1;
     GlobalInitExoPlayer globalInitExoPlayer;
+    public static String Name, Desc;
+    Intent playbackServiceIntent;
     public static boolean isprogressbar = false;
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
@@ -127,20 +130,7 @@ public class GlobalInitExoPlayer extends Service {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                try {
-                    if (songImg.equalsIgnoreCase("")) {
-                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
-                    } else {
-                        if (!BWSApplication.isNetworkConnected(ctx)) {
-                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
-                        } else {
-                            URL url = new URL(songImg);
-                            myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
             }
         }
 
@@ -211,6 +201,7 @@ public class GlobalInitExoPlayer extends Service {
             player.setMediaItem(mediaItem1);
 //            mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
         }
+
         for (int i = 1; i < mainPlayModelList.size(); i++) {
             if (downloadAudioDetailsList.size() != 0) {
                 for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
@@ -280,7 +271,7 @@ public class GlobalInitExoPlayer extends Service {
         audioClick = false;
         if (!serviceConected) {
             try {
-                Intent playbackServiceIntent = new Intent(ctx.getApplicationContext(), GlobalInitExoPlayer.class);
+                playbackServiceIntent = new Intent(ctx.getApplicationContext(), GlobalInitExoPlayer.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     startForegroundService(playbackServiceIntent);
                 } else {
@@ -311,6 +302,14 @@ public class GlobalInitExoPlayer extends Service {
         }*/
     }
 
+   /* @Override
+    public void onDestroy() {
+        super.onDestroy();
+        playerNotificationManager.setPlayer(null);
+        player.release();
+        player = null;
+    }
+*/
     private void removeArray(Context ctx, int position, List<MainPlayModel> mainPlayModelList) {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -384,21 +383,17 @@ public class GlobalInitExoPlayer extends Service {
 //        if (miniPlayer == 1) {
         player.setPlayWhenReady(true);
 //        }
-//        InitNotificationAudioPLayer(ctx, mainPlayModelList);
-
-
 //       player.addAnalyticsListener(new EventLogger(trackSelector));
-
         audioClick = false;
     }
 
     public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList,List<File> filesDownloaded, List<String> downloadAudioDetailsList){
-      if(player!=null) {
-          for (int i = size; i < mainPlayModelList.size(); i++) {
-              if (downloadAudioDetailsList.size() != 0) {
-                  for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
-                      if (downloadAudioDetailsList.get(f).equalsIgnoreCase(mainPlayModelList.get(i).getName())) {
-                          if (filesDownloaded.get(f) != null) {
+        if(player!=null) {
+            for (int i = size; i < mainPlayModelList.size(); i++) {
+                if (downloadAudioDetailsList.size() != 0) {
+                    for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
+                        if (downloadAudioDetailsList.get(f).equalsIgnoreCase(mainPlayModelList.get(i).getName())) {
+                            if (filesDownloaded.get(f) != null) {
                          /*   Uri uri = Uri.fromFile(bytesDownloaded.get(f));
                             DataSpec dataSpec = new DataSpec(uri);
                             final FileDataSource fileDataSource = new FileDataSource();
@@ -407,40 +402,40 @@ public class GlobalInitExoPlayer extends Service {
                             } catch (FileDataSource.FileDataSourceException e) {
                                 e.printStackTrace();
                             }*/
-                              Log.e("Globle Player", mainPlayModelList.get(i).getName());
-                              MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///" + filesDownloaded.get(f).getPath()));
-                              player.addMediaItem(i, mediaItem);
-                              player.prepare();
+                                Log.e("Globle Player", mainPlayModelList.get(i).getName());
+                                MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///" + filesDownloaded.get(f).getPath()));
+                                player.addMediaItem(i, mediaItem);
+                                player.prepare();
 //                            mediaSources[i] = new ExtractorMediaSource( Uri.parse("file:///"+bytesDownloaded.get(f).getPath()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
-                          } else {
+                            } else {
                           /*  if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                     AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                                removeArray(ctx,i,mainPlayModelList);
                                 Log.e("GloblePlayer no net", mainPlayModelList.get(i).getName());
                             }else{*/
-                              MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                              player.addMediaItem(i, mediaItem);
-                              player.prepare();
-                              Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
+                                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+                                player.addMediaItem(i, mediaItem);
+                                player.prepare();
+                                Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
 //                                mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 
 //                            }
-                          }
-                      } else if (f == downloadAudioDetailsList.size()) {
-                          MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                          player.addMediaItem(i,mediaItem);
-                          player.prepare();
+                            }
+                        } else if (f == downloadAudioDetailsList.size()) {
+                            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+                            player.addMediaItem(i,mediaItem);
+                            player.prepare();
 //                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
-                      }
-                  }
-              } else {
+                        }
+                    }
+                } else {
 //                mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
-                  MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                  player.addMediaItem(i, mediaItem);
-                  player.prepare();
-              }
-          }
-      }
+                    MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+                    player.addMediaItem(i, mediaItem);
+                    player.prepare();
+                }
+            }
+        }
     }
 
     public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
@@ -451,15 +446,10 @@ public class GlobalInitExoPlayer extends Service {
                 notificationId,
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
-                    public String getCurrentContentTitle(Player player) {
-                        return mainPlayModelList.get(player.getCurrentWindowIndex()).getName();
+                    public String getCurrentContentTitle(Player players) {
+                        Log.e("AudioFIle", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile());
+                        return mainPlayModelList.get(players.getCurrentWindowIndex()).getName();
                     }
-
-                  /*  @Nullable
-                    @Override
-                    public CharSequence getCurrentSubText(Player player) {
-                        return mainPlayModelList.get(player.getDuration());
-                    }*/
 
                     @Nullable
                     @Override
@@ -472,18 +462,19 @@ public class GlobalInitExoPlayer extends Service {
 
                     @Nullable
                     @Override
-                    public String getCurrentContentText(Player player) {
-                        return mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioDirection();
+                    public String getCurrentContentText(Player players) {
+                        return mainPlayModelList.get(players.getCurrentWindowIndex()).getAudioDirection();
                     }
 
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-                        getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentPeriodIndex()).getImageFile());
-                        Log.e("Imageeeeeeeeeeeeeeee", mainPlayModelList.get(player.getCurrentPeriodIndex()).getImageFile());
+                        getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+//                        Log.e("ImageFIle", mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         return myBitmap;
                     }
                 },
+
                 new PlayerNotificationManager.NotificationListener() {
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
@@ -499,7 +490,8 @@ public class GlobalInitExoPlayer extends Service {
                         stopSelf();
                     }
                 });
-        if (!mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioFile().equalsIgnoreCase("")) {
+
+        if (!mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile().equalsIgnoreCase("")) {
             playerNotificationManager.setFastForwardIncrementMs(30000);
             playerNotificationManager.setRewindIncrementMs(30000);
             playerNotificationManager.setUseNavigationActions(true);
@@ -510,7 +502,76 @@ public class GlobalInitExoPlayer extends Service {
             playerNotificationManager.setUseNavigationActions(false);
             playerNotificationManager.setUseNavigationActionsInCompactView(false);
         }
+
         playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
+        playerNotificationManager.setColor(Color.BLACK);
+        playerNotificationManager.setColorized(true);
+        playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
+        playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        playerNotificationManager.setUseChronometer(true);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
+        playerNotificationManager.setUsePlayPauseActions(true);
+        playerNotificationManager.setPlayer(player);
+    }
+
+    public void InitNotificationAudioPLayerD(Context ctx) {
+        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
+                ctx,
+                "10001",
+                R.string.playback_channel_name,
+                notificationId,
+                new PlayerNotificationManager.MediaDescriptionAdapter() {
+                    @Override
+                    public String getCurrentContentTitle(Player players) {
+                        return "Disclaimer";
+                    }
+
+                    @Nullable
+                    @Override
+                    public PendingIntent createCurrentContentIntent(Player player) {
+                        Intent intent = new Intent(ctx, DashboardActivity.class);
+                        PendingIntent contentPendingIntent = PendingIntent.getActivity
+                                (ctx, 0, intent, 0);
+                        return contentPendingIntent;
+                    }
+
+                    @Nullable
+                    @Override
+                    public String getCurrentContentText(Player players) {
+                        return "The audio shall start playing after the disclaimer";
+                    }
+
+                    @Nullable
+                    @Override
+                    public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
+                        return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    }
+                },
+
+                new PlayerNotificationManager.NotificationListener() {
+                    @Override
+                    public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
+                        notification1 = notification;
+                    }
+
+                    @Override
+                    public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
+                        if (dismissedByUser) {
+                            // Do what the app wants to do when dismissed by the user,
+                            // like calling stopForeground(true); or stopSelf();
+                        }
+                        stopSelf();
+                    }
+                });
+
+
+        playerNotificationManager.setFastForwardIncrementMs(0);
+        playerNotificationManager.setRewindIncrementMs(0);
+        playerNotificationManager.setUseNavigationActions(false);
+        playerNotificationManager.setUseNavigationActionsInCompactView(false);
+        playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
+        playerNotificationManager.setColor(Color.BLACK);
+        playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         playerNotificationManager.setUseChronometer(true);
@@ -538,7 +599,6 @@ public class GlobalInitExoPlayer extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         new LocalBinder();
-
         return null;
     }
 
