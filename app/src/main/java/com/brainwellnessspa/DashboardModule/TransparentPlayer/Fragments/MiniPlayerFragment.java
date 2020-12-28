@@ -136,6 +136,9 @@ public class MiniPlayerFragment extends Fragment {
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if (audioClick) {
             audioClick = false;
+            exoBinding.llPlay.setVisibility(View.GONE);
+            exoBinding.llPause.setVisibility(View.GONE);
+            exoBinding.progressBar.setVisibility(View.VISIBLE);
             MakeArray2();
             GetAllMedia();
         } else {
@@ -784,7 +787,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModelList2 = mainPlayModelList;
                 if (downloadAudioDetailsList.size() != 0) {
                     if(mainPlayModelList.get(position).getAudioFile().equals("")) {
-                        getPrepareShowData();
+//                        getPrepareShowData();
 //                        ismyDes = true;
                         mainPlayModelList2.remove(position);
                     }

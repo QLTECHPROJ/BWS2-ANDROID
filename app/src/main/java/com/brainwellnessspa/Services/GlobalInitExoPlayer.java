@@ -185,17 +185,17 @@ public class GlobalInitExoPlayer extends Service {
 //                        mediaSources[0] = new ExtractorMediaSource(Uri.parse("file:///" + bytesDownloaded.get(f).getPath()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 
                     }else{
-                        if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
+                       /* if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                 AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                            removeArray(ctx,0,mainPlayModelList);
                             Log.e("GloblePlayer no net", mainPlayModelList.get(0).getName());
-                        }else{
+                        }else{*/
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
                             player.setMediaItem(mediaItem);
 //                            mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 
                             Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
-                        }
+//                        }
                     }
                     break;
                 } else if (f == downloadAudioDetailsList.size() - 1) {
@@ -226,6 +226,7 @@ public class GlobalInitExoPlayer extends Service {
                             Log.e("Globle Player", mainPlayModelList.get(i).getName());
                             MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///"+filesDownloaded.get(f).getPath()));
                             player.addMediaItem(mediaItem);
+                            break;
 //                            mediaSources[i] = new ExtractorMediaSource( Uri.parse("file:///"+bytesDownloaded.get(f).getPath()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                         } else {
                           /*  if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
@@ -236,13 +237,15 @@ public class GlobalInitExoPlayer extends Service {
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                             player.addMediaItem(mediaItem);
                             Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
+                            break;
 //                                mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 
 //                            }
                         }
-                    } else if (f == downloadAudioDetailsList.size()) {
+                    } else if (f == downloadAudioDetailsList.size()-1) {
                         MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                         player.addMediaItem(mediaItem);
+                        break;
 //                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                     }
                 }

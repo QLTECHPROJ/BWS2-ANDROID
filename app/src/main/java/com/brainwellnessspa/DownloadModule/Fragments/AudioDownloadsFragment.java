@@ -566,6 +566,8 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                     }
                 }
+
+
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
                 dialog.dismiss();
             });

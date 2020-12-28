@@ -135,10 +135,10 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                                     player.setPlayWhenReady(true);
                                 }
                             }else{
-                             /*   audioClick = true;
+                                audioClick = true;
                                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                ctx.startActivity(i);*/
+                                ctx.startActivity(i);
                             }
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
