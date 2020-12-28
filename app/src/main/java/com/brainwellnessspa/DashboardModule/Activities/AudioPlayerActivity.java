@@ -860,8 +860,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         mainPlayModelList = gson.fromJson(json, type);
                     }
                     player.setPlayWhenReady(true);
-                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+//                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+//                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                     position = player.getCurrentWindowIndex();
                     myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
 
@@ -888,13 +888,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 @Override
                 public void onIsLoadingChanged(boolean isLoading) {
                     isPrepared = isLoading;
-                    if (isLoading) {
+                  /*  if (isLoading) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                         Log.e("Isloading", "BigLoadingggggggggggggggggg");
-                    }
+                    }*/
                 }
 
                 @Override
@@ -1259,11 +1259,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            if(position == mainPlayModelList.size()-1) {
 //                position = 0;
 //            }
-            /*DatabaseClient.getInstance(ctx)
+            DatabaseClient
+                    .getInstance(ctx)
                     .getaudioDatabase()
                     .taskDao()
-                    .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
-            });*/
+                    .getaudioByPlaylist1(url, "").removeObserver( audiolist -> {});
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
@@ -1472,9 +1472,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llBackWordSec.setClickable(true);
             exoBinding.llBackWordSec.setEnabled(true);
             exoBinding.llBackWordSec.setAlpha(1f);
-//            binding.llDownload.setClickable(true);
-//            binding.llDownload.setEnabled(true);
-//            binding.llDownload.setAlpha(1f);
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
+            binding.llDownload.setAlpha(1f);
             binding.llRepeat.setClickable(true);
             binding.llRepeat.setEnabled(true);
             binding.llRepeat.setAlpha(1f);
@@ -1680,7 +1680,37 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     public void GetMedia2() {
 
-        downloadAudioDetailsList1 = new ArrayList<>();
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getaudioByPlaylist1(url, "").observe(this, audiolist -> {
+
+            if (!url.equalsIgnoreCase("")) {
+                if (audiolist.size() != 0) {
+                    if (audiolist.get(0).getDownload().equalsIgnoreCase("1")) {
+                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        binding.llDownload.setClickable(false);
+                        binding.llDownload.setEnabled(false);
+                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                    } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
+                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        binding.llDownload.setClickable(false);
+                        binding.llDownload.setEnabled(false);
+                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                    }
+                } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
+                    binding.llDownload.setClickable(true);
+                    binding.llDownload.setEnabled(true);
+                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                }
+            }
+            if (audiolist.size() != 0) {
+                getMediaByPer();
+            }
+        });
+       /* downloadAudioDetailsList1 = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -1701,14 +1731,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                        } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
+                        } else {
                             binding.llDownload.setClickable(true);
                             binding.llDownload.setEnabled(true);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         }
                         getMediaByPer();
-                    } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
+                    } else  {
                         binding.llDownload.setClickable(true);
                         binding.llDownload.setEnabled(true);
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
@@ -1719,9 +1749,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }
         GetMedia st = new GetMedia();
-        st.execute();
+        st.execute();*/
     }
-
     private void addToRecentPlay() {
         if (BWSApplication.isNetworkConnected(ctx)) {
 //            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
@@ -1746,53 +1775,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
-
-    /*   private void getMediaByPer(List<DownloadAudioDetails> audiolist) {
-           class getMediaByPer extends AsyncTask<Void, Void, Void> {
-               @Override
-               protected Void doInBackground(Void... voids) {
-                   downloadPercentage = DatabaseClient.getInstance(ctx)
-                           .getaudioDatabase()
-                           .taskDao()
-                           .getDownloadProgress(url, "");
-
-                   return null;
-               }
-
-               @Override
-               protected void onPostExecute(Void aVoid) {
-
-                   if (audiolist.size() != 0) {
-                       if (downloadPercentage <= 100) {
-                           if (downloadPercentage == 100) {
-                               binding.pbProgress.setVisibility(View.GONE);
-                               binding.ivDownloads.setVisibility(View.VISIBLE);
-   //                            handler1.removeCallbacks(UpdateSongTime1);
-                           } else {
-                               binding.pbProgress.setVisibility(View.VISIBLE);
-                               binding.ivDownloads.setVisibility(View.GONE);
-                               binding.pbProgress.setIndeterminate(false);
-                               binding.pbProgress.setProgress(downloadPercentage);
-                               getMediaByPer(audiolist);
-   //                             handler1.postDelayed(UpdateSongTime1, 500);
-                           }
-                       } else {
-                           binding.pbProgress.setVisibility(View.GONE);
-                           binding.ivDownloads.setVisibility(View.VISIBLE);
-   //                        handler1.removeCallbacks(UpdateSongTime1);
-                       }
-                   } else {
-                       binding.pbProgress.setVisibility(View.GONE);
-                       binding.ivDownloads.setVisibility(View.VISIBLE);
-                   }
-
-                   super.onPostExecute(aVoid);
-               }
-           }
-           getMediaByPer st = new getMediaByPer();
-           st.execute();
-       }*/
-    private void getMediaByPer() {
+   /* private void getMediaByPer() {
         class getMediaByPer extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -1830,6 +1813,56 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         getMediaByPer st = new getMediaByPer();
         st.execute();
+    }*/
+   private void getMediaByPer() {
+       DatabaseClient.getInstance(ctx)
+               .getaudioDatabase()
+               .taskDao()
+               .getDownloadProgress1(url, "").observe(this, downloadPercentage -> {
+               if (downloadPercentage.size() != 0) {
+                   if (downloadPercentage.get(0).getDownloadProgress() <= 100) {
+                       if (downloadPercentage.get(0).getDownloadProgress() == 100) {
+                           binding.pbProgress.setVisibility(View.GONE);
+                           binding.ivDownloads.setVisibility(View.VISIBLE);
+//                            handler1.removeCallbacks(UpdateSongTime1);
+                           DatabaseClient.getInstance(ctx)
+                                   .getaudioDatabase()
+                                   .taskDao()
+                                   .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                           });
+                       } else {
+                           if (binding.pbProgress.getVisibility() == View.GONE) {
+                               binding.pbProgress.setVisibility(View.VISIBLE);
+                           }
+                           if (binding.ivDownloads.getVisibility() == View.VISIBLE) {
+                               binding.ivDownloads.setVisibility(View.GONE);
+                           }
+                           binding.pbProgress.setIndeterminate(false);
+                           binding.pbProgress.setProgress(downloadPercentage.get(0).getDownloadProgress());
+//                            getMediaByPer();
+//                             handler1.postDelayed(UpdateSongTime1, 500);
+                       }
+                   } else {
+                       binding.pbProgress.setVisibility(View.GONE);
+                       binding.ivDownloads.setVisibility(View.VISIBLE);
+//                        handler1.removeCallbacks(UpdateSongTime1);
+                       DatabaseClient.getInstance(ctx)
+                               .getaudioDatabase()
+                               .taskDao()
+                               .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                       });
+                   }
+               } else {
+                   binding.pbProgress.setVisibility(View.GONE);
+                   binding.ivDownloads.setVisibility(View.VISIBLE);
+                   DatabaseClient.getInstance(ctx)
+                           .getaudioDatabase()
+                           .taskDao()
+                           .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                   });
+               }
+       });
+
     }
 
     private void getDownloadMedia(DownloadMedia downloadMedia, String name, int i) {

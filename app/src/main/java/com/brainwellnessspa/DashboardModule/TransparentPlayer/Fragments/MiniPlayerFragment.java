@@ -278,8 +278,8 @@ public class MiniPlayerFragment extends Fragment {
                     player.setPlayWhenReady(true);
                     position = player.getCurrentWindowIndex();
                     myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+//                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+//                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     Gson gson = new Gson();
                     String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -314,12 +314,12 @@ public class MiniPlayerFragment extends Fragment {
                 @Override
                 public void onIsLoadingChanged(boolean isLoading) {
                     isPrepared = isLoading;
-                    if (isLoading) {
+                    /*if (isLoading) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                         Log.e("Isloading", "MiniLoadingggggggggggggggggg");
-                    }
+                    }*/
                 }
 
                 @Override
@@ -337,7 +337,7 @@ public class MiniPlayerFragment extends Fragment {
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
                     }
-
+                    isprogressbar = false;
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());

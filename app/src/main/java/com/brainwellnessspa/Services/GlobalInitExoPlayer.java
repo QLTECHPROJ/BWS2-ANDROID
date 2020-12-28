@@ -365,7 +365,7 @@ public class GlobalInitExoPlayer extends Service {
         if (player != null) {
             player.stop();
             player.release();
-            player = null;
+//            player = null;
         }
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
