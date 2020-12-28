@@ -476,14 +476,16 @@ public class ViewAllAudioFragment extends Fragment {
                         }
                     }else{
                         audioClick = true;
-                        Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        getActivity().startActivity(i);
+                        miniPlayer = 1;
                     }
+                    Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    getActivity().startActivity(i);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if(player!=null){
                         player.seekTo(position);
+                        miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -523,14 +525,16 @@ public class ViewAllAudioFragment extends Fragment {
                         }
                     }else{
                         audioClick = true;
-                        Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        getActivity().startActivity(i);
+                        miniPlayer = 1;
                     }
+                    Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    getActivity().startActivity(i);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if(player!=null){
                         player.seekTo(position);
+                        miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -585,8 +589,8 @@ public class ViewAllAudioFragment extends Fragment {
                             }
                         }else{
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
-                            openMyFragment();
                         }
+                        openMyFragment();
 
                     } else {
                         listModelList2 = new ArrayList<>();
@@ -603,6 +607,7 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.commit();
                         if(player!=null){
                             player.seekTo(position);
+                            miniPlayer = 1;
                             SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editord = sharedxx.edit();
                             editord.putInt(CONSTANTS.PREF_KEY_position, position);

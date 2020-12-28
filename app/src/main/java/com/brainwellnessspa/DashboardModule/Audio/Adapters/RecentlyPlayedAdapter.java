@@ -164,14 +164,16 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         player.setPlayWhenReady(true);
                     }
             }else{
+                    miniPlayer = 1;
                     audioClick = true;
-                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    ctx.startActivity(i);
             }
+                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                ctx.startActivity(i);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if(player!=null){
+                    miniPlayer = 1;
                     player.seekTo(position);
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();

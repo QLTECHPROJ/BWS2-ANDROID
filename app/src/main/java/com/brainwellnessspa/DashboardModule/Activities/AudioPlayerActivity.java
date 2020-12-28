@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,6 +85,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.isprogressbar;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -110,8 +112,25 @@ public class AudioPlayerActivity extends AppCompatActivity {
     FancyShowCaseQueue queue;
     PlayerControlView playerControlView;
     private long mLastClickTime = 0;
-//    boolean ismyDes = false;
+    Handler handler1,handler2;
+    //    boolean ismyDes = false;
+    Runnable UpdateSongTime2 = new Runnable() {
+        @Override
+        public void run() {
+            handler2.removeCallbacks(UpdateSongTime2);
+            initializePlayerDisclaimer();
+            Log.e("runaa","run");
+        }
+    };
 
+    Runnable UpdateSongTime1 = new Runnable() {
+        @Override
+        public void run() {
+            handler1.removeCallbacks(UpdateSongTime1);
+            initializePlayer();
+            Log.e("run  saa","runasca");
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +148,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
         downloadAudioDetailsList1 = new ArrayList<>();
         downloadAudioDetailsListGloble = new ArrayList<>();
         filesDownloaded = new ArrayList<>();
+
+        handler1 = new Handler();
+        handler2 = new Handler();
+        miniPlayer = 1;
         if (audioClick) {
             audioClick = false;
             exoBinding.llPlay.setVisibility(View.GONE);
@@ -745,7 +768,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //                isPause = false;
 //            }
 //        pauseMedia();
-            audioClick = false;
+            if (exoBinding.progressBar.getVisibility() == View.VISIBLE ) {
+                isprogressbar = true;
+            }            audioClick = false;
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
             Gson gson = new Gson();
@@ -979,6 +1004,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             exoBinding.llProgressBar.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.GONE);
                         }
+                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -1051,7 +1077,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
             exoBinding.exoProgress.setPosition(player.getCurrentPosition());
             exoBinding.exoProgress.setDuration(player.getDuration());
-
+        }else if(player == null){
+            if (isprogressbar) {
+            exoBinding.llPlay.setVisibility(View.GONE);
+            exoBinding.llPause.setVisibility(View.GONE);
+            exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+            exoBinding.progressBar.setVisibility(View.VISIBLE);
+                handler2.postDelayed(UpdateSongTime2, 2000);
+        }
         }
         callAllDisable(true);
         epAllClicks();
@@ -1078,6 +1111,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+
+                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -1089,7 +1124,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
+                 /*   if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
@@ -1099,7 +1134,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    }
+                    }*/
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -1124,11 +1159,20 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
                 }
-                exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
-                exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                exoBinding.exoProgress.setDuration(player.getDuration());
+            exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
+            exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+            exoBinding.exoProgress.setDuration(player.getDuration());
+            }
+        } else if(player == null) {
+            if (isprogressbar) {
+                exoBinding.llPlay.setVisibility(View.GONE);
+                exoBinding.llPause.setVisibility(View.GONE);
+                exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                exoBinding.progressBar.setVisibility(View.VISIBLE);
+                handler2.postDelayed(UpdateSongTime2, 2000);
             }
         }
+
         exoBinding.llPause.setOnClickListener(view -> {
             player.setPlayWhenReady(false);
             exoBinding.llPlay.setVisibility(View.VISIBLE);
@@ -1262,6 +1306,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .taskDao()
                     .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
             });*/
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
+            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             if(player!=null) {
              if(player.hasNext()) {
                  player.next();
@@ -1274,6 +1322,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 .taskDao()
                 .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
                 });*/
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
+            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
          if(player!=null) {
              if(player.hasPrevious()) {
                  player.previous();
@@ -1462,9 +1514,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llBackWordSec.setClickable(true);
             exoBinding.llBackWordSec.setEnabled(true);
             exoBinding.llBackWordSec.setAlpha(1f);
-            binding.llDownload.setClickable(true);
-            binding.llDownload.setEnabled(true);
-            binding.llDownload.setAlpha(1f);
+//            binding.llDownload.setClickable(true);
+//            binding.llDownload.setEnabled(true);
+//            binding.llDownload.setAlpha(1f);
             binding.llRepeat.setClickable(true);
             binding.llRepeat.setEnabled(true);
             binding.llRepeat.setAlpha(1f);

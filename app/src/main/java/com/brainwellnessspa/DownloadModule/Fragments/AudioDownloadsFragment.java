@@ -469,12 +469,29 @@ public class AudioDownloadsFragment extends Fragment {
                             arrayList.remove(0);
                         }
                         name = arrayList.get(0).getName();
-
-                        if (name.equalsIgnoreCase(listModelList.get(position).getName())) {
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
+                            } else {
+                                if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
+                                    BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                                } else {
+                                    deleteAudio(holder.getAdapterPosition());
+                                }
+                            }
+                        } else {
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
+                                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                            } else {
+                                deleteAudio(holder.getAdapterPosition());
+                            }
+                        }
+                      /*  if (name.equalsIgnoreCase(listModelList.get(position).getName())) {
                             BWSApplication.showToast("Currently this audio is in player,so you can't delete this audio as of now", ctx);
                         } else {
                             deleteAudio(holder.getAdapterPosition());
-                        }
+                        }*/
                     } else {
                         deleteAudio(holder.getAdapterPosition());
                     }
@@ -566,7 +583,36 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                     }
                 }
-
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                if(player!=null){
+                    player.removeMediaItem(pos);
+                }
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    if (pos == position && position < listModelList.size() - 1) {
+//                                            pos = pos + 1;
+                        if (isDisclaimer == 1) {
+//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                        } else {
+                            callTransparentFrag(pos);
+                        }
+                    } else if (pos == position && position == listModelList.size() - 1) {
+                        pos = 0;
+                        if (isDisclaimer == 1) {
+//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                        } else {
+                            callTransparentFrag(pos);
+                        }
+                    } else if (pos < position && pos < listModelList.size() - 1) {
+                        callTransparentFrag(pos);
+                    } else if (pos > position && pos == listModelList.size()) {
+                        pos = pos - 1;
+                        callTransparentFrag(pos);
+                    }
+                }
 
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
                 dialog.dismiss();
@@ -574,6 +620,26 @@ public class AudioDownloadsFragment extends Fragment {
             tvGoBack.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
             dialog.setCancelable(false);
+        }
+
+        private void callTransparentFrag(int position) {
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(listModelList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+            editor.commit();
         }
 
         private void getDownloadData() {

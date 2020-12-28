@@ -170,14 +170,16 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                 }else{
 
                     audioClick = true;
-                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    ctx.startActivity(i);
+                    miniPlayer = 1;
                 }
+                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                ctx.startActivity(i);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if(player!=null){
                     player.seekTo(position);
+                    miniPlayer = 1;
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);

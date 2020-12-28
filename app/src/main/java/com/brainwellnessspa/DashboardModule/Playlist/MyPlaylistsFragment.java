@@ -432,7 +432,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
-        class GetTask extends AsyncTask<Void, Void, Void> {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
+            downloadPlaylistDetailsList = new ArrayList<>();
+            downloadPlaylistDetailsList = audioList;
+                if (downloadPlaylistDetailsList.size() != 0 /*New.equalsIgnoreCase("1") ||*/) {
+                    enableDisableDownload(false, "orange");
+                    removeobserver();
+                } else if (RefreshIcon == 0) {
+                    enableDisableDownload(false, "gray");
+                    removeobserver();
+                } else if (download.equalsIgnoreCase("1") /* New.equalsIgnoreCase("1") ||*/) {
+                    enableDisableDownload(false, "orange");
+                    removeobserver();
+                } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
+                        New.equalsIgnoreCase("0") || RefreshIcon != 0) {
+                    enableDisableDownload(true, "white");
+                    removeobserver();
+                }
+        });
+    /*    class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 downloadPlaylistDetailsList = DatabaseClient
@@ -445,11 +467,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (downloadPlaylistDetailsList.size() != 0 /*New.equalsIgnoreCase("1") ||*/) {
+                if (downloadPlaylistDetailsList.size() != 0 *//*New.equalsIgnoreCase("1") ||*//*) {
                     enableDisableDownload(false, "orange");
                 } else if (RefreshIcon == 0) {
                     enableDisableDownload(false, "gray");
-                } else if (download.equalsIgnoreCase("1") /* New.equalsIgnoreCase("1") ||*/) {
+                } else if (download.equalsIgnoreCase("1") *//* New.equalsIgnoreCase("1") ||*//*) {
                     enableDisableDownload(false, "orange");
                 } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
                         New.equalsIgnoreCase("0") || RefreshIcon != 0) {
@@ -460,8 +482,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         GetTask st = new GetTask();
-        st.execute();
+        st.execute();*/
         return downloadPlaylistDetailsList;
+    }
+
+    private void removeobserver() {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getPlaylist1(PlaylistID).removeObserver(dc-> {
+        });
     }
 
     private void GetPlaylistDetail2() {
@@ -973,7 +1004,46 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void getMediaByPer(String playlistID, int totalAudio) {
-        class getMediaByPer extends AsyncTask<Void, Void, Void> {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getCountDownloadProgress1("Complete", playlistID).observe(getActivity(), countx -> {
+//            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
+            count = countx.size();
+            if (downloadPlaylistDetailsList.size() != 0) {
+                if (count <= totalAudio) {
+                    if (count == totalAudio) {
+                        binding.pbProgress.setVisibility(View.GONE);
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
+                        DatabaseClient
+                                .getInstance(getActivity())
+                                .getaudioDatabase()
+                                .taskDao()
+                                .getCountDownloadProgress1("Complete", playlistID).removeObserver( cs-> {});
+//                            handler1.removeCallbacks(UpdateSongTime1);
+                    } else {
+                        long progressPercent = count * 100 / totalAudio;
+                        int downloadProgress1 = (int) progressPercent;
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                        binding.ivDownloads.setVisibility(View.GONE);
+                        binding.pbProgress.setProgress(downloadProgress1);
+//                        getMediaByPer(playlistID, totalAudio);
+//                             handler1.postDelayed(UpdateSongTime1, 500);
+                    }
+                } else {
+                    DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getCountDownloadProgress1("Complete", playlistID).removeObserver( cs-> {});
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+//                        handler1.removeCallbacks(UpdateSongTime1);
+                }
+            }
+        });
+      /*  class getMediaByPer extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 count = DatabaseClient.getInstance(getActivity())
@@ -1012,7 +1082,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         }
         getMediaByPer st = new getMediaByPer();
-        st.execute();
+        st.execute();*/
     }
 
     private void getDownloadData() {

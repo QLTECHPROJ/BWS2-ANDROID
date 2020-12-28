@@ -27,6 +27,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;

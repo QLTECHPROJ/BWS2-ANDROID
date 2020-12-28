@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,6 +74,7 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.isprogressbar;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -95,7 +97,25 @@ public class MiniPlayerFragment extends Fragment {
     Intent localIntent;
     PlayerControlView playerControlView;
     private long mLastClickTime = 0;
+    Handler handler1,handler2;
 //    boolean ismyDes = false;
+    Runnable UpdateSongTime2 = new Runnable() {
+        @Override
+        public void run() {
+                handler2.removeCallbacks(UpdateSongTime2);
+                initializePlayerDisclaimer();
+                Log.e("runaa","run");
+        }
+    };
+
+    Runnable UpdateSongTime1 = new Runnable() {
+        @Override
+        public void run() {
+                handler1.removeCallbacks(UpdateSongTime1);
+                initializePlayer();
+                Log.e("run  saa","runasca");
+        }
+    };
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -130,7 +150,8 @@ public class MiniPlayerFragment extends Fragment {
         filesDownloaded = new ArrayList<>();
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
                 , R.layout.fragment_mini_exo_custom, binding.playerControlView, false);
-
+        handler1 = new Handler();
+        handler2 = new Handler();
         playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         localIntent = new Intent("play_pause_Action");
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
@@ -175,17 +196,9 @@ public class MiniPlayerFragment extends Fragment {
             } else {
                 audioClick = false;
             }
-//            if (!isPause && binding.progressBar.getVisibility() == View.GONE) {
-//                isPause = false;
-//                isprogressbar = false;
-//            } else if (isPause && binding.progressBar.getVisibility() == View.GONE) {
-//                isPause = true;
-//                isprogressbar = false;
-//            } else if (isCompleteStop && binding.progressBar.getVisibility() == View.GONE) {
-//                isprogressbar = false;
-//            } else if (binding.progressBar.getVisibility() == View.VISIBLE && (binding.ivPause.getVisibility() == View.GONE && binding.ivPlay.getVisibility() == View.GONE)) {
-//                isprogressbar = true;
-//            }
+              if (exoBinding.progressBar.getVisibility() == View.VISIBLE ) {
+                isprogressbar = true;
+            }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -409,6 +422,7 @@ public class MiniPlayerFragment extends Fragment {
                             localIntent.putExtra("MyData", "pause");
                             localBroadcastManager.sendBroadcast(localIntent);
                         }
+                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -483,6 +497,11 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                 exoBinding.exoProgress.setDuration(player.getDuration());
+            }else if (isprogressbar) {
+                exoBinding.llPlay.setVisibility(View.GONE);
+                exoBinding.llPause.setVisibility(View.GONE);
+                exoBinding.progressBar.setVisibility(View.VISIBLE);
+                handler1.postDelayed(UpdateSongTime1, 2000);
             }
         }
         epAllClicks();
@@ -540,6 +559,7 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -550,7 +570,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
+                    /*if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
@@ -562,7 +582,7 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    }
+                    }*/
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -614,6 +634,12 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                 exoBinding.exoProgress.setDuration(player.getDuration());
+            } else if (isprogressbar) {
+
+                exoBinding.llPlay.setVisibility(View.GONE);
+                exoBinding.llPause.setVisibility(View.GONE);
+                exoBinding.progressBar.setVisibility(View.VISIBLE);
+                handler2.postDelayed(UpdateSongTime2, 2000);
             }
         }
 //        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));

@@ -86,6 +86,7 @@ public class GlobalInitExoPlayer extends Service {
     public static PlayerNotificationManager playerNotificationManager;
     Notification notification1;
     GlobalInitExoPlayer globalInitExoPlayer;
+    public static boolean isprogressbar = false;
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
