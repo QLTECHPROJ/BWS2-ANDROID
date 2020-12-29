@@ -1309,14 +1309,24 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                     } else {
-                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                        if(player!=null){
+                                            player.seekTo(pos);
+                                            saveToPref(pos, mData);
+                                        }else {
+                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                        }
                                     }
                                 } else if (pos == position && position == mData.size() - 1) {
                                     pos = 0;
                                     if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                     } else {
-                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                        if(player!=null){
+                                            player.seekTo(pos);
+                                            saveToPref(pos, mData);
+                                        }else {
+                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                        }
                                     }
                                 } else if (pos < position && pos < mData.size() - 1) {
                                     saveToPref(pos, mData);
