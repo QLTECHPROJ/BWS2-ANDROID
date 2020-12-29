@@ -120,6 +120,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         @Override
         public void run() {
             handler2.removeCallbacks(UpdateSongTime2);
+//            audioClick = true;
             initializePlayerDisclaimer();
             Log.e("runaa","run");
         }
@@ -129,6 +130,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         @Override
         public void run() {
             handler1.removeCallbacks(UpdateSongTime1);
+//            audioClick = true;
             initializePlayer();
             Log.e("run  saa","runasca");
         }
@@ -946,6 +948,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 @Override
                 public void onPlaybackStateChanged(int state) {
                     if (state == ExoPlayer.STATE_READY) {
+                        try {
                         if (player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.VISIBLE);
@@ -956,6 +959,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.llProgressBar.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.GONE);
+                        }
+                        }catch (Exception e){
+
                         }
                         isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
@@ -976,9 +982,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         } else {
                             Log.e("Curr audio End", mainPlayModelList.get(position).getName());
                         }
-                        new Handler().postDelayed(() -> {
+                       /* new Handler().postDelayed(() -> {
                             playerNotificationManager.setPlayer(null);
-                        }, 2 * 1000);
+                        }, 2 * 1000);*/
                     } else if (state == ExoPlayer.STATE_IDLE) {
                        /* GetAllMedia();
                         audioClick = true;
@@ -1039,7 +1045,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.llProgressBar.setVisibility(View.VISIBLE);
             exoBinding.progressBar.setVisibility(View.VISIBLE);
-                handler2.postDelayed(UpdateSongTime2, 2000);
+            if(isDisclaimer == 0) {
+                handler1.postDelayed(UpdateSongTime1, 5000);
+            }
         }
         }
         callAllDisable(true);
@@ -1048,6 +1056,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
+        isDisclaimer = 1;
         if (audioClick) {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
@@ -1063,11 +1072,20 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         removeArray();
                     }
                     if (state == ExoPlayer.STATE_READY) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.VISIBLE);
-                        exoBinding.llProgressBar.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-
+                        try {
+                            if (player.getPlayWhenReady()) {
+                                exoBinding.llPlay.setVisibility(View.GONE);
+                                exoBinding.llPause.setVisibility(View.VISIBLE);
+                                exoBinding.llProgressBar.setVisibility(View.GONE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                            } else if (!player.getPlayWhenReady()) {
+                                exoBinding.llPlay.setVisibility(View.VISIBLE);
+                                exoBinding.llPause.setVisibility(View.GONE);
+                                exoBinding.llProgressBar.setVisibility(View.GONE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                            }
+                        }catch (Exception e){
+                        }
                         isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
@@ -1075,21 +1093,37 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llProgressBar.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
-
+                }
+                @Override
+                public void onIsLoadingChanged(boolean isLoading) {
+                    isPrepared = isLoading;
+                  /*  if (isLoading) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
+                        Log.e("Isloading", "BigLoadingggggggggggggggggg");
+                    }*/
                 }
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                 /*   if (isPlaying) {
+                    if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    } else {
+                    } else if (!isPlaying && !isPrepared) {
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                    }
+                  /*  else {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }*/
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
@@ -1125,7 +1159,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.llProgressBar.setVisibility(View.VISIBLE);
                 exoBinding.progressBar.setVisibility(View.VISIBLE);
-                handler2.postDelayed(UpdateSongTime2, 2000);
+                if(isDisclaimer == 1) {
+                    handler2.postDelayed(UpdateSongTime2, 5000);
+                }
             }
         }
 

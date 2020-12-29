@@ -730,7 +730,25 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                            callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
+                            if (player != null) {
+                                player.seekTo(position);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                                try {
+                                    Fragment fragment = new MiniPlayerFragment();
+                                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                    fragmentManager1.beginTransaction()
+                                            .add(R.id.flContainer, fragment)
+                                            .commit();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
+                            }
                         }
                     } else {
                         isDisclaimer = 0;
@@ -768,7 +786,25 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
+                        if (player != null) {
+                            player.seekTo(position);
+                            miniPlayer = 1;
+                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedxx.edit();
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.commit();
+                            try {
+                                Fragment fragment = new MiniPlayerFragment();
+                                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                fragmentManager1.beginTransaction()
+                                        .add(R.id.flContainer, fragment)
+                                        .commit();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
+                        }
                     }
                 } else {
                     isDisclaimer = 0;

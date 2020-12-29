@@ -105,6 +105,7 @@ public class MiniPlayerFragment extends Fragment {
         @Override
         public void run() {
                 handler2.removeCallbacks(UpdateSongTime2);
+//            audioClick = true;
                 initializePlayerDisclaimer();
                 Log.e("runaa","run");
         }
@@ -114,10 +115,12 @@ public class MiniPlayerFragment extends Fragment {
         @Override
         public void run() {
                 handler1.removeCallbacks(UpdateSongTime1);
+//                audioClick = true;
                 initializePlayer();
                 Log.e("run  saa","runasca");
         }
     };
+
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -346,18 +349,22 @@ public class MiniPlayerFragment extends Fragment {
                 @Override
                 public void onPlaybackStateChanged(int state) {
                     if (state == ExoPlayer.STATE_READY) {
-                        if (player.getPlayWhenReady()) {
-                            exoBinding.llPlay.setVisibility(View.GONE);
-                            exoBinding.llPause.setVisibility(View.VISIBLE);
-                            exoBinding.progressBar.setVisibility(View.GONE);
-                            localIntent.putExtra("MyData", "play");
-                            localBroadcastManager.sendBroadcast(localIntent);
-                        } else if (!player.getPlayWhenReady()) {
-                            exoBinding.llPlay.setVisibility(View.VISIBLE);
-                            exoBinding.llPause.setVisibility(View.GONE);
-                            exoBinding.progressBar.setVisibility(View.GONE);
-                            localIntent.putExtra("MyData", "pause");
-                            localBroadcastManager.sendBroadcast(localIntent);
+                        try {
+                            if (player.getPlayWhenReady()) {
+                                exoBinding.llPlay.setVisibility(View.GONE);
+                                exoBinding.llPause.setVisibility(View.VISIBLE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                                localIntent.putExtra("MyData", "play");
+                                localBroadcastManager.sendBroadcast(localIntent);
+                            } else if (!player.getPlayWhenReady()) {
+                                exoBinding.llPlay.setVisibility(View.VISIBLE);
+                                exoBinding.llPause.setVisibility(View.GONE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                                localIntent.putExtra("MyData", "pause");
+                                localBroadcastManager.sendBroadcast(localIntent);
+                            }
+                        }catch (Exception e){
+
                         }
                         isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
@@ -375,9 +382,9 @@ public class MiniPlayerFragment extends Fragment {
                         } else {
                             Log.e("Curr audio End", mainPlayModelList.get(position).getName());
                         }
-                        new Handler().postDelayed(() -> {
+                  /*      new Handler().postDelayed(() -> {
                             playerNotificationManager.setPlayer(null);
-                        }, 2 * 1000);
+                        }, 2 * 1000);*/
                     }  else if (state == ExoPlayer.STATE_IDLE) {
                       /*GetAllMedia();
                         audioClick = true;
@@ -443,7 +450,7 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.VISIBLE);
-                handler1.postDelayed(UpdateSongTime1, 2000);
+                handler1.postDelayed(UpdateSongTime1, 5000);
             }
         }
         epAllClicks();
@@ -472,6 +479,9 @@ public class MiniPlayerFragment extends Fragment {
             } else {
                 audioClick = true;
                 miniPlayer = 1;
+                exoBinding.llPlay.setVisibility(View.GONE);
+                exoBinding.llPause.setVisibility(View.GONE);
+                exoBinding.progressBar.setVisibility(View.VISIBLE);
                 GetAllMedia();
             }
 
@@ -499,37 +509,62 @@ public class MiniPlayerFragment extends Fragment {
                         removeArray();
                     }
                     if (state == ExoPlayer.STATE_READY) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
+                        try {
+                            if (player.getPlayWhenReady()) {
+                                exoBinding.llPlay.setVisibility(View.GONE);
+                                exoBinding.llPause.setVisibility(View.VISIBLE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                                localIntent.putExtra("MyData", "play");
+                                localBroadcastManager.sendBroadcast(localIntent);
+                            } else if (!player.getPlayWhenReady()) {
+                                exoBinding.llPlay.setVisibility(View.VISIBLE);
+                                exoBinding.llPause.setVisibility(View.GONE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                                localIntent.putExtra("MyData", "pause");
+                                localBroadcastManager.sendBroadcast(localIntent);
+                            }
+                        }catch (Exception e){
+
+                        }
                         isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
-
+                }
+                @Override
+                public void onIsLoadingChanged(boolean isLoading) {
+                    isPrepared = isLoading;
+                    /*if (isLoading) {
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
+                        Log.e("Isloading", "MiniLoadingggggggggggggggggg");
+                    }*/
                 }
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    /*if (isPlaying) {
+                    if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "play");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    } else if (!isPlaying) {
+                    } else if (!isPlaying && !isPrepared) {
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
-                    }*/
+                    }
+                    isprogressbar = false;
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
                 }
+
             });
         }
         exoBinding.llPause.setOnClickListener(view -> {
@@ -549,6 +584,9 @@ public class MiniPlayerFragment extends Fragment {
             } else {
                 audioClick = true;
                 miniPlayer = 1;
+                exoBinding.llPlay.setVisibility(View.GONE);
+                exoBinding.llPause.setVisibility(View.GONE);
+                exoBinding.progressBar.setVisibility(View.VISIBLE);
                 GetAllMedia();
             }
 
@@ -578,11 +616,10 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                 exoBinding.exoProgress.setDuration(player.getDuration());
             } else if (isprogressbar) {
-
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.VISIBLE);
-                handler2.postDelayed(UpdateSongTime2, 2000);
+                handler2.postDelayed(UpdateSongTime2, 5000);
             }
         }
 //        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
@@ -758,7 +795,7 @@ public class MiniPlayerFragment extends Fragment {
                 if (downloadAudioDetailsList.size() != 0) {
                     if (mainPlayModelList.get(position).getAudioFile().equals("")) {
 //                        getPrepareShowData();
-//                        ismyDes = true;
+//                          ismyDes = true;
                         mainPlayModelList2.remove(position);
                     }
                     int x = 0;

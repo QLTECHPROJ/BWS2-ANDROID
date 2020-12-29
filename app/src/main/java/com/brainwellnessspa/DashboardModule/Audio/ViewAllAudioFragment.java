@@ -666,6 +666,7 @@ public class ViewAllAudioFragment extends Fragment {
                 editor.commit();
 //                openMyFragment();
                 miniPlayer = 1;
+                audioClick = true;
                 callNewPlayerRelease();
 
                 Intent i = new Intent(getActivity(), AudioPlayerActivity.class);

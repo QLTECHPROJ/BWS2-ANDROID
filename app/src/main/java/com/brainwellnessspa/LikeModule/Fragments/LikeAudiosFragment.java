@@ -361,7 +361,25 @@ public class LikeAudiosFragment extends Fragment {
                 if (isDisclaimer == 1) {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                 } else {
-                    callTransFrag(pos, modelList);
+                    if (player != null) {
+                        player.seekTo(pos);
+                        miniPlayer = 1;
+                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedxx.edit();
+                        editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                        editor.commit();
+                        try {
+                            Fragment fragment = new MiniPlayerFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        callTransFrag(pos, modelList);
+                    }
                 }
             } else {
                 isDisclaimer = 0;

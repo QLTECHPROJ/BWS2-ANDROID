@@ -145,6 +145,8 @@ public class AudioDownloadsFragment extends Fragment {
 
     @Override
     public void onResume() {
+
+        callObserverMethod();
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
@@ -426,7 +428,25 @@ public class AudioDownloadsFragment extends Fragment {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                            callTransFrag(position, listModelList);
+                            if (player != null) {
+                                player.seekTo(position);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                                try {
+                                    Fragment fragment = new MiniPlayerFragment();
+                                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                                    fragmentManager1.beginTransaction()
+                                            .add(R.id.flContainer, fragment)
+                                            .commit();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                callTransFrag(position, listModelList);
+                            }
                         }
                     } else {
                         isDisclaimer = 0;

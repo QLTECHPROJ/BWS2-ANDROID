@@ -1306,10 +1306,8 @@ public class AddQueueActivity extends AppCompatActivity {
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .getLastIdByuId1(AudioFile).observe(this, audioList -> {
+                .getaudioByPlaylist1(AudioFile,"").observe(this, audioList -> {
             if (audioList.size() != 0) {
-                callDisableDownload();
-            } else if (download.equalsIgnoreCase("1")) {
                 callDisableDownload();
             } else {
                 binding.llDownload.setClickable(true);
