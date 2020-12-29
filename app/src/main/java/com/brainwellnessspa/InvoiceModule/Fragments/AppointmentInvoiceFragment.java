@@ -71,7 +71,6 @@ public class AppointmentInvoiceFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         if (appointmentList.size() != 0) {
             getDataList(appointmentList);
             binding.llError.setVisibility(View.GONE);
@@ -80,6 +79,7 @@ public class AppointmentInvoiceFragment extends Fragment {
             binding.llError.setVisibility(View.VISIBLE);
             binding.rvAIList.setVisibility(View.GONE);
         }
+        super.onResume();
     }
 
     private void getDataList(ArrayList<InvoiceListModel.Appointment> historyList) {

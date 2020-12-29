@@ -249,11 +249,11 @@ public class AccountFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         ComeScreenAccount = 1;
         comefromDownload = "0";
         //        showTooltiop();
         profileViewData(getActivity());
+        super.onResume();
     }
 
     private void showTooltiop() {

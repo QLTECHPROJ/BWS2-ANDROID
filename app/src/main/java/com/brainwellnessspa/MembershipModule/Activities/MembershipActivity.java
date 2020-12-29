@@ -102,8 +102,8 @@ public class MembershipActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareMembershipData();
+        super.onResume();
     }
 
     private void prepareMembershipData() {

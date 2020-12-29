@@ -362,8 +362,8 @@ public class ReminderActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         RefreshButton();
+        super.onResume();
     }
 
     public void RefreshButton() {

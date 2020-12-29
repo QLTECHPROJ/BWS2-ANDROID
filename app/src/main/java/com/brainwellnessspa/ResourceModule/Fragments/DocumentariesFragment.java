@@ -60,8 +60,8 @@ public class DocumentariesFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareData();
+        super.onResume();
     }
 
     void prepareData() {

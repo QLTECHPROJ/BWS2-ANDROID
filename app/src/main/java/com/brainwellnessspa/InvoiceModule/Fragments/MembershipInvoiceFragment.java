@@ -71,7 +71,6 @@ public class MembershipInvoiceFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         if (memberShipList.size() != 0) {
             getDataList(memberShipList);
             binding.llError.setVisibility(View.GONE);
@@ -80,6 +79,7 @@ public class MembershipInvoiceFragment extends Fragment {
             binding.llError.setVisibility(View.VISIBLE);
             binding.rvAIList.setVisibility(View.GONE);
         }
+        super.onResume();
     }
 
     private void getDataList(ArrayList<InvoiceListModel.MemberShip> historyList) {

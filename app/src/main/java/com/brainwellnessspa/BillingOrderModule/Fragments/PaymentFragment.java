@@ -61,8 +61,8 @@ public class PaymentFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareCardList();
+        super.onResume();
     }
 
     private void prepareCardList() {

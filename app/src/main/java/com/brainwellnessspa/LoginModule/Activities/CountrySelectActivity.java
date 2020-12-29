@@ -122,8 +122,8 @@ public class CountrySelectActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         PrepareData();
+        super.onResume();
     }
 
     public void PrepareData() {

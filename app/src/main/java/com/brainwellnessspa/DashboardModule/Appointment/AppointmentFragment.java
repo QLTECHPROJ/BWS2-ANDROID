@@ -87,10 +87,10 @@ public class AppointmentFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         ComeScreenAccount = 0;
         comefromDownload = "0";
         preparePreviousAppointmentsData();
+        super.onResume();
     }
 
     private void preparePreviousAppointmentsData() {

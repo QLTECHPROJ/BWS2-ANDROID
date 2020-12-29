@@ -83,7 +83,6 @@ public class SessionsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareSessionList();
         if (view == null) {
             return;
@@ -102,6 +101,7 @@ public class SessionsFragment extends Fragment {
             prepareSessionList();
             ComeFromAppointmentDetail = 0;
         }
+        super.onResume();
     }
 
     private void callBack() {

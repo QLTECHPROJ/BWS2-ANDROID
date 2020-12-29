@@ -75,11 +75,11 @@ public class LikePlaylistsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         if (RefreshLikePlaylist == 1) {
             prepareData();
         }
         prepareData();
+        super.onResume();
     }
 
     public void prepareData() {

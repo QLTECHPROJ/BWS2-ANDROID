@@ -145,8 +145,8 @@ public class ResourceActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareData(activity, rvFilterList, dialogBox, tvAll, ivFilter);
+        super.onResume();
     }
 
     @Override

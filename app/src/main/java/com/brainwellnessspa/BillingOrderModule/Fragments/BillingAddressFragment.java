@@ -109,8 +109,8 @@ public class BillingAddressFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         getPrepareData();
+        super.onResume();
     }
 
     private void getPrepareData() {

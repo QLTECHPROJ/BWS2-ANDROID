@@ -115,7 +115,6 @@ public class ViewAllAudioFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         refreshData();
         if (Name.equalsIgnoreCase("My Downloads")) {
             audioList = new ArrayList<>();
@@ -124,6 +123,7 @@ public class ViewAllAudioFragment extends Fragment {
         } else {
             prepareData();
         }
+        super.onResume();
     }
 
     private void callObserverMethod() {

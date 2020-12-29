@@ -269,10 +269,10 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         ComeScreenAccount = 0;
         comefromDownload = "0";
         prepareSuggestedData();
+        super.onResume();
     }
 
     private void prepareSuggestedData() {

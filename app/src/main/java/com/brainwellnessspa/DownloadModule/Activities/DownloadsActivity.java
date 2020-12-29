@@ -276,12 +276,12 @@ public class DownloadsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareData1();
         if (comeDeletePlaylist == 1) {
             prepareData1();
             comeDeletePlaylist = 0;
         }
+        super.onResume();
     }
 }
 

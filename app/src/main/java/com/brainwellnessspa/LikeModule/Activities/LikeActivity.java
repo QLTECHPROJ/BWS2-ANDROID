@@ -62,10 +62,10 @@ public class LikeActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         ComeScreenAccount = 0;
         comefromDownload = "1";
         RefreshData();
+        super.onResume();
     }
 
 

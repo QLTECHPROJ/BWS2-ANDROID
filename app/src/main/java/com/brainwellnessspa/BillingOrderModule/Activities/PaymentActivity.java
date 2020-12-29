@@ -122,8 +122,8 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareCardList();
+        super.onResume();
     }
 
     private void prepareCardList() {

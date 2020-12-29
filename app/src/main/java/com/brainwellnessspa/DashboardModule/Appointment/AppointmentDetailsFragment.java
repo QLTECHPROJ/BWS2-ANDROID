@@ -79,7 +79,6 @@ public class AppointmentDetailsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
 
         RefreshData();
         view.setFocusableInTouchMode(true);
@@ -91,6 +90,7 @@ public class AppointmentDetailsFragment extends Fragment {
             }
             return false;
         });
+        super.onResume();
     }
 
     private void callBack() {

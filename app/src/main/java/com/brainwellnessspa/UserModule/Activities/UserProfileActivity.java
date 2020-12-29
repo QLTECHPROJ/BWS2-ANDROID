@@ -441,8 +441,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         profileViewData(ctx);
+        super.onResume();
     }
 
     @Override

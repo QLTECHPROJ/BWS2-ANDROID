@@ -96,8 +96,8 @@ public class PlaylistLikeActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         PrepareData();
+        super.onResume();
     }
 
     private void callMembershipMediaPlayer() {

@@ -101,9 +101,9 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareData();
 //        showTooltiop();
+        super.onResume();
     }
 
     private void showTooltiop() {
