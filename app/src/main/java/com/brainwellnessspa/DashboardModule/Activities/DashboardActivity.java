@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
+import android.app.NotificationManager;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,7 +34,9 @@ import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
@@ -247,29 +250,19 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     }
 
     @Override
+    protected void onPause() {
+//        BWSApplication.showToast("Pauseeeeeee", DashboardActivity.this);
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
-        super.onDestroy();
-        playerNotificationManager.setPlayer(null);
-        player.release();
-        player = null;
-        Log.e("Destroyyyyyyyyyyyyyyyyyyyyyy","Destroyyyyyyyyyyyyyyyyyyyyyy");
-//        if (playerNotificationManager != null) {
-//            playerNotificationManager.setPlayer(null);
-//        }
-//        if (player != null) {
-//            player.release();
-//        }
+//        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
+        relesePlayer();
+
         deleteCache(DashboardActivity.this);
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-
-
-
-/*        JobScheduler scheduler = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-            scheduler.cancel(123);
-            Log.d("TAG", "Job cancelled");
-        }*/
+        super.onDestroy();
     }
 
   /*  @Override

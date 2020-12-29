@@ -99,25 +99,25 @@ public class MiniPlayerFragment extends Fragment {
     boolean isPrepared = false;
     PlayerControlView playerControlView;
     private long mLastClickTime = 0;
-    Handler handler1,handler2;
-//    boolean ismyDes = false;
+    Handler handler1, handler2;
+    //    boolean ismyDes = false;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
-                handler2.removeCallbacks(UpdateSongTime2);
+            handler2.removeCallbacks(UpdateSongTime2);
 //            audioClick = true;
-                initializePlayerDisclaimer();
-                Log.e("runaa","run");
+            initializePlayerDisclaimer();
+            Log.e("runaa", "run");
         }
     };
 
     Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-                handler1.removeCallbacks(UpdateSongTime1);
+            handler1.removeCallbacks(UpdateSongTime1);
 //                audioClick = true;
-                initializePlayer();
-                Log.e("run  saa","runasca");
+            initializePlayer();
+            Log.e("run  saa", "runasca");
         }
     };
 
@@ -195,7 +195,7 @@ public class MiniPlayerFragment extends Fragment {
             } else {
                 audioClick = false;
             }
-              if (exoBinding.progressBar.getVisibility() == View.VISIBLE ) {
+            if (exoBinding.progressBar.getVisibility() == View.VISIBLE) {
                 isprogressbar = true;
             }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -223,6 +223,12 @@ public class MiniPlayerFragment extends Fragment {
             ctx.startActivity(i);
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        super.onResume();
     }
 
     private void addToRecentPlay() {
@@ -317,23 +323,26 @@ public class MiniPlayerFragment extends Fragment {
                 @Override
                 public void onIsLoadingChanged(boolean isLoading) {
                     isPrepared = isLoading;
-                    /*if (isLoading) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                        Log.e("Isloading", "MiniLoadingggggggggggggggggg");
-                    }*/
+//                    if (isLoading) {
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//                        exoBinding.llPlay.setVisibility(View.GONE);
+//                        exoBinding.llPause.setVisibility(View.GONE);
+//                        exoBinding.progressBar.setVisibility(View.VISIBLE);
+//                        Log.e("Isloading", "MiniLoadingggggggggggggggggg");
+//                    }
                 }
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
                     if (isPlaying) {
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "play");
                         localBroadcastManager.sendBroadcast(localIntent);
                     } else if (!isPlaying && !isPrepared) {
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         exoBinding.llPlay.setVisibility(View.VISIBLE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
@@ -363,7 +372,7 @@ public class MiniPlayerFragment extends Fragment {
                                 localIntent.putExtra("MyData", "pause");
                                 localBroadcastManager.sendBroadcast(localIntent);
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
 
                         }
                         isprogressbar = false;
@@ -382,10 +391,10 @@ public class MiniPlayerFragment extends Fragment {
                         } else {
                             Log.e("Curr audio End", mainPlayModelList.get(position).getName());
                         }
-                  /*      new Handler().postDelayed(() -> {
+                        /*new Handler().postDelayed(() -> {
                             playerNotificationManager.setPlayer(null);
                         }, 2 * 1000);*/
-                    }  else if (state == ExoPlayer.STATE_IDLE) {
+                    } else if (state == ExoPlayer.STATE_IDLE) {
                       /*GetAllMedia();
                         audioClick = true;
 
@@ -446,7 +455,7 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                 exoBinding.exoProgress.setDuration(player.getDuration());
-            }else if (isprogressbar) {
+            } else if (isprogressbar) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.VISIBLE);
