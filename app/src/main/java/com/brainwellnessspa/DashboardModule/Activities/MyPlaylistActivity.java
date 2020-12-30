@@ -159,13 +159,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
         CallObserverMethodGetAllMedia();
         GetPlaylistDetail();
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ComeFindAudio = 1;
+        binding.llBack.setOnClickListener(view -> {
+            ComeFindAudio = 1;
 //                handler1.removeCallbacks(UpdateSongTime1);
-                finish();
-            }
+            finish();
         });
 
         binding.llAddPlaylist.setOnClickListener(view -> {

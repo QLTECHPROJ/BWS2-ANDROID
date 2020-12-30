@@ -902,9 +902,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 @Override
                 public void onIsLoadingChanged(boolean isLoading) {
                     isPrepared = isLoading;
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
 //                    BWSApplication.showToast("onIsLoadingChangeddddddddddd", ctx);
 //                    if (isLoading) {
-//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
 //                        exoBinding.llPlay.setVisibility(View.GONE);
 //                        exoBinding.llPause.setVisibility(View.GONE);
 //                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
@@ -967,6 +967,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 public void onPlaybackStateChanged(int state) {
                     if (state == ExoPlayer.STATE_READY) {
                         try {
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         if (player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.VISIBLE);
@@ -983,6 +984,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                         isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.VISIBLE);
