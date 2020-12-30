@@ -259,6 +259,7 @@ public class MiniPlayerFragment extends Fragment {
         if (audioClick) {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, filesDownloaded);
+            setpleyerctrView();
         }
         if (player != null) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -422,7 +423,7 @@ public class MiniPlayerFragment extends Fragment {
                     exoBinding.exoProgress.setPosition(position);
                 }
             });*/
-
+            setpleyerctrView();
             callRepeatShuffle();
         }
         if (miniPlayer == 0) {
@@ -450,7 +451,7 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.VISIBLE);
-                handler1.postDelayed(UpdateSongTime1, 5000);
+                handler1.postDelayed(UpdateSongTime1, 2000);
             }
         }
         epAllClicks();
@@ -495,6 +496,7 @@ public class MiniPlayerFragment extends Fragment {
         if (audioClick) {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
+            setpleyerctrView();
         }
 
         exoBinding.exoProgress.setClickable(false);
@@ -566,6 +568,7 @@ public class MiniPlayerFragment extends Fragment {
                 }
 
             });
+            setpleyerctrView();
         }
         exoBinding.llPause.setOnClickListener(view -> {
             player.setPlayWhenReady(false);
@@ -619,7 +622,7 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.VISIBLE);
-                handler2.postDelayed(UpdateSongTime2, 5000);
+                handler2.postDelayed(UpdateSongTime2, 2000);
             }
         }
 //        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
@@ -627,6 +630,19 @@ public class MiniPlayerFragment extends Fragment {
         callAllDisable(false);
 //        player.setPlayWhenReady(true);
 //        player.prepare();
+    }
+
+    private void setpleyerctrView() {
+        playerControlView.setPlayer(player);
+        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
+            exoBinding.exoProgress.setPosition(position);
+            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+        });
+        playerControlView.setFocusable(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            playerControlView.setFocusedByDefault(true);
+        }
+        playerControlView.show();
     }
 
     private void callRepeatShuffle() {

@@ -615,14 +615,24 @@ public class AudioDownloadsFragment extends Fragment {
                         if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                         } else {
-                            callTransparentFrag(pos);
+                            if(player!=null){
+                                player.seekTo(pos);
+                                callTransparentFrag(pos);
+                            }else {
+                                callTransFrag(position, listModelList);
+                            }
                         }
                     } else if (pos == position && position == listModelList.size() - 1) {
                         pos = 0;
                         if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                         } else {
-                            callTransparentFrag(pos);
+                            if(player!=null){
+                                player.seekTo(pos);
+                                callTransparentFrag(pos);
+                            }else {
+                                callTransFrag(position, listModelList);
+                            }
                         }
                     } else if (pos < position && pos < listModelList.size() - 1) {
                         callTransparentFrag(pos);
