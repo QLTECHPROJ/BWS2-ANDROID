@@ -85,7 +85,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.isprogressbar;
+//import static com.brainwellnessspa.Services.GlobalInitExoPlayer.isprogressbar;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
@@ -115,9 +115,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
     PlayerControlView playerControlView;
     private long mLastClickTime = 0;
     boolean isPrepared = false;
-    Handler handler1, handler2;
+//    Handler handler1, handler2;
     //    boolean ismyDes = false;
-    Runnable UpdateSongTime2 = new Runnable() {
+/*    Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
             handler2.removeCallbacks(UpdateSongTime2);
@@ -137,7 +137,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            }
             Log.e("run  saa", "runasca");
         }
-    };
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +157,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
         downloadAudioDetailsListGloble = new ArrayList<>();
         filesDownloaded = new ArrayList<>();
 
-        handler1 = new Handler();
-        handler2 = new Handler();
+//        handler1 = new Handler();
+//        handler2 = new Handler();
         miniPlayer = 1;
         if (audioClick) {
             audioClick = false;
@@ -697,9 +697,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //                isPause = false;
 //            }
 //        pauseMedia();
-            if (exoBinding.progressBar.getVisibility() == View.VISIBLE) {
+          /*  if (exoBinding.progressBar.getVisibility() == View.VISIBLE) {
                 isprogressbar = true;
-            }
+            }*/
             audioClick = false;
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
@@ -853,7 +853,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         isDisclaimer = 0;
         if (audioClick) {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsListGloble, mainPlayModelList, filesDownloaded);
+            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList);
             setpleyerctrView();
         }
         if (player != null) {
@@ -982,7 +982,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }catch (Exception e){
 
                         }
-                        isprogressbar = false;
+//                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         exoBinding.llPlay.setVisibility(View.GONE);
@@ -1060,7 +1060,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.exoProgress.setPosition(player.getCurrentPosition());
             exoBinding.exoProgress.setDuration(player.getDuration());
             setpleyerctrView();
-        }else if(player == null){
+        }/*else if(player == null){
             if (isprogressbar) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
@@ -1070,7 +1070,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 handler1.postDelayed(UpdateSongTime1, 2000);
             }
             }
-        }
+        }*/
         callAllDisable(true);
         epAllClicks();
     }
@@ -1108,7 +1108,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             }
                         }catch (Exception e){
                         }
-                        isprogressbar = false;
+//                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -1176,7 +1176,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 exoBinding.exoProgress.setDuration(player.getDuration());
             }
             setpleyerctrView();
-        } else if(player == null) {
+        } /*else if(player == null) {
             if (isprogressbar) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
@@ -1186,7 +1186,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     handler2.postDelayed(UpdateSongTime2, 2000);
                 }
             }
-        }
+        }*/
 
         exoBinding.llPause.setOnClickListener(view -> {
             player.setPlayWhenReady(false);
@@ -1955,7 +1955,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //                try {
 
                 downloadAudioDetailsListGloble.add(name);
-                descriptor = downloadMedia.decrypt(name);
+
+                fileDescriptor = new File(FileUtils.getFilePath(ctx,name));
+             /*   descriptor = downloadMedia.decrypt(name);
                 try {
                     if (descriptor != null) {
                         fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
@@ -1971,7 +1973,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
+*/
 
                 return null;
             }
@@ -2108,12 +2110,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 audioClick = true;
+                MakeArray();
 //                if(mainPlayModelList.get(position).getAudioFile().equals("")){
 //                    getPrepareShowData();
 //                }
-                mainPlayModelList2 = new ArrayList<>();
-                mainPlayModelList2 = mainPlayModelList;
-                if (downloadAudioDetailsList.size() != 0) {
+//                mainPlayModelList2 = new ArrayList<>();
+//                mainPlayModelList2 = mainPlayModelList;
+
+                /*if (downloadAudioDetailsList.size() != 0) {
                     if (mainPlayModelList.get(position).getAudioFile().equals("")) {
 //                        ismyDes = true;
 //                        getPrepareShowData();
@@ -2145,7 +2149,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }
                 } else {
                     MakeArray();
-                }
+                }*/
+
                 super.onPostExecute(aVoid);
             }
         }

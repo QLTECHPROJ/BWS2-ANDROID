@@ -612,6 +612,7 @@ public class AudioDownloadsFragment extends Fragment {
                 if(player!=null){
                     player.removeMediaItem(pos);
                 }
+                listModelList.remove(position);
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     if (pos == position && position < listModelList.size() - 1) {
