@@ -897,6 +897,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                         Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                     }
+
                     callButtonText(player.getCurrentWindowIndex());
                 }
 
@@ -1352,10 +1353,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .taskDao()
                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
             });
+               DatabaseClient.getInstance(ctx)
+                                .getaudioDatabase()
+                                .taskDao()
+                                .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+                        });
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.pbProgress.setVisibility(View.GONE);
+            binding.ivDownloads.setVisibility(View.VISIBLE);
             if (player != null) {
                 if (player.hasNext()) {
                     player.next();
@@ -1363,15 +1371,21 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         });
         exoBinding.llPrev.setOnClickListener(view -> {
-         /*   DatabaseClient.getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
-                });*/
+         DatabaseClient
+                    .getInstance(ctx)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {});
+         DatabaseClient.getInstance(ctx)
+                                .getaudioDatabase()
+                                .taskDao()
+                                .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {});
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.pbProgress.setVisibility(View.GONE);
+            binding.ivDownloads.setVisibility(View.VISIBLE);
             if (player != null) {
                 if (player.hasPrevious()) {
                     player.previous();
@@ -1781,17 +1795,23 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         binding.llDownload.setClickable(false);
                         binding.llDownload.setEnabled(false);
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
+                        binding.pbProgress.setVisibility(View.GONE);
                     } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         binding.llDownload.setClickable(false);
                         binding.llDownload.setEnabled(false);
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
+                        binding.pbProgress.setVisibility(View.GONE);
                     }
                 } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
                     binding.llDownload.setClickable(true);
                     binding.llDownload.setEnabled(true);
                     binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setVisibility(View.GONE);
                 }
             }
             if (audiolist.size() != 0) {
@@ -1921,12 +1941,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
                         });
                     } else {
-                        if (binding.pbProgress.getVisibility() == View.GONE) {
+//                        if (binding.pbProgress.getVisibility() == View.GONE) {
                             binding.pbProgress.setVisibility(View.VISIBLE);
-                        }
-                        if (binding.ivDownloads.getVisibility() == View.VISIBLE) {
+//                        }
+//                        if (binding.ivDownloads.getVisibility() == View.VISIBLE) {
                             binding.ivDownloads.setVisibility(View.GONE);
-                        }
+//                        }
                         binding.pbProgress.setIndeterminate(false);
                         binding.pbProgress.setProgress(downloadPercentage.get(0).getDownloadProgress());
 //                            getMediaByPer();

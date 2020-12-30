@@ -310,7 +310,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistName())) {
                     BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
                 } else {
-                    getDownloadData(listModelList.get(position).getPlaylistID());
                     final Dialog dialog = new Dialog(ctx);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.logout_layout);
@@ -336,6 +335,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             if (isMyDownloading) {
                                 handler1.removeCallbacks(UpdateSongTime1);
                             }
+                            getDownloadData(listModelList.get(position).getPlaylistID());
                             GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                         } catch (Exception e) {
                         }
@@ -392,7 +392,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
 
         private void getDownloadData() {

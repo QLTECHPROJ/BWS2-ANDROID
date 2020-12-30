@@ -580,10 +580,10 @@ public class AudioDownloadsFragment extends Fragment {
                 if (fileNameList.size() != 0) {
                     for (int i = 0; i < fileNameList.size(); i++) {
                         if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
-                                if (downloadProgress <= 100) {
+                            if (filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+//                                if (downloadProgress <= 100) {
                                     PRDownloader.cancel(downloadIdOne);
-                                }
+//                                }
                             } else {
                                 fileNameList.remove(i);
                                 playlistDownloadId.remove(i);

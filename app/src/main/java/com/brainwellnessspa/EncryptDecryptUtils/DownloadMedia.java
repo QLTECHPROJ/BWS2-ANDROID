@@ -120,7 +120,7 @@ public class DownloadMedia implements OnDownloadListener {
         byte[] decryptedBytes = null;
 //        BWSApplication.showToast("Retrieve file...", context);
         try {
-            byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, FILE_NAME));
+                byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, FILE_NAME));
             decryptedBytes = EncryptDecryptUtils.decode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
 //            BWSApplication.showToast("File Retrieve Done", context);
             return decryptedBytes;
