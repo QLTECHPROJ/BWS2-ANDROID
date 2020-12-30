@@ -156,13 +156,14 @@ public class MiniPlayerFragment extends Fragment {
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         if (audioClick) {
             audioClick = false;
-            exoBinding.llPlay.setVisibility(View.GONE);
-            exoBinding.llPause.setVisibility(View.GONE);
-            exoBinding.progressBar.setVisibility(View.VISIBLE);
-//            MakeArray2();
+//            exoBinding.llPlay.setVisibility(View.GONE);
+//            exoBinding.llPause.setVisibility(View.GONE);
+//            exoBinding.progressBar.setVisibility(View.VISIBLE);
+            MakeArray2();
             GetAllMedia();
 //            MakeArray();
         } else {
+            GetAllMedia1();
             MakeArray2();
         }
 
@@ -353,6 +354,10 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.progressBar.setVisibility(View.GONE);
                         localIntent.putExtra("MyData", "pause");
                         localBroadcastManager.sendBroadcast(localIntent);
+                    }else if(!isPlaying && isPrepared){
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
 //                    isprogressbar = false;
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
@@ -867,6 +872,29 @@ public class MiniPlayerFragment extends Fragment {
                     MakeArray();
                 }*/
 //                MakeArray();
+                super.onPostExecute(aVoid);
+            }
+        }
+//        MakeArray2();
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadAudioDetailsList;
+    }
+
+    public List<String> GetAllMedia1() {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded("Complete");
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
             }
         }

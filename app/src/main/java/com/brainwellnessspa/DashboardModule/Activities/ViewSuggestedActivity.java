@@ -258,7 +258,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                     List<File> filesDownloaded = new ArrayList<>();
                                     List<String> downloadAudioDetailsList = new ArrayList<>();
                                     GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                    ge.AddAudioToPlayer(size,mainPlayModelList,filesDownloaded,downloadAudioDetailsList);
+                                    ge.AddAudioToPlayer(size,mainPlayModelList,downloadAudioDetailsList,ctx);
                                     if(player!=null){
                                         Fragment fragment = new MiniPlayerFragment();
                                         FragmentManager fragmentManager1 = getSupportFragmentManager();

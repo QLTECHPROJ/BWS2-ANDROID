@@ -36,7 +36,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
@@ -59,14 +58,12 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AudioDownloadsFragment extends Fragment {
@@ -610,7 +607,7 @@ public class AudioDownloadsFragment extends Fragment {
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                 if(player!=null){
-                    player.removeMediaItem(pos);
+                    player.removeMediaItem(position);
                 }
                 listModelList.remove(position);
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -621,8 +618,8 @@ public class AudioDownloadsFragment extends Fragment {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                         } else {
                             if(player!=null){
-                                player.seekTo(pos);
-                                callTransparentFrag(pos);
+//                                player.seekTo(pos);
+                                callTransparentFrag(pos,listModelList);
                             }else {
                                 callTransFrag(pos, listModelList);
                             }
@@ -633,17 +630,27 @@ public class AudioDownloadsFragment extends Fragment {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                         } else {
                             if(player!=null){
-                                player.seekTo(pos);
-                                callTransparentFrag(pos);
+//                                player.seekTo(pos);
+                                callTransparentFrag(pos,listModelList);
                             }else {
                                 callTransFrag(pos, listModelList);
                             }
                         }
                     } else if (pos < position && pos < listModelList.size() - 1) {
-                        callTransparentFrag(pos);
+                        if(player!=null){
+//                                player.seekTo(pos);
+                            callTransparentFrag(pos,listModelList);
+                        }else {
+                            callTransFrag(pos, listModelList);
+                        }
                     } else if (pos > position && pos == listModelList.size()) {
                         pos = pos - 1;
-                        callTransparentFrag(pos);
+                        if(player!=null){
+//                                player.seekTo(pos);
+                            callTransparentFrag(pos,listModelList);
+                        }else {
+                            callTransFrag(pos, listModelList);
+                        }
                     }
                 }
 
@@ -655,7 +662,7 @@ public class AudioDownloadsFragment extends Fragment {
             dialog.setCancelable(false);
         }
 
-        private void callTransparentFrag(int position) {
+        private void callTransparentFrag(int position, List<DownloadAudioDetails> listModelList) {
             Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
             fragmentManager1.beginTransaction()

@@ -36,6 +36,7 @@ import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.AudioAptListLayoutBinding;
@@ -572,11 +573,12 @@ public class AptAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                     editor.commit();
-                       /*List<File> filesDownloaded = new ArrayList<>();
-                List<String> downloadAudioDetailsList = new ArrayList<>();
-                GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                ge.AddAudioToPlayer(size,arrayList2,filesDownloaded,downloadAudioDetailsList);
-                callAddTransFrag();*/
+
+                        List<String> downloadAudioDetailsList = new ArrayList<>();
+                        GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                        downloadAudioDetailsList.add(downloadAudioDetails.getName());
+                        ge.AddAudioToPlayer(size,arrayList2,downloadAudioDetailsList,ctx);
+                callAddTransFrag();
                 }
                     DatabaseClient.getInstance(getActivity().getApplicationContext())
                             .getaudioDatabase()
@@ -609,5 +611,13 @@ public class AptAudioFragment extends Fragment {
                 this.binding = binding;
             }
         }
+    }
+
+    private void callAddTransFrag() { 
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
     }
 }

@@ -320,7 +320,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         List<File> filesDownloaded = new ArrayList<>();
                                         List<String> downloadAudioDetailsList = new ArrayList<>();
                                         GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                        ge.AddAudioToPlayer(size,mainPlayModelList,filesDownloaded,downloadAudioDetailsList);
+                                        ge.AddAudioToPlayer(size,mainPlayModelList,downloadAudioDetailsList,ctx);
                                     }
                                 }
                                 if (comeAddPlaylist == 1) {

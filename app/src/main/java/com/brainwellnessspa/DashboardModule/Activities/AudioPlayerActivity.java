@@ -162,13 +162,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
         miniPlayer = 1;
         if (audioClick) {
             audioClick = false;
-            exoBinding.llPlay.setVisibility(View.GONE);
-            exoBinding.llPause.setVisibility(View.GONE);
-            exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-            exoBinding.progressBar.setVisibility(View.VISIBLE);
+//            exoBinding.llPlay.setVisibility(View.GONE);
+//            exoBinding.llPause.setVisibility(View.GONE);
+//            exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+//            exoBinding.progressBar.setVisibility(View.VISIBLE);
             MakeArray2();
             GetAllMedia();
         } else {
+            GetAllMedia1();
             MakeArray2();
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -929,6 +930,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
 //                        BWSApplication.showToast("IsPlayingggggggggFalseeeee", ctx);
+                    }else if(!isPlaying && isPrepared){
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
                   /*  else {
                         exoBinding.llPlay.setVisibility(View.GONE);
@@ -1140,6 +1146,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
+                    }else if(!isPlaying && isPrepared){
+                        exoBinding.llPlay.setVisibility(View.GONE);
+                        exoBinding.llPause.setVisibility(View.GONE);
+                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+                        exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
                   /*  else {
                         exoBinding.llPlay.setVisibility(View.GONE);
@@ -2150,6 +2161,29 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 } else {
                     MakeArray();
                 }*/
+
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadAudioDetailsList;
+    }
+
+    public List<String> GetAllMedia1() {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded("Complete");
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
 
                 super.onPostExecute(aVoid);
             }

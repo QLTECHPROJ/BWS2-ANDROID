@@ -850,13 +850,14 @@ public class AddQueueActivity extends AppCompatActivity {
                 String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
                 ArrayList<DownloadAudioDetails> arrayList = new ArrayList<>();
                 ArrayList<MainPlayModel> arrayList2 = new ArrayList<>();
+                int size = 0;
                 if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
                     Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                     }.getType();
                     Gson gson1 = new Gson();
                     arrayList = gson1.fromJson(jsonw, type1);
                     arrayList2 = gson1.fromJson(json11, type1);
-                    int size= arrayList2.size();
+                    size= arrayList2.size();
                 }
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     arrayList.add(downloadAudioDetails);
@@ -886,11 +887,11 @@ public class AddQueueActivity extends AppCompatActivity {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                     editor.commit();
-                    /*List<File> filesDownloaded = new ArrayList<>();
                 List<String> downloadAudioDetailsList = new ArrayList<>();
                 GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                ge.AddAudioToPlayer(size,arrayList2,filesDownloaded,downloadAudioDetailsList);
-                callAddTransFrag();*/
+                downloadAudioDetailsList.add(downloadAudioDetails.getName());
+                ge.AddAudioToPlayer(size,arrayList2,downloadAudioDetailsList,ctx);
+//                callAddTransFrag();
                 }
                 DatabaseClient.getInstance(activity)
                         .getaudioDatabase()
@@ -1053,10 +1054,9 @@ public class AddQueueActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
                                     editor.commit();
-                                    List<File> filesDownloaded = new ArrayList<>();
                                     List<String> downloadAudioDetailsList = new ArrayList<>();
                                     GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                    ge.AddAudioToPlayer(size,mainPlayModelList,filesDownloaded,downloadAudioDetailsList);
+                                    ge.AddAudioToPlayer(size,mainPlayModelList,downloadAudioDetailsList,ctx);
                                 }
                             }
                             if (queuePlay) {

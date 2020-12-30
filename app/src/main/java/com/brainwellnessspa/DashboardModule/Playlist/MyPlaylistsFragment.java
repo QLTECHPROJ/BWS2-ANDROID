@@ -1573,11 +1573,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                 editor.commit();
 
-                /*List<File> filesDownloaded = new ArrayList<>();
                 List<String> downloadAudioDetailsList = new ArrayList<>();
                 GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                ge.AddAudioToPlayer(size,arrayList2,filesDownloaded,downloadAudioDetailsList);
-                callAddTransFrag();*/
+                downloadAudioDetailsList.add(mainPlayModel1.getName());
+                ge.AddAudioToPlayer(size,arrayList2,downloadAudioDetailsList,getActivity());
+                callAddTransFrag();
             }
             handler2.postDelayed(UpdateSongTime2, 2000);
         }

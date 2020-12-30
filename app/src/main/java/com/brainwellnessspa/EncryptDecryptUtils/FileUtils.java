@@ -56,6 +56,11 @@ public class FileUtils {
         return contents;
     }
 
+ public static File readFile1(String filePath) {
+        File file = new File(filePath);
+        return file;
+    }
+
     @NonNull
     public static File createTempFile(Context context, byte[] decrypted) throws IOException {
         File tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
