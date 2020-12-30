@@ -35,12 +35,13 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-    String IsLock;
+//    String IsLock;
     int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
@@ -49,7 +50,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
-        this.IsLock = IsLock;
+//        this.IsLock = IsLock;
     }
 
     @NonNull

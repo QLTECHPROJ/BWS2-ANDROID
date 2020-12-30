@@ -55,7 +55,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class ReminderActivity extends AppCompatActivity {
     ActivityReminderBinding binding;

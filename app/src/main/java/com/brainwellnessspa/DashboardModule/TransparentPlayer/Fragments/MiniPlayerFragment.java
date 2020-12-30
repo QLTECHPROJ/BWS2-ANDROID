@@ -227,7 +227,9 @@ public class MiniPlayerFragment extends Fragment {
 
     @Override
     public void onResume() {
-        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        try {
+            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        }catch (Exception e){}
         super.onResume();
     }
 
@@ -698,6 +700,14 @@ public class MiniPlayerFragment extends Fragment {
                         fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
                     }
                 } catch (IOException e) {
+                    descriptor = downloadMedia.decrypt(name);
+                    try {
+                        if (descriptor != null) {
+                            fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                     e.printStackTrace();
                 }
                 Log.e("Download do in bg Call", String.valueOf(x) + ":-" + name);

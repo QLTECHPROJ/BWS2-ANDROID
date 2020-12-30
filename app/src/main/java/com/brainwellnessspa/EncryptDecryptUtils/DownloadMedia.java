@@ -126,6 +126,15 @@ public class DownloadMedia implements OnDownloadListener {
             return decryptedBytes;
         } catch (Exception e) {
 //            BWSApplication.showToast("File Decryption failed.\nException: " + e.getMessage(), context);
+            try {
+                byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, FILE_NAME));
+                decryptedBytes = EncryptDecryptUtils.decode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
+//            BWSApplication.showToast("File Retrieve Done", context);
+                return decryptedBytes;
+            } catch (Exception ez) {
+//            BWSApplication.showToast("File Decryption failed.\nException: " + e.getMessage(), context);
+                Log.e("erssssssssssss", ez.getMessage());
+            }
             Log.e("erssssssssssss", e.getMessage());
         }
         return decryptedBytes;

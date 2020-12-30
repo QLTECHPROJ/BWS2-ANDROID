@@ -309,7 +309,7 @@ public class GlobalInitExoPlayer extends Service {
     }
 
     public static void relesePlayer() {
-        playerNotificationManager.setPlayer(null);
+//        playerNotificationManager.setPlayer(null);
         player.stop();
         player.release();
         player = null;

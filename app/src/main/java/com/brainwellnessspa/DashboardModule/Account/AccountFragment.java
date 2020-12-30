@@ -68,9 +68,9 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdO
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class AccountFragment extends Fragment {
-    public static String IsLock = "";
     public static int ComeScreenReminder = 0;
     public static int ComeScreenAccount = 0;
     public static boolean logout = false;
