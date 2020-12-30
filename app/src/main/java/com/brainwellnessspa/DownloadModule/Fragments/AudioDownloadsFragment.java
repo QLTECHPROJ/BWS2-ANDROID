@@ -621,7 +621,7 @@ public class AudioDownloadsFragment extends Fragment {
                                 player.seekTo(pos);
                                 callTransparentFrag(pos);
                             }else {
-                                callTransFrag(position, listModelList);
+                                callTransFrag(pos, listModelList);
                             }
                         }
                     } else if (pos == position && position == listModelList.size() - 1) {
@@ -633,7 +633,7 @@ public class AudioDownloadsFragment extends Fragment {
                                 player.seekTo(pos);
                                 callTransparentFrag(pos);
                             }else {
-                                callTransFrag(position, listModelList);
+                                callTransFrag(pos, listModelList);
                             }
                         }
                     } else if (pos < position && pos < listModelList.size() - 1) {
