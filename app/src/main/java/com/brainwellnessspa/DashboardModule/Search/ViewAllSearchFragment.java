@@ -127,8 +127,8 @@ public class ViewAllSearchFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         PrepareData();
+        super.onResume();
     }
 
     @Override

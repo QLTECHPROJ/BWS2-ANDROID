@@ -139,8 +139,8 @@ public class LikeAudiosFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareData();
+        super.onResume();
     }
 
     public void prepareData() {

@@ -55,8 +55,8 @@ public class InvoiceReceiptFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareData();
+        super.onResume();
     }
 
     public void setValues(String InvoiceId, String flag) {

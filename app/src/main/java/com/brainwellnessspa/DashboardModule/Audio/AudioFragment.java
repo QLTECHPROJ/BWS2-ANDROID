@@ -198,11 +198,11 @@ public class AudioFragment extends Fragment {
 */
     @Override
     public void onResume() {
-        super.onResume();
         prepareDisplayData();
         prepareData();
         ComeScreenAccount = 0;
         comefromDownload = "0";
+        super.onResume();
     }
 
  /*   public void GetAllMedia(FragmentActivity ctx, List<MainAudioModel.ResponseData> listModel) {

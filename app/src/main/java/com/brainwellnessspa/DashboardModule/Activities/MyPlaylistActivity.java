@@ -390,8 +390,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         getPrepareData();
+        super.onResume();
     }
 
     /*  private void getMediaByPer(String playlistID, int totalAudio) {

@@ -61,8 +61,8 @@ public class AudioBooksFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareData();
+        super.onResume();
     }
 
     void prepareData() {

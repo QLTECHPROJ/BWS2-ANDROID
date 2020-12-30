@@ -67,8 +67,8 @@ public class MembershipChangeActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareMembershipData();
+        super.onResume();
     }
 
     @Override

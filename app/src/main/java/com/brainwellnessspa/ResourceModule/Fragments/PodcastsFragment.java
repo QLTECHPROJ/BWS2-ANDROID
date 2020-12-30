@@ -59,8 +59,8 @@ public class PodcastsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareData();
+        super.onResume();
     }
 
     void prepareData() {

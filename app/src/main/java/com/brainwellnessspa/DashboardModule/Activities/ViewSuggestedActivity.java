@@ -126,8 +126,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         PrepareData();
+        super.onResume();
     }
 
     @Override

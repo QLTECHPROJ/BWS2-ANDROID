@@ -136,12 +136,12 @@ public class ViewAllPlaylistFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         if (MyDownloads.equalsIgnoreCase("1")) {
             GetAllMedia();
         } else {
             prepareData();
         }
+        super.onResume();
     }
 
     private void prepareData() {

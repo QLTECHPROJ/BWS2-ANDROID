@@ -217,8 +217,8 @@ public class CurrentPlanFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         PrepareData();
+        super.onResume();
     }
 
     public class FeaturedListAdpater extends RecyclerView.Adapter<FeaturedListAdpater.MyViewHolder> {

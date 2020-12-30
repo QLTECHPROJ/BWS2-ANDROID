@@ -169,8 +169,8 @@ public class AddAudioActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareSuggestedData();
+        super.onResume();
     }
 
     @Override

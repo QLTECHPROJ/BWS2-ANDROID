@@ -145,12 +145,14 @@ public class AudioDownloadsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
+
         callObserverMethod();
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
 //        audioList = GetAllMedia(getActivity());
+
+        super.onResume();
     }
 
 

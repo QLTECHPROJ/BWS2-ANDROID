@@ -300,8 +300,8 @@ public class AddQueueActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareData();
+        super.onResume();
     }
 
     private void callBack() {

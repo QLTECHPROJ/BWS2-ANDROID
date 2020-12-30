@@ -198,8 +198,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         prepareData(AddPlaylistActivity.this);
+        super.onResume();
     }
 
     private void prepareData(Context ctx) {

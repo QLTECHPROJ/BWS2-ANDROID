@@ -171,21 +171,21 @@ public class GlobalInitExoPlayer extends Service {
                         }*/
                         Log.e("Globle Player", mainPlayModelList.get(0).getName());
 
-                        MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///"+filesDownloaded.get(f).getPath()));
+                        MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///" + filesDownloaded.get(f).getPath()));
                         player.setMediaItem(mediaItem);
 //                        mediaSources[0] = new ExtractorMediaSource(Uri.parse("file:///" + bytesDownloaded.get(f).getPath()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 
-                    }else{
+                    } else {
                        /* if((AudioFlag.equalsIgnoreCase("DownloadListAudio") ||
                                 AudioFlag.equalsIgnoreCase("Downloadlist")) && !BWSApplication.isNetworkConnected(ctx)){
 //                            removeArray(ctx,0,mainPlayModelList);
                             Log.e("GloblePlayer no net", mainPlayModelList.get(0).getName());
                         }else{*/
-                            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-                            player.setMediaItem(mediaItem);
+                        MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+                        player.setMediaItem(mediaItem);
 //                            mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 
-                            Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
+                        Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
 //                        }
                     }
                     break;
@@ -216,7 +216,7 @@ public class GlobalInitExoPlayer extends Service {
                                 e.printStackTrace();
                             }*/
                             Log.e("Globle Player", mainPlayModelList.get(i).getName());
-                            MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///"+filesDownloaded.get(f).getPath()));
+                            MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///" + filesDownloaded.get(f).getPath()));
                             player.addMediaItem(mediaItem);
                             break;
 //                            mediaSources[i] = new ExtractorMediaSource( Uri.parse("file:///"+bytesDownloaded.get(f).getPath()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
@@ -234,7 +234,7 @@ public class GlobalInitExoPlayer extends Service {
 
 //                            }
                         }
-                    } else if (f == downloadAudioDetailsList.size()-1) {
+                    } else if (f == downloadAudioDetailsList.size() - 1) {
                         MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                         player.addMediaItem(mediaItem);
                         break;
@@ -302,14 +302,19 @@ public class GlobalInitExoPlayer extends Service {
         }*/
     }
 
-   /* @Override
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        relesePlayer();
+    }
+
+    public static void relesePlayer() {
         playerNotificationManager.setPlayer(null);
+        player.stop();
         player.release();
         player = null;
     }
-*/
+
     private void removeArray(Context ctx, int position, List<MainPlayModel> mainPlayModelList) {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -387,8 +392,8 @@ public class GlobalInitExoPlayer extends Service {
         audioClick = false;
     }
 
-    public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList,List<File> filesDownloaded, List<String> downloadAudioDetailsList){
-        if(player!=null) {
+    public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<File> filesDownloaded, List<String> downloadAudioDetailsList) {
+        if (player != null) {
             for (int i = size; i < mainPlayModelList.size(); i++) {
                 if (downloadAudioDetailsList.size() != 0) {
                     for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
@@ -423,7 +428,7 @@ public class GlobalInitExoPlayer extends Service {
                             }
                         } else if (f == downloadAudioDetailsList.size()) {
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                            player.addMediaItem(i,mediaItem);
+                            player.addMediaItem(i, mediaItem);
                             player.prepare();
 //                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                         }
@@ -447,13 +452,15 @@ public class GlobalInitExoPlayer extends Service {
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player players) {
-                        Log.e("AudioFIle", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile());
+//                        Log.e("AudioFIle", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile());
                         return mainPlayModelList.get(players.getCurrentWindowIndex()).getName();
                     }
 
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
+                        /*int window = player.getCurrentWindowIndex();
+                        return createPendingIntent(window);*/
                         Intent intent = new Intent(ctx, DashboardActivity.class);
                         PendingIntent contentPendingIntent = PendingIntent.getActivity
                                 (ctx, 0, intent, 0);
@@ -469,9 +476,10 @@ public class GlobalInitExoPlayer extends Service {
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-                        getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-//                        Log.e("ImageFIle", mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                        return myBitmap;
+//                        getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+//                        playerNotificationManager.invalidate();
+//                        return myBitmap;
+                        return getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                     }
                 },
 

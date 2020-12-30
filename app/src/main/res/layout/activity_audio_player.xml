@@ -27,7 +27,7 @@
                     android:id="@+id/llFirst"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.13"
+                    android:layout_weight="0.15"
                     android:paddingTop="@dimen/_16sdp"
                     android:weightSum="1">
 
@@ -61,7 +61,7 @@
                             android:paddingTop="@dimen/_4sdp"
                             android:text="@string/NOW_PLAYING_FROM"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <TextView
                             android:id="@+id/tvTitle"
@@ -73,7 +73,7 @@
                             android:gravity="center"
                             android:maxLines="1"
                             android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_13sdp" />
 
                     </LinearLayout>
 
@@ -101,7 +101,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.7">
+                    android:layout_weight="0.68">
 
                     <RelativeLayout
                         android:layout_width="match_parent"

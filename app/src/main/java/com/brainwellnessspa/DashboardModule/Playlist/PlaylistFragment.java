@@ -116,11 +116,11 @@ public class PlaylistFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         prepareData();
         openMiniPlayer();
         ComeScreenAccount = 0;
         comefromDownload = "0";
+        super.onResume();
     }
 
     private void prepareData() {

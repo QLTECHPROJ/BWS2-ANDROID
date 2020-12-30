@@ -87,13 +87,13 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         if (comeDeletePlaylist == 1) {
             GetAllMedia(getActivity());
             comeDeletePlaylist = 0;
         }
 //        GetAllMedia(getActivity());
         RefreshData();
+        super.onResume();
     }
 
     @Override
