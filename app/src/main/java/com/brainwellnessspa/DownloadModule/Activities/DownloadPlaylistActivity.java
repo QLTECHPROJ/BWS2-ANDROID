@@ -695,7 +695,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                             editor.commit();
-                            player.seekTo(0);
+                            player.seekTo(0,0);
                             player.setPlayWhenReady(true);
 
                         } else {
@@ -731,7 +731,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                player.seekTo(position);
+                                player.seekTo(position,0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -788,7 +788,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         if (player != null) {
-                            player.seekTo(position);
+                            player.seekTo(position,0);
                             player.setPlayWhenReady(true);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

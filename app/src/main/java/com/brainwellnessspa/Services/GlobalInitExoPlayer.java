@@ -349,16 +349,16 @@ Appointment Audios*/
                             File extStore = FileUtils.readFile1(FileUtils.getFilePath(ctx, mainPlayModelList.get(i).getName()));
                             if (extStore.exists()) {
                                 MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, mainPlayModelList.get(i).getName()));
-                                player.addMediaItem(i, mediaItem);
+                                player.addMediaItem(i-1, mediaItem);
                             } else {
                                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                                player.addMediaItem(i, mediaItem);
+                                player.addMediaItem(i-1, mediaItem);
                             }
                             player.prepare();
                             Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
                         } else if (f == downloadAudioDetailsList.size() - 1) {
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                            player.addMediaItem(i, mediaItem);
+                            player.addMediaItem(i-1, mediaItem);
                             player.prepare();
 //                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                         }
@@ -366,7 +366,7 @@ Appointment Audios*/
                 } else {
 //                mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                     MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                    player.addMediaItem(i, mediaItem);
+                    player.addMediaItem(i-1, mediaItem);
                     player.prepare();
                 }
             }

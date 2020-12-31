@@ -673,7 +673,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         if (comeFromAddToQueue) {
             if (player != null) {
                 player.removeMediaItem(position);
-                player.seekTo(position + 1);
+                player.seekTo(position + 1,0);
                 player.setPlayWhenReady(true);
             }
             comeFromAddToQueue = false;
@@ -1282,8 +1282,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (player != null) {
                 if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
                         && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-                    playerNotificationManager.setPlayer(player);
-                    player.seekTo(position);
+//                    playerNotificationManager.setPlayer(player);
+                    player.seekTo(position,0);
                 }
                 player.setPlayWhenReady(true);
 

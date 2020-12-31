@@ -363,7 +363,7 @@ public class LikeAudiosFragment extends Fragment {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                 } else {
                     if (player != null) {
-                        player.seekTo(pos);
+                        player.seekTo(pos,0);
                         player.setPlayWhenReady(true);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

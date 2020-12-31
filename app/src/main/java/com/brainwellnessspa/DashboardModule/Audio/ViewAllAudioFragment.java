@@ -512,7 +512,7 @@ public class ViewAllAudioFragment extends Fragment {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if (player != null) {
-                        player.seekTo(position);
+                        player.seekTo(position,0);
                         player.setPlayWhenReady(true);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -562,7 +562,7 @@ public class ViewAllAudioFragment extends Fragment {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if (player != null) {
-                        player.seekTo(position);
+                        player.seekTo(position,0);
                         player.setPlayWhenReady(true);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -636,7 +636,7 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                         editor.commit();
                         if (player != null) {
-                            player.seekTo(position);
+                            player.seekTo(position,0);
                             player.setPlayWhenReady(true);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

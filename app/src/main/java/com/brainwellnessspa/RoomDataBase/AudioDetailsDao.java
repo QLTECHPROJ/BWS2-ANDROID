@@ -28,6 +28,10 @@ public interface AudioDetailsDao {
 // ORDER BY uid ASC
     List<String> geAllDataBYDownloaded(String IsDownload);
 
+    @Query("SELECT DISTINCT Name FROM audio_table")
+// ORDER BY uid ASC
+    List<String> geAllDataBYDownloaded1();
+
     @Insert
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
 //    void insertMedia(DownloadAudioDetails downloadAudioDetails);  download

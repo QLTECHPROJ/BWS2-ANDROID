@@ -507,8 +507,8 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.progressBar.setVisibility(View.GONE);
                 if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
                         && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-                    playerNotificationManager.setPlayer(player);
-                    player.seekTo(position);
+//                    playerNotificationManager.setPlayer(player);
+                    player.seekTo(position,0);
                 }
                 player.setPlayWhenReady(true);
             } else {

@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,8 +24,11 @@ import android.widget.MediaController;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
+import com.brainwellnessspa.LoginModule.Activities.OtpActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
@@ -33,11 +37,15 @@ import com.brainwellnessspa.databinding.ActivitySplashScreenBinding;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.getKey;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -45,6 +53,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     public static String key = "", UserID;
     String flag, id, title, message, IsLock;
     public static Analytics analytics;
+    List<String> downloadAudioDetailsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +200,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                                     });
                             builder.create().show();
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
+
+                            GetAllMedia();
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Required");
                             builder.setCancelable(false);
@@ -242,5 +253,74 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
             BWSApplication.showToast(context.getString(R.string.no_server_found), context);
         }
+    }
+    public void GetAllMedia() {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(SplashScreenActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded1();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                for(int i = 0;i<downloadAudioDetailsList.size();i++){
+                    FileUtils.deleteDownloadedFile(getApplicationContext(), downloadAudioDetailsList.get(i));
+                }
+                DeletallLocalCart();
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetTask st = new GetTask();
+        st.execute();
+    }
+
+    private void DeletallLocalCart() {
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient
+                        .getInstance(SplashScreenActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAll();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                DeletallLocalCart1();
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeletallCart st = new DeletallCart();
+        st.execute();
+    }
+    public void DeletallLocalCart1() {
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient
+                        .getInstance(SplashScreenActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAllPlalist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeletallCart st = new DeletallCart();
+        st.execute();
     }
 }

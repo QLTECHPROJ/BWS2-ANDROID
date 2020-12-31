@@ -432,12 +432,20 @@ public class AudioDownloadsFragment extends Fragment {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                player.seekTo(position);
+                                player.seekTo(holder.getAdapterPosition(),0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedxx.edit();
+                                Gson gson = new Gson();
+                                String json = gson.toJson(listModelList);
+                                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                                 editor.commit();
                                 try {
                                     Fragment fragment = new MiniPlayerFragment();
@@ -620,6 +628,19 @@ public class AudioDownloadsFragment extends Fragment {
                 if(player!=null){
                     player.removeMediaItem(position);
                 }
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("audioId", listModelList.get(position).getID());
+                p.putValue("audioName", listModelList.get(position).getName());
+                p.putValue("audioDescription", "");
+                p.putValue("audioDuration", listModelList.get(position).getAudioDuration());
+                p.putValue("directions", listModelList.get(position).getAudioDirection());
+                p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
+                p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
+                p.putValue("audioService", "");
+                p.putValue("audioType", "");
+                p.putValue("bitRate", "");
+                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
                 listModelList.remove(position);
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
@@ -666,19 +687,6 @@ public class AudioDownloadsFragment extends Fragment {
                 }
 
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
-                Properties p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("audioId", listModelList.get(position).getID());
-                p.putValue("audioName", listModelList.get(position).getName());
-                p.putValue("audioDescription", "");
-                p.putValue("audioDuration", listModelList.get(position).getAudioDuration());
-                p.putValue("directions", listModelList.get(position).getAudioDirection());
-                p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
-                p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
-                p.putValue("audioService", "");
-                p.putValue("audioType", "");
-                p.putValue("bitRate", "");
-                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
                 dialog.dismiss();
             });
             tvGoBack.setOnClickListener(v -> dialog.dismiss());

@@ -177,7 +177,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if(player!=null){
-                    player.seekTo(position);
+                    player.seekTo(position,0);
                     player.setPlayWhenReady(true);
                     miniPlayer = 1;
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
