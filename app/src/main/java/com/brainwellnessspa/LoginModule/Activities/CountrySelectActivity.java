@@ -29,6 +29,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCountrySelectBinding;
 import com.brainwellnessspa.databinding.CountryLayoutBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,8 @@ public class CountrySelectActivity extends AppCompatActivity {
             }
         });
 
+        Properties p = new Properties();
+        BWSApplication.addToSegment("Country List Viewed", p, CONSTANTS.screen);
         binding.searchView.onActionViewExpanded();
         EditText searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));

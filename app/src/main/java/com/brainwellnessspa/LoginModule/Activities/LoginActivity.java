@@ -32,6 +32,7 @@ import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.WebView.TncActivity;
 import com.brainwellnessspa.databinding.ActivityLoginBinding;
+import com.segment.analytics.Properties;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             binding.edtNumber.setText(MobileNo);
         }
-
+        Properties p = new Properties();
+        BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen);
         binding.rlCountrySelect.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

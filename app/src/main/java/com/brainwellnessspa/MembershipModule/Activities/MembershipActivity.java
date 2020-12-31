@@ -34,6 +34,7 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.WebView.TncActivity;
 import com.brainwellnessspa.databinding.ActivityMembershipBinding;
 import com.brainwellnessspa.databinding.AudioFaqLayoutBinding;
+import com.segment.analytics.Properties;
 
 import java.util.List;
 
@@ -70,6 +71,9 @@ public class MembershipActivity extends AppCompatActivity {
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvFaqList.setLayoutManager(serachList);
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
+
+        Properties p = new Properties();
+        BWSApplication.addToSegment("Plan List Viewed", p, CONSTANTS.screen);
 
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);

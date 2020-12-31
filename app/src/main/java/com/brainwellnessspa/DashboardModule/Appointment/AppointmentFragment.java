@@ -36,6 +36,7 @@ import com.brainwellnessspa.databinding.FragmentAppointmentBinding;
 import com.brainwellnessspa.databinding.PreviousAppointmentsLayoutBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -69,6 +70,9 @@ public class AppointmentFragment extends Fragment {
             appointmentImage = bundle.getString("appointmentImage");
             appointmentMainName = bundle.getString("appointmentMainName");
         }
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());

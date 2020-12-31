@@ -41,6 +41,7 @@ import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCheckoutOtpBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 
@@ -98,6 +99,12 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         binding.txtError.setText("");
         binding.txtError.setVisibility(View.GONE);
 
+        Properties p = new Properties();
+        p.putValue("mobileNo", MobileNo);
+        p.putValue("countryCode", Code);
+        p.putValue("countryName", Name);
+        BWSApplication.addToSegment("Checkout Otp Viewed", p, CONSTANTS.screen);
+
         binding.llResendSms.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 binding.txtError.setText("");
@@ -133,6 +140,10 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                                             binding.tvResendOTP.getPaint().setMaskFilter(null);
                                         }
                                     }.start();
+                                    Properties p = new Properties();
+                                    p.putValue("mobileNo", MobileNo);
+                                    p.putValue("countryCode", Code);
+                                    BWSApplication.addToSegment("Checkout  Screen SMS Resent", p, CONSTANTS.track);
                                     binding.edtOTP1.requestFocus();
                                     binding.edtOTP1.setText("");
                                     binding.edtOTP2.setText("");

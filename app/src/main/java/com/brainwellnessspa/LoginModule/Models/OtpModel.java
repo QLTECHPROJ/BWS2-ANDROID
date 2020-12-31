@@ -53,15 +53,12 @@ public class OtpModel {
         @SerializedName("UserID")
         @Expose
         private String userID;
-        @SerializedName("FirstName")
+        @SerializedName("Name")
         @Expose
-        private String firstName;
+        private String name;
         @SerializedName("error")
         @Expose
         private String error;
-        @SerializedName("LastName")
-        @Expose
-        private String lastName;
         @SerializedName("FirstLogin")
         @Expose
         private String firstLogin;
@@ -74,6 +71,15 @@ public class OtpModel {
         @SerializedName("PhoneNumber")
         @Expose
         private String phoneNumber;
+        @SerializedName("Plan")
+        @Expose
+        private String plan;
+        @SerializedName("PlanStatus")
+        @Expose
+        private String planStatus;
+        @SerializedName("PlanExpiryDate")
+        @Expose
+        private String planExpiryDate;
         @SerializedName("Address1")
         @Expose
         private String address1;
@@ -116,20 +122,36 @@ public class OtpModel {
             this.error = error;
         }
 
-        public String getFirstName() {
-            return firstName;
+        public String getPlan() {
+            return plan;
         }
 
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
+        public void setPlan(String plan) {
+            this.plan = plan;
         }
 
-        public String getLastName() {
-            return lastName;
+        public String getPlanStatus() {
+            return planStatus;
         }
 
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
+        public void setPlanStatus(String planStatus) {
+            this.planStatus = planStatus;
+        }
+
+        public String getPlanExpiryDate() {
+            return planExpiryDate;
+        }
+
+        public void setPlanExpiryDate(String planExpiryDate) {
+            this.planExpiryDate = planExpiryDate;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         public String getEmail() {

@@ -6,12 +6,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -159,13 +163,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             }
 
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
+            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//            Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.ringtone);
+           /* AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build();*/
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 notificationChannel = new NotificationChannel(channelId, channelName, importance);
                 notificationChannel.enableLights(true);
                 notificationChannel.enableVibration(true);
+//                notificationChannel.setSound(soundUri, attributes);
                 notificationChannel.setDescription("BWS Notification");
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationBuilder = new NotificationCompat.Builder(this, notificationChannel.getId());
@@ -178,36 +186,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     notificationManager.createNotificationChannel(notificationChannel);
                 }
             }
+//            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+
+//            Uri soundUri = Uri.parse("android.resource://"
+//                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
             notificationBuilder.setSmallIcon(R.drawable.square_app_icon);
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentTitle(title);
-            notificationBuilder.setDefaults(Notification.FLAG_INSISTENT |
-                    Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND |
-                    Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL);
-
+            notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
             notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
             notificationBuilder.setContentText(message);
             notificationBuilder.setColor(getResources().getColor(R.color.blue));
             notificationBuilder.setAutoCancel(true);
-            notificationBuilder.setSound(defaultSoundUri);
+            notificationBuilder.setSound(soundUri);
             notificationBuilder.setChannelId(channelId);
             notificationBuilder.setContentIntent(resultPendingIntent);
 
             Notification notification = notificationBuilder.build();
-            notification.flags = Notification.FLAG_INSISTENT;
-            notification.flags = Notification.DEFAULT_VIBRATE;
-            notification.flags = Notification.DEFAULT_SOUND;
-            notification.flags = Notification.DEFAULT_LIGHTS;
             notification.flags = Notification.FLAG_AUTO_CANCEL;
 
             if (notificationManager != null) {
+//                MediaPlayer mp= MediaPlayer.create(getApplicationContext(), R.raw.ringtone);
+//                mp.start();
                 notificationManager.notify(Integer.parseInt(m), notification);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage() + channelId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, e.getMessage() + channelId, Toast.LENGTH_SHORT).show();
         }
     }
 }

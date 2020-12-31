@@ -57,6 +57,7 @@ import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.io.File;
 import java.io.IOException;
@@ -290,6 +291,23 @@ public class MiniPlayerFragment extends Fragment {
                 public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                     Log.v("TAG", "Listener-onTracksChanged... ");
                     player.setPlayWhenReady(true);
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("audioId", mainPlayModelList.get(position).getID());
+                    p.putValue("audioName", mainPlayModelList.get(position).getName());
+                    p.putValue("audioDescription", "");
+                    p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+                    p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+                    p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+                    p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+                    p.putValue("position", position);
+                    p.putValue("audioType", "");
+                    p.putValue("source", "");
+                    p.putValue("playerType", "");
+                    p.putValue("audioService", "");
+                    p.putValue("bitRate", "");
+                    p.putValue("sound", "");
+                    BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
                     position = player.getCurrentWindowIndex();
                     myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
 //                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();

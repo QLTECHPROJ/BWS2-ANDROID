@@ -65,6 +65,7 @@ import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -222,6 +223,24 @@ public class GlobalInitExoPlayer extends Service {
                 player.setPlayWhenReady(true);
             }
         }
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("audioId", mainPlayModelList.get(position).getID());
+        p.putValue("audioName", mainPlayModelList.get(position).getName());
+        p.putValue("audioDescription", "");
+        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("position", position);
+        p.putValue("audioType", "");
+        p.putValue("source", "");
+        p.putValue("playerType", "");
+        p.putValue("audioService", "");
+        p.putValue("bitRate", "");
+        p.putValue("sound", "");
+        BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
 //            String source = "file:////storage/3639-3632/my sounds/Gujarati songs/Chok Puravo d.mp3";
 //            // The MediaSource represents the media to be played.
 //            MediaSource mediaSource =
@@ -350,7 +369,7 @@ public class GlobalInitExoPlayer extends Service {
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
         player.setMediaItem(mediaItem1);
-//       player.setPlayWhenReady(true);
+        InitNotificationAudioPLayerD(ctx);
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);

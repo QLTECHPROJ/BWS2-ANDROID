@@ -23,6 +23,7 @@ import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCheckoutGetCodeBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 
@@ -60,6 +61,8 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         }
         binding.edtNumber.addTextChangedListener(signupTextWatcher);
 
+        Properties p = new Properties();
+        BWSApplication.addToSegment("Checkout Login Viewed", p, CONSTANTS.screen);
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
             binding.tvCountryCode.setText(R.string.code);
             binding.tvCountry.setText(R.string.Australia);

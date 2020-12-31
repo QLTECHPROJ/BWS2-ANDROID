@@ -61,6 +61,7 @@ public class ReminderActivity extends AppCompatActivity {
     ActivityReminderBinding binding;
     Activity activity;
     Context context;
+    int pos;
     Dialog dialog;
     String am_pm, hourString, minuteSting, UserId, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
     ArrayList<String> remiderDays = new ArrayList<>();
@@ -433,12 +434,10 @@ public class ReminderActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            if (position == 0) {
-                holder.binding.cbChecked.setChecked(true);
+            if ((position == pos)) {
+                holder.binding.cbChecked.setChecked(position == pos);
             }
-         /*   else if ((position == mSelectedItem)) {
-                holder.binding.cbChecked.setChecked(position == mSelectedItem);
-            }*/
+
 
             holder.binding.cbChecked.setTag(model.get(position));
             holder.binding.cbChecked.setText(model.get(position).getName());
@@ -459,6 +458,7 @@ public class ReminderActivity extends AppCompatActivity {
                 binding.cbChecked.setOnClickListener(view -> {
                     mSelectedItem = getAdapterPosition();
                     notifyDataSetChanged();
+                    pos = mSelectedItem;
                     PlaylistID = model.get(mSelectedItem).getID();
                     PlaylistName = model.get(mSelectedItem).getName();
                     ShowPlaylistName();

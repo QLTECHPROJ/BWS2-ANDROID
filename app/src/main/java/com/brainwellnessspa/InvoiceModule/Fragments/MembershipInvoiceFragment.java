@@ -33,8 +33,10 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.UserModule.Activities.RequestPermissionHandler;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentInvoiceBinding;
 import com.brainwellnessspa.databinding.InvoiceListLayoutBinding;
+import com.segment.analytics.Properties;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,6 +62,10 @@ public class MembershipInvoiceFragment extends Fragment {
         if (getArguments() != null) {
             memberShipList = getArguments().getParcelableArrayList("membershipInvoiceFragment");
         }
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Membership Invoice Screen Viewed", p, CONSTANTS.screen);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
@@ -121,6 +127,13 @@ public class MembershipInvoiceFragment extends Fragment {
                 receiptFragment.setCancelable(true);
                 receiptFragment.setValues(listModelList.get(position).getInvoiceId(), "1");
                 receiptFragment.show(fragmentManager, "receipt");
+
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
+                p.putValue("invoiceType", listModelList.get(position).getStatus());
+                p.putValue("invoiceAmount", listModelList.get(position).getAmount());
+                BWSApplication.addToSegment("Membership Invoice Clicked", p, CONSTANTS.track);
             });
 
             if (listModelList.get(position).getStatus().equalsIgnoreCase("paid")) {
@@ -134,6 +147,12 @@ public class MembershipInvoiceFragment extends Fragment {
             holder.binding.llDownloads.setOnClickListener(v -> {
                 downloadUrl = listModelList.get(position).getInvoicePdf();
                 new FileDownloader();
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
+                p.putValue("invoiceType", listModelList.get(position).getStatus());
+                p.putValue("invoiceAmount", listModelList.get(position).getAmount());
+                BWSApplication.addToSegment("Memebrship Invoice Downloaded", p, CONSTANTS.track);
             });
         }
 

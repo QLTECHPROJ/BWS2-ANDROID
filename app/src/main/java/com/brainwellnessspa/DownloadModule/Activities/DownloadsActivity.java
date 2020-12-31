@@ -29,6 +29,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.databinding.ActivityDownloadsBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -64,9 +65,10 @@ public class DownloadsActivity extends AppCompatActivity {
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-      /*  Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("My Downloads Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("My Downloads Screen Viewed", p, CONSTANTS.screen);
+
         binding.llBack.setOnClickListener(view -> {
             ComeScreenAccount = 1;
             comefromDownload = "0";

@@ -51,6 +51,8 @@ import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.segment.analytics.Properties;
+import com.segment.analytics.Traits;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
@@ -60,6 +62,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
@@ -75,7 +78,7 @@ public class AccountFragment extends Fragment {
     public static int ComeScreenAccount = 0;
     public static boolean logout = false;
     FragmentAccountBinding binding;
-    String UserID, MobileNo;
+    String UserID, MobileNo, Email, DeviceType, DeviceID, Name, UserName;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
     private long mLastClickTime = 0;
@@ -87,6 +90,10 @@ public class AccountFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_MobileNo, ""));
+        Name = (shared1.getString(CONSTANTS.PREF_KEY_Name, ""));
+        Email = (shared1.getString(CONSTANTS.PREF_KEY_Email, ""));
+        DeviceType = (shared1.getString(CONSTANTS.PREF_KEY_DeviceType, ""));
+        DeviceID = (shared1.getString(CONSTANTS.PREF_KEY_DeviceID, ""));
         ComeScreenAccount = 1;
         comefromDownload = "0";
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
@@ -98,9 +105,9 @@ public class AccountFragment extends Fragment {
                 1, 1, 0.2f, 10);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
 
         binding.llDownloads.setOnClickListener(view12 -> {
@@ -346,6 +353,19 @@ public class AccountFragment extends Fragment {
                             LogoutModel loginModel = response.body();
                             dialog.hide();
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("deviceId", DeviceID);
+                            p.putValue("deviceType", DeviceType);
+                            p.putValue("userName", Name);
+                            p.putValue("mobileNo", MobileNo);
+                            BWSApplication.addToSegment("Signed Out", p, CONSTANTS.track);
+                            analytics.identify(new Traits()
+                                    .putValue("userId", UserID)
+                                    .putValue("deviceId", DeviceID)
+                                    .putValue("deviceType", DeviceType)
+                                    .putValue("userName", UserName)
+                                    .putValue("mobileNo", MobileNo));
                             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                 return;
                             }
@@ -442,12 +462,15 @@ public class AccountFragment extends Fragment {
                             ProfileViewModel viewModel = response.body();
                             binding.tvViewProfile.setVisibility(View.VISIBLE);
 
+
                             if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
                                     viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
                                     viewModel.getResponseData().getName() == null) {
                                 binding.tvName.setText(R.string.Guest);
+                                UserName = "Guest";
                             } else {
                                 binding.tvName.setText(viewModel.getResponseData().getName());
+                                UserName = viewModel.getResponseData().getName();
                             }
                             if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
                                 String Letter = "G";

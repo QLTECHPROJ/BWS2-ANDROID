@@ -46,6 +46,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -75,6 +76,9 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             IsLock = getArguments().getString("IsLock");
         }
         playlistList = new ArrayList<>();
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Downloaded Playlist Viewed", p, CONSTANTS.screen);
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
 
@@ -291,6 +295,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
                     i.putExtra("MyDownloads", "1");
                     ctx.startActivity(i);
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                    p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                    p.putValue("playlistType", "");
+                    BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
         /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
@@ -337,6 +347,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             }
                             getDownloadData(listModelList.get(position).getPlaylistID());
                             GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                            p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                            p.putValue("playlistType", "");
+                            BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
                         } catch (Exception e) {
                         }
                         dialog.dismiss();

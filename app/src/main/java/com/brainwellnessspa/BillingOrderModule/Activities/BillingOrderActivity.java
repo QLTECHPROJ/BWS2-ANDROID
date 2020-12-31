@@ -7,8 +7,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Fragments.BillingAddressFragment;
@@ -16,6 +18,7 @@ import com.brainwellnessspa.BillingOrderModule.Fragments.CurrentPlanFragment;
 import com.brainwellnessspa.BillingOrderModule.Fragments.PaymentFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding;
+import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -23,17 +26,24 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 public class BillingOrderActivity extends AppCompatActivity {
     ActivityBillingOrderBinding binding;
     int payment = 0;
+    String UserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order);
-
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
             ComeScreenAccount = 1;
             comefromDownload = "0";
             finish();
         });
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen);
+
         binding.viewPager.setOffscreenPageLimit(3);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));

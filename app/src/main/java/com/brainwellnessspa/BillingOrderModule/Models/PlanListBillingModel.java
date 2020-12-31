@@ -167,7 +167,6 @@ public class PlanListBillingModel  implements Parcelable{
         }
 
         public static class Plan implements Parcelable {
-
             @SerializedName("PlanPosition")
             @Expose
             private String planPosition;

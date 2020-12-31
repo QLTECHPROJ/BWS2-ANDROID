@@ -23,6 +23,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityInvoiceBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 
@@ -54,6 +55,10 @@ public class InvoiceActivity extends AppCompatActivity {
         if (getIntent() != null) {
             ComeFrom = getIntent().getStringExtra("ComeFrom");
         }
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override

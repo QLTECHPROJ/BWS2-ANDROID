@@ -48,6 +48,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -95,7 +96,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (player!=null) {
+                    if (player != null) {
                         if (listSize != 0) {
                             serachListAdpater.notifyDataSetChanged();
                         }
@@ -117,6 +118,12 @@ public class AddAudioActivity extends AppCompatActivity {
         }
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("source", "Add Audio Screen");
+        BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
+
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
@@ -388,10 +395,10 @@ public class AddAudioActivity extends AppCompatActivity {
                         && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                         songId = myAudioId;
-                        if (player!=null) {
-                            if(!player.getPlayWhenReady()) {
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
                                 holder.binding.equalizerview.stopBars();
-                            }else{
+                            } else {
                                 holder.binding.equalizerview.animateBars();
                             }
                         } else
@@ -702,9 +709,9 @@ public class AddAudioActivity extends AppCompatActivity {
                                         editor.commit();
                                         List<String> downloadAudioDetailsList = new ArrayList<>();
                                         GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                        ge.AddAudioToPlayer(size,mainPlayModelList,downloadAudioDetailsList,ctx);
+                                        ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
 
-                                        if(player!=null){
+                                        if (player != null) {
                                             Fragment fragment = new MiniPlayerFragment();
                                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                                             fragmentManager1.beginTransaction()
@@ -776,10 +783,10 @@ public class AddAudioActivity extends AppCompatActivity {
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(listModel.get(position).getID())) {
                     songId = myAudioId;
-                    if (player!=null) {
-                        if(!player.getPlayWhenReady()) {
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
                             holder.binding.equalizerview.stopBars();
-                        }else
+                        } else
                             holder.binding.equalizerview.animateBars();
                     } else
                         holder.binding.equalizerview.stopBars();

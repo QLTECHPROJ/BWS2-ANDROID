@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 
+import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.BillingOrderModule.Activities.PaymentActivity;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
@@ -17,6 +18,7 @@ import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 
@@ -51,6 +53,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
         if (getIntent() != null) {
             ComesTrue = getIntent().getStringExtra("ComesTrue");
         }
+
+        Properties p = new Properties();
+        if (!comeFrom.equalsIgnoreCase("")) {
+            p.putValue("plan", listModelList2);
+        } else {
+            p.putValue("plan", listModelList);
+        }
+        BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen);
 
         try {
             if (!comeFrom.equalsIgnoreCase("")) {
@@ -87,11 +97,17 @@ public class OrderSummaryActivity extends AppCompatActivity {
         });
 
         binding.btnCheckout.setOnClickListener(view -> {
+            Properties p1 = new Properties();
             if (!comeFrom.equalsIgnoreCase("")) {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return;
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
+                p1.putValue("plan", listModelList2);
+                p1.putValue("planStartDt ", "");
+                p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
+                p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
+                p1.putValue("planAmount",listModelList2.get(position).getPlanAmount());
                 Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
                 i.putExtra("ComesTrue", ComesTrue);
                 i.putExtra("comeFrom", "membership");
@@ -105,12 +121,18 @@ public class OrderSummaryActivity extends AppCompatActivity {
                     return;
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
+                p1.putValue("plan", listModelList);
+                p1.putValue("planStartDt ", "");
+                p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
+                p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
+                p1.putValue("planAmount",listModelList.get(position).getPlanAmount());
                 Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
                 i.putParcelableArrayListExtra("PlanData", listModelList);
                 i.putExtra("TrialPeriod", TrialPeriod);
                 i.putExtra("position", position);
                 startActivity(i);
             }
+            BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
         });
     }
 

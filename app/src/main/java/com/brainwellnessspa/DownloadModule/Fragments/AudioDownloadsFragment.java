@@ -51,6 +51,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -111,6 +112,9 @@ public class AudioDownloadsFragment extends Fragment {
         }
         handler1 = new Handler();
         audioList = new ArrayList<>();
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
         binding.tvFound.setText("Your downloaded audios will appear here");
@@ -466,6 +470,11 @@ public class AudioDownloadsFragment extends Fragment {
                         listModelList2.add(position, mainPlayModel);
                         callTransFrag(position, listModelList2);
                     }
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("audioId", listModelList.get(position).getID());
+                    p.putValue("audioName", listModelList.get(position).getName());
+                    BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
                 }
 //            handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
@@ -506,6 +515,7 @@ public class AudioDownloadsFragment extends Fragment {
                                 deleteAudio(holder.getAdapterPosition());
                             }
                         }
+
                       /*  if (name.equalsIgnoreCase(listModelList.get(position).getName())) {
                             BWSApplication.showToast("Currently this audio is in player,so you can't delete this audio as of now", ctx);
                         } else {
@@ -655,6 +665,19 @@ public class AudioDownloadsFragment extends Fragment {
                 }
 
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("audioId", listModelList.get(position).getID());
+                p.putValue("audioName", listModelList.get(position).getName());
+                p.putValue("audioDescription", "");
+                p.putValue("audioDuration", listModelList.get(position).getAudioDuration());
+                p.putValue("directions", listModelList.get(position).getAudioDirection());
+                p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
+                p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
+                p.putValue("audioService", "");
+                p.putValue("audioType", "");
+                p.putValue("bitRate", "");
+                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
                 dialog.dismiss();
             });
             tvGoBack.setOnClickListener(v -> dialog.dismiss());

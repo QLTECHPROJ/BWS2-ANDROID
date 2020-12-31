@@ -386,7 +386,6 @@ public class MembershipPlanListModel implements Parcelable {
     }
 
     public class AudioFile {
-
         @SerializedName("ID")
         @Expose
         private String iD;

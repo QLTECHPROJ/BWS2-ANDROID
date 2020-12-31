@@ -12,8 +12,10 @@ import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityThankYouMembershipBinding;
+import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 public class ThankYouMpActivity extends AppCompatActivity {
@@ -42,6 +44,8 @@ public class ThankYouMpActivity extends AppCompatActivity {
             finish();
         });
 
+        Properties p = new Properties();
+        BWSApplication.addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen);
         binding.tvViewInvoice.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

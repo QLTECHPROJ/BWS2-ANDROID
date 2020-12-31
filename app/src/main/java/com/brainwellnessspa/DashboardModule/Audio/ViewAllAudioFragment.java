@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -79,6 +80,33 @@ public class ViewAllAudioFragment extends Fragment {
             ID = getArguments().getString("ID");
             Name = getArguments().getString("Name");
             Category = getArguments().getString("Category");
+        }
+
+        if (Name.equalsIgnoreCase(getString(R.string.recently_played))) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("Recently Played Viewed", p, CONSTANTS.screen);
+        } else if (Name.equalsIgnoreCase("My Downloads")) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("My Downloads Viewed", p, CONSTANTS.screen);
+        } else if (Name.equalsIgnoreCase(getString(R.string.Library))) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("Library List Viewed", p, CONSTANTS.screen);
+        } else if (Name.equalsIgnoreCase(getString(R.string.get_inspired))) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("Get Inspired List Viewed ", p, CONSTANTS.screen);
+        } else if (Name.equalsIgnoreCase(getString(R.string.popular))) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("Popular List Viewed", p, CONSTANTS.screen);
+        } else if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("categoryName", Category);
+            BWSApplication.addToSegment("Top Categories Item Viewed", p, CONSTANTS.screen);
         }
 
         view.setFocusableInTouchMode(true);
@@ -131,7 +159,7 @@ public class ViewAllAudioFragment extends Fragment {
                 .getInstance(getActivity())
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData1("").observe(getActivity(),audioList ->{
+                .geAllData1("").observe(getActivity(), audioList -> {
             refreshData();
             binding.tvTitle.setText(Name);
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList = new ArrayList<>();
@@ -470,11 +498,11 @@ public class ViewAllAudioFragment extends Fragment {
         if (Name.equalsIgnoreCase("My Downloads")) {
             if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 if (isDisclaimer == 1) {
-                    if(player!=null){
-                        if(!player.getPlayWhenReady()) {
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
                             player.setPlayWhenReady(true);
                         }
-                    }else{
+                    } else {
                         audioClick = true;
                         miniPlayer = 1;
                     }
@@ -483,7 +511,7 @@ public class ViewAllAudioFragment extends Fragment {
                     getActivity().startActivity(i);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
-                    if(player!=null){
+                    if (player != null) {
                         player.seekTo(position);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -493,7 +521,7 @@ public class ViewAllAudioFragment extends Fragment {
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
-                    }else {
+                    } else {
                         callTransFrag(position, listModelList);
                     }
                 }
@@ -519,11 +547,11 @@ public class ViewAllAudioFragment extends Fragment {
         } else {
             if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)) {
                 if (isDisclaimer == 1) {
-                    if(player!=null){
-                        if(!player.getPlayWhenReady()) {
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
                             player.setPlayWhenReady(true);
                         }
-                    }else{
+                    } else {
                         audioClick = true;
                         miniPlayer = 1;
                     }
@@ -532,7 +560,7 @@ public class ViewAllAudioFragment extends Fragment {
                     getActivity().startActivity(i);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
-                    if(player!=null){
+                    if (player != null) {
                         player.seekTo(position);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -542,7 +570,7 @@ public class ViewAllAudioFragment extends Fragment {
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
-                    }else {
+                    } else {
                         callTransFrag(position, listModelList);
                     }
                 }
@@ -583,11 +611,11 @@ public class ViewAllAudioFragment extends Fragment {
                 String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("TopCategories") && catName.equalsIgnoreCase(Category)) {
                     if (isDisclaimer == 1) {
-                        if(player!=null){
-                            if(!player.getPlayWhenReady()) {
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
                                 player.setPlayWhenReady(true);
                             }
-                        }else{
+                        } else {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                         }
                         openMyFragment();
@@ -605,7 +633,7 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                         editor.commit();
-                        if(player!=null){
+                        if (player != null) {
                             player.seekTo(position);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -613,7 +641,7 @@ public class ViewAllAudioFragment extends Fragment {
                             editord.putInt(CONSTANTS.PREF_KEY_position, position);
                             editord.commit();
                             openOnlyFragment();
-                        }else {
+                        } else {
                             openMyFragment();
                         }
                     }

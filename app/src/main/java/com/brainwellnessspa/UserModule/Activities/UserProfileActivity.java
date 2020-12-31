@@ -39,6 +39,8 @@ import com.brainwellnessspa.Utility.APIClientProfile;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityUserProfileBinding;
+import com.segment.analytics.Properties;
+import com.segment.analytics.Traits;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +56,8 @@ import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class UserProfileActivity extends AppCompatActivity {
     ActivityUserProfileBinding binding;
@@ -80,6 +84,10 @@ public class UserProfileActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         binding.llBack.setOnClickListener(view -> finish());
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("User Profile Viewed", p, CONSTANTS.screen);
 
         binding.rlImageUpload.setOnClickListener(view -> selectImage());
         binding.btnSave.setOnClickListener(view -> profileUpdate());
@@ -140,6 +148,13 @@ public class UserProfileActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 ProfileUpdateModel viewModel = response.body();
+                               /* Properties p = new Properties();
+                                p.putValue("userId", UserID);
+                                p.putValue("userName", binding.etUser.getText().toString());
+                                p.putValue("mobileNo", binding.etMobileNumber.getText().toString());
+                                p.putValue("emailId", binding.etEmail.getText().toString());
+                                p.putValue("dob", binding.etCalendar.getText().toString());
+                                BWSApplication.addToSegment("User Profile Updated", p, CONSTANTS.screen);*/
                                 finish();
                                 BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
                             } else {
@@ -231,6 +246,17 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.etCalendar.addTextChangedListener(userTextWatcher);
                             binding.etMobileNumber.addTextChangedListener(userTextWatcher);
                             binding.etEmail.addTextChangedListener(userTextWatcher);
+                            analytics.identify(new Traits()
+                                    .putValue("userId", UserID)
+                                    .putValue("userName", viewModel.getResponseData().getName())
+                                    .putValue("mobileNo", viewModel.getResponseData().getPhoneNumber())
+                                    .putValue("email", viewModel.getResponseData().getEmail()));
+                           /* Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("userName", viewModel.getResponseData().getName());
+                            p.putValue("mobileNo", viewModel.getResponseData().getPhoneNumber());
+                            p.putValue("email", viewModel.getResponseData().getEmail());
+                            BWSApplication.addToSegment("Audio pause", p, CONSTANTS.track);*/
                             if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
                                     viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
                                     viewModel.getResponseData().getName() == null) {
@@ -425,6 +451,9 @@ public class UserProfileActivity extends AppCompatActivity {
                             });
                         }
                     } else if (options[item].equals(getString(R.string.cancel))) {
+                        Properties p = new Properties();
+                        p.putValue("userId", UserID);
+                        BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
                         dialog.dismiss();
                     }
                 });
@@ -464,6 +493,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        Properties p = new Properties();
+                                        p.putValue("userId", UserID);
+                                        BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
                                                 .thumbnail(0.1f)
@@ -504,6 +536,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        Properties p = new Properties();
+                                        p.putValue("userId", UserID);
+                                        BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
                                                 .thumbnail(0.1f)
@@ -524,6 +559,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         } else if (requestCode == RESULT_CANCELED) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
             finish();
         }
     }

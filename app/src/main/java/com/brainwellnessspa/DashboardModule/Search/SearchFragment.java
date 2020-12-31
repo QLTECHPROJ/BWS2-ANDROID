@@ -49,6 +49,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -117,6 +118,11 @@ public class SearchFragment extends Fragment {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         ComeScreenAccount = 0;
         comefromDownload = "0";
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("source", "Search Screen");
+        BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
@@ -215,14 +221,16 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onPause() {
-         super.onPause();
+        super.onPause();
     }
+
     @Override
     public void onDestroy() {
 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
+
     private void prepareSearchData(String search, EditText searchEditText) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());

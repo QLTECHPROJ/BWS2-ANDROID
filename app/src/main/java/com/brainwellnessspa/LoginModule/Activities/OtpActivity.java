@@ -50,9 +50,13 @@ import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
+import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
+
 import com.brainwellnessspa.databinding.ActivityOtpBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
+import com.segment.analytics.Traits;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -92,7 +96,6 @@ public class OtpActivity extends AppCompatActivity implements
 //        logger = AppEventsLogger.newLogger(this);
         binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + MobileNo);
 
-
         editTexts = new EditText[]{binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4};
         binding.edtOTP1.addTextChangedListener(new PinTextWatcher(0));
         binding.edtOTP2.addTextChangedListener(new PinTextWatcher(1));
@@ -105,6 +108,12 @@ public class OtpActivity extends AppCompatActivity implements
         startSMSListener();
         binding.txtError.setText("");
         binding.txtError.setVisibility(View.GONE);
+
+        Properties p = new Properties();
+        p.putValue("mobileNo", MobileNo);
+        p.putValue("countryCode", Code);
+        p.putValue("countryName", Name);
+        BWSApplication.addToSegment("Otp Screen Viewed", p, CONSTANTS.screen);
 
         binding.llResendSms.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
@@ -140,6 +149,10 @@ public class OtpActivity extends AppCompatActivity implements
                                     binding.tvResendOTP.getPaint().setMaskFilter(null);
                                 }
                             }.start();
+                            Properties p = new Properties();
+                            p.putValue("mobileNo", MobileNo);
+                            p.putValue("countryCode", Code);
+                            BWSApplication.addToSegment("SMS Resent", p, CONSTANTS.track);
                             binding.edtOTP1.requestFocus();
                             binding.edtOTP1.setText("");
                             binding.edtOTP2.setText("");
@@ -222,8 +235,32 @@ public class OtpActivity extends AppCompatActivity implements
                                             String UserID = otpModel.getResponseData().getUserID();
                                             String MobileNO = otpModel.getResponseData().getPhoneNumber();
                                             editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
+                                            editor.putString(CONSTANTS.PREF_KEY_Name, otpModel.getResponseData().getName());
                                             editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
+                                            editor.putString(CONSTANTS.PREF_KEY_Email, otpModel.getResponseData().getEmail());
+                                            editor.putString(CONSTANTS.PREF_KEY_DeviceType, CONSTANTS.FLAG_ONE);
+                                            editor.putString(CONSTANTS.PREF_KEY_DeviceID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                                             editor.commit();
+                                         /*   Properties p = new Properties();
+                                            p.putValue("userId", UserID);
+                                            p.putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                                            p.putValue("deviceType", CONSTANTS.FLAG_ONE);
+                                            p.putValue("userName", otpModel.getResponseData().getName());
+                                            p.putValue("mobileNo", otpModel.getResponseData().getPhoneNumber());
+                                            p.putValue("plan", otpModel.getResponseData().getPlan());
+                                            p.putValue("planStatus", otpModel.getResponseData().getPlanStatus());
+                                            p.putValue("planStartDt", otpModel.getResponseData().getPlanExpiryDate());
+                                            p.putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate());
+                                            BWSApplication.addToSegment("Signed In", p, CONSTANTS.track);*/
+                                            analytics.identify(new Traits()
+                                                    .putValue("userId", UserID)
+                                                    .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
+                                                    .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                                    .putValue("userName", otpModel.getResponseData().getName())
+                                                    .putValue("mobileNo", otpModel.getResponseData().getPhoneNumber())
+                                                    .putValue("plan", otpModel.getResponseData().getPlan())
+                                                    .putValue("planStatus", otpModel.getResponseData().getPlanStatus())
+                                                    .putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate()));
                                             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
                                             String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
                                             String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
@@ -275,7 +312,7 @@ public class OtpActivity extends AppCompatActivity implements
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData12().observe(this,audioList -> {
+                .geAllData12().observe(this, audioList -> {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();
@@ -311,7 +348,7 @@ public class OtpActivity extends AppCompatActivity implements
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData12().observe(this,audioList -> {
+                .geAllData12().observe(this, audioList -> {
             if (audioList.size() != 0) {
                 for (int i = 0; i < audioList.size(); i++) {
                     FileUtils.deleteDownloadedFile(getApplicationContext(), audioList.get(i).getName());

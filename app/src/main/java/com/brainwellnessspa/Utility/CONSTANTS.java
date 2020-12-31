@@ -98,6 +98,9 @@ public class CONSTANTS {
     public static final String PREF_KEY_Status = "Status";
     public static final String PREF_KEY_IsShuffle = "IsShuffle";
     public static final String PREF_KEY_MobileNo = "MobileNo";
+    public static final String PREF_KEY_Email = "Email";
+    public static final String PREF_KEY_DeviceType = "DeviceType";
+    public static final String PREF_KEY_DeviceID = "DeviceID";
     public static final String PREF_KEY_IsLock = "IsLock";
     public static final String PREF_KEY_UnLockAudiList = "UnLockAudiList";
     public static final String PREF_KEY_modelList = "modelList";

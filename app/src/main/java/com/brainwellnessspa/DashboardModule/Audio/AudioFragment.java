@@ -52,6 +52,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -107,6 +108,9 @@ public class AudioFragment extends Fragment {
         binding.rvMainAudioList.setLayoutManager(manager);
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
         prepareDisplayData();
+        Properties p = new Properties();
+        p.putValue("userId",UserID);
+        BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
