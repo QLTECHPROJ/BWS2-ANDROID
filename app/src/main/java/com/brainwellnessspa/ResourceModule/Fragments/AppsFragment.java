@@ -135,6 +135,7 @@ public class AppsFragment extends Fragment {
                     mLastClickTime = SystemClock.elapsedRealtime();
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("apps", apps);
+                    i.putExtra("id", listModelList.get(position).getID());
                     i.putExtra("title", listModelList.get(position).getTitle());
                     i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
                     i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());

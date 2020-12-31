@@ -84,6 +84,7 @@ public class SearchFragment extends Fragment {
     SuggestionAudiosAdpater suggestionAudiosAdpater;
     long myProgress = 0, diff = 0;
     private long currentDuration = 0;
+    Properties p;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -119,7 +120,7 @@ public class SearchFragment extends Fragment {
         ComeScreenAccount = 0;
         comefromDownload = "0";
 
-        Properties p = new Properties();
+        p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("source", "Search Screen");
         BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
@@ -152,6 +153,11 @@ public class SearchFragment extends Fragment {
                 } else {
                     prepareSearchData(search, searchEditText);
                 }
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("source", "Search Screen");
+                p.putValue("searchKeyword", search);
+                BWSApplication.addToSegment("Audio/Playlist Searched", p, CONSTANTS.track);
                 return false;
             }
         });
@@ -377,6 +383,10 @@ public class SearchFragment extends Fragment {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                             SuggestedModel listModel = response.body();
                             binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("source", "Search Screen");
+                            BWSApplication.addToSegment("Recommended Audios List Viewed", p, CONSTANTS.screen);
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
                             suggestionAudiosAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
                             LocalBroadcastManager.getInstance(getActivity())
@@ -420,6 +430,10 @@ public class SearchFragment extends Fragment {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                             SearchPlaylistModel listModel = response.body();
                             binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("source", "Search Screen");
+                            BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
                             binding.tvSPViewAll.setVisibility(View.VISIBLE);
                             SearchPlaylistAdapter suggestedAdpater = new SearchPlaylistAdapter(listModel.getResponseData());
                             binding.rvPlayList.setAdapter(suggestedAdpater);
@@ -540,6 +554,7 @@ public class SearchFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", modelList.get(position).getID());
+                        i.putExtra("ScreenView","Search Audio");
                         i.putExtra("PlaylistID", "");
                         startActivity(i);
                     }
@@ -618,6 +633,7 @@ public class SearchFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", "");
+                        i.putExtra("ScreenView","Search Playlist");
                         i.putExtra("PlaylistID", modelList.get(position).getID());
                         startActivity(i);
                     }
@@ -806,6 +822,7 @@ public class SearchFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", modelList.get(position).getID());
+                    i.putExtra("ScreenView","Recommended Search Audio");
                     i.putExtra("PlaylistID", "");
                     startActivity(i);
                 }
@@ -906,6 +923,7 @@ public class SearchFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                         i.putExtra("AudioId", "");
+                        i.putExtra("ScreenView","Recommended Search Playlist");
                         i.putExtra("PlaylistID", modelList.get(position).getID());
                         startActivity(i);
                     }

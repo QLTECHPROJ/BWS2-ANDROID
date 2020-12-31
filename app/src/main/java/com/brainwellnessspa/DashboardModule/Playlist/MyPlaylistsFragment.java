@@ -79,6 +79,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -127,7 +128,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int isPlayPlaylist = 0;
     public boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
-    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
+    String PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     int RefreshIcon;
     PlayListsAdpater adpater;
     PlayListsAdpater1 adpater1;
@@ -247,6 +248,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistImage = getArguments().getString("PlaylistImage");
             MyDownloads = getArguments().getString("MyDownloads");
         }
+        if (getArguments() != null) {
+            ScreenView = getArguments().getString("ScreenView");
+        }
+
+        if (getArguments() != null) {
+            PlaylistType = getArguments().getString("PlaylistType");
+        }
+
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
@@ -272,6 +281,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             i.putExtra("PlaylistID", PlaylistID);
             i.putExtra("PlaylistName", PlaylistName);
             i.putExtra("PlaylistIDImage", PlaylistImage);
+            i.putExtra("ScreenView", ScreenView);
+            i.putExtra("PlaylistType", PlaylistType);
             i.putExtra("Liked", "0");
             startActivity(i);
 
@@ -430,28 +441,32 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
-            downloadPlaylistDetailsList = new ArrayList<>();
-            downloadPlaylistDetailsList = audioList;
-            if (downloadPlaylistDetailsList.size() != 0 /*New.equalsIgnoreCase("1") ||*/) {
-                enableDisableDownload(false, "orange");
-                removeobserver();
-            } else if (RefreshIcon == 0) {
-                enableDisableDownload(false, "gray");
-                removeobserver();
-            } else if (download.equalsIgnoreCase("1") /* New.equalsIgnoreCase("1") ||*/) {
-                enableDisableDownload(false, "orange");
-                removeobserver();
-            } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
-                    New.equalsIgnoreCase("0") || RefreshIcon != 0) {
-                enableDisableDownload(true, "white");
-                removeobserver();
-            }
-        });
+        try {
+            DatabaseClient
+                    .getInstance(getActivity())
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
+                downloadPlaylistDetailsList = new ArrayList<>();
+                downloadPlaylistDetailsList = audioList;
+                if (downloadPlaylistDetailsList.size() != 0 /*New.equalsIgnoreCase("1") ||*/) {
+                    enableDisableDownload(false, "orange");
+                    removeobserver();
+                } else if (RefreshIcon == 0) {
+                    enableDisableDownload(false, "gray");
+                    removeobserver();
+                } else if (download.equalsIgnoreCase("1") /* New.equalsIgnoreCase("1") ||*/) {
+                    enableDisableDownload(false, "orange");
+                    removeobserver();
+                } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
+                        New.equalsIgnoreCase("0") || RefreshIcon != 0) {
+                    enableDisableDownload(true, "white");
+                    removeobserver();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     /*    class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -781,6 +796,26 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("playlistId", listModel.getResponseData().getPlaylistID());
+                            p.putValue("playlistName", listModel.getResponseData().getPlaylistName());
+                            p.putValue("playlistDescription", listModel.getResponseData().getPlaylistDesc());
+                            if (PlaylistType.equalsIgnoreCase("1")) {
+                                p.putValue("playlistType", "Created");
+                            } else if (PlaylistType.equalsIgnoreCase("0")) {
+                                p.putValue("playlistType", "Default");
+                            }
+                            if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", "0h " + listModel.getResponseData().getTotalminute() + "m");
+                            } else if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h 0m");
+                            } else {
+                                p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
+                            }
+                            p.putValue("audioCount", listModel.getResponseData().getTotalAudio());
+                            p.putValue("source", ScreenView);
+                            BWSApplication.addToSegment("Playlist Viewed", p, CONSTANTS.screen);
                             getDownloadData();
                             callObserveMethodGetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
@@ -990,55 +1025,60 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callAddTransFrag() {
-        Fragment fragment = new MiniPlayerFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flContainer, fragment)
-                .commit();
+        try {
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getMediaByPer(String playlistID, int totalAudio) {
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getCountDownloadProgress1("Complete", playlistID).observe(getActivity(), countx -> {
+        try {
+            DatabaseClient
+                    .getInstance(getActivity())
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getCountDownloadProgress1("Complete", playlistID).observe(getActivity(), countx -> {
 //            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
-            count = countx.size();
-            if (downloadPlaylistDetailsList.size() != 0) {
-                if (count <= totalAudio) {
-                    if (count == totalAudio) {
-                        binding.pbProgress.setVisibility(View.GONE);
-                        binding.ivDownloads.setVisibility(View.VISIBLE);
+                count = countx.size();
+                if (downloadPlaylistDetailsList.size() != 0) {
+                    if (count <= totalAudio) {
+                        if (count == totalAudio) {
+                            binding.pbProgress.setVisibility(View.GONE);
+                            binding.ivDownloads.setVisibility(View.VISIBLE);
+                            DatabaseClient
+                                    .getInstance(getActivity())
+                                    .getaudioDatabase()
+                                    .taskDao()
+                                    .getCountDownloadProgress1("Complete", playlistID).removeObserver(cs -> {
+                            });
+//                            handler1.removeCallbacks(UpdateSongTime1);
+                        } else {
+                            long progressPercent = count * 100 / totalAudio;
+                            int downloadProgress1 = (int) progressPercent;
+                            binding.pbProgress.setVisibility(View.VISIBLE);
+                            binding.ivDownloads.setVisibility(View.GONE);
+                            binding.pbProgress.setProgress(downloadProgress1);
+//                        getMediaByPer(playlistID, totalAudio);
+//                             handler1.postDelayed(UpdateSongTime1, 500);
+                        }
+                    } else {
                         DatabaseClient
                                 .getInstance(getActivity())
                                 .getaudioDatabase()
                                 .taskDao()
                                 .getCountDownloadProgress1("Complete", playlistID).removeObserver(cs -> {
                         });
-//                            handler1.removeCallbacks(UpdateSongTime1);
-                    } else {
-                        long progressPercent = count * 100 / totalAudio;
-                        int downloadProgress1 = (int) progressPercent;
-                        binding.pbProgress.setVisibility(View.VISIBLE);
-                        binding.ivDownloads.setVisibility(View.GONE);
-                        binding.pbProgress.setProgress(downloadProgress1);
-//                        getMediaByPer(playlistID, totalAudio);
-//                             handler1.postDelayed(UpdateSongTime1, 500);
-                    }
-                } else {
-                    DatabaseClient
-                            .getInstance(getActivity())
-                            .getaudioDatabase()
-                            .taskDao()
-                            .getCountDownloadProgress1("Complete", playlistID).removeObserver(cs -> {
-                    });
-                    binding.pbProgress.setVisibility(View.GONE);
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                        binding.pbProgress.setVisibility(View.GONE);
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
 //                        handler1.removeCallbacks(UpdateSongTime1);
+                    }
                 }
-            }
-        });
+            });
       /*  class getMediaByPer extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -1079,6 +1119,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         getMediaByPer st = new getMediaByPer();
         st.execute();*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getDownloadData() {
@@ -2687,8 +2730,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                                 editor.commit();
                                 callAddTransFrag();
-                            }else {
+                            } else {
                                 callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
+                                //                        TODO  Playlist Started
                             }
                         }
                     } else {
@@ -2698,6 +2742,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                         callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
+//                        TODO  Playlist Started
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -2740,8 +2785,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             editor.putInt(CONSTANTS.PREF_KEY_position, position);
                             editor.commit();
                             callAddTransFrag();
-                        }else {
+                        } else {
                             callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID);
+                            //                        TODO  Playlist Started
                         }
                     }
                 } else {
@@ -2756,6 +2802,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         listModelList2.addAll(listModelList);
                     }
                     callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
+                    //                        TODO  Playlist Started
                 }
                 isPlayPlaylist = 1;
 //                handler3.postDelayed(UpdateSongTime3, 500);
@@ -3034,9 +3081,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                                     editor.commit();
                                     callAddTransFrag();
-                                }else {
-                                     callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
-                                 }
+                                } else {
+                                    callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                                    //                        TODO  Playlist Started
+                                }
                             }
                         } else {
                             isDisclaimer = 0;
@@ -3045,6 +3093,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.add(addDisclaimer);
                             listModelList2.addAll(listModelList);
                             callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                            //                        TODO  Playlist Started
                         }
                     } else {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
@@ -3071,6 +3120,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 callAddTransFrag();
                             }else {
                                      callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                                     //                        TODO  Playlist Started
                                  }
                             }
                         } else {
@@ -3080,6 +3130,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.add(addDisclaimer);
                             listModelList2.addAll(listModelList);
                             callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                            //                        TODO  Playlist Started
                         }
                     }
                     isPlayPlaylist = 1;
@@ -3119,9 +3170,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                                 editor.commit();
                                 callAddTransFrag();
-                            }else {
-                                 callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
-                             }
+                            } else {
+                                callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                                //                        TODO  Playlist Started
+                            }
                         }
                     } else {
                         isDisclaimer = 0;
@@ -3135,6 +3187,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.addAll(listModelList);
                         }
                         callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
+                        //                        TODO  Playlist Started
                     }
                 } else {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
@@ -3158,9 +3211,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                                 editor.commit();
                                 callAddTransFrag();
-                            }else {
-                                 callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
-                             }
+                            } else {
+                                callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                                //                        TODO  Playlist Started
+                            }
                         }
                     } else {
                         isDisclaimer = 0;
@@ -3174,6 +3228,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.addAll(listModelList);
                         }
                         callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
+                        //                        TODO  Playlist Started
                     }
                 }
                 isPlayPlaylist = 1;

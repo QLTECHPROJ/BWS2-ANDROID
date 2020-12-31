@@ -39,6 +39,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityResourceBinding;
 import com.brainwellnessspa.databinding.FilterListLayoutBinding;
+import com.segment.analytics.Properties;
 
 import java.util.List;
 
@@ -75,6 +76,9 @@ public class ResourceActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        /*Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen);*/
         binding.viewPager.setOffscreenPageLimit(5);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio Books"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Podcasts"));

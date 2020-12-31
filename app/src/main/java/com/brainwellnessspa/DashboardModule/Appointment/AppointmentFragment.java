@@ -70,9 +70,9 @@ public class AppointmentFragment extends Fragment {
             appointmentImage = bundle.getString("appointmentImage");
             appointmentMainName = bundle.getString("appointmentMainName");
         }
-        Properties p = new Properties();
+        /*Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
+        BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);*/
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());

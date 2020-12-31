@@ -53,6 +53,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     public static int comeDeletePlaylist = 0;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute, PlaylistImageDetails;
+    String PlaylistDescription, Created, UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute, PlaylistImageDetails;
     EditText searchEditText;
     Context ctx;
     List<DownloadAudioDetails> playlistWiseAudiosDetails;
@@ -146,7 +147,30 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             TotalAudio = getIntent().getStringExtra("TotalAudio");
             Totalhour = getIntent().getStringExtra("Totalhour");
             Totalminute = getIntent().getStringExtra("Totalminute");
+            Created = getIntent().getStringExtra("Created");
+            PlaylistDescription = getIntent().getStringExtra("PlaylistDescription");
         }
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("playlistId", PlaylistID);
+        p.putValue("playlistName", PlaylistName);
+        p.putValue("playlistDescription", PlaylistDescription);
+        if (Created.equalsIgnoreCase("1")) {
+            p.putValue("playlistType", "Created");
+        } else if (Created.equalsIgnoreCase("0")) {
+            p.putValue("playlistType", "Default");
+        }
+        if (Totalhour.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", "0h " + Totalminute + "m");
+        } else if (Totalminute.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", Totalhour + "h 0m");
+        } else {
+            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+        }
+        p.putValue("audioCount", TotalAudio);
+        p.putValue("source", "Downloaded Playlists");
+        BWSApplication.addToSegment("Playlist Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(view -> {
             LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
@@ -749,6 +773,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 }
                             } else {
                                 callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
+                                //                        TODO  Playlist Started
                             }
                         }
                     } else {
@@ -758,6 +783,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                         callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
+                        //                        TODO  Playlist Started
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -806,6 +832,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             }
                         } else {
                             callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
+                            //                        TODO  Playlist Started
                         }
                     }
                 } else {
@@ -820,6 +847,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         listModelList2.addAll(listModelList);
                     }
                     callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
+                    //                        TODO  Playlist Started
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));

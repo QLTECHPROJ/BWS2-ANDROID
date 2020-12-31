@@ -256,11 +256,15 @@ public class OtpActivity extends AppCompatActivity implements
                                                     .putValue("userId", UserID)
                                                     .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
                                                     .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                                    .putValue("countryCode", Code)
+                                                    .putValue("countryName", Name)
                                                     .putValue("userName", otpModel.getResponseData().getName())
                                                     .putValue("mobileNo", otpModel.getResponseData().getPhoneNumber())
                                                     .putValue("plan", otpModel.getResponseData().getPlan())
                                                     .putValue("planStatus", otpModel.getResponseData().getPlanStatus())
-                                                    .putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate()));
+                                                    .putValue("planStartDt", "")
+                                                    .putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate())
+                                                    .putValue("clinikoId", ""));
                                             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
                                             String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
                                             String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));

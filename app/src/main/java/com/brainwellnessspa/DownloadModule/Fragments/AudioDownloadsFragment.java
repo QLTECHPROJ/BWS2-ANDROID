@@ -112,9 +112,9 @@ public class AudioDownloadsFragment extends Fragment {
         }
         handler1 = new Handler();
         audioList = new ArrayList<>();
-        Properties p = new Properties();
+        /*Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
+        BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);*/
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
         binding.tvFound.setText("Your downloaded audios will appear here");
@@ -479,11 +479,11 @@ public class AudioDownloadsFragment extends Fragment {
                         listModelList2.add(position, mainPlayModel);
                         callTransFrag(position, listModelList2);
                     }
-                    Properties p = new Properties();
+                    /*Properties p = new Properties();
                     p.putValue("userId", UserID);
                     p.putValue("audioId", listModelList.get(position).getID());
                     p.putValue("audioName", listModelList.get(position).getName());
-                    BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
+                    BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);*/
                 }
 //            handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
@@ -628,7 +628,7 @@ public class AudioDownloadsFragment extends Fragment {
                 if(player!=null){
                     player.removeMediaItem(position);
                 }
-                Properties p = new Properties();
+                /*Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("audioId", listModelList.get(position).getID());
                 p.putValue("audioName", listModelList.get(position).getName());
@@ -640,7 +640,7 @@ public class AudioDownloadsFragment extends Fragment {
                 p.putValue("audioService", "");
                 p.putValue("audioType", "");
                 p.putValue("bitRate", "");
-                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
+                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);*/
                 listModelList.remove(position);
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {

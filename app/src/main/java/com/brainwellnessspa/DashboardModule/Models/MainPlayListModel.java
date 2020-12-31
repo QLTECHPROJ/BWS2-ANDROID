@@ -143,6 +143,9 @@ public class MainPlayListModel {
             @SerializedName("PlaylistId")
             @Expose
             private String playlistId;
+            @SerializedName("Created")
+            @Expose
+            private String created;
             @SerializedName("Audiolist")
             @Expose
             private ArrayList<Audiolist> audiolist = null;
@@ -160,6 +163,7 @@ public class MainPlayListModel {
                 playlistImage = in.readString();
                 playlistImageDetails = in.readString();
                 playlistId = in.readString();
+                created = in.readString();
                 audiolist = in.createTypedArrayList(Audiolist.CREATOR);
             }
 
@@ -267,6 +271,14 @@ public class MainPlayListModel {
                 this.playlistId = playlistId;
             }
 
+            public String getCreated() {
+                return created;
+            }
+
+            public void setCreated(String created) {
+                this.created = created;
+            }
+
             public ArrayList<Audiolist> getAudiolist() {
                 return audiolist;
             }
@@ -293,6 +305,7 @@ public class MainPlayListModel {
                 parcel.writeString(playlistImage);
                 parcel.writeString(playlistImageDetails);
                 parcel.writeString(playlistId);
+                parcel.writeString(created);
             }
 
             public static class Audiolist implements Parcelable {

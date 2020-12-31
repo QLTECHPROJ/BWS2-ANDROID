@@ -22,6 +22,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentPaymentBinding;
+import com.segment.analytics.Properties;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +32,7 @@ public class PaymentFragment extends Fragment {
     static Context context;
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
-    String userId;
+    String UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,16 +41,23 @@ public class PaymentFragment extends Fragment {
         View view = binding.getRoot();
         context = getActivity();
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        UserID = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
+
+        /*Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);*/
 
         binding.llAddNewCard.setOnClickListener(view1 -> {
             if (BWSApplication.isNetworkConnected(context)) {
                 Intent i = new Intent(getActivity(), AddPaymentActivity.class);
                 i.putExtra("ComePayment", "1");
                 startActivity(i);
+                /*Properties p1 = new Properties();
+                p1.putValue("userId", UserID);
+                BWSApplication.addToSegment("Payment Card Add Clicked", p1, CONSTANTS.track);*/
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -68,7 +76,7 @@ public class PaymentFragment extends Fragment {
     private void prepareCardList() {
         try {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
+            Call<CardListModel> listCall = APIClient.getClient().getCardLists(UserID);
             listCall.enqueue(new Callback<CardListModel>() {
                 @Override
                 public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
@@ -83,7 +91,7 @@ public class PaymentFragment extends Fragment {
                                     binding.rvCardList.setVisibility(View.GONE);
                                 } else {
                                     binding.rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.progressBar,
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), UserID, binding.progressBar,
                                             binding.progressBarHolder, binding.rvCardList);
                                     binding.rvCardList.setAdapter(adapter);
                                 }

@@ -46,6 +46,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -67,6 +68,10 @@ public class LikePlaylistsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvLikesList.setLayoutManager(mLayoutManager);
         binding.rvLikesList.setItemAnimator(new DefaultItemAnimator());
+        /*Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Liked Playlists Viewed", p, CONSTANTS.screen);*/
+
         prepareData();
         binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your like playlists will appear here");
@@ -258,6 +263,7 @@ public class LikePlaylistsFragment extends Fragment {
                     i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
                     i.putExtra("PlaylistName", modelList.get(position).getPlaylistName());
                     i.putExtra("PlaylistIDImage", modelList.get(position).getPlaylistImage());
+                    i.putExtra("ScreenView", "Liked Playlist");
                     i.putExtra("Liked", "1");
                     startActivity(i);
                 }

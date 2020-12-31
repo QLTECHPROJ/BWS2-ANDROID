@@ -477,6 +477,7 @@ public class AptAudioFragment extends Fragment {
                             listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", listModelList.get(position).getID());
+                        i.putExtra("ScreenView","Appointment Audio Screen");
                         i.putExtra("PlaylistID", "");
                         startActivity(i);
                     }

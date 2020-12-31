@@ -383,6 +383,7 @@ public class ViewAllSearchFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", AudiolistModel.get(position).getID());
+                    i.putExtra("ScreenView","Recommended Search Audio");
                     i.putExtra("PlaylistID", "");
                     startActivity(i);
                 }
@@ -507,6 +508,7 @@ public class ViewAllSearchFragment extends Fragment {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
                     i.putExtra("PlaylistID", PlaylistModel.get(position).getID());
+                    i.putExtra("ScreenView","Recommended Search Playlist");
                     i.putExtra("PlaylistName", PlaylistModel.get(position).getName());
                     startActivity(i);
                 }

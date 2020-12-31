@@ -127,6 +127,7 @@ public class ViewAllPlayListModel {
             @SerializedName("PlaylistImage")
             @Expose
             private String playlistImage;
+            private String Created;
             private String totalAudio;
             private String totalhour;
             private String totalminute;
@@ -170,6 +171,14 @@ public class ViewAllPlayListModel {
 
             public void setPlaylistSubcat(String playlistSubcat) {
                 this.playlistSubcat = playlistSubcat;
+            }
+
+            public String getCreated() {
+                return Created;
+            }
+
+            public void setCreated(String created) {
+                Created = created;
             }
 
             public String getPlaylistImage() {

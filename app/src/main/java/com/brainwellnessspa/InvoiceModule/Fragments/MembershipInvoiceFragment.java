@@ -55,19 +55,22 @@ public class MembershipInvoiceFragment extends Fragment {
     private static final String TAG = "Download Task";
     private ProgressDialog progressDialog;
     String UserID;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false);
         View view = binding.getRoot();
 
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
         if (getArguments() != null) {
             memberShipList = getArguments().getParcelableArrayList("membershipInvoiceFragment");
         }
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-          UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Properties p = new Properties();
+
+        /*Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Membership Invoice Screen Viewed", p, CONSTANTS.screen);
+        BWSApplication.addToSegment("Membership Invoice Screen Viewed", p, CONSTANTS.screen);*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
@@ -129,14 +132,13 @@ public class MembershipInvoiceFragment extends Fragment {
                 receiptFragment.setCancelable(true);
                 receiptFragment.setValues(listModelList.get(position).getInvoiceId(), "1");
                 receiptFragment.show(fragmentManager, "receipt");
-                SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-                Properties p = new Properties();
+
+                /*Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
                 p.putValue("invoiceType", listModelList.get(position).getStatus());
                 p.putValue("invoiceAmount", listModelList.get(position).getAmount());
-                BWSApplication.addToSegment("Membership Invoice Clicked", p, CONSTANTS.track);
+                BWSApplication.addToSegment("Membership Invoice Clicked", p, CONSTANTS.track);*/
             });
 
             if (listModelList.get(position).getStatus().equalsIgnoreCase("paid")) {
@@ -150,12 +152,12 @@ public class MembershipInvoiceFragment extends Fragment {
             holder.binding.llDownloads.setOnClickListener(v -> {
                 downloadUrl = listModelList.get(position).getInvoicePdf();
                 new FileDownloader();
-                Properties p = new Properties();
+                /*Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
                 p.putValue("invoiceType", listModelList.get(position).getStatus());
                 p.putValue("invoiceAmount", listModelList.get(position).getAmount());
-                BWSApplication.addToSegment("Memebrship Invoice Downloaded", p, CONSTANTS.track);
+                BWSApplication.addToSegment("Memebrship Invoice Downloaded", p, CONSTANTS.track);*/
             });
         }
 

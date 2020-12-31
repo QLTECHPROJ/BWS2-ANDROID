@@ -419,6 +419,7 @@ public class ViewAllAudioFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                         i.putExtra("AudioId", listModelList.get(position).getID());
+                        i.putExtra("ScreenView","Audio View All Screen");
                         i.putExtra("PlaylistID", "");
                         startActivity(i);
                     }

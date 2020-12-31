@@ -32,6 +32,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityAddPaymentBinding;
 import com.brainwellnessspa.databinding.YeardialogBinding;
+import com.segment.analytics.Properties;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
@@ -53,7 +54,7 @@ public class AddPaymentActivity extends AppCompatActivity {
     Activity activity;
     Dialog d;
     int a = 0;
-    String userId, card_id, TrialPeriod, comeFrom = "", ComesTrue, strToken, ComePayment = "";
+    String userId, card_id, TrialPeriod, comeFrom = "", ComesTrue, strToken, ComePayment = "", UserID;
     int year, month;
     int position;
     YeardialogBinding binding1;
@@ -66,6 +67,9 @@ public class AddPaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_payment);
         context = AddPaymentActivity.this;
         activity = AddPaymentActivity.this;
+        SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
         if (getIntent() != null) {
             ComePayment = getIntent().getStringExtra("ComePayment");
         }
@@ -131,8 +135,7 @@ public class AddPaymentActivity extends AppCompatActivity {
             a = 1;
             showYearDialog();
         });
-        SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
         CreditCardFormatTextWatcher tv = new CreditCardFormatTextWatcher(binding.etNumber);
         binding.etNumber.addTextChangedListener(tv);
         binding.etName.addTextChangedListener(addCardTextWatcher);
@@ -203,6 +206,9 @@ public class AddPaymentActivity extends AppCompatActivity {
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                                /*Properties p = new Properties();
+                                                p.putValue("userId", UserID);
+                                                BWSApplication.addToSegment("Payment Card Added", p, CONSTANTS.track);*/
                                                 finish();
                                                 BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {

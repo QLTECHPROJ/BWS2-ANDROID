@@ -87,8 +87,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding1 = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.yeardialog, null, false);
         d.setContentView(binding1.getRoot());
-        Properties p = new Properties();
-        BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);
+        /*Properties p = new Properties();
+        BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);*/
 
        /* binding.etNumber.addTextChangedListener(addCardTextWatcher);
         binding.etName.addTextChangedListener(addCardTextWatcher);

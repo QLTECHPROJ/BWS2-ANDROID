@@ -50,6 +50,7 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
         holder.binding.tvTitle.setText(listModelList.get(position).getCategoryName());
         Glide.with(ctx).load(listModelList.get(position).getCatImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
         /*MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 16,
                 1, 1, 0.52f, 10);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());

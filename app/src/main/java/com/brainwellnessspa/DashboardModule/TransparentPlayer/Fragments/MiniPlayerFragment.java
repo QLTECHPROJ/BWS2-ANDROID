@@ -310,8 +310,8 @@ public class MiniPlayerFragment extends Fragment {
                     BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
                     position = player.getCurrentWindowIndex();
                     myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-//                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-//                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                   /* GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);*/
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     Gson gson = new Gson();
                     String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));

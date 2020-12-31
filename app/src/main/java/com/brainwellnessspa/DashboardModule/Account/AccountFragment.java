@@ -105,9 +105,9 @@ public class AccountFragment extends Fragment {
                 1, 1, 0.2f, 10);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
-        Properties p = new Properties();
+       /* Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);
+        BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);*/
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
 
         binding.llDownloads.setOnClickListener(view12 -> {

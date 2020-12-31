@@ -83,6 +83,7 @@ public class AddAudioActivity extends AppCompatActivity {
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0, diff = 0;
+    Properties p;
 //    private Runnable UpdateSongTime3;
 
     private BroadcastReceiver listener = new BroadcastReceiver() {
@@ -119,7 +120,7 @@ public class AddAudioActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        Properties p = new Properties();
+        p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("source", "Add Audio Screen");
         BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
@@ -152,6 +153,11 @@ public class AddAudioActivity extends AppCompatActivity {
                 } else {
                     prepareSearchData(search, searchEditText);
                 }
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("source", "Add Audio Screen");
+                p.putValue("searchKeyword", search);
+                BWSApplication.addToSegment("Audio/Playlist Searched", p, CONSTANTS.track);
                 return false;
             }
         });
@@ -265,6 +271,10 @@ public class AddAudioActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SuggestedModel listModel = response.body();
                             binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("source", "Add Audio Screen");
+                            BWSApplication.addToSegment("Recommended Audios List Viewed", p, CONSTANTS.screen);
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
                             suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
                             binding.rvSuggestedList.setAdapter(suggestedAdpater);
@@ -306,6 +316,10 @@ public class AddAudioActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SearchPlaylistModel listModel = response.body();
                             binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("source", "Add Audio Screen");
+                            BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
                             binding.tvSPViewAll.setVisibility(View.VISIBLE);
 
                             SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());

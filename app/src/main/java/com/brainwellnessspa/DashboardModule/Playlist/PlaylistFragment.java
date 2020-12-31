@@ -50,6 +50,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -73,6 +74,8 @@ public class PlaylistFragment extends Fragment {
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     MainPlayListAdapter adapter;
     ArrayList<MainPlayListModel.ResponseData> listModelList;
+    public static String PlaylistSource = "";
+    PlaylistAdapter playlistAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
@@ -83,6 +86,10 @@ public class PlaylistFragment extends Fragment {
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         ComeScreenAccount = 0;
         comefromDownload = "0";
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen);
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
@@ -94,7 +101,7 @@ public class PlaylistFragment extends Fragment {
         return view;
     }
 
-    private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage, String MyDownloads) {
+    private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage, String MyDownloads, String ScreenView, String PlaylistType) {
         try {
             comefrom_search = 0;
             Bundle bundle = new Bundle();
@@ -104,7 +111,10 @@ public class PlaylistFragment extends Fragment {
             bundle.putString("PlaylistID", id);
             bundle.putString("PlaylistName", name);
             bundle.putString("PlaylistImage", playlistImage);
+            bundle.putString("PlaylistSource", PlaylistSource);
             bundle.putString("MyDownloads", MyDownloads);
+            bundle.putString("ScreenView", ScreenView);
+            bundle.putString("PlaylistType", PlaylistType);
             myPlaylistsFragment.setArguments(bundle);
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, myPlaylistsFragment)
@@ -187,7 +197,6 @@ public class PlaylistFragment extends Fragment {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
-
 
     public void openMiniPlayer() {
         try {
@@ -359,6 +368,10 @@ public class PlaylistFragment extends Fragment {
             }
 
             binding.rlCreatePlaylist.setOnClickListener(view -> {
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("source", "Playlist Main Screen");
+                BWSApplication.addToSegment("Create Playlist Clicked", p, CONSTANTS.track);
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
@@ -426,7 +439,13 @@ public class PlaylistFragment extends Fragment {
                                             } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
                                                     listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
 
-                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
+                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0", "Your Created","Created");
+                                                /*Properties p = new Properties();
+                                                p.putValue("userId", UserID);
+                                                p.putValue("playlistId", listModel.getResponseData().getId());
+                                                p.putValue("playlistName", listModel.getResponseData().getName());
+                                                p.putValue("source", "Add To Playlist Screen");
+                                                BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);*/
                                                 dialog.dismiss();
                                             }
                                         }
@@ -460,21 +479,21 @@ public class PlaylistFragment extends Fragment {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.your_created))) {
-                    PlaylistAdapter adapter1 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock(), "0");
-                    holder.binding.rvMainAudio.setAdapter(adapter1);
+                    playlistAdapter = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock(), "0", listModelList.get(position).getView());
+                    holder.binding.rvMainAudio.setAdapter(playlistAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
-                    PlaylistAdapter adapter2 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock(), "1");
-                    holder.binding.rvMainAudio.setAdapter(adapter2);
+                    playlistAdapter = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock(), "1", listModelList.get(position).getView());
+                    holder.binding.rvMainAudio.setAdapter(playlistAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Recommended_Playlist))) {
-                    PlaylistAdapter adapter3 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock(), "0");
-                    holder.binding.rvMainAudio.setAdapter(adapter3);
+                    playlistAdapter = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock(), "0", listModelList.get(position).getView());
+                    holder.binding.rvMainAudio.setAdapter(playlistAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.populars))) {
-                    PlaylistAdapter adapter4 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock(), "0");
-                    holder.binding.rvMainAudio.setAdapter(adapter4);
+                    playlistAdapter = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock(), "0", listModelList.get(position).getView());
+                    holder.binding.rvMainAudio.setAdapter(playlistAdapter);
                 }
             }
         }
@@ -562,15 +581,16 @@ public class PlaylistFragment extends Fragment {
 
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         Context ctx;
-        String IsLock, MyDownloads;
+        String IsLock, MyDownloads, screenView;
         int index = -1;
         private ArrayList<MainPlayListModel.ResponseData.Detail> listModelList;
 
-        public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx, String IsLock, String MyDownloads) {
+        public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx, String IsLock, String MyDownloads, String screenView) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.IsLock = IsLock;
             this.MyDownloads = MyDownloads;
+            this.screenView = screenView;
         }
 
         @NonNull
@@ -636,6 +656,7 @@ public class PlaylistFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", "");
+                        i.putExtra("ScreenView", "Playlist Main Screen");
                         i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                         ctx.startActivity(i);
                     }
@@ -655,7 +676,7 @@ public class PlaylistFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     if (MyDownloads.equalsIgnoreCase("1")) {
                         callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
-                                listModelList.get(position).getPlaylistImage(), MyDownloads);
+                                listModelList.get(position).getPlaylistImage(), MyDownloads, "Downloaded Playlists","");
 //                        getMedia(listModelList.get(position).getPlaylistID());
                        /* Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
                         i.putExtra("New", "0");
@@ -670,7 +691,7 @@ public class PlaylistFragment extends Fragment {
                         ctx.startActivity(i);*/
                     } else {
                         callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
-                                listModelList.get(position).getPlaylistImage(), MyDownloads);
+                                listModelList.get(position).getPlaylistImage(), MyDownloads, screenView,listModelList.get(position).getCreated());
                     }
 
                 }

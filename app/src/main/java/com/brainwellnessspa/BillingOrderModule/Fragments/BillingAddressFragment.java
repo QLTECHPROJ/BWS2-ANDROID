@@ -20,6 +20,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentBillingAddressBinding;
+import com.segment.analytics.Properties;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +38,9 @@ public class BillingAddressFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        /*Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Billing Address Screen Viewed", p, CONSTANTS.screen);*/
 
         binding.btnSave.setEnabled(false);
         binding.btnSave.setTextColor(getResources().getColor(R.color.white));
@@ -86,6 +90,9 @@ public class BillingAddressFragment extends Fragment {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                     BillingAddressSaveModel listModel = response.body();
                                     BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                                    /*Properties p = new Properties();
+                                    p.putValue("userId", UserID);
+                                    BWSApplication.addToSegment("Billing Address Updated", p, CONSTANTS.track);*/
                                     getActivity().finish();
                                 } catch (Exception e) {
                                     e.printStackTrace();

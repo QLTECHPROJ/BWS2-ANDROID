@@ -109,6 +109,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                 holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
+                i.putExtra("ScreenView","Audio Main Screen");
                 i.putExtra("PlaylistID", "");
                 ctx.startActivity(i);
             }

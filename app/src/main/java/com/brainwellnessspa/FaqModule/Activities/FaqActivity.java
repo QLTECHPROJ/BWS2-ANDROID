@@ -4,14 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.FaqModule.Models.FaqListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityFaqBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 
@@ -24,16 +28,22 @@ public class FaqActivity extends AppCompatActivity {
     FaqListModel faqListModel;
     private ArrayList<FaqListModel.ResponseData> modelList;
     Activity activity;
+    String UserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_faq);
         activity = FaqActivity.this;
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         modelList = new ArrayList<>();
         PrepareData();
         binding.llBack.setOnClickListener(view -> finish());
 
+        /*Properties p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("FAQ Viewed", p, CONSTANTS.screen);*/
         binding.llAudio.setOnClickListener(view -> {
             try {
                 modelList.clear();

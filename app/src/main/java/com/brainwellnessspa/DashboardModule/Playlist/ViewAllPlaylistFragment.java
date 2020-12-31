@@ -55,7 +55,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRel
 public class ViewAllPlaylistFragment extends Fragment {
     public static String GetPlaylistLibraryID = "";
     FragmentViewAllPlaylistBinding binding;
-    String GetLibraryID, Name, UserID, AudioFlag, MyDownloads;
+    String GetLibraryID, Name, UserID, AudioFlag, MyDownloads, ScreenView = "";
     List<DownloadPlaylistDetails> playlistList;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     View view;
@@ -104,6 +104,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 .taskDao()
                 .getAllPlaylist1().observe(getActivity(), audioList -> {
             binding.tvTitle.setText("My Downloads");
+            ScreenView = "My Downloads";
             ArrayList<ViewAllPlayListModel.ResponseData.Detail> listModelList = new ArrayList<>();
             for (int i = 0; i < audioList.size(); i++) {
                 ViewAllPlayListModel.ResponseData.Detail detail = new ViewAllPlayListModel.ResponseData.Detail();
@@ -235,6 +236,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                 ViewAllPlayListModel listModel = response.body();
                                 binding.tvTitle.setText(listModel.getResponseData().getView());
+                                ScreenView = listModel.getResponseData().getView();
                                 PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
                                 binding.rvMainAudio.setAdapter(adapter);
                             }
@@ -321,6 +323,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
+                    i.putExtra("ScreenView", "Playlist View All Screen");
                     i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                     startActivity(i);
                 }
@@ -363,6 +366,8 @@ public class ViewAllPlaylistFragment extends Fragment {
                         bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
                         bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
                         bundle.putString("MyDownloads", MyDownloads);
+                        bundle.putString("ScreenView", ScreenView);
+                        bundle.putString("PlaylistType", listModelList.get(position).getCreated());
                         myPlaylistsFragment.setArguments(bundle);
                         fragmentManager1.beginTransaction()
                                 .replace(R.id.flContainer, myPlaylistsFragment)

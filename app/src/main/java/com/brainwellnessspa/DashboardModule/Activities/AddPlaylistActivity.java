@@ -43,6 +43,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -61,9 +62,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
     public static boolean addToPlayList = false;
     public static String MyPlaylistId = "";
     ActivityAddPlaylistBinding binding;
-    String UserID, AudioId, FromPlaylistID, PlaylistName;
+    String UserID, AudioId, FromPlaylistID, PlaylistName, ScreenView = "";
     Context ctx;
     Activity activity;
+    Properties p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,14 @@ public class AddPlaylistActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
+        if (getIntent().getExtras() != null) {
+            ScreenView = getIntent().getStringExtra("ScreenView");
+        }
+
+        p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("source", ScreenView);
+        BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(view -> {
             comefrom_search = 0;
@@ -95,6 +105,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
 
         binding.btnAddPlatLists.setOnClickListener(view -> {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("source", "Add To Playlist Screen");
+            BWSApplication.addToSegment("Create Playlist Clicked", p, CONSTANTS.track);
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.create_palylist);
@@ -166,6 +180,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             } else {
                                                 callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
                                             }
+                                           /* Properties p = new Properties();
+                                            p.putValue("userId", UserID);
+                                            p.putValue("playlistId", PlaylistID);
+                                            p.putValue("playlistName", listsModel.getResponseData().getName());
+                                            p.putValue("source", "Add To Playlist Screen");
+                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);*/
                                         } else {
                                             BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
                                         }

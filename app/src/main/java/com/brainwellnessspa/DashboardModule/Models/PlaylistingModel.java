@@ -58,6 +58,21 @@ public class PlaylistingModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("Created")
+        @Expose
+        private String created;
+        @SerializedName("TotalAudio")
+        @Expose
+        private String totalAudio;
+        @SerializedName("TotalDuration")
+        @Expose
+        private String totalDuration;
+        @SerializedName("Totalhour")
+        @Expose
+        private String totalhour;
+        @SerializedName("Totalminute")
+        @Expose
+        private String totalminute;
         @SerializedName("Image")
         @Expose
         private String image;
@@ -87,6 +102,46 @@ public class PlaylistingModel {
 
         public void setImage(String image) {
             this.image = image;
+        }
+
+        public String getCreated() {
+            return created;
+        }
+
+        public void setCreated(String created) {
+            this.created = created;
+        }
+
+        public String getTotalAudio() {
+            return totalAudio;
+        }
+
+        public void setTotalAudio(String totalAudio) {
+            this.totalAudio = totalAudio;
+        }
+
+        public String getTotalDuration() {
+            return totalDuration;
+        }
+
+        public void setTotalDuration(String totalDuration) {
+            this.totalDuration = totalDuration;
+        }
+
+        public String getTotalhour() {
+            return totalhour;
+        }
+
+        public void setTotalhour(String totalhour) {
+            this.totalhour = totalhour;
+        }
+
+        public String getTotalminute() {
+            return totalminute;
+        }
+
+        public void setTotalminute(String totalminute) {
+            this.totalminute = totalminute;
         }
 
         public String getIscreate() {

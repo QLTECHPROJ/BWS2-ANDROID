@@ -51,6 +51,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
     ActivityMyPlaylistBinding binding;
-    String UserID, PlaylistID, Download = "", Liked = "", PlaylistDesc = "", PlaylistName = "";
+    String PlaylistType = "", UserID, PlaylistID, Download = "", Liked = "", PlaylistDesc = "", PlaylistName = "", ScreenView = "", TotalAudio = "", Totalhour = "", Totalminute = "";
     Context ctx;
     Activity activity;
     public static int comeAddPlaylist = 0;
@@ -125,7 +126,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 binding.ivDownloads.setVisibility(View.VISIBLE);
                 handler1.removeCallbacks(UpdateSongTime1);
                 getDownloadData();
-            }*//*
+            }*/
+    /*
 //            getMediaByPer(PlaylistID,SongListSize);
         }
     };*/
@@ -155,6 +157,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
             Liked = getIntent().getStringExtra("Liked");
         }
 
+        if (getIntent().getExtras() != null) {
+            ScreenView = getIntent().getStringExtra("ScreenView");
+        }
+
+        if (getIntent().getExtras() != null) {
+            PlaylistType = getIntent().getStringExtra("PlaylistType");
+        }
+
 //        downloadAudioDetailsList = GetAllMedia();
         CallObserverMethodGetAllMedia();
         GetPlaylistDetail();
@@ -173,6 +183,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, AddPlaylistActivity.class);
             i.putExtra("AudioId", "");
+            i.putExtra("ScreenView", "Playlist Details Screen");
             i.putExtra("PlaylistID", PlaylistID);
             startActivity(i);
         });
@@ -278,6 +289,26 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     RenamePlaylistModel listModel = response1.body();
                                     BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                    Properties p = new Properties();
+                                    p.putValue("userId", UserID);
+                                    p.putValue("playlistId", PlaylistID);
+                                    p.putValue("playlistName", PlaylistName);
+                                    p.putValue("playlistDescription", PlaylistDesc);
+                                    if (PlaylistType.equalsIgnoreCase("1")) {
+                                        p.putValue("playlistType", "Created");
+                                    } else if (PlaylistType.equalsIgnoreCase("0")) {
+                                        p.putValue("playlistType", "Default");
+                                    }
+                                    if (Totalhour.equalsIgnoreCase("")) {
+                                        p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                                    } else if (Totalminute.equalsIgnoreCase("")) {
+                                        p.putValue("playlistDuration", Totalhour + "h 0m");
+                                    } else {
+                                        p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                                    }
+                                    p.putValue("audioCount", TotalAudio);
+                                    p.putValue("source", ScreenView);
+                                    BWSApplication.addToSegment("Playlist Rename Clicked", p, CONSTANTS.track);
                                     dialog.dismiss();
                                     finish();
                                 }
@@ -375,14 +406,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
     }
 
     private void CallObserverMethodGetAllMedia() {
-       DatabaseClient
+        DatabaseClient
                 .getInstance(ctx)
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData12().observe(this,audioList -> {
-           this.downloadAudioDetailsList = audioList;
+                .geAllData12().observe(this, audioList -> {
+            this.downloadAudioDetailsList = audioList;
 
-       });
+        });
     }
 
     @Override
@@ -672,12 +703,37 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             PlaylistDesc = model.getResponseData().getPlaylistDesc();
                             PlaylistName = model.getResponseData().getPlaylistName();
                             PlaylistID = model.getResponseData().getPlaylistID();
+                            TotalAudio = model.getResponseData().getTotalAudio();
+                            Totalhour = model.getResponseData().getTotalhour();
+                            Totalminute = model.getResponseData().getTotalminute();
                             if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
                                 binding.tvDesc.setVisibility(View.GONE);
                             } else {
                                 binding.tvDesc.setVisibility(View.VISIBLE);
                                 binding.tvDesc.setText(model.getResponseData().getPlaylistMastercat());
                             }
+
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("playlistId", model.getResponseData().getPlaylistID());
+                            p.putValue("playlistName", model.getResponseData().getPlaylistName());
+                            p.putValue("playlistDescription", PlaylistDesc);
+                            if (PlaylistType.equalsIgnoreCase("1")) {
+                                p.putValue("playlistType", "Created");
+                            } else if (PlaylistType.equalsIgnoreCase("0")) {
+                                p.putValue("playlistType", "Default");
+                            }
+                            if (model.getResponseData().getTotalhour().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", "0h " + model.getResponseData().getTotalminute() + "m");
+                            } else if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h 0m");
+                            } else {
+                                p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+                            }
+
+                            p.putValue("audioCount", model.getResponseData().getTotalAudio());
+                            p.putValue("source", ScreenView);
+                            BWSApplication.addToSegment("Playlist Details Viewed", p, CONSTANTS.screen);
 
                             if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
                                     model.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&

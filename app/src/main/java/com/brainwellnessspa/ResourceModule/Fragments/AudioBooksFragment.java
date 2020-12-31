@@ -169,6 +169,7 @@ public class AudioBooksFragment extends Fragment {
                 mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                 i.putExtra("audio_books", audio_books);
+                i.putExtra("id", listModelList.get(position).getID());
                 i.putExtra("title", listModelList.get(position).getTitle());
                 i.putExtra("author", listModelList.get(position).getAuthor());
                 i.putExtra("linkOne", listModelList.get(position).getResourceLink1());

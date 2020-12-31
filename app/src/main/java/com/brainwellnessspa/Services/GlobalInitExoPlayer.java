@@ -240,12 +240,12 @@ public class GlobalInitExoPlayer extends Service {
 //                : new ConcatenatingMediaSource(mediaSources);
 //        player.setMediaSource(mediaSource);
 //        player.prepare(mediaSource);
+//        InitNotificationAudioPLayer(ctx, mainPlayModelList);
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
         player.setForegroundMode(true);
-//        InitNotificationAudioPLayer(ctx, mainPlayModelList);
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
                 .build();

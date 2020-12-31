@@ -1263,6 +1263,7 @@ public class AddQueueActivity extends AppCompatActivity {
                             mLastClickTime = SystemClock.elapsedRealtime();
                             Intent i = new Intent(ctx, AddPlaylistActivity.class);
                             i.putExtra("AudioId", AudioId);
+                            i.putExtra("ScreenView","Audio Details Screen");
                             i.putExtra("PlaylistID", "");
                             startActivity(i);
                         });

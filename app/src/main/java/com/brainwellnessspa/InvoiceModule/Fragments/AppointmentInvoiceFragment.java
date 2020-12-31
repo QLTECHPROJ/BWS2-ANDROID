@@ -54,20 +54,23 @@ public class AppointmentInvoiceFragment extends Fragment {
     RequestPermissionHandler mRequestPermissionHandler;
     private static final String TAG = "Download Task";
     private ProgressDialog progressDialog;
+    String UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false);
         View view = binding.getRoot();
 
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
         if (getArguments() != null) {
             appointmentList = getArguments().getParcelableArrayList("appointmentInvoiceFragment");
         }
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Properties p = new Properties();
+
+        /*Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Appointment Invoice  Screen Viewed", p, CONSTANTS.screen);
+        BWSApplication.addToSegment("Appointment Invoice  Screen Viewed", p, CONSTANTS.screen);*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
@@ -132,12 +135,12 @@ public class AppointmentInvoiceFragment extends Fragment {
                 receiptFragment.show(fragmentManager, "receipt");
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-                Properties p = new Properties();
+               /* Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
                 p.putValue("invoiceType", listModelList.get(position).getStatus());
                 p.putValue("invoiceAmount", listModelList.get(position).getAmount());
-                BWSApplication.addToSegment("Appointment Invoice Clicked", p, CONSTANTS.track);
+                BWSApplication.addToSegment("Appointment Invoice Clicked", p, CONSTANTS.track);*/
             });
 
             holder.binding.llDownloads.setVisibility(View.GONE);
