@@ -96,7 +96,7 @@ public class BWSApplication extends Application {
     public static MediaSessionCompat mediaSession;
     public static MediaControllerCompat.TransportControls transportControls;
     public static Notification notification;
-//    public static NotificationManager notificationManager;
+    //    public static NotificationManager notificationManager;
     private static Context mContext;
     private static BWSApplication BWSApplication;
     private static List<DownloadAudioDetails> downloadAudioDetailsList;
@@ -146,11 +146,16 @@ public class BWSApplication extends Application {
     }
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {
-        if (methodName.equalsIgnoreCase("track")) {
-            analytics.track(TagName, properties);
-        } else if (methodName.equalsIgnoreCase("screen")) {
-            analytics.screen(TagName, properties);
+        try {
+            if (methodName.equalsIgnoreCase("track")) {
+                analytics.track(TagName, properties);
+            } else if (methodName.equalsIgnoreCase("screen")) {
+                analytics.screen(TagName, properties);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
@@ -504,7 +509,7 @@ public class BWSApplication extends Application {
         }
         return false;
     }*/
-        public static void turnOffDozeMode(Context context) {  //you can use with or without passing context
+    public static void turnOffDozeMode(Context context) {  //you can use with or without passing context
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent intent = new Intent();
             String packageName = context.getPackageName();
@@ -530,6 +535,7 @@ public class BWSApplication extends Application {
         }*/
 
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
