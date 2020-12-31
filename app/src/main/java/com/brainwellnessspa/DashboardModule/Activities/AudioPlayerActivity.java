@@ -1081,15 +1081,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.exoProgress.setDuration(player.getDuration());
             setpleyerctrView();
         }/*else if(player == null){
-            if (isprogressbar) {
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.GONE);
-                exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                exoBinding.progressBar.setVisibility(View.VISIBLE);
-            if(isDisclaimer == 0) {
-                handler1.postDelayed(UpdateSongTime1, 2000);
-            }
-            }
+            handler1.postDelayed(UpdateSongTime1, 2000);
         }*/
         callAllDisable(true);
         epAllClicks();
@@ -1676,12 +1668,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void callDownload() {
-        if (!url.equalsIgnoreCase("")) {
+        if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             disableDownload();
             byte[] EncodeBytes = new byte[1024];
-            List<String> url1 = new ArrayList<>();
-            List<String> name1 = new ArrayList<>();
-            List<String> downloadPlaylistId = new ArrayList<>();
+            List<String> fileNameList = new ArrayList<>();
+            List<String> audioFile1 = new ArrayList<>();
+            List<String> playlistId1 = new ArrayList<>();
             SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
             Gson gson1 = new Gson();
             String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
@@ -1690,33 +1682,28 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
                 Type type = new TypeToken<List<String>>() {
                 }.getType();
-                List<String> fileNameList = gson1.fromJson(json, type);
-                List<String> audioFile1 = gson1.fromJson(json1, type);
-                List<String> playlistId1 = gson1.fromJson(json2, type);
-                if (fileNameList.size() != 0) {
-                    url1.addAll(audioFile1);
-                    name1.addAll(fileNameList);
-                    downloadPlaylistId.addAll(playlistId1);
-                }
+                fileNameList = gson1.fromJson(json, type);
+                audioFile1 = gson1.fromJson(json1, type);
+                playlistId1 = gson1.fromJson(json2, type);
+
             }
-            url1.add(url);
-            name1.add(name);
-            downloadPlaylistId.add("");
-            if (url1.size() != 0) {
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                String urlJson = gson.toJson(url1);
-                String nameJson = gson.toJson(name1);
-                String playlistIdJson = gson.toJson(downloadPlaylistId);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editor.commit();
-            }
+            audioFile1.add(mainPlayModelList.get(position).getAudioFile());
+            fileNameList.add(mainPlayModelList.get(position).getName());
+            playlistId1.add("");
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String nameJson = gson.toJson(fileNameList);
+            String urlJson = gson.toJson(audioFile1);
+            String playlistIdJson = gson.toJson(playlistId1);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editor.commit();
+
             if (!isDownloading) {
                 DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                downloadMedia.encrypt1(audioFile1, fileNameList, playlistId1);
             }
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);
@@ -1746,12 +1733,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     downloadAudioDetails.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
                     downloadAudioDetails.setImageFile(addToQueueModelList.get(position).getImageFile());
                     downloadAudioDetails.setLike(addToQueueModelList.get(position).getLike());
-                    downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
-                    downloadAudioDetails.setIsSingle("1");
-                    downloadAudioDetails.setPlaylistId("");
-                    downloadAudioDetails.setIsDownload("pending");
-                    downloadAudioDetails.setDownloadProgress(0);
                 } else if (audioPlay) {
                     downloadAudioDetails.setID(mainPlayModelList.get(position).getID());
                     downloadAudioDetails.setName(mainPlayModelList.get(position).getName());
@@ -1761,13 +1743,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     downloadAudioDetails.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
                     downloadAudioDetails.setImageFile(mainPlayModelList.get(position).getImageFile());
                     downloadAudioDetails.setLike(mainPlayModelList.get(position).getLike());
-                    downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
-                    downloadAudioDetails.setIsSingle("1");
-                    downloadAudioDetails.setPlaylistId("");
-                    downloadAudioDetails.setIsDownload("pending");
-                    downloadAudioDetails.setDownloadProgress(0);
                 }
+                downloadAudioDetails.setDownload("1");
+                downloadAudioDetails.setIsSingle("1");
+                downloadAudioDetails.setPlaylistId("");
+                downloadAudioDetails.setIsDownload("pending");
+                downloadAudioDetails.setDownloadProgress(0);
+
                 DatabaseClient.getInstance(getApplicationContext())
                         .getaudioDatabase()
                         .taskDao()

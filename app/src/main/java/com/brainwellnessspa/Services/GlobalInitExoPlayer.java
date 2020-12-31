@@ -323,6 +323,22 @@ public class GlobalInitExoPlayer extends Service {
 //       player.addAnalyticsListener(new EventLogger(trackSelector));
         audioClick = false;
     }
+    public String GetSourceName(String AudioFlag){
+        /*Playlist
+Downloaded Playlists
+Top Categories
+Queue
+Downloaded Audios
+Liked Audios
+Recently Played
+Library
+Get Inspired
+Popular
+Recommended Search Audio
+Search Audio
+Appointment Audios*/
+        return "";
+    }
 
     public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<String> downloadAudioDetailsList, Context ctx) {
         if (player != null) {

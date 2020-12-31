@@ -854,9 +854,11 @@ public class AddQueueActivity extends AppCompatActivity {
                 if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
                     Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                     }.getType();
+                    Type type0 = new TypeToken<ArrayList<MainPlayModel>>() {
+                    }.getType();
                     Gson gson1 = new Gson();
                     arrayList = gson1.fromJson(jsonw, type1);
-                    arrayList2 = gson1.fromJson(json11, type1);
+                    arrayList2 = gson1.fromJson(json11, type0);
                     size= arrayList2.size();
                 }
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {

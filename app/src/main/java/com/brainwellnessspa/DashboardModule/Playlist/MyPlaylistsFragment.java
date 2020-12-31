@@ -1580,8 +1580,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
                     downloadAudioDetailsList.add(mainPlayModel1.getName());
                     ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList, getActivity());
-                    callAddTransFrag();
                 }
+                callAddTransFrag();
             }
             handler2.postDelayed(UpdateSongTime2, 2000);
         }
