@@ -91,7 +91,7 @@ public class FileUtils {
     }
 
     public static final void deleteDownloadedFile(Context context,String FILE_NAME) {
-        File file = new File(getFilePath(context,FILE_NAME));
+        File file = new File(getFilePath(context,FILE_NAME+CONSTANTS.FILE_EXT));
         if (null != file && file.exists()) {
             if (file.delete()) Log.i("FileUtils", "File Deleted.");
         }

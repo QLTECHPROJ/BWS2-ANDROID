@@ -54,12 +54,34 @@ public class VersionModel {
         @Expose
         private String isForce;
 
+        @SerializedName("displayRegister")
+        @Expose
+        private String displayRegister;
+        @SerializedName("segmentKey")
+        @Expose
+        private String segmentKey;
         public String getIsForce() {
             return isForce;
         }
 
         public void setIsForce(String isForce) {
             this.isForce = isForce;
+        }
+
+        public String getDisplayRegister() {
+            return displayRegister;
+        }
+
+        public void setDisplayRegister(String displayRegister) {
+            this.displayRegister = displayRegister;
+        }
+
+        public String getSegmentKey() {
+            return segmentKey;
+        }
+
+        public void setSegmentKey(String segmentKey) {
+            this.segmentKey = segmentKey;
         }
     }
 }

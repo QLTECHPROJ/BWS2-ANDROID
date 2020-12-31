@@ -1355,7 +1355,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                     } else {
                                         if (player != null) {
-                                            player.seekTo(pos, 0);
+//                                            player.seekTo(pos, 0);
                                             player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
@@ -1368,7 +1368,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                     } else {
                                         if (player != null) {
-                                            player.seekTo(pos, 0);
+//                                            player.seekTo(pos, 0);
                                             player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
@@ -1581,7 +1581,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 Gson gson1 = new Gson();
                 arrayList = gson1.fromJson(jsonw, type1);
                 arrayList2 = gson1.fromJson(json, type0);
-                size = arrayList2.size();
+                size = arrayList.size();
             }
 
             if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {

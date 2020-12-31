@@ -148,6 +148,7 @@ public class GlobalInitExoPlayer extends Service {
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        String ViewType = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
 //        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
 //        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 //        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
@@ -324,6 +325,11 @@ public class GlobalInitExoPlayer extends Service {
         audioClick = false;
     }
     public String GetSourceName(String AudioFlag){
+        String myFlagType ="";
+        if(AudioFlag.equalsIgnoreCase("Recently Played")){
+
+
+        }
         /*Playlist
 Downloaded Playlists
 Top Categories
@@ -349,16 +355,16 @@ Appointment Audios*/
                             File extStore = FileUtils.readFile1(FileUtils.getFilePath(ctx, mainPlayModelList.get(i).getName()));
                             if (extStore.exists()) {
                                 MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, mainPlayModelList.get(i).getName()));
-                                player.addMediaItem(i-1, mediaItem);
+                                player.addMediaItem(i, mediaItem);
                             } else {
                                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                                player.addMediaItem(i-1, mediaItem);
+                                player.addMediaItem(i, mediaItem);
                             }
                             player.prepare();
                             Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
                         } else if (f == downloadAudioDetailsList.size() - 1) {
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                            player.addMediaItem(i-1, mediaItem);
+                            player.addMediaItem(i, mediaItem);
                             player.prepare();
 //                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                         }
@@ -366,7 +372,7 @@ Appointment Audios*/
                 } else {
 //                mediaSources[i] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(i).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
                     MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-                    player.addMediaItem(i-1, mediaItem);
+                    player.addMediaItem(i, mediaItem);
                     player.prepare();
                 }
             }

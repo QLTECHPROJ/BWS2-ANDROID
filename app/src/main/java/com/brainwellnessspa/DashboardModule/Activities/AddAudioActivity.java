@@ -543,7 +543,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Search Audio");
                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchModelAudio");
                             editor.commit();
                             Fragment fragment = new MiniPlayerFragment();
@@ -864,7 +864,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Recommended Search Audio");
                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                             editor.commit();
                             Fragment fragment = new MiniPlayerFragment();
@@ -915,7 +915,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Recommended Search Audio");
                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                         editor.commit();
                         Fragment fragment = new MiniPlayerFragment();

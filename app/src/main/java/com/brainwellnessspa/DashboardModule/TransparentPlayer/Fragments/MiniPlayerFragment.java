@@ -514,9 +514,6 @@ public class MiniPlayerFragment extends Fragment {
             } else {
                 audioClick = true;
                 miniPlayer = 1;
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.GONE);
-                exoBinding.progressBar.setVisibility(View.VISIBLE);
                 GetAllMedia();
             }
 
@@ -618,12 +615,8 @@ public class MiniPlayerFragment extends Fragment {
             } else {
                 audioClick = true;
                 miniPlayer = 1;
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.GONE);
-                exoBinding.progressBar.setVisibility(View.VISIBLE);
                 GetAllMedia();
             }
-
             localIntent.putExtra("MyData", "play");
             localBroadcastManager.sendBroadcast(localIntent);
         });
