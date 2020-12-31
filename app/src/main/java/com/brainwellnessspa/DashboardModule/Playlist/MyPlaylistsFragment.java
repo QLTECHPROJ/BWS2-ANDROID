@@ -128,7 +128,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int isPlayPlaylist = 0;
     public boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
-    String PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
+    String TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     int RefreshIcon;
     PlayListsAdpater adpater;
     PlayListsAdpater1 adpater1;
@@ -785,6 +785,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                             SubPlayListModel listModel = response.body();
+
                             try {
                                 if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
                                         listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
@@ -796,6 +797,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            PlaylistDescription = listModel.getResponseData().getPlaylistDesc();
+                            TotalAudio = listModel.getResponseData().getTotalAudio();
+                            Totalhour = listModel.getResponseData().getTotalhour();
+                            Totalminute = listModel.getResponseData().getTotalminute();
                             Properties p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("playlistId", listModel.getResponseData().getPlaylistID());
@@ -1349,7 +1355,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                     } else {
                                         if (player != null) {
-                                            player.seekTo(pos,0);
+                                            player.seekTo(pos, 0);
                                             player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
@@ -1362,7 +1368,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                     } else {
                                         if (player != null) {
-                                            player.seekTo(pos,0);
+                                            player.seekTo(pos, 0);
                                             player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
@@ -2694,7 +2700,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                         editor.commit();
-                        player.seekTo(0,0);
+                        player.seekTo(0, 0);
                         player.setPlayWhenReady(true);
 
                     } else {
@@ -2722,7 +2728,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else {
                             myAudioId = mData.get(0).getID();
                             if (player != null) {
-                                player.seekTo(position,0);
+                                player.seekTo(position, 0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -2732,7 +2738,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 callAddTransFrag();
                             } else {
                                 callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
-                                //                        TODO  Playlist Started
+                                SegmentTag();
                             }
                         }
                     } else {
@@ -2742,7 +2748,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                         callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
-//                        TODO  Playlist Started
+                        SegmentTag();
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -2777,7 +2783,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         myAudioId = mData.get(pos).getID();
                         if (player != null) {
-                            player.seekTo(position,0);
+                            player.seekTo(position, 0);
                             player.setPlayWhenReady(true);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -2787,7 +2793,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             callAddTransFrag();
                         } else {
                             callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID);
-                            //                        TODO  Playlist Started
+                            SegmentTag();
                         }
                     }
                 } else {
@@ -2802,7 +2808,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         listModelList2.addAll(listModelList);
                     }
                     callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
-                    //                        TODO  Playlist Started
+                    SegmentTag();
                 }
                 isPlayPlaylist = 1;
 //                handler3.postDelayed(UpdateSongTime3, 500);
@@ -3042,7 +3048,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                             editor.commit();
-                            player.seekTo(0,0);
+                            player.seekTo(0, 0);
                             player.setPlayWhenReady(true);
                             myAudioId = mData.get(0).getID();
 
@@ -3072,8 +3078,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 myAudioId = mData.get(0).getID();
-                                 if (player != null) {
-                                    player.seekTo(position,0);
+                                if (player != null) {
+                                    player.seekTo(position, 0);
                                     player.setPlayWhenReady(true);
                                     miniPlayer = 1;
                                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -3083,7 +3089,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     callAddTransFrag();
                                 } else {
                                     callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
-                                    //                        TODO  Playlist Started
+                                    SegmentTag();
                                 }
                             }
                         } else {
@@ -3093,7 +3099,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.add(addDisclaimer);
                             listModelList2.addAll(listModelList);
                             callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
-                            //                        TODO  Playlist Started
+                            SegmentTag();
                         }
                     } else {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
@@ -3109,19 +3115,19 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 myAudioId = mData.get(0).getID();
-                                 if (player != null) {
-                                player.seekTo(position,0);
-                                player.setPlayWhenReady(true);
-                                miniPlayer = 1;
-                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                editor.commit();
-                                callAddTransFrag();
-                            }else {
-                                     callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
-                                     //                        TODO  Playlist Started
-                                 }
+                                if (player != null) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    miniPlayer = 1;
+                                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                    editor.commit();
+                                    callAddTransFrag();
+                                } else {
+                                    callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                                    SegmentTag();
+                                }
                             }
                         } else {
                             isDisclaimer = 0;
@@ -3130,7 +3136,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.add(addDisclaimer);
                             listModelList2.addAll(listModelList);
                             callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
-                            //                        TODO  Playlist Started
+                            SegmentTag();
                         }
                     }
                     isPlayPlaylist = 1;
@@ -3161,8 +3167,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                             if (player != null) {
-                                player.seekTo(position,0);
+                            if (player != null) {
+                                player.seekTo(position, 0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -3172,7 +3178,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 callAddTransFrag();
                             } else {
                                 callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
-                                //                        TODO  Playlist Started
+                                SegmentTag();
                             }
                         }
                     } else {
@@ -3187,7 +3193,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.addAll(listModelList);
                         }
                         callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
-                        //                        TODO  Playlist Started
+                        SegmentTag();
                     }
                 } else {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
@@ -3202,8 +3208,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                             if (player != null) {
-                                player.seekTo(position,0);
+                            if (player != null) {
+                                player.seekTo(position, 0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -3213,7 +3219,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 callAddTransFrag();
                             } else {
                                 callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
-                                //                        TODO  Playlist Started
+                                SegmentTag();
                             }
                         }
                     } else {
@@ -3228,7 +3234,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.addAll(listModelList);
                         }
                         callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
-                        //                        TODO  Playlist Started
+                        SegmentTag();
                     }
                 }
                 isPlayPlaylist = 1;
@@ -3376,5 +3382,34 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 this.binding = binding;
             }
         }
+    }
+
+    public void SegmentTag() {
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("playlistId", PlaylistID);
+        p.putValue("playlistName", PlaylistName);
+        p.putValue("playlistDescription", PlaylistDescription);
+
+        if (PlaylistType.equalsIgnoreCase("1")) {
+            p.putValue("playlistType", "Created");
+        } else if (PlaylistType.equalsIgnoreCase("0")) {
+            p.putValue("playlistType", "Default");
+        }
+
+        if (Totalhour.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", "0h " + Totalminute + "m");
+        } else if (Totalminute.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", Totalhour + "h 0m");
+        } else {
+            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+        }
+
+        p.putValue("audioCount", TotalAudio);
+        p.putValue("source", ScreenView);
+        p.putValue("playerType", "");
+        p.putValue("audioService", "");
+        p.putValue("sound", String.valueOf(player.getDeviceVolume());
+        BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 }

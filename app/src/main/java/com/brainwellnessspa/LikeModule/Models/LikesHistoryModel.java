@@ -362,6 +362,9 @@ public class LikesHistoryModel {
             @SerializedName("Totalminute")
             @Expose
             private String totalminute;
+            @SerializedName("Created")
+            @Expose
+            private String created;
             @SerializedName("IsLock")
             @Expose
             private String isLock;
@@ -428,6 +431,14 @@ public class LikesHistoryModel {
 
             public void setTotalminute(String totalminute) {
                 this.totalminute = totalminute;
+            }
+
+            public String getCreated() {
+                return created;
+            }
+
+            public void setCreated(String created) {
+                this.created = created;
             }
 
             public String getIsLock() {

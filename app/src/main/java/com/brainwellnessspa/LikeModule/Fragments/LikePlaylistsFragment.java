@@ -324,6 +324,8 @@ public class LikePlaylistsFragment extends Fragment {
                         bundle.putString("PlaylistID", modelList.get(position).getPlaylistId());
                         bundle.putString("PlaylistName", modelList.get(position).getPlaylistName());
                         bundle.putString("PlaylistImage", modelList.get(position).getPlaylistImage());
+                        bundle.putString("PlaylistType", modelList.get(position).getCreated());
+                        bundle.putString("ScreenView", "Liked");
                         bundle.putString("MyDownloads", "");
                         myPlaylistsFragment.setArguments(bundle);
                         fragmentManager1.beginTransaction()
