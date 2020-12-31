@@ -144,6 +144,8 @@ public class GlobalInitExoPlayer extends Service {
 
     public void GlobleInItPlayer(Context ctx, int position, List<String> downloadAudioDetailsList,
                                  ArrayList<MainPlayModel> mainPlayModelList) {
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 //        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -171,11 +173,11 @@ public class GlobalInitExoPlayer extends Service {
                     } else {*/
 
 //                    fileDescriptor = new File(FileUtils.getFilePath(ctx,name));
-                        MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx,mainPlayModelList.get(0).getName()));
-                        player.setMediaItem(mediaItem);
+                    MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, mainPlayModelList.get(0).getName()));
+                    player.setMediaItem(mediaItem);
 //                        Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
 //                    }
-                    if(position == 0){
+                    if (position == 0) {
                         player.setPlayWhenReady(true);
                     }
                     break;
@@ -202,10 +204,10 @@ public class GlobalInitExoPlayer extends Service {
                             player.addMediaItem(mediaItem);
                             break;
                         } else { */
-                            MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx,mainPlayModelList.get(i).getName()));
-                            player.addMediaItem(mediaItem);
+                        MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, mainPlayModelList.get(i).getName()));
+                        player.addMediaItem(mediaItem);
 //                            Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
-                            break;
+                        break;
 //                        }
                     } else if (f == downloadAudioDetailsList.size() - 1) {
                         MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
@@ -219,7 +221,7 @@ public class GlobalInitExoPlayer extends Service {
                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                 player.addMediaItem(mediaItem);
             }
-            if(position == i){
+            if (position == i) {
                 player.setPlayWhenReady(true);
             }
         }
@@ -386,23 +388,23 @@ public class GlobalInitExoPlayer extends Service {
         audioClick = false;
     }
 
-    public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<String> downloadAudioDetailsList,Context ctx) {
+    public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<String> downloadAudioDetailsList, Context ctx) {
         if (player != null) {
             for (int i = size; i < mainPlayModelList.size(); i++) {
                 if (downloadAudioDetailsList.size() != 0) {
                     for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
                         if (downloadAudioDetailsList.get(f).equalsIgnoreCase(mainPlayModelList.get(i).getName())) {
-                            File extStore = FileUtils.readFile1(FileUtils.getFilePath(ctx,mainPlayModelList.get(i).getName()));
-                            if(extStore.exists()){
-                             MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx,mainPlayModelList.get(i).getName()));
-                            player.addMediaItem(i, mediaItem);
-                            }else{
+                            File extStore = FileUtils.readFile1(FileUtils.getFilePath(ctx, mainPlayModelList.get(i).getName()));
+                            if (extStore.exists()) {
+                                MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, mainPlayModelList.get(i).getName()));
+                                player.addMediaItem(i, mediaItem);
+                            } else {
                                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                                 player.addMediaItem(i, mediaItem);
                             }
                             player.prepare();
                             Log.e("Globle Player else part", mainPlayModelList.get(i).getName());
-                        } else if (f == downloadAudioDetailsList.size()-1) {
+                        } else if (f == downloadAudioDetailsList.size() - 1) {
                             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                             player.addMediaItem(i, mediaItem);
                             player.prepare();
