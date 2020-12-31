@@ -143,8 +143,8 @@ public class GlobalInitExoPlayer extends Service {
     }
 
     public void GlobleInItPlayer(Context ctx, int position, List<String> downloadAudioDetailsList,
-                                 ArrayList<MainPlayModel> mainPlayModelList) {
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                 ArrayList<MainPlayModel> mainPlayModelList,String playerType) {
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -154,12 +154,6 @@ public class GlobalInitExoPlayer extends Service {
 //        DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(ctx, Util.getUserAgent(ctx, getPackageName()));
 //        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
-        DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(ctx, Util.getUserAgent(ctx, ctx.getPackageName()), (TransferListener) bandwidthMeter);
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(ctx, Util.getUserAgent(ctx, "com.brainwellnessspa"), null);
-//        MediaSource[] mediaSources = new MediaSource[mainPlayModelList.size()];
         if (downloadAudioDetailsList.size() != 0) {
             for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
                 if (downloadAudioDetailsList.get(f).equalsIgnoreCase(mainPlayModelList.get(0).getName())) {
@@ -177,9 +171,6 @@ public class GlobalInitExoPlayer extends Service {
                     player.setMediaItem(mediaItem);
 //                        Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
 //                    }
-                    if (position == 0) {
-                        player.setPlayWhenReady(true);
-                    }
                     break;
                 } else if (f == downloadAudioDetailsList.size() - 1) {
                     MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
@@ -191,7 +182,6 @@ public class GlobalInitExoPlayer extends Service {
         } else {
             MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
             player.setMediaItem(mediaItem1);
-//            mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
         }
 
         for (int i = 1; i < mainPlayModelList.size(); i++) {
@@ -221,9 +211,6 @@ public class GlobalInitExoPlayer extends Service {
                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                 player.addMediaItem(mediaItem);
             }
-            if (position == i) {
-                player.setPlayWhenReady(true);
-            }
         }
 
         Properties p = new Properties();
@@ -238,10 +225,10 @@ public class GlobalInitExoPlayer extends Service {
         p.putValue("position", position);
         p.putValue("audioType", "");
         p.putValue("source", "");
-        p.putValue("playerType", "");
+        p.putValue("playerType", playerType);
         p.putValue("audioService", "");
         p.putValue("bitRate", "");
-        p.putValue("sound", "");
+        p.putValue("sound", String.valueOf(player.getDeviceVolume()));
         BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
 //            String source = "file:////storage/3639-3632/my sounds/Gujarati songs/Chok Puravo d.mp3";
 //            // The MediaSource represents the media to be played.
@@ -311,57 +298,6 @@ public class GlobalInitExoPlayer extends Service {
         player = null;
     }
 
-    private void removeArray(Context ctx, int position, List<MainPlayModel> mainPlayModelList) {
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        Gson gson = new Gson();
-        String json1 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
-        if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-            }.getType();
-            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
-            arrayList.remove(position);
-            mainPlayModelList.remove(position);
-          /*  if (pos == position && position < mData.size() - 1) {
-
-                    callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
-
-            } else if (pos == position && position == mData.size() - 1) {
-                pos = 0;
-
-                    callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
-
-            } else if (pos < position && pos < mData.size() - 1) {
-                saveToPref(pos, mData);
-            } else if (pos > position && pos == mData.size()) {
-                pos = pos - 1;
-                saveToPref(pos, mData);
-            }*/
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String json = gson.toJson(arrayList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
-            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-            }.getType();
-            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
-            arrayList.remove(position);
-            mainPlayModelList.remove(position);
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String json = gson.toJson(arrayList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-        }
-    }
-
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         if (player != null) {
             player.stop();
@@ -371,7 +307,7 @@ public class GlobalInitExoPlayer extends Service {
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
         player.setMediaItem(mediaItem1);
-        InitNotificationAudioPLayerD(ctx);
+//        InitNotificationAudioPLayerD(ctx);
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);

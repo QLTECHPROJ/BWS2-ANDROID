@@ -707,10 +707,12 @@ public class AddAudioActivity extends AppCompatActivity {
                                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
                                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                         editor.commit();
-                                        List<String> downloadAudioDetailsList = new ArrayList<>();
-                                        GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                        ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
 
+                                        if (!mainPlayModelList.get(pos).getAudioFile().equals("")) {
+                                            List<String> downloadAudioDetailsList = new ArrayList<>();
+                                            GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                                            ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
+                                        }
                                         if (player != null) {
                                             Fragment fragment = new MiniPlayerFragment();
                                             FragmentManager fragmentManager1 = getSupportFragmentManager();

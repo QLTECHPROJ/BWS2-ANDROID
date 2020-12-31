@@ -317,10 +317,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
                                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                         editor.commit();
-                                        List<File> filesDownloaded = new ArrayList<>();
-                                        List<String> downloadAudioDetailsList = new ArrayList<>();
-                                        GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                        ge.AddAudioToPlayer(size,mainPlayModelList,downloadAudioDetailsList,ctx);
+
+                                        if (!mainPlayModelList.get(pos).getAudioFile().equals("")) {
+                                            List<File> filesDownloaded = new ArrayList<>();
+                                            List<String> downloadAudioDetailsList = new ArrayList<>();
+                                            GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                                            ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
+                                        }
                                     }
                                 }
                                 if (comeAddPlaylist == 1) {

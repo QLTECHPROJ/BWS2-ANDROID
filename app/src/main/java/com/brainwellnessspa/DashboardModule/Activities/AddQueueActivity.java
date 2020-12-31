@@ -887,10 +887,12 @@ public class AddQueueActivity extends AppCompatActivity {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                     editor.commit();
-                List<String> downloadAudioDetailsList = new ArrayList<>();
-                GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                downloadAudioDetailsList.add(downloadAudioDetails.getName());
-                ge.AddAudioToPlayer(size,arrayList2,downloadAudioDetailsList,ctx);
+                    if (!arrayList2.get(position).getAudioFile().equals("")) {
+                        List<String> downloadAudioDetailsList = new ArrayList<>();
+                        GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                        downloadAudioDetailsList.add(downloadAudioDetails.getName());
+                        ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList, ctx);
+                    }
 //                callAddTransFrag();
                 }
                 DatabaseClient.getInstance(activity)
@@ -1054,9 +1056,12 @@ public class AddQueueActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
                                     editor.commit();
-                                    List<String> downloadAudioDetailsList = new ArrayList<>();
-                                    GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                    ge.AddAudioToPlayer(size,mainPlayModelList,downloadAudioDetailsList,ctx);
+
+                                    if (!mainPlayModelList.get(pos).getAudioFile().equals("")) {
+                                        List<String> downloadAudioDetailsList = new ArrayList<>();
+                                        GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                                        ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
+                                    }
                                 }
                             }
                             if (queuePlay) {

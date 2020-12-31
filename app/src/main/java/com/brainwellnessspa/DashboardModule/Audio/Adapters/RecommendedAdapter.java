@@ -179,6 +179,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             } else {
                 if(player!=null){
                     player.seekTo(position);
+                    player.setPlayWhenReady(true);
                     miniPlayer = 1;
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();

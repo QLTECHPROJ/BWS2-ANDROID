@@ -732,6 +732,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else {
                             if (player != null) {
                                 player.seekTo(position);
+                                player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedxx.edit();
@@ -788,6 +789,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     } else {
                         if (player != null) {
                             player.seekTo(position);
+                            player.setPlayWhenReady(true);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedxx.edit();

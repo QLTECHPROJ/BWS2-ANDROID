@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -62,7 +63,8 @@ public class AppointmentInvoiceFragment extends Fragment {
         if (getArguments() != null) {
             appointmentList = getArguments().getParcelableArrayList("appointmentInvoiceFragment");
         }
-
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Properties p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Appointment Invoice  Screen Viewed", p, CONSTANTS.screen);
@@ -128,7 +130,8 @@ public class AppointmentInvoiceFragment extends Fragment {
                 receiptFragment.setCancelable(true);
                 receiptFragment.setValues(listModelList.get(position).getInvoiceNumber(), "2");
                 receiptFragment.show(fragmentManager, "receipt");
-
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
                 Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("invoiceId", listModelList.get(position).getInvoiceId());

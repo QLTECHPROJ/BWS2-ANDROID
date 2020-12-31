@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -53,7 +54,7 @@ public class MembershipInvoiceFragment extends Fragment {
     RequestPermissionHandler mRequestPermissionHandler;
     private static final String TAG = "Download Task";
     private ProgressDialog progressDialog;
-
+    String UserID;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false);
@@ -62,7 +63,8 @@ public class MembershipInvoiceFragment extends Fragment {
         if (getArguments() != null) {
             memberShipList = getArguments().getParcelableArrayList("membershipInvoiceFragment");
         }
-
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+          UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Properties p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Membership Invoice Screen Viewed", p, CONSTANTS.screen);
@@ -127,7 +129,8 @@ public class MembershipInvoiceFragment extends Fragment {
                 receiptFragment.setCancelable(true);
                 receiptFragment.setValues(listModelList.get(position).getInvoiceId(), "1");
                 receiptFragment.show(fragmentManager, "receipt");
-
+                SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
                 Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("invoiceId", listModelList.get(position).getInvoiceId());

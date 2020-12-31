@@ -1307,6 +1307,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     } else {
                                         if (player != null) {
                                             player.seekTo(pos);
+                                            player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
                                             callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
@@ -1319,6 +1320,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     } else {
                                         if (player != null) {
                                             player.seekTo(pos);
+                                            player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
                                             callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
@@ -1573,11 +1575,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                 editor.commit();
 
-                List<String> downloadAudioDetailsList = new ArrayList<>();
-                GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                downloadAudioDetailsList.add(mainPlayModel1.getName());
-                ge.AddAudioToPlayer(size,arrayList2,downloadAudioDetailsList,getActivity());
-                callAddTransFrag();
+                if (!arrayList2.get(position1).getAudioFile().equals("")) {
+                    List<String> downloadAudioDetailsList = new ArrayList<>();
+                    GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                    downloadAudioDetailsList.add(mainPlayModel1.getName());
+                    ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList, getActivity());
+                    callAddTransFrag();
+                }
             }
             handler2.postDelayed(UpdateSongTime2, 2000);
         }
@@ -2674,7 +2678,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             myAudioId = mData.get(0).getID();
-                            callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
+                            if (player != null) {
+                                player.seekTo(position);
+                                player.setPlayWhenReady(true);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                                callAddTransFrag();
+                            }else {
+                                callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
+                            }
                         }
                     } else {
                         isDisclaimer = 0;
@@ -2716,7 +2731,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         myAudioId = mData.get(pos).getID();
-                        callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID);
+                        if (player != null) {
+                            player.seekTo(position);
+                            player.setPlayWhenReady(true);
+                            miniPlayer = 1;
+                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedxx.edit();
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.commit();
+                            callAddTransFrag();
+                        }else {
+                            callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID);
+                        }
                     }
                 } else {
                     isDisclaimer = 0;
@@ -2999,7 +3025,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 myAudioId = mData.get(0).getID();
-                                callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                                 if (player != null) {
+                                    player.seekTo(position);
+                                    player.setPlayWhenReady(true);
+                                    miniPlayer = 1;
+                                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                    editor.commit();
+                                    callAddTransFrag();
+                                }else {
+                                     callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                                 }
                             }
                         } else {
                             isDisclaimer = 0;
@@ -3023,7 +3060,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 myAudioId = mData.get(0).getID();
-                                callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                                 if (player != null) {
+                                player.seekTo(position);
+                                player.setPlayWhenReady(true);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                                callAddTransFrag();
+                            }else {
+                                     callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                                 }
                             }
                         } else {
                             isDisclaimer = 0;
@@ -3062,7 +3110,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                            callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                             if (player != null) {
+                                player.seekTo(position);
+                                player.setPlayWhenReady(true);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                                callAddTransFrag();
+                            }else {
+                                 callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                             }
                         }
                     } else {
                         isDisclaimer = 0;
@@ -3090,7 +3149,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                            callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                             if (player != null) {
+                                player.seekTo(position);
+                                player.setPlayWhenReady(true);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                                callAddTransFrag();
+                            }else {
+                                 callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                             }
                         }
                     } else {
                         isDisclaimer = 0;

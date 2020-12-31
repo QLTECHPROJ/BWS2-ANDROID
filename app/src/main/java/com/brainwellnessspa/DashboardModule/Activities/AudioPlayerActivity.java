@@ -163,10 +163,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
         miniPlayer = 1;
         if (audioClick) {
             audioClick = false;
-//            exoBinding.llPlay.setVisibility(View.GONE);
-//            exoBinding.llPause.setVisibility(View.GONE);
-//            exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-//            exoBinding.progressBar.setVisibility(View.VISIBLE);
+            exoBinding.llPlay.setVisibility(View.GONE);
+            exoBinding.llPause.setVisibility(View.GONE);
+            exoBinding.llProgressBar.setVisibility(View.VISIBLE);
+            exoBinding.progressBar.setVisibility(View.VISIBLE);
             MakeArray2();
             GetAllMedia();
         } else {
@@ -855,7 +855,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         isDisclaimer = 0;
         if (audioClick) {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList);
+            globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList,"Main");
             setpleyerctrView();
         }
         if (player != null) {
@@ -918,10 +918,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     callButtonText(player.getCurrentWindowIndex());
                 }
 
-                @Override
-                public void onIsLoadingChanged(boolean isLoading) {
-                    isPrepared = isLoading;
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//                @Override
+//                public void onIsLoadingChanged(boolean isLoading) {
+//                    isPrepared = isLoading;
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
 //                    BWSApplication.showToast("onIsLoadingChangeddddddddddd", ctx);
 //                    if (isLoading) {
 //                        exoBinding.llPlay.setVisibility(View.GONE);
@@ -930,11 +930,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //                        exoBinding.progressBar.setVisibility(View.VISIBLE);
 //                        Log.e("Isloading", "BigLoadingggggggggggggggggg");
 //                    }
-                }
+//                }
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
+        /*            if (isPlaying) {
                         myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
@@ -948,12 +948,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
 //                        BWSApplication.showToast("IsPlayingggggggggFalseeeee", ctx);
-                    }else if(!isPlaying && isPrepared){
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }
+                    }*/
                   /*  else {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -992,6 +987,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     if (state == ExoPlayer.STATE_READY) {
                         try {
                             myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+                        }catch (Exception e){
+
+                        }
                         if (player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.VISIBLE);
@@ -1003,9 +1001,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             exoBinding.llProgressBar.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.GONE);
                         }
-                        }catch (Exception e){
 
-                        }
 //                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
                         myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
@@ -1140,9 +1136,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                     }
                 }
-                @Override
-                public void onIsLoadingChanged(boolean isLoading) {
-                    isPrepared = isLoading;
+//                @Override
+//                public void onIsLoadingChanged(boolean isLoading) {
+//                    isPrepared = isLoading;
                   /*  if (isLoading) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
@@ -1150,11 +1146,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
                         Log.e("Isloading", "BigLoadingggggggggggggggggg");
                     }*/
-                }
+//                }
 
                 @Override
                 public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
+                  /*  if (isPlaying) {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
@@ -1164,12 +1160,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.llProgressBar.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
-                    }else if(!isPlaying && isPrepared){
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }
+                    } */
                   /*  else {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);

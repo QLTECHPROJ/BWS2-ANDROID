@@ -66,6 +66,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -363,6 +364,7 @@ public class LikeAudiosFragment extends Fragment {
                 } else {
                     if (player != null) {
                         player.seekTo(pos);
+                        player.setPlayWhenReady(true);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
@@ -446,12 +448,8 @@ public class LikeAudiosFragment extends Fragment {
         try {
             miniPlayer = 1;
             audioClick = true;
-            if (player != null) {
-                player.stop();
-                player.release();
-                player = null;
-            }
 
+            callNewPlayerRelease();
             Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()

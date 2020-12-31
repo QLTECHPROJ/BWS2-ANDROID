@@ -513,6 +513,7 @@ public class ViewAllAudioFragment extends Fragment {
                 } else {
                     if (player != null) {
                         player.seekTo(position);
+                        player.setPlayWhenReady(true);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
@@ -562,6 +563,7 @@ public class ViewAllAudioFragment extends Fragment {
                 } else {
                     if (player != null) {
                         player.seekTo(position);
+                        player.setPlayWhenReady(true);
                         miniPlayer = 1;
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
@@ -635,6 +637,7 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.commit();
                         if (player != null) {
                             player.seekTo(position);
+                            player.setPlayWhenReady(true);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editord = sharedxx.edit();

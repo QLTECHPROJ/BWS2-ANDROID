@@ -178,6 +178,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
 
                     miniPlayer = 1;
                     player.seekTo(position);
+                    player.setPlayWhenReady(true);
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
