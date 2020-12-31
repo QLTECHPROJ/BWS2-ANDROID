@@ -773,7 +773,30 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 }
                             } else {
                                 callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
-                                //                        TODO  Playlist Started
+                                Properties p = new Properties();
+                                p.putValue("userId", UserID);
+                                p.putValue("playlistId", PlaylistID);
+                                p.putValue("playlistName", PlaylistName);
+                                p.putValue("playlistDescription", PlaylistDescription);
+                                if (Created.equalsIgnoreCase("1")) {
+                                    p.putValue("playlistType", "Created");
+                                } else if (Created.equalsIgnoreCase("0")) {
+                                    p.putValue("playlistType", "Default");
+                                }
+
+                                if (Totalhour.equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                                } else if (Totalminute.equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", Totalhour + "h 0m");
+                                } else {
+                                    p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                                }
+                                p.putValue("audioCount", TotalAudio);
+                                p.putValue("source", "Downloaded Playlists");
+                                p.putValue("playerType", "");
+                                p.putValue("audioService", "");
+                                p.putValue("sound", "");
+                                BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
                             }
                         }
                     } else {
@@ -783,7 +806,30 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                         callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
-                        //                        TODO  Playlist Started
+                        Properties p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("playlistId", PlaylistID);
+                        p.putValue("playlistName", PlaylistName);
+                        p.putValue("playlistDescription", PlaylistDescription);
+                        if (Created.equalsIgnoreCase("1")) {
+                            p.putValue("playlistType", "Created");
+                        } else if (Created.equalsIgnoreCase("0")) {
+                            p.putValue("playlistType", "Default");
+                        }
+
+                        if (Totalhour.equalsIgnoreCase("")) {
+                            p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                        } else if (Totalminute.equalsIgnoreCase("")) {
+                            p.putValue("playlistDuration", Totalhour + "h 0m");
+                        } else {
+                            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                        }
+                        p.putValue("audioCount", TotalAudio);
+                        p.putValue("source", "Downloaded Playlists");
+                        p.putValue("playerType", "");
+                        p.putValue("audioService", "");
+                        p.putValue("sound", "");
+                        BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -832,7 +878,30 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             }
                         } else {
                             callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
-                            //                        TODO  Playlist Started
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("playlistId", PlaylistID);
+                            p.putValue("playlistName", PlaylistName);
+                            p.putValue("playlistDescription", PlaylistDescription);
+                            if (Created.equalsIgnoreCase("1")) {
+                                p.putValue("playlistType", "Created");
+                            } else if (Created.equalsIgnoreCase("0")) {
+                                p.putValue("playlistType", "Default");
+                            }
+
+                            if (Totalhour.equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                            } else if (Totalminute.equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", Totalhour + "h 0m");
+                            } else {
+                                p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                            }
+                            p.putValue("audioCount", TotalAudio);
+                            p.putValue("source", "Downloaded Playlists");
+                            p.putValue("playerType", "");
+                            p.putValue("audioService", "");
+                            p.putValue("sound", "");
+                            BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
                         }
                     }
                 } else {
@@ -847,7 +916,30 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         listModelList2.addAll(listModelList);
                     }
                     callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
-                    //                        TODO  Playlist Started
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("playlistId", PlaylistID);
+                    p.putValue("playlistName", PlaylistName);
+                    p.putValue("playlistDescription", PlaylistDescription);
+                    if (Created.equalsIgnoreCase("1")) {
+                        p.putValue("playlistType", "Created");
+                    } else if (Created.equalsIgnoreCase("0")) {
+                        p.putValue("playlistType", "Default");
+                    }
+
+                    if (Totalhour.equalsIgnoreCase("")) {
+                        p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                    } else if (Totalminute.equalsIgnoreCase("")) {
+                        p.putValue("playlistDuration", Totalhour + "h 0m");
+                    } else {
+                        p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                    }
+                    p.putValue("audioCount", TotalAudio);
+                    p.putValue("source", "Downloaded Playlists");
+                    p.putValue("playerType", "");
+                    p.putValue("audioService", "");
+                    p.putValue("sound", "");
+                    BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
