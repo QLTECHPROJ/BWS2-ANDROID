@@ -3409,7 +3409,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         p.putValue("source", ScreenView);
         p.putValue("playerType", "");
         p.putValue("audioService", "");
-        p.putValue("sound", String.valueOf(player.getDeviceVolume());
+        p.putValue("sound", "");
         BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 }
