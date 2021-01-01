@@ -81,7 +81,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -2060,6 +2059,35 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         st.execute();
     }
 
+    public void SegmentTag() {
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("playlistId", PlaylistID);
+        p.putValue("playlistName", PlaylistName);
+        p.putValue("playlistDescription", PlaylistDescription);
+
+        if (PlaylistType.equalsIgnoreCase("1")) {
+            p.putValue("playlistType", "Created");
+        } else if (PlaylistType.equalsIgnoreCase("0")) {
+            p.putValue("playlistType", "Default");
+        }
+
+        if (Totalhour.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", "0h " + Totalminute + "m");
+        } else if (Totalminute.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", Totalhour + "h 0m");
+        } else {
+            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+        }
+
+        p.putValue("audioCount", TotalAudio);
+        p.putValue("source", ScreenView);
+        p.putValue("playerType", "");
+        p.putValue("audioService", "");
+        p.putValue("sound", "");
+        BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
+    }
+
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
         String UserID, Created, name;
@@ -2336,6 +2364,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             for (int i = 0; i < listModelList.size(); i++) {
                 changedAudio.add(listModelList.get(i).getID());
             }
+
             callDragApi();
             notifyItemMoved(fromPosition, toPosition);
             adpater1.notifyItemMoved(fromPosition, toPosition);
@@ -2347,6 +2376,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                     if (pID.equalsIgnoreCase(PlaylistID)) {
+                      /*  if(player!=null){
+                            player.removeMediaItem(fromPosition);
+                            MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, listModelList.get(toPosition).getAudioFile()));
+                            player.addMediaItem(toPosition,mediaItem);
+                        }*/
                         if (fromPosition == pos) {
                             pos = toPosition;
                             String one = "1";
@@ -3382,34 +3416,5 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 this.binding = binding;
             }
         }
-    }
-
-    public void SegmentTag() {
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        p.putValue("playlistId", PlaylistID);
-        p.putValue("playlistName", PlaylistName);
-        p.putValue("playlistDescription", PlaylistDescription);
-
-        if (PlaylistType.equalsIgnoreCase("1")) {
-            p.putValue("playlistType", "Created");
-        } else if (PlaylistType.equalsIgnoreCase("0")) {
-            p.putValue("playlistType", "Default");
-        }
-
-        if (Totalhour.equalsIgnoreCase("")) {
-            p.putValue("playlistDuration", "0h " + Totalminute + "m");
-        } else if (Totalminute.equalsIgnoreCase("")) {
-            p.putValue("playlistDuration", Totalhour + "h 0m");
-        } else {
-            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
-        }
-
-        p.putValue("audioCount", TotalAudio);
-        p.putValue("source", ScreenView);
-        p.putValue("playerType", "");
-        p.putValue("audioService", "");
-        p.putValue("sound", "");
-        BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 }

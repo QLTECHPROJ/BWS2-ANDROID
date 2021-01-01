@@ -10,7 +10,7 @@ import java.util.List;
 @Dao
 public interface AudioDetailsDao {
 
-    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
 // ORDER BY uid ASC
     LiveData<List<DownloadAudioDetails>> geAllData1(String PlaylistId);
 

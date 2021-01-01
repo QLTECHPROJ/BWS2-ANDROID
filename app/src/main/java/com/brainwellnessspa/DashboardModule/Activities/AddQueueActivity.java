@@ -48,7 +48,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1041,12 +1040,20 @@ public class AddQueueActivity extends AppCompatActivity {
                                         mainPlayModel1.setDownload(mainPlayModelList.get(position).getDownload());
                                         mainPlayModel1.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
                                     }
+
+                                    Gson gson = new Gson();
+                                    String jsonz = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+//                                    mainPlayModelList=new ArrayList<>();
+                                    if (!jsonz.equalsIgnoreCase(String.valueOf(gson))) {
+                                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                                        }.getType();
+                                        mainPlayModelList = gson.fromJson(jsonz, type);
+                                    }
                                     int size = mainPlayModelList.size();
                                     arrayList.add(arrayList.size(), mainPlayModel);
                                     mainPlayModelList.add(mainPlayModelList.size(), mainPlayModel1);
                                     SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedd.edit();
-                                    Gson gson = new Gson();
                                     String jsonx = gson.toJson(mainPlayModelList);
                                     String json1 = gson.toJson(arrayList);
                                     editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
@@ -1058,8 +1065,9 @@ public class AddQueueActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
                                     editor.commit();
+                                    pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
 
-                                    if (!mainPlayModelList.get(pos).getAudioFile().equals("")) {
+                                    if (!mainPlayModelList.get(pos).getAudioFile().equalsIgnoreCase("")) {
                                         List<String> downloadAudioDetailsList = new ArrayList<>();
                                         GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
                                         ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);

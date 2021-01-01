@@ -138,7 +138,9 @@ public class AptAudioFragment extends Fragment {
 //        handler3.removeCallbacks(UpdateSongTime3);
 
         super.onPause();
-    }   @Override
+    }
+
+    @Override
     public void onDestroy() {
 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
@@ -178,7 +180,7 @@ public class AptAudioFragment extends Fragment {
                 .getInstance(getActivity())
                 .getaudioDatabase()
                 .taskDao()
-                .getLastIdByuId1(AudioFile).observe(getActivity(),audioList -> {
+                .getLastIdByuId1(AudioFile).observe(getActivity(), audioList -> {
             if (audioList.size() != 0) {
                 if (audioList.get(0).getDownload().equalsIgnoreCase("1")) {
                     disableDownload(llDownload, ivDownload);
@@ -212,6 +214,14 @@ public class AptAudioFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void callAddTransFrag() {
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
     }
 
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder> {
@@ -477,7 +487,7 @@ public class AptAudioFragment extends Fragment {
                             listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", listModelList.get(position).getID());
-                        i.putExtra("ScreenView","Appointment Audio Screen");
+                        i.putExtra("ScreenView", "Appointment Audio Screen");
                         i.putExtra("PlaylistID", "");
                         startActivity(i);
                     }
@@ -539,12 +549,19 @@ public class AptAudioFragment extends Fragment {
                     Gson gsonx = new Gson();
                     String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
                     String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
-                    Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-                    }.getType();
-                    Gson gson1 = new Gson();
-                    ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(jsonw, type1);
-                    ArrayList<MainPlayModel> arrayList2 = gson1.fromJson(json11, type1);
-                    int size= arrayList2.size();
+                    ArrayList<DownloadAudioDetails> arrayList = new ArrayList<>();
+                    ArrayList<MainPlayModel> arrayList2 = new ArrayList<>();
+                    int size = 0;
+                    if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
+                        Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                        }.getType();
+                        Type type0 = new TypeToken<ArrayList<MainPlayModel>>() {
+                        }.getType();
+                        Gson gson1 = new Gson();
+                        arrayList = gson1.fromJson(jsonw, type1);
+                        arrayList2 = gson1.fromJson(json11, type0);
+                        size = arrayList2.size();
+                    }
                     int position = sharedx1.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         arrayList.add(downloadAudioDetails);
@@ -581,8 +598,8 @@ public class AptAudioFragment extends Fragment {
                             downloadAudioDetailsList.add(downloadAudioDetails.getName());
                             ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList, ctx);
                         }
-                callAddTransFrag();
-                }
+                        callAddTransFrag();
+                    }
                     DatabaseClient.getInstance(getActivity().getApplicationContext())
                             .getaudioDatabase()
                             .taskDao()
@@ -614,13 +631,5 @@ public class AptAudioFragment extends Fragment {
                 this.binding = binding;
             }
         }
-    }
-
-    private void callAddTransFrag() { 
-        Fragment fragment = new MiniPlayerFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flContainer, fragment)
-                .commit();
     }
 }

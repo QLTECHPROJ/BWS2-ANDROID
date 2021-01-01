@@ -368,7 +368,7 @@ public class LikeAudiosFragment extends Fragment {
                 if (isDisclaimer == 1) {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                 } else {
-                    if (player != null) {
+            /*        if (player != null) {
                         player.seekTo(pos,0);
                         player.setPlayWhenReady(true);
                         miniPlayer = 1;
@@ -385,9 +385,9 @@ public class LikeAudiosFragment extends Fragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else {
+                    } else {*/
                         callTransFrag(pos, modelList);
-                    }
+//                    }
                 }
             } else {
                 isDisclaimer = 0;

@@ -10,11 +10,14 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -168,6 +171,11 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     miniPlayer = 1;
                     audioClick = true;
             }
+                /*   Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();*/
                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
@@ -181,6 +189,11 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     SharedPreferences.Editor editor = sharedxx.edit();
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.commit();
+                     /*  Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();*/
                     Intent i = new Intent(ctx, AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
@@ -231,7 +244,11 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, HomeView);
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-            editor.commit();
+            editor.commit();/* Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();*/
             Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);

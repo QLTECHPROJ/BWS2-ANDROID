@@ -26,7 +26,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
     Button btnFreeJoin;
     String TrialPeriod;
     Intent i;
-    public static String planFlag, planId, price;
+    public static String planFlag="", planId="", price="";
 
     public MembershipPlanAdapter(ArrayList<MembershipPlanListModel.Plan> listModelList, Context ctx, Button btnFreeJoin, String TrialPeriod) {
         this.listModelList = listModelList;

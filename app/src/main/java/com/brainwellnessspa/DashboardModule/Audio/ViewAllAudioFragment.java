@@ -506,7 +506,11 @@ public class ViewAllAudioFragment extends Fragment {
                     } else {
                         audioClick = true;
                         miniPlayer = 1;
-                    }
+                    } /*Fragment fragment = new MiniPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();*/
                     Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     getActivity().startActivity(i);
@@ -519,7 +523,11 @@ public class ViewAllAudioFragment extends Fragment {
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit();
+                        editor.commit(); /*Fragment fragment = new MiniPlayerFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, fragment)
+                                .commit();*/
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
@@ -556,7 +564,11 @@ public class ViewAllAudioFragment extends Fragment {
                     } else {
                         audioClick = true;
                         miniPlayer = 1;
-                    }
+                    } /*Fragment fragment = new MiniPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();*/
                     Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     getActivity().startActivity(i);
@@ -569,7 +581,11 @@ public class ViewAllAudioFragment extends Fragment {
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit();
+                        editor.commit();/* Fragment fragment = new MiniPlayerFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, fragment)
+                                .commit();*/
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
@@ -700,7 +716,11 @@ public class ViewAllAudioFragment extends Fragment {
                 miniPlayer = 1;
                 audioClick = true;
                 callNewPlayerRelease();
-
+                /*Fragment fragment = new MiniPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();*/
                 Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 getActivity().startActivity(i);

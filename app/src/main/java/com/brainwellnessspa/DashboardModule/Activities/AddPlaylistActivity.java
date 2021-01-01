@@ -167,6 +167,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             dialog.dismiss();
                                             prepareData(ctx);
                                             String PlaylistID = listsModel.getResponseData().getId();
+                                            String Created = listsModel.getResponseData().getIscreated();
                                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                                             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -175,10 +176,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                 if (isDisclaimer == 1) {
                                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                                                 } else {
-                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created);
                                                 }
                                             } else {
-                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created);
                                             }
                                            /* Properties p = new Properties();
                                             p.putValue("userId", UserID);
@@ -257,7 +258,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         }
     }
 
-    private void callAddPlaylistFromPlaylist(String PlaylistID, String name, Dialog dialog, String d) {
+    private void callAddPlaylistFromPlaylist(String PlaylistID, String name, Dialog dialog, String d, String Created) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
@@ -404,6 +405,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         intent.putExtra("PlaylistID", PlaylistID);
                                         intent.putExtra("PlaylistName", name);
                                         intent.putExtra("PlaylistImage", "");
+                                        intent.putExtra("PlaylistType", Created);
                                         startActivity(intent);
                                         finish();
                                     });
@@ -460,25 +462,23 @@ public class AddPlaylistActivity extends AppCompatActivity {
             Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String PlaylistID = listModel.get(position).getID();
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                        if (isDisclaimer == 1) {
-                            BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                        } else {
-                            final Dialog dialogx = new Dialog(ctx);
-                            callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1");
-                        }
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                String PlaylistID = listModel.get(position).getID();
+                String Created = listModel.get(position).getCreated();
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                    if (isDisclaimer == 1) {
+                        BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                     } else {
                         final Dialog dialogx = new Dialog(ctx);
-                        callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1");
+                        callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created);
                     }
+                } else {
+                    final Dialog dialogx = new Dialog(ctx);
+                    callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created);
                 }
             });
         }

@@ -309,7 +309,9 @@ public class MiniPlayerFragment extends Fragment {
                     p.putValue("sound", "");
                     BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
                     position = player.getCurrentWindowIndex();
-                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+                    try {
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+                    }catch(Exception e){}
                    /* GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);*/
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -473,6 +475,10 @@ public class MiniPlayerFragment extends Fragment {
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
 
+                }else if(player.isLoading()){
+                    exoBinding.llPlay.setVisibility(View.GONE);
+                    exoBinding.llPause.setVisibility(View.GONE);
+                    exoBinding.progressBar.setVisibility(View.VISIBLE);
                 } else if (!player.getPlayWhenReady()) {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
@@ -633,6 +639,10 @@ public class MiniPlayerFragment extends Fragment {
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
+                } else if(player.isLoading()){
+                    exoBinding.llPlay.setVisibility(View.GONE);
+                    exoBinding.llPause.setVisibility(View.GONE);
+                    exoBinding.progressBar.setVisibility(View.VISIBLE);
                 } else if (!player.isPlaying()) {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
@@ -1538,7 +1548,11 @@ public class MiniPlayerFragment extends Fragment {
 //        } else {
 //            initializePlayer();
 //        }
-        getPrepareShowData();
+        if(!audioClick) {
+            getPrepareShowData();
+        }else{
+            callButtonText(position);
+        }
     }
 
     private void removeArray() {

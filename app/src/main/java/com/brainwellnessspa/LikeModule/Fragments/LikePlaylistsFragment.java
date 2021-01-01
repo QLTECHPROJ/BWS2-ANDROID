@@ -53,7 +53,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.RefreshLikePlaylist;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
-
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.RefreshIconData;
 
 public class LikePlaylistsFragment extends Fragment {
     FragmentLikesBinding binding;
@@ -259,10 +259,12 @@ public class LikePlaylistsFragment extends Fragment {
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    RefreshIconData = Integer.parseInt(modelList.get(position).getTotalAudio());
                     Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
                     i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
                     i.putExtra("PlaylistName", modelList.get(position).getPlaylistName());
                     i.putExtra("PlaylistIDImage", modelList.get(position).getPlaylistImage());
+                    i.putExtra("PlaylistType", modelList.get(position).getCreated());
                     i.putExtra("ScreenView", "Liked Playlist");
                     i.putExtra("Liked", "1");
                     startActivity(i);

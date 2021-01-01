@@ -45,7 +45,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
-    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "";
+    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "",PlaylistType="";
     TelephonyManager mTelephonyMgr;
     //    AudioManager mAudioManager;
     BroadcastReceiver broadcastReceiver;
@@ -146,6 +146,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");
             PlaylistImage = getIntent().getStringExtra("PlaylistImage");
+            PlaylistType = getIntent().getStringExtra("PlaylistType");
         }
         if (Goplaylist.equalsIgnoreCase("1")) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
@@ -155,6 +156,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
             bundle.putString("PlaylistID", PlaylistID);
             bundle.putString("PlaylistName", PlaylistName);
             bundle.putString("PlaylistImage", PlaylistImage);
+            bundle.putString("PlaylistType", PlaylistType);
             bundle.putString("MyDownloads", "0");
             myPlaylistsFragment.setArguments(bundle);
             FragmentManager fragmentManager1 = getSupportFragmentManager();

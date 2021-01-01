@@ -153,15 +153,15 @@ public class MyPlaylistActivity extends AppCompatActivity {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
 
-        if (getIntent().getExtras() != null) {
+        if (getIntent().hasExtra("Liked")) {
             Liked = getIntent().getStringExtra("Liked");
         }
 
-        if (getIntent().getExtras() != null) {
+        if (getIntent().hasExtra("ScreenView")) {
             ScreenView = getIntent().getStringExtra("ScreenView");
         }
 
-        if (getIntent().getExtras() != null) {
+        if (getIntent().hasExtra("PlaylistType")) {
             PlaylistType = getIntent().getStringExtra("PlaylistType");
         }
 
@@ -803,9 +803,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 binding.tvSubDec.setVisibility(View.VISIBLE);
                             }
 
-                            binding.tvSubDec.setText(model.getResponseData().
-
-                                    getPlaylistDesc());
+                            binding.tvSubDec.setText(model.getResponseData().getPlaylistDesc());
                             int linecount = binding.tvSubDec.getLineCount();
                             if (linecount >= 4) {
                                 binding.tvReadMore.setVisibility(View.VISIBLE);
