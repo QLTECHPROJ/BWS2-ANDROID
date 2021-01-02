@@ -294,9 +294,11 @@ public class GlobalInitExoPlayer extends Service {
 
     public static void relesePlayer() {
 //        playerNotificationManager.setPlayer(null);
-        player.stop();
-        player.release();
-        player = null;
+        if(player!=null) {
+            player.stop();
+            player.release();
+            player = null;
+        }
     }
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
