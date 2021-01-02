@@ -343,10 +343,16 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     });
 
                     Btn.setOnClickListener(v -> {
-                        try {
+//                        try {
                             if (isMyDownloading) {
+
                                 handler1.removeCallbacks(UpdateSongTime1);
                             }
+                            DatabaseClient
+                                    .getInstance(getActivity())
+                                    .getaudioDatabase()
+                                    .taskDao()
+                                    .getAllPlaylist1().removeObserver(audioList -> {});
                             getDownloadData(listModelList.get(position).getPlaylistID());
                             GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                             /*Properties p = new Properties();
@@ -355,8 +361,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             p.putValue("playlistName", listModelList.get(position).getPlaylistName());
                             p.putValue("playlistType", "");
                             BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);*/
-                        } catch (Exception e) {
-                        }
+//                        } catch (Exception e) {
+//                        }
                         dialog.dismiss();
                     });
 

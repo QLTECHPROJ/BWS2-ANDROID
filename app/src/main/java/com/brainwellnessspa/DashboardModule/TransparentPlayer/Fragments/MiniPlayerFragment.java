@@ -1809,11 +1809,11 @@ public class MiniPlayerFragment extends Fragment {
 //        } else {
 //            initializePlayer();
 //        }
-        if (!audioClick) {
+//        if(!audioClick) {
             getPrepareShowData();
-        } else {
-            callButtonText(position);
-        }
+//        }else{
+//            callButtonText(position);
+//        }
     }
 
     private void removeArray() {

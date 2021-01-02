@@ -574,11 +574,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        } else {
 //            initializePlayer();
 //        }
-        if (!audioClick) {
+//        if (!audioClick) {
             getPrepareShowData();
-        } else {
-            callButtonText(position);
-        }
+//        } else {
+//            callButtonText(position);
+//        }
     }
 
     @Override
