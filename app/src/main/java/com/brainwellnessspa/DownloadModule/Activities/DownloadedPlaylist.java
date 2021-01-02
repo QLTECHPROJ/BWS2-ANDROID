@@ -1,3 +1,4 @@
+/*
 package com.brainwellnessspa.DownloadModule.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,4 +38,4 @@ public class DownloadedPlaylist extends AppCompatActivity {
                 .replace(R.id.flContainer, myPlaylistsFragment)
                 .commit();
     }
-}
+}*/
