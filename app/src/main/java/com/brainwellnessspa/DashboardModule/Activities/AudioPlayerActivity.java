@@ -36,6 +36,7 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
@@ -198,8 +199,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             startActivity(i);
 //            finish();
         });
-
-        registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
 
     }
 

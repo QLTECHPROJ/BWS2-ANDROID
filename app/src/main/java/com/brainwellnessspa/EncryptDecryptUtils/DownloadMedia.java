@@ -66,7 +66,7 @@ public class DownloadMedia implements OnDownloadListener {
                 .build().setOnProgressListener(progress -> {
                     long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
                     downloadProgress = (int) progressPercent;
-                    if (downloadProgress == downloadProgress2 + 5) {
+                    if (downloadProgress == downloadProgress2 + 10) {
                        /* localIntent.putExtra("Progress", downloadProgress);
                         localIntent.putExtra("name", FILE_NAME.get(0));
                         localBroadcastManager.sendBroadcast(localIntent);*/

@@ -112,18 +112,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <fragment
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:defaultNavHost="true"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/nav_view"
-            tools:layout="@layout/fragment_transparent_player"/>
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             style="@style/BottomNavigationView"

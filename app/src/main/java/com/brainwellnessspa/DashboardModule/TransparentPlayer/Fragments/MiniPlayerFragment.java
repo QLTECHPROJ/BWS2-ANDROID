@@ -230,7 +230,9 @@ public class MiniPlayerFragment extends Fragment {
             ctx.startActivity(i);
         });
 
-        getActivity().registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getActivity().registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         return view;
     }
 
