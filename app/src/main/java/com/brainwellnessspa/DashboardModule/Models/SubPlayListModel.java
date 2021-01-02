@@ -340,6 +340,26 @@ public class SubPlayListModel {
             @SerializedName("Name")
             @Expose
             private String name;
+            boolean isDownload;
+            @SerializedName("Download")
+            @Expose
+            private String download;
+            @SerializedName("Like")
+            @Expose
+            private String like;
+            @SerializedName("Audiomastercat")
+            @Expose
+            private String audiomastercat;
+            @SerializedName("AudioSubCategory")
+            @Expose
+            private String audioSubCategory;
+            @SerializedName("AudioDirection")
+            @Expose
+            private String audioDirection;
+            @SerializedName("Bitrate")
+            @Expose
+            private String bitrate;
+
 
             protected PlaylistSong(Parcel in) {
                 iD = in.readString();
@@ -356,6 +376,7 @@ public class SubPlayListModel {
                 audiomastercat = in.readString();
                 audioSubCategory = in.readString();
                 audioDirection = in.readString();
+                bitrate = in.readString();
             }
 
             public static final Creator<PlaylistSong> CREATOR = new Creator<PlaylistSong>() {
@@ -378,22 +399,6 @@ public class SubPlayListModel {
                 isDownload = download;
             }
 
-            boolean isDownload;
-            @SerializedName("Download")
-            @Expose
-            private String download;
-            @SerializedName("Like")
-            @Expose
-            private String like;
-            @SerializedName("Audiomastercat")
-            @Expose
-            private String audiomastercat;
-            @SerializedName("AudioSubCategory")
-            @Expose
-            private String audioSubCategory;
-            @SerializedName("AudioDirection")
-            @Expose
-            private String audioDirection;
 
             public PlaylistSong() {
             }
@@ -503,6 +508,14 @@ public class SubPlayListModel {
                 this.audioFile = audioFile;
             }
 
+            public String getBitrate() {
+                return bitrate;
+            }
+
+            public void setBitrate(String bitrate) {
+                this.bitrate = bitrate;
+            }
+
             @Override
             public int describeContents() {
                 return 0;
@@ -525,6 +538,7 @@ public class SubPlayListModel {
                 parcel.writeString(audiomastercat);
                 parcel.writeString(audioSubCategory);
                 parcel.writeString(audioDirection);
+                parcel.writeString(bitrate);
             }
 
         }

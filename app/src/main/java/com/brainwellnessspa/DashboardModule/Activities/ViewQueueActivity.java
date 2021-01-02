@@ -58,6 +58,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -99,7 +100,7 @@ import static com.brainwellnessspa.Utility.MusicService.transportControls;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener/*, Playable */ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName, playFrom = "";
+    String UserID, IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName, playFrom = "";
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -235,6 +236,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_queue);
         ctx = ViewQueueActivity.this;
         activity = ViewQueueActivity.this;
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         downloadAudioDetailsList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
@@ -246,6 +249,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         if (getIntent().getExtras() != null) {
             play = getIntent().getStringExtra("play");
         }
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("source", "");
+        BWSApplication.addToSegment("Queue Screen Viewed", p, CONSTANTS.track);
         handler = new Handler();
         addToQueueModelList = new ArrayList<>();
         addToQueueModelList2 = new ArrayList<>();

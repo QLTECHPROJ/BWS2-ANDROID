@@ -117,8 +117,10 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadPro
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
@@ -154,6 +156,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     FancyShowCaseQueue queue;
     private Handler handler2;
     private long totalDuration, currentDuration = 0;
+    Properties p;
+
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -801,7 +805,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             TotalAudio = listModel.getResponseData().getTotalAudio();
                             Totalhour = listModel.getResponseData().getTotalhour();
                             Totalminute = listModel.getResponseData().getTotalminute();
-                            Properties p = new Properties();
+                            p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("playlistId", listModel.getResponseData().getPlaylistID());
                             p.putValue("playlistName", listModel.getResponseData().getPlaylistName());
@@ -833,6 +837,28 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             binding.tvTag.setVisibility(View.VISIBLE);
                             binding.tvTag.setText(R.string.Audios_in_Playlist);
                             binding.llReminder.setOnClickListener(view -> {
+                                p = new Properties();
+                                p.putValue("userId", UserID);
+                                p.putValue("playlistId", listModel.getResponseData().getPlaylistID());
+                                p.putValue("playlistName", listModel.getResponseData().getPlaylistName());
+                                p.putValue("playlistDescription", listModel.getResponseData().getPlaylistDesc());
+                                if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
+                                    p.putValue("playlistType", "Created");
+                                } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
+                                    p.putValue("playlistType", "Default");
+                                }
+
+                                if (Totalhour.equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                                } else if (Totalminute.equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", Totalhour + "h 0m");
+                                } else {
+                                    p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                                }
+                                p.putValue("audioCount", TotalAudio);
+                                p.putValue("source", ScreenView);
+                                p.putValue("playerType", "Mini");
+                                BWSApplication.addToSegment("Playlist Reminder Clicked", p, CONSTANTS.track);
                                 if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
                                         listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
@@ -1663,6 +1689,30 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
+                p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
+                p.putValue("playlistDescription", downloadPlaylistDetails.getPlaylistDesc());
+                if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("1")) {
+                    p.putValue("playlistType", "Created");
+                } else if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("0")) {
+                    p.putValue("playlistType", "Default");
+                }
+
+                if (downloadPlaylistDetails.getTotalhour().equalsIgnoreCase("")) {
+                    p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.getTotalminute() + "m");
+                } else if (downloadPlaylistDetails.getTotalminute().equalsIgnoreCase("")) {
+                    p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h 0m");
+                } else {
+                    p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h " + downloadPlaylistDetails.getTotalminute() + "m");
+                }
+                p.putValue("audioCount", downloadPlaylistDetails.getTotalAudio());
+                p.putValue("source", "Downloaded Playlists");
+                p.putValue("playerType", "Mini");
+                p.putValue("audioService", APP_SERVICE_STATUS);
+                p.putValue("sound", GetDeviceVolume(getActivity()));
+                BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
                 for (int i = 0; i < playlistSongs.size(); i++) {
                     downloadAudioDetails.setID(playlistSongs.get(i).getID());
                     downloadAudioDetails.setName(playlistSongs.get(i).getName());
@@ -2060,7 +2110,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     public void SegmentTag() {
-        Properties p = new Properties();
+        p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("playlistId", PlaylistID);
         p.putValue("playlistName", PlaylistName);
@@ -2082,9 +2132,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         p.putValue("audioCount", TotalAudio);
         p.putValue("source", ScreenView);
-        p.putValue("playerType", "");
-        p.putValue("audioService", "");
-        p.putValue("sound", "");
+        p.putValue("playerType", "Mini");
+        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("sound", GetDeviceVolume(getActivity()));
         BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 
@@ -2366,6 +2416,36 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
 
             callDragApi();
+            p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("playlistId", PlaylistID);
+            p.putValue("playlistName", PlaylistName);
+            p.putValue("playlistDescription", PlaylistDescription);
+            if (Created.equalsIgnoreCase("1")) {
+                p.putValue("playlistType", "Created");
+            } else if (Created.equalsIgnoreCase("0")) {
+                p.putValue("playlistType", "Default");
+            }
+
+            if (Totalhour.equalsIgnoreCase("")) {
+                p.putValue("playlistDuration", "0h " + Totalminute + "m");
+            } else if (Totalminute.equalsIgnoreCase("")) {
+                p.putValue("playlistDuration", Totalhour + "h 0m");
+            } else {
+                p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+            }
+            p.putValue("audioCount", TotalAudio);
+            p.putValue("source", "Your Created");
+            p.putValue("playerType", "Mini");
+            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("audioId", listModelList.get(toPosition).getID());
+            p.putValue("audioName", listModelList.get(toPosition).getName());
+            p.putValue("masterCategory", listModelList.get(toPosition).getAudiomastercat());
+            p.putValue("subCategory", listModelList.get(toPosition).getAudioSubCategory());
+            p.putValue("audioSortPosition", fromPosition);
+            p.putValue("audioSortPositionNew", toPosition);
+            BWSApplication.addToSegment("Playlist Audio Sorted", p, CONSTANTS.track);
             notifyItemMoved(fromPosition, toPosition);
             adpater1.notifyItemMoved(fromPosition, toPosition);
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

@@ -121,6 +121,9 @@ public class SuggestedModel implements Parcelable {
         @SerializedName("Download")
         @Expose
         private String download;
+        @SerializedName("Bitrate")
+        @Expose
+        private String bitrate;
 
         public ResponseData() {
 
@@ -138,6 +141,7 @@ public class SuggestedModel implements Parcelable {
             audioSubCategory = in.readString();
             like = in.readString();
             download = in.readString();
+            bitrate = in.readString();
         }
 
         @Override
@@ -154,6 +158,7 @@ public class SuggestedModel implements Parcelable {
             dest.writeString(audioSubCategory);
             dest.writeString(like);
             dest.writeString(download);
+            dest.writeString(bitrate);
         }
 
         @Override
@@ -269,5 +274,12 @@ public class SuggestedModel implements Parcelable {
             this.download = download;
         }
 
+        public String getBitrate() {
+            return bitrate;
+        }
+
+        public void setBitrate(String bitrate) {
+            this.bitrate = bitrate;
+        }
     }
 }

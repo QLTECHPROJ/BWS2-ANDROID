@@ -253,6 +253,9 @@ public class MainAudioModel implements Parcelable {
             @SerializedName("AudioDuration")
             @Expose
             private String audioDuration;
+            @SerializedName("Bitrate")
+            @Expose
+            private String bitrate;
 
             public Detail() {
             }
@@ -260,6 +263,9 @@ public class MainAudioModel implements Parcelable {
             protected Detail(Parcel in) {
                 iD = in.readString();
                 name = in.readString();
+                categoryName = in.readString();
+                catImage = in.readString();
+                isPlay = in.readString();
                 audioFile = in.readString();
                 audioDirection = in.readString();
                 audiomastercat = in.readString();
@@ -268,9 +274,7 @@ public class MainAudioModel implements Parcelable {
                 like = in.readString();
                 download = in.readString();
                 audioDuration = in.readString();
-                isPlay = in.readString();
-                categoryName = in.readString();
-                catImage = in.readString();
+                bitrate = in.readString();
             }
 
             public String getID() {
@@ -385,6 +389,13 @@ public class MainAudioModel implements Parcelable {
                 this.isPlay = isPlay;
             }
 
+            public String getBitrate() {
+                return bitrate;
+            }
+
+            public void setBitrate(String bitrate) {
+                this.bitrate = bitrate;
+            }
 
             @Override
             public int describeContents() {
@@ -395,6 +406,9 @@ public class MainAudioModel implements Parcelable {
             public void writeToParcel(Parcel parcel, int i) {
                 parcel.writeString(iD);
                 parcel.writeString(name);
+                parcel.writeString(categoryName);
+                parcel.writeString(catImage);
+                parcel.writeString(isPlay);
                 parcel.writeString(audioFile);
                 parcel.writeString(audioDirection);
                 parcel.writeString(audiomastercat);
@@ -403,9 +417,7 @@ public class MainAudioModel implements Parcelable {
                 parcel.writeString(like);
                 parcel.writeString(download);
                 parcel.writeString(audioDuration);
-                parcel.writeString(isPlay);
-                parcel.writeString(categoryName);
-                parcel.writeString(catImage);
+                parcel.writeString(bitrate);
             }
         }
     }

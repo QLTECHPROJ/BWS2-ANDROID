@@ -231,6 +231,9 @@ public class LikesHistoryModel {
             @SerializedName("IsPlay")
             @Expose
             private String isPlay;
+            @SerializedName("Bitrate")
+            @Expose
+            private String bitrate;
 
             public String getID() {
                 return iD;
@@ -334,6 +337,14 @@ public class LikesHistoryModel {
 
             public void setIsPlay(String isPlay) {
                 this.isPlay = isPlay;
+            }
+
+            public String getBitrate() {
+                return bitrate;
+            }
+
+            public void setBitrate(String bitrate) {
+                this.bitrate = bitrate;
             }
         }
 

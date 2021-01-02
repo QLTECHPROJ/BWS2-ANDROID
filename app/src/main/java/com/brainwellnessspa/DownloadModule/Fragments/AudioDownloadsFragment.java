@@ -633,7 +633,7 @@ public class AudioDownloadsFragment extends Fragment {
                 if (player != null) {
                     player.removeMediaItem(position);
                 }
-                Properties p = new Properties();
+               /* Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("audioId", listModelList.get(position).getID());
                 p.putValue("audioName", listModelList.get(position).getName());
@@ -645,7 +645,7 @@ public class AudioDownloadsFragment extends Fragment {
                 p.putValue("audioService", "");
                 p.putValue("audioType", "");
                 p.putValue("bitRate", "");
-                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
+                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);*/
                 listModelList.remove(position);
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {

@@ -1,6 +1,5 @@
 package com.brainwellnessspa.Services;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,7 +10,7 @@ import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -22,65 +21,29 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
-import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
-import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
-import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.UserModule.Activities.FileUtil;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MusicService;
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
-import com.google.android.exoplayer2.upstream.TransferListener;
-import com.google.android.exoplayer2.util.Util;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.concurrent.TimeUnit;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
 public class GlobalInitExoPlayer extends Service {
     public static SimpleExoPlayer player;
@@ -93,6 +56,11 @@ public class GlobalInitExoPlayer extends Service {
     public static String Name, Desc;
     Intent playbackServiceIntent;
     public static boolean isprogressbar = false;
+    public static String APP_SERVICE_STATUS = "Foreground";
+    public static AudioManager audioManager;
+    public static int hundredVolume, currentVolume, maxVolume;
+    public static int percent;
+    public static String PlayerCurrantAudioPostion="0";
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -143,12 +111,13 @@ public class GlobalInitExoPlayer extends Service {
     }
 
     public void GlobleInItPlayer(Context ctx, int position, List<String> downloadAudioDetailsList,
-                                 ArrayList<MainPlayModel> mainPlayModelList,String playerType) {
+                                 ArrayList<MainPlayModel> mainPlayModelList, String playerType) {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String ViewType = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+
 //        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
 //        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 //        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
@@ -223,14 +192,16 @@ public class GlobalInitExoPlayer extends Service {
         p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-        p.putValue("position", position);
+        p.putValue("position", GetCurrentAudioPosition());
         p.putValue("audioType", "");
         p.putValue("source", "");
         p.putValue("playerType", playerType);
-        p.putValue("audioService", "");
+        p.putValue("audioService", APP_SERVICE_STATUS);
         p.putValue("bitRate", "");
-        p.putValue("sound", String.valueOf(player.getDeviceVolume()));
+        p.putValue("sound", GetDeviceVolume(ctx));
         BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
+
+        Log.e("Audio Volume", GetDeviceVolume(ctx));
 //            String source = "file:////storage/3639-3632/my sounds/Gujarati songs/Chok Puravo d.mp3";
 //            // The MediaSource represents the media to be played.
 //            MediaSource mediaSource =
@@ -293,8 +264,8 @@ public class GlobalInitExoPlayer extends Service {
     }
 
     public static void relesePlayer() {
+        if (player != null) {
 //        playerNotificationManager.setPlayer(null);
-        if(player!=null) {
             player.stop();
             player.release();
             player = null;
@@ -326,9 +297,10 @@ public class GlobalInitExoPlayer extends Service {
 //       player.addAnalyticsListener(new EventLogger(trackSelector));
         audioClick = false;
     }
-    public String GetSourceName(String AudioFlag){
-        String myFlagType ="";
-        if(AudioFlag.equalsIgnoreCase("Recently Played")){
+
+    public String GetSourceName(String AudioFlag) {
+        String myFlagType = "";
+        if (AudioFlag.equalsIgnoreCase("Recently Played")) {
 
 
         }
@@ -546,6 +518,27 @@ Appointment Audios*/
     public IBinder onBind(Intent intent) {
         new LocalBinder();
         return null;
+    }
+
+    public static String GetDeviceVolume(Context ctx) {
+        audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        percent = 100;
+        hundredVolume = (int) (currentVolume * percent) / maxVolume;
+        return String.valueOf(hundredVolume);
+    }
+
+    public static String GetCurrentAudioPosition() {
+        if(player!=null) {
+            long pos = player.getCurrentPosition();
+            PlayerCurrantAudioPostion =
+            String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
+                    TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos)));
+        }else{
+            PlayerCurrantAudioPostion="0";
+        }
+        return PlayerCurrantAudioPostion;
     }
 
     public class LocalBinder extends Binder {

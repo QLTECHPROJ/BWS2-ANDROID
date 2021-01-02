@@ -91,6 +91,9 @@ public class SearchBothModel {
         @SerializedName("Download")
         @Expose
         private String download;
+        @SerializedName("Bitrate")
+        @Expose
+        private String bitrate;
         public String getID() {
             return iD;
         }
@@ -193,6 +196,14 @@ public class SearchBothModel {
 
         public void setDownload(String download) {
             this.download = download;
+        }
+
+        public String getBitrate() {
+            return bitrate;
+        }
+
+        public void setBitrate(String bitrate) {
+            this.bitrate = bitrate;
         }
     }
 }

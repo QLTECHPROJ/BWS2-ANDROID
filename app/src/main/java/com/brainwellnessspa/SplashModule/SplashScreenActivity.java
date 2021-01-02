@@ -83,24 +83,26 @@ public class SplashScreenActivity extends AppCompatActivity {
         binding.ivBackground.requestFocus();
         binding.ivBackground.start();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-        if (requestCode == 15695) {
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            boolean isIgnoringBatteryOptimizations = false;
+            if (requestCode == 15695) {
+                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                boolean isIgnoringBatteryOptimizations = false;
                 isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
-            if (isIgnoringBatteryOptimizations) {
-                // Ignoring battery optimization
-                callDashboard();
-            } else {
-                // Not ignoring battery optimization
-                callDashboard();
+                if (isIgnoringBatteryOptimizations) {
+                    // Ignoring battery optimization
+                    callDashboard();
+                } else {
+                    // Not ignoring battery optimization
+                    callDashboard();
+                }
             }
-        }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     private void callDashboard() {
         if (UserID.equalsIgnoreCase("")) {
             new Handler().postDelayed(() -> {
@@ -153,6 +155,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     VersionModel versionModel = response.body();
                     try {
                         try {
+//                             TODO Live segment key
                             analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")
                                     .trackApplicationLifecycleEvents()
                                     .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
@@ -186,15 +189,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                                             String packageName = getPackageName();
                                             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                                             boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
-                                            if(!isIgnoringBatteryOptimizations){
+                                            if (!isIgnoringBatteryOptimizations) {
                                                 Intent intent = new Intent();
                                                 intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                                                 intent.setData(Uri.parse("package:" + packageName));
                                                 startActivityForResult(intent, 15695);
-                                            }else{
+                                            } else {
                                                 callDashboard();
                                             }
-                                        }else {
+                                        } else {
                                             callDashboard();
                                         }
                                         dialog.dismiss();
@@ -215,15 +218,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                                 String packageName = getPackageName();
                                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                                 boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
-                                if(!isIgnoringBatteryOptimizations){
+                                if (!isIgnoringBatteryOptimizations) {
                                     Intent intent = new Intent();
                                     intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                                     intent.setData(Uri.parse("package:" + packageName));
                                     startActivityForResult(intent, 15695);
-                                }else{
+                                } else {
                                     callDashboard();
                                 }
-                            }else {
+                            } else {
                                 callDashboard();
                             }
                         }
@@ -241,20 +244,21 @@ public class SplashScreenActivity extends AppCompatActivity {
                 String packageName = getPackageName();
                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                 boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
-                if(!isIgnoringBatteryOptimizations){
+                if (!isIgnoringBatteryOptimizations) {
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                     intent.setData(Uri.parse("package:" + packageName));
                     startActivityForResult(intent, 15695);
-                }else{
+                } else {
                     callDashboard();
                 }
-            }else {
+            } else {
                 callDashboard();
             }
             BWSApplication.showToast(context.getString(R.string.no_server_found), context);
         }
     }
+
     public void GetAllMedia() {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
@@ -270,7 +274,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                for(int i = 0;i<downloadAudioDetailsList.size();i++){
+                for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                     FileUtils.deleteDownloadedFile1(getApplicationContext(), downloadAudioDetailsList.get(i));
                 }
                 DeletallLocalCart();
@@ -303,6 +307,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         DeletallCart st = new DeletallCart();
         st.execute();
     }
+
     public void DeletallLocalCart1() {
         class DeletallCart extends AsyncTask<Void, Void, Void> {
             @Override

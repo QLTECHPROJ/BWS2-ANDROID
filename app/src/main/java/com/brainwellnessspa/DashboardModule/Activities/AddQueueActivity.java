@@ -47,6 +47,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -59,8 +60,10 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 
 public class AddQueueActivity extends AppCompatActivity {
     public static boolean comeFromAddToQueue = false;
@@ -84,6 +87,9 @@ public class AddQueueActivity extends AppCompatActivity {
     //    Handler handler1;
 //    List<String> fileNameList;
     private long mLastClickTime = 0;
+    Properties p;
+    int playerpos;
+
 /*
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
@@ -192,6 +198,57 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             comeFrom = "";
         }
+
+        playerpos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+        p = new Properties();
+        p.putValue("userId", UserID);
+        if (!comeFrom.equalsIgnoreCase("")) {
+            if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
+                p.putValue("audioId",mDataDownload.get(position).getID());
+                p.putValue("audioName", mDataDownload.get(position).getName());
+                p.putValue("audioDescription", "");
+                p.putValue("directions", mDataDownload.get(position).getAudioDirection());
+                p.putValue("masterCategory", mDataDownload.get(position).getAudiomastercat());
+                p.putValue("subCategory", mDataDownload.get(position).getAudioSubCategory());
+                p.putValue("audioDuration", mDataDownload.get(position).getAudioDuration());
+            } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
+                p.putValue("audioId",mDataLike.get(position).getID());
+                p.putValue("audioName", mDataLike.get(position).getName());
+                p.putValue("audioDescription", "");
+                p.putValue("directions", mDataLike.get(position).getAudioDirection());
+                p.putValue("masterCategory", mDataLike.get(position).getAudiomastercat());
+                p.putValue("subCategory", mDataLike.get(position).getAudioSubCategory());
+                p.putValue("audioDuration", mDataLike.get(position).getAudioDuration());
+            } else {
+                p.putValue("audioId",mData.get(position).getID());
+                p.putValue("audioName", mData.get(position).getName());
+                p.putValue("audioDescription", "");
+                p.putValue("directions", mData.get(position).getAudioDirection());
+                p.putValue("masterCategory", mData.get(position).getAudiomastercat());
+                p.putValue("subCategory", mData.get(position).getAudioSubCategory());
+                p.putValue("audioDuration", mData.get(position).getAudioDuration());
+            }
+
+            p.putValue("position", GetCurrentAudioPosition());
+            p.putValue("audioType", "");
+            p.putValue("source", "");
+            p.putValue("playerType", "Mini");
+        } else {
+            p.putValue("audioId", mainPlayModelList.get(playerpos).getID());
+            p.putValue("audioName", mainPlayModelList.get(playerpos).getName());
+            p.putValue("audioDescription", "");
+            p.putValue("directions", mainPlayModelList.get(playerpos).getAudioDirection());
+            p.putValue("masterCategory", mainPlayModelList.get(playerpos).getAudiomastercat());
+            p.putValue("subCategory", mainPlayModelList.get(playerpos).getAudioSubCategory());
+            p.putValue("audioDuration", mainPlayModelList.get(playerpos).getAudioDuration());
+            p.putValue("position", GetCurrentAudioPosition());
+            p.putValue("audioType", "");
+            p.putValue("source", "");
+            p.putValue("playerType", "Main");
+        }
+        p.putValue("bitRate", "");
+        p.putValue("sound", GetDeviceVolume(ctx));
+        BWSApplication.addToSegment("Audio Details Viewed", p, CONSTANTS.track);
 
         if (queuePlay) {
             listSize = addToQueueModelList.size();
@@ -555,7 +612,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                         mData.remove(position);
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
-                                            if(player!=null){
+                                            if (player != null) {
                                                 player.removeMediaItem(pos);
                                             }
                                             if (mData.size() != 0) {
@@ -616,7 +673,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                     } else {
                                         mainPlayModelList.remove(pos);
                                         arrayList1.remove(pos);
-                                        if(player!=null){
+                                        if (player != null) {
                                             player.removeMediaItem(pos);
                                         }
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
@@ -756,6 +813,7 @@ public class AddQueueActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
+
         }
 //        fileNameList = url1;
         if (!isDownloading) {
@@ -782,7 +840,7 @@ public class AddQueueActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-
+                p = new Properties();
                 if (!comeFrom.equalsIgnoreCase("")) {
                     if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
                         downloadAudioDetails.setID(mDataDownload.get(i).getID());
@@ -818,12 +876,14 @@ public class AddQueueActivity extends AppCompatActivity {
                         downloadAudioDetails.setLike(mData.get(i).getLike());
                         downloadAudioDetails.setAudioDuration(mData.get(i).getAudioDuration());
                     }
+                    p.putValue("playerType", "Mini");
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setIsSingle("1");
                     downloadAudioDetails.setPlaylistId("");
                     downloadAudioDetails.setIsDownload("pending");
                     downloadAudioDetails.setDownloadProgress(0);
                 } else {
+                    p.putValue("playerType", "Main");
                     downloadAudioDetails.setID(mainPlayModelList.get(i).getID());
                     downloadAudioDetails.setName(mainPlayModelList.get(i).getName());
                     downloadAudioDetails.setAudioFile(mainPlayModelList.get(i).getAudioFile());
@@ -840,6 +900,21 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setIsDownload("pending");
                     downloadAudioDetails.setDownloadProgress(0);
                 }
+
+                p.putValue("userId", UserID);
+                p.putValue("audioId", downloadAudioDetails.getID());
+                p.putValue("audioName", downloadAudioDetails.getName());
+                p.putValue("audioDescription", "");
+                p.putValue("directions", downloadAudioDetails.getAudioDirection());
+                p.putValue("masterCategory",downloadAudioDetails.getAudiomastercat());
+                p.putValue("subCategory", downloadAudioDetails.getAudioSubCategory());
+                p.putValue("audioDuration",downloadAudioDetails.getAudioDuration());
+                p.putValue("position", GetCurrentAudioPosition());
+                p.putValue("audioType", "");
+                p.putValue("source", "");
+                p.putValue("bitRate", "");
+                p.putValue("sound", GetDeviceVolume(ctx));
+                BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
                 SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -858,7 +933,7 @@ public class AddQueueActivity extends AppCompatActivity {
                     Gson gson1 = new Gson();
                     arrayList = gson1.fromJson(jsonw, type1);
                     arrayList2 = gson1.fromJson(json11, type0);
-                    size= arrayList2.size();
+                    size = arrayList2.size();
                 }
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     arrayList.add(downloadAudioDetails);
@@ -1269,9 +1344,59 @@ public class AddQueueActivity extends AppCompatActivity {
                                 return;
                             }
                             mLastClickTime = SystemClock.elapsedRealtime();
+                            playerpos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            if (!comeFrom.equalsIgnoreCase("")) {
+                                if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
+                                    p.putValue("audioId",mDataDownload.get(position).getID());
+                                    p.putValue("audioName", mDataDownload.get(position).getName());
+                                    p.putValue("audioDescription", "");
+                                    p.putValue("directions", mDataDownload.get(position).getAudioDirection());
+                                    p.putValue("masterCategory", mDataDownload.get(position).getAudiomastercat());
+                                    p.putValue("subCategory", mDataDownload.get(position).getAudioSubCategory());
+                                    p.putValue("audioDuration", mDataDownload.get(position).getAudioDuration());
+                                } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
+                                    p.putValue("audioId",mDataLike.get(position).getID());
+                                    p.putValue("audioName", mDataLike.get(position).getName());
+                                    p.putValue("audioDescription", "");
+                                    p.putValue("directions", mDataLike.get(position).getAudioDirection());
+                                    p.putValue("masterCategory", mDataLike.get(position).getAudiomastercat());
+                                    p.putValue("subCategory", mDataLike.get(position).getAudioSubCategory());
+                                    p.putValue("audioDuration", mDataLike.get(position).getAudioDuration());
+                                } else {
+                                    p.putValue("audioId",mData.get(position).getID());
+                                    p.putValue("audioName", mData.get(position).getName());
+                                    p.putValue("audioDescription", "");
+                                    p.putValue("directions", mData.get(position).getAudioDirection());
+                                    p.putValue("masterCategory", mData.get(position).getAudiomastercat());
+                                    p.putValue("subCategory", mData.get(position).getAudioSubCategory());
+                                    p.putValue("audioDuration", mData.get(position).getAudioDuration());
+                                }
+
+                                p.putValue("position", GetCurrentAudioPosition());
+                                p.putValue("audioType", "");
+                                p.putValue("source", "");
+                                p.putValue("playerType", "Mini");
+                            } else {
+                                p.putValue("audioId", mainPlayModelList.get(playerpos).getID());
+                                p.putValue("audioName", mainPlayModelList.get(playerpos).getName());
+                                p.putValue("audioDescription", "");
+                                p.putValue("directions", mainPlayModelList.get(playerpos).getAudioDirection());
+                                p.putValue("masterCategory", mainPlayModelList.get(playerpos).getAudiomastercat());
+                                p.putValue("subCategory", mainPlayModelList.get(playerpos).getAudioSubCategory());
+                                p.putValue("audioDuration", mainPlayModelList.get(playerpos).getAudioDuration());
+                                p.putValue("position", GetCurrentAudioPosition());
+                                p.putValue("audioType", "");
+                                p.putValue("source", "");
+                                p.putValue("playerType", "Main");
+                            }
+                            p.putValue("bitRate", "");
+                            p.putValue("sound", GetDeviceVolume(ctx));
+                            BWSApplication.addToSegment("Add to Playlist Clicked", p, CONSTANTS.track);
                             Intent i = new Intent(ctx, AddPlaylistActivity.class);
                             i.putExtra("AudioId", AudioId);
-                            i.putExtra("ScreenView","Audio Details Screen");
+                            i.putExtra("ScreenView", "Audio Details Screen");
                             i.putExtra("PlaylistID", "");
                             startActivity(i);
                         });
@@ -1322,7 +1447,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .getaudioByPlaylist1(AudioFile,"").observe(this, audioList -> {
+                .getaudioByPlaylist1(AudioFile, "").observe(this, audioList -> {
             if (audioList.size() != 0) {
                 callDisableDownload();
             } else {

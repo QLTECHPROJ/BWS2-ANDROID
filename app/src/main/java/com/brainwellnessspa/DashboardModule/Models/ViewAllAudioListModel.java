@@ -177,6 +177,9 @@ public class ViewAllAudioListModel {
             @SerializedName("Download")
             @Expose
             private String download;
+            @SerializedName("Bitrate")
+            @Expose
+            private String bitrate;
 
             public Detail() {
             }
@@ -184,14 +187,15 @@ public class ViewAllAudioListModel {
                 iD = in.readString();
                 name = in.readString();
                 audioFile = in.readString();
+                imageFile = in.readString();
+                audioDuration = in.readString();
                 audioDirection = in.readString();
+                isPlay = in.readString();
                 audiomastercat = in.readString();
                 audioSubCategory = in.readString();
-                imageFile = in.readString();
                 like = in.readString();
                 download = in.readString();
-                audioDuration = in.readString();
-                isPlay = in.readString();
+                bitrate = in.readString();
             }
 
             public static final Creator<MainAudioModel.ResponseData.Detail> CREATOR = new Creator<MainAudioModel.ResponseData.Detail>() {
@@ -294,6 +298,14 @@ public class ViewAllAudioListModel {
                 this.download = download;
             }
 
+            public String getBitrate() {
+                return bitrate;
+            }
+
+            public void setBitrate(String bitrate) {
+                this.bitrate = bitrate;
+            }
+
             @Override
             public int describeContents() {
                 return 0;
@@ -304,14 +316,15 @@ public class ViewAllAudioListModel {
                 parcel.writeString(iD);
                 parcel.writeString(name);
                 parcel.writeString(audioFile);
+                parcel.writeString(imageFile);
+                parcel.writeString(audioDuration);
                 parcel.writeString(audioDirection);
+                parcel.writeString(isPlay);
                 parcel.writeString(audiomastercat);
                 parcel.writeString(audioSubCategory);
-                parcel.writeString(imageFile);
                 parcel.writeString(like);
                 parcel.writeString(download);
-                parcel.writeString(audioDuration);
-                parcel.writeString(isPlay);
+                parcel.writeString(bitrate);
             }
         }
     }

@@ -3,12 +3,15 @@
 
     <string name="segment_key">X3sYYbQtro7xHI31AJppjMQ20AZlPdlS</string>
     <string name="segment_key2">2ClHzzCF1JFEDocqe0Az8KSV4ybDcUdm</string>//sunny sir id
+    <string name="mansi_segment_key">"Zvo5vSa1Ih8CdMVilkKqzNf9UHMVTFuO"</string>
     <string name="ResponseCodesuccess">200</string>
     <string name="ResponseCodefail">401</string>
     <string name="stripe_test_key">pk_test_Mm4d65j7STTpLo0YrkYGmaWH00tQO1qMnv</string>
     <string name="stripe_live_key">pk_live_nmRApzuiZfmKRruPcnpYhurb00tFp2EYYP</string>
 
     <string name="sign_in">Sign In</string>
+    <string name="Foreground">Foreground</string>
+    <string name="Background">Background</string>
     <string name="enter_phone_number">Enter Phone Number</string>
     <string name="enter_mobile_number">Enter Mobile Number</string>
     <string name="mobile_number">Mobile Number</string>
