@@ -803,6 +803,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             TotalAudio = listModel.getResponseData().getTotalAudio();
                             Totalhour = listModel.getResponseData().getTotalhour();
                             Totalminute = listModel.getResponseData().getTotalminute();
+                            PlaylistType = listModel.getResponseData().getCreated();
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("playlistId", listModel.getResponseData().getPlaylistID());
