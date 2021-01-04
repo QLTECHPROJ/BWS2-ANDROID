@@ -256,10 +256,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             ScreenView = getArguments().getString("ScreenView");
         }
 
-        if (getArguments() != null) {
-            PlaylistType = getArguments().getString("PlaylistType");
-        }
-
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
@@ -2149,33 +2145,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             e.printStackTrace();
         }
     }
-
-/*    public static void PlaylistCompleteST(){
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        p.putValue("playlistId", PlaylistID);
-        p.putValue("playlistName", PlaylistName);
-        p.putValue("playlistDescription", PlaylistDescription);
-        if (PlaylistType.equalsIgnoreCase("1")) {
-            p.putValue("playlistType", "Created");
-        } else if (PlaylistType.equalsIgnoreCase("0")) {
-            p.putValue("playlistType", "Default");
-        }
-        if (Totalhour.equalsIgnoreCase("")) {
-            p.putValue("playlistDuration", "0h " + Totalminute + "m");
-        } else if (Totalminute.equalsIgnoreCase("")) {
-            p.putValue("playlistDuration", Totalhour + "h 0m");
-        } else {
-            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
-        }
-
-        p.putValue("audioCount", TotalAudio);
-        p.putValue("source", ScreenView);
-        p.putValue("playerType", "Mini");
-        p.putValue("audioService", APP_SERVICE_STATUS);
-        p.putValue("sound", GetDeviceVolume(getActivity()));
-        BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
-    }*/
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;

@@ -101,7 +101,7 @@ public class PlaylistFragment extends Fragment {
         return view;
     }
 
-    private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage, String MyDownloads, String ScreenView, String PlaylistType) {
+    private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage, String MyDownloads, String ScreenView) {
         try {
             comefrom_search = 0;
             Bundle bundle = new Bundle();
@@ -114,7 +114,6 @@ public class PlaylistFragment extends Fragment {
             bundle.putString("PlaylistSource", PlaylistSource);
             bundle.putString("MyDownloads", MyDownloads);
             bundle.putString("ScreenView", ScreenView);
-            bundle.putString("PlaylistType", PlaylistType);
             myPlaylistsFragment.setArguments(bundle);
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, myPlaylistsFragment)
@@ -439,7 +438,7 @@ public class PlaylistFragment extends Fragment {
                                             } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
                                                     listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
 
-                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0", "Your Created","Created");
+                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0", "Your Created");
                                                 /*Properties p = new Properties();
                                                 p.putValue("userId", UserID);
                                                 p.putValue("playlistId", listModel.getResponseData().getId());
@@ -676,7 +675,7 @@ public class PlaylistFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     if (MyDownloads.equalsIgnoreCase("1")) {
                         callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
-                                listModelList.get(position).getPlaylistImage(), MyDownloads, "Downloaded Playlists","");
+                                listModelList.get(position).getPlaylistImage(), MyDownloads, "Downloaded Playlists");
 //                        getMedia(listModelList.get(position).getPlaylistID());
                        /* Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
                         i.putExtra("New", "0");
@@ -691,7 +690,7 @@ public class PlaylistFragment extends Fragment {
                         ctx.startActivity(i);*/
                     } else {
                         callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
-                                listModelList.get(position).getPlaylistImage(), MyDownloads, screenView,listModelList.get(position).getCreated());
+                                listModelList.get(position).getPlaylistImage(), MyDownloads, screenView);
                     }
 
                 }
