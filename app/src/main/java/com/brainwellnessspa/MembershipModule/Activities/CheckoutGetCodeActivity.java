@@ -43,6 +43,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
     private long mLastClickTime = 0;
+    public static int SegmentTagCheck = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +62,11 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         }
         binding.edtNumber.addTextChangedListener(signupTextWatcher);
 
-        Properties p = new Properties();
-        BWSApplication.addToSegment("Checkout Login Viewed", p, CONSTANTS.screen);
+        if (SegmentTagCheck == 0) {
+            Properties p = new Properties();
+            BWSApplication.addToSegment("Checkout Login Viewed", p, CONSTANTS.screen);
+        }
+
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
             binding.tvCountryCode.setText(R.string.code);
             binding.tvCountry.setText(R.string.Australia);

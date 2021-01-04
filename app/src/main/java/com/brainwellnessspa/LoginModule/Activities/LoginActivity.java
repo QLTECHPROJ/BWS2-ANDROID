@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     Activity activity;
     Handler handler;
     private long mLastClickTime = 0;
+    public static int SegmentTag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +83,13 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             binding.edtNumber.setText(MobileNo);
         }
-        Properties p = new Properties();
-        BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen);
+
+        if (SegmentTag == 0) {
+            Properties p = new Properties();
+            BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen);
+        } else {
+        }
+
         binding.rlCountrySelect.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

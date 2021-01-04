@@ -129,6 +129,16 @@ public class CONSTANTS {
     public static final String PREF_KEY_Image = "Image";
     public static final String PREF_KEY_Plan = "Plan";
 
+    public static final String PREF_KEY_SEGMENT_PLAYLIST = "SegmentPlaylist";
+    public static final String PREF_KEY_PlaylistID = "PlaylistID";
+    public static final String PREF_KEY_PlaylistName = "PlaylistName";
+    public static final String PREF_KEY_PlaylistDescription = "PlaylistDescription";
+    public static final String PREF_KEY_PlaylistType = "PlaylistType";
+    public static final String PREF_KEY_Totalhour = "Totalhour";
+    public static final String PREF_KEY_Totalminute = "Totalminute";
+    public static final String PREF_KEY_TotalAudio = "TotalAudio";
+    public static final String PREF_KEY_ScreenView = "ScreenView";
+
     public static final String Token = "Token";
 
     // Files

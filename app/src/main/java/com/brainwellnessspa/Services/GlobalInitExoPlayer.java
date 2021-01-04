@@ -60,7 +60,7 @@ public class GlobalInitExoPlayer extends Service {
     public static AudioManager audioManager;
     public static int hundredVolume, currentVolume, maxVolume;
     public static int percent;
-    public static String PlayerCurrantAudioPostion="0";
+    public static String PlayerCurrantAudioPostion = "0";
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -298,23 +298,27 @@ public class GlobalInitExoPlayer extends Service {
         audioClick = false;
     }
 
-    public String GetSourceName(String AudioFlag,String MyPlaylist) {
+    public String GetSourceName(Context ctx) {
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
         String myFlagType = "";
 
-        if (AudioFlag.equalsIgnoreCase("MainAudioList")||AudioFlag.equalsIgnoreCase("ViewAllAudioList")){
+        if (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             if (MyPlaylist.equalsIgnoreCase("Recently Played")) {
                 myFlagType = MyPlaylist;
-            }else if (MyPlaylist.equalsIgnoreCase("Library")) {
+            } else if (MyPlaylist.equalsIgnoreCase("Library")) {
                 myFlagType = MyPlaylist;
-            }else if (MyPlaylist.equalsIgnoreCase("Get Inspired")) {
+            } else if (MyPlaylist.equalsIgnoreCase("Get Inspired")) {
                 myFlagType = MyPlaylist;
-            }else if (MyPlaylist.equalsIgnoreCase("Popular")) {
+            } else if (MyPlaylist.equalsIgnoreCase("Popular")) {
                 myFlagType = MyPlaylist;
-            }else if (MyPlaylist.equalsIgnoreCase("Top Categories")) {
+            } else if (MyPlaylist.equalsIgnoreCase("Top Categories")) {
                 myFlagType = MyPlaylist;
             }
-        } if (AudioFlag.equalsIgnoreCase("LikeAudioList")){
-                myFlagType = "Liked Audios";
+        }
+        if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+            myFlagType = "Liked Audios";
         }
 /*
 Top Categories  dddd
@@ -534,22 +538,28 @@ Appointment Audios*/
     }
 
     public static String GetDeviceVolume(Context ctx) {
-        audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        percent = 100;
-        hundredVolume = (int) (currentVolume * percent) / maxVolume;
+        try {
+            if (audioManager != null) {
+                audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+                currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                percent = 100;
+                hundredVolume = (int) (currentVolume * percent) / maxVolume;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return String.valueOf(hundredVolume);
     }
 
     public static String GetCurrentAudioPosition() {
-        if(player!=null) {
+        if (player != null) {
             long pos = player.getCurrentPosition();
             PlayerCurrantAudioPostion =
-            String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
-                    TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos)));
-        }else{
-            PlayerCurrantAudioPostion="0";
+                    String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
+                            TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos)));
+        } else {
+            PlayerCurrantAudioPostion = "0";
         }
         return PlayerCurrantAudioPostion;
     }

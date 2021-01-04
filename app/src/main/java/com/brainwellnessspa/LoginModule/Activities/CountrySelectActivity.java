@@ -38,6 +38,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.LoginModule.Activities.LoginActivity.SegmentTag;
+import static com.brainwellnessspa.MembershipModule.Activities.CheckoutGetCodeActivity.SegmentTagCheck;
+
 public class CountrySelectActivity extends AppCompatActivity {
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
@@ -64,8 +67,10 @@ public class CountrySelectActivity extends AppCompatActivity {
 //            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
 //            position = getIntent().getIntExtra("position", 0);
         }
+
         binding.llBack.setOnClickListener(view -> {
             if (Check.equalsIgnoreCase("0")) {
+                SegmentTagCheck = 1;
                 Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
                 i.putExtra("Name", Name);
                 i.putExtra("Code", Code);
@@ -73,6 +78,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             } else if (Check.equalsIgnoreCase("1")) {
+                SegmentTag = 1;
                 Intent i = new Intent(ctx, LoginActivity.class);
                 i.putExtra("Name", Name);
                 i.putExtra("Code", Code);
@@ -163,6 +169,7 @@ public class CountrySelectActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (Check.equalsIgnoreCase("0")) {
+            SegmentTagCheck = 1;
             Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);
@@ -170,6 +177,7 @@ public class CountrySelectActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         } else if (Check.equalsIgnoreCase("1")) {
+            SegmentTag = 1;
             Intent i = new Intent(ctx, LoginActivity.class);
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);
@@ -204,6 +212,7 @@ public class CountrySelectActivity extends AppCompatActivity {
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 String conutry = "+" + mData.getCode();
                 if (Check.equalsIgnoreCase("0")) {
+                    SegmentTagCheck = 1;
                     Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
                     i.putExtra("Name", mData.getName());
                     i.putExtra("Code", conutry);
@@ -211,6 +220,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                     ctx.startActivity(i);
                     finish();
                 } else if (Check.equalsIgnoreCase("1")) {
+                    SegmentTag = 1;
                     Intent i = new Intent(ctx, LoginActivity.class);
                     i.putExtra("Name", mData.getName());
                     i.putExtra("Code", conutry);

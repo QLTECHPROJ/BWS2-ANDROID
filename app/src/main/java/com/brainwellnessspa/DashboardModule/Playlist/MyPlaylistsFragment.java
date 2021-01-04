@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -593,7 +594,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onDestroy() {
-
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
@@ -622,7 +622,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             ComeFindAudio = 0;
         }
 
-
         addDisclaimer();
         if (deleteFrg == 1) {
             callBack();
@@ -641,7 +640,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         if (comeRename == 1) {
             prepareData(UserID, PlaylistID);
         }
-
         super.onResume();
     }
 
@@ -1762,7 +1760,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 super.onPostExecute(aVoid);
             }
         }
-
         SaveMedia st = new SaveMedia();
         st.execute();
     }
@@ -1801,7 +1798,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 super.onPostExecute(aVoid);
             }
         }
-
         SaveMedia st = new SaveMedia();
         st.execute();
     }
@@ -1851,7 +1847,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             } else {
                 enableDownload(llDownload, ivDownloads);
             }
-
         });
     }
 
@@ -2111,18 +2106,60 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     public void SegmentTag() {
-        p = new Properties();
+        try {
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistID, PlaylistID);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistName, PlaylistName);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistDescription, PlaylistDescription);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistType, PlaylistType);
+            editor.putString(CONSTANTS.PREF_KEY_Totalhour, Totalhour);
+            editor.putString(CONSTANTS.PREF_KEY_Totalminute, Totalminute);
+            editor.putString(CONSTANTS.PREF_KEY_TotalAudio, TotalAudio);
+            editor.putString(CONSTANTS.PREF_KEY_ScreenView, ScreenView);
+            editor.commit();
+            p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("playlistId", PlaylistID);
+            p.putValue("playlistName", PlaylistName);
+            p.putValue("playlistDescription", PlaylistDescription);
+
+            if (PlaylistType.equalsIgnoreCase("1")) {
+                p.putValue("playlistType", "Created");
+            } else if (PlaylistType.equalsIgnoreCase("0")) {
+                p.putValue("playlistType", "Default");
+            }
+
+            if (Totalhour.equalsIgnoreCase("")) {
+                p.putValue("playlistDuration", "0h " + Totalminute + "m");
+            } else if (Totalminute.equalsIgnoreCase("")) {
+                p.putValue("playlistDuration", Totalhour + "h 0m");
+            } else {
+                p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+            }
+
+            p.putValue("audioCount", TotalAudio);
+            p.putValue("source", ScreenView);
+            p.putValue("playerType", "Mini");
+            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("sound", GetDeviceVolume(getActivity()));
+            BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+/*    public static void PlaylistCompleteST(){
+        Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("playlistId", PlaylistID);
         p.putValue("playlistName", PlaylistName);
         p.putValue("playlistDescription", PlaylistDescription);
-
         if (PlaylistType.equalsIgnoreCase("1")) {
             p.putValue("playlistType", "Created");
         } else if (PlaylistType.equalsIgnoreCase("0")) {
             p.putValue("playlistType", "Default");
         }
-
         if (Totalhour.equalsIgnoreCase("")) {
             p.putValue("playlistDuration", "0h " + Totalminute + "m");
         } else if (Totalminute.equalsIgnoreCase("")) {
@@ -2136,8 +2173,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         p.putValue("playerType", "Mini");
         p.putValue("audioService", APP_SERVICE_STATUS);
         p.putValue("sound", GetDeviceVolume(getActivity()));
-        BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
-    }
+        BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
+    }*/
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;

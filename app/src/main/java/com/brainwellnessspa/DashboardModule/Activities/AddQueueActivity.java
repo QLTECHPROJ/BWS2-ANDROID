@@ -87,6 +87,7 @@ public class AddQueueActivity extends AppCompatActivity {
     //    Handler handler1;
 //    List<String> fileNameList;
     private long mLastClickTime = 0;
+    List<String> downloadAudioDetailsList;
     Properties p;
     int playerpos;
 
@@ -127,6 +128,7 @@ public class AddQueueActivity extends AppCompatActivity {
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mData = new ArrayList<>();
+
         /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson1 = new Gson();
         String json11 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
@@ -135,6 +137,7 @@ public class AddQueueActivity extends AppCompatActivity {
             }.getType();
 //            fileNameList = gson1.fromJson(json11, type);
         }*/
+
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -154,6 +157,8 @@ public class AddQueueActivity extends AppCompatActivity {
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
+
+        GetAllMediaDownload();
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
@@ -198,13 +203,17 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             comeFrom = "";
         }
-
         playerpos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         p = new Properties();
         p.putValue("userId", UserID);
         if (!comeFrom.equalsIgnoreCase("")) {
             if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
-                p.putValue("audioId",mDataDownload.get(position).getID());
+                if (downloadAudioDetailsList.contains(mDataDownload.get(position).getName())) {
+                    p.putValue("audioType", "Downloaded");
+                } else {
+                    p.putValue("audioType", "Streaming");
+                }
+                p.putValue("audioId", mDataDownload.get(position).getID());
                 p.putValue("audioName", mDataDownload.get(position).getName());
                 p.putValue("audioDescription", "");
                 p.putValue("directions", mDataDownload.get(position).getAudioDirection());
@@ -212,7 +221,12 @@ public class AddQueueActivity extends AppCompatActivity {
                 p.putValue("subCategory", mDataDownload.get(position).getAudioSubCategory());
                 p.putValue("audioDuration", mDataDownload.get(position).getAudioDuration());
             } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
-                p.putValue("audioId",mDataLike.get(position).getID());
+                if (downloadAudioDetailsList.contains(mDataLike.get(position).getName())) {
+                    p.putValue("audioType", "Downloaded");
+                } else {
+                    p.putValue("audioType", "Streaming");
+                }
+                p.putValue("audioId", mDataLike.get(position).getID());
                 p.putValue("audioName", mDataLike.get(position).getName());
                 p.putValue("audioDescription", "");
                 p.putValue("directions", mDataLike.get(position).getAudioDirection());
@@ -220,7 +234,12 @@ public class AddQueueActivity extends AppCompatActivity {
                 p.putValue("subCategory", mDataLike.get(position).getAudioSubCategory());
                 p.putValue("audioDuration", mDataLike.get(position).getAudioDuration());
             } else {
-                p.putValue("audioId",mData.get(position).getID());
+                if (downloadAudioDetailsList.contains(mData.get(position).getName())) {
+                    p.putValue("audioType", "Downloaded");
+                } else {
+                    p.putValue("audioType", "Streaming");
+                }
+                p.putValue("audioId", mData.get(position).getID());
                 p.putValue("audioName", mData.get(position).getName());
                 p.putValue("audioDescription", "");
                 p.putValue("directions", mData.get(position).getAudioDirection());
@@ -230,7 +249,6 @@ public class AddQueueActivity extends AppCompatActivity {
             }
 
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
             p.putValue("source", "");
             p.putValue("playerType", "Mini");
         } else {
@@ -242,7 +260,11 @@ public class AddQueueActivity extends AppCompatActivity {
             p.putValue("subCategory", mainPlayModelList.get(playerpos).getAudioSubCategory());
             p.putValue("audioDuration", mainPlayModelList.get(playerpos).getAudioDuration());
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                p.putValue("audioType", "Downloaded");
+            } else {
+                p.putValue("audioType", "Streaming");
+            }
             p.putValue("source", "");
             p.putValue("playerType", "Main");
         }
@@ -352,6 +374,29 @@ public class AddQueueActivity extends AppCompatActivity {
             callBack();
         });
 
+    }
+
+    public List<String> GetAllMediaDownload() {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded("Complete");
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadAudioDetailsList;
     }
 
     @Override
@@ -906,11 +951,15 @@ public class AddQueueActivity extends AppCompatActivity {
                 p.putValue("audioName", downloadAudioDetails.getName());
                 p.putValue("audioDescription", "");
                 p.putValue("directions", downloadAudioDetails.getAudioDirection());
-                p.putValue("masterCategory",downloadAudioDetails.getAudiomastercat());
+                p.putValue("masterCategory", downloadAudioDetails.getAudiomastercat());
                 p.putValue("subCategory", downloadAudioDetails.getAudioSubCategory());
-                p.putValue("audioDuration",downloadAudioDetails.getAudioDuration());
+                p.putValue("audioDuration", downloadAudioDetails.getAudioDuration());
                 p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("audioType", "");
+                if (downloadAudioDetailsList.contains(downloadAudioDetails.getName())) {
+                    p.putValue("audioType", "Downloaded");
+                } else {
+                    p.putValue("audioType", "Streaming");
+                }
                 p.putValue("source", "");
                 p.putValue("bitRate", "");
                 p.putValue("sound", GetDeviceVolume(ctx));
@@ -1349,7 +1398,12 @@ public class AddQueueActivity extends AppCompatActivity {
                             p.putValue("userId", UserID);
                             if (!comeFrom.equalsIgnoreCase("")) {
                                 if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
-                                    p.putValue("audioId",mDataDownload.get(position).getID());
+                                    if (downloadAudioDetailsList.contains(mDataDownload.get(position).getName())) {
+                                        p.putValue("audioType", "Downloaded");
+                                    } else {
+                                        p.putValue("audioType", "Streaming");
+                                    }
+                                    p.putValue("audioId", mDataDownload.get(position).getID());
                                     p.putValue("audioName", mDataDownload.get(position).getName());
                                     p.putValue("audioDescription", "");
                                     p.putValue("directions", mDataDownload.get(position).getAudioDirection());
@@ -1357,7 +1411,12 @@ public class AddQueueActivity extends AppCompatActivity {
                                     p.putValue("subCategory", mDataDownload.get(position).getAudioSubCategory());
                                     p.putValue("audioDuration", mDataDownload.get(position).getAudioDuration());
                                 } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
-                                    p.putValue("audioId",mDataLike.get(position).getID());
+                                    if (downloadAudioDetailsList.contains(mDataLike.get(position).getName())) {
+                                        p.putValue("audioType", "Downloaded");
+                                    } else {
+                                        p.putValue("audioType", "Streaming");
+                                    }
+                                    p.putValue("audioId", mDataLike.get(position).getID());
                                     p.putValue("audioName", mDataLike.get(position).getName());
                                     p.putValue("audioDescription", "");
                                     p.putValue("directions", mDataLike.get(position).getAudioDirection());
@@ -1365,7 +1424,12 @@ public class AddQueueActivity extends AppCompatActivity {
                                     p.putValue("subCategory", mDataLike.get(position).getAudioSubCategory());
                                     p.putValue("audioDuration", mDataLike.get(position).getAudioDuration());
                                 } else {
-                                    p.putValue("audioId",mData.get(position).getID());
+                                    if (downloadAudioDetailsList.contains(mData.get(position).getName())) {
+                                        p.putValue("audioType", "Downloaded");
+                                    } else {
+                                        p.putValue("audioType", "Streaming");
+                                    }
+                                    p.putValue("audioId", mData.get(position).getID());
                                     p.putValue("audioName", mData.get(position).getName());
                                     p.putValue("audioDescription", "");
                                     p.putValue("directions", mData.get(position).getAudioDirection());
@@ -1375,7 +1439,6 @@ public class AddQueueActivity extends AppCompatActivity {
                                 }
 
                                 p.putValue("position", GetCurrentAudioPosition());
-                                p.putValue("audioType", "");
                                 p.putValue("source", "");
                                 p.putValue("playerType", "Mini");
                             } else {
@@ -1387,7 +1450,11 @@ public class AddQueueActivity extends AppCompatActivity {
                                 p.putValue("subCategory", mainPlayModelList.get(playerpos).getAudioSubCategory());
                                 p.putValue("audioDuration", mainPlayModelList.get(playerpos).getAudioDuration());
                                 p.putValue("position", GetCurrentAudioPosition());
-                                p.putValue("audioType", "");
+                                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                                    p.putValue("audioType", "Downloaded");
+                                } else {
+                                    p.putValue("audioType", "Streaming");
+                                }
                                 p.putValue("source", "");
                                 p.putValue("playerType", "Main");
                             }

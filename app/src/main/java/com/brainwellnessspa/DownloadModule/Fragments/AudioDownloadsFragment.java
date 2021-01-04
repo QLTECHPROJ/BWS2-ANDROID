@@ -65,6 +65,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AudioDownloadsFragment extends Fragment {
@@ -599,7 +600,8 @@ public class AudioDownloadsFragment extends Fragment {
                         .getInstance(getActivity())
                         .getaudioDatabase()
                         .taskDao()
-                        .geAllData1("").removeObserver(audioList1 -> {});
+                        .geAllData1("").removeObserver(audioList1 -> {
+                });
                 String AudioFile = listModelList.get(position).getAudioFile();
                 String AudioName = listModelList.get(position).getName();
                 try {
@@ -644,8 +646,8 @@ public class AudioDownloadsFragment extends Fragment {
                 p.putValue("directions", listModelList.get(position).getAudioDirection());
                 p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
                 p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
-                p.putValue("audioService", "");
-                p.putValue("audioType", "");
+                p.putValue("audioService", APP_SERVICE_STATUS);
+                p.putValue("audioType", "Downloaded");
                 p.putValue("bitRate", "");
                 BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
                 listModelList.remove(position);

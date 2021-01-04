@@ -93,8 +93,6 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
-//import static com.brainwellnessspa.Services.GlobalInitExoPlayer.isprogressbar;
-
 public class AudioPlayerActivity extends AppCompatActivity {
     List<String> downloadAudioDetailsList;
     List<String> downloadAudioDetailsListGloble;
@@ -948,9 +946,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
-                    if(downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                         p.putValue("audioType", "Downloaded");
-                    }else{
+                    }else {
                         p.putValue("audioType", "Streaming");
                     }
                     p.putValue("source", "");
@@ -1076,7 +1074,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("audioType", "");
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                            p.putValue("audioType", "Downloaded");
+                        }else {
+                            p.putValue("audioType", "Streaming");
+                        }
                         p.putValue("source", "");
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1098,7 +1100,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                             p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                             p.putValue("position", GetCurrentAudioPosition());
-                            p.putValue("audioType", "");
+                            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                                p.putValue("audioType", "Downloaded");
+                            }else {
+                                p.putValue("audioType", "Streaming");
+                            }
                             p.putValue("source", "");
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1129,7 +1135,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("audioType", "");
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                            p.putValue("audioType", "Downloaded");
+                        }else {
+                            p.putValue("audioType", "Streaming");
+                        }
                         p.putValue("source", "");
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1147,7 +1157,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("audioType", "");
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                            p.putValue("audioType", "Downloaded");
+                        }else {
+                            p.putValue("audioType", "Streaming");
+                        }
                         p.putValue("source", "");
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1166,7 +1180,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                             p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                             p.putValue("position", GetCurrentAudioPosition());
-                            p.putValue("audioType", "");
+                            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                                p.putValue("audioType", "Downloaded");
+                            }else {
+                                p.putValue("audioType", "Streaming");
+                            }
                             p.putValue("source", "");
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1180,22 +1198,27 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.llProgressBar.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.GONE);
+                            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
+                            String PlaylistID = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, ""));
+                            String PlaylistName = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistName, ""));
+                            String PlaylistDescription = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistDescription, ""));
+                            String PlaylistType = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistType, ""));
+                            String Totalhour = (shared1.getString(CONSTANTS.PREF_KEY_Totalhour, ""));
+                            String Totalminute = (shared1.getString(CONSTANTS.PREF_KEY_Totalminute, ""));
+                            String TotalAudio = (shared1.getString(CONSTANTS.PREF_KEY_TotalAudio, ""));
+                            String ScreenView = (shared1.getString(CONSTANTS.PREF_KEY_ScreenView, ""));
 
                             p = new Properties();
                             p.putValue("userId", UserID);
-                            p.putValue("playlistId", mainPlayModelList.get(position).getPlaylistID());
-                           /*
+                            p.putValue("playlistId", PlaylistID);
                             p.putValue("playlistName", PlaylistName);
-                           */
-
-                           /*  p.putValue("playlistDescription", PlaylistDescription);
-                           if (PlaylistType.equalsIgnoreCase("1")) {
+                            p.putValue("playlistDescription", PlaylistDescription);
+                            if (PlaylistType.equalsIgnoreCase("1")) {
                                 p.putValue("playlistType", "Created");
                             } else if (PlaylistType.equalsIgnoreCase("0")) {
                                 p.putValue("playlistType", "Default");
                             }
-*/
-                            /*if (Totalhour.equalsIgnoreCase("")) {
+                            if (Totalhour.equalsIgnoreCase("")) {
                                 p.putValue("playlistDuration", "0h " + Totalminute + "m");
                             } else if (Totalminute.equalsIgnoreCase("")) {
                                 p.putValue("playlistDuration", Totalhour + "h 0m");
@@ -1204,7 +1227,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             }
 
                             p.putValue("audioCount", TotalAudio);
-                            p.putValue("source", ScreenView);*/
+                            p.putValue("source", ScreenView);
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("sound", GetDeviceVolume(ctx));
@@ -1252,7 +1275,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("seekPosition", pos);
                     p.putValue("seekDirection", "");
-                    p.putValue("audioType", "");
+                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                        p.putValue("audioType", "Downloaded");
+                    }else {
+                        p.putValue("audioType", "Streaming");
+                    }
                     p.putValue("source", "");
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1288,7 +1315,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     } else if (oldSeekPosition > pos) {
                         p.putValue("seekDirection", "Backwarded");
                     }
-                    p.putValue("audioType", "");
+                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                        p.putValue("audioType", "Downloaded");
+                    }else {
+                        p.putValue("audioType", "Streaming");
+                    }
                     p.putValue("source", "");
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1345,10 +1376,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("audioType", "");
                         p.putValue("source", "");
                         p.putValue("playerType", "Main");
-                        p.putValue("audioType", "");
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                            p.putValue("audioType", "Downloaded");
+                        }else {
+                            p.putValue("audioType", "Streaming");
+                        }
                         p.putValue("bitRate", "");
                         p.putValue("sound", GetDeviceVolume(ctx));
                         BWSApplication.addToSegment("Disclaimer Completed", p, CONSTANTS.track);
@@ -1357,10 +1391,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("audioType", "");
                         p.putValue("source", "");
                         p.putValue("playerType", "Main");
-                        p.putValue("audioType", "");
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                            p.putValue("audioType", "Downloaded");
+                        }else {
+                            p.putValue("audioType", "Streaming");
+                        }
                         p.putValue("bitRate", "");
                         p.putValue("sound", GetDeviceVolume(ctx));
                         BWSApplication.addToSegment("Disclaimer Started", p, CONSTANTS.track);
@@ -1373,10 +1410,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 p = new Properties();
                                 p.putValue("userId", UserID);
                                 p.putValue("position", GetCurrentAudioPosition());
-                                p.putValue("audioType", "");
                                 p.putValue("source", "");
                                 p.putValue("playerType", "Main");
-                                p.putValue("audioType", "");
+                                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                                    p.putValue("audioType", "Downloaded");
+                                }else {
+                                    p.putValue("audioType", "Streaming");
+                                }
                                 p.putValue("bitRate", "");
                                 p.putValue("sound", GetDeviceVolume(ctx));
                                 BWSApplication.addToSegment("Disclaimer Playing", p, CONSTANTS.track);
@@ -1482,10 +1522,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p = new Properties();
             p.putValue("userId", UserID);
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
             p.putValue("source", "");
             p.putValue("playerType", "Main");
-            p.putValue("audioType", "");
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                p.putValue("audioType", "Downloaded");
+            }else {
+                p.putValue("audioType", "Streaming");
+            }
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));
             BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
@@ -1501,10 +1544,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("audioType", "");
                 p.putValue("source", "");
                 p.putValue("playerType", "Main");
-                p.putValue("audioType", "");
+                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                    p.putValue("audioType", "Downloaded");
+                }else {
+                    p.putValue("audioType", "Streaming");
+                }
                 p.putValue("bitRate", "");
                 p.putValue("sound", GetDeviceVolume(ctx));
                 BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
@@ -1580,7 +1626,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
             p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                p.putValue("audioType", "Downloaded");
+            }else {
+                p.putValue("audioType", "Streaming");
+            }
             p.putValue("source", "");
             p.putValue("playerType", "Main");
             p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1612,7 +1662,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                 p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                 p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("audioType", "");
+                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                    p.putValue("audioType", "Downloaded");
+                }else {
+                    p.putValue("audioType", "Streaming");
+                }
                 p.putValue("source", "");
                 p.putValue("playerType", "Main");
                 p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1701,7 +1755,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("audioId", mainPlayModelList.get(player.getCurrentWindowIndex()).getID());
                     p.putValue("audioName", mainPlayModelList.get(player.getCurrentWindowIndex()).getName());
                     p.putValue("audioDuration", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioDuration());
-                    p.putValue("audioType", "");
+                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                        p.putValue("audioType", "Downloaded");
+                    }else {
+                        p.putValue("audioType", "Streaming");
+                    }
                     p.putValue("source", "");
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1738,7 +1796,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("audioId", mainPlayModelList.get(player.getCurrentWindowIndex()).getID());
                     p.putValue("audioName", mainPlayModelList.get(player.getCurrentWindowIndex()).getName());
                     p.putValue("audioDuration", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioDuration());
-                    p.putValue("audioType", "");
+                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                        p.putValue("audioType", "Downloaded");
+                    }else {
+                        p.putValue("audioType", "Streaming");
+                    }
                     p.putValue("source", "");
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
@@ -1893,7 +1955,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
             p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                p.putValue("audioType", "Downloaded");
+            }else {
+                p.putValue("audioType", "Streaming");
+            }
             p.putValue("source", "");
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));
@@ -1927,7 +1993,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
             p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                p.putValue("audioType", "Downloaded");
+            }else {
+                p.putValue("audioType", "Streaming");
+            }
             p.putValue("source", "");
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));
@@ -1957,7 +2027,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
             p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                p.putValue("audioType", "Downloaded");
+            }else {
+                p.putValue("audioType", "Streaming");
+            }
             p.putValue("source", "");
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));
@@ -2111,7 +2185,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
             p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("audioType", "");
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                p.putValue("audioType", "Downloaded");
+            }else {
+                p.putValue("audioType", "Streaming");
+            }
             p.putValue("source", "");
             p.putValue("playerType", "Main");
             p.putValue("bitRate", "");
