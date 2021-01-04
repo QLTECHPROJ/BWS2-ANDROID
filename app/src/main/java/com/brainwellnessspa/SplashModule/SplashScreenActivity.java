@@ -34,6 +34,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivitySplashScreenBinding;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
@@ -73,7 +74,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (key.equalsIgnoreCase("")) {
             key = getKey(SplashScreenActivity.this);
         }
-
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 //        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);
         getLatasteUpdate(SplashScreenActivity.this);
         MediaController mediaController = new MediaController(this);

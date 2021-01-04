@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 30
@@ -23,11 +24,20 @@ android {
         debug {
             debuggable true
             resValue("string", "PORT_NUMBER", "8081")
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+// These paths are relative to the app/ folder
+                strippedNativeLibsDir "build/ndklibs/obj"
+                unstrippedNativeLibsDir "build/ndklibs/libs"
+            }
         }
     }
 
@@ -90,10 +100,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
 /* TODO Bottom Menu and Fragment*/
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.1'
-    implementation 'androidx.navigation:navigation-ui:2.3.1'
-    implementation 'androidx.navigation:navigation-fragment:2.3.1'
-    implementation 'androidx.navigation:navigation-ui:2.3.1'
+    implementation 'androidx.navigation:navigation-fragment:2.3.2'
+    implementation 'androidx.navigation:navigation-ui:2.3.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     / TODO Stripe Payment Gateway /
@@ -133,6 +141,14 @@ dependencies {
     implementation 'com.google.android.exoplayer:extension-mediasession:2.11.5'
     implementation 'com.google.android.gms:play-services-basement:17.4.0'
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    // Declare the dependencies for the Crashlytics and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'
+
 // implementation 'com.google.android.gms:play-services-basement:17.5.0'
 // implementation "androidx.work:work-runtime:$work_version"
 // implementation 'com.google.android.exoplayer:library-ui:2.10.8'

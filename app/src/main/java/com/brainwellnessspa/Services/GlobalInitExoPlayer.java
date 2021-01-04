@@ -298,26 +298,39 @@ public class GlobalInitExoPlayer extends Service {
         audioClick = false;
     }
 
-    public String GetSourceName(String AudioFlag) {
+    public String GetSourceName(String AudioFlag,String MyPlaylist) {
         String myFlagType = "";
-        if (AudioFlag.equalsIgnoreCase("Recently Played")) {
 
-
+        if (AudioFlag.equalsIgnoreCase("MainAudioList")||AudioFlag.equalsIgnoreCase("ViewAllAudioList")){
+            if (MyPlaylist.equalsIgnoreCase("Recently Played")) {
+                myFlagType = MyPlaylist;
+            }else if (MyPlaylist.equalsIgnoreCase("Library")) {
+                myFlagType = MyPlaylist;
+            }else if (MyPlaylist.equalsIgnoreCase("Get Inspired")) {
+                myFlagType = MyPlaylist;
+            }else if (MyPlaylist.equalsIgnoreCase("Popular")) {
+                myFlagType = MyPlaylist;
+            }else if (MyPlaylist.equalsIgnoreCase("Top Categories")) {
+                myFlagType = MyPlaylist;
+            }
+        } if (AudioFlag.equalsIgnoreCase("LikeAudioList")){
+                myFlagType = "Liked Audios";
         }
-        /*Playlist
+/*
+Top Categories  dddd
+Recently Played  dddd
+Library  ddddd
+Get Inspired  dddd
+Popular dddd
+Queue   nottt
+Playlist
 Downloaded Playlists
-Top Categories
-Queue
 Downloaded Audios
 Liked Audios
-Recently Played
-Library
-Get Inspired
-Popular
 Recommended Search Audio
 Search Audio
 Appointment Audios*/
-        return "";
+        return myFlagType;
     }
 
     public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<String> downloadAudioDetailsList, Context ctx) {

@@ -763,6 +763,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
           /*  if (exoBinding.progressBar.getVisibility() == View.VISIBLE) {
                 isprogressbar = true;
             }*/
+            DatabaseClient
+                    .getInstance(ctx)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
+            });
+            DatabaseClient.getInstance(ctx)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
+            });
             audioClick = false;
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
@@ -937,7 +948,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
-                    p.putValue("audioType", "");
+                    if(downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
+                        p.putValue("audioType", "Downloaded");
+                    }else{
+                        p.putValue("audioType", "Streaming");
+                    }
                     p.putValue("source", "");
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
