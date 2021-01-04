@@ -61,6 +61,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
@@ -250,7 +251,7 @@ public class AddQueueActivity extends AppCompatActivity {
             }
 
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Mini");
         } else {
             p.putValue("audioId", mainPlayModelList.get(playerpos).getID());
@@ -266,7 +267,7 @@ public class AddQueueActivity extends AppCompatActivity {
             } else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Main");
         }
         p.putValue("bitRate", "");
@@ -961,7 +962,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 } else {
                     p.putValue("audioType", "Streaming");
                 }
-                p.putValue("source", "");
+                p.putValue("source", GetSourceName(ctx));
                 p.putValue("bitRate", "");
                 p.putValue("sound", GetDeviceVolume(ctx));
                 BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
@@ -1440,7 +1441,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 }
 
                                 p.putValue("position", GetCurrentAudioPosition());
-                                p.putValue("source", "");
+                                p.putValue("source", GetSourceName(ctx));
                                 p.putValue("playerType", "Mini");
                             } else {
                                 p.putValue("audioId", mainPlayModelList.get(playerpos).getID());
@@ -1456,7 +1457,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 } else {
                                     p.putValue("audioType", "Streaming");
                                 }
-                                p.putValue("source", "");
+                                p.putValue("source", GetSourceName(ctx));
                                 p.putValue("playerType", "Main");
                             }
                             p.putValue("bitRate", "");

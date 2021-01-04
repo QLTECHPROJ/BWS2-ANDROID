@@ -183,7 +183,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             } else {
                 if(player!=null){
                     miniPlayer = 1;
-                    player.seekTo(200,0);
+                    player.seekTo(position,0);
                     player.setPlayWhenReady(true);
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();

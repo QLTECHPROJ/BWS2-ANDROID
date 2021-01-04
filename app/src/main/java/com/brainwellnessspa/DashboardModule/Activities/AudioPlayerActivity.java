@@ -90,6 +90,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloadi
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -951,7 +952,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }else {
                         p.putValue("audioType", "Streaming");
                     }
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -1079,7 +1080,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }else {
                             p.putValue("audioType", "Streaming");
                         }
-                        p.putValue("source", "");
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
@@ -1105,7 +1106,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             }else {
                                 p.putValue("audioType", "Streaming");
                             }
-                            p.putValue("source", "");
+                            p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
@@ -1140,7 +1141,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }else {
                             p.putValue("audioType", "Streaming");
                         }
-                        p.putValue("source", "");
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
@@ -1162,7 +1163,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }else {
                             p.putValue("audioType", "Streaming");
                         }
-                        p.putValue("source", "");
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
@@ -1185,7 +1186,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             }else {
                                 p.putValue("audioType", "Streaming");
                             }
-                            p.putValue("source", "");
+                            p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
@@ -1280,7 +1281,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }else {
                         p.putValue("audioType", "Streaming");
                     }
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -1320,7 +1321,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }else {
                         p.putValue("audioType", "Streaming");
                     }
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -1376,7 +1377,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("source", "");
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
                         if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                             p.putValue("audioType", "Downloaded");
@@ -1391,7 +1392,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("source", "");
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
                         if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                             p.putValue("audioType", "Downloaded");
@@ -1410,7 +1411,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 p = new Properties();
                                 p.putValue("userId", UserID);
                                 p.putValue("position", GetCurrentAudioPosition());
-                                p.putValue("source", "");
+                                p.putValue("source", GetSourceName(ctx));
                                 p.putValue("playerType", "Main");
                                 if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                                     p.putValue("audioType", "Downloaded");
@@ -1522,7 +1523,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p = new Properties();
             p.putValue("userId", UserID);
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Main");
             if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                 p.putValue("audioType", "Downloaded");
@@ -1544,7 +1545,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("source", "");
+                p.putValue("source", GetSourceName(ctx));
                 p.putValue("playerType", "Main");
                 if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                     p.putValue("audioType", "Downloaded");
@@ -1631,7 +1632,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Main");
             p.putValue("audioService", APP_SERVICE_STATUS);
             p.putValue("bitRate", "");
@@ -1667,7 +1668,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }else {
                     p.putValue("audioType", "Streaming");
                 }
-                p.putValue("source", "");
+                p.putValue("source", GetSourceName(ctx));
                 p.putValue("playerType", "Main");
                 p.putValue("audioService", APP_SERVICE_STATUS);
                 p.putValue("bitRate", "");
@@ -1760,7 +1761,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }else {
                         p.putValue("audioType", "Streaming");
                     }
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -1801,7 +1802,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }else {
                         p.putValue("audioType", "Streaming");
                     }
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -1960,7 +1961,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));
             BWSApplication.addToSegment("Audio Repeated Once", p, CONSTANTS.track);
@@ -1998,7 +1999,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));
             BWSApplication.addToSegment("All Audio Repeated", p, CONSTANTS.track);
@@ -2032,7 +2033,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));
             BWSApplication.addToSegment("Audio Repeated Off", p, CONSTANTS.track);
@@ -2190,7 +2191,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source", "");
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Main");
             p.putValue("bitRate", "");
             p.putValue("sound", GetDeviceVolume(ctx));

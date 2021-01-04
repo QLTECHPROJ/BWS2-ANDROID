@@ -18,7 +18,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -37,7 +37,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -56,7 +56,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -75,7 +75,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -94,7 +94,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -115,7 +115,7 @@ public class Segmenttemp {
                     p.putValue("seekPosition", "");
                     p.putValue("seekDirection", "");
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -136,7 +136,7 @@ public class Segmenttemp {
                     p.putValue("seekPosition", "");
                     p.putValue("seekDirection", "");
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -155,7 +155,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -174,7 +174,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -188,7 +188,7 @@ public class Segmenttemp {
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -202,7 +202,7 @@ public class Segmenttemp {
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
@@ -216,7 +216,7 @@ public class Segmenttemp {
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     BWSApplication.addToSegment("Audio Shuffled", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Shuffle Off
@@ -226,7 +226,7 @@ public class Segmenttemp {
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     BWSApplication.addToSegment("Audio Shuffle Off", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Repeated Once
@@ -241,7 +241,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
                     BWSApplication.addToSegment("Audio Repeated Once", p, CONSTANTS.track);*/
@@ -258,7 +258,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
                     BWSApplication.addToSegment("All Audio Repeated", p, CONSTANTS.track);*/
@@ -275,7 +275,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
                     BWSApplication.addToSegment("Audio Repeated Off", p, CONSTANTS.track);*/
@@ -292,7 +292,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
@@ -310,7 +310,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
@@ -328,7 +328,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
@@ -346,7 +346,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
@@ -364,7 +364,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
@@ -382,7 +382,7 @@ public class Segmenttemp {
                     p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(getActivity()));
@@ -395,7 +395,7 @@ public class Segmenttemp {
                     p.putValue("userId", UserID);
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
@@ -407,7 +407,7 @@ public class Segmenttemp {
                     p.putValue("userId", UserID);
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
@@ -419,7 +419,7 @@ public class Segmenttemp {
                     p.putValue("userId", UserID);
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
@@ -431,7 +431,7 @@ public class Segmenttemp {
                     p.putValue("userId", UserID);
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
@@ -443,7 +443,7 @@ public class Segmenttemp {
                     p.putValue("userId", UserID);
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
@@ -455,7 +455,7 @@ public class Segmenttemp {
                     p.putValue("userId", UserID);
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("audioType", "");
-                    p.putValue("source", "");
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");

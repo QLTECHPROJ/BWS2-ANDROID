@@ -75,6 +75,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
@@ -251,7 +252,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
         Properties p = new Properties();
         p.putValue("userId", UserID);
-        p.putValue("source", "");
+        p.putValue("source", GetSourceName(ctx));
         BWSApplication.addToSegment("Queue Screen Viewed", p, CONSTANTS.track);
         handler = new Handler();
         addToQueueModelList = new ArrayList<>();
