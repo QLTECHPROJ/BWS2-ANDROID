@@ -60,14 +60,12 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloadi
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
-
 public class AptAudioFragment extends Fragment {
     public static int comeRefreshData = 0;
     public FragmentManager f_manager;
     FragmentAptAudioBinding binding;
     String UserID, AudioFlag;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
-
     //    Handler handler3;
     int startTime;
     AudioListAdapter appointmentsAdapter;
@@ -110,7 +108,6 @@ public class AptAudioFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
-
         handler1 = new Handler();
 //        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -122,7 +119,6 @@ public class AptAudioFragment extends Fragment {
         }
         if (appointmentDetail.size() == 0) {
         } else {
-
             appointmentsAdapter = new AudioListAdapter(appointmentDetail, getActivity(), f_manager);
             RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             binding.rvAudioList.setLayoutManager(recentlyPlayed);
@@ -136,13 +132,11 @@ public class AptAudioFragment extends Fragment {
     @Override
     public void onPause() {
 //        handler3.removeCallbacks(UpdateSongTime3);
-
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
-
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
@@ -376,7 +370,6 @@ public class AptAudioFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-
                 comeRefreshData = 1;
                 try {
                     miniPlayer = 1;
@@ -422,7 +415,6 @@ public class AptAudioFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             });
 
             holder.binding.llDownload.setOnClickListener(view -> {
@@ -474,6 +466,7 @@ public class AptAudioFragment extends Fragment {
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
                 SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
             });
+
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -523,7 +516,6 @@ public class AptAudioFragment extends Fragment {
 
         private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, RelativeLayout llDownload) {
             class SaveMedia extends AsyncTask<Void, Void, Void> {
-
                 @Override
                 protected Void doInBackground(Void... voids) {
                     DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();

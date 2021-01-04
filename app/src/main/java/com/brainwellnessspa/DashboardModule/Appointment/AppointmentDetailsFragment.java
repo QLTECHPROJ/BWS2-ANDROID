@@ -56,6 +56,7 @@ public class AppointmentDetailsFragment extends Fragment {
     public static int ComesessionScreen = 0;
     String UserId, appointmentTypeId, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     AppointmentDetailModel globalAppointmentDetailModel;
+    LinearLayout.LayoutParams params;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -166,13 +167,19 @@ public class AppointmentDetailsFragment extends Fragment {
                 fragmentManager1.beginTransaction()
                         .add(R.id.flContainer, fragment)
                         .commit();
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 280);
                 binding.llViewOne.setLayoutParams(params);
+                params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 0, 280);
+                binding.llViewTwo.setLayoutParams(params);
             } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 50);
                 binding.llViewOne.setLayoutParams(params);
+                params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 0, 50);
+                binding.llViewTwo.setLayoutParams(params);
             }
         } catch (Exception e) {
             e.printStackTrace();
