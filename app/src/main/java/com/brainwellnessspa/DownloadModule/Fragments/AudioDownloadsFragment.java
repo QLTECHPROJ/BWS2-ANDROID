@@ -550,11 +550,6 @@ public class AudioDownloadsFragment extends Fragment {
                     player = null;
                 }
 
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
@@ -567,6 +562,11 @@ public class AudioDownloadsFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                 editor.commit();
+                Fragment fragment = new MiniPlayerFragment();
+                FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -707,11 +707,6 @@ public class AudioDownloadsFragment extends Fragment {
         }
 
         private void callTransparentFrag(int position, List<DownloadAudioDetails> listModelList) {
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -724,6 +719,11 @@ public class AudioDownloadsFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
             editor.commit();
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
         }
 
         private void getDownloadData() {

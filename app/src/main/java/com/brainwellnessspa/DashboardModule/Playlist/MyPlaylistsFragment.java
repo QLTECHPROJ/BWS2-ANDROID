@@ -1707,7 +1707,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 p.putValue("source", "Downloaded Playlists");
                 p.putValue("playerType", "Mini");
                 p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("sound", GetDeviceVolume(getActivity()));
+                p.putValue("source", /*GetSourceName(getActivity())*/"0");
                 BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
                 for (int i = 0; i < playlistSongs.size(); i++) {
                     downloadAudioDetails.setID(playlistSongs.get(i).getID());
@@ -2139,7 +2139,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             p.putValue("source", ScreenView);
             p.putValue("playerType", "Mini");
             p.putValue("audioService", APP_SERVICE_STATUS);
-            p.putValue("sound", GetDeviceVolume(getActivity()));
+            p.putValue("source", /*GetSourceName(getActivity())*/"0");
             BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
         } catch (Exception e) {
             e.printStackTrace();
@@ -2446,7 +2446,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             p.putValue("source", "Your Created");
             p.putValue("playerType", "Mini");
             p.putValue("audioService", APP_SERVICE_STATUS);
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             p.putValue("audioId", listModelList.get(toPosition).getID());
             p.putValue("audioName", listModelList.get(toPosition).getName());
             p.putValue("masterCategory", listModelList.get(toPosition).getAudiomastercat());

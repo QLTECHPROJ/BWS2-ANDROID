@@ -981,7 +981,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         p.putValue("source", "Downloaded Playlists");
         p.putValue("playerType", "Mini");
         p.putValue("audioService", APP_SERVICE_STATUS);
-        p.putValue("sound", GetDeviceVolume(ctx));
+        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
         BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 }

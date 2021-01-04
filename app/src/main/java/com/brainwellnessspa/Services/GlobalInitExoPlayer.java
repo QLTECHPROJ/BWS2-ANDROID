@@ -58,7 +58,7 @@ public class GlobalInitExoPlayer extends Service {
     public static boolean isprogressbar = false;
     public static String APP_SERVICE_STATUS = "Foreground";
     public static AudioManager audioManager;
-    public static int hundredVolume, currentVolume, maxVolume;
+    public static int hundredVolume = 0, currentVolume=0, maxVolume=0;
     public static int percent;
     public static String PlayerCurrantAudioPostion = "0";
 
@@ -202,7 +202,7 @@ public class GlobalInitExoPlayer extends Service {
         p.putValue("playerType", playerType);
         p.putValue("audioService", APP_SERVICE_STATUS);
         p.putValue("bitRate", "");
-        p.putValue("sound", GetDeviceVolume(ctx));
+        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
         BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
 
         Log.e("Audio Volume", GetDeviceVolume(ctx));
@@ -559,7 +559,7 @@ Appointment Audios dddd*/
     }
 
     public static String GetDeviceVolume(Context ctx) {
-        try {
+        /*try {
             if (audioManager != null) {
                 audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
                 currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -569,7 +569,7 @@ Appointment Audios dddd*/
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         return String.valueOf(hundredVolume);
     }
 

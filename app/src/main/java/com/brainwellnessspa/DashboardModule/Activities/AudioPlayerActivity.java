@@ -956,7 +956,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(ctx));
+                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                     BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
                     SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     Gson gson = new Gson();
@@ -1084,7 +1084,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Audio Buffer Completed", p, CONSTANTS.track);
                         if (player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.GONE);
@@ -1110,7 +1110,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            p.putValue("sound", GetDeviceVolume(ctx));
+                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                             BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);
                         } else if (!player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.VISIBLE);
@@ -1145,7 +1145,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);
                     } else if (state == ExoPlayer.STATE_ENDED) {
                         p = new Properties();
@@ -1167,7 +1167,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("playerType", "Main");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Audio Completed", p, CONSTANTS.track);
                         if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().
                                 equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())) {
@@ -1190,7 +1190,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            p.putValue("sound", GetDeviceVolume(ctx));
+                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                             BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
                             Log.e("Last audio End", mainPlayModelList.get(position).getName());
 
@@ -1231,7 +1231,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("source", ScreenView);
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
-                            p.putValue("sound", GetDeviceVolume(ctx));
+                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                             BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
                         } else {
                             Log.e("Curr audio End", mainPlayModelList.get(position).getName());
@@ -1285,7 +1285,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(ctx));
+                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                     BWSApplication.addToSegment("Audio Seek Started", p, CONSTANTS.track);
                 }
 
@@ -1325,7 +1325,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(ctx));
+                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                     BWSApplication.addToSegment("Audio Seek Completed", p, CONSTANTS.track);
                 }
             });
@@ -1385,7 +1385,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("audioType", "Streaming");
                         }
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Disclaimer Completed", p, CONSTANTS.track);
                     }
                     if (state == ExoPlayer.STATE_READY) {
@@ -1400,7 +1400,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("audioType", "Streaming");
                         }
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Disclaimer Started", p, CONSTANTS.track);
                         try {
                             if (player.getPlayWhenReady()) {
@@ -1419,7 +1419,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     p.putValue("audioType", "Streaming");
                                 }
                                 p.putValue("bitRate", "");
-                                p.putValue("sound", GetDeviceVolume(ctx));
+                                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                                 BWSApplication.addToSegment("Disclaimer Playing", p, CONSTANTS.track);
                             } else if (!player.getPlayWhenReady()) {
                                 exoBinding.llPlay.setVisibility(View.VISIBLE);
@@ -1531,7 +1531,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 p.putValue("audioType", "Streaming");
             }
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
         });
 
@@ -1553,7 +1553,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("audioType", "Streaming");
                 }
                 p.putValue("bitRate", "");
-                p.putValue("sound", GetDeviceVolume(ctx));
+                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                 BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
             } else {
                 audioClick = true;
@@ -1636,7 +1636,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("playerType", "Main");
             p.putValue("audioService", APP_SERVICE_STATUS);
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("Audio Paused", p, CONSTANTS.track);
         });
 
@@ -1672,7 +1672,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 p.putValue("playerType", "Main");
                 p.putValue("audioService", APP_SERVICE_STATUS);
                 p.putValue("bitRate", "");
-                p.putValue("sound", GetDeviceVolume(ctx));
+                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                 BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
             }
         });
@@ -1765,7 +1765,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(ctx));
+                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                     BWSApplication.addToSegment("Audio Next Clicked", p, CONSTANTS.track);
                 }
             }
@@ -1806,7 +1806,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(ctx));
+                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                     BWSApplication.addToSegment("Audio Previous Clicked", p, CONSTANTS.track);
                 }
             }
@@ -1963,7 +1963,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("Audio Repeated Once", p, CONSTANTS.track);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -2001,7 +2001,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("All Audio Repeated", p, CONSTANTS.track);
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -2035,7 +2035,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("Audio Repeated Off", p, CONSTANTS.track);
         }
     }
@@ -2194,7 +2194,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Main");
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
             if (!isDownloading) {
                 DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());

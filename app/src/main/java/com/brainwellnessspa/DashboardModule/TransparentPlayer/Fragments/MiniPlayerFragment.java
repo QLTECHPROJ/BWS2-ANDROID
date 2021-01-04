@@ -157,7 +157,7 @@ public class MiniPlayerFragment extends Fragment {
 //        handler2 = new Handler();
         playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         localIntent = new Intent("play_pause_Action");
-        localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
         if (audioClick) {
             audioClick = false;
             exoBinding.llPlay.setVisibility(View.GONE);
@@ -363,11 +363,11 @@ public class MiniPlayerFragment extends Fragment {
                     }else {
                         p.putValue("audioType", "Streaming");
                     }
-                    p.putValue("source", GetSourceName(getActivity()));
+                    p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                     BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
                     position = player.getCurrentWindowIndex();
                     try {
@@ -466,11 +466,11 @@ public class MiniPlayerFragment extends Fragment {
                         }else {
                             p.putValue("audioType", "Streaming");
                         }
-                        p.putValue("source", GetSourceName(getActivity()));
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Mini");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Audio Buffer Completed", p, CONSTANTS.track);
                         if (player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.GONE);
@@ -494,11 +494,11 @@ public class MiniPlayerFragment extends Fragment {
                             }else {
                                 p.putValue("audioType", "Streaming");
                             }
-                            p.putValue("source", GetSourceName(getActivity()));
+                            p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                             BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);
                         } else if (!player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.VISIBLE);
@@ -529,11 +529,11 @@ public class MiniPlayerFragment extends Fragment {
                         }else {
                             p.putValue("audioType", "Streaming");
                         }
-                        p.putValue("source", GetSourceName(getActivity()));
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Mini");
                         p.putValue("audioService", APP_SERVICE_STATUS);
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);
                     } else if (state == ExoPlayer.STATE_ENDED) {
                         try {
@@ -552,11 +552,11 @@ public class MiniPlayerFragment extends Fragment {
                             }else {
                                 p.putValue("audioType", "Streaming");
                             }
-                            p.putValue("source", GetSourceName(getActivity()));
+                            p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            p.putValue("sound", GetDeviceVolume(ctx));
+                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                             BWSApplication.addToSegment("Audio Completed", p, CONSTANTS.track);
                             if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().
                                     equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())) {
@@ -576,13 +576,13 @@ public class MiniPlayerFragment extends Fragment {
                                     }else {
                                         p.putValue("audioType", "Streaming");
                                     }
-                                    p.putValue("source", GetSourceName(getActivity()));
+                                    p.putValue("source", GetSourceName(ctx));
                                     p.putValue("playerType", "Mini");
                                     p.putValue("audioService", APP_SERVICE_STATUS);
                                     p.putValue("bitRate", "");
-                                    p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+                                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                                     BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
-                                    SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
+                                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
                                     String PlaylistID = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, ""));
                                     String PlaylistName = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistName, ""));
                                     String PlaylistDescription = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistDescription, ""));
@@ -614,7 +614,7 @@ public class MiniPlayerFragment extends Fragment {
                                     p.putValue("source", ScreenView);
                                     p.putValue("playerType", "Mini");
                                     p.putValue("audioService", APP_SERVICE_STATUS);
-                                    p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+                                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                                     BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
 
                                     Log.e("Last audio End", mainPlayModelList.get(position).getName());
@@ -730,11 +730,11 @@ public class MiniPlayerFragment extends Fragment {
             }else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source", GetSourceName(getActivity()));
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Mini");
             p.putValue("audioService", APP_SERVICE_STATUS);
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("Audio Paused", p, CONSTANTS.track);
         });
 
@@ -764,11 +764,11 @@ public class MiniPlayerFragment extends Fragment {
                 }else {
                     p.putValue("audioType", "Streaming");
                 }
-                p.putValue("source", GetSourceName(getActivity()));
+                p.putValue("source", GetSourceName(ctx));
                 p.putValue("playerType", "Mini");
                 p.putValue("audioService", APP_SERVICE_STATUS);
                 p.putValue("bitRate", "");
-                p.putValue("sound", GetDeviceVolume(getActivity().getApplicationContext()));
+                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                 BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
             } else {
                 audioClick = true;
@@ -802,7 +802,7 @@ public class MiniPlayerFragment extends Fragment {
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("source", GetSourceName(getActivity()));
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Mini");
                         if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                             p.putValue("audioType", "Downloaded");
@@ -810,14 +810,14 @@ public class MiniPlayerFragment extends Fragment {
                             p.putValue("audioType", "Streaming");
                         }
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Disclaimer Completed", p, CONSTANTS.track);
                     }
                     if (state == ExoPlayer.STATE_READY) {
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("source", GetSourceName(getActivity()));
+                        p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Mini");
                         if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                             p.putValue("audioType", "Downloaded");
@@ -825,7 +825,7 @@ public class MiniPlayerFragment extends Fragment {
                             p.putValue("audioType", "Streaming");
                         }
                         p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                         BWSApplication.addToSegment("Disclaimer Started", p, CONSTANTS.track);
                         if (player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.GONE);
@@ -836,7 +836,7 @@ public class MiniPlayerFragment extends Fragment {
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());
-                            p.putValue("source", GetSourceName(getActivity()));
+                            p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
                             if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                                 p.putValue("audioType", "Downloaded");
@@ -844,7 +844,7 @@ public class MiniPlayerFragment extends Fragment {
                                 p.putValue("audioType", "Streaming");
                             }
                             p.putValue("bitRate", "");
-                            p.putValue("sound", GetDeviceVolume(ctx));
+                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                             BWSApplication.addToSegment("Disclaimer Playing", p, CONSTANTS.track);
                         } else if (!player.getPlayWhenReady()) {
                             exoBinding.llPlay.setVisibility(View.VISIBLE);
@@ -906,7 +906,7 @@ public class MiniPlayerFragment extends Fragment {
             p = new Properties();
             p.putValue("userId", UserID);
             p.putValue("position", GetCurrentAudioPosition());
-            p.putValue("source", GetSourceName(getActivity()));
+            p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Mini");
             if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                 p.putValue("audioType", "Downloaded");
@@ -914,7 +914,7 @@ public class MiniPlayerFragment extends Fragment {
                 p.putValue("audioType", "Streaming");
             }
             p.putValue("bitRate", "");
-            p.putValue("sound", GetDeviceVolume(ctx));
+            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
             BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
         });
 
@@ -927,7 +927,7 @@ public class MiniPlayerFragment extends Fragment {
                 p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("source", GetSourceName(getActivity()));
+                p.putValue("source", GetSourceName(ctx));
                 p.putValue("playerType", "Mini");
                 if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
                     p.putValue("audioType", "Downloaded");
@@ -935,7 +935,7 @@ public class MiniPlayerFragment extends Fragment {
                     p.putValue("audioType", "Streaming");
                 }
                 p.putValue("bitRate", "");
-                p.putValue("sound", GetDeviceVolume(ctx));
+                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                 BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
             } else {
                 audioClick = true;

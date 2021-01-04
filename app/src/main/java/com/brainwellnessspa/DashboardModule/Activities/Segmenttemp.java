@@ -22,7 +22,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                    p.putValue("source", GetSourceName(getActivity()));
                     BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Paused
@@ -41,7 +41,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Paused", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Resumed
@@ -60,7 +60,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Buffer Started
@@ -79,7 +79,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Buffer Completed
@@ -98,7 +98,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Buffer Completed", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Seek Started
@@ -119,7 +119,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Seek Started", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Seek Completed
@@ -140,7 +140,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Seek Completed", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Completed
@@ -159,7 +159,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Completed", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Playback Completed
@@ -178,7 +178,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Next Clicked
@@ -192,7 +192,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Next Clicked", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Previous Clicked
@@ -206,7 +206,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Previous Clicked", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Shuffled
@@ -243,7 +243,7 @@ public class Segmenttemp {
                     p.putValue("audioType", "");
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Repeated Once", p, CONSTANTS.track);*/
 
     /* TODO Mansi All Audio Repeated
@@ -260,7 +260,7 @@ public class Segmenttemp {
                     p.putValue("audioType", "");
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("All Audio Repeated", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Repeated Off
@@ -277,7 +277,7 @@ public class Segmenttemp {
                     p.putValue("audioType", "");
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Repeated Off", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Details Viewed
@@ -295,7 +295,7 @@ public class Segmenttemp {
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Details Viewed", p, CONSTANTS.track);*/
 
      /* TODO Mansi Add to Playlist Clicked
@@ -313,7 +313,7 @@ public class Segmenttemp {
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Add to Playlist Clicked", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Added to Queue
@@ -331,7 +331,7 @@ public class Segmenttemp {
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Added to Queue", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Download Started
@@ -349,7 +349,7 @@ public class Segmenttemp {
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);*/
 
     /* TODO Mansi Audio Download Completed
@@ -367,7 +367,7 @@ public class Segmenttemp {
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Audio Download Completed", p, CONSTANTS.track);*/
 
      /* TODO Mansi Audio Sorted
@@ -385,7 +385,7 @@ public class Segmenttemp {
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     p.putValue("sortPosition", "");
                     p.putValue("sortPositionNew", "");
                     BWSApplication.addToSegment("Queue Screen Viewed", p, CONSTANTS.track);*/
@@ -399,7 +399,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Disclaimer Started", p, CONSTANTS.track);*/
 
     /* TODO Mansi Disclaimer Playing
@@ -411,7 +411,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Disclaimer Playing", p, CONSTANTS.track);*/
 
     /* TODO Mansi Disclaimer Paused
@@ -423,7 +423,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);*/
 
     /* TODO Mansi Disclaimer Resumed
@@ -435,7 +435,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);*/
 
     /* TODO Mansi Disclaimer Interrupted
@@ -447,7 +447,7 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Disclaimer Interrupted", p, CONSTANTS.track);*/
 
     /* TODO Mansi Disclaimer Completed
@@ -459,6 +459,6 @@ public class Segmenttemp {
                     p.putValue("playerType", "Mini/Main");
                     p.putValue("audioType", "");
                     p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(getActivity()));
+                     p.putValue("sound", GetDeviceVolume(ctx));
                     BWSApplication.addToSegment("Disclaimer Completed", p, CONSTANTS.track);*/
 }

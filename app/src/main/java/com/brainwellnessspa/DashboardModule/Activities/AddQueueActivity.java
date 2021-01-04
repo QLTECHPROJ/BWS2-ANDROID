@@ -271,7 +271,7 @@ public class AddQueueActivity extends AppCompatActivity {
             p.putValue("playerType", "Main");
         }
         p.putValue("bitRate", "");
-        p.putValue("sound", GetDeviceVolume(ctx));
+        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
         BWSApplication.addToSegment("Audio Details Viewed", p, CONSTANTS.track);
 
         if (queuePlay) {
@@ -964,7 +964,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 }
                 p.putValue("source", GetSourceName(ctx));
                 p.putValue("bitRate", "");
-                p.putValue("sound", GetDeviceVolume(ctx));
+                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                 BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
                 SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -1461,7 +1461,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 p.putValue("playerType", "Main");
                             }
                             p.putValue("bitRate", "");
-                            p.putValue("sound", GetDeviceVolume(ctx));
+                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
                             BWSApplication.addToSegment("Add to Playlist Clicked", p, CONSTANTS.track);
                             Intent i = new Intent(ctx, AddPlaylistActivity.class);
                             i.putExtra("AudioId", AudioId);

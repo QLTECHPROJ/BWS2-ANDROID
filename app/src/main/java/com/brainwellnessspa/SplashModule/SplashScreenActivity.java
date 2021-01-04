@@ -157,8 +157,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     try {
                         try {
 //                             TODO Live segment key
-//                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
-                            analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key))//foram
+                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
+//                            analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key))//foram
                                     .trackApplicationLifecycleEvents()
                                     .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
                                     .trackAttributionInformation()
