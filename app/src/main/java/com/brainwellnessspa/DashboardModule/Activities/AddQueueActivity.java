@@ -123,6 +123,7 @@ public class AddQueueActivity extends AppCompatActivity {
         ctx = AddQueueActivity.this;
         activity = AddQueueActivity.this;
         oneAudioDetailsList = new ArrayList<>();
+        downloadAudioDetailsList = new ArrayList<>();
 //        handler1 = new Handler();
 //        fileNameList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
