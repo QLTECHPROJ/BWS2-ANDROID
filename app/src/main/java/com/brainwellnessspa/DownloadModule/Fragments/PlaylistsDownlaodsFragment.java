@@ -273,8 +273,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
-                }
-                if (IsLock.equalsIgnoreCase("2")) {
+                } else if (IsLock.equalsIgnoreCase("2")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
@@ -344,17 +343,17 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
                     Btn.setOnClickListener(v -> {
 //                        try {
-                            if (isMyDownloading) {
-
-                                handler1.removeCallbacks(UpdateSongTime1);
-                            }
-                            DatabaseClient
-                                    .getInstance(getActivity())
-                                    .getaudioDatabase()
-                                    .taskDao()
-                                    .getAllPlaylist1().removeObserver(audioList -> {});
-                            getDownloadData(listModelList.get(position).getPlaylistID());
-                            GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                        if (isMyDownloading) {
+                            handler1.removeCallbacks(UpdateSongTime1);
+                        }
+                        DatabaseClient
+                                .getInstance(getActivity())
+                                .getaudioDatabase()
+                                .taskDao()
+                                .getAllPlaylist1().removeObserver(audioList -> {
+                        });
+                        getDownloadData(listModelList.get(position).getPlaylistID());
+                        GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                             /*Properties p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("playlistId", listModelList.get(position).getPlaylistID());

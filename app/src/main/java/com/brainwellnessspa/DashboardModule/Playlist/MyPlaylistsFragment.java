@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -131,7 +132,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
     String TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
-    int RefreshIcon;
     PlayListsAdpater adpater;
     PlayListsAdpater1 adpater1;
     PlayListsAdpater2 adpater2;
@@ -148,7 +148,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     List<String> fileNameList, playlistDownloadId, remainAudio;
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
-    int SongListSize = 0, count = 0;
     List<DownloadAudioDetails> playlistWiseAudiosDetails;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
@@ -158,6 +157,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     private Handler handler2;
     private long totalDuration, currentDuration = 0;
     Properties p;
+    public AudioManager audioManager;
+    int RefreshIcon, SongListSize = 0, count = 0, hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
 
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -240,6 +241,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         fileNameList = new ArrayList<>();
         playlistDownloadId = new ArrayList<>();
         addDisclaimer();
+        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        percent = 100;
+        hundredVolume = (int) (currentVolume * percent) / maxVolume;
 //        playlistWiseAudioDetails = new ArrayList<>();
         downloadPlaylistDetailsList = new ArrayList<>();
         playlistSongsList = new ArrayList<>();
@@ -1707,7 +1713,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 p.putValue("source", "Downloaded Playlists");
                 p.putValue("playerType", "Mini");
                 p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("source", /*GetSourceName(getActivity())*/"0");
+                p.putValue("sound", String.valueOf(hundredVolume));
                 BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
                 for (int i = 0; i < playlistSongs.size(); i++) {
                     downloadAudioDetails.setID(playlistSongs.get(i).getID());
@@ -1865,7 +1871,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
                         listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
                         listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
-                        listModel.setPlaylistImageDetail(downloadPlaylistDetailsList.get(0).getPlaylistImage());
+                        listModel.setPlaylistImage(downloadPlaylistDetailsList.get(0).getPlaylistImage());
+                        listModel.setPlaylistImageDetail(downloadPlaylistDetailsList.get(0).getPlaylistImageDetails());
                         listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
                         listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
                         listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
@@ -2139,7 +2146,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             p.putValue("source", ScreenView);
             p.putValue("playerType", "Mini");
             p.putValue("audioService", APP_SERVICE_STATUS);
-            p.putValue("source", /*GetSourceName(getActivity())*/"0");
+            p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
         } catch (Exception e) {
             e.printStackTrace();
@@ -2446,7 +2453,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             p.putValue("source", "Your Created");
             p.putValue("playerType", "Mini");
             p.putValue("audioService", APP_SERVICE_STATUS);
-            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+            p.putValue("sound", String.valueOf(hundredVolume));
             p.putValue("audioId", listModelList.get(toPosition).getID());
             p.putValue("audioName", listModelList.get(toPosition).getName());
             p.putValue("masterCategory", listModelList.get(toPosition).getAudiomastercat());

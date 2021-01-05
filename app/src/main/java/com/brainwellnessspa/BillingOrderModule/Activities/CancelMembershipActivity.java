@@ -52,6 +52,10 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
+            if (player!=null) {
+                player.setPlayWhenReady(false);
+            } else {
+            }
             finish();
 //            resumeMedia();
 //            isPause = false;
@@ -60,7 +64,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         binding.youtubeView.initialize(API_KEY, this);
 
         if (player!=null) {
-            if(player.getPlayWhenReady())
             player.setPlayWhenReady(false);
         } else {
         }
@@ -153,7 +156,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                                 BWSApplication.showToast(model.getResponseMessage(), ctx);
                                                 dialog.dismiss();
                                                 if(player!=null){
-                                                    player.setPlayWhenReady(true);
+                                                    player.setPlayWhenReady(false);
                                                 }
                                                 finish();
                                             }
@@ -195,6 +198,10 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
     @Override
     public void onBackPressed() {
+        if (player!=null) {
+            player.setPlayWhenReady(false);
+        } else {
+        }
         finish();
 //        resumeMedia();
 //        isPause = false;

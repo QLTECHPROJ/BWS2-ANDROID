@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,9 +74,9 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 
 public class DownloadPlaylistActivity extends AppCompatActivity {
+    //    Handler handler3;
     public static int comeDeletePlaylist = 0;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
@@ -85,11 +86,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     List<DownloadAudioDetails> playlistWiseAudiosDetails;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
-    //    Handler handler3;
     int startTime;
-    long myProgress = 0, diff = 0;
+    long myProgress = 0, diff = 0, currentDuration = 0;
     private List<DownloadPlaylistDetails> listModelList;
-    private long currentDuration = 0;
+    public AudioManager audioManager;
+    public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -152,7 +153,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             Created = getIntent().getStringExtra("Created");
             PlaylistDescription = getIntent().getStringExtra("PlaylistDescription");
         }
-
+        audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        percent = 100;
+        hundredVolume = (int) (currentVolume * percent) / maxVolume;
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("playlistId", PlaylistID);
@@ -184,7 +189,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     @Override
     public void onPause() {
 //        handler3.removeCallbacks(UpdateSongTime3);
-
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
         super.onPause();
     }
@@ -301,11 +305,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         }
         binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
         binding.tvLibraryName.setText(PlaylistName);
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+        /*MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 5, 3, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);*/
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (!PlaylistImageDetails.equalsIgnoreCase("")) {
                 try {
@@ -417,7 +421,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         binding.tvTag.setVisibility(View.VISIBLE);
         binding.tvTag.setText("Audios in Playlist");
         binding.tvPlaylist.setText("Playlist");
@@ -621,7 +624,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolders> implements Filterable {
@@ -721,7 +723,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                             editor.commit();
-                            player.seekTo(0,0);
+                            player.seekTo(0, 0);
                             player.setPlayWhenReady(true);
 
                         } else {
@@ -757,7 +759,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                player.seekTo(position,0);
+                                player.seekTo(position, 0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -816,7 +818,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         if (player != null) {
-                            player.seekTo(position,0);
+                            player.seekTo(position, 0);
                             player.setPlayWhenReady(true);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -958,7 +960,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         }
     }
 
-    public void SegmentTag(){
+    public void SegmentTag() {
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("playlistId", PlaylistID);
@@ -981,7 +983,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         p.putValue("source", "Downloaded Playlists");
         p.putValue("playerType", "Mini");
         p.putValue("audioService", APP_SERVICE_STATUS);
-        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+        p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 }

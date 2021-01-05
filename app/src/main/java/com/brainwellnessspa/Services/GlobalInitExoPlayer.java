@@ -117,7 +117,11 @@ public class GlobalInitExoPlayer extends Service {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String ViewType = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-
+        audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        percent = 100;
+        hundredVolume = (int) (currentVolume * percent) / maxVolume;
 //        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
 //        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 //        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
@@ -202,10 +206,10 @@ public class GlobalInitExoPlayer extends Service {
         p.putValue("playerType", playerType);
         p.putValue("audioService", APP_SERVICE_STATUS);
         p.putValue("bitRate", "");
-        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+        p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
 
-        Log.e("Audio Volume", GetDeviceVolume(ctx));
+        Log.e("Audio Volume", String.valueOf(hundredVolume));
 //            String source = "file:////storage/3639-3632/my sounds/Gujarati songs/Chok Puravo d.mp3";
 //            // The MediaSource represents the media to be played.
 //            MediaSource mediaSource =
@@ -300,62 +304,6 @@ public class GlobalInitExoPlayer extends Service {
 //        }
 //       player.addAnalyticsListener(new EventLogger(trackSelector));
         audioClick = false;
-    }
-
-    public static String GetSourceName(Context ctx) {
-        String myFlagType = "";
-        try {
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-
-            if (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
-                if (MyPlaylist.equalsIgnoreCase("Recently Played")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Library")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Get Inspired")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Popular")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Top Categories")) {
-                    myFlagType = MyPlaylist;
-                }
-            } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                myFlagType = "Liked Audios";
-            } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                myFlagType = "Playlist";
-            } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
-                myFlagType = "Downloaded Playlists";
-            } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                myFlagType = "Downloaded Audios";
-            } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                myFlagType = "Appointment Audios";
-            } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
-                if (MyPlaylist.equalsIgnoreCase("Recommended Search Audio")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Search Audio")) {
-                    myFlagType = MyPlaylist;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-/*
-Top Categories  dddd
-Recently Played  dddd
-Library  ddddd
-Get Inspired  dddd
-Popular dddd
-Queue   nottt
-Playlist dddd
-Downloaded Playlists ddd
-Downloaded Audios ddd
-Liked Audios dddd
-Recommended Search Audio dddd
-Search Audio ddd
-Appointment Audios dddd*/
-        return myFlagType;
     }
 
     public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<String> downloadAudioDetailsList, Context ctx) {
@@ -558,8 +506,64 @@ Appointment Audios dddd*/
         return null;
     }
 
+    public static String GetSourceName(Context ctx) {
+        String myFlagType = "";
+        try {
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+
+            if (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+                if (MyPlaylist.equalsIgnoreCase("Recently Played")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Library")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Get Inspired")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Popular")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Top Categories")) {
+                    myFlagType = MyPlaylist;
+                }
+            } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                myFlagType = "Liked Audios";
+            } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                myFlagType = "Playlist";
+            } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+                myFlagType = "Downloaded Playlists";
+            } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                myFlagType = "Downloaded Audios";
+            } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                myFlagType = "Appointment Audios";
+            } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                if (MyPlaylist.equalsIgnoreCase("Recommended Search Audio")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Search Audio")) {
+                    myFlagType = MyPlaylist;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+/*
+Top Categories  dddd
+Recently Played  dddd
+Library  ddddd
+Get Inspired  dddd
+Popular dddd
+Queue   nottt
+Playlist dddd
+Downloaded Playlists ddd
+Downloaded Audios ddd
+Liked Audios dddd
+Recommended Search Audio dddd
+Search Audio ddd
+Appointment Audios dddd*/
+        return myFlagType;
+    }
+
     public static String GetDeviceVolume(Context ctx) {
-        /*try {
+        try {
             if (audioManager != null) {
                 audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
                 currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -569,7 +573,7 @@ Appointment Audios dddd*/
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
         return String.valueOf(hundredVolume);
     }
 

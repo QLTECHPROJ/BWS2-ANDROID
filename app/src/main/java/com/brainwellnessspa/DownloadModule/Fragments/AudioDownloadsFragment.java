@@ -149,7 +149,6 @@ public class AudioDownloadsFragment extends Fragment {
 
     @Override
     public void onResume() {
-
         callObserverMethod();
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
@@ -573,6 +572,7 @@ public class AudioDownloadsFragment extends Fragment {
         }
 
         private void deleteAudio(int position) {
+            callObserverMethod();
             getDownloadData();
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

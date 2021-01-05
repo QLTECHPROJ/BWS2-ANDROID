@@ -311,7 +311,6 @@ public class AccountFragment extends Fragment {
                 .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                 .focusOn(binding.llResource).closeOnTouch(false).build();
 
-
         queue = new FancyShowCaseQueue()
                 .add(fancyShowCaseView11)
                 .add(fancyShowCaseView21)
@@ -322,6 +321,8 @@ public class AccountFragment extends Fragment {
     }
 
     void clearData(Dialog dialog) {
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+        dialog.hide();
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
         DeleteCall();
@@ -342,52 +343,42 @@ public class AccountFragment extends Fragment {
             fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
         }
 
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
-            listCall.enqueue(new Callback<LogoutModel>() {
-                @Override
-                public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            LogoutModel loginModel = response.body();
-                            dialog.hide();
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            Properties p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("deviceId", DeviceID);
-                            p.putValue("deviceType", DeviceType);
-                            p.putValue("userName", Name);
-                            p.putValue("mobileNo", MobileNo);
-                            BWSApplication.addToSegment("Signed Out", p, CONSTANTS.track);
-                            analytics.identify(new Traits()
-                                    .putValue("userId", UserID)
-                                    .putValue("deviceId", DeviceID)
-                                    .putValue("deviceType", DeviceType)
-                                    .putValue("userName", UserName)
-                                    .putValue("mobileNo", MobileNo));
-                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                return;
-                            }
-                            mLastClickTime = SystemClock.elapsedRealtime();
-                            Intent i = new Intent(getActivity(), LoginActivity.class);
-                            startActivity(i);
-                        } else {
-                            BWSApplication.showToast(response.message(), getActivity());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<LogoutModel> call, Throwable t) {
+        Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
+        listCall.enqueue(new Callback<LogoutModel>() {
+            @Override
+            public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                try {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    LogoutModel loginModel = response.body();
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("deviceId", DeviceID);
+                    p.putValue("deviceType", DeviceType);
+                    p.putValue("userName", Name);
+                    p.putValue("mobileNo", MobileNo);
+                    BWSApplication.addToSegment("Signed Out", p, CONSTANTS.track);
+                    analytics.identify(new Traits()
+                            .putValue("userId", UserID)
+                            .putValue("deviceId", DeviceID)
+                            .putValue("deviceType", DeviceType)
+                            .putValue("userName", UserName)
+                            .putValue("mobileNo", MobileNo));
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    Intent i = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
+            }
+
+            @Override
+            public void onFailure(Call<LogoutModel> call, Throwable t) {
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+            }
+        });
     }
 
     void DeleteCall() {
@@ -446,7 +437,6 @@ public class AccountFragment extends Fragment {
         editorr.clear();
         editorr.commit();
     }
-
 
     void profileViewData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {

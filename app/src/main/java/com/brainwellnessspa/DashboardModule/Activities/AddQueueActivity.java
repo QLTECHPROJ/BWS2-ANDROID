@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -64,7 +65,6 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioP
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 
 public class AddQueueActivity extends AppCompatActivity {
     public static boolean comeFromAddToQueue = false;
@@ -81,7 +81,6 @@ public class AddQueueActivity extends AppCompatActivity {
     ArrayList<LikesHistoryModel.ResponseData.Audio> mDataLike;
     MainPlayModel mainPlayMode;
     AddToQueueModel addToQueueModel;
-    int position, listSize;
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
@@ -90,7 +89,8 @@ public class AddQueueActivity extends AppCompatActivity {
     private long mLastClickTime = 0;
     List<String> downloadAudioDetailsList;
     Properties p;
-    int playerpos;
+    int position, listSize, playerpos, hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
+    public AudioManager audioManager;
 
 /*
     private Runnable UpdateSongTime1 = new Runnable() {
@@ -130,7 +130,11 @@ public class AddQueueActivity extends AppCompatActivity {
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mData = new ArrayList<>();
-
+        audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        percent = 100;
+        hundredVolume = (int) (currentVolume * percent) / maxVolume;
         /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson1 = new Gson();
         String json11 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
@@ -249,7 +253,6 @@ public class AddQueueActivity extends AppCompatActivity {
                 p.putValue("subCategory", mData.get(position).getAudioSubCategory());
                 p.putValue("audioDuration", mData.get(position).getAudioDuration());
             }
-
             p.putValue("position", GetCurrentAudioPosition());
             p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Mini");
@@ -271,7 +274,7 @@ public class AddQueueActivity extends AppCompatActivity {
             p.putValue("playerType", "Main");
         }
         p.putValue("bitRate", "");
-        p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+        p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Audio Details Viewed", p, CONSTANTS.track);
 
         if (queuePlay) {
@@ -964,7 +967,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 }
                 p.putValue("source", GetSourceName(ctx));
                 p.putValue("bitRate", "");
-                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                p.putValue("sound", String.valueOf(hundredVolume));
                 BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
                 SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -1251,7 +1254,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
 
                         binding.llOptions.setVisibility(View.VISIBLE);
-                        if (comeFrom.equalsIgnoreCase("myPlayList")) {
+                        if (comeFrom.equalsIgnoreCase("myPlayList") || comeFrom.equalsIgnoreCase("myLikeAudioList")) {
                             binding.llRemovePlaylist.setVisibility(View.GONE);
                         } else {
                             if (MyPlaylist.equalsIgnoreCase("myPlaylist")) {
@@ -1461,7 +1464,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 p.putValue("playerType", "Main");
                             }
                             p.putValue("bitRate", "");
-                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                            p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Add to Playlist Clicked", p, CONSTANTS.track);
                             Intent i = new Intent(ctx, AddPlaylistActivity.class);
                             i.putExtra("AudioId", AudioId);
