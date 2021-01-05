@@ -55,6 +55,7 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.Utility.Track;
 import com.segment.analytics.Properties;
 
+import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -143,6 +144,32 @@ public class BWSApplication extends Application {
 //        //Log.e("height...........", "" + context.getClass().getSimpleName()+","+height);
 //        //Log.e("displayMetrics.density...........", "" + context.getClass().getSimpleName()+","+displayMetrics.density);
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
+    }
+
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if (dir != null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
     }
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {

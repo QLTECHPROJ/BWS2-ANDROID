@@ -123,21 +123,25 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     }
 
     private void GetAllMedia(FragmentActivity activity) {
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getAllPlaylist1().observe(getActivity(), audioList -> {
+        try {
+            DatabaseClient
+                    .getInstance(getActivity())
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getAllPlaylist1().observe(getActivity(), audioList -> {
 
-            if (audioList.size() != 0) {
-                getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, IsLock);
-                binding.llError.setVisibility(View.GONE);
-                binding.rvDownloadsList.setVisibility(View.VISIBLE);
-            } else {
-                binding.llError.setVisibility(View.VISIBLE);
-                binding.rvDownloadsList.setVisibility(View.GONE);
-            }
-        });
+                if (audioList.size() != 0) {
+                    getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, IsLock);
+                    binding.llError.setVisibility(View.GONE);
+                    binding.rvDownloadsList.setVisibility(View.VISIBLE);
+                } else {
+                    binding.llError.setVisibility(View.VISIBLE);
+                    binding.rvDownloadsList.setVisibility(View.GONE);
+                }
+            });
+        }catch (Exception e){
+
+        }
     }
 
     private void getDataList(List<DownloadPlaylistDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, String IsLock) {

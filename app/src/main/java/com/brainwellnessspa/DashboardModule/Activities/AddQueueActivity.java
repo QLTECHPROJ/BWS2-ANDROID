@@ -63,6 +63,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.audioRemove;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -664,16 +665,14 @@ public class AddQueueActivity extends AppCompatActivity {
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
                                             if (player != null) {
                                                 player.removeMediaItem(pos);
+                                                player.setPlayWhenReady(true);
+                                                audioRemove = true;
                                             }
                                             if (mData.size() != 0) {
                                                 if (pos == position && position < mData.size() - 1) {
                                                     pos = pos;
-
-                                                    callNewPlayerRelease();
                                                 } else if (pos == position && position == mData.size() - 1) {
                                                     pos = 0;
-
-                                                    callNewPlayerRelease();
                                                 } else if (pos < position && pos < mData.size() - 1) {
                                                     pos = pos;
                                                 } else if (pos > position && pos == mData.size()) {
@@ -717,14 +716,18 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 String jsonz = gsonz.toJson(mainPlayModelList);
                                                 editor1.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                                                 editor1.commit();
+                                                finish();
                                             }
                                             comeFromAddToQueue = true;
                                         }
+                                        finish();
                                     } else {
                                         mainPlayModelList.remove(pos);
                                         arrayList1.remove(pos);
                                         if (player != null) {
                                             player.removeMediaItem(pos);
+                                            player.setPlayWhenReady(true);
+                                            audioRemove = true;
                                         }
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
@@ -736,8 +739,6 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 } else if (pos > mainPlayModelList.size()) {
                                                     pos = pos - 1;
                                                 }
-
-                                                callNewPlayerRelease();
                                                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = new ArrayList<>();
                                                 for (int i = 0; i < mainPlayModelList.size(); i++) {
                                                     SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
@@ -769,12 +770,12 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                                 editor.commit();
                                                 comeFromAddToQueue = true;
+                                                finish();
                                             }
                                         }
                                     }
                                 }
                             }
-                            finish();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1520,6 +1521,11 @@ public class AddQueueActivity extends AppCompatActivity {
                 .getaudioDatabase()
                 .taskDao()
                 .getaudioByPlaylist1(AudioFile, "").observe(this, audioList -> {
+            DatabaseClient
+                    .getInstance(this)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getaudioByPlaylist1(AudioFile, "").removeObserver( audioListx -> {});
             if (audioList.size() != 0) {
                 callDisableDownload();
             } else {

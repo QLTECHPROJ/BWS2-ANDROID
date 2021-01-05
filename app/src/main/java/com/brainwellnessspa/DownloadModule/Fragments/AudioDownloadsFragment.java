@@ -777,6 +777,11 @@ public class AudioDownloadsFragment extends Fragment {
                             .getaudioDatabase()
                             .taskDao()
                             .getLastIdByuId1(audioFile).observe(getActivity(), audioList -> {
+                                DatabaseClient
+                            .getInstance(ctx)
+                            .getaudioDatabase()
+                            .taskDao()
+                            .getLastIdByuId1(audioFile).removeObserver(  audioListx -> {});
                         if (audioList.size() == 0) {
                             try {
                                 FileUtils.deleteDownloadedFile(applicationContext, audioName);

@@ -31,14 +31,11 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
+import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;
@@ -46,29 +43,8 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "",PlaylistType="";
-    TelephonyManager mTelephonyMgr;
-    //    AudioManager mAudioManager;
     BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
-    private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
-               /* if(player!=null){
-                    if(mediaPlayer!=null) {
-                        if (isMediaStart && !audioPause) {
-                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
-                            pauseMedia();
-                            audioPause = true;
-                        }
-                    }
-                } */ // Put here the code to stop your music
-            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-            }
-            super.onCallStateChanged(state, incomingNumber);
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +55,6 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-        mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
@@ -261,9 +235,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     protected void onDestroy() {
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
         relesePlayer();
-
         deleteCache(DashboardActivity.this);
-        mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         super.onDestroy();
     }
 

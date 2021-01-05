@@ -48,7 +48,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 public class GlobalInitExoPlayer extends Service {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
-    public static boolean serviceConected = false;
+    public static boolean serviceConected = false,PlayerINIT=false,audioRemove=false;
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     Notification notification1;
@@ -232,6 +232,7 @@ public class GlobalInitExoPlayer extends Service {
         player.setAudioAttributes(audioAttributes, /* handleAudioFocus= */ true);
         player.setPlayWhenReady(true);
         audioClick = false;
+        PlayerINIT=true;
         if (!serviceConected) {
             try {
                 playbackServiceIntent = new Intent(ctx.getApplicationContext(), GlobalInitExoPlayer.class);
@@ -304,6 +305,7 @@ public class GlobalInitExoPlayer extends Service {
 //        }
 //       player.addAnalyticsListener(new EventLogger(trackSelector));
         audioClick = false;
+        PlayerINIT=true;
     }
 
     public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<String> downloadAudioDetailsList, Context ctx) {
