@@ -1110,7 +1110,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                            p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);
                         } else if (state == ExoPlayer.STATE_ENDED) {
                             p = new Properties();
@@ -1132,7 +1132,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                            p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Completed", p, CONSTANTS.track);
                             if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().
                                     equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())) {
@@ -1161,7 +1161,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 p.putValue("playerType", "Main");
                                 p.putValue("audioService", APP_SERVICE_STATUS);
                                 p.putValue("bitRate", "");
-                                p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                                p.putValue("sound", String.valueOf(hundredVolume));
                                 BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
                                 Log.e("Last audio End", mainPlayModelList.get(position).getName());
                                 if (audioPlay && (AudioFlag.equalsIgnoreCase("SubPlayList") || AudioFlag.equalsIgnoreCase("Downloadlist"))) {
@@ -1196,7 +1196,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     p.putValue("source", ScreenView);
                                     p.putValue("playerType", "Mini");
                                     p.putValue("audioService", APP_SERVICE_STATUS);
-                                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                                    p.putValue("sound", String.valueOf(hundredVolume));
                                     BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
 
                                     Log.e("Last audio End", mainPlayModelList.get(position).getName());
@@ -2010,6 +2010,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
+            p.putValue("audioService", APP_SERVICE_STATUS);
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Audio Repeated Once", p, CONSTANTS.track);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
@@ -2048,6 +2049,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
+            p.putValue("audioService", APP_SERVICE_STATUS);
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("All Audio Repeated", p, CONSTANTS.track);
         } else if (IsRepeat.equalsIgnoreCase("1")) {
@@ -2082,6 +2084,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
+            p.putValue("audioService", APP_SERVICE_STATUS);
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Audio Repeated Off", p, CONSTANTS.track);
         }
@@ -2245,6 +2248,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Main");
             p.putValue("bitRate", "");
+            p.putValue("audioService", APP_SERVICE_STATUS);
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
             if (!isDownloading) {
@@ -2644,7 +2648,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     p.putValue("playerType", "Main");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                    p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
                 } else {
                     exoBinding.llPlay.setVisibility(View.GONE);
@@ -2663,7 +2667,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("audioType", "Streaming");
                     }
                     p.putValue("bitRate", "");
-                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
                 }
             } else {

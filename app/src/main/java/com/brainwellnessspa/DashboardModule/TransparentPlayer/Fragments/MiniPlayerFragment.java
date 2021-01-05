@@ -554,7 +554,7 @@ public class MiniPlayerFragment extends Fragment {
                                     p.putValue("playerType", "Mini");
                                     p.putValue("audioService", APP_SERVICE_STATUS);
                                     p.putValue("bitRate", "");
-                                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                                    p.putValue("sound", String.valueOf(hundredVolume));
                                     BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
                                     if (audioPlay && (AudioFlag.equalsIgnoreCase("SubPlayList") || AudioFlag.equalsIgnoreCase("Downloadlist"))) {
                                         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
@@ -1167,7 +1167,7 @@ public class MiniPlayerFragment extends Fragment {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound",/* GetDeviceVolume(ctx)*/"0");
+                    p.putValue("sound",String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
                 } else {
                     player.setPlayWhenReady(true);
@@ -1182,7 +1182,8 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("audioType", "Streaming");
                     }
                     p.putValue("bitRate", "");
-                    p.putValue("sound", /*GetDeviceVolume(ctx)*/"0");
+                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("sound",String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
                 }
             } else {
