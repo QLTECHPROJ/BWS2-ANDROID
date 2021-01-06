@@ -443,12 +443,16 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 playlistDownloadId = gson.fromJson(jsonq, type);
 
                 if (playlistDownloadId.size() != 0) {
-                    playlistDownloadId.contains(PlaylistID);
-                    for (int i = 1; i < fileNameList1.size(); i++) {
-                        if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                            fileNameList.remove(i);
-                            audioFile.remove(i);
-                            playlistDownloadId.remove(i);
+                    if (playlistDownloadId.contains(PlaylistID)) {
+                        Log.e("cancel", String.valueOf(playlistDownloadId.size()));
+                        for (int i = 1; i <= fileNameList1.size(); i++) {
+                            if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                                Log.e("cancel name id",  "My id " + i + fileNameList1.get(i));
+                                fileNameList.remove(i);
+                                audioFile.remove(i);
+                                playlistDownloadId.remove(i);
+                                Log.e("cancel id",  "My id " + playlistDownloadId.size() + i);
+                            }
                         }
                     }
                 }

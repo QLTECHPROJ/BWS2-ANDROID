@@ -1404,6 +1404,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     }
                                 } else if (pos < position && pos < mData.size() - 1) {
                                     saveToPref(pos, mData);
+                                }  else if (pos < position && pos == mData.size()-1) {
+                                    saveToPref(pos, mData);
                                 } else if (pos > position && pos == mData.size()) {
                                     pos = pos - 1;
                                     saveToPref(pos, mData);

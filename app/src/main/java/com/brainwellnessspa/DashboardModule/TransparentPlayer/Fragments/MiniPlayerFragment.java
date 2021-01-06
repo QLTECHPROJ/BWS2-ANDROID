@@ -1234,7 +1234,7 @@ public class MiniPlayerFragment extends Fragment {
                 .taskDao()
                 .geAllDataBYDownloaded1("Complete").observe(getActivity(), audioList -> {
             downloadAudioDetailsList = audioList;
-            audioClick = true;
+//            audioClick = true;
             MakeArray();
             DatabaseClient
                     .getInstance(ctx)

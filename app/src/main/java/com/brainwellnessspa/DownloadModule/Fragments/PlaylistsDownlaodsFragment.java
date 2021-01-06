@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -398,12 +399,16 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     playlistDownloadId = gson.fromJson(jsonq, type);
 
                     if (playlistDownloadId.size() != 0) {
-                        playlistDownloadId.contains(playlistID);
-                        for (int i = 1; i < fileNameList1.size(); i++) {
-                            if (playlistDownloadId.get(i).equalsIgnoreCase(playlistID)) {
-                                fileNameList.remove(i);
-                                audioFile.remove(i);
-                                playlistDownloadId.remove(i);
+                        if (playlistDownloadId.contains(playlistID)) {
+                            Log.e("cancel", String.valueOf(playlistDownloadId.size()));
+                            for (int i = 1; i <= fileNameList1.size(); i++) {
+                                if (playlistDownloadId.get(i).equalsIgnoreCase(playlistID)) {
+                                    Log.e("cancel name id",  "My id " + i + fileNameList1.get(i));
+                                    fileNameList.remove(i);
+                                    audioFile.remove(i);
+                                    playlistDownloadId.remove(i);
+                                    Log.e("cancel id",  "My id " + playlistDownloadId.size() + i);
+                                }
                             }
                         }
                     }

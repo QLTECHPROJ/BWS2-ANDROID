@@ -98,6 +98,9 @@ public class DownloadMedia implements OnDownloadListener {
                         edit1.clear();
                         edit1.commit();
                     } else {
+                        fileNameList = new ArrayList<>();
+                        audioFile = new ArrayList<>();
+                        playlistDownloadId = new ArrayList<>();
                         SharedPreferences sharedy1 = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
                         String jsony1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));

@@ -711,8 +711,8 @@ public class AddAudioActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = sharedd.edit();
                                         Gson gson = new Gson();
                                         String jsonx = gson.toJson(mainPlayModelList);
-                                        String json1 = gson.toJson(playlistSongs);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+                                        String json11 = gson.toJson(playlistSongs);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
                                         editor.putInt(CONSTANTS.PREF_KEY_position, pos);
                                         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
@@ -727,13 +727,12 @@ public class AddAudioActivity extends AppCompatActivity {
                                             GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
                                             ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                         }
-                                        if (player != null) {
                                             Fragment fragment = new MiniPlayerFragment();
                                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                                             fragmentManager1.beginTransaction()
                                                     .add(R.id.flContainer, fragment)
                                                     .commit();
-                                        }
+
                                     }
                                 }
                                 if (s.equalsIgnoreCase("1")) {

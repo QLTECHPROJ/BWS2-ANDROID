@@ -675,10 +675,11 @@ public class AddQueueActivity extends AppCompatActivity {
                                                     pos = 0;
                                                 } else if (pos < position && pos < mData.size() - 1) {
                                                     pos = pos;
+                                                } else if (pos < position && pos == mData.size()-1) {
+                                                    pos = pos;
                                                 } else if (pos > position && pos == mData.size()) {
                                                     pos = pos - 1;
                                                 }
-
                                                 SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedd.edit();
                                                 Gson gson = new Gson();
@@ -726,7 +727,6 @@ public class AddQueueActivity extends AppCompatActivity {
                                         arrayList1.remove(pos);
                                         if (player != null) {
                                             player.removeMediaItem(pos);
-                                            player.setPlayWhenReady(true);
                                             audioRemove = true;
                                         }
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
@@ -734,32 +734,24 @@ public class AddQueueActivity extends AppCompatActivity {
                                             if (mainPlayModelList.size() != 0) {
                                                 if (pos < mainPlayModelList.size() - 1) {
                                                     pos = pos;
+                                                    player.seekTo(pos,0);
                                                 } else if (pos == mainPlayModelList.size() - 1) {
                                                     pos = 0;
+                                                    player.seekTo(pos,0);
+                                                }  else if (pos == mainPlayModelList.size()) {
+                                                    pos = 0;
+                                                    player.seekTo(pos,0);
                                                 } else if (pos > mainPlayModelList.size()) {
                                                     pos = pos - 1;
+                                                    player.seekTo(pos,0);
                                                 }
-                                                ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = new ArrayList<>();
-                                                for (int i = 0; i < mainPlayModelList.size(); i++) {
-                                                    SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
-                                                    mainPlayModel.setID(mainPlayModelList.get(i).getID());
-                                                    mainPlayModel.setName(mainPlayModelList.get(i).getName());
-                                                    mainPlayModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
-                                                    mainPlayModel.setPlaylistID(mainPlayModelList.get(i).getPlaylistID());
-                                                    mainPlayModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
-                                                    mainPlayModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
-                                                    mainPlayModel.setAudioSubCategory(mainPlayModelList.get(i).getAudioSubCategory());
-                                                    mainPlayModel.setImageFile(mainPlayModelList.get(i).getImageFile());
-                                                    mainPlayModel.setLike(mainPlayModelList.get(i).getLike());
-                                                    mainPlayModel.setDownload(mainPlayModelList.get(i).getDownload());
-                                                    mainPlayModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
-                                                    arrayList.add(mainPlayModel);
-                                                }
+
+                                                player.setPlayWhenReady(true);
                                                 SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedd.edit();
                                                 Gson gson = new Gson();
                                                 String json = gson.toJson(mainPlayModelList);
-                                                String json1 = gson.toJson(arrayList);
+                                                String json1 = gson.toJson(arrayList1);
                                                 editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
                                                 editor.putString(CONSTANTS.PREF_KEY_audioList, json);
                                                 editor.putInt(CONSTANTS.PREF_KEY_position, pos);
