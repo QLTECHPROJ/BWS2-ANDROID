@@ -179,11 +179,11 @@ public class AudioDownloadsFragment extends Fragment {
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 190);
+            params.setMargins(0, 9, 0, 190);
             binding.llSpace.setLayoutParams(params);
         } else {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 28);
+            params.setMargins(0, 9, 0, 28);
             binding.llSpace.setLayoutParams(params);
         }
     }
@@ -572,7 +572,6 @@ public class AudioDownloadsFragment extends Fragment {
         }
 
         private void deleteAudio(int position) {
-            callObserverMethod();
             getDownloadData();
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -618,6 +617,7 @@ public class AudioDownloadsFragment extends Fragment {
                                     audiofilelist.remove(i);
                                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = shared.edit();
+                                    callObserverMethod();
                                     Gson gson = new Gson();
                                     String urlJson = gson.toJson(audiofilelist);
                                     String nameJson = gson.toJson(fileNameList);

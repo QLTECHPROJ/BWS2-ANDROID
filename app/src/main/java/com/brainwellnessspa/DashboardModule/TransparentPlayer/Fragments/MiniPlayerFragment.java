@@ -316,65 +316,67 @@ public class MiniPlayerFragment extends Fragment {
 
                     @Override
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-                        Log.v("TAG", "Listener-onTracksChanged... ");
-                        player.setPlayWhenReady(true);
-                        p = new Properties();
-                        p.putValue("userId", UserID);
-                        p.putValue("audioId", mainPlayModelList.get(position).getID());
-                        p.putValue("audioName", mainPlayModelList.get(position).getName());
-                        p.putValue("audioDescription", "");
-                        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                        p.putValue("position", GetCurrentAudioPosition());
-                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-                            p.putValue("audioType", "Downloaded");
-                        } else {
-                            p.putValue("audioType", "Streaming");
-                        }
-                        p.putValue("source", GetSourceName(ctx));
-                        p.putValue("playerType", "Mini");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
-                        p.putValue("bitRate", "");
-                        p.putValue("sound", String.valueOf(hundredVolume));
-                        BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
-                        position = player.getCurrentWindowIndex();
                         try {
+                            Log.v("TAG", "Listener-onTracksChanged... ");
+                            player.setPlayWhenReady(true);
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("audioId", mainPlayModelList.get(position).getID());
+                            p.putValue("audioName", mainPlayModelList.get(position).getName());
+                            p.putValue("audioDescription", "");
+                            p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+                            p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+                            p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+                            p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+                            p.putValue("position", GetCurrentAudioPosition());
+                            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                                p.putValue("audioType", "Downloaded");
+                            } else {
+                                p.putValue("audioType", "Streaming");
+                            }
+                            p.putValue("source", GetSourceName(ctx));
+                            p.putValue("playerType", "Mini");
+                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("bitRate", "");
+                            p.putValue("sound", String.valueOf(hundredVolume));
+                            BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
+                            position = player.getCurrentWindowIndex();
+
                             myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        } catch (Exception e) {
-                        }
+
                    /* GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);*/
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        Gson gson = new Gson();
-                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
-                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                            }.getType();
-                            mainPlayModelList = gson.fromJson(json, type);
-                        }
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            Gson gson = new Gson();
+                            String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                            if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                                }.getType();
+                                mainPlayModelList = gson.fromJson(json, type);
+                            }
 
-                        myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
-                        SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedz.edit();
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit();
-                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                            Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
-                        }
-                        UiModeManager uiModeManager = (UiModeManager) ctx.getSystemService(Context.UI_MODE_SERVICE);
-                        if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
-                                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
-                                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
-                            uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+                            myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
+                            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedz.edit();
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.commit();
+                            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                                Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+                            }
+                            UiModeManager uiModeManager = (UiModeManager) ctx.getSystemService(Context.UI_MODE_SERVICE);
+                            if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
+                                    || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
+                                    || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
+                                uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
 
-                            Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
+                                Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
+                            }
+                            localIntent.putExtra("MyData", "play");
+                            localBroadcastManager.sendBroadcast(localIntent);
+                            callButtonText(player.getCurrentWindowIndex());
+                        } catch (Exception e) {
                         }
-                        localIntent.putExtra("MyData", "play");
-                        localBroadcastManager.sendBroadcast(localIntent);
-                        callButtonText(player.getCurrentWindowIndex());
                     }
 
 //                @Override

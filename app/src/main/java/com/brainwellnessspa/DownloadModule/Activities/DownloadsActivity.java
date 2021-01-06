@@ -105,6 +105,8 @@ public class DownloadsActivity extends AppCompatActivity {
             });
         }
 */
+        ComeScreenAccount = 0;
+        comefromDownload = "1";
         callMembershipMediaPlayer();
 /*        if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -155,6 +157,8 @@ public class DownloadsActivity extends AppCompatActivity {
     }
 
     public void prepareData1() {
+        ComeScreenAccount = 0;
+        comefromDownload = "1";
         callMembershipMediaPlayer();
     }
 
