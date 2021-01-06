@@ -85,6 +85,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
@@ -156,6 +157,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
                 , R.layout.audio_player_custom_layout, binding.playerControlView, false);
         binding.playerControlView.addView(exoBinding.getRoot());
+        PlayerStatus = "Main";
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mainPlayModelList2 = new ArrayList<>();

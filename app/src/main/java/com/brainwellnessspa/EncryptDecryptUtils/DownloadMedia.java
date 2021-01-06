@@ -31,6 +31,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.EncryptDecryptUtils.FileUtils.saveFile;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
 
 public class DownloadMedia implements OnDownloadListener {
     public static int downloadError = 2, downloadIdOne;
@@ -212,22 +213,22 @@ public class DownloadMedia implements OnDownloadListener {
                             .getaudioByPlaylist1(fileNameList.get(0), "").observe(context, audioList -> {
                         Myaudiolist = new ArrayList<>();
                             Myaudiolist = audioList;});*/
-                        p = new Properties();
-                        p.putValue("userId", UserID);
-                        p.putValue("audioName", fileNameList.get(0));
+                    p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("audioName", fileNameList.get(0));
                         /*p.putValue("audioId", Myaudiolist.get(0).getID());
                         p.putValue("audioDescription", "");
                         p.putValue("directions", Myaudiolist.get(0).getAudioDirection());
                         p.putValue("masterCategory", Myaudiolist.get(0).getAudiomastercat());
                         p.putValue("subCategory", Myaudiolist.get(0).getAudioSubCategory());
-                        p.putValue("audioDuration", Myaudiolist.get(0).getAudioDuration());
-                        p.putValue("playerType", "Main");*/
-                        p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("audioType", "Downloaded");
-                        p.putValue("source", "Downloaded Audios");
-                        p.putValue("bitRate", "");
-                        p.putValue("sound", GetDeviceVolume(context));
-                        BWSApplication.addToSegment("Audio Download Completed", p, CONSTANTS.track);
+                        p.putValue("audioDuration", Myaudiolist.get(0).getAudioDuration());*/
+                    p.putValue("playerType", PlayerStatus);
+                    p.putValue("position", GetCurrentAudioPosition());
+                    p.putValue("audioType", "Downloaded");
+                    p.putValue("source", "Downloaded Audios");
+                    p.putValue("bitRate", "");
+                    p.putValue("sound", GetDeviceVolume(context));
+                    BWSApplication.addToSegment("Audio Download Completed", p, CONSTANTS.track);
                 } else if (!playlistDownloadId.get(0).equalsIgnoreCase("")) {
                     if (playlistDownloadId.size() > 1) {
                         if (!playlistDownloadId.get(0).equalsIgnoreCase(playlistDownloadId.get(1))) {
@@ -250,8 +251,8 @@ public class DownloadMedia implements OnDownloadListener {
                             } else {
                                 p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
                             }
-                            p.putValue("audioCount", TotalAudio);
-                            p.putValue("playerType", "Mini");*/
+                            p.putValue("audioCount", TotalAudio);*/
+                            p.putValue("playerType", PlayerStatus);
                             p.putValue("source", "Downloaded Playlists");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("sound", GetDeviceVolume(context));
@@ -261,8 +262,8 @@ public class DownloadMedia implements OnDownloadListener {
                         if (!playlistDownloadId.get(0).equalsIgnoreCase(playlistDownloadId.get(1))) {
                             p = new Properties();
                             p.putValue("userId", UserID);
-                            /*p.putValue("playlistId", PlaylistID);
-                            p.putValue("playlistName", PlaylistName);
+                            p.putValue("playlistId", playlistDownloadId);
+                            /*p.putValue("playlistName", PlaylistName);
                             p.putValue("playlistDescription", PlaylistDescription);
                             if (Created.equalsIgnoreCase("1")) {
                                 p.putValue("playlistType", "Created");
@@ -276,8 +277,8 @@ public class DownloadMedia implements OnDownloadListener {
                             } else {
                                 p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
                             }
-                            p.putValue("audioCount", TotalAudio);
-                            p.putValue("playerType", "Mini");*/
+                            p.putValue("audioCount", TotalAudio);*/
+                            p.putValue("playerType", PlayerStatus);
                             p.putValue("source", "Downloaded Playlists");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("sound", GetDeviceVolume(context));

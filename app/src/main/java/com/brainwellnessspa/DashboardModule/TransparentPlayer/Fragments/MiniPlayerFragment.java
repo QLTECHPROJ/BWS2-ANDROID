@@ -105,6 +105,7 @@ public class MiniPlayerFragment extends Fragment {
     PlayerControlView playerControlView;
     Properties p;
     private long mLastClickTime = 0;
+    public static String PlayerStatus = "";
     /*    Handler handler1, handler2;
         //    boolean ismyDes = false;
         Runnable UpdateSongTime2 = new Runnable() {
@@ -157,7 +158,7 @@ public class MiniPlayerFragment extends Fragment {
         view = binding.getRoot();
         ctx = getActivity();
         activity = getActivity();
-
+        PlayerStatus = "Mini";
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mainPlayModelList2 = new ArrayList<>();
@@ -1167,7 +1168,7 @@ public class MiniPlayerFragment extends Fragment {
                     p.putValue("playerType", "Mini");
                     p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
-                    p.putValue("sound",String.valueOf(hundredVolume));
+                    p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
                 } else {
                     player.setPlayWhenReady(true);
@@ -1183,7 +1184,7 @@ public class MiniPlayerFragment extends Fragment {
                     }
                     p.putValue("bitRate", "");
                     p.putValue("audioService", APP_SERVICE_STATUS);
-                    p.putValue("sound",String.valueOf(hundredVolume));
+                    p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
                 }
             } else {
