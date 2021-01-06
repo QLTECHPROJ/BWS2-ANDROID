@@ -138,9 +138,15 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     binding.llError.setVisibility(View.VISIBLE);
                     binding.rvDownloadsList.setVisibility(View.GONE);
                 }
+                DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllPlaylist1().removeObserver(audioList1 -> {
+                });
             });
-        }catch (Exception e){
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -154,7 +160,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }
-
 
     public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
         FragmentActivity ctx;

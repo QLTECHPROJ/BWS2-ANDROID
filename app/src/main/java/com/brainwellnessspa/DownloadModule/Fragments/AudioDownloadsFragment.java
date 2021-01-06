@@ -142,7 +142,11 @@ public class AudioDownloadsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
-
+            DatabaseClient
+                    .getInstance(getActivity())
+                    .getaudioDatabase()
+                    .taskDao()
+                    .geAllData1("").removeObserver( audioList1 -> {});
         });
 
     }
@@ -169,7 +173,6 @@ public class AudioDownloadsFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
