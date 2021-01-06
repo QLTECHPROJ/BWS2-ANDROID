@@ -277,6 +277,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+
                 if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -289,6 +290,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0")
                         || IsLock.equalsIgnoreCase("")) {
+                    handler1.removeCallbacks(UpdateSongTime1);
+                    DatabaseClient
+                            .getInstance(ctx)
+                            .getaudioDatabase()
+                            .taskDao()
+                            .getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID()).removeObserver(audioList -> {});
                     comefromDownload = "1";
 //                playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
