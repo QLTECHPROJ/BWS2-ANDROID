@@ -148,6 +148,12 @@ public class UserProfileActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 ProfileUpdateModel viewModel = response.body();
+                                analytics.identify(new Traits()
+                                        .putValue("userId", UserID)
+                                        .putValue("userName", viewModel.getResponseData().getName())
+                                        .putValue("mobileNo", viewModel.getResponseData().getPhoneNumber())
+                                        .putValue("email", viewModel.getResponseData().getEmail()));
+
                                /* Properties p = new Properties();
                                 p.putValue("userId", UserID);
                                 p.putValue("userName", binding.etUser.getText().toString());
@@ -246,12 +252,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.etCalendar.addTextChangedListener(userTextWatcher);
                             binding.etMobileNumber.addTextChangedListener(userTextWatcher);
                             binding.etEmail.addTextChangedListener(userTextWatcher);
-                            analytics.identify(new Traits()
-                                    .putValue("userId", UserID)
-                                    .putValue("userName", viewModel.getResponseData().getName())
-                                    .putValue("mobileNo", viewModel.getResponseData().getPhoneNumber())
-                                    .putValue("email", viewModel.getResponseData().getEmail()));
-                           /* Properties p = new Properties();
+                            /* Properties p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("userName", viewModel.getResponseData().getName());
                             p.putValue("mobileNo", viewModel.getResponseData().getPhoneNumber());

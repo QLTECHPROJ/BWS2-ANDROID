@@ -1,46 +1,38 @@
 package com.brainwellnessspa.LikeModule.Activities;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.LikeModule.Fragments.LikeAudiosFragment;
 import com.brainwellnessspa.LikeModule.Fragments.LikePlaylistsFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityLikeBinding;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Callback;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class LikeActivity extends AppCompatActivity {
+    public static boolean ComeFrom_LikePlaylist = false;
+    public static int RefreshLikePlaylist = 0;
     ActivityLikeBinding binding;
     Activity activity;
     String AudioFlag, UserID;
     Context ctx;
-    public static boolean ComeFrom_LikePlaylist = false;
-    public static int RefreshLikePlaylist = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +56,29 @@ public class LikeActivity extends AppCompatActivity {
     protected void onResume() {
         ComeScreenAccount = 0;
         comefromDownload = "1";
-        RefreshData();
-        super.onResume();
-    }
-
-
-    public void RefreshData() {
         callMembershipMediaPlayer();
+        super.onResume();
     }
 
     private void callMembershipMediaPlayer() {
         try {
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.UpdateMiniPlayer(ctx);
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new MiniPlayerFragment();
+                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();
+                comefromDownload = "1";
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+      /*  try {
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -144,7 +148,7 @@ public class LikeActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void prepareData() {
@@ -189,8 +193,8 @@ public class LikeActivity extends AppCompatActivity {
 
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
-        private Context myContext;
         Callback<LikesHistoryModel> likesHistoryModelCallback;
+        private Context myContext;
 
         public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
             super(fm);

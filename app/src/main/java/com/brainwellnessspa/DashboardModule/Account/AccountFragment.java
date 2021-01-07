@@ -357,12 +357,8 @@ public class AccountFragment extends Fragment {
                     p.putValue("userName", Name);
                     p.putValue("mobileNo", MobileNo);
                     BWSApplication.addToSegment("Signed Out", p, CONSTANTS.track);
-                    analytics.identify(new Traits()
-                            .putValue("userId", UserID)
-                            .putValue("deviceId", DeviceID)
-                            .putValue("deviceType", DeviceType)
-                            .putValue("userName", UserName)
-                            .putValue("mobileNo", MobileNo));
+                    analytics.flush();
+                    analytics.reset();
                     if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                         return;
                     }
@@ -490,7 +486,6 @@ public class AccountFragment extends Fragment {
                                     Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
                                 }
                             }
-
 
                             binding.llUserProfile.setOnClickListener(view13 -> {
 //                            if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")){

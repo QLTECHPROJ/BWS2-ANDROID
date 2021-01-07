@@ -54,7 +54,7 @@ public class AddPaymentActivity extends AppCompatActivity {
     Activity activity;
     Dialog d;
     int a = 0;
-    String userId, card_id, TrialPeriod, comeFrom = "", ComesTrue, strToken, ComePayment = "", UserID;
+    String card_id, TrialPeriod, comeFrom = "", ComesTrue, strToken, ComePayment = "", UserID;
     int year, month;
     int position;
     YeardialogBinding binding1;
@@ -196,7 +196,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                Call<AddCardModel> listCall = APIClient.getClient().getAddCard(userId, strToken);
+                                Call<AddCardModel> listCall = APIClient.getClient().getAddCard(UserID, strToken);
                                 listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {

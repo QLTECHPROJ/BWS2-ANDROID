@@ -21,8 +21,14 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
+import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
+import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
+import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.exoplayer2.C;
@@ -32,35 +38,43 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class GlobalInitExoPlayer extends Service {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
-    public static boolean serviceConected = false,PlayerINIT=false,audioRemove=false;
+    public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false;
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
-    Notification notification1;
-    GlobalInitExoPlayer globalInitExoPlayer;
     public static String Name, Desc;
-    Intent playbackServiceIntent;
     public static boolean isprogressbar = false;
     public static String APP_SERVICE_STATUS = "Foreground";
     public static AudioManager audioManager;
-    public static int hundredVolume = 0, currentVolume=0, maxVolume=0;
+    public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0;
     public static int percent;
     public static String PlayerCurrantAudioPostion = "0";
+    Notification notification1;
+    GlobalInitExoPlayer globalInitExoPlayer;
+    Intent playbackServiceIntent;
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -108,6 +122,98 @@ public class GlobalInitExoPlayer extends Service {
         GetMedia st = new GetMedia();
         st.execute();
         return myBitmap;
+    }
+
+    public static void relesePlayer() {
+        if (player != null) {
+//        playerNotificationManager.setPlayer(null);
+            player.stop();
+            player.release();
+            player = null;
+        }
+    }
+
+    public static String GetSourceName(Context ctx) {
+        String myFlagType = "";
+        try {
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+
+            if (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+                if (MyPlaylist.equalsIgnoreCase("Recently Played")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Library")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Get Inspired")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Popular")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Top Categories")) {
+                    myFlagType = MyPlaylist;
+                }
+            } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                myFlagType = "Liked Audios";
+            } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                myFlagType = "Playlist";
+            } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+                myFlagType = "Downloaded Playlists";
+            } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                myFlagType = "Downloaded Audios";
+            } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                myFlagType = "Appointment Audios";
+            } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                if (MyPlaylist.equalsIgnoreCase("Recommended Search Audio")) {
+                    myFlagType = MyPlaylist;
+                } else if (MyPlaylist.equalsIgnoreCase("Search Audio")) {
+                    myFlagType = MyPlaylist;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+/*
+Top Categories  dddd
+Recently Played  dddd
+Library  ddddd
+Get Inspired  dddd
+Popular dddd
+Queue   nottt
+Playlist dddd
+Downloaded Playlists ddd
+Downloaded Audios ddd
+Liked Audios dddd
+Recommended Search Audio dddd
+Search Audio ddd
+Appointment Audios dddd*/
+        return myFlagType;
+    }
+
+    public static String GetDeviceVolume(Context ctx) {
+        try {
+            if (audioManager != null) {
+                audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+                currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                percent = 100;
+                hundredVolume = (int) (currentVolume * percent) / maxVolume;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(hundredVolume);
+    }
+
+    public static String GetCurrentAudioPosition() {
+        if (player != null) {
+            long pos = player.getCurrentPosition();
+            PlayerCurrantAudioPostion =
+                    String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
+                            TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos)));
+        } else {
+            PlayerCurrantAudioPostion = "0";
+        }
+        return PlayerCurrantAudioPostion;
     }
 
     public void GlobleInItPlayer(Context ctx, int position, List<String> downloadAudioDetailsList,
@@ -232,7 +338,7 @@ public class GlobalInitExoPlayer extends Service {
         player.setAudioAttributes(audioAttributes, /* handleAudioFocus= */ true);
         player.setPlayWhenReady(true);
         audioClick = false;
-        PlayerINIT=true;
+        PlayerINIT = true;
         if (!serviceConected) {
             try {
                 playbackServiceIntent = new Intent(ctx.getApplicationContext(), GlobalInitExoPlayer.class);
@@ -272,15 +378,6 @@ public class GlobalInitExoPlayer extends Service {
         relesePlayer();
     }
 
-    public static void relesePlayer() {
-        if (player != null) {
-//        playerNotificationManager.setPlayer(null);
-            player.stop();
-            player.release();
-            player = null;
-        }
-    }
-
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         if (player != null) {
             player.stop();
@@ -305,7 +402,7 @@ public class GlobalInitExoPlayer extends Service {
 //        }
 //       player.addAnalyticsListener(new EventLogger(trackSelector));
         audioClick = false;
-        PlayerINIT=true;
+        PlayerINIT = true;
     }
 
     public void AddAudioToPlayer(int size, ArrayList<MainPlayModel> mainPlayModelList, List<String> downloadAudioDetailsList, Context ctx) {
@@ -508,87 +605,197 @@ public class GlobalInitExoPlayer extends Service {
         return null;
     }
 
-    public static String GetSourceName(Context ctx) {
-        String myFlagType = "";
+    public String UpdateMiniPlayer(Context ctx) {
+        String AudioFlag = "0";
+        SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        String expDate = (shared1x.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
+//            expDate = "2020-09-29 06:34:10";
+        Log.e("Exp Date !!!!", expDate);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date Expdate = new Date();
         try {
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            Expdate = format.parse(expDate);
+            Log.e("Exp Date Expdate!!!!", String.valueOf(Expdate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-            if (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
-                if (MyPlaylist.equalsIgnoreCase("Recently Played")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Library")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Get Inspired")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Popular")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Top Categories")) {
-                    myFlagType = MyPlaylist;
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date currdate = Calendar.getInstance().getTime();
+        Date currdate1 = new Date();
+        String currantDateTime = simpleDateFormat1.format(currdate);
+        try {
+            currdate1 = format.parse(currantDateTime);
+            Log.e("currant currdate !!!!", String.valueOf(currdate1));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Log.e("currant Date !!!!", currantDateTime);
+        if (Expdate.before(currdate1)) {
+            Log.e("app", "Date1 is before Date2");
+            IsLock = "1";
+        } else if (Expdate.after(currdate1)) {
+            Log.e("app", "Date1 is after Date2");
+            IsLock = "0";
+        } else if (Expdate == currdate1) {
+            Log.e("app", "Date1 is equal Date2");
+            IsLock = "1";
+        }
+        try {
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
+            SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+            Gson gson1 = new Gson();
+            Type type1 = new TypeToken<List<String>>() {
+            }.getType();
+            List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+            if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
+                    || AudioFlag.equalsIgnoreCase("ViewAllAudioList")
+                    || AudioFlag.equalsIgnoreCase("LikeAudioList"))) {
+                String audioID = "";
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                String json1 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                Type type12 = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                ArrayList<MainPlayModel> arrayList1 = gson.fromJson(json1, type12);
+                String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+
+                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedd.edit();
+                List<String> myAudioID = new ArrayList<>();
+
+                if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+                    Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+                    }.getType();
+                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+
+                    for (int i = 0; i < arrayList1.size(); i++) {
+                        audioID = arrayList1.get(i).getID();
+                        if (!UnlockAudioList.contains(audioID) && !arrayList1.get(i).getAudioFile().equalsIgnoreCase("")) {
+                            if (player != null) {
+                                player.removeMediaItem(i);
+                            }
+                            arrayList.remove(i);
+                            arrayList1.remove(i);
+                        }
+                    }
+                    if(arrayList.size()!=0) {
+                        if (arrayList.size() == 1 && arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+                            removeSharepref(ctx);
+                        }else {
+                            String jsonx = gson.toJson(arrayList1);
+                            String json11 = gson.toJson(arrayList);
+                            editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
+                            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                        }
+                    }else{
+                        removeSharepref(ctx);
+                    }
+                } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+                    Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+                    }.getType();
+                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+
+                    for (int i = 0; i < arrayList1.size(); i++) {
+                        audioID = arrayList1.get(i).getID();
+                        if (!UnlockAudioList.contains(audioID) && !arrayList1.get(i).getAudioFile().equalsIgnoreCase("")) {
+                            if (player != null) {
+                                player.removeMediaItem(i);
+                            }
+                            arrayList.remove(i);
+                            arrayList1.remove(i);
+                        }
+                    }
+                    if(arrayList.size()!=0) {
+                        if (arrayList.size() == 1 && arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+                            removeSharepref(ctx);
+                        }else {
+                            String jsonx = gson.toJson(arrayList1);
+                            String json11 = gson.toJson(arrayList);
+                            editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
+                            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                        }
+                    }else{
+                        removeSharepref(ctx);
+                    }
+                } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                    Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                    }.getType();
+                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
+
+                    for (int i = 0; i < arrayList1.size(); i++) {
+                        audioID = arrayList1.get(i).getID();
+                        if (!UnlockAudioList.contains(audioID) && !arrayList1.get(i).getAudioFile().equalsIgnoreCase("")) {
+                            if (player != null) {
+                                player.removeMediaItem(i);
+                            }
+                            arrayList.remove(i);
+                            arrayList1.remove(i);
+                        }
+                    }
+                    if(arrayList.size()!=0) {
+                        if (arrayList.size() == 1 && arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+                            removeSharepref(ctx);
+                        }else {
+                            String jsonx = gson.toJson(arrayList1);
+                            String json11 = gson.toJson(arrayList);
+                            editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
+                            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                        }
+                    }else{
+                        removeSharepref(ctx);
+                    }
                 }
-            } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                myFlagType = "Liked Audios";
-            } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                myFlagType = "Playlist";
-            } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
-                myFlagType = "Downloaded Playlists";
-            } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                myFlagType = "Downloaded Audios";
-            } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                myFlagType = "Appointment Audios";
-            } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
-                if (MyPlaylist.equalsIgnoreCase("Recommended Search Audio")) {
-                    myFlagType = MyPlaylist;
-                } else if (MyPlaylist.equalsIgnoreCase("Search Audio")) {
-                    myFlagType = MyPlaylist;
-                }
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                editor.apply();
+                editor.commit();
+
+            } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                SharedPreferences sharedm = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editorr = sharedm.edit();
+                editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                editorr.remove(CONSTANTS.PREF_KEY_audioList);
+                editorr.remove(CONSTANTS.PREF_KEY_position);
+                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+                editorr.clear();
+                editorr.commit();
+                callNewPlayerRelease();
+
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-/*
-Top Categories  dddd
-Recently Played  dddd
-Library  ddddd
-Get Inspired  dddd
-Popular dddd
-Queue   nottt
-Playlist dddd
-Downloaded Playlists ddd
-Downloaded Audios ddd
-Liked Audios dddd
-Recommended Search Audio dddd
-Search Audio ddd
-Appointment Audios dddd*/
-        return myFlagType;
+        return AudioFlag;
     }
 
-    public static String GetDeviceVolume(Context ctx) {
-        try {
-            if (audioManager != null) {
-                audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-                currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                percent = 100;
-                hundredVolume = (int) (currentVolume * percent) / maxVolume;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return String.valueOf(hundredVolume);
-    }
-
-    public static String GetCurrentAudioPosition() {
-        if (player != null) {
-            long pos = player.getCurrentPosition();
-            PlayerCurrantAudioPostion =
-                    String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
-                            TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos)));
-        } else {
-            PlayerCurrantAudioPostion = "0";
-        }
-        return PlayerCurrantAudioPostion;
+    private void removeSharepref(Context ctx) {
+        SharedPreferences sharedm = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorr = sharedm.edit();
+        editorr.remove(CONSTANTS.PREF_KEY_modelList);
+        editorr.remove(CONSTANTS.PREF_KEY_audioList);
+        editorr.remove(CONSTANTS.PREF_KEY_position);
+        editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+        editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+        editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+        editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+        editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+        editorr.clear();
+        editorr.commit();
+        callNewPlayerRelease();
     }
 
     public class LocalBinder extends Binder {

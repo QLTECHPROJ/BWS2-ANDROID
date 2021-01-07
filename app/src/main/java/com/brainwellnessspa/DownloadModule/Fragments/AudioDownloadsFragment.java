@@ -775,6 +775,7 @@ public class AudioDownloadsFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
+                    CallObserverMethod2();
                     DatabaseClient
                             .getInstance(ctx)
                             .getaudioDatabase()
@@ -795,7 +796,6 @@ public class AudioDownloadsFragment extends Fragment {
                     });
                     listModelList = new ArrayList<>();
 //                    listModelList = GetAllMedia(ctx);
-                    CallObserverMethod2();
                     super.onPostExecute(aVoid);
                 }
             }

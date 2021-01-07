@@ -408,7 +408,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     if (playlistDownloadId.size() != 0) {
                         if (playlistDownloadId.contains(playlistID)) {
                             Log.e("cancel", String.valueOf(playlistDownloadId.size()));
-                            for (int i = 1; i <= fileNameList1.size(); i++) {
+                            for (int i = 1; i < fileNameList1.size(); i++) {
                                 if (playlistDownloadId.get(i).equalsIgnoreCase(playlistID)) {
                                     Log.e("cancel name id",  "My id " + i + fileNameList1.get(i));
                                     fileNameList.remove(i);
@@ -428,7 +428,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                     editor.commit();
-                    if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(playlistID)) {
+                    if (playlistDownloadId.get(0).equalsIgnoreCase(playlistID)) {
                         PRDownloader.cancel(downloadIdOne);
                         filename = "";
                     }

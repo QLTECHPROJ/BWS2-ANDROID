@@ -179,6 +179,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPause.setVisibility(View.GONE);
 //            // exoBinding.llProgressBar.setVisibility(View.VISIBLE);
             exoBinding.progressBar.setVisibility(View.VISIBLE);
+
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.UpdateMiniPlayer(ctx);
             MakeArray2();
             GetAllMedia();
         } else {

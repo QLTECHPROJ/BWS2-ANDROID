@@ -45,6 +45,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
@@ -202,15 +203,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     public void PrepareData() {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(10, 8, 10, 210);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(10, 8, 10, 20);
-            binding.llSpace.setLayoutParams(params);
-        }
+
+        /*
         try {
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
@@ -270,13 +264,26 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
+                callAddTranFrag();
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        try {
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+             globalInitExoPlayer.UpdateMiniPlayer(ctx);
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                comefromDownload = "1";
+                callAddTranFrag();
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(10, 8, 10, 210);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(10, 8, 10, 20);
+                binding.llSpace.setLayoutParams(params);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -445,7 +452,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 if (playlistDownloadId.size() != 0) {
                     if (playlistDownloadId.contains(PlaylistID)) {
                         Log.e("cancel", String.valueOf(playlistDownloadId.size()));
-                        for (int i = 1; i <= fileNameList1.size(); i++) {
+                        for (int i = 1; i < fileNameList1.size(); i++) {
                             if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
                                 Log.e("cancel name id",  "My id " + i + fileNameList1.get(i));
                                 fileNameList.remove(i);
@@ -466,7 +473,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                 editor.commit();
-                if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
+                if (playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
                     PRDownloader.cancel(downloadIdOne);
                     filename = "";
                 }
@@ -619,6 +626,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
         editor.commit();
+        callAddTranFrag();
+    }
+    private void callAddTranFrag() {
         try {
             Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -714,11 +724,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     }
                     isPlayPlaylist = 2;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                    Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
+                    callAddTranFrag();
                 } else if (isPlayPlaylist == 2) {
                     if (player != null) {
                         if (myAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID())
@@ -736,11 +742,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                    Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
+                    callAddTranFrag();
                 } else {
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -753,11 +755,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                     player.setPlayWhenReady(true);
                                 } else
                                     player.setPlayWhenReady(true);
-                                Fragment fragment = new MiniPlayerFragment();
-                                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                fragmentManager1.beginTransaction()
-                                        .add(R.id.flContainer, fragment)
-                                        .commit();
+                                callAddTranFrag();
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
@@ -770,15 +768,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sharedxx.edit();
                                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                                 editor.commit();
-                                try {
-                                    Fragment fragment = new MiniPlayerFragment();
-                                    FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                    fragmentManager1.beginTransaction()
-                                            .add(R.id.flContainer, fragment)
-                                            .commit();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                callAddTranFrag();
                             } else {
                                 callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
                                 SegmentTag();
@@ -812,11 +802,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 player.setPlayWhenReady(true);
                             } else
                                 player.setPlayWhenReady(true);
-                            Fragment fragment = new MiniPlayerFragment();
-                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
+                            callAddTranFrag();
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
@@ -829,15 +815,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = sharedxx.edit();
                             editor.putInt(CONSTANTS.PREF_KEY_position, position);
                             editor.commit();
-                            try {
-                                Fragment fragment = new MiniPlayerFragment();
-                                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                fragmentManager1.beginTransaction()
-                                        .add(R.id.flContainer, fragment)
-                                        .commit();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            callAddTranFrag();
                         } else {
                             callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
                             SegmentTag();

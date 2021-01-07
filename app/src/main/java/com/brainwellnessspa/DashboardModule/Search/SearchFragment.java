@@ -38,6 +38,7 @@ import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -290,10 +291,90 @@ public class SearchFragment extends Fragment {
     }
 
     private void prepareSuggestedData() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+       try {
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+              globalInitExoPlayer.UpdateMiniPlayer(getActivity());
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new MiniPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 6, 0, 260);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 6, 0, 50);
+                binding.llSpace.setLayoutParams(params);
+            }
+            /*
+            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        try {
+            SharedPreferences shared2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+            Gson gson1 = new Gson();
+            Type type1 = new TypeToken<List<String>>() {
+            }.getType();
+            List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+            if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
+                    || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
+                String audioID = "";
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
+
+                if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
+                    arrayList.remove(0);
+                }
+                audioID = arrayList.get(0).getID();
+
+                if (UnlockAudioList.contains(audioID)) {
+
+                } else {
+                    SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editorr = sharedm.edit();
+                    editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                    editorr.remove(CONSTANTS.PREF_KEY_audioList);
+                    editorr.remove(CONSTANTS.PREF_KEY_position);
+                    editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+                    editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+                    editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                    editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+                    editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+                    editorr.clear();
+                    editorr.commit();
+                    callNewPlayerRelease();
+                }
+
+            } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editorr = sharedm.edit();
+                editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                editorr.remove(CONSTANTS.PREF_KEY_audioList);
+                editorr.remove(CONSTANTS.PREF_KEY_position);
+                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+                editorr.clear();
+                editorr.commit();
+                callNewPlayerRelease();
+
+            }
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+      /*  try {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             SharedPreferences shared2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -370,7 +451,7 @@ public class SearchFragment extends Fragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
