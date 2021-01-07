@@ -72,7 +72,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
-
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 public class LikeAudiosFragment extends Fragment {
     FragmentLikesBinding binding;
     String UserID, AudioFlag;
@@ -386,20 +386,47 @@ public class LikeAudiosFragment extends Fragment {
                             e.printStackTrace();
                         }
                     } else {*/
-                        callTransFrag(pos, modelList);
+                    List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
+                    if(!IsLock.equalsIgnoreCase("0")) {
+                        SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                        Gson gson1 = new Gson();
+                        Type type1 = new TypeToken<List<String>>() {
+                        }.getType();
+                        List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                        int size = modelList.size();
+                        for (int i = 0; i < size; i++) {
+                            if (UnlockAudioList.contains(modelList.get(i).getID())) {
+                                listModelList2.add(modelList.get(i));
+                            }
+                        }
+                        pos = 0;
+                    }
+                        callTransFrag(pos, listModelList2);
 //                    }
                 }
             } else {
-                isDisclaimer = 0;
-                disclaimerPlayed = 0;
                 List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
-                if (pos != 0) {
-                    listModelList2.addAll(modelList);
-                    listModelList2.add(pos, mainPlayModel);
-                } else {
-                    listModelList2.add(mainPlayModel);
+                if(!IsLock.equalsIgnoreCase("0")) {
+                    SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                    Gson gson1 = new Gson();
+                    Type type1 = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                    int size = modelList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(modelList.get(i).getID())) {
+                            listModelList2.add(modelList.get(i));
+                        }
+                    }
+                    pos = 0;
+                }else {
                     listModelList2.addAll(modelList);
                 }
+                isDisclaimer = 0;
+                disclaimerPlayed = 0;
+                listModelList2.add(pos, mainPlayModel);
                 callTransFrag(pos, listModelList2);
             }
         }

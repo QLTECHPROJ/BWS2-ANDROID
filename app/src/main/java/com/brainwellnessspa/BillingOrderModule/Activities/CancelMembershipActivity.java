@@ -39,6 +39,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     Context ctx;
     String UserID, CancelId = "";
     Activity activity;
+    boolean audioPause = false;
     public static final String API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ";
     public static final String VIDEO_ID = "y1rfRW6WX08";
     private static final int RECOVERY_DIALOG_REQUEST = 1;
@@ -52,8 +53,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
-            if (player!=null) {
-                player.setPlayWhenReady(false);
+            if (audioPause) {
+                player.setPlayWhenReady(true);
             } else {
             }
             finish();
@@ -64,8 +65,10 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         binding.youtubeView.initialize(API_KEY, this);
 
         if (player!=null) {
-            player.setPlayWhenReady(false);
-        } else {
+            if(player.getPlayWhenReady()) {
+                player.setPlayWhenReady(false);
+                audioPause = true;
+            }
         }
 
         binding.cbOne.setOnClickListener(view -> {
@@ -109,9 +112,10 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
         binding.btnCancelSubscrible.setOnClickListener(view -> {
             if (player!=null) {
-                player.setPlayWhenReady(false);
-            } else {
-
+                if(player.getPlayWhenReady()) {
+                    player.setPlayWhenReady(false);
+                    audioPause = true;
+                }
             }
             if (CancelId.equalsIgnoreCase("4") &&
                     binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
@@ -129,7 +133,10 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();
                         if (player!=null) {
-                            player.setPlayWhenReady(false);
+                            if(player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(false);
+                                audioPause = true;
+                            }
                         }
                         return true;
                     }
@@ -155,8 +162,11 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                                 CancelPlanModel model = response.body();
                                                 BWSApplication.showToast(model.getResponseMessage(), ctx);
                                                 dialog.dismiss();
-                                                if(player!=null){
-                                                    player.setPlayWhenReady(false);
+                                                if (player!=null) {
+                                                    if(player.getPlayWhenReady()) {
+                                                        player.setPlayWhenReady(false);
+                                                        audioPause = true;
+                                                    }
                                                 }
                                                 finish();
                                             }
@@ -185,9 +195,10 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 tvGoBack.setOnClickListener(v -> {
                     dialog.dismiss();
                     if (player!=null) {
-                        player.setPlayWhenReady(false);
-                    } else {
-
+                        if(player.getPlayWhenReady()) {
+                            player.setPlayWhenReady(false);
+                            audioPause = true;
+                        }
                     }
                 });
                 dialog.show();
@@ -198,8 +209,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
     @Override
     public void onBackPressed() {
-        if (player!=null) {
-            player.setPlayWhenReady(false);
+        if (audioPause) {
+            player.setPlayWhenReady(true);
         } else {
         }
         finish();

@@ -22,6 +22,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
@@ -654,44 +655,53 @@ Appointment Audios dddd*/
             List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList")
-                    || AudioFlag.equalsIgnoreCase("LikeAudioList"))) {
+                    || AudioFlag.equalsIgnoreCase("LikeAudioList")
+                    || AudioFlag.equalsIgnoreCase("AppointmentDetailList"))) {
                 String audioID = "";
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 String json1 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                 Type type12 = new TypeToken<ArrayList<MainPlayModel>>() {
                 }.getType();
-                ArrayList<MainPlayModel> arrayList1 = gson.fromJson(json1, type12);
+                ArrayList<MainPlayModel> arrayList1 = new ArrayList<>();
                 String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
 
                 SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedd.edit();
-                List<String> myAudioID = new ArrayList<>();
-
                 if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                     Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
                     }.getType();
                     ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList2 = gson.fromJson(json, type);
 
-                    for (int i = 0; i < arrayList1.size(); i++) {
-                        audioID = arrayList1.get(i).getID();
-                        if (!UnlockAudioList.contains(audioID) && !arrayList1.get(i).getAudioFile().equalsIgnoreCase("")) {
-                            if (player != null) {
-                                player.removeMediaItem(i);
-                            }
-                            arrayList.remove(i);
-                            arrayList1.remove(i);
+                    int size = arrayList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(arrayList.get(i).getID())) {
+                            arrayList2.add(arrayList.get(i));
                         }
                     }
-                    if(arrayList.size()!=0) {
-                        if (arrayList.size() == 1 && arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
-                            removeSharepref(ctx);
-                        }else {
-                            String jsonx = gson.toJson(arrayList1);
-                            String json11 = gson.toJson(arrayList);
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                    if(arrayList2.size()!=0) {
+                        for (int i = 0; i < arrayList2.size(); i++) {
+                            MainPlayModel mainPlayModel = new MainPlayModel();
+                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setName(arrayList.get(i).getName());
+                            mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                            mainPlayModel.setPlaylistID("");
+                            mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                            mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                            mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                            mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                            mainPlayModel.setLike(arrayList.get(i).getLike());
+                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                            arrayList1.add(mainPlayModel);
                         }
+                    }
+                    if(arrayList2.size()!=0) {
+                        String jsonx = gson.toJson(arrayList1);
+                        String json11 = gson.toJson(arrayList2);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
                     }else{
                         removeSharepref(ctx);
                     }
@@ -699,26 +709,36 @@ Appointment Audios dddd*/
                     Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
                     }.getType();
                     ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList2 = gson.fromJson(json, type);
 
-                    for (int i = 0; i < arrayList1.size(); i++) {
-                        audioID = arrayList1.get(i).getID();
-                        if (!UnlockAudioList.contains(audioID) && !arrayList1.get(i).getAudioFile().equalsIgnoreCase("")) {
-                            if (player != null) {
-                                player.removeMediaItem(i);
-                            }
-                            arrayList.remove(i);
-                            arrayList1.remove(i);
+                    int size = arrayList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(arrayList.get(i).getID())) {
+                            arrayList2.add(arrayList.get(i));
                         }
                     }
-                    if(arrayList.size()!=0) {
-                        if (arrayList.size() == 1 && arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
-                            removeSharepref(ctx);
-                        }else {
-                            String jsonx = gson.toJson(arrayList1);
-                            String json11 = gson.toJson(arrayList);
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                    if(arrayList2.size()!=0) {
+                        for (int i = 0; i < arrayList2.size(); i++) {
+                            MainPlayModel mainPlayModel = new MainPlayModel();
+                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setName(arrayList.get(i).getName());
+                            mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                            mainPlayModel.setPlaylistID("");
+                            mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                            mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                            mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                            mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                            mainPlayModel.setLike(arrayList.get(i).getLike());
+                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                            arrayList1.add(mainPlayModel);
                         }
+                    }
+                    if(arrayList2.size()!=0) {
+                        String jsonx = gson.toJson(arrayList1);
+                        String json11 = gson.toJson(arrayList2);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
                     }else{
                         removeSharepref(ctx);
                     }
@@ -726,26 +746,73 @@ Appointment Audios dddd*/
                     Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
                     }.getType();
                     ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
+                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList2 = gson.fromJson(json, type);
 
-                    for (int i = 0; i < arrayList1.size(); i++) {
-                        audioID = arrayList1.get(i).getID();
-                        if (!UnlockAudioList.contains(audioID) && !arrayList1.get(i).getAudioFile().equalsIgnoreCase("")) {
-                            if (player != null) {
-                                player.removeMediaItem(i);
-                            }
-                            arrayList.remove(i);
-                            arrayList1.remove(i);
+                    int size = arrayList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(arrayList.get(i).getID())) {
+                            arrayList2.add(arrayList.get(i));
                         }
                     }
-                    if(arrayList.size()!=0) {
-                        if (arrayList.size() == 1 && arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
-                            removeSharepref(ctx);
-                        }else {
-                            String jsonx = gson.toJson(arrayList1);
-                            String json11 = gson.toJson(arrayList);
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                    if(arrayList2.size()!=0) {
+                        for (int i = 0; i < arrayList2.size(); i++) {
+                            MainPlayModel mainPlayModel = new MainPlayModel();
+                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setName(arrayList.get(i).getName());
+                            mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                            mainPlayModel.setPlaylistID("");
+                            mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                            mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                            mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                            mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                            mainPlayModel.setLike(arrayList.get(i).getLike());
+                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                            arrayList1.add(mainPlayModel);
                         }
+                    }
+                    if(arrayList2.size()!=0) {
+                        String jsonx = gson.toJson(arrayList1);
+                        String json11 = gson.toJson(arrayList2);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                    }else{
+                        removeSharepref(ctx);
+                    }
+                } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                    Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+                    }.getType();
+                    ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
+                    ArrayList<AppointmentDetailModel.Audio> arrayList2 = gson.fromJson(json, type);
+
+                    int size = arrayList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(arrayList.get(i).getID())) {
+                            arrayList2.add(arrayList.get(i));
+                        }
+                    }
+                    if(arrayList2.size()!=0) {
+                        for (int i = 0; i < arrayList2.size(); i++) {
+                            MainPlayModel mainPlayModel = new MainPlayModel();
+                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setName(arrayList.get(i).getName());
+                            mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                            mainPlayModel.setPlaylistID("");
+                            mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                            mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                            mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                            mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                            mainPlayModel.setLike(arrayList.get(i).getLike());
+                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                            arrayList1.add(mainPlayModel);
+                        }
+                    }
+                    if(arrayList2.size()!=0) {
+                        String jsonx = gson.toJson(arrayList1);
+                        String json11 = gson.toJson(arrayList2);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
                     }else{
                         removeSharepref(ctx);
                     }
@@ -758,22 +825,6 @@ Appointment Audios dddd*/
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
                 editor.apply();
                 editor.commit();
-
-            } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                SharedPreferences sharedm = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editorr = sharedm.edit();
-                editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                editorr.remove(CONSTANTS.PREF_KEY_audioList);
-                editorr.remove(CONSTANTS.PREF_KEY_position);
-                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                editorr.clear();
-                editorr.commit();
-                callNewPlayerRelease();
-
             }
 
         } catch (Exception e) {

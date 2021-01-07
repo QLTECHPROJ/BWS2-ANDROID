@@ -23,6 +23,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
+import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -620,6 +621,7 @@ public class ViewAllAudioFragment extends Fragment {
                     }
                 }
             } else {
+
                 isDisclaimer = 0;
                 disclaimerPlayed = 0;
                 ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
@@ -674,13 +676,47 @@ public class ViewAllAudioFragment extends Fragment {
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
                     } else {
-                        callTransFrag(position, listModelList);
+                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                        if(!IsLock.equalsIgnoreCase("0")) {
+                            SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                            Gson gson1 = new Gson();
+                            Type type1 = new TypeToken<List<String>>() {
+                            }.getType();
+                            List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                            int size = listModelList.size();
+                            for (int i = 0; i < size; i++) {
+                                if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                                    listModelList2.add(listModelList.get(i));
+                                }
+                            }
+                            position = 0;
+                        }
+                        callTransFrag(position, listModelList2);
                     }
                 }
             } else {
+                ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                if(!IsLock.equalsIgnoreCase("0")) {
+                    SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                    Gson gson1 = new Gson();
+                    Type type1 = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                    int size = listModelList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                            listModelList2.add(listModelList.get(i));
+                        }
+                    }
+                    position = 0;
+                }else {
+                    listModelList2.addAll(listModelList);
+                }
+
                 isDisclaimer = 0;
                 disclaimerPlayed = 0;
-                ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                 ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
                 mainPlayModel.setID("0");
                 mainPlayModel.setName("Disclaimer");
@@ -692,7 +728,6 @@ public class ViewAllAudioFragment extends Fragment {
                 mainPlayModel.setLike("");
                 mainPlayModel.setDownload("");
                 mainPlayModel.setAudioDuration("00:48");
-                listModelList2.addAll(listModelList);
                 listModelList2.add(position, mainPlayModel);
                 callTransFrag(position, listModelList2);
             }

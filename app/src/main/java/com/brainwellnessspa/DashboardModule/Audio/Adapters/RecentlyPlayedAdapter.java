@@ -29,8 +29,11 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.SmallBoxLayoutBinding;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -198,13 +201,46 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
                 }else {
-                    callTransFrag(position, listModelList);
+                    ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                    if(!IsLock.equalsIgnoreCase("0")) {
+                    SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                    Gson gson1 = new Gson();
+                    Type type1 = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                    int size = listModelList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                            listModelList2.add(listModelList.get(i));
+                        }
+                    }
+                    position = 0;
+                }
+                    callTransFrag(position, listModelList2);
                 }
             }
         } else {
+            ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+            if(!IsLock.equalsIgnoreCase("0")) {
+                SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                Gson gson1 = new Gson();
+                Type type1 = new TypeToken<List<String>>() {
+                }.getType();
+                List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                int size = listModelList.size();
+                 for (int i = 0; i < size; i++) {
+                    if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                        listModelList2.add(listModelList.get(i));
+                    }
+                }
+                position = 0;
+            }else {
+                listModelList2.addAll(listModelList);
+            }
             isDisclaimer = 0;
             disclaimerPlayed = 0;
-            ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
             MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");
@@ -216,7 +252,6 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
             mainPlayModel.setAudioDuration("00:48");
-            listModelList2.addAll(listModelList);
             listModelList2.add(position, mainPlayModel);
             callTransFrag(position, listModelList2);
         }

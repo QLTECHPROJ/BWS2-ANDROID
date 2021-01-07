@@ -285,14 +285,6 @@ public class MainAudioModel implements Parcelable {
                 this.iD = iD;
             }
 
-            public String getiD() {
-                return iD;
-            }
-
-            public void setiD(String iD) {
-                this.iD = iD;
-            }
-
             public String getAudioDirection() {
                 return audioDirection;
             }
