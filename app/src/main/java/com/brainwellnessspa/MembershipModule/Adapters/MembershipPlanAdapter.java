@@ -1,5 +1,6 @@
 package com.brainwellnessspa.MembershipModule.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -26,13 +27,15 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
     Button btnFreeJoin;
     String TrialPeriod;
     Intent i;
-    public static String planFlag="", planId="", price="";
+    Activity activity;
+    public static String planFlag = "", planId = "", price = "";
 
-    public MembershipPlanAdapter(ArrayList<MembershipPlanListModel.Plan> listModelList, Context ctx, Button btnFreeJoin, String TrialPeriod) {
+    public MembershipPlanAdapter(ArrayList<MembershipPlanListModel.Plan> listModelList, Context ctx, Button btnFreeJoin, String TrialPeriod, Activity activity) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.TrialPeriod = TrialPeriod;
         this.btnFreeJoin = btnFreeJoin;
+        this.activity = activity;
     }
 
     @NonNull
@@ -91,7 +94,8 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
         }
         btnFreeJoin.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
-                ctx.startActivity(i);
+                activity.startActivity(i);
+                activity.finish();
             } else {
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
             }
@@ -112,7 +116,6 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
         i.putParcelableArrayListExtra("PlanData", listModelList);
         i.putExtra("TrialPeriod", TrialPeriod);
         i.putExtra("position", position);
-
     }
 
     @Override

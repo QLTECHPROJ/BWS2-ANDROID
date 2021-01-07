@@ -36,10 +36,9 @@ import static com.brainwellnessspa.MembershipModule.Activities.CheckoutOtpActivi
 
 public class CheckoutGetCodeActivity extends AppCompatActivity {
     ActivityCheckoutGetCodeBinding binding;
-    String Name = "", Code = "", MobileNo = "";
+    String Name = "", Code = "", MobileNo = "", TrialPeriod;
     Context ctx;
     Activity activity;
-    String TrialPeriod;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
     private long mLastClickTime = 0;
@@ -52,13 +51,16 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         ctx = CheckoutGetCodeActivity.this;
         activity = CheckoutGetCodeActivity.this;
 
-        if (getIntent().hasExtra("Name")) {
+        if (getIntent().getExtras() != null) {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
-//            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
-//            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
-//            position = getIntent().getIntExtra("position", 0);
+        }
+
+        if (getIntent().getExtras() != null) {
+            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+            position = getIntent().getIntExtra("position", 0);
         }
         binding.edtNumber.addTextChangedListener(signupTextWatcher);
 
@@ -82,11 +84,11 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         }
 
         binding.llBack.setOnClickListener(view -> {
-//                Intent i = new Intent(ctx, OrderSummaryActivity.class);
-//                i.putParcelableArrayListExtra("PlanData",listModelList);
-//                i.putExtra("TrialPeriod",TrialPeriod);
-//                i.putExtra("position",position);
-//                startActivity(i);
+            Intent i = new Intent(ctx, OrderSummaryActivity.class);
+            i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("position", position);
+            startActivity(i);
             finish();
         });
 
@@ -96,9 +98,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, CountrySelectActivity.class);
-//                i.putParcelableArrayListExtra("PlanData",listModelList);
-//                i.putExtra("TrialPeriod",TrialPeriod);
-//                i.putExtra("position",position);
+            i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("position", position);
             i.putExtra("Name", binding.tvCountry.getText().toString());
             i.putExtra("Code", binding.tvCountryCode.getText().toString());
             i.putExtra("MobileNo", binding.edtNumber.getText().toString());
@@ -117,6 +119,16 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         inputMethodManager.toggleSoftInputFromWindow(binding.edtNumber.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
 
         binding.btnSendCode.setOnClickListener(view -> prepareData());
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ctx, OrderSummaryActivity.class);
+        i.putParcelableArrayListExtra("PlanData", listModelList);
+        i.putExtra("TrialPeriod", TrialPeriod);
+        i.putExtra("position", position);
+        startActivity(i);
+        finish();
     }
 
     void prepareData() {
@@ -146,9 +158,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                                 SignUpModel loginModel = response.body();
                                 if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     Intent i = new Intent(ctx, CheckoutOtpActivity.class);
-//                            i.putParcelableArrayListExtra("PlanData",listModelList);
-//                            i.putExtra("TrialPeriod",TrialPeriod);
-//                            i.putExtra("position",position);
+                            i.putParcelableArrayListExtra("PlanData", listModelList);
+                                    i.putExtra("TrialPeriod", TrialPeriod);
+                                    i.putExtra("position", position);
                                     i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                                     i.putExtra("Name", binding.tvCountry.getText().toString());
                                     i.putExtra("Code", binding.tvCountryCode.getText().toString());

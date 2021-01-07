@@ -24,7 +24,8 @@ import java.util.ArrayList;
 
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
-    String TrialPeriod, comeFrom = "", UserId, renewPlanFlag, renewPlanId, ComesTrue;
+    String TrialPeriod, comeFrom = "", UserId,/* renewPlanFlag, renewPlanId, */
+            ComesTrue;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
@@ -39,8 +40,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
-            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
-            renewPlanId = getIntent().getStringExtra("renewPlanId");
+//            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
+//            renewPlanId = getIntent().getStringExtra("renewPlanId");
             position = getIntent().getIntExtra("position", 0);
             if (getIntent().hasExtra("comeFrom")) {
                 comeFrom = getIntent().getStringExtra("comeFrom");
@@ -62,27 +63,23 @@ public class OrderSummaryActivity extends AppCompatActivity {
         }
         BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen);
 
-        try {
-            if (!comeFrom.equalsIgnoreCase("")) {
-                binding.tvTrialPeriod.setVisibility(View.GONE);
-                binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
-                binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
-                binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
-                binding.tvSubName.setText(listModelList2.get(position).getSubName());
-                binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
-                binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
-            } else {
-                binding.tvTrialPeriod.setVisibility(View.VISIBLE);
-                binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
-                binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
-                binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
-                binding.tvSubName.setText(listModelList.get(position).getSubName());
-                binding.tvTrialPeriod.setText(TrialPeriod);
-                binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
-                binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!comeFrom.equalsIgnoreCase("")) {
+            binding.tvTrialPeriod.setVisibility(View.GONE);
+            binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
+            binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
+            binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
+            binding.tvSubName.setText(listModelList2.get(position).getSubName());
+            binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+            binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+        } else {
+            binding.tvTrialPeriod.setVisibility(View.VISIBLE);
+            binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
+            binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
+            binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
+            binding.tvSubName.setText(listModelList.get(position).getSubName());
+            binding.tvTrialPeriod.setText(TrialPeriod);
+            binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
+            binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
         }
 
         binding.llBack.setOnClickListener(view -> {
@@ -107,7 +104,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 p1.putValue("planStartDt ", "");
                 p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                 p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
-                p1.putValue("planAmount",listModelList2.get(position).getPlanAmount());
+                p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
                 Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
                 i.putExtra("ComesTrue", ComesTrue);
                 i.putExtra("comeFrom", "membership");
@@ -125,12 +122,16 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 p1.putValue("planStartDt ", "");
                 p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
                 p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
-                p1.putValue("planAmount",listModelList.get(position).getPlanAmount());
+                p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
                 Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
+                i.putExtra("Name", "");
+                i.putExtra("Code", "");
+                i.putExtra("MobileNo", "");
                 i.putParcelableArrayListExtra("PlanData", listModelList);
                 i.putExtra("TrialPeriod", TrialPeriod);
                 i.putExtra("position", position);
                 startActivity(i);
+                finish();
             }
             BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
         });
@@ -144,6 +145,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         } else {
+            Intent i = new Intent(OrderSummaryActivity.this, MembershipActivity.class);
+            startActivity(i);
             finish();
         }
     }

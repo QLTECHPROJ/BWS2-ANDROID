@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.AddPayment.AddPaymentActivity;
 import com.brainwellnessspa.AddPayment.Model.AddCardModel;
+import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.Utility.APIClient;
@@ -39,6 +40,7 @@ import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -56,6 +58,9 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     Activity activity;
     Dialog d;
     int a = 0;
+    String TrialPeriod;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    int position;
     int year, month;
     YeardialogBinding binding1;
     String strToken;
@@ -67,16 +72,21 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_checkout_payment);
         context = CheckoutPaymentActivity.this;
         activity = CheckoutPaymentActivity.this;
-        if (getIntent() != null) {
+        if (getIntent().getExtras() != null) {
             MobileNo = getIntent().getStringExtra("MobileNo");
             Code = getIntent().getStringExtra("Code");
+            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+            position = getIntent().getIntExtra("position", 0);
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+        binding.llBack.setOnClickListener(view -> {
+            Intent i = new Intent(context, OrderSummaryActivity.class);
+            i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("position", position);
+            startActivity(i);
+            finish();
         });
 
         year = Calendar.getInstance().get(Calendar.YEAR);
@@ -158,6 +168,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 binding.tlNumber.setError("");
                 binding.txtError.setText("Please enter a valid CVV number");
             } else {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 binding.tlName.setError("");
                 binding.tlNumber.setError("");
                 binding.txtError.setText("");
@@ -180,7 +191,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         Log.e("strToken.............", "" + strToken);
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
-                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 String countryCode = Code.replace("+", "");
                                 Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode);
                                 listCall.enqueue(new Callback<AddCardModel>() {
@@ -188,33 +198,30 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         try {
-                                            if (response.isSuccessful()) {
-                                                AddCardModel cardModel = response.body();
-                                                if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                    InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                                    keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                                                    SharedPreferences.Editor editor = shared.edit();
-                                                    editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
-                                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
-                                                    editor.commit();
-                                                    Properties p = new Properties();
-                                                    p.putValue("cardNumber",binding.etNumber.getText().toString() );
-                                                    p.putValue("cardHolderName", binding.etName.getText().toString());
-                                                    p.putValue("cardType", "");
-                                                    p.putValue("cardExpiry", binding.textMonth.getText().toString());
-                                                    p.putValue("mobileNo", MobileNo);
-                                                    BWSApplication.addToSegment("Payment Info Added", p, CONSTANTS.track);
-                                                    Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
-                                                    startActivity(i);
-                                                    finish();
-                                                } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                } else {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                }
+                                            AddCardModel cardModel = response.body();
+                                            if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = shared.edit();
+                                                editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
+                                                editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                editor.commit();
+                                                Properties p = new Properties();
+                                                p.putValue("cardNumber", binding.etNumber.getText().toString());
+                                                p.putValue("cardHolderName", binding.etName.getText().toString());
+                                                p.putValue("cardType", "");
+                                                p.putValue("cardExpiry", binding.textMonth.getText().toString());
+                                                p.putValue("mobileNo", MobileNo);
+                                                BWSApplication.addToSegment("Payment Info Added", p, CONSTANTS.track);
+                                                Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
+                                                startActivity(i);
+                                                finish();
+                                            } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                            } else {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             }
-
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -238,6 +245,11 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Intent i = new Intent(context, OrderSummaryActivity.class);
+        i.putParcelableArrayListExtra("PlanData", listModelList);
+        i.putExtra("TrialPeriod", TrialPeriod);
+        i.putExtra("position", position);
+        startActivity(i);
         finish();
     }
 

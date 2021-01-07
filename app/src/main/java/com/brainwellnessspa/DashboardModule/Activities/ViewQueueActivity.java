@@ -134,6 +134,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
         }
     };
+
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -740,10 +741,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         if (isPause) {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         } else {
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llPlay.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         }
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
@@ -958,10 +963,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         if (listSize == 1) {
                             binding.llPlay.setVisibility(View.VISIBLE);
                             binding.llPause.setVisibility(View.GONE);
+                            binding.llProgressBar.setVisibility(View.GONE);
+                            binding.progressBar.setVisibility(View.GONE);
                             stopMedia();
                         } else {
                             binding.llPlay.setVisibility(View.VISIBLE);
                             binding.llPause.setVisibility(View.GONE);
+                            binding.llProgressBar.setVisibility(View.GONE);
+                            binding.progressBar.setVisibility(View.GONE);
                             stopMedia();
 //                        position = 0;
 //                        getPrepareShowData(position);

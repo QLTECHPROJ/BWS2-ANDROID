@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.FaqModule.Models.FaqListModel;
+import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
 import com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter;
 import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
@@ -50,7 +51,6 @@ public class MembershipActivity extends AppCompatActivity {
     MembershipFaqAdapter adapter;
     private long mLastClickTime = 0;
     Activity activity;
-//    String PlanPosition, PlanID, PlanAmount, PlanCurrency, PlanInterval, PlanImage, PlanTenure, PlanNextRenewal, SubName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,12 @@ public class MembershipActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership);
         ctx = MembershipActivity.this;
         activity = MembershipActivity.this;
-        binding.llBack.setOnClickListener(view -> finish());
+
+        binding.llBack.setOnClickListener(view -> {
+            Intent i = new Intent(ctx, LoginActivity.class);
+            startActivity(i);
+            finish();
+        });
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         binding.rvList.setLayoutManager(mLayoutManager);
@@ -108,6 +113,13 @@ public class MembershipActivity extends AppCompatActivity {
     protected void onResume() {
         prepareMembershipData();
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ctx, LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void prepareMembershipData() {
@@ -177,7 +189,7 @@ public class MembershipActivity extends AppCompatActivity {
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
 
                                 membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(), ctx, binding.btnFreeJoin,
-                                        membershipPlanListModel.getResponseData().getTrialPeriod());
+                                        membershipPlanListModel.getResponseData().getTrialPeriod(), activity);
                                 binding.rvPlanList.setAdapter(membershipPlanAdapter);
 
                                 subscriptionAdapter = new SubscriptionAdapter(membershipPlanListModel.getResponseData().getAudioFiles(), ctx);

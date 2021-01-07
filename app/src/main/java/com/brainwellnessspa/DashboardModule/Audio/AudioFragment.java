@@ -1,8 +1,14 @@
 package com.brainwellnessspa.DashboardModule.Audio;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -110,8 +117,9 @@ public class AudioFragment extends Fragment {
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
         prepareDisplayData();
         Properties p = new Properties();
-        p.putValue("userId",UserID);
+        p.putValue("userId", UserID);
         BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
+
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);

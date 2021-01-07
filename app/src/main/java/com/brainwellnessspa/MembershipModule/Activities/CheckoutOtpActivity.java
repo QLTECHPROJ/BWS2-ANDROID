@@ -78,9 +78,9 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
-//            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
-//            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
-//            position = getIntent().getIntExtra("position", 0);
+            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+            position = getIntent().getIntExtra("position", 0);
         }
         activity = CheckoutOtpActivity.this;
         ctx = CheckoutOtpActivity.this;
@@ -186,6 +186,9 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             i.putExtra("MobileNo", MobileNo);
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);
+            i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("position", position);
             startActivity(i);
             finish();
         });
@@ -241,6 +244,9 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                                 Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
                                 i.putExtra("MobileNo", MobileNo);
                                 i.putExtra("Code", Code);
+                                i.putParcelableArrayListExtra("PlanData", listModelList);
+                                i.putExtra("TrialPeriod", TrialPeriod);
+                                i.putExtra("position", position);
                                 startActivity(i);
                                 finish();
                             } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
@@ -298,6 +304,9 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         i.putExtra("MobileNo", MobileNo);
         i.putExtra("Name", Name);
         i.putExtra("Code", Code);
+        i.putParcelableArrayListExtra("PlanData", listModelList);
+        i.putExtra("TrialPeriod", TrialPeriod);
+        i.putExtra("position", position);
         startActivity(i);
         finish();
     }

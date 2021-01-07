@@ -42,6 +42,8 @@ public class InvoiceActivity extends AppCompatActivity {
     Context context;
     Activity activity;
     public static int invoiceToDashboard = 0;
+    public static int invoiceToRecepit = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +65,25 @@ public class InvoiceActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ComeFrom.equalsIgnoreCase("1")) {
-                    invoiceToDashboard = 1;
+                if (invoiceToRecepit == 0) {
+                    if (ComeFrom.equalsIgnoreCase("1")) {
+                        invoiceToDashboard = 1;
+                        Intent i = new Intent(context, DashboardActivity.class);
+                        startActivity(i);
+                        finish();
+                    } else {
+                        ComeScreenAccount = 1;
+                        comefromDownload = "0";
+                        finish();
+                    }
+                } else if (invoiceToRecepit == 1) {
+                    ComeScreenAccount = 1;
+                    comefromDownload = "0";
                     Intent i = new Intent(context, DashboardActivity.class);
                     startActivity(i);
                     finish();
-                } else {
-                    ComeScreenAccount = 1;
-                    comefromDownload = "0";
-                    finish();
+                }else {
+
                 }
             }
         });
@@ -141,15 +153,25 @@ public class InvoiceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (ComeFrom.equalsIgnoreCase("1")) {
-            invoiceToDashboard = 1;
+        if (invoiceToRecepit == 0) {
+            if (ComeFrom.equalsIgnoreCase("1")) {
+                invoiceToDashboard = 1;
+                Intent i = new Intent(context, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            } else {
+                ComeScreenAccount = 1;
+                comefromDownload = "0";
+                finish();
+            }
+        } else if (invoiceToRecepit == 1) {
+            ComeScreenAccount = 1;
+            comefromDownload = "0";
             Intent i = new Intent(context, DashboardActivity.class);
             startActivity(i);
             finish();
-        } else {
-            ComeScreenAccount = 1;
-            comefromDownload = "0";
-            finish();
+        }else {
+
         }
     }
 

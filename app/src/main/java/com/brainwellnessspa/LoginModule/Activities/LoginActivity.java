@@ -162,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                 mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ctx, MembershipActivity.class);
                 startActivity(i);
+                finish();
             }
         });
     }

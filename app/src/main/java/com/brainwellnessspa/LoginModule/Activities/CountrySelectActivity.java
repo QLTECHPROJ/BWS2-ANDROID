@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
+import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Activities.CheckoutGetCodeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -44,12 +45,11 @@ import static com.brainwellnessspa.MembershipModule.Activities.CheckoutGetCodeAc
 public class CountrySelectActivity extends AppCompatActivity {
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
-    //    String TrialPeriod;
-//    private ArrayList<MembershipPlanListModel.Plan> listModelList;
-//    int position;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
     Context ctx;
+    int position;
     Activity activity;
-    String Name, Code, MobileNo, Check, searchFilter;
+    String Name, Code, MobileNo, Check, searchFilter, TrialPeriod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +63,12 @@ public class CountrySelectActivity extends AppCompatActivity {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
             Check = getIntent().getStringExtra(CONSTANTS.Check);
-//            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
-//            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
-//            position = getIntent().getIntExtra("position", 0);
+        }
+
+        if (getIntent().getExtras() != null) {
+            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+            position = getIntent().getIntExtra("position", 0);
         }
 
         binding.llBack.setOnClickListener(view -> {
@@ -75,6 +78,9 @@ public class CountrySelectActivity extends AppCompatActivity {
                 i.putExtra("Name", Name);
                 i.putExtra("Code", Code);
                 i.putExtra("MobileNo", MobileNo);
+                i.putParcelableArrayListExtra("PlanData", listModelList);
+                i.putExtra("TrialPeriod", TrialPeriod);
+                i.putExtra("position", position);
                 startActivity(i);
                 finish();
             } else if (Check.equalsIgnoreCase("1")) {
@@ -174,6 +180,9 @@ public class CountrySelectActivity extends AppCompatActivity {
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);
             i.putExtra("MobileNo", MobileNo);
+            i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("position", position);
             startActivity(i);
             finish();
         } else if (Check.equalsIgnoreCase("1")) {
@@ -217,6 +226,9 @@ public class CountrySelectActivity extends AppCompatActivity {
                     i.putExtra("Name", mData.getName());
                     i.putExtra("Code", conutry);
                     i.putExtra("MobileNo", MobileNo);
+                    i.putParcelableArrayListExtra("PlanData", listModelList);
+                    i.putExtra("TrialPeriod", TrialPeriod);
+                    i.putExtra("position", position);
                     ctx.startActivity(i);
                     finish();
                 } else if (Check.equalsIgnoreCase("1")) {

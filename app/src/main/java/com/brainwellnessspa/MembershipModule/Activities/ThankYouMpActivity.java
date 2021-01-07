@@ -18,6 +18,8 @@ import com.brainwellnessspa.databinding.ActivityThankYouMembershipBinding;
 import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
+import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+
 public class ThankYouMpActivity extends AppCompatActivity {
     ActivityThankYouMembershipBinding binding;
     private long mLastClickTime = 0;
@@ -51,6 +53,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
+            invoiceToRecepit = 0;
             Intent i = new Intent(ThankYouMpActivity.this, InvoiceActivity.class);
             i.putExtra("ComeFrom", "1");
             startActivity(i);

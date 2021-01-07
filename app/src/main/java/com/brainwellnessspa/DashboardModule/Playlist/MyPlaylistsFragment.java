@@ -2815,6 +2815,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 260);
@@ -2887,7 +2888,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
                 notifyDataSetChanged();
-//                handler3.postDelayed(UpdateSongTime3, 500);
+// handler3.postDelayed(UpdateSongTime3, 500);
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -3275,7 +3276,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-//                handler3.postDelayed(UpdateSongTime3, 500);
+// handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
             });
 

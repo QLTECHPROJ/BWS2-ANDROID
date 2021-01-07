@@ -618,9 +618,9 @@ public class AudioDownloadsFragment extends Fragment {
                                     fileNameList.remove(i);
                                     playlistDownloadId.remove(i);
                                     audiofilelist.remove(i);
+                                    callObserverMethod();
                                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = shared.edit();
-                                    callObserverMethod();
                                     Gson gson = new Gson();
                                     String urlJson = gson.toJson(audiofilelist);
                                     String nameJson = gson.toJson(fileNameList);

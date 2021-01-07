@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
@@ -1209,7 +1210,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 } else {
                                     Log.e("Curr audio End", mainPlayModelList.get(position).getName());
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
 
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
@@ -1616,7 +1617,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
         try {
             binding.llDownload.setOnClickListener(view -> {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    callDownload();
+                    if (IsLock.equalsIgnoreCase("1")) {
+                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        ctx.startActivity(i);
+                    } else if (IsLock.equalsIgnoreCase("2")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } else {
+                        callDownload();
+                    }
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }

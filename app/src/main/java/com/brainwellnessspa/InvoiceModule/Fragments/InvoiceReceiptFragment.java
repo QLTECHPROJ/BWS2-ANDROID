@@ -1,6 +1,7 @@
 package com.brainwellnessspa.InvoiceModule.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceDetailModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -26,15 +29,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+
 public class InvoiceReceiptFragment extends DialogFragment {
     FragmentInvoiceReceiptBinding binding;
     String UserID, InvoiceID, Flag;
+    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice_receipt, container, false);
-        View view = binding.getRoot();
-
+        view = binding.getRoot();
+        invoiceToRecepit = 1;
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         if (getDialog() != null && getDialog().getWindow() != null) {
@@ -42,19 +48,24 @@ public class InvoiceReceiptFragment extends DialogFragment {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.receipt_dialog_background_inset);
         }
-
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                dismiss();
-                return true;
-            }
-            return false;
-        });
         return view;
     }
 
     @Override
     public void onResume() {
+        invoiceToRecepit = 1;
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                dismiss();
+                invoiceToRecepit = 1;
+                Intent i = new Intent(getActivity(), InvoiceActivity.class);
+                i.putExtra("ComeFrom", "");
+                startActivity(i);
+                getActivity().finish();
+                return true;
+            }
+            return false;
+        });
         prepareData();
         super.onResume();
     }

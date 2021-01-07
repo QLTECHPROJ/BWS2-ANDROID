@@ -364,10 +364,10 @@ public class AddAudioActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SuggestedModel listModel = response.body();
                             binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
-                            p = new Properties();
+                            /*p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("source", "Add Audio Screen");
-                            BWSApplication.addToSegment("Recommended Audios List Viewed", p, CONSTANTS.screen);
+                            BWSApplication.addToSegment("Recommended Audios List Viewed", p, CONSTANTS.screen);*/
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
                             suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
                             binding.rvSuggestedList.setAdapter(suggestedAdpater);
@@ -409,10 +409,10 @@ public class AddAudioActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SearchPlaylistModel listModel = response.body();
                             binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
-                            p = new Properties();
+                            /*p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("source", "Add Audio Screen");
-                            BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
+                            BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);*/
                             binding.tvSPViewAll.setVisibility(View.VISIBLE);
 
                             SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());

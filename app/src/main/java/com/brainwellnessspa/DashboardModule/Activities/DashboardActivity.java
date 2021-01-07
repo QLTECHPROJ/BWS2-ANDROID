@@ -26,6 +26,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
@@ -35,6 +36,7 @@ import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
+import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
@@ -42,9 +44,11 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
-    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "",PlaylistType="";
+    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "";
     BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
+    int BackClick = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +143,15 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
                     .commit();
         }
 
+        if (invoiceToRecepit == 1) {
+            binding.navView.setSelectedItemId(R.id.navigation_account);
+            Fragment fragment = new AccountFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.flContainer, fragment)
+                    .commit();
+        }
+
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             ComeScreenAccount = 0;
             comefromDownload = "0";
@@ -204,6 +217,9 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 
     @Override
     public void onBackPressed() {
+        if (BackClick == 1) {
+            binding.navView.setSelectedItemId(R.id.navigation_audio);
+        }
         if (invoiceToDashboard == 1) {
             finishAffinity();
             deleteCache(DashboardActivity.this);
