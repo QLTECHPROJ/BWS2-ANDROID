@@ -24,8 +24,6 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
-import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
@@ -440,6 +438,7 @@ Appointment Audios dddd*/
     }
 
     public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
+        int position = 0;
         playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
                 ctx,
                 "10001",
@@ -495,7 +494,13 @@ Appointment Audios dddd*/
                     }
                 });
 
-        if (!mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile().equalsIgnoreCase("")) {
+        if (player != null) {
+            position = player.getCurrentWindowIndex();
+        } else {
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+        }
+        if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             playerNotificationManager.setFastForwardIncrementMs(30000);
             playerNotificationManager.setRewindIncrementMs(30000);
             playerNotificationManager.setUseNavigationActions(true);
@@ -680,7 +685,7 @@ Appointment Audios dddd*/
                             arrayList2.add(arrayList.get(i));
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
                             mainPlayModel.setID(arrayList.get(i).getID());
@@ -697,12 +702,12 @@ Appointment Audios dddd*/
                             arrayList1.add(mainPlayModel);
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    }else{
+                    } else {
                         removeSharepref(ctx);
                     }
                 } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
@@ -717,7 +722,7 @@ Appointment Audios dddd*/
                             arrayList2.add(arrayList.get(i));
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
                             mainPlayModel.setID(arrayList.get(i).getID());
@@ -734,12 +739,12 @@ Appointment Audios dddd*/
                             arrayList1.add(mainPlayModel);
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    }else{
+                    } else {
                         removeSharepref(ctx);
                     }
                 } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
@@ -754,7 +759,7 @@ Appointment Audios dddd*/
                             arrayList2.add(arrayList.get(i));
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
                             mainPlayModel.setID(arrayList.get(i).getID());
@@ -771,12 +776,12 @@ Appointment Audios dddd*/
                             arrayList1.add(mainPlayModel);
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    }else{
+                    } else {
                         removeSharepref(ctx);
                     }
                 } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -791,7 +796,7 @@ Appointment Audios dddd*/
                             arrayList2.add(arrayList.get(i));
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
                             mainPlayModel.setID(arrayList.get(i).getID());
@@ -808,23 +813,27 @@ Appointment Audios dddd*/
                             arrayList1.add(mainPlayModel);
                         }
                     }
-                    if(arrayList2.size()!=0) {
+                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    }else{
+                    } else {
                         removeSharepref(ctx);
                     }
                 }
-                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
-                editor.apply();
-                editor.commit();
+                if (arrayList1.size() != 0) {
+                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                    editor.apply();
+                    editor.commit();
+                } else {
+                    removeSharepref(ctx);
+                }
             }
 
         } catch (Exception e) {

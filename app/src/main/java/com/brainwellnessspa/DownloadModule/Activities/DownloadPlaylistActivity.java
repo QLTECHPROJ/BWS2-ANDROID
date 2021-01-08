@@ -39,7 +39,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -64,7 +63,6 @@ import java.util.List;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
@@ -79,6 +77,8 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class DownloadPlaylistActivity extends AppCompatActivity {
     //    Handler handler3;
     public static int comeDeletePlaylist = 0;
+    public AudioManager audioManager;
+    public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
     String PlaylistDescription, Created, UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute, PlaylistImageDetails;
@@ -90,8 +90,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     int startTime;
     long myProgress = 0, diff = 0, currentDuration = 0;
     private List<DownloadPlaylistDetails> listModelList;
-    public AudioManager audioManager;
-    public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -272,7 +270,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         }*/
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-             globalInitExoPlayer.UpdateMiniPlayer(ctx);
+            globalInitExoPlayer.UpdateMiniPlayer(ctx);
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
                 callAddTranFrag();
@@ -454,11 +452,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         Log.e("cancel", String.valueOf(playlistDownloadId.size()));
                         for (int i = 1; i < fileNameList1.size(); i++) {
                             if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                                Log.e("cancel name id",  "My id " + i + fileNameList1.get(i));
+                                Log.e("cancel name id", "My id " + i + fileNameList1.get(i));
                                 fileNameList.remove(i);
                                 audioFile.remove(i);
                                 playlistDownloadId.remove(i);
-                                Log.e("cancel id",  "My id " + playlistDownloadId.size() + i);
+                                Log.e("cancel id", "My id " + playlistDownloadId.size() + i);
                             }
                         }
                     }
@@ -628,6 +626,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         editor.commit();
         callAddTranFrag();
     }
+
     private void callAddTranFrag() {
         try {
             Fragment fragment = new MiniPlayerFragment();
@@ -638,6 +637,33 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void SegmentTag() {
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("playlistId", PlaylistID);
+        p.putValue("playlistName", PlaylistName);
+        p.putValue("playlistDescription", PlaylistDescription);
+        if (Created.equalsIgnoreCase("1")) {
+            p.putValue("playlistType", "Created");
+        } else if (Created.equalsIgnoreCase("0")) {
+            p.putValue("playlistType", "Default");
+        }
+
+        if (Totalhour.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", "0h " + Totalminute + "m");
+        } else if (Totalminute.equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", Totalhour + "h 0m");
+        } else {
+            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+        }
+        p.putValue("audioCount", TotalAudio);
+        p.putValue("source", "Downloaded Playlists");
+        p.putValue("playerType", "Mini");
+        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("sound", String.valueOf(hundredVolume));
+        BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolders> implements Filterable {
@@ -748,6 +774,59 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    if (!player.getPlayWhenReady()) {
+                                        player.setPlayWhenReady(true);
+                                    } else
+                                        player.setPlayWhenReady(true);
+                                    callAddTranFrag();
+                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                } else
+                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                if (player != null) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    miniPlayer = 1;
+                                    SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                    editor.commit();
+                                    callAddTranFrag();
+                                } else {
+                                    callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
+                                    SegmentTag();
+                                }
+                            }
+                        } else {
+                            isDisclaimer = 0;
+                            disclaimerPlayed = 0;
+                            List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                            listModelList2.add(addDisclaimer);
+                            listModelList2.addAll(listModelList);
+                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
+                            SegmentTag();
+                        }
+                    } else {
+                        getAllCompletedMedia(audioPlay, AudioFlag, pID, position, shared);
+                    }
+                    isPlayPlaylist = 1;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                }
+//                handler3.postDelayed(UpdateSongTime3,500);
+                notifyDataSetChanged();
+            });
+
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (BWSApplication.isNetworkConnected(ctx)) {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                         if (isDisclaimer == 1) {
                             if (player != null) {
@@ -770,7 +849,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 editor.commit();
                                 callAddTranFrag();
                             } else {
-                                callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
+                                callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
                                 SegmentTag();
                             }
                         }
@@ -778,62 +857,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         isDisclaimer = 0;
                         disclaimerPlayed = 0;
                         List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                        listModelList2.add(addDisclaimer);
-                        listModelList2.addAll(listModelList);
-                        callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
+                        if (position != 0) {
+                            listModelList2.addAll(listModelList);
+                            listModelList2.add(holder.getAdapterPosition(), addDisclaimer);
+                        } else {
+                            listModelList2.add(addDisclaimer);
+                            listModelList2.addAll(listModelList);
+                        }
+                        callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
                         SegmentTag();
                     }
-                    isPlayPlaylist = 1;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                }
-//                handler3.postDelayed(UpdateSongTime3,500);
-                notifyDataSetChanged();
-            });
-
-            holder.binding.llMainLayout.setOnClickListener(view -> {
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
-                    if (isDisclaimer == 1) {
-                        if (player != null) {
-                            if (!player.getPlayWhenReady()) {
-                                player.setPlayWhenReady(true);
-                            } else
-                                player.setPlayWhenReady(true);
-                            callAddTranFrag();
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                    } else {
-                        if (player != null) {
-                            player.seekTo(position, 0);
-                            player.setPlayWhenReady(true);
-                            miniPlayer = 1;
-                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedxx.edit();
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editor.commit();
-                            callAddTranFrag();
-                        } else {
-                            callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
-                            SegmentTag();
-                        }
-                    }
                 } else {
-                    isDisclaimer = 0;
-                    disclaimerPlayed = 0;
-                    List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                    if (position != 0) {
-                        listModelList2.addAll(listModelList);
-                        listModelList2.add(holder.getAdapterPosition(), addDisclaimer);
-                    } else {
-                        listModelList2.add(addDisclaimer);
-                        listModelList2.addAll(listModelList);
-                    }
-                    callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
-                    SegmentTag();
+                    getAllCompletedMedia(audioPlay, AudioFlag, pID, position, shared);
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -884,6 +919,74 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     startActivity(i);
                 }
             });
+        }
+
+        private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position, SharedPreferences shared) {
+            class GetTask extends AsyncTask<Void, Void, Void> {
+                List<String> downloadAudioDetailsList = new ArrayList<>();
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    downloadAudioDetailsList = DatabaseClient
+                            .getInstance(ctx)
+                            .getaudioDatabase()
+                            .taskDao()
+                            .geAllDataBYDownloaded("Complete");
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    int pos = 0;
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                if (!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
+                                } else
+                                    player.setPlayWhenReady(true);
+                                callAddTranFrag();
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        } else {
+                            ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                            for (int i = 0; i < listModelList.size(); i++) {
+                                if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                                    listModelList2.add(listModelList.get(i));
+                                }
+                            }
+                            if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                                pos = position;
+                            } else {
+                                pos = 0;
+                            }
+                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName);
+                            SegmentTag();
+                        }
+                    } else {
+                        ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                        for (int i = 0; i < listModelList.size(); i++) {
+                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                                listModelList2.add(listModelList.get(i));
+                            }
+                        }
+                        if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                            pos = position;
+                        } else {
+                            pos = 0;
+                        }
+                        isDisclaimer = 0;
+                        disclaimerPlayed = 0;
+                        listModelList2.add(pos, addDisclaimer);
+                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName);
+                        SegmentTag();
+                    }
+                    super.onPostExecute(aVoid);
+                }
+            }
+            GetTask st = new GetTask();
+            st.execute();
         }
 
         @Override
@@ -940,32 +1043,5 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 this.binding = binding;
             }
         }
-    }
-
-    public void SegmentTag() {
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        p.putValue("playlistId", PlaylistID);
-        p.putValue("playlistName", PlaylistName);
-        p.putValue("playlistDescription", PlaylistDescription);
-        if (Created.equalsIgnoreCase("1")) {
-            p.putValue("playlistType", "Created");
-        } else if (Created.equalsIgnoreCase("0")) {
-            p.putValue("playlistType", "Default");
-        }
-
-        if (Totalhour.equalsIgnoreCase("")) {
-            p.putValue("playlistDuration", "0h " + Totalminute + "m");
-        } else if (Totalminute.equalsIgnoreCase("")) {
-            p.putValue("playlistDuration", Totalhour + "h 0m");
-        } else {
-            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
-        }
-        p.putValue("audioCount", TotalAudio);
-        p.putValue("source", "Downloaded Playlists");
-        p.putValue("playerType", "Mini");
-        p.putValue("audioService", APP_SERVICE_STATUS);
-        p.putValue("sound", String.valueOf(hundredVolume));
-        BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
 }

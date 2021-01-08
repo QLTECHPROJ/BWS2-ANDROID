@@ -69,10 +69,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
@@ -84,6 +84,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
     public static String addToRecentPlayId = "", myAudioId = "";
+    public static String PlayerStatus = "";
     public AudioManager audioManager;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     FragmentMiniPlayerBinding binding;
@@ -106,7 +107,6 @@ public class MiniPlayerFragment extends Fragment {
     PlayerControlView playerControlView;
     Properties p;
     private long mLastClickTime = 0;
-    public static String PlayerStatus = "";
     /*    Handler handler1, handler2;
         //    boolean ismyDes = false;
         Runnable UpdateSongTime2 = new Runnable() {
@@ -394,25 +394,25 @@ public class MiniPlayerFragment extends Fragment {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                    if(player.getPlaybackState()== ExoPlayer.STATE_BUFFERING){
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }else if (isPlaying) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-                        localIntent.putExtra("MyData", "play");
-                        localBroadcastManager.sendBroadcast(localIntent);
-                    } else if (!isPlaying) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        exoBinding.llPlay.setVisibility(View.VISIBLE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-                        localIntent.putExtra("MyData", "pause");
-                        localBroadcastManager.sendBroadcast(localIntent);
-                    }
+                        if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.VISIBLE);
+                        } else if (isPlaying) {
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.VISIBLE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                            localIntent.putExtra("MyData", "play");
+                            localBroadcastManager.sendBroadcast(localIntent);
+                        } else if (!isPlaying) {
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+                            exoBinding.llPlay.setVisibility(View.VISIBLE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                            localIntent.putExtra("MyData", "pause");
+                            localBroadcastManager.sendBroadcast(localIntent);
+                        }
 //                    isprogressbar = false;
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
@@ -879,23 +879,23 @@ public class MiniPlayerFragment extends Fragment {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                        if(player.getPlaybackState()== ExoPlayer.STATE_BUFFERING){
+                        if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
-                        }else  if (isPlaying) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-                        localIntent.putExtra("MyData", "play");
-                        localBroadcastManager.sendBroadcast(localIntent);
-                    } else if (!isPlaying) {
-                        exoBinding.llPlay.setVisibility(View.VISIBLE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-                        localIntent.putExtra("MyData", "pause");
-                        localBroadcastManager.sendBroadcast(localIntent);
-                    }
+                        } else if (isPlaying) {
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.VISIBLE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                            localIntent.putExtra("MyData", "play");
+                            localBroadcastManager.sendBroadcast(localIntent);
+                        } else if (!isPlaying) {
+                            exoBinding.llPlay.setVisibility(View.VISIBLE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                            localIntent.putExtra("MyData", "pause");
+                            localBroadcastManager.sendBroadcast(localIntent);
+                        }
 //                    isprogressbar = false;
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());

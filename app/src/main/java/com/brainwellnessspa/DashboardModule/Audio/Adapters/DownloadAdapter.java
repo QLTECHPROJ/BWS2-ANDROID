@@ -3,6 +3,7 @@ package com.brainwellnessspa.DashboardModule.Audio.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,41 +11,40 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
+import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.databinding.BigBoxLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.databinding.BigBoxLayoutBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
-public class  DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
+public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-//    String IsLock;
+    //    String IsLock;
     int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
@@ -112,7 +112,7 @@ public class  DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyVie
                 holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
-                i.putExtra("ScreenView","Audio Main Screen");
+                i.putExtra("ScreenView", "Audio Main Screen");
                 i.putExtra("PlaylistID", "");
                 ctx.startActivity(i);
             }
@@ -134,62 +134,62 @@ public class  DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyVie
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                        if (isDisclaimer == 1) {
-                            if(player!=null){
-                                if(!player.getPlayWhenReady()) {
-                                    player.setPlayWhenReady(true);
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    if (!player.getPlayWhenReady()) {
+                                        player.setPlayWhenReady(true);
+                                    }
+                                } else {
+                                    audioClick = true;
+                                    miniPlayer = 1;
                                 }
-                            }else{
-                                audioClick = true;
-                                miniPlayer = 1;
-                            } /*Fragment fragment = new MiniPlayerFragment();
-                            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();*/
-                            Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            ctx.startActivity(i);
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else {
-                            if(player!=null){
-                                player.seekTo(position,0);
-                                player.setPlayWhenReady(true);
-                                miniPlayer = 1;
-                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                editor.commit();/* Fragment fragment = new MiniPlayerFragment();
+                                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                ctx.startActivity(i);
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                if (player != null) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    miniPlayer = 1;
+                                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                    editor.commit();/* Fragment fragment = new MiniPlayerFragment();
                                 FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                                 fragmentManager1.beginTransaction()
                                         .add(R.id.flContainer, fragment)
                                         .commit();*/
-                                Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                ctx.startActivity(i);
-                            }else {
-                                callTransFrag(position, listModelList);
+                                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    ctx.startActivity(i);
+                                } else {
+                                    callTransFrag(position, listModelList);
+                                }
                             }
+                        } else {
+                            isDisclaimer = 0;
+                            disclaimerPlayed = 0;
+                            ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                            mainPlayModel.setID("0");
+                            mainPlayModel.setName("Disclaimer");
+                            mainPlayModel.setAudioFile("");
+                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                            mainPlayModel.setAudiomastercat("");
+                            mainPlayModel.setAudioSubCategory("");
+                            mainPlayModel.setImageFile("");
+                            mainPlayModel.setLike("");
+                            mainPlayModel.setDownload("");
+                            mainPlayModel.setAudioDuration("00:48");
+                            listModelList2.addAll(listModelList);
+                            listModelList2.add(position, mainPlayModel);
+                            callTransFrag(position, listModelList2);
                         }
                     } else {
-                        isDisclaimer = 0;
-                        disclaimerPlayed = 0;
-                        ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-                        MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-                        mainPlayModel.setID("0");
-                        mainPlayModel.setName("Disclaimer");
-                        mainPlayModel.setAudioFile("");
-                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                        mainPlayModel.setAudiomastercat("");
-                        mainPlayModel.setAudioSubCategory("");
-                        mainPlayModel.setImageFile("");
-                        mainPlayModel.setLike("");
-                        mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("00:48");
-                        listModelList2.addAll(listModelList);
-                        listModelList2.add(position, mainPlayModel);
-                        callTransFrag(position, listModelList2);
+                        getMedia(audioPlay, AudioFlag, position);
                     }
                 }
             } catch (JsonSyntaxException e) {
@@ -198,17 +198,100 @@ public class  DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyVie
         });
     }
 
+    private void getMedia(boolean audioPlay, String AudioFlag, int position) {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            List<String> downloadAudioDetailsList = new ArrayList<>();
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded("Complete");
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                int pos = 0;
+                if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
+                            }
+                        } else {
+                            audioClick = true;
+                            miniPlayer = 1;
+                        }
+                        Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        ctx.startActivity(i);
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    } else {
+                        ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                        for (int i = 0; i < listModelList.size(); i++) {
+                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                                listModelList2.add(listModelList.get(i));
+                            }
+                        }
+                        if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                            pos = position;
+                        } else{
+                            pos = 0;
+                        }
+                        if (listModelList2.size() != 0) {
+                            callTransFrag(pos, listModelList2);
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
+                    }
+                } else {
+                    ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                    for (int i = 0; i < listModelList.size(); i++) {
+                        if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                            listModelList2.add(listModelList.get(i));
+                        }
+                    }
+                    if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                        pos = position;
+                    } else{
+                        pos = 0;
+                    }
+                    isDisclaimer = 0;
+                    disclaimerPlayed = 0;
+                    MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    listModelList2.add(pos, mainPlayModel);
+                    if (listModelList2.size() != 1) {
+                        callTransFrag(pos, listModelList2);
+                    } else {
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                    }
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetTask st = new GetTask();
+        st.execute();
+    }
+
     private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
         try {
             miniPlayer = 1;
             audioClick = true;
 
             callNewPlayerRelease();
-           /* Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();*/
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();

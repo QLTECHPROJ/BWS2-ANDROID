@@ -85,8 +85,8 @@ import static com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity.c
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
@@ -977,11 +977,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                        if(player.getPlaybackState()== ExoPlayer.STATE_BUFFERING){
+                        if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
-                        }else  if (isPlaying) {
+                        } else if (isPlaying) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.VISIBLE);
                             exoBinding.progressBar.setVisibility(View.GONE);
@@ -1447,11 +1447,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                        if(player.getPlaybackState()== ExoPlayer.STATE_BUFFERING){
+                        if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
-                        }else  if (isPlaying) {
+                        } else if (isPlaying) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.VISIBLE);
                             exoBinding.progressBar.setVisibility(View.GONE);
@@ -3482,6 +3482,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            if(!ismyDes) {
             initializePlayerDisclaimer();
         } else {
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
             initializePlayer();
         }
 
@@ -3499,8 +3501,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             playerControlView.setFocusedByDefault(true);
         }
         playerControlView.show();
-        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
