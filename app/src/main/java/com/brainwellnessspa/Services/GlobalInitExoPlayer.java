@@ -313,6 +313,7 @@ Appointment Audios dddd*/
             }
         }
 
+        InitNotificationAudioPLayer(ctx, mainPlayModelList);
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -346,7 +347,6 @@ Appointment Audios dddd*/
 //                : new ConcatenatingMediaSource(mediaSources);
 //        player.setMediaSource(mediaSource);
 //        player.prepare(mediaSource);
-        InitNotificationAudioPLayer(ctx, mainPlayModelList);
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);

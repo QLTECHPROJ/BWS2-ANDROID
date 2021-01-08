@@ -272,10 +272,8 @@ public class MiniPlayerFragment extends Fragment {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     try {
-                        if (response.isSuccessful()) {
 //                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                            SucessModel model = response.body();
-                        }
+                        SucessModel model = response.body();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -319,10 +317,40 @@ public class MiniPlayerFragment extends Fragment {
                     @Override
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                         Log.v("TAG", "Listener-onTracksChanged... ");
+
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            mainPlayModelList = gson.fromJson(json, type);
+                        }
                         player.setPlayWhenReady(true);
                         position = player.getCurrentWindowIndex();
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                        myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
+                        SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedz.edit();
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.commit();
+                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+                        }
+                        UiModeManager uiModeManager = (UiModeManager) ctx.getSystemService(Context.UI_MODE_SERVICE);
+                        if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
+                                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
+                                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
+                            uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+
+                            Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
+                        }
+                        localIntent.putExtra("MyData", "play");
+                        localBroadcastManager.sendBroadcast(localIntent);
+                        callButtonText(player.getCurrentWindowIndex());
+
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -344,36 +372,6 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
-
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        Gson gson = new Gson();
-                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
-                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                            }.getType();
-                            mainPlayModelList = gson.fromJson(json, type);
-                        }
-
-                        myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
-                        SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedz.edit();
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit();
-                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                            Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
-                        }
-                        UiModeManager uiModeManager = (UiModeManager) ctx.getSystemService(Context.UI_MODE_SERVICE);
-                        if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
-                                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
-                                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
-                            uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
-
-                            Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
-                        }
-                        localIntent.putExtra("MyData", "play");
-                        localBroadcastManager.sendBroadcast(localIntent);
-                        callButtonText(player.getCurrentWindowIndex());
                     }
 
                     @Override
@@ -779,6 +777,8 @@ public class MiniPlayerFragment extends Fragment {
                             //player back ended
                             audioClick = true;
                             removeArray();
+                            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                            globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());
@@ -2293,6 +2293,8 @@ public class MiniPlayerFragment extends Fragment {
             initializePlayerDisclaimer();
 //            }
         } else {
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
             initializePlayer();
         }
 

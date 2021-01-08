@@ -96,7 +96,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             GetAllMedia(getActivity());
             comeDeletePlaylist = 0;
         }
-//        GetAllMedia(getActivity());
+        GetAllMedia(getActivity());
         RefreshData();
         super.onResume();
     }
@@ -124,49 +124,42 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     }
 
     private void GetAllMedia(FragmentActivity activity) {
-        try {
+        DatabaseClient
+                .getInstance(getActivity())
+                .getaudioDatabase()
+                .taskDao()
+                .getAllPlaylist1().observe(getActivity(), audioList -> {
+
+            if (audioList.size() != 0) {
+                getDataList(audioList);
+                binding.llError.setVisibility(View.GONE);
+                binding.rvDownloadsList.setVisibility(View.VISIBLE);
+            } else {
+                binding.llError.setVisibility(View.VISIBLE);
+                binding.rvDownloadsList.setVisibility(View.GONE);
+            }
             DatabaseClient
                     .getInstance(getActivity())
                     .getaudioDatabase()
                     .taskDao()
-                    .getAllPlaylist1().observe(getActivity(), audioList -> {
-
-                if (audioList.size() != 0) {
-                    getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, IsLock);
-                    binding.llError.setVisibility(View.GONE);
-                    binding.rvDownloadsList.setVisibility(View.VISIBLE);
-                } else {
-                    binding.llError.setVisibility(View.VISIBLE);
-                    binding.rvDownloadsList.setVisibility(View.GONE);
-                }
-                DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllPlaylist1().removeObserver(audioList1 -> {
-                });
+                    .getAllPlaylist1().removeObserver(audioList1 -> {
             });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 
-    private void getDataList(List<DownloadPlaylistDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, String IsLock) {
+    private void getDataList(List<DownloadPlaylistDetails> historyList) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
             binding.llError.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, binding.llError, binding.tvFound, binding.rvDownloadsList, IsLock);
+            adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), binding.llError, binding.tvFound, binding.rvDownloadsList);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }
 
     public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
         FragmentActivity ctx;
-        String UserID, IsLock;
-        FrameLayout progressBarHolder;
-        ProgressBar ImgV;
         List<DownloadAudioDetails> playlistWiseAudioDetails;
         List<DownloadAudioDetails> oneAudioDetailsList;
         List<DownloadPlaylistDetails> playlistList;
@@ -176,18 +169,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), remainAudio = new ArrayList<>();
         private List<DownloadPlaylistDetails> listModelList;
 
-        public PlaylistsDownloadsAdapter(List<DownloadPlaylistDetails> listModelList, FragmentActivity ctx, String UserID,
-                                         FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList,
-                                         String IsLock) {
+        public PlaylistsDownloadsAdapter(List<DownloadPlaylistDetails> listModelList, FragmentActivity ctx, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList) {
             this.listModelList = listModelList;
             this.ctx = ctx;
-            this.UserID = UserID;
-            this.progressBarHolder = progressBarHolder;
-            this.ImgV = ImgV;
             this.llError = llError;
             this.tvFound = tvFound;
             this.rvDownloadsList = rvDownloadsList;
-            this.IsLock = IsLock;
             handler1 = new Handler();
             oneAudioDetailsList = new ArrayList<>();
             getDownloadData();
@@ -277,7 +264,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-
                 if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -295,7 +281,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             .getInstance(ctx)
                             .getaudioDatabase()
                             .taskDao()
-                            .getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID()).removeObserver(audioList -> {});
+                            .getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID()).removeObserver(audioList -> {
+                    });
                     comefromDownload = "1";
 //                playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
@@ -313,6 +300,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     i.putExtra("Created", listModelList.get(position).getCreated());
                     i.putExtra("MyDownloads", "1");
                     ctx.startActivity(i);
+                    BWSApplication.showToast("Opened", ctx);
                     /*Properties p = new Properties();
                     p.putValue("userId", UserID);
                     p.putValue("playlistId", listModelList.get(position).getPlaylistID());
@@ -410,11 +398,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             Log.e("cancel", String.valueOf(playlistDownloadId.size()));
                             for (int i = 1; i < fileNameList1.size(); i++) {
                                 if (playlistDownloadId.get(i).equalsIgnoreCase(playlistID)) {
-                                    Log.e("cancel name id",  "My id " + i + fileNameList1.get(i));
+                                    Log.e("cancel name id", "My id " + i + fileNameList1.get(i));
                                     fileNameList.remove(i);
                                     audioFile.remove(i);
                                     playlistDownloadId.remove(i);
-                                    Log.e("cancel id",  "My id " + playlistDownloadId.size() + i);
+                                    Log.e("cancel id", "My id " + playlistDownloadId.size() + i);
                                 }
                             }
                         }
@@ -474,7 +462,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     .taskDao()
                     .getCountDownloadProgress1("Complete", playlistID).observe(this.ctx, audioList -> {
 
-
                 if (audioList != null) {
                     if (audioList.size() < Integer.parseInt(totalAudio)) {
                         long progressPercent = audioList.size() * 100 / Integer.parseInt(totalAudio);
@@ -493,7 +480,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                                 .getInstance(ctx)
                                 .getaudioDatabase()
                                 .taskDao()
-                                .getCountDownloadProgress1("Complete", playlistID).removeObserver( audioListx -> {});
+                                .getCountDownloadProgress1("Complete", playlistID).removeObserver(audioListx -> {
+                        });
                     }
                 }
             });
@@ -687,5 +675,4 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
         }
     }
-
 }
