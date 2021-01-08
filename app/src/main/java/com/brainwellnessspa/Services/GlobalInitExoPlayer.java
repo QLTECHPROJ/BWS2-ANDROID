@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
@@ -120,7 +121,21 @@ public class GlobalInitExoPlayer extends Service {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
+                try {
+                    if (songImg.equalsIgnoreCase("")) {
+                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    } else {
+                        if (!BWSApplication.isNetworkConnected(ctx)) {
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                        } else {
+                            URL url = new URL(songImg);
+                            myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.onPostExecute(aVoid);
             }
         }
 
@@ -461,10 +476,12 @@ Appointment Audios dddd*/
                     public PendingIntent createCurrentContentIntent(Player player) {
                         /*int window = player.getCurrentWindowIndex();
                         return createPendingIntent(window);*/
-                        Intent intent = new Intent(ctx, DashboardActivity.class);
-                        PendingIntent contentPendingIntent = PendingIntent.getActivity
-                                (ctx, 0, intent, 0);
-                        return contentPendingIntent;
+                        Intent intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        return PendingIntent.getActivity(ctx, 0, intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
                     }
 
                     @Nullable
@@ -530,7 +547,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
     }
@@ -550,10 +567,12 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
-                        Intent intent = new Intent(ctx, DashboardActivity.class);
-                        PendingIntent contentPendingIntent = PendingIntent.getActivity
-                                (ctx, 0, intent, 0);
-                        return contentPendingIntent;
+                        Intent intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        return PendingIntent.getActivity(ctx, 0, intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
                     }
 
                     @Nullable
@@ -585,7 +604,6 @@ Appointment Audios dddd*/
                     }
                 });
 
-
         playerNotificationManager.setFastForwardIncrementMs(0);
         playerNotificationManager.setRewindIncrementMs(0);
         playerNotificationManager.setUseNavigationActions(false);
@@ -596,7 +614,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
     }

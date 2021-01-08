@@ -320,6 +320,9 @@ public class MiniPlayerFragment extends Fragment {
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                         Log.v("TAG", "Listener-onTracksChanged... ");
                         player.setPlayWhenReady(true);
+                        position = player.getCurrentWindowIndex();
+                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -341,10 +344,7 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
-                        position = player.getCurrentWindowIndex();
 
-                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
                         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
