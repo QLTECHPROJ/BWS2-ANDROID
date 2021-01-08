@@ -665,9 +665,6 @@ Appointment Audios dddd*/
                 String audioID = "";
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
-                String json1 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                Type type12 = new TypeToken<ArrayList<MainPlayModel>>() {
-                }.getType();
                 ArrayList<MainPlayModel> arrayList1 = new ArrayList<>();
                 String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
 
@@ -677,7 +674,7 @@ Appointment Audios dddd*/
                     Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
                     }.getType();
                     ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList2 = gson.fromJson(json, type);
+                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList2 = new ArrayList<>();
 
                     int size = arrayList.size();
                     for (int i = 0; i < size; i++) {
@@ -702,6 +699,13 @@ Appointment Audios dddd*/
                             arrayList1.add(mainPlayModel);
                         }
                     }
+                    if(arrayList2.size()<arrayList.size()){
+                        if(player!=null) {
+                            callNewPlayerRelease();
+                            audioClick = true;
+                        }
+                    }
+
                     if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);

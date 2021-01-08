@@ -489,6 +489,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         handler1.removeCallbacks(UpdateSongTime1);
                         isMyDownloading = false;
                         notifyDataSetChanged();
+                        DatabaseClient
+                                .getInstance(ctx)
+                                .getaudioDatabase()
+                                .taskDao()
+                                .getCountDownloadProgress1("Complete", playlistID).removeObserver( audioListx -> {});
                     }
                 }
             });
