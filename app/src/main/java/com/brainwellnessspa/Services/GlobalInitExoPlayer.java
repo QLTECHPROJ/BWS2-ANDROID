@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -21,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
@@ -30,6 +32,8 @@ import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -45,6 +49,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +58,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
@@ -74,6 +80,7 @@ public class GlobalInitExoPlayer extends Service {
     Notification notification1;
     GlobalInitExoPlayer globalInitExoPlayer;
     Intent playbackServiceIntent;
+    static Bitmap notification_artwork;
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -114,7 +121,21 @@ public class GlobalInitExoPlayer extends Service {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
+                try {
+                    if (songImg.equalsIgnoreCase("")) {
+                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    } else {
+                        if (!BWSApplication.isNetworkConnected(ctx)) {
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                        } else {
+                            URL url = new URL(songImg);
+                            myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.onPostExecute(aVoid);
             }
         }
 
@@ -447,7 +468,6 @@ Appointment Audios dddd*/
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player players) {
-//                        Log.e("AudioFIle", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile());
                         return mainPlayModelList.get(players.getCurrentWindowIndex()).getName();
                     }
 
@@ -456,10 +476,12 @@ Appointment Audios dddd*/
                     public PendingIntent createCurrentContentIntent(Player player) {
                         /*int window = player.getCurrentWindowIndex();
                         return createPendingIntent(window);*/
-                        Intent intent = new Intent(ctx, DashboardActivity.class);
-                        PendingIntent contentPendingIntent = PendingIntent.getActivity
-                                (ctx, 0, intent, 0);
-                        return contentPendingIntent;
+                        Intent intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        return PendingIntent.getActivity(ctx, 0, intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
                     }
 
                     @Nullable
@@ -470,11 +492,18 @@ Appointment Audios dddd*/
 
                     @Nullable
                     @Override
-                    public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-//                        getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-//                        playerNotificationManager.invalidate();
-//                        return myBitmap;
-                        return getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                    public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
+                      /*  int window = player.getCurrentWindowIndex();
+                        Bitmap largeIcon = getLargeIcon(window);
+                        if (largeIcon == null && getLargeIconUri(window) != null) {
+                            // load bitmap async
+                            loadBitmap(getLargeIconUri(window), callback);
+                            return getPlaceholderBitmap();
+                        }
+                        return largeIcon;callback.onBitmap(myBitmap)*/
+                        getMediaBitmap(ctx, mainPlayModelList.get(players.getCurrentWindowIndex()).getImageFile());
+                        Log.e("IMAGES NOTIFICATION", mainPlayModelList.get(players.getCurrentWindowIndex()).getImageFile());
+                        return myBitmap;
                     }
                 },
 
@@ -518,7 +547,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
     }
@@ -538,10 +567,12 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
-                        Intent intent = new Intent(ctx, DashboardActivity.class);
-                        PendingIntent contentPendingIntent = PendingIntent.getActivity
-                                (ctx, 0, intent, 0);
-                        return contentPendingIntent;
+                        Intent intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        return PendingIntent.getActivity(ctx, 0, intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
                     }
 
                     @Nullable
@@ -573,7 +604,6 @@ Appointment Audios dddd*/
                     }
                 });
 
-
         playerNotificationManager.setFastForwardIncrementMs(0);
         playerNotificationManager.setRewindIncrementMs(0);
         playerNotificationManager.setUseNavigationActions(false);
@@ -584,7 +614,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
     }

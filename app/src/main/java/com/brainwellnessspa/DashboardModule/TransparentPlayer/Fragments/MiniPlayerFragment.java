@@ -320,6 +320,9 @@ public class MiniPlayerFragment extends Fragment {
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                         Log.v("TAG", "Listener-onTracksChanged... ");
                         player.setPlayWhenReady(true);
+                        position = player.getCurrentWindowIndex();
+                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -341,13 +344,7 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
-                        position = player.getCurrentWindowIndex();
-                        try {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        } catch (Exception e) {
-                        }
-                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
                         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -379,19 +376,6 @@ public class MiniPlayerFragment extends Fragment {
                         callButtonText(player.getCurrentWindowIndex());
                     }
 
-//                @Override
-//                public void onIsLoadingChanged(boolean isLoading) {
-//                    isPrepared = isLoading;
-//                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-//                    if (isLoading) {
-//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-//                        exoBinding.llPlay.setVisibility(View.GONE);
-//                        exoBinding.llPause.setVisibility(View.GONE);
-//                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-//                        Log.e("Isloading", "MiniLoadingggggggggggggggggg");
-//                    }
-//                }
-
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
@@ -399,14 +383,12 @@ public class MiniPlayerFragment extends Fragment {
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
                         } else if (isPlaying) {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.VISIBLE);
                             exoBinding.progressBar.setVisibility(View.GONE);
                             localIntent.putExtra("MyData", "play");
                             localBroadcastManager.sendBroadcast(localIntent);
                         } else if (!isPlaying) {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                             exoBinding.llPlay.setVisibility(View.VISIBLE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.GONE);
@@ -422,11 +404,6 @@ public class MiniPlayerFragment extends Fragment {
                     @Override
                     public void onPlaybackStateChanged(int state) {
                         if (state == ExoPlayer.STATE_READY) {
-                            try {
-                                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                            } catch (Exception e) {
-
-                            }
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -486,7 +463,6 @@ public class MiniPlayerFragment extends Fragment {
 
 //                        isprogressbar = false;
                         } else if (state == ExoPlayer.STATE_BUFFERING) {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
@@ -672,6 +648,8 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.GONE);
                     }
+                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
@@ -1209,7 +1187,6 @@ public class MiniPlayerFragment extends Fragment {
         if (mainPlayModelList.get(ps).getPlaylistID() == null) {
             mainPlayModelList.get(ps).setPlaylistID("");
         }
-        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(ps).getImageFile());
         try {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
@@ -2305,7 +2282,11 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void getPrepareShowData() {
-//        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        /*try {
+            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
 //            if(!ismyDes) {
