@@ -41,7 +41,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
-public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
+public class  DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
 //    String IsLock;

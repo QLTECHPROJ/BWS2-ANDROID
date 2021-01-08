@@ -977,27 +977,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-        /*            if (isPlaying) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.VISIBLE);
-                        // exoBinding.llProgressBar.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-//                        BWSApplication.showToast("IsPlayinggggggggg", ctx);
-                    } else if (!isPlaying && !isPrepared) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        exoBinding.llPlay.setVisibility(View.VISIBLE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        // exoBinding.llProgressBar.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-//                        BWSApplication.showToast("IsPlayingggggggggFalseeeee", ctx);
-                    }*/
-                  /*  else {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        // exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }*/
+                        if(player.getPlaybackState()== ExoPlayer.STATE_BUFFERING){
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.VISIBLE);
+                        }else  if (isPlaying) {
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.VISIBLE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                        } else if (!isPlaying) {
+                            exoBinding.llPlay.setVisibility(View.VISIBLE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                        }
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                         exoBinding.exoProgress.setDuration(player.getDuration());
@@ -1455,23 +1447,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                  /*  if (isPlaying) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.VISIBLE);
-                        // exoBinding.llProgressBar.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-                    } else if (!isPlaying && !isPrepared) {
-                        exoBinding.llPlay.setVisibility(View.VISIBLE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        // exoBinding.llProgressBar.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.GONE);
-                    } */
-                  /*  else {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        // exoBinding.llProgressBar.setVisibility(View.VISIBLE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                    }*/
+                        if(player.getPlaybackState()== ExoPlayer.STATE_BUFFERING){
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.VISIBLE);
+                        }else  if (isPlaying) {
+                            exoBinding.llPlay.setVisibility(View.GONE);
+                            exoBinding.llPause.setVisibility(View.VISIBLE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                        } else if (!isPlaying) {
+                            exoBinding.llPlay.setVisibility(View.VISIBLE);
+                            exoBinding.llPause.setVisibility(View.GONE);
+                            exoBinding.progressBar.setVisibility(View.GONE);
+                        }
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                         exoBinding.exoProgress.setDuration(player.getDuration());
