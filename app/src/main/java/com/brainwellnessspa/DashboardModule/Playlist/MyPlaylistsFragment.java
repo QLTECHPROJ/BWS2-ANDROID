@@ -348,6 +348,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.rvPlayLists2.setItemAnimator(new DefaultItemAnimator());
 
         binding.llDownloads.setOnClickListener(view1 -> {
+            callObserveMethodGetAllMedia();
             callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
         });
 
@@ -1110,6 +1111,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                        handler1.removeCallbacks(UpdateSongTime1);
                     }
                 }
+                callObserveMethodGetAllMedia();
             });
       /*  class getMediaByPer extends AsyncTask<Void, Void, Void> {
             @Override
@@ -1532,7 +1534,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             savePlaylist();
             saveAllMedia(playlistSongs, playlistSongs2, encodedBytes);
         } else {
-            callObserveMethodGetAllMedia();
             boolean downloadOrNot = false;
             if (downloadAudioDetailsList.size() != 0) {
                 for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
