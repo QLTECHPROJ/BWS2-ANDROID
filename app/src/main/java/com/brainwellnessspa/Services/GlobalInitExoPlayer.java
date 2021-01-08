@@ -327,7 +327,7 @@ Appointment Audios dddd*/
 //                : new ConcatenatingMediaSource(mediaSources);
 //        player.setMediaSource(mediaSource);
 //        player.prepare(mediaSource);
-//        InitNotificationAudioPLayer(ctx, mainPlayModelList);
+        InitNotificationAudioPLayer(ctx, mainPlayModelList);
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);
@@ -388,7 +388,7 @@ Appointment Audios dddd*/
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
         player.setMediaItem(mediaItem1);
-//        InitNotificationAudioPLayerD(ctx);
+        InitNotificationAudioPLayerD(ctx);
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);

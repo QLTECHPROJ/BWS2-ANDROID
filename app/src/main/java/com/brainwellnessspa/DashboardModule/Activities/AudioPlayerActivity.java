@@ -931,8 +931,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             mainPlayModelList = gson.fromJson(json, type);
                         }
                         player.setPlayWhenReady(true);
-                    /*GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);*/
+                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         position = player.getCurrentWindowIndex();
                         myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
 
@@ -3499,7 +3499,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             playerControlView.setFocusedByDefault(true);
         }
         playerControlView.show();
-//        InitNotificationAudioPLayer();
+        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
