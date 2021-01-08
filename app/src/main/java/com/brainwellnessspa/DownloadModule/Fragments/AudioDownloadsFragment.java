@@ -144,11 +144,6 @@ public class AudioDownloadsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
-            DatabaseClient
-                    .getInstance(getActivity())
-                    .getaudioDatabase()
-                    .taskDao()
-                    .geAllData1("").removeObserver( audioList1 -> {});
         });
 
     }
@@ -693,12 +688,12 @@ public class AudioDownloadsFragment extends Fragment {
 
             Btn.setOnClickListener(v -> {
 //                handler1.removeCallbacks(UpdateSongTime1);
-                DatabaseClient
+             /*   DatabaseClient
                         .getInstance(getActivity())
                         .getaudioDatabase()
                         .taskDao()
                         .geAllData1("").removeObserver(audioList1 -> {
-                });
+                });*/
                 String AudioFile = listModelList.get(position).getAudioFile();
                 String AudioName = listModelList.get(position).getName();
                 try {

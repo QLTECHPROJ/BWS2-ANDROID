@@ -2475,11 +2475,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                     if (pID.equalsIgnoreCase(PlaylistID)) {
-                      /*  if(player!=null){
-                            player.removeMediaItem(fromPosition);
-                            MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, listModelList.get(toPosition).getAudioFile()));
-                            player.addMediaItem(toPosition,mediaItem);
-                        }*/
+                        if(player!=null){
+                            player.moveMediaItem(fromPosition,toPosition);
+                        }
                         if (fromPosition == pos) {
                             pos = toPosition;
                             String one = "1";
