@@ -790,8 +790,8 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                     }
                 }
-
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
+                notifyItemRemoved(position);
                 dialog.dismiss();
             });
             tvGoBack.setOnClickListener(v -> dialog.dismiss());

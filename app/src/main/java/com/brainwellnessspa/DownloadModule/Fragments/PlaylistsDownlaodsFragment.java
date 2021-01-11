@@ -138,12 +138,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
-            DatabaseClient
+            /*DatabaseClient
                     .getInstance(getActivity())
                     .getaudioDatabase()
                     .taskDao()
                     .getAllPlaylist1().removeObserver(audioList1 -> {
-            });
+            });*/
         });
     }
 
@@ -396,6 +396,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
 //                        } catch (Exception e) {
 //                        }
+                        notifyItemRemoved(position);
                         dialog.dismiss();
                     });
 
