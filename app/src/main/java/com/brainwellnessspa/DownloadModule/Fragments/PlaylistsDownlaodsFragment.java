@@ -299,7 +299,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         i.putExtra("Created", listModelList.get(position).getCreated());
                         i.putExtra("MyDownloads", "1");
                         ctx.startActivity(i);
-                        BWSApplication.showToast("Opened", ctx);
+//                        BWSApplication.showToast("Opened", ctx);
                         /*Properties p = new Properties();
                     p.putValue("userId", UserID);
                     p.putValue("playlistId", listModelList.get(position).getPlaylistID());

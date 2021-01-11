@@ -35,6 +35,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -230,9 +231,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
-        view = binding.getRoot();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         handler2 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -262,9 +261,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             ScreenView = getArguments().getString("ScreenView");
         }
 
-        binding.llBack.setOnClickListener(view1 -> {
-            callBack();
-        });
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
@@ -280,6 +276,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivMore.setImageResource(R.drawable.ic_menu_icon);
             binding.ivMore.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }
+        binding.llBack.setOnClickListener(view1 -> {
+            callBack();
+        });
 
         binding.llMore.setOnClickListener(view13 -> {
             handler2.removeCallbacks(UpdateSongTime2);
@@ -361,7 +360,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
             binding.llListing.setVisibility(View.GONE);
-            binding.btnAddAudio.setOnClickListener(view -> {
+            binding.btnAddAudio.setOnClickListener(view1 -> {
                 Intent i = new Intent(getActivity(), AddAudioActivity.class);
                 i.putExtra("PlaylistID", PlaylistID);
                 startActivity(i);
@@ -376,6 +375,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llListing.setVisibility(View.VISIBLE);
             prepareData(UserID, PlaylistID);
         }
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
+        view = binding.getRoot();
         return view;
     }
 
@@ -638,7 +645,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             prepareData(UserID, MyPlaylistIds);
             addToSearch = false;
         } else {
-            prepareData(UserID, PlaylistID);
+//            prepareData(UserID, PlaylistID);
         }
         if (comeRename == 1) {
             prepareData(UserID, PlaylistID);
@@ -1590,9 +1597,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     fileNameList = name;
                     playlistDownloadId = downloadPlaylistId;
                 }
+                String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
+                SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads,100);
+            }else {
+                String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
+                SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads,0);
             }
-            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-            SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads);
             SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             int position1 = sharedx.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -1771,7 +1781,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         st.execute();
     }
 
-    private void SaveMedia(byte[] encodeBytes, String dirPath, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, RelativeLayout llDownload, ImageView ivDownloads) {
+    private void SaveMedia(byte[] encodeBytes, String dirPath, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, RelativeLayout llDownload, ImageView ivDownloads,int progress) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -1788,8 +1798,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
                 downloadAudioDetails.setIsSingle("1");
                 downloadAudioDetails.setPlaylistId("");
-                downloadAudioDetails.setIsDownload("pending");
-                downloadAudioDetails.setDownloadProgress(0);
+                if(progress==0) {
+                    downloadAudioDetails.setIsDownload("pending");
+                }else{
+                    downloadAudioDetails.setIsDownload("Complete");
+                }
+                downloadAudioDetails.setDownloadProgress(progress);
                 DatabaseClient.getInstance(activity)
                         .getaudioDatabase()
                         .taskDao()

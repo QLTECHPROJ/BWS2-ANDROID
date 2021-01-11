@@ -891,6 +891,10 @@ public class AddQueueActivity extends AppCompatActivity {
                 DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
                 downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
             }
+        }else {
+            String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
+            SaveMedia(new byte[1024], dirPath, i,100);
+
         }
 //        MyDownloadService myDownloadService = new MyDownloadService(0);
 //        DownloadRequest downloadRequest =
@@ -904,10 +908,10 @@ public class AddQueueActivity extends AppCompatActivity {
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
         String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
-        SaveMedia(new byte[1024], dirPath, i);
+        SaveMedia(new byte[1024], dirPath, i,0);
     }
 
-    private void SaveMedia(byte[] encodeBytes, String dirPath, int i) {
+    private void SaveMedia(byte[] encodeBytes, String dirPath, int i,int progress) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -952,8 +956,12 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setIsSingle("1");
                     downloadAudioDetails.setPlaylistId("");
-                    downloadAudioDetails.setIsDownload("pending");
-                    downloadAudioDetails.setDownloadProgress(0);
+                    if(progress==0) {
+                        downloadAudioDetails.setIsDownload("pending");
+                    }else{
+                        downloadAudioDetails.setIsDownload("Complete");
+                    }
+                    downloadAudioDetails.setDownloadProgress(progress);
                 } else {
                     p.putValue("playerType", "Main");
                     downloadAudioDetails.setID(mainPlayModelList.get(i).getID());

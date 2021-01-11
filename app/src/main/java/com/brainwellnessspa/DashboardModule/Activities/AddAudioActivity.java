@@ -66,7 +66,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-
+import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeRename;
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
     Context ctx;
@@ -194,6 +194,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
     private void callback() {
         comefromDownload = "0";
+        comeRename = 1;
         finish();
     }
 

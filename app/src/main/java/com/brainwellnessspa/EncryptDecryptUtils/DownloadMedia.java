@@ -15,6 +15,8 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.downloader.Error;
 import com.downloader.OnDownloadListener;
+import com.downloader.OnPauseListener;
+import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
 import com.google.gson.Gson;
@@ -85,6 +87,17 @@ public class DownloadMedia implements OnDownloadListener {
                         updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
                     }
                     downloadProgress2 = downloadProgress;
+                }) .setOnStartOrResumeListener(new OnStartOrResumeListener() {
+                    @Override
+                    public void onStartOrResume() {
+
+                    }
+                })
+                .setOnPauseListener(new OnPauseListener() {
+                    @Override
+                    public void onPause() {
+
+                    }
                 }).setOnCancelListener(() -> {
                     downloadIdOne = 0;
 //                    LocalBroadcastManager.getInstance(context).unregisterReceiver(listener);

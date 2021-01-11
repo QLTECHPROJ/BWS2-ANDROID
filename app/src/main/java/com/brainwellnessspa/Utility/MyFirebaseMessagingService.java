@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -155,7 +156,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             }
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 //            Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.alert);
@@ -163,11 +164,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+           
                 notificationChannel = new NotificationChannel(channelId, "Name", NotificationManager.IMPORTANCE_DEFAULT);
                 notificationChannel.setDescription("BWS Notification");
                 notificationChannel.setShowBadge(true);
                 notificationChannel.enableLights(true);
                 notificationChannel.enableVibration(true);
+                notificationBuilder.setSound(defaultSoundUri, AudioManager.STREAM_NOTIFICATION);
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationBuilder = new NotificationCompat.Builder(this, notificationChannel.getId());
             } else {
