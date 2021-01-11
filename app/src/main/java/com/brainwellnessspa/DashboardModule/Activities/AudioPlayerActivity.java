@@ -98,6 +98,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.audioRemove;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class AudioPlayerActivity extends AppCompatActivity {
     public AudioManager audioManager;
@@ -117,7 +118,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Activity activity;
     List<String> fileNameList = new ArrayList<>(), audioFile1 = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     Boolean queuePlay, audioPlay;
-    PlayerNotificationManager playerNotificationManager;
     int notificationId = 1234, downloadPercentage = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList1;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
