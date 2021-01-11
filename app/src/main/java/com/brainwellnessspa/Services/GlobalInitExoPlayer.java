@@ -457,6 +457,7 @@ Appointment Audios dddd*/
             }
         }
         InitNotificationAudioPLayer(ctx, mainPlayModelList);
+        playerNotificationManager.setPlayer(player);
     }
 
     public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
