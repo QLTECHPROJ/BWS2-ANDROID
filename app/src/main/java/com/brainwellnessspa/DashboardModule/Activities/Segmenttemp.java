@@ -20,7 +20,7 @@ public class Segmenttemp {
                     p.putValue("audioType", "");
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioSPlaylist Download Completedervice", APP_SERVICE_STATUS);
                     p.putValue("bitRate", "");
                     p.putValue("source", GetSourceName(getActivity()));
                     BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);*/

@@ -24,6 +24,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentInvoiceReceiptBinding;
+import com.segment.analytics.Properties;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +34,7 @@ import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invo
 
 public class InvoiceReceiptFragment extends DialogFragment {
     FragmentInvoiceReceiptBinding binding;
-    String UserID, InvoiceID, Flag;
+    String UserID, InvoiceID, Flag, InvoiceAmount;
     View view;
 
     @Override
@@ -47,6 +48,21 @@ public class InvoiceReceiptFragment extends DialogFragment {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.receipt_dialog_background_inset);
+        }
+        try {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("invoiceId", InvoiceID);
+            if (Flag.equalsIgnoreCase("1")) {
+                p.putValue("invoiceType", "Memebrship");
+            } else if (Flag.equalsIgnoreCase("2")) {
+                p.putValue("invoiceType", "Appointment");
+            }
+
+            p.putValue("invoiceAmount", InvoiceAmount);
+            BWSApplication.addToSegment("Invoice Clicked", p, CONSTANTS.track);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return view;
     }
@@ -86,6 +102,7 @@ public class InvoiceReceiptFragment extends DialogFragment {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                             InvoiceDetailModel listModel = response.body();
+                            InvoiceAmount = "$" + listModel.getResponseData().getTotalAmount();
                             binding.tvFromTitle.setText("From");
                             binding.tvDateTitle.setText("Order Date:");
                             binding.tvOrderIdTitle.setText("Order #:");

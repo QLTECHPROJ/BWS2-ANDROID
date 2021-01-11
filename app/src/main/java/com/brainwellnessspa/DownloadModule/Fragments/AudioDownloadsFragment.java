@@ -115,9 +115,9 @@ public class AudioDownloadsFragment extends Fragment {
         }
         handler1 = new Handler();
         audioList = new ArrayList<>();
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
         binding.tvFound.setText("Your downloaded audios will appear here");

@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAptBookletBinding;
+import com.segment.analytics.Properties;
 
 public class AptBookletFragment extends Fragment {
     FragmentAptBookletBinding binding;
@@ -29,10 +31,10 @@ public class AptBookletFragment extends Fragment {
         }
         binding.tvTilte.setText(appointmentDetail.getName());
         binding.btnComplete.setOnClickListener(view1 -> {
-            BWSApplication.showToast("Complete the booklet", getActivity());
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(appointmentDetail.getBooklet()));
             startActivity(i);
+            BWSApplication.showToast("Complete the booklet", getActivity());
         });
         return view;
     }

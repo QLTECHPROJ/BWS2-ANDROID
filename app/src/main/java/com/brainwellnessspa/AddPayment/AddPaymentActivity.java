@@ -206,9 +206,9 @@ public class AddPaymentActivity extends AppCompatActivity {
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                /*Properties p = new Properties();
+                                                Properties p = new Properties();
                                                 p.putValue("userId", UserID);
-                                                BWSApplication.addToSegment("Payment Card Added", p, CONSTANTS.track);*/
+                                                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
                                                 finish();
                                                 BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {

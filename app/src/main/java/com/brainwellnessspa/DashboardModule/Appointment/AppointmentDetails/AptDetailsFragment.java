@@ -1,6 +1,8 @@
 package com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetails;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
@@ -18,15 +21,20 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAptDetailsBinding;
+import com.segment.analytics.Properties;
 
 public class AptDetailsFragment extends Fragment {
     FragmentAptDetailsBinding binding;
     AppointmentDetailModel.ResponseData appointmentDetail;
+    Properties p;
+    String UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_details, container, false);
         View view = binding.getRoot();
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelable("AppointmentDetail");
         }
@@ -58,10 +66,16 @@ public class AptDetailsFragment extends Fragment {
             binding.btnComplete.setVisibility(View.VISIBLE);
         }
         binding.btnComplete.setOnClickListener(view1 -> {
-            BWSApplication.showToast("Book Now", getActivity());
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(appointmentDetail.getBookUrl()));
             startActivity(i);
+            BWSApplication.showToast("Book Now", getActivity());
+            p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("sessionId", appointmentDetail.getId());
+            p.putValue("sessionName", appointmentDetail.getName());
+            p.putValue("sessionBookUrl", appointmentDetail.getBookUrl());
+            BWSApplication.addToSegment("Session Book Clicked", p, CONSTANTS.track);
         });
         return view;
     }

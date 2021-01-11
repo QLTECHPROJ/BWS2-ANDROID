@@ -38,9 +38,9 @@ public class BillingAddressFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Billing Address Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Billing Address Screen Viewed", p, CONSTANTS.screen);
 
         binding.btnSave.setEnabled(false);
         binding.btnSave.setTextColor(getResources().getColor(R.color.white));

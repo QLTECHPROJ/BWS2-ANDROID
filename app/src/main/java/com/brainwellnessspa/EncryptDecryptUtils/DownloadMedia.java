@@ -239,8 +239,8 @@ public class DownloadMedia implements OnDownloadListener {
                         p.putValue("subCategory", Myaudiolist.get(0).getAudioSubCategory());
                         p.putValue("audioDuration", Myaudiolist.get(0).getAudioDuration());*/
                     p.putValue("playerType", PlayerStatus);
+                    p.putValue("audioService", APP_SERVICE_STATUS);
                     p.putValue("position", GetCurrentAudioPosition());
-                    p.putValue("audioType", "Downloaded");
                     p.putValue("source", "Downloaded Audios");
                     p.putValue("bitRate", "");
                     p.putValue("sound", GetDeviceVolume(context));
@@ -279,13 +279,15 @@ public class DownloadMedia implements OnDownloadListener {
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("playlistId", playlistDownloadId);
-                            /*p.putValue("playlistName", PlaylistName);
+                            /*
+                            p.putValue("playlistName", PlaylistName);
                             p.putValue("playlistDescription", PlaylistDescription);
                             if (Created.equalsIgnoreCase("1")) {
                                 p.putValue("playlistType", "Created");
                             } else if (Created.equalsIgnoreCase("0")) {
                                 p.putValue("playlistType", "Default");
                             }
+
                             if (Totalhour.equalsIgnoreCase("")) {
                                 p.putValue("playlistDuration", "0h " + Totalminute + "m");
                             } else if (Totalminute.equalsIgnoreCase("")) {

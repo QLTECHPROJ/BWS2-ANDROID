@@ -76,9 +76,6 @@ public class ResourceActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        /*Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen);*/
         binding.viewPager.setOffscreenPageLimit(5);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio Books"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Podcasts"));
@@ -91,6 +88,20 @@ public class ResourceActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
                 CurruntTab = tab.getPosition();
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                if (tab.getPosition() == 0) {
+                    p.putValue("resourceType", "Audio Books");
+                } else if (tab.getPosition() == 1) {
+                    p.putValue("resourceType", "Podcasts");
+                } else if (tab.getPosition() == 2) {
+                    p.putValue("resourceType", "Apps");
+                } else if (tab.getPosition() == 3) {
+                    p.putValue("resourceType", "Websites");
+                } else if (tab.getPosition() == 4) {
+                    p.putValue("resourceType", "Documentaries");
+                }
+                BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen);
             }
 
             @Override

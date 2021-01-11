@@ -64,11 +64,13 @@ public class ReminderActivity extends AppCompatActivity {
     Context context;
     int pos;
     Dialog dialog;
-    String am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
+    String ReminderDay, ReminderId, am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
     ArrayList<String> remiderDays = new ArrayList<>();
+    String ReminderDaySelected, ReminderDayTemp;
     private int mHour, mMinute;
     SelectPlaylistAdapter adapter;
     TimePickerDialog timePickerDialog;
+    Properties p, p1, p2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,8 @@ public class ReminderActivity extends AppCompatActivity {
             ComeFrom = getIntent().getStringExtra("ComeFrom");
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
             PlaylistName = getIntent().getStringExtra("PlaylistName");
+            ReminderId = getIntent().getStringExtra("ReminderId");
+            ReminderDay = getIntent().getStringExtra("ReminderDay");
         }
 
         if (getIntent().getExtras() != null) {
@@ -90,9 +94,6 @@ public class ReminderActivity extends AppCompatActivity {
             Day = getIntent().getStringExtra("Day");
         }
 
-        /*Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen);*/
         RefreshButton();
         ShowPlaylistName();
 
@@ -167,6 +168,12 @@ public class ReminderActivity extends AppCompatActivity {
                             minuteSting = "" + minute;
 //                        binding.tvTime.setText(hourOfDay + ":" + minute);
                         binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
+                        p2 = new Properties();
+                        p2.putValue("userId", UserID);
+                        p2.putValue("reminderId", ReminderId);
+                        p2.putValue("reminderTime", hourString + ":" + minuteSting + " " + am_pm);
+                        p2.putValue("playlistName", PlaylistName);
+                        BWSApplication.addToSegment("Reminder Timer Clicked", p2, CONSTANTS.track);
                         ShowPlaylistName();
                     }, mHour, mMinute, false);
             timePickerDialog.show();
@@ -290,6 +297,48 @@ public class ReminderActivity extends AppCompatActivity {
             textView.setTextColor(getResources().getColor(R.color.dark_blue_gray));
             textView.setBackground(getResources().getDrawable(R.drawable.transparent_bg));
         }
+        p = new Properties();
+        p.putValue("userId", UserID);
+        if (ReminderId.equalsIgnoreCase("")) {
+            p.putValue("reminderId", "");
+        } else {
+            p.putValue("reminderId", ReminderId);
+        }
+        ReminderDaySelected = TextUtils.join(",", remiderDays);
+        if (ReminderDaySelected.contains("0")) {
+            ReminderDayTemp = "Sun";
+        }
+
+        if (ReminderDaySelected.contains("1")) {
+            ReminderDayTemp = "Mon";
+        }
+
+        if (ReminderDaySelected.contains("2")) {
+            ReminderDayTemp = "Tue";
+        }
+
+        if (ReminderDaySelected.contains("3")) {
+            ReminderDayTemp = "Wed";
+        }
+
+        if (ReminderDaySelected.contains("4")) {
+            ReminderDayTemp = "Thu";
+        }
+
+        if (ReminderDaySelected.contains("5")) {
+            ReminderDayTemp = "Fri";
+        }
+
+        if (ReminderDaySelected.contains("6")) {
+            ReminderDayTemp = "Sat";
+        }
+
+        p.putValue("reminderDay", ReminderDayTemp);
+//        "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+        Log.e("ReminderDaySelected", ReminderDaySelected);
+        p.putValue("playlistId", PlaylistID);
+        p.putValue("playlistName", PlaylistName);
+        BWSApplication.addToSegment("Reminder Day Selected", p, CONSTANTS.track);
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
     }
 
@@ -299,6 +348,7 @@ public class ReminderActivity extends AppCompatActivity {
         } else {
             binding.tvPlaylistName.setText(PlaylistName);
         }
+
         binding.btnSave.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
                 Intent i = new Intent(context, MembershipChangeActivity.class);
@@ -333,19 +383,17 @@ public class ReminderActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
                                 try {
-                                    if (response.isSuccessful()) {
-                                        Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                                        remiderDays.clear();
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        SetReminderModel listModel = response.body();
-                                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                                        if (ComeScreenReminder == 1) {
-                                            Intent i = new Intent(context, ReminderDetailsActivity.class);
-                                            startActivity(i);
-                                            finish();
-                                        } else {
-                                            finish();
-                                        }
+                                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                                    remiderDays.clear();
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    SetReminderModel listModel = response.body();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                    if (ComeScreenReminder == 1) {
+                                        Intent i = new Intent(context, ReminderDetailsActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    } else {
+                                        finish();
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -442,7 +490,6 @@ public class ReminderActivity extends AppCompatActivity {
                 holder.binding.cbChecked.setChecked(position == pos);
             }
 
-
             holder.binding.cbChecked.setTag(model.get(position));
             holder.binding.cbChecked.setText(model.get(position).getName());
         }
@@ -467,6 +514,11 @@ public class ReminderActivity extends AppCompatActivity {
                     PlaylistName = model.get(mSelectedItem).getName();
                     ShowPlaylistName();
                     dialog.dismiss();
+                    p1 = new Properties();
+                    p1.putValue("userId", UserID);
+                    p1.putValue("playlistId", PlaylistID);
+                    p1.putValue("playlistName", PlaylistName);
+                    BWSApplication.addToSegment("Reminder Playlist List Clicked", p1, CONSTANTS.track);
                     RefreshButton();
                 });
             }

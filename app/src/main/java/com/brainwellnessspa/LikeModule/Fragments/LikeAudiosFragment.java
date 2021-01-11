@@ -118,9 +118,9 @@ public class LikeAudiosFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Liked Audios Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Liked Audios Viewed", p, CONSTANTS.screen);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvLikesList.setLayoutManager(mLayoutManager);

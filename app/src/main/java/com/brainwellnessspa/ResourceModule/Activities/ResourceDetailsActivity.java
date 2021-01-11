@@ -22,9 +22,9 @@ import com.segment.analytics.Properties;
 
 public class ResourceDetailsActivity extends AppCompatActivity {
     ActivityResourceDetailsBinding binding;
-    String id, title, author, linkOne, linkTwo, image, description, resourceType, UserID;
+    String id, title, author, linkOne, linkTwo, image, description, resourceType, UserID, mastercat, subcat;
     Context ctx;
-    Properties p;
+    Properties p, p1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +41,29 @@ public class ResourceDetailsActivity extends AppCompatActivity {
             linkTwo = getIntent().getStringExtra(CONSTANTS.linkTwo);
             image = getIntent().getStringExtra(CONSTANTS.image);
             description = getIntent().getStringExtra(CONSTANTS.description);
+            mastercat = getIntent().getStringExtra(CONSTANTS.mastercat);
+            subcat = getIntent().getStringExtra(CONSTANTS.subcat);
 
+            p = new Properties();
+            p1 = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("resourceId", id);
+            p.putValue("resourceName", title);
             if (getIntent().getStringExtra("audio_books") != null) {
                 binding.tvScreenName.setText(R.string.Audio_Book);
                 binding.btnComplete.setVisibility(View.VISIBLE);
                 binding.llPlatfroms.setVisibility(View.GONE);
                 resourceType = getString(R.string.Audio_Book);
+                p.putValue("author", author);
+                p1.putValue("author", author);
             }
             if (getIntent().getStringExtra("podcasts") != null) {
                 binding.tvScreenName.setText(R.string.Podcasts);
                 binding.btnComplete.setVisibility(View.VISIBLE);
                 binding.llPlatfroms.setVisibility(View.GONE);
                 resourceType = getString(R.string.Podcasts);
+                p.putValue("author", author);
+                p1.putValue("author", author);
             }
             if (getIntent().getStringExtra("apps") != null) {
                 binding.tvScreenName.setText(R.string.Apps);
@@ -60,6 +71,8 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                 binding.llPlatfroms.setVisibility(View.VISIBLE);
                 binding.tvCreator.setVisibility(View.GONE);
                 resourceType = getString(R.string.Apps);
+                p.putValue("author", "");
+                p1.putValue("author", "");
             }
             if (getIntent().getStringExtra("website") != null) {
                 binding.tvScreenName.setText(R.string.Websites);
@@ -67,19 +80,35 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                 binding.llPlatfroms.setVisibility(View.GONE);
                 binding.tvCreator.setVisibility(View.GONE);
                 resourceType = getString(R.string.Websites);
+                p.putValue("author", "");
+                p1.putValue("author", "");
             }
             if (getIntent().getStringExtra("documentaries") != null) {
                 binding.tvScreenName.setText(R.string.Documentaries);
                 binding.btnComplete.setVisibility(View.VISIBLE);
                 binding.llPlatfroms.setVisibility(View.GONE);
                 resourceType = getString(R.string.Documentaries);
+                p.putValue("author", author);
+                p1.putValue("author", author);
             }
-           /* p = new Properties();
-            p.putValue("userId", UserID);
-            p.putValue("resourceId", id);
-            p.putValue("resourceName", title);
-            p.putValue("resourceType", resourceType);
-            BWSApplication.addToSegment("Resource Details Viewed", p, CONSTANTS.screen);*/
+
+            try {
+                p.putValue("resourceType", resourceType);
+                p.putValue("resourceDesc", description);
+                p.putValue("masterCategory", mastercat);
+                p.putValue("subCategory", subcat);
+                if (linkOne.equalsIgnoreCase("")) {
+                    p.putValue("resourceLink", linkTwo);
+                } else if (linkTwo.equalsIgnoreCase("")) {
+                    p.putValue("resourceLink", linkOne);
+                } else {
+
+                }
+                BWSApplication.addToSegment("Resource Details Viewed", p, CONSTANTS.screen);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             binding.tvTitle.setText(title);
             binding.tvCreator.setText(author);
             binding.tvSubTitle.setText(description);
@@ -98,13 +127,15 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(linkOne));
                     startActivity(i);
-                    /*p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("resourceId", id);
-                    p.putValue("resourceName", title);
-                    p.putValue("resourceType", resourceType);
-                    p.putValue("resourceLink", linkOne);
-                    BWSApplication.addToSegment("Resource External Link Clicked", p, CONSTANTS.track);*/
+                    p1.putValue("userId", UserID);
+                    p1.putValue("resourceId", id);
+                    p1.putValue("resourceName", title);
+                    p1.putValue("resourceType", resourceType);
+                    p1.putValue("resourceDesc", description);
+                    p1.putValue("resourceLink", linkOne);
+                    p1.putValue("masterCategory", mastercat);
+                    p1.putValue("subCategory", subcat);
+                    BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track);
                 }
             });
 
@@ -115,13 +146,15 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(linkOne));
                     startActivity(i);
-                    /*p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("resourceId", id);
-                    p.putValue("resourceName", title);
-                    p.putValue("resourceType", resourceType);
-                    p.putValue("resourceLink", linkOne);
-                    BWSApplication.addToSegment("Resource External Link Clicked", p, CONSTANTS.track);*/
+                    p1.putValue("userId", UserID);
+                    p1.putValue("resourceId", id);
+                    p1.putValue("resourceName", title);
+                    p1.putValue("resourceType", resourceType);
+                    p1.putValue("resourceDesc", description);
+                    p1.putValue("resourceLink", linkOne);
+                    p1.putValue("masterCategory", mastercat);
+                    p1.putValue("subCategory", subcat);
+                    BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track);
                 }
             });
 
@@ -132,13 +165,15 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(linkTwo));
                     startActivity(i);
-                    /*p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("resourceId", id);
-                    p.putValue("resourceName", title);
-                    p.putValue("resourceType", resourceType);
-                    p.putValue("resourceLink", linkTwo);
-                    BWSApplication.addToSegment("Resource External Link Clicked", p, CONSTANTS.track);*/
+                    p1.putValue("userId", UserID);
+                    p1.putValue("resourceId", id);
+                    p1.putValue("resourceName", title);
+                    p1.putValue("resourceType", resourceType);
+                    p1.putValue("resourceDesc", description);
+                    p1.putValue("resourceLink", linkTwo);
+                    p1.putValue("masterCategory", mastercat);
+                    p1.putValue("subCategory", subcat);
+                    BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track);
                 }
             });
         }

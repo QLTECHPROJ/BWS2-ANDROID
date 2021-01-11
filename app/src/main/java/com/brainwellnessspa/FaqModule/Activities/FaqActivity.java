@@ -41,9 +41,9 @@ public class FaqActivity extends AppCompatActivity {
         PrepareData();
         binding.llBack.setOnClickListener(view -> finish());
 
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("FAQ Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("FAQ Viewed", p, CONSTANTS.screen);
         binding.llAudio.setOnClickListener(view -> {
             try {
                 modelList.clear();

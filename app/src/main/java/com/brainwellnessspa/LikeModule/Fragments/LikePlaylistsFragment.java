@@ -68,9 +68,10 @@ public class LikePlaylistsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvLikesList.setLayoutManager(mLayoutManager);
         binding.rvLikesList.setItemAnimator(new DefaultItemAnimator());
-        /*Properties p = new Properties();
+
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Liked Playlists Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Liked Playlists Viewed", p, CONSTANTS.screen);
 
         prepareData();
         binding.llError.setVisibility(View.GONE);

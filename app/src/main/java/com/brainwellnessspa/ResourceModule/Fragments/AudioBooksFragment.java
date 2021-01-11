@@ -176,6 +176,8 @@ public class AudioBooksFragment extends Fragment {
                 i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
                 i.putExtra("image", listModelList.get(position).getDetailimage());
                 i.putExtra("description", listModelList.get(position).getDescription());
+                i.putExtra("mastercat", listModelList.get(position).getMasterCategory());
+                i.putExtra("subcat", listModelList.get(position).getSubCategory());
                 startActivity(i);
             });
         }

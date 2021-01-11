@@ -35,6 +35,7 @@ import com.brainwellnessspa.databinding.FragmentSessionsBinding;
 import com.brainwellnessspa.databinding.SessionListLayoutBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -54,7 +55,8 @@ public class SessionsFragment extends Fragment {
     public FragmentManager f_manager;
     Activity activity;
     View view;
-    String UserId, appointmentName, appointmentMainName, appointmentImage, appointmentTypeId, AudioFlag;
+    Properties p;
+    String UserID, appointmentName, appointmentMainName, appointmentImage, appointmentTypeId, AudioFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +65,7 @@ public class SessionsFragment extends Fragment {
         view = binding.getRoot();
         activity = getActivity();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
@@ -234,7 +236,7 @@ public class SessionsFragment extends Fragment {
         try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId, appointmentName);
+                Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserID, appointmentName);
                 listCall.enqueue(new Callback<SessionListModel>() {
                     @Override
                     public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
@@ -342,6 +344,11 @@ public class SessionsFragment extends Fragment {
                 fragmentManager1.beginTransaction()
                         .addToBackStack("AppointmentDetailsFragment")
                         .replace(R.id.flContainer, appointmentDetailsFragment).commit();
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("sessionId", listModel.getId());
+                p.putValue("sessionName", listModel.getName());
+                BWSApplication.addToSegment("Session List Item Clicked", p, CONSTANTS.track);
             });
         }
 

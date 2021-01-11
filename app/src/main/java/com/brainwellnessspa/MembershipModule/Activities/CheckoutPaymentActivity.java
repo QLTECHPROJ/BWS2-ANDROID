@@ -53,7 +53,7 @@ import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapt
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
-    String MobileNo, Code;
+    String MobileNo, Code, UserID;
     Context context;
     Activity activity;
     Dialog d;
@@ -72,6 +72,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_checkout_payment);
         context = CheckoutPaymentActivity.this;
         activity = CheckoutPaymentActivity.this;
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         if (getIntent().getExtras() != null) {
             MobileNo = getIntent().getStringExtra("MobileNo");
             Code = getIntent().getStringExtra("Code");
@@ -97,8 +99,15 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding1 = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.yeardialog, null, false);
         d.setContentView(binding1.getRoot());
-        /*Properties p = new Properties();
-        BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);*/
+
+        try {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
        /* binding.etNumber.addTextChangedListener(addCardTextWatcher);
         binding.etName.addTextChangedListener(addCardTextWatcher);
@@ -208,12 +217,15 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
                                                 editor.commit();
                                                 Properties p = new Properties();
+                                                p.putValue("userId", UserID);
+                                                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
+                                                /*Properties p = new Properties();
                                                 p.putValue("cardNumber", binding.etNumber.getText().toString());
                                                 p.putValue("cardHolderName", binding.etName.getText().toString());
                                                 p.putValue("cardType", "");
                                                 p.putValue("cardExpiry", binding.textMonth.getText().toString());
                                                 p.putValue("mobileNo", MobileNo);
-                                                BWSApplication.addToSegment("Payment Info Added", p, CONSTANTS.track);
+                                                BWSApplication.addToSegment("Payment Info Added", p, CONSTANTS.track);*/
                                                 Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
                                                 startActivity(i);
                                                 finish();

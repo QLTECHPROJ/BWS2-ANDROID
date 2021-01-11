@@ -58,9 +58,9 @@ public class InvoiceActivity extends AppCompatActivity {
             ComeFrom = getIntent().getStringExtra("ComeFrom");
         }
 
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override

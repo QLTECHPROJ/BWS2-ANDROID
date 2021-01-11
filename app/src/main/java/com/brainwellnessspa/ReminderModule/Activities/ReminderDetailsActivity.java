@@ -38,6 +38,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityReminderDetailsBinding;
 import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ import retrofit2.Response;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
-    String UserId;
+    String UserID;
     Context ctx;
     Activity activity;
     ArrayList<String> remiderIds = new ArrayList<>();
@@ -61,6 +62,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     FancyShowCaseQueue queue;
     public static String comeBack = "";
     RemiderDetailsModel listReminderModel;
+    Properties p;
 //    CheckBox checkBox;
 
     @Override
@@ -70,11 +72,15 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         ctx = ReminderDetailsActivity.this;
         activity = ReminderDetailsActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
         binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());
+
+        p = new Properties();
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen);
 
         /*ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(binding.rvReminderDetails);*/
@@ -87,10 +93,12 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 Intent i = new Intent(ctx, ReminderActivity.class);
                 i.putExtra("ComeFrom", "");
+                i.putExtra("ReminderId", "");
                 i.putExtra("PlaylistID", "");
                 i.putExtra("PlaylistName", "");
                 i.putExtra("Time", "");
                 i.putExtra("Day", "");
+                i.putExtra("ReminderDay", "");
                 startActivity(i);
                 finish();
             } else {
@@ -162,7 +170,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<RemiderDetailsModel> listCall = APIClient.getClient().getGetReminderStatus(UserId);
+            Call<RemiderDetailsModel> listCall = APIClient.getClient().getGetReminderStatus(UserID);
             listCall.enqueue(new Callback<RemiderDetailsModel>() {
                 @Override
                 public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
@@ -227,7 +235,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
             tvconfirm.setOnClickListener(v -> {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserId,
+                    Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserID,
                             TextUtils.join(",", remiderIds));
                     listCall.enqueue(new Callback<DeleteRemiderModel>() {
                         @Override
@@ -431,10 +439,12 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             holder.bind.llMainLayout.setOnClickListener(view -> {
                 Intent i = new Intent(ctx, ReminderActivity.class);
                 i.putExtra("ComeFrom", "1");
+                i.putExtra("ReminderId", model.get(position).getReminderId());
                 i.putExtra("PlaylistID", model.get(position).getPlaylistId());
                 i.putExtra("PlaylistName", model.get(position).getPlaylistName());
                 i.putExtra("Time", model.get(position).getReminderTime());
                 i.putExtra("Day", model.get(position).getRDay());
+                i.putExtra("ReminderDay", model.get(position).getReminderDay());
                 startActivity(i);
                 finish();
             });
@@ -458,7 +468,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private void prepareSwitchStatus(String reminderStatus, String PlaylistID) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, PlaylistID, reminderStatus);/*set 1 or not 0 */
+            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserID, PlaylistID, reminderStatus);/*set 1 or not 0 */
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override
                 public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
@@ -515,7 +525,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
                 tvconfirm.setOnClickListener(v -> {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserId,
+                        Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserID,
                                 listReminderModel.getResponseData().get(position).getReminderId());
                         listCall.enqueue(new Callback<DeleteRemiderModel>() {
                             @Override

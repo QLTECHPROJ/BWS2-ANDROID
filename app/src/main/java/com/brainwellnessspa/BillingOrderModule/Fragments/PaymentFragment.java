@@ -46,9 +46,9 @@ public class PaymentFragment extends Fragment {
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
 
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);
 
         binding.llAddNewCard.setOnClickListener(view1 -> {
             if (BWSApplication.isNetworkConnected(context)) {

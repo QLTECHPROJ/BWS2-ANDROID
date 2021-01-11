@@ -76,6 +76,8 @@ public class CONSTANTS {
     public static String linkTwo = "linkTwo";
     public static String image = "image";
     public static String description = "description";
+    public static String mastercat = "mastercat";
+    public static String subcat = "subcat";
     public static String AudioFile = "AudioFile";
     public static String ImageFile = "ImageFile";
     public static String AudioDirection = "AudioDirection";

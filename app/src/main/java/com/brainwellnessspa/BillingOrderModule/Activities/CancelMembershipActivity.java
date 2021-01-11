@@ -25,9 +25,12 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
+
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding;
+import com.segment.analytics.Properties;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,8 +67,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
         binding.youtubeView.initialize(API_KEY, this);
 
-        if (player!=null) {
-            if(player.getPlayWhenReady()) {
+        if (player != null) {
+            if (player.getPlayWhenReady()) {
                 player.setPlayWhenReady(false);
                 audioPause = true;
             }
@@ -111,8 +114,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         });
 
         binding.btnCancelSubscrible.setOnClickListener(view -> {
-            if (player!=null) {
-                if(player.getPlayWhenReady()) {
+            if (player != null) {
+                if (player.getPlayWhenReady()) {
                     player.setPlayWhenReady(false);
                     audioPause = true;
                 }
@@ -132,8 +135,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();
-                        if (player!=null) {
-                            if(player.getPlayWhenReady()) {
+                        if (player != null) {
+                            if (player.getPlayWhenReady()) {
                                 player.setPlayWhenReady(false);
                                 audioPause = true;
                             }
@@ -158,18 +161,22 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                     @Override
                                     public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
                                         try {
-                                            if (response.isSuccessful()) {
-                                                CancelPlanModel model = response.body();
-                                                BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                                dialog.dismiss();
-                                                if (player!=null) {
-                                                    if(player.getPlayWhenReady()) {
-                                                        player.setPlayWhenReady(false);
-                                                        audioPause = true;
-                                                    }
+                                            CancelPlanModel model = response.body();
+                                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                            dialog.dismiss();
+                                            String CancelReason = binding.edtCancelBox.getText().toString();
+                                            Properties p = new Properties();
+                                            p.putValue("userId", UserID);
+                                            p.putValue("cancelId", CancelId);
+                                            p.putValue("cancelReason", CancelReason);
+                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
+                                            if (player != null) {
+                                                if (player.getPlayWhenReady()) {
+                                                    player.setPlayWhenReady(false);
+                                                    audioPause = true;
                                                 }
-                                                finish();
                                             }
+                                            finish();
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -194,8 +201,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
                 tvGoBack.setOnClickListener(v -> {
                     dialog.dismiss();
-                    if (player!=null) {
-                        if(player.getPlayWhenReady()) {
+                    if (player != null) {
+                        if (player.getPlayWhenReady()) {
                             player.setPlayWhenReady(false);
                             audioPause = true;
                         }

@@ -47,6 +47,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     Runnable UpdateSongTime1;
     Handler handler1;
     boolean isMyDownloading = false;
+    Properties p;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,9 +77,9 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             IsLock = getArguments().getString("IsLock");
         }
         playlistList = new ArrayList<>();
-        /*Properties p = new Properties();
+        p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Downloaded Playlist Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Downloaded Playlist Viewed", p, CONSTANTS.screen);
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
 
@@ -323,7 +325,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     if (exception.getMessage() != null && (//
                             exception.getMessage().contains("Underflow in restore") || //
                                     exception.getCause().getMessage().contains("Underflow in restore"))) { //
-                        Log.e("downloadPlaylist NotOpn","Caught a Canvas stack underflow! (java.lang.IllegalStateException: Underflow in restore)");
+                        Log.e("downloadPlaylist NotOpn", "Caught a Canvas stack underflow! (java.lang.IllegalStateException: Underflow in restore)");
                     } else {
                         // It wasn't a Canvas underflow, so re-throw.
                         throw exception;
@@ -372,12 +374,26 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         });
                         getDownloadData(listModelList.get(position).getPlaylistID());
                         GetPlaylistMedia(listModelList.get(position).getPlaylistID());
-                            /*Properties p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("playlistId", listModelList.get(position).getPlaylistID());
-                            p.putValue("playlistName", listModelList.get(position).getPlaylistName());
-                            p.putValue("playlistType", "");
-                            BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);*/
+                        Properties p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                        p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                        if (listModelList.get(position).getCreated().equalsIgnoreCase("1")) {
+                            p.putValue("playlistType", "Created");
+                        } else if (listModelList.get(position).getCreated().equalsIgnoreCase("0")) {
+                            p.putValue("playlistType", "Default");
+                        }
+                        p.putValue("audioCount", listModelList.get(position).getTotalAudio());
+                        p.putValue("playlistDescription", listModelList.get(position).getPlaylistDesc());
+                        if (listModelList.get(position).getTotalhour().equalsIgnoreCase("")) {
+                            p.putValue("playlistDuration", "0h " + listModelList.get(position).getTotalminute() + "m");
+                        } else if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+                            p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h 0m");
+                        } else {
+                            p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+                        }
+                        p.putValue("source", "Downloaded Playlists");
+                        BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
 //                        } catch (Exception e) {
 //                        }
                         dialog.dismiss();

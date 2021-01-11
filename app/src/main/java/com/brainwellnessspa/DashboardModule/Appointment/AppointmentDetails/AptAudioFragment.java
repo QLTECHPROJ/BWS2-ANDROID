@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -57,6 +59,8 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -65,6 +69,8 @@ public class AptAudioFragment extends Fragment {
     public FragmentManager f_manager;
     FragmentAptAudioBinding binding;
     String UserID, AudioFlag;
+    public AudioManager audioManager;
+    public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     //    Handler handler3;
     int startTime;
@@ -72,6 +78,7 @@ public class AptAudioFragment extends Fragment {
     long myProgress = 0;
     private Handler handler1;
     private long currentDuration = 0;
+    Properties p;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -117,6 +124,12 @@ public class AptAudioFragment extends Fragment {
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelableArrayList("AppointmentDetailList");
         }
+        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        percent = 100;
+        hundredVolume = (int) (currentVolume * percent) / maxVolume;
+
         if (appointmentDetail.size() == 0) {
         } else {
             appointmentsAdapter = new AudioListAdapter(appointmentDetail, getActivity(), f_manager);
@@ -535,6 +548,30 @@ public class AptAudioFragment extends Fragment {
                     downloadAudioDetails.setPlaylistId("");
                     downloadAudioDetails.setIsDownload("pending");
                     downloadAudioDetails.setDownloadProgress(0);
+
+                    try {
+                        p.putValue("userId", UserID);
+                        p.putValue("audioId", downloadAudioDetails.getID());
+                        p.putValue("audioName", downloadAudioDetails.getName());
+                        p.putValue("audioDescription", "");
+                        p.putValue("directions", downloadAudioDetails.getAudioDirection());
+                        p.putValue("masterCategory", downloadAudioDetails.getAudiomastercat());
+                        p.putValue("subCategory", downloadAudioDetails.getAudioSubCategory());
+                        p.putValue("audioDuration", downloadAudioDetails.getAudioDuration());
+                        p.putValue("position", GetCurrentAudioPosition());
+                        String name = audio.getName();
+                        if (name.contains(downloadAudioDetails.getName())) {
+                            p.putValue("audioType", "Downloaded");
+                        } else {
+                            p.putValue("audioType", "Streaming");
+                        }
+                        p.putValue("source", GetSourceName(getActivity()));
+                        p.putValue("bitRate", "");
+                        p.putValue("sound", String.valueOf(hundredVolume));
+                        BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     SharedPreferences sharedx1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     String AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

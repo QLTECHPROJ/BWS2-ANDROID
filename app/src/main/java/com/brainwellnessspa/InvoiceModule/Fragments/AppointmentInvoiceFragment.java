@@ -68,9 +68,9 @@ public class AppointmentInvoiceFragment extends Fragment {
             appointmentList = getArguments().getParcelableArrayList("appointmentInvoiceFragment");
         }
 
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Appointment Invoice  Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Appointment Invoice  Screen Viewed", p, CONSTANTS.screen);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
@@ -135,18 +135,18 @@ public class AppointmentInvoiceFragment extends Fragment {
                 receiptFragment.show(fragmentManager, "receipt");
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-               /* Properties p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
-                p.putValue("invoiceType", listModelList.get(position).getStatus());
-                p.putValue("invoiceAmount", listModelList.get(position).getAmount());
-                BWSApplication.addToSegment("Appointment Invoice Clicked", p, CONSTANTS.track);*/
             });
 
             holder.binding.llDownloads.setVisibility(View.GONE);
             holder.binding.llDownloads.setOnClickListener(v -> {
                 downloadUrl = listModelList.get(position).getInvoicePdf();
                 new FileDownloader();
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
+                p.putValue("invoiceType", "Appointment");
+                p.putValue("invoiceAmount", listModelList.get(position).getAmount());
+                BWSApplication.addToSegment("Invoice Downloaded", p, CONSTANTS.track);
             });
         }
 

@@ -56,6 +56,7 @@ public class AppointmentFragment extends Fragment {
     FragmentAppointmentBinding binding;
     String UserID, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     Activity activity;
+    Properties p;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
@@ -71,9 +72,9 @@ public class AppointmentFragment extends Fragment {
             appointmentImage = bundle.getString("appointmentImage");
             appointmentMainName = bundle.getString("appointmentMainName");
         }
-        /*Properties p = new Properties();
+        p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
@@ -85,6 +86,10 @@ public class AppointmentFragment extends Fragment {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse("https://brainwellnessspa.com.au/bookings/services.php"));
                 startActivity(i);
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("bookingLink", "https://brainwellnessspa.com.au/bookings/services.php");
+                BWSApplication.addToSegment("Book a New Appointment Clicked", p, CONSTANTS.track);
             }
         });
         return view;
@@ -334,6 +339,11 @@ public class AppointmentFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("appointmentName", listModel.get(position).getCategory());
+                    p.putValue("appointmentCategory", listModel.get(position).getCatMenual());
+                    BWSApplication.addToSegment("Appointment Item Clicked", p, CONSTANTS.track);
                     Bundle bundle = new Bundle();
                     Fragment sessionsFragment = new SessionsFragment();
                     bundle.putString("appointmentMainName", listModel.get(position).getCategory());

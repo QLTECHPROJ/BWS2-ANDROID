@@ -42,6 +42,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityPaymentBinding;
 import com.brainwellnessspa.databinding.CardsListLayoutBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class PaymentActivity extends AppCompatActivity {
     ActivityPaymentBinding binding;
     AllCardsAdapter adapter;
     Context context;
-    String card_id, userId, TrialPeriod, comeFrom = "", ComesTrue;
+    String card_id, UserID, TrialPeriod, comeFrom = "", ComesTrue;
     Activity activity;
     int position;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
@@ -72,7 +73,7 @@ public class PaymentActivity extends AppCompatActivity {
         context = PaymentActivity.this;
         activity = PaymentActivity.this;
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        UserID = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
@@ -91,6 +92,10 @@ public class PaymentActivity extends AppCompatActivity {
         if (getIntent() != null) {
             ComesTrue = getIntent().getStringExtra("ComesTrue");
         }
+
+        Properties p = new Properties();
+        p.putValue("UserID", UserID);
+        BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(view -> {
             Intent i = new Intent(context, OrderSummaryActivity.class);
@@ -130,7 +135,7 @@ public class PaymentActivity extends AppCompatActivity {
         try {
             if (BWSApplication.isNetworkConnected(context)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
+                Call<CardListModel> listCall = APIClient.getClient().getCardLists(UserID);
                 listCall.enqueue(new Callback<CardListModel>() {
                     @Override
                     public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
@@ -156,7 +161,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                                             if (BWSApplication.isNetworkConnected(context)) {
                                                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, card_id, renewPlanId, renewPlanFlag,
+                                                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(UserID, card_id, renewPlanId, renewPlanFlag,
                                                         invoicePayId, PlanStatus);
                                                 listCall.enqueue(new Callback<PayNowDetailsModel>() {
                                                     @Override
@@ -253,7 +258,7 @@ public class PaymentActivity extends AppCompatActivity {
             holder.binding.llAddNewCard.setOnClickListener(view -> {
                 if (BWSApplication.isNetworkConnected(context)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    Call<CardListModel> listCall = APIClient.getClient().getChangeCard(userId, listModel.getCustomer());
+                    Call<CardListModel> listCall = APIClient.getClient().getChangeCard(UserID, listModel.getCustomer());
                     listCall.enqueue(new Callback<CardListModel>() {
                         @Override
                         public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
@@ -318,7 +323,7 @@ public class PaymentActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_UP:
                             if (BWSApplication.isNetworkConnected(context)) {
                                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
+                                Call<CardModel> listCall = APIClient.getClient().getRemoveCard(UserID, listModel.getCustomer());
                                 listCall.enqueue(new Callback<CardModel>() {
                                     @Override
                                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {

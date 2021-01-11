@@ -40,9 +40,9 @@ public class BillingOrderActivity extends AppCompatActivity {
             finish();
         });
 
-        /*Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen);*/
+        BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen);
 
         binding.viewPager.setOffscreenPageLimit(3);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"));
