@@ -456,6 +456,7 @@ Appointment Audios dddd*/
                 }
             }
         }
+        InitNotificationAudioPLayer(ctx, mainPlayModelList);
     }
 
     public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
