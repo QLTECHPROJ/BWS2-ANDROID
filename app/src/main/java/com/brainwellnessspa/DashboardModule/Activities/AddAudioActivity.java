@@ -67,10 +67,11 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRel
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeRename;
+
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
     Context ctx;
-    String UserID, PlaylistID, AudioFlag;
+    String UserID, PlaylistID = "", AudioFlag;
     SerachListAdpater serachListAdpater;
     EditText searchEditText;
     Activity activity;
@@ -260,21 +261,21 @@ public class AddAudioActivity extends AppCompatActivity {
             }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-         if (!AudioFlag.equalsIgnoreCase("0")) {
-            comefromDownload = "1";
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(0, 8, 0, 210);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(0, 8, 0, 20);
-            binding.llSpace.setLayoutParams(params);
-        }
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                comefromDownload = "1";
+                Fragment fragment = new MiniPlayerFragment();
+                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(0, 8, 0, 210);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(0, 8, 0, 20);
+                binding.llSpace.setLayoutParams(params);
+            }
             /*
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -821,11 +822,11 @@ public class AddAudioActivity extends AppCompatActivity {
                                             GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
                                             ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                         }
-                                            Fragment fragment = new MiniPlayerFragment();
-                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                            fragmentManager1.beginTransaction()
-                                                    .add(R.id.flContainer, fragment)
-                                                    .commit();
+                                        Fragment fragment = new MiniPlayerFragment();
+                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                        fragmentManager1.beginTransaction()
+                                                .add(R.id.flContainer, fragment)
+                                                .commit();
 
                                     }
                                 }

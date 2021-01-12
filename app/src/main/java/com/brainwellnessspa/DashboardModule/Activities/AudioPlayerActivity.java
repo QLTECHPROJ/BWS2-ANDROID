@@ -2187,7 +2187,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
                 disableDownload();
                 SaveMedia(100);
-            }else{
+            } else {
                 fileNameList = new ArrayList<>();
                 audioFile1 = new ArrayList<>();
                 playlistDownloadId = new ArrayList<>();
@@ -2288,9 +2288,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 downloadAudioDetails.setDownload("1");
                 downloadAudioDetails.setIsSingle("1");
                 downloadAudioDetails.setPlaylistId("");
-                if(progress==0) {
+                if (progress == 0) {
                     downloadAudioDetails.setIsDownload("pending");
-                }else{
+                } else {
                     downloadAudioDetails.setIsDownload("Complete");
                 }
                 downloadAudioDetails.setDownloadProgress(progress);
@@ -2319,14 +2319,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 .taskDao()
                 .getaudioByPlaylist1(url, "").observe(this, audiolist -> {
             if (audiolist.size() != 0) {
-                if(audiolist.get(0).getDownloadProgress() == 100) {
+                if (audiolist.get(0).getDownloadProgress() == 100) {
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     binding.llDownload.setClickable(false);
                     binding.llDownload.setEnabled(false);
                     binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     binding.ivDownloads.setVisibility(View.VISIBLE);
                     binding.pbProgress.setVisibility(View.GONE);
-                }else{
+                } else {
                     GetMediaPer();
                 }
             } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
@@ -2761,7 +2761,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 fileNameList = gson.fromJson(jsony, type);
                 playlistDownloadId = gson.fromJson(jsonq, type);
                 if (fileNameList.contains(mainPlayModelList.get(position).getName())) {
-                    handler2.postDelayed(UpdateSongTime2,3000);
+                    handler2.postDelayed(UpdateSongTime2, 3000);
                     GetMediaPer();
                 }
             } else {
