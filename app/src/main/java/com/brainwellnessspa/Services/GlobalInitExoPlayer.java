@@ -88,6 +88,7 @@ public class GlobalInitExoPlayer extends Service {
     Notification notification1;
     GlobalInitExoPlayer globalInitExoPlayer;
     Intent playbackServiceIntent;
+    ArrayList<MainPlayModel> mainPlayModelList1=new ArrayList<>();
     static Bitmap notification_artwork;
     /*MediaSessionCompat mediaSession = null;
     MediaSessionConnector mediaSessionConnector = null;*/
@@ -470,8 +471,16 @@ Appointment Audios dddd*/
 //        playerNotificationManager.setPlayer(player);
     }
 
-    public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
+    public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList2) {
         int position = 0;
+        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+            }.getType();
+            mainPlayModelList1 = gson.fromJson(json, type);
+        }
         playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
                 ctx,
                 "10001",
@@ -480,7 +489,15 @@ Appointment Audios dddd*/
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player players) {
-                        return mainPlayModelList.get(players.getCurrentWindowIndex()).getName();
+                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            mainPlayModelList1 = gson.fromJson(json, type);
+                        }
+                        return mainPlayModelList1.get(players.getCurrentWindowIndex()).getName();
                     }
 
                     @Nullable
@@ -497,14 +514,30 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public String getCurrentContentText(Player players) {
-                        return mainPlayModelList.get(players.getCurrentWindowIndex()).getAudioDirection();
+                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            mainPlayModelList1 = gson.fromJson(json, type);
+                        }
+                        return mainPlayModelList1.get(players.getCurrentWindowIndex()).getAudioDirection();
                     }
 
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
-                        getMediaBitmap(getBaseContext(), mainPlayModelList.get(players.getCurrentWindowIndex()).getImageFile());
-                        Log.e("IMAGES NOTIFICATION", mainPlayModelList.get(players.getCurrentWindowIndex()).getImageFile());
+                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            mainPlayModelList1 = gson.fromJson(json, type);
+                        }
+                        getMediaBitmap(getBaseContext(), mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
                         return myBitmap;
                     }
                 },
@@ -531,7 +564,8 @@ Appointment Audios dddd*/
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         }
-        if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+
+        if (!mainPlayModelList1.get(position).getAudioFile().equalsIgnoreCase("")) {
             playerNotificationManager.setFastForwardIncrementMs(30000);
             playerNotificationManager.setRewindIncrementMs(30000);
             playerNotificationManager.setUseNavigationActions(true);
