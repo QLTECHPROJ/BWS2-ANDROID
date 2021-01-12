@@ -776,6 +776,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .taskDao()
                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
             });
+            handler2.removeCallbacks(UpdateSongTime2);
             audioClick = false;
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
@@ -2258,57 +2259,70 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void SaveMedia(int progress) {
-        class SaveMedia extends AsyncTask<Void, Void, Void> {
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .getaudioByPlaylist1(url, "").observe(this, audioList -> {
+            if (audioList.size() == 0) {
+                class SaveMedia extends AsyncTask<Void, Void, Void> {
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-                if (queuePlay) {
-                    downloadAudioDetails.setID(addToQueueModelList.get(position).getID());
-                    downloadAudioDetails.setName(addToQueueModelList.get(position).getName());
-                    downloadAudioDetails.setAudioFile(addToQueueModelList.get(position).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(addToQueueModelList.get(position).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(addToQueueModelList.get(position).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(addToQueueModelList.get(position).getImageFile());
-                    downloadAudioDetails.setLike(addToQueueModelList.get(position).getLike());
-                    downloadAudioDetails.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
-                } else if (audioPlay) {
-                    downloadAudioDetails.setID(mainPlayModelList.get(position).getID());
-                    downloadAudioDetails.setName(mainPlayModelList.get(position).getName());
-                    downloadAudioDetails.setAudioFile(mainPlayModelList.get(position).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(mainPlayModelList.get(position).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(mainPlayModelList.get(position).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(mainPlayModelList.get(position).getImageFile());
-                    downloadAudioDetails.setLike(mainPlayModelList.get(position).getLike());
-                    downloadAudioDetails.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
-                }
-                downloadAudioDetails.setDownload("1");
-                downloadAudioDetails.setIsSingle("1");
-                downloadAudioDetails.setPlaylistId("");
-                if (progress == 0) {
-                    downloadAudioDetails.setIsDownload("pending");
-                } else {
-                    downloadAudioDetails.setIsDownload("Complete");
-                }
-                downloadAudioDetails.setDownloadProgress(progress);
-                DatabaseClient.getInstance(getApplicationContext())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .insertMedia(downloadAudioDetails);
-                return null;
-            }
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+                        if (queuePlay) {
+                            downloadAudioDetails.setID(addToQueueModelList.get(position).getID());
+                            downloadAudioDetails.setName(addToQueueModelList.get(position).getName());
+                            downloadAudioDetails.setAudioFile(addToQueueModelList.get(position).getAudioFile());
+                            downloadAudioDetails.setAudioDirection(addToQueueModelList.get(position).getAudioDirection());
+                            downloadAudioDetails.setAudiomastercat(addToQueueModelList.get(position).getAudiomastercat());
+                            downloadAudioDetails.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
+                            downloadAudioDetails.setImageFile(addToQueueModelList.get(position).getImageFile());
+                            downloadAudioDetails.setLike(addToQueueModelList.get(position).getLike());
+                            downloadAudioDetails.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
+                        } else if (audioPlay) {
+                            downloadAudioDetails.setID(mainPlayModelList.get(position).getID());
+                            downloadAudioDetails.setName(mainPlayModelList.get(position).getName());
+                            downloadAudioDetails.setAudioFile(mainPlayModelList.get(position).getAudioFile());
+                            downloadAudioDetails.setAudioDirection(mainPlayModelList.get(position).getAudioDirection());
+                            downloadAudioDetails.setAudiomastercat(mainPlayModelList.get(position).getAudiomastercat());
+                            downloadAudioDetails.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
+                            downloadAudioDetails.setImageFile(mainPlayModelList.get(position).getImageFile());
+                            downloadAudioDetails.setLike(mainPlayModelList.get(position).getLike());
+                            downloadAudioDetails.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
+                        }
+                        downloadAudioDetails.setDownload("1");
+                        downloadAudioDetails.setIsSingle("1");
+                        downloadAudioDetails.setPlaylistId("");
+                        if (progress == 0) {
+                            downloadAudioDetails.setIsDownload("pending");
+                        } else {
+                            downloadAudioDetails.setIsDownload("Complete");
+                        }
+                        downloadAudioDetails.setDownloadProgress(progress);
+                        DatabaseClient.getInstance(getApplicationContext())
+                                .getaudioDatabase()
+                                .taskDao()
+                                .insertMedia(downloadAudioDetails);
+                        return null;
+                    }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                GetMediaPer();
-                disableDownload();
-                super.onPostExecute(aVoid);
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        GetMediaPer();
+                        disableDownload();
+                        super.onPostExecute(aVoid);
+                    }
+                }
+                SaveMedia st = new SaveMedia();
+                st.execute();
             }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();
+            DatabaseClient
+                    .getInstance(this)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getaudioByPlaylist1(url, "").removeObserver(audioListx -> {});
+        });
     }
 
     public void GetMedia2() {
@@ -2732,11 +2746,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             binding.ivDownloads.setVisibility(View.VISIBLE);
                             handler2.removeCallbacks(UpdateSongTime2);
                         }
-                        handler2.postDelayed(UpdateSongTime2, 3000);
+                        handler2.postDelayed(UpdateSongTime2, 10000);
                     } else {
                         binding.pbProgress.setVisibility(View.VISIBLE);
                         binding.ivDownloads.setVisibility(View.GONE);
-                        handler2.postDelayed(UpdateSongTime2, 3000);
+                        handler2.postDelayed(UpdateSongTime2, 10000);
                     }
                 }
             }
@@ -2760,7 +2774,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 fileNameList = gson.fromJson(jsony, type);
                 playlistDownloadId = gson.fromJson(jsonq, type);
                 if (fileNameList.contains(mainPlayModelList.get(position).getName())) {
-                    handler2.postDelayed(UpdateSongTime2, 3000);
+                    handler2.postDelayed(UpdateSongTime2, 10000);
                     GetMediaPer();
                 }
             } else {

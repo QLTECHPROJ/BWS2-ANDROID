@@ -705,41 +705,6 @@ Appointment Audios dddd*/
     }
 
     public String UpdateMiniPlayer(Context ctx) {
-        List<String> fileNameList, audioFile, playlistDownloadId;
-        if (!isDownloading) {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                Gson gson = new Gson();
-                String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-                    Type type = new TypeToken<List<String>>() {
-                    }.getType();
-                    fileNameList = gson.fromJson(json, type);
-                    audioFile = gson.fromJson(json1, type);
-                    playlistDownloadId = gson.fromJson(json2, type);
-                   /* fileNameList = new ArrayList<>();
-                    audioFile = new ArrayList<>();
-                    playlistDownloadId = new ArrayList<>();
-                    SharedPreferences sharedxxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedxxx.edit();
-                    String nameJson = gson.toJson(fileNameList);
-                    String urlJson = gson.toJson(audioFile);
-                    String playlistIdJson = gson.toJson(playlistDownloadId);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();*/
-                    if (fileNameList.size() != 0) {
-                        DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                        downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
-                    }
-                }
-            }
-        } else {
-//            getRemainDownloads();
-        }
         String AudioFlag = "0";
         SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String expDate = (shared1x.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
