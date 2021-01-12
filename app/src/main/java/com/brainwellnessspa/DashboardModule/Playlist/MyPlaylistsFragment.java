@@ -2359,7 +2359,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     adpater.notifyDataSetChanged();
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
                 } else {
                     adpater.notifyDataSetChanged();
                     holder.binding.equalizerview.setVisibility(View.GONE);
@@ -2734,9 +2733,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if (player != null) {
                             if (!player.getPlayWhenReady()) {
                                 holder.binding.equalizerview.stopBars();
-                            }
+                            } else
+                                holder.binding.equalizerview.animateBars();
                         } else
-                            holder.binding.equalizerview.animateBars();
+                            holder.binding.equalizerview.stopBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         songId = myAudioId;
