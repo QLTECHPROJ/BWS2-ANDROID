@@ -5,6 +5,8 @@ import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
+import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
@@ -48,6 +51,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
     int BackClick = 0;
+    MyNetworkReceiver myNetworkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,8 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 
             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
         }
+        registerReceiver(myNetworkReceiver=new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -251,6 +257,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     protected void onDestroy() {
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
         relesePlayer();
+        unregisterReceiver(myNetworkReceiver);
         deleteCache(DashboardActivity.this);
         super.onDestroy();
     }

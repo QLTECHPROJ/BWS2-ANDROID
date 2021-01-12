@@ -88,13 +88,13 @@ public class DownloadMedia implements OnDownloadListener {
 //                        PRDownloader.resume(downloadIdOne);
 //                        status = Status.RUNNING;
 //                    }
-                })
+                })*/
                 .setOnPauseListener(() -> {
                     if (Status.RUNNING == status) {
                         PRDownloader.pause(downloadIdOne);
                         status = Status.PAUSED;
                     }
-                })*/.setOnCancelListener(() -> {
+                }).setOnCancelListener(() -> {
                     downloadIdOne = 0;
 //                    LocalBroadcastManager.getInstance(context).unregisterReceiver(listener);
                     filename = "";

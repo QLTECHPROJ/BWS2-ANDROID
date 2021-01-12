@@ -127,7 +127,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Properties p;
     long oldSeekPosition = 0;
     Handler handler2;
-    //    boolean ismyDes = false;
 /*    Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
