@@ -585,6 +585,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        } else {
 //            initializePlayer();
 //        }
+        getDownloadData();
         if (!audioClick) {
             getPrepareShowData();
         } else {
@@ -2317,12 +2318,16 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 .taskDao()
                 .getaudioByPlaylist1(url, "").observe(this, audiolist -> {
             if (audiolist.size() != 0) {
-                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                binding.llDownload.setClickable(false);
-                binding.llDownload.setEnabled(false);
-                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                binding.ivDownloads.setVisibility(View.VISIBLE);
-                binding.pbProgress.setVisibility(View.GONE);
+                if(audiolist.get(0).getDownloadProgress() == 100) {
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                    binding.llDownload.setClickable(false);
+                    binding.llDownload.setEnabled(false);
+                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setVisibility(View.GONE);
+                }else{
+                    GetMediaPer();
+                }
             } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
                 binding.llDownload.setClickable(true);
                 binding.llDownload.setEnabled(true);
@@ -2568,6 +2573,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void callButtonText(int ps) {
+        getDownloadData();
 //        simpleSeekbar.setMax(100);
         if (!BWSApplication.isNetworkConnected(ctx)) {
             Gson gson = new Gson();
@@ -2589,6 +2595,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.tvNowPlaying.setText("");
         } else {
             GetMedia2();
+            GetMediaPer();
             binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
             isDisclaimer = 0;
         }
@@ -2703,7 +2710,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }
         addToRecentPlayId = id;
-        GetMediaPer();
     }
 
     private void GetMediaPer() {
@@ -2754,6 +2760,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 fileNameList = gson.fromJson(jsony, type);
                 playlistDownloadId = gson.fromJson(jsonq, type);
                 if (fileNameList.contains(mainPlayModelList.get(position).getName())) {
+                    handler2.postDelayed(UpdateSongTime2,3000);
                     GetMediaPer();
                 }
             } else {
