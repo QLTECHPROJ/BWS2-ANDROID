@@ -62,7 +62,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
     public static boolean addToPlayList = false;
     public static String MyPlaylistId = "";
     ActivityAddPlaylistBinding binding;
-    String UserID, AudioId, FromPlaylistID, PlaylistName, ScreenView = "";
+    String UserID, AudioId = "", FromPlaylistID = "", PlaylistName = "", ScreenView = "", PlaylistImage = "", PlaylistType = "";
     Context ctx;
     Activity activity;
     Properties p;
@@ -84,6 +84,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
             PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
         if (getIntent().getExtras() != null) {
+            PlaylistImage = getIntent().getStringExtra("PlaylistImage");
+        }
+        if (getIntent().getExtras() != null) {
+            PlaylistType = getIntent().getStringExtra("PlaylistType");
+        }
+        if (getIntent().getExtras() != null) {
             ScreenView = getIntent().getStringExtra("ScreenView");
         }
 
@@ -94,7 +100,19 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             comefrom_search = 0;
-            finish();
+            if (comeAddPlaylist == 1) {
+                Intent i = new Intent(ctx, MyPlaylistActivity.class);
+                i.putExtra("PlaylistID", FromPlaylistID);
+                i.putExtra("PlaylistName", PlaylistName);
+                i.putExtra("PlaylistIDImage", PlaylistImage);
+                i.putExtra("ScreenView", ScreenView);
+                i.putExtra("PlaylistType", PlaylistType);
+                i.putExtra("Liked", "0");
+                startActivity(i);
+                finish();
+            } else {
+                finish();
+            }
         });
 
         RecyclerView.LayoutManager played = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
@@ -102,7 +120,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
         binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("No result found");
-
 
         binding.btnAddPlatLists.setOnClickListener(view -> {
             Properties p = new Properties();
@@ -214,7 +231,19 @@ public class AddPlaylistActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         comefrom_search = 0;
-        finish();
+        if (comeAddPlaylist == 1) {
+            Intent i = new Intent(ctx, MyPlaylistActivity.class);
+            i.putExtra("PlaylistID", FromPlaylistID);
+            i.putExtra("PlaylistName", PlaylistName);
+            i.putExtra("PlaylistIDImage", PlaylistImage);
+            i.putExtra("ScreenView", ScreenView);
+            i.putExtra("PlaylistType", PlaylistType);
+            i.putExtra("Liked", "0");
+            startActivity(i);
+            finish();
+        } else {
+            finish();
+        }
     }
 
     @Override

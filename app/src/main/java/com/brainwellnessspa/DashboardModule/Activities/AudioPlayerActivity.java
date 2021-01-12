@@ -94,8 +94,10 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloadi
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.audioRemove;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AudioPlayerActivity extends AppCompatActivity {
@@ -575,7 +577,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
         }
 //        binding.tvDireName.setText(R.string.Directions);
-//        myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
+//        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
 
 //        callButtonText(position);
 //        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
@@ -664,7 +666,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -952,7 +953,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         position = player.getCurrentWindowIndex();
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -1448,6 +1449,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
@@ -1761,6 +1763,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llNext.setOnClickListener(view -> {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                 DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -1793,6 +1796,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPrev.setOnClickListener(view -> {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                 DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()

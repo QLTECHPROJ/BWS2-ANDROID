@@ -64,7 +64,7 @@ public class ReminderActivity extends AppCompatActivity {
     Context context;
     int pos;
     Dialog dialog;
-    String ReminderDay, ReminderId, am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
+    String ReminderDay, ReminderId = "", am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
     ArrayList<String> remiderDays = new ArrayList<>();
     String ReminderDaySelected, ReminderDayTemp;
     private int mHour, mMinute;

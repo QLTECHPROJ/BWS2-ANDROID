@@ -15,7 +15,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -40,6 +44,8 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.gson.Gson;
@@ -83,6 +89,8 @@ public class GlobalInitExoPlayer extends Service {
     GlobalInitExoPlayer globalInitExoPlayer;
     Intent playbackServiceIntent;
     static Bitmap notification_artwork;
+    /*MediaSessionCompat mediaSession = null;
+    MediaSessionConnector mediaSessionConnector = null;*/
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -478,8 +486,6 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
-                        /*int window = player.getCurrentWindowIndex();
-                        return createPendingIntent(window);*/
                         Intent intent = new Intent(ctx, AudioPlayerActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
@@ -497,15 +503,7 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
-                      /*  int window = player.getCurrentWindowIndex();
-                        Bitmap largeIcon = getLargeIcon(window);
-                        if (largeIcon == null && getLargeIconUri(window) != null) {
-                            // load bitmap async
-                            loadBitmap(getLargeIconUri(window), callback);
-                            return getPlaceholderBitmap();
-                        }
-                        return largeIcon;callback.onBitmap(myBitmap)*/
-                        getMediaBitmap(ctx, mainPlayModelList.get(players.getCurrentWindowIndex()).getImageFile());
+                        getMediaBitmap(getBaseContext(), mainPlayModelList.get(players.getCurrentWindowIndex()).getImageFile());
                         Log.e("IMAGES NOTIFICATION", mainPlayModelList.get(players.getCurrentWindowIndex()).getImageFile());
                         return myBitmap;
                     }
@@ -554,6 +552,33 @@ Appointment Audios dddd*/
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
+
+       /* MediaSessionCompat mediaSession = new MediaSessionCompat(ctx, "MEDIA_SESSION_TAG");
+        mediaSession.setActive(true);
+
+        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+
+        MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
+        mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
+            @Override
+            public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
+                Bundle extras = new Bundle();
+//                myBitmap = getMediaBitmap(getBaseContext(), mainPlayModelList.get(windowIndex).getImageFile());
+//                extras.putParcelable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
+//                extras.putParcelable(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, myBitmap);
+                return new MediaDescriptionCompat.Builder()
+                        .setMediaId(mainPlayModelList.get(windowIndex).getID())
+                        *//*.setIconBitmap(myBitmap)*//*
+                        .setTitle(mainPlayModelList.get(windowIndex).getName())
+                        .setDescription(mainPlayModelList.get(windowIndex).getAudioDirection())
+
+                        *//*.setSubtitle(mainPlayModelList.get(windowIndex).getSIZE() + " " +
+                                mainPlayModelList.get(windowIndex).getAudioDuration())
+                        .setExtras(extras)*//*
+                        .build();
+            }
+        });
+        mediaSessionConnector.setPlayer(player);*/
     }
 
     public void InitNotificationAudioPLayerD(Context ctx) {
@@ -768,8 +793,8 @@ Appointment Audios dddd*/
                             arrayList1.add(mainPlayModel);
                         }
                     }
-                    if(arrayList2.size()<arrayList.size()){
-                        if(player!=null) {
+                    if (arrayList2.size() < arrayList.size()) {
+                        if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
                         }

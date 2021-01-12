@@ -469,6 +469,10 @@ public class ViewAllSearchFragment extends Fragment {
                     i.putExtra("AudioId", AudiolistModel.get(position).getID());
                     i.putExtra("ScreenView","Recommended Search Audio");
                     i.putExtra("PlaylistID", "");
+                    i.putExtra("PlaylistName", "");
+                    i.putExtra("PlaylistImage", "");
+                    i.putExtra("PlaylistType", "");
+                    i.putExtra("Liked", "0");
                     startActivity(i);
                 }
             });
@@ -594,6 +598,9 @@ public class ViewAllSearchFragment extends Fragment {
                     i.putExtra("PlaylistID", PlaylistModel.get(position).getID());
                     i.putExtra("ScreenView","Recommended Search Playlist");
                     i.putExtra("PlaylistName", PlaylistModel.get(position).getName());
+                    i.putExtra("PlaylistImage", "");
+                    i.putExtra("PlaylistType", "");
+                    i.putExtra("Liked", "0");
                     startActivity(i);
                 }
             });

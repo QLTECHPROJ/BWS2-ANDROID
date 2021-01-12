@@ -69,7 +69,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
     ActivityMyPlaylistBinding binding;
-    String PlaylistType = "", UserID, PlaylistID, Download = "", Liked = "", PlaylistDesc = "", PlaylistName = "", ScreenView = "", TotalAudio = "", Totalhour = "", Totalminute = "";
+    String PlaylistImage = "", PlaylistType = "", UserID, PlaylistID = "", Download = "", Liked = "", PlaylistDesc = "", PlaylistName = "", ScreenView = "", TotalAudio = "", Totalhour = "", Totalminute = "";
     Context ctx;
     Activity activity;
     public static int comeAddPlaylist = 0;
@@ -152,6 +152,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
+        if (getIntent().getExtras() != null) {
+            PlaylistName = getIntent().getStringExtra(CONSTANTS.PlaylistName);
+        }
+        if (getIntent().getExtras() != null) {
+            PlaylistImage = getIntent().getStringExtra(CONSTANTS.PlaylistImage);
+        }
 
         if (getIntent().hasExtra("Liked")) {
             Liked = getIntent().getStringExtra("Liked");
@@ -185,7 +191,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
             i.putExtra("AudioId", "");
             i.putExtra("ScreenView", "Playlist Details Screen");
             i.putExtra("PlaylistID", PlaylistID);
+            i.putExtra("PlaylistName", PlaylistName);
+            i.putExtra("PlaylistImage", PlaylistImage);
+            i.putExtra("PlaylistType", PlaylistType);
+            i.putExtra("Liked", "0");
             startActivity(i);
+            finish();
         });
 
         binding.llLikes.setOnClickListener(v -> CallPlaylistLike(PlaylistID));

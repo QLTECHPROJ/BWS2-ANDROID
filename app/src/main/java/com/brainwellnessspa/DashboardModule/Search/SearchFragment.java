@@ -291,9 +291,9 @@ public class SearchFragment extends Fragment {
     }
 
     private void prepareSuggestedData() {
-       try {
+        try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-              globalInitExoPlayer.UpdateMiniPlayer(getActivity());
+            globalInitExoPlayer.UpdateMiniPlayer(getActivity());
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
@@ -635,8 +635,12 @@ public class SearchFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", modelList.get(position).getID());
-                        i.putExtra("ScreenView","Search Audio");
+                        i.putExtra("ScreenView", "Search Audio");
                         i.putExtra("PlaylistID", "");
+                        i.putExtra("PlaylistName", "");
+                        i.putExtra("PlaylistImage", "");
+                        i.putExtra("PlaylistType", "");
+                        i.putExtra("Liked", "0");
                         startActivity(i);
                     }
                 });
@@ -714,8 +718,12 @@ public class SearchFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", "");
-                        i.putExtra("ScreenView","Search Playlist");
+                        i.putExtra("ScreenView", "Search Playlist");
                         i.putExtra("PlaylistID", modelList.get(position).getID());
+                        i.putExtra("PlaylistName", "");
+                        i.putExtra("PlaylistImage", "");
+                        i.putExtra("PlaylistType", "");
+                        i.putExtra("Liked", "0");
                         startActivity(i);
                     }
                 });
@@ -903,8 +911,12 @@ public class SearchFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", modelList.get(position).getID());
-                    i.putExtra("ScreenView","Recommended Search Audio");
+                    i.putExtra("ScreenView", "Recommended Search Audio");
                     i.putExtra("PlaylistID", "");
+                    i.putExtra("PlaylistName", "");
+                    i.putExtra("PlaylistImage", "");
+                    i.putExtra("PlaylistType", "");
+                    i.putExtra("Liked", "0");
                     startActivity(i);
                 }
             });
@@ -1004,8 +1016,12 @@ public class SearchFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                         i.putExtra("AudioId", "");
-                        i.putExtra("ScreenView","Recommended Search Playlist");
+                        i.putExtra("ScreenView", "Recommended Search Playlist");
                         i.putExtra("PlaylistID", modelList.get(position).getID());
+                        i.putExtra("PlaylistName", "");
+                        i.putExtra("PlaylistImage", "");
+                        i.putExtra("PlaylistType", "");
+                        i.putExtra("Liked", "0");
                         startActivity(i);
                     }
 

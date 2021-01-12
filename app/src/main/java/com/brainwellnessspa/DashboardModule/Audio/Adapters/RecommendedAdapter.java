@@ -128,6 +128,10 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                     i.putExtra("AudioId", listModelList.get(position).getID());
                     i.putExtra("ScreenView","Audio Main Screen");
                     i.putExtra("PlaylistID", "");
+                    i.putExtra("PlaylistName", "");
+                    i.putExtra("PlaylistImage", "");
+                    i.putExtra("PlaylistType", "");
+                    i.putExtra("Liked", "0");
                     ctx.startActivity(i);
                 }
             }

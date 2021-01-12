@@ -325,6 +325,11 @@ public class ViewAllPlaylistFragment extends Fragment {
                     i.putExtra("AudioId", "");
                     i.putExtra("ScreenView", "Playlist View All Screen");
                     i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                    i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                    i.putExtra("PlaylistType", listModelList.get(position).getCreated());
+                    i.putExtra("Liked", "0");
                     startActivity(i);
                 }
 

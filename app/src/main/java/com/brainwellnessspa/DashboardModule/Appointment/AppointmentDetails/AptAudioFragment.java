@@ -496,6 +496,10 @@ public class AptAudioFragment extends Fragment {
                         i.putExtra("AudioId", listModelList.get(position).getID());
                         i.putExtra("ScreenView", "Appointment Audio Screen");
                         i.putExtra("PlaylistID", "");
+                        i.putExtra("PlaylistName", "");
+                        i.putExtra("PlaylistImage", "");
+                        i.putExtra("PlaylistType", "");
+                        i.putExtra("Liked", "0");
                         startActivity(i);
                     }
                 }

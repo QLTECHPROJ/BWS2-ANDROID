@@ -1462,6 +1462,10 @@ public class AddQueueActivity extends AppCompatActivity {
                             i.putExtra("AudioId", AudioId);
                             i.putExtra("ScreenView", "Audio Details Screen");
                             i.putExtra("PlaylistID", "");
+                            i.putExtra("PlaylistName", "");
+                            i.putExtra("PlaylistImage", "");
+                            i.putExtra("PlaylistType", "");
+                            i.putExtra("Liked", "0");
                             startActivity(i);
                         });
 

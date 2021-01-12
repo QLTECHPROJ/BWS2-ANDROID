@@ -156,7 +156,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     VersionModel versionModel = response.body();
                     try {
                         try {
-//                             TODO Live segment key
+//     TODO :                         Live segment key
 //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
                             analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key_foram))//foram
                                     .trackApplicationLifecycleEvents()
