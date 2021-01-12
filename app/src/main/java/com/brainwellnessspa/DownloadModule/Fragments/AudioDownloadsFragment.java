@@ -148,7 +148,8 @@ public class AudioDownloadsFragment extends Fragment {
                     .getInstance(getActivity())
                     .getaudioDatabase()
                     .taskDao()
-                    .geAllData1("").removeObserver( audioListx -> {});
+                    .geAllData1("").removeObserver(audioListx -> {
+            });
         });
 
     }
@@ -432,7 +433,7 @@ public class AudioDownloadsFragment extends Fragment {
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    if(BWSApplication.isNetworkConnected(ctx)) {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
@@ -485,7 +486,7 @@ public class AudioDownloadsFragment extends Fragment {
                             listModelList2.add(position, mainPlayModel);
                             callTransFrag(position, listModelList2);
                         }
-                    }else {
+                    } else {
                         getMedia(audioPlay, AudioFlag, position);
                     }
                     /*Properties p = new Properties();
@@ -547,57 +548,40 @@ public class AudioDownloadsFragment extends Fragment {
                 }
             });
         }
+
         private void getMedia(boolean audioPlay, String AudioFlag, int position) {
-                class GetTask extends AsyncTask<Void, Void, Void> {
-                    List<String> downloadAudioDetailsList = new ArrayList<>();
+            class GetTask extends AsyncTask<Void, Void, Void> {
+                List<String> downloadAudioDetailsList = new ArrayList<>();
 
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        downloadAudioDetailsList = DatabaseClient
-                                .getInstance(ctx)
-                                .getaudioDatabase()
-                                .taskDao()
-                                .geAllDataBYDownloaded("Complete");
-                        return null;
-                    }
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    downloadAudioDetailsList = DatabaseClient
+                            .getInstance(ctx)
+                            .getaudioDatabase()
+                            .taskDao()
+                            .geAllDataBYDownloaded("Complete");
+                    return null;
+                }
 
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        int pos = 0;
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                            if (isDisclaimer == 1) {
-                                if (player != null) {
-                                    if (!player.getPlayWhenReady()) {
-                                        player.setPlayWhenReady(true);
-                                    }
-                                } else {
-                                    audioClick = true;
-                                    miniPlayer = 1;
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    int pos = 0;
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                if (!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
                                 }
-                                Fragment fragment = new MiniPlayerFragment();
-                                FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                                fragmentManager1.beginTransaction()
-                                        .add(R.id.flContainer, fragment)
-                                        .commit();
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
-                                ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                                for (int i = 0; i < listModelList.size(); i++) {
-                                    if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
-                                        listModelList2.add(listModelList.get(i));
-                                    }
-                                }
-                                if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                                    pos = position;
-                                } else{
-                                    pos = 0;
-                                }
-                                if (listModelList2.size() != 0) {
-                                    callTransFrag(pos, listModelList2);
-                                } else {
-                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                                }
+                                audioClick = true;
+                                miniPlayer = 1;
                             }
+                            Fragment fragment = new MiniPlayerFragment();
+                            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                             for (int i = 0; i < listModelList.size(); i++) {
@@ -607,34 +591,52 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                             if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                 pos = position;
-                            } else{
+                            } else {
                                 pos = 0;
                             }
-                            isDisclaimer = 0;
-                            disclaimerPlayed = 0;
-                            DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                            mainPlayModel.setID("0");
-                            mainPlayModel.setName("Disclaimer");
-                            mainPlayModel.setAudioFile("");
-                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                            mainPlayModel.setAudiomastercat("");
-                            mainPlayModel.setAudioSubCategory("");
-                            mainPlayModel.setImageFile("");
-                            mainPlayModel.setLike("");
-                            mainPlayModel.setDownload("");
-                            mainPlayModel.setAudioDuration("00:48");
-                            listModelList2.add(pos, mainPlayModel);
-                            if (listModelList2.size() != 1) {
+                            if (listModelList2.size() != 0) {
                                 callTransFrag(pos, listModelList2);
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                         }
-                        super.onPostExecute(aVoid);
+                    } else {
+                        ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                        for (int i = 0; i < listModelList.size(); i++) {
+                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                                listModelList2.add(listModelList.get(i));
+                            }
+                        }
+                        if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                            pos = position;
+                        } else {
+                            pos = 0;
+                        }
+                        isDisclaimer = 0;
+                        disclaimerPlayed = 0;
+                        DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
+                        mainPlayModel.setID("0");
+                        mainPlayModel.setName("Disclaimer");
+                        mainPlayModel.setAudioFile("");
+                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                        mainPlayModel.setAudiomastercat("");
+                        mainPlayModel.setAudioSubCategory("");
+                        mainPlayModel.setImageFile("");
+                        mainPlayModel.setLike("");
+                        mainPlayModel.setDownload("");
+                        mainPlayModel.setAudioDuration("00:48");
+                        listModelList2.add(pos, mainPlayModel);
+                        if (listModelList2.size() != 1) {
+                            callTransFrag(pos, listModelList2);
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
                     }
+                    super.onPostExecute(aVoid);
                 }
-                GetTask st = new GetTask();
-                st.execute();
+            }
+            GetTask st = new GetTask();
+            st.execute();
         }
 
         private void callTransFrag(int position, List<DownloadAudioDetails> listModelList) {
@@ -735,19 +737,24 @@ public class AudioDownloadsFragment extends Fragment {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                Properties p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("audioId", listModelList.get(position).getID());
-                p.putValue("audioName", listModelList.get(position).getName());
-                p.putValue("audioDescription", "");
-                p.putValue("audioDuration", listModelList.get(position).getAudioDuration());
-                p.putValue("directions", listModelList.get(position).getAudioDirection());
-                p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
-                p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
-                p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("audioType", "Downloaded");
-                p.putValue("bitRate", "");
-                BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
+                try {
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("audioId", listModelList.get(position).getID());
+                    p.putValue("audioName", listModelList.get(position).getName());
+                    p.putValue("audioDescription", "");
+                    p.putValue("audioDuration", listModelList.get(position).getAudioDuration());
+                    p.putValue("directions", listModelList.get(position).getAudioDirection());
+                    p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
+                    p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
+                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioType", "Downloaded");
+                    p.putValue("bitRate", "");
+                    BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 listModelList.remove(position);
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
@@ -876,11 +883,12 @@ public class AudioDownloadsFragment extends Fragment {
                             .getaudioDatabase()
                             .taskDao()
                             .getLastIdByuId1(audioFile).observe(getActivity(), audioList -> {
-                                DatabaseClient
-                            .getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .getLastIdByuId1(audioFile).removeObserver(  audioListx -> {});
+                        DatabaseClient
+                                .getInstance(ctx)
+                                .getaudioDatabase()
+                                .taskDao()
+                                .getLastIdByuId1(audioFile).removeObserver(audioListx -> {
+                        });
                         if (audioList.size() == 0) {
                             try {
                                 FileUtils.deleteDownloadedFile(applicationContext, audioName);
