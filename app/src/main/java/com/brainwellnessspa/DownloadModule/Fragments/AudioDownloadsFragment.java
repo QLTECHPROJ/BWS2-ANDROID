@@ -907,6 +907,7 @@ public class AudioDownloadsFragment extends Fragment {
                 if (audioList.size() != 0) {
                     if (audioList.size() == 0) {
                         tvFound.setVisibility(View.VISIBLE);
+                        llError.setVisibility(View.VISIBLE);
                     } else {
                         llError.setVisibility(View.GONE);
                         LocalBroadcastManager.getInstance(getActivity())
