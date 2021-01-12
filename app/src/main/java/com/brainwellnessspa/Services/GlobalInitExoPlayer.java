@@ -410,11 +410,7 @@ Appointment Audios dddd*/
     }
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
-        if (player != null) {
-            player.stop();
-            player.release();
-//            player = null;
-        }
+        relesePlayer();
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
         player.setMediaItem(mediaItem1);

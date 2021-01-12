@@ -223,6 +223,8 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                             }
                         }
                         position = 0;
+                    } else {
+                        listModelList2.addAll(listModelList);
                     }
                     callTransFrag(position, listModelList2);
                 }

@@ -1766,13 +1766,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                 myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
-                });
                 if (player != null) {
+                    DatabaseClient
+                            .getInstance(ctx)
+                            .getaudioDatabase()
+                            .taskDao()
+                            .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
+                    });
                     if (player.hasNext()) {
                         player.next();
                         p = new Properties();
@@ -1799,14 +1799,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                 myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
-                });
                 if (player != null) {
                     if (player.hasPrevious()) {
+                        DatabaseClient
+                                .getInstance(ctx)
+                                .getaudioDatabase()
+                                .taskDao()
+                                .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
+                        });
                         player.previous();
                         p = new Properties();
                         p.putValue("userId", UserID);
@@ -2330,7 +2330,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 .getInstance(ctx)
                 .getaudioDatabase()
                 .taskDao()
-                .getaudioByPlaylist1(url, "").observe(this, audiolist -> {
+                .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
             if (audiolist.size() != 0) {
                 if (audiolist.get(0).getDownloadProgress() == 100) {
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
@@ -2342,7 +2342,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 } else {
                     GetMediaPer();
                 }
-            } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
+            } else {
                 binding.llDownload.setClickable(true);
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);

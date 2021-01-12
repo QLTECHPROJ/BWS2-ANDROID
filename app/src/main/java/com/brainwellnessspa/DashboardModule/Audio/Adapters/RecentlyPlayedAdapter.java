@@ -10,25 +10,21 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.SmallBoxLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -39,7 +35,6 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -48,8 +43,8 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     FragmentActivity activity;
     String IsLock;
     int index = -1;
-    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     String HomeView;
+    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
                                  String IsLock, String HomeView) {
@@ -124,7 +119,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
-                i.putExtra("ScreenView","Audio Main Screen");
+                i.putExtra("ScreenView", "Audio Main Screen");
                 i.putExtra("PlaylistID", "");
                 i.putExtra("PlaylistName", "");
                 i.putExtra("PlaylistImage", "");
@@ -170,14 +165,14 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") ||
                 AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
-                if(player!=null){
-                    if(!player.getPlayWhenReady()) {
+                if (player != null) {
+                    if (!player.getPlayWhenReady()) {
                         player.setPlayWhenReady(true);
                     }
-            }else{
+                } else {
                     miniPlayer = 1;
                     audioClick = true;
-            }
+                }
                 /*   Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
             fragmentManager1.beginTransaction()
@@ -188,9 +183,9 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 ctx.startActivity(i);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
-                if(player!=null){
+                if (player != null) {
                     miniPlayer = 1;
-                    player.seekTo(position,0);
+                    player.seekTo(position, 0);
                     player.setPlayWhenReady(true);
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();
@@ -204,29 +199,31 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     Intent i = new Intent(ctx, AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
-                }else {
+                } else {
                     ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-                    if(!IsLock.equalsIgnoreCase("0")) {
-                    SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                    String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
-                    Gson gson1 = new Gson();
-                    Type type1 = new TypeToken<List<String>>() {
-                    }.getType();
-                    List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
-                    int size = listModelList.size();
-                    for (int i = 0; i < size; i++) {
-                        if (UnlockAudioList.contains(listModelList.get(i).getID())) {
-                            listModelList2.add(listModelList.get(i));
+                    if (!IsLock.equalsIgnoreCase("0")) {
+                        SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                        Gson gson1 = new Gson();
+                        Type type1 = new TypeToken<List<String>>() {
+                        }.getType();
+                        List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                        int size = listModelList.size();
+                        for (int i = 0; i < size; i++) {
+                            if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                                listModelList2.add(listModelList.get(i));
+                            }
                         }
+                        position = 0;
+                    } else {
+                        listModelList2.addAll(listModelList);
                     }
-                    position = 0;
-                }
                     callTransFrag(position, listModelList2);
                 }
             }
         } else {
             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-            if(!IsLock.equalsIgnoreCase("0")) {
+            if (!IsLock.equalsIgnoreCase("0")) {
                 SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
                 Gson gson1 = new Gson();
@@ -234,13 +231,13 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 }.getType();
                 List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
                 int size = listModelList.size();
-                 for (int i = 0; i < size; i++) {
+                for (int i = 0; i < size; i++) {
                     if (UnlockAudioList.contains(listModelList.get(i).getID())) {
                         listModelList2.add(listModelList.get(i));
                     }
                 }
                 position = 0;
-            }else {
+            } else {
                 listModelList2.addAll(listModelList);
             }
             isDisclaimer = 0;

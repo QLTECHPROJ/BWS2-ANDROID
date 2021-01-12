@@ -695,6 +695,8 @@ public class ViewAllAudioFragment extends Fragment {
                                 }
                             }
                             position = 0;
+                        } else {
+                            listModelList2.addAll(listModelList);
                         }
                         callTransFrag(position, listModelList2);
                     }

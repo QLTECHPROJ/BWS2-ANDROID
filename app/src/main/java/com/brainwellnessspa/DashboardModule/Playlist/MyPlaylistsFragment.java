@@ -124,6 +124,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STAT
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
@@ -2131,6 +2132,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (pID.equalsIgnoreCase(PlaylistID)) {
                         if (player != null) {
                             player.moveMediaItem(fromPosition, toPosition);
+                            playerNotificationManager.setPlayer(player);
                         }
                         if (fromPosition == pos) {
                             pos = toPosition;

@@ -10,9 +10,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
@@ -20,7 +18,6 @@ import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivi
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -36,7 +33,6 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -125,7 +121,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", listModelList.get(position).getID());
-                    i.putExtra("ScreenView","Audio Main Screen");
+                    i.putExtra("ScreenView", "Audio Main Screen");
                     i.putExtra("PlaylistID", "");
                     i.putExtra("PlaylistName", "");
                     i.putExtra("PlaylistImage", "");
@@ -173,11 +169,11 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") ||
                 AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
-                if(player!=null){
-                    if(!player.getPlayWhenReady()) {
+                if (player != null) {
+                    if (!player.getPlayWhenReady()) {
                         player.setPlayWhenReady(true);
                     }
-                }else{
+                } else {
                     audioClick = true;
                     miniPlayer = 1;
                 } /*Fragment fragment = new MiniPlayerFragment();
@@ -190,10 +186,10 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                 ctx.startActivity(i);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
-                if(player!=null){
+                if (player != null) {
 
                     miniPlayer = 1;
-                    player.seekTo(position,0);
+                    player.seekTo(position, 0);
                     player.setPlayWhenReady(true);
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();
@@ -206,29 +202,31 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                     Intent i = new Intent(ctx, AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
-                }else {
+                } else {
                     ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-                    if(!IsLock.equalsIgnoreCase("0")) {
-                    SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                    String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
-                    Gson gson1 = new Gson();
-                    Type type1 = new TypeToken<List<String>>() {
-                    }.getType();
-                    List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
-                    int size = listModelList.size();
-                    for (int i = 0; i < size; i++) {
-                        if (UnlockAudioList.contains(listModelList.get(i).getID())) {
-                            listModelList2.add(listModelList.get(i));
+                    if (!IsLock.equalsIgnoreCase("0")) {
+                        SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                        Gson gson1 = new Gson();
+                        Type type1 = new TypeToken<List<String>>() {
+                        }.getType();
+                        List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                        int size = listModelList.size();
+                        for (int i = 0; i < size; i++) {
+                            if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                                listModelList2.add(listModelList.get(i));
+                            }
                         }
+                        position = 0;
+                    } else {
+                        listModelList2.addAll(listModelList);
                     }
-                    position = 0;
-                }
                     callTransFrag(position, listModelList2);
                 }
             }
         } else {
             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-            if(!IsLock.equalsIgnoreCase("0")) {
+            if (!IsLock.equalsIgnoreCase("0")) {
                 SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
                 Gson gson1 = new Gson();
@@ -242,7 +240,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                     }
                 }
                 position = 0;
-            }else {
+            } else {
                 listModelList2.addAll(listModelList);
             }
             isDisclaimer = 0;

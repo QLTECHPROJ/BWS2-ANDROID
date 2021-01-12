@@ -222,6 +222,8 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                             }
                         }
                         position = 0;
+                    } else {
+                        listModelList2.addAll(listModelList);
                     }
                     callTransFrag(position, listModelList2);
                 }
