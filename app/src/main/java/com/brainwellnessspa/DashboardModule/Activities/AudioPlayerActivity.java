@@ -255,6 +255,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 i.putExtra("position", position);
                 i.putExtra("PlaylistAudioId", "");
                 startActivity(i);
+                finish();
             }
         });
 

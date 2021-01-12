@@ -422,6 +422,9 @@ public class AddQueueActivity extends AppCompatActivity {
             String json11 = gson11.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
             editor.commit();*/
+            Intent i = new Intent(ctx, AudioPlayerActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            ctx.startActivity(i);
             finish();
         }
     }
@@ -713,10 +716,16 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 String jsonz = gsonz.toJson(mainPlayModelList);
                                                 editor1.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                                                 editor1.commit();
+                                                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                ctx.startActivity(i);
                                                 finish();
                                             }
                                             comeFromAddToQueue = true;
                                         }
+                                        Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                        ctx.startActivity(i);
                                         finish();
                                     } else {
                                         mainPlayModelList.remove(pos);
@@ -758,6 +767,9 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                                 editor.commit();
                                                 comeFromAddToQueue = true;
+                                                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                ctx.startActivity(i);
                                                 finish();
                                             }
                                         }
