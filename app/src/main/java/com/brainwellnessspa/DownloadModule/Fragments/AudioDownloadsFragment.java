@@ -144,12 +144,6 @@ public class AudioDownloadsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
-            DatabaseClient
-                    .getInstance(getActivity())
-                    .getaudioDatabase()
-                    .taskDao()
-                    .geAllData1("").removeObserver(audioListx -> {
-            });
         });
 
     }
