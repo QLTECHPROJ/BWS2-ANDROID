@@ -780,7 +780,7 @@ public class MiniPlayerFragment extends Fragment {
                             audioClick = true;
                             removeArray();
                             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                            globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                            globalInitExoPlayer.InitNotificationAudioPLayerD(ctx);
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());

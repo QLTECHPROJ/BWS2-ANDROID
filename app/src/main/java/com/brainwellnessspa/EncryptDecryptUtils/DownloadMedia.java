@@ -1,13 +1,9 @@
 package com.brainwellnessspa.EncryptDecryptUtils;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -15,10 +11,9 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.downloader.Error;
 import com.downloader.OnDownloadListener;
-import com.downloader.OnPauseListener;
-import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
+import com.downloader.Status;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -28,18 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
-import static com.brainwellnessspa.EncryptDecryptUtils.FileUtils.saveFile;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 
 public class DownloadMedia implements OnDownloadListener {
     public static int downloadError = 2, downloadIdOne;
     public static String filename = "";
     public static int downloadProgress = 0;
     public static boolean isDownloading = false;
+    public static Status status;
     int downloadProgress2 = 0;
     List<DownloadAudioDetails> Myaudiolist;
     Context context;
@@ -67,6 +61,7 @@ public class DownloadMedia implements OnDownloadListener {
 //        localBroadcastManager = LocalBroadcastManager.getInstance(context);
 // Setting timeout globally for the download network requests:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .setDatabaseEnabled(true)
                 .build();
         PRDownloader.initialize(context, config);
         isDownloading = true;
@@ -75,7 +70,8 @@ public class DownloadMedia implements OnDownloadListener {
         playlistDownloadId = PLAYLIST_ID;
         filename = FILE_NAME.get(0);
         downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0) + CONSTANTS.FILE_EXT)
-                .build().setOnProgressListener(progress -> {
+                .build()
+                .setOnProgressListener(progress -> {
                     long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
                     downloadProgress = (int) progressPercent;
                     if (downloadProgress == downloadProgress2 + 10) {
@@ -87,18 +83,18 @@ public class DownloadMedia implements OnDownloadListener {
                         updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
                     }
                     downloadProgress2 = downloadProgress;
-                }) .setOnStartOrResumeListener(new OnStartOrResumeListener() {
-                    @Override
-                    public void onStartOrResume() {
-
-                    }
+                })/*.setOnStartOrResumeListener(() -> {
+//                    if (Status.PAUSED == status) {
+//                        PRDownloader.resume(downloadIdOne);
+//                        status = Status.RUNNING;
+//                    }
                 })
-                .setOnPauseListener(new OnPauseListener() {
-                    @Override
-                    public void onPause() {
-
+                .setOnPauseListener(() -> {
+                    if (Status.RUNNING == status) {
+                        PRDownloader.pause(downloadIdOne);
+                        status = Status.PAUSED;
                     }
-                }).setOnCancelListener(() -> {
+                })*/.setOnCancelListener(() -> {
                     downloadIdOne = 0;
 //                    LocalBroadcastManager.getInstance(context).unregisterReceiver(listener);
                     filename = "";

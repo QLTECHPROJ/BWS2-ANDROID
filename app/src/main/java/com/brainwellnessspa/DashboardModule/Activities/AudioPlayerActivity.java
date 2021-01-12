@@ -61,7 +61,6 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
-import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.gson.Gson;
@@ -98,7 +97,6 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.audioRemove;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class AudioPlayerActivity extends AppCompatActivity {
     public AudioManager audioManager;
@@ -776,11 +774,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .taskDao()
                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
             });
-            DatabaseClient.getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
-                    .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
-            });
             audioClick = false;
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
@@ -1378,7 +1371,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             audioClick = true;
                             removeArray();
                             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                            globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                            globalInitExoPlayer.InitNotificationAudioPLayerD(ctx);
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());
@@ -1774,18 +1767,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .taskDao()
                         .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                 });
-                DatabaseClient.getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
-                });
-
-                binding.llDownload.setClickable(true);
-                binding.llDownload.setEnabled(true);
-                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                binding.pbProgress.setVisibility(View.GONE);
-                binding.ivDownloads.setVisibility(View.VISIBLE);
                 if (player != null) {
                     if (player.hasNext()) {
                         player.next();
@@ -1818,18 +1799,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .taskDao()
                         .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                 });
-                DatabaseClient.getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getDownloadProgress1(url, "").removeObserver(downloadAudioDetails -> {
-                });
-
-                binding.llDownload.setClickable(true);
-                binding.llDownload.setEnabled(true);
-                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                binding.pbProgress.setVisibility(View.GONE);
-                binding.ivDownloads.setVisibility(View.VISIBLE);
                 if (player != null) {
                     if (player.hasPrevious()) {
                         player.previous();
@@ -2203,83 +2172,76 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void callDownload() {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getaudioByPlaylist1(url, "").observe(this, audiolist -> {
+        byte[] EncodeBytes = new byte[1024];
+        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+            disableDownload();
+            SaveMedia(100);
 
-            if (audiolist.size() != 0) {
-                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                binding.llDownload.setClickable(false);
-                binding.llDownload.setEnabled(false);
-                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                binding.ivDownloads.setVisibility(View.VISIBLE);
-                binding.pbProgress.setVisibility(View.GONE);
-            } else {
-                if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
-                    disableDownload();
-                    byte[] EncodeBytes = new byte[1024];
-                    fileNameList = new ArrayList<>();
-                    audioFile1 = new ArrayList<>();
-                    playlistDownloadId = new ArrayList<>();
-                    SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                    Gson gson1 = new Gson();
-                    String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
-                    String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
-                    String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
-                    if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
-                        Type type = new TypeToken<List<String>>() {
-                        }.getType();
-                        fileNameList = gson1.fromJson(json, type);
-                        audioFile1 = gson1.fromJson(json1, type);
-                        playlistDownloadId = gson1.fromJson(json2, type);
-
-                    }
-                    audioFile1.add(mainPlayModelList.get(position).getAudioFile());
-                    fileNameList.add(mainPlayModelList.get(position).getName());
-                    playlistDownloadId.add("");
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String nameJson = gson.toJson(fileNameList);
-                    String urlJson = gson.toJson(audioFile1);
-                    String playlistIdJson = gson.toJson(playlistDownloadId);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
-                    p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("audioId", mainPlayModelList.get(position).getID());
-                    p.putValue("audioName", mainPlayModelList.get(position).getName());
-                    p.putValue("audioDescription", "");
-                    p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                    p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                    p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                    p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                    p.putValue("position", GetCurrentAudioPosition());
-                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-                        p.putValue("audioType", "Downloaded");
-                    } else {
-                        p.putValue("audioType", "Streaming");
-                    }
-                    p.putValue("source", GetSourceName(ctx));
-                    p.putValue("playerType", "Main");
-                    p.putValue("bitRate", "");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
-                    p.putValue("sound", String.valueOf(hundredVolume));
-                    BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
-                    if (!isDownloading) {
-                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                        downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
-                    }
-                    binding.pbProgress.setVisibility(View.VISIBLE);
-                    binding.ivDownloads.setVisibility(View.GONE);
-                    SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
+        } else {
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                disableDownload();
+                SaveMedia(100);
+            }else{
+                fileNameList = new ArrayList<>();
+                audioFile1 = new ArrayList<>();
+                playlistDownloadId = new ArrayList<>();
+                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                Gson gson1 = new Gson();
+                String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+                String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+                String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+                if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                    Type type = new TypeToken<List<String>>() {
+                    }.getType();
+                    fileNameList = gson1.fromJson(json, type);
+                    audioFile1 = gson1.fromJson(json1, type);
+                    playlistDownloadId = gson1.fromJson(json2, type);
                 }
+                audioFile1.add(mainPlayModelList.get(position).getAudioFile());
+                fileNameList.add(mainPlayModelList.get(position).getName());
+                playlistDownloadId.add("");
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String nameJson = gson.toJson(fileNameList);
+                String urlJson = gson.toJson(audioFile1);
+                String playlistIdJson = gson.toJson(playlistDownloadId);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editor.commit();
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("audioId", mainPlayModelList.get(position).getID());
+                p.putValue("audioName", mainPlayModelList.get(position).getName());
+                p.putValue("audioDescription", "");
+                p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+                p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+                p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+                p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+                p.putValue("position", GetCurrentAudioPosition());
+                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                    p.putValue("audioType", "Downloaded");
+                } else {
+                    p.putValue("audioType", "Streaming");
+                }
+                p.putValue("source", GetSourceName(ctx));
+                p.putValue("playerType", "Main");
+                p.putValue("bitRate", "");
+                p.putValue("audioService", APP_SERVICE_STATUS);
+                p.putValue("sound", String.valueOf(hundredVolume));
+                BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
+                if (!isDownloading) {
+                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                    downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
+                }
+                binding.pbProgress.setVisibility(View.VISIBLE);
+                binding.ivDownloads.setVisibility(View.GONE);
+
+                GetMediaPer();
+                SaveMedia(0);
             }
-        });
+        }
 
     }
 
@@ -2290,7 +2252,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         binding.llDownload.setEnabled(false);
     }
 
-    private void SaveMedia(byte[] EncodeBytes, String dirPath) {
+    private void SaveMedia(int progress) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -2320,9 +2282,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 downloadAudioDetails.setDownload("1");
                 downloadAudioDetails.setIsSingle("1");
                 downloadAudioDetails.setPlaylistId("");
-                downloadAudioDetails.setIsDownload("pending");
-                downloadAudioDetails.setDownloadProgress(0);
-
+                if(progress==0) {
+                    downloadAudioDetails.setIsDownload("pending");
+                }else{
+                    downloadAudioDetails.setIsDownload("Complete");
+                }
+                downloadAudioDetails.setDownloadProgress(progress);
                 DatabaseClient.getInstance(getApplicationContext())
                         .getaudioDatabase()
                         .taskDao()
@@ -2332,9 +2297,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                disableDownload();
-                GetMedia2();
                 GetMediaPer();
+                disableDownload();
                 super.onPostExecute(aVoid);
             }
         }
@@ -2348,25 +2312,20 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 .getaudioDatabase()
                 .taskDao()
                 .getaudioByPlaylist1(url, "").observe(this, audiolist -> {
-
-            if (!url.equalsIgnoreCase("")) {
-                if (audiolist.size() != 0) {
-                    if (audiolist.get(0).getDownload().equalsIgnoreCase("1")) {
-                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                        binding.llDownload.setClickable(false);
-                        binding.llDownload.setEnabled(false);
-                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                        binding.ivDownloads.setVisibility(View.VISIBLE);
-                        binding.pbProgress.setVisibility(View.GONE);
-                    }
-                } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
-                    binding.llDownload.setClickable(true);
-                    binding.llDownload.setEnabled(true);
-                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
-                    binding.pbProgress.setVisibility(View.GONE);
-                }
+            if (audiolist.size() != 0) {
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                binding.llDownload.setClickable(false);
+                binding.llDownload.setEnabled(false);
+                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                binding.ivDownloads.setVisibility(View.VISIBLE);
+                binding.pbProgress.setVisibility(View.GONE);
+            } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
+                binding.llDownload.setClickable(true);
+                binding.llDownload.setEnabled(true);
+                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                binding.ivDownloads.setVisibility(View.VISIBLE);
+                binding.pbProgress.setVisibility(View.GONE);
             }
         });
        /* downloadAudioDetailsList1 = new ArrayList<>();
@@ -2435,7 +2394,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
     }
 
-    private void getMediaByPer() {
+   /* private void getMediaByPer() {
         DatabaseClient.getInstance(ctx)
                 .getaudioDatabase()
                 .taskDao()
@@ -2484,7 +2443,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 
     /* private void getMediaByPer() {
          class getMediaByPer extends AsyncTask<Void, Void, Void> {
@@ -2620,10 +2579,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
         id = mainPlayModelList.get(ps).getID();
         name = mainPlayModelList.get(ps).getName();
 
+
         if (url.equalsIgnoreCase("") || url.isEmpty()) {
             isDisclaimer = 1;
             binding.tvNowPlaying.setText("");
         } else {
+            GetMedia2();
             binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
             isDisclaimer = 0;
         }
@@ -2738,7 +2699,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }
         addToRecentPlayId = id;
-        GetMedia2();
         GetMediaPer();
     }
 
