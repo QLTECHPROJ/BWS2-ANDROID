@@ -249,6 +249,7 @@ Appointment Audios dddd*/
 
     public void GlobleInItPlayer(Context ctx, int position, List<String> downloadAudioDetailsList,
                                  ArrayList<MainPlayModel> mainPlayModelList, String playerType) {
+        relesePlayer();
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
