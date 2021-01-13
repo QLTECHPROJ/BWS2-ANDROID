@@ -38,7 +38,6 @@ public class APIClient {
             Request original = chain.request();
             Request request = original.newBuilder()
                     .header("Oauth", securityKey())
-                    .header("Newtoken", "1")
                     .header("Yaccess", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID))
                     .method(original.method(), original.body())
                     .build();

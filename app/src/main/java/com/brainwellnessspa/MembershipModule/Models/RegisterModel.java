@@ -1,12 +1,11 @@
-package com.brainwellnessspa.LoginModule.Models;
+package com.brainwellnessspa.MembershipModule.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OtpModel {
-    @SerializedName("ResponseData")
-    @Expose
-    private ResponseData responseData;
+public class RegisterModel { @SerializedName("ResponseData")
+@Expose
+private ResponseData responseData;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -50,7 +49,9 @@ public class OtpModel {
     }
 
     public class ResponseData {
-
+        @SerializedName("CardId")
+        @Expose
+        private String cardId;
         @SerializedName("error")
         @Expose
         private String error;
@@ -105,6 +106,14 @@ public class OtpModel {
         @SerializedName("CountryName")
         @Expose
         private String countryName;
+
+        public String getCardId() {
+            return cardId;
+        }
+
+        public void setCardId(String cardId) {
+            this.cardId = cardId;
+        }
 
         public String getError() {
             return error;
@@ -249,6 +258,5 @@ public class OtpModel {
         public void setCountryName(String countryName) {
             this.countryName = countryName;
         }
-
     }
 }

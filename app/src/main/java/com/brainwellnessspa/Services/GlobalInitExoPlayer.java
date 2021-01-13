@@ -86,7 +86,6 @@ public class GlobalInitExoPlayer extends Service {
     public static int percent;
     public static String PlayerCurrantAudioPostion = "0";
     Notification notification1;
-    GlobalInitExoPlayer globalInitExoPlayer;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1=new ArrayList<>();
     static Bitmap notification_artwork;

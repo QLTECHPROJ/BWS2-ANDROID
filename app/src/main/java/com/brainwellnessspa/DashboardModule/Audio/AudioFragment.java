@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
+import com.segment.analytics.Traits;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -89,12 +91,14 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class AudioFragment extends Fragment {
     public static boolean exit = false;
     public static String IsLock = "0";
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate;
+    boolean Identify;
     List<String> fileNameList;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
@@ -108,6 +112,7 @@ public class AudioFragment extends Fragment {
         viewallAudio = false;
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        Identify = (shared1.getBoolean(CONSTANTS.PREF_KEY_Identify, false));
         ComeScreenAccount = 0;
         comefromDownload = "0";
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -370,6 +375,26 @@ public class AudioFragment extends Fragment {
                             Gson gson = new Gson();
                             editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
                             editor.commit();
+                            if(!Identify){
+                                analytics.identify(new Traits()
+                                        .putValue("userId", UserID)
+                                        .putValue("deviceId", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID))
+                                        .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                        .putValue("countryCode", listModel.getResponseData().getUserData().getCountryCode())
+                                        .putValue("countryName", "")
+                                        .putValue("userName", listModel.getResponseData().getUserData().getName())
+                                        .putValue("mobileNo", listModel.getResponseData().getUserData().getPhoneNumber())
+                                        .putValue("plan", listModel.getResponseData().getUserData().getPlan())
+                                        .putValue("planStatus", listModel.getResponseData().getUserData().getPlanStatus())
+                                        .putValue("planStartDt", listModel.getResponseData().getUserData().getPlanStartDt())
+                                        .putValue("planExpiryDt", listModel.getResponseData().getUserData().getPlanExpiryDate())
+                                        .putValue("clinikoId", listModel.getResponseData().getUserData().getClinikoId()));
+                                SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor1 = shared1.edit();
+                                editor1.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                editor1.commit();
+                                Identify = true;
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

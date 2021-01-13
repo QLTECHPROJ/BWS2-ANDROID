@@ -43,6 +43,7 @@ import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.LoginModule.Models.OtpModel;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
+import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
 import com.brainwellnessspa.MembershipModule.Models.SignUpModel;
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.RemiderDetailsModel;
@@ -105,7 +106,7 @@ public interface APIInterface {
     /* TODO Membership Payment */
     @POST("payment")
     @FormUrlEncoded
-    Call<AddCardModel> getMembershipPayment(
+    Call<RegisterModel> getMembershipPayment(
             @Field("PlanId") String planId,
             @Field("PlanFlag") String planFlag,
             @Field("TokenId") String CardId,

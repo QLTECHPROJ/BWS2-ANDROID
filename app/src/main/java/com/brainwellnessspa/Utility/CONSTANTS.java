@@ -100,6 +100,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_Status = "Status";
     public static final String PREF_KEY_IsShuffle = "IsShuffle";
     public static final String PREF_KEY_MobileNo = "MobileNo";
+    public static final String PREF_KEY_Identify = "Identify";
     public static final String PREF_KEY_Email = "Email";
     public static final String PREF_KEY_DeviceType = "DeviceType";
     public static final String PREF_KEY_DeviceID = "DeviceID";

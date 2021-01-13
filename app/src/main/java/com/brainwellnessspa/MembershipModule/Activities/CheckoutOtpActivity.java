@@ -244,6 +244,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                                 Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
                                 i.putExtra("MobileNo", MobileNo);
                                 i.putExtra("Code", Code);
+                                i.putExtra("Name", Name);
                                 i.putParcelableArrayListExtra("PlanData", listModelList);
                                 i.putExtra("TrialPeriod", TrialPeriod);
                                 i.putExtra("position", position);

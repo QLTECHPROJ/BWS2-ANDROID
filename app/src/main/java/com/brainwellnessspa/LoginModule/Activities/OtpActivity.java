@@ -230,15 +230,29 @@ public class OtpActivity extends AppCompatActivity implements
                                         binding.txtError.setVisibility(View.GONE);
                                         if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
                                                 otpModel.getResponseData().getError().equalsIgnoreCase("")) {
-                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = shared.edit();
                                             String UserID = otpModel.getResponseData().getUserID();
                                             String MobileNO = otpModel.getResponseData().getPhoneNumber();
+                                            analytics.identify(new Traits()
+                                                .putValue("userId", UserID)
+                                                .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
+                                                .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                                .putValue("countryCode", Code)
+                                                .putValue("countryName", Name)
+                                                .putValue("userName", otpModel.getResponseData().getName())
+                                                .putValue("mobileNo", otpModel.getResponseData().getPhoneNumber())
+                                                .putValue("plan", otpModel.getResponseData().getPlan())
+                                                .putValue("planStatus", otpModel.getResponseData().getPlanStatus())
+                                                .putValue("planStartDt", otpModel.getResponseData().getPlanStartDt())
+                                                .putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate())
+                                                .putValue("clinikoId", otpModel.getResponseData().getClinikoId()));
+                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = shared.edit();
                                             editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
                                             editor.putString(CONSTANTS.PREF_KEY_Name, otpModel.getResponseData().getName());
                                             editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
                                             editor.putString(CONSTANTS.PREF_KEY_Email, otpModel.getResponseData().getEmail());
                                             editor.putString(CONSTANTS.PREF_KEY_DeviceType, CONSTANTS.FLAG_ONE);
+                                            editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                             editor.putString(CONSTANTS.PREF_KEY_DeviceID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                                             editor.commit();
                                          /*   Properties p = new Properties();
@@ -252,19 +266,7 @@ public class OtpActivity extends AppCompatActivity implements
                                             p.putValue("planStartDt", otpModel.getResponseData().getPlanExpiryDate());
                                             p.putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate());
                                             BWSApplication.addToSegment("Signed In", p, CONSTANTS.track);*/
-                                            analytics.identify(new Traits()
-                                                    .putValue("userId", UserID)
-                                                    .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
-                                                    .putValue("deviceType", CONSTANTS.FLAG_ONE)
-                                                    .putValue("countryCode", Code)
-                                                    .putValue("countryName", Name)
-                                                    .putValue("userName", otpModel.getResponseData().getName())
-                                                    .putValue("mobileNo", otpModel.getResponseData().getPhoneNumber())
-                                                    .putValue("plan", otpModel.getResponseData().getPlan())
-                                                    .putValue("planStatus", otpModel.getResponseData().getPlanStatus())
-                                                    .putValue("planStartDt", "")
-                                                    .putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate())
-                                                    .putValue("clinikoId", ""));
+
                                             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
                                             String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
                                             String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));

@@ -80,6 +80,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -1967,6 +1968,9 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void removeArray() {
+        if(!BWSApplication.isNetworkConnected(ctx)){
+            relesePlayer();
+        }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();

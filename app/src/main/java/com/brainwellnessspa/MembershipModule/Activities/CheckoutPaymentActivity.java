@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.TextWatcher;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import com.brainwellnessspa.AddPayment.AddPaymentActivity;
 import com.brainwellnessspa.AddPayment.Model.AddCardModel;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
+import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.Utility.APIClient;
@@ -35,6 +37,7 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityCheckoutPaymentBinding;
 import com.brainwellnessspa.databinding.YeardialogBinding;
 import com.segment.analytics.Properties;
+import com.segment.analytics.Traits;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
@@ -50,10 +53,11 @@ import retrofit2.Response;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planFlag;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planId;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.price;
+import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
-    String MobileNo, Code, UserID;
+    String MobileNo="", Code="", UserID,Name="";
     Context context;
     Activity activity;
     Dialog d;
@@ -77,6 +81,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             MobileNo = getIntent().getStringExtra("MobileNo");
             Code = getIntent().getStringExtra("Code");
+            Name = getIntent().getStringExtra(CONSTANTS.Name);
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
             listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             position = getIntent().getIntExtra("position", 0);
@@ -86,6 +91,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             Intent i = new Intent(context, OrderSummaryActivity.class);
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("Name", Name);
             i.putExtra("position", position);
             startActivity(i);
             finish();
@@ -201,24 +207,39 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 String countryCode = Code.replace("+", "");
-                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode);
-                                listCall.enqueue(new Callback<AddCardModel>() {
+                                Call<RegisterModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode);
+                                listCall.enqueue(new Callback<RegisterModel>() {
                                     @Override
-                                    public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
+                                    public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         try {
-                                            AddCardModel cardModel = response.body();
+                                            RegisterModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                                analytics.identify(new Traits()
+                                                        .putValue("userId", UserID)
+                                                        .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
+                                                        .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                                        .putValue("countryCode", Code)
+                                                        .putValue("countryName", Name)
+                                                        .putValue("userName", cardModel.getResponseData().getName())
+                                                        .putValue("mobileNo", cardModel.getResponseData().getPhoneNumber())
+                                                        .putValue("plan", cardModel.getResponseData().getPlan())
+                                                        .putValue("planStatus", cardModel.getResponseData().getPlanStatus())
+                                                        .putValue("planStartDt", cardModel.getResponseData().getPlanStartDt())
+                                                        .putValue("planExpiryDt", cardModel.getResponseData().getPlanExpiryDate())
+                                                        .putValue("clinikoId", cardModel.getResponseData().getClinikoId()));
                                                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = shared.edit();
-                                                editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
+                                                editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
                                                 editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                                 editor.commit();
                                                 Properties p = new Properties();
                                                 p.putValue("userId", UserID);
                                                 BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
+
                                                 /*Properties p = new Properties();
                                                 p.putValue("cardNumber", binding.etNumber.getText().toString());
                                                 p.putValue("cardHolderName", binding.etName.getText().toString());
@@ -240,7 +261,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<AddCardModel> call, Throwable t) {
+                                    public void onFailure(Call<RegisterModel> call, Throwable t) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     }
                                 });
