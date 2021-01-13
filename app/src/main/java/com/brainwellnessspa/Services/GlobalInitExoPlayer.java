@@ -248,7 +248,8 @@ Appointment Audios dddd*/
 
     public void GlobleInItPlayer(Context ctx, int position, List<String> downloadAudioDetailsList,
                                  ArrayList<MainPlayModel> mainPlayModelList, String playerType) {
-        relesePlayer();
+//        relesePlayer();
+
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -573,7 +574,7 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNavigationActionsInCompactView(false);
         }
 
-        playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
+//        playerNotificationManager.setSmallIcon(R.drawable.round_app_logo);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
@@ -667,7 +668,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setRewindIncrementMs(0);
         playerNotificationManager.setUseNavigationActions(false);
         playerNotificationManager.setUseNavigationActionsInCompactView(false);
-        playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
+//        playerNotificationManager.setSmallIcon(R.drawable.round_app_logo);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);

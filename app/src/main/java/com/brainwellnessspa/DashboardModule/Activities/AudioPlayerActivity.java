@@ -1449,25 +1449,27 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                        if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
-                            exoBinding.llPlay.setVisibility(View.GONE);
-                            exoBinding.llPause.setVisibility(View.GONE);
-                            exoBinding.progressBar.setVisibility(View.VISIBLE);
-                        } else if (isPlaying) {
-                            exoBinding.llPlay.setVisibility(View.GONE);
-                            exoBinding.llPause.setVisibility(View.VISIBLE);
-                            exoBinding.progressBar.setVisibility(View.GONE);
-                        } else if (!isPlaying) {
-                            exoBinding.llPlay.setVisibility(View.VISIBLE);
-                            exoBinding.llPause.setVisibility(View.GONE);
-                            exoBinding.progressBar.setVisibility(View.GONE);
+                        if (player != null) {
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                            if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
+                                exoBinding.llPlay.setVisibility(View.GONE);
+                                exoBinding.llPause.setVisibility(View.GONE);
+                                exoBinding.progressBar.setVisibility(View.VISIBLE);
+                            } else if (isPlaying) {
+                                exoBinding.llPlay.setVisibility(View.GONE);
+                                exoBinding.llPause.setVisibility(View.VISIBLE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                            } else if (!isPlaying) {
+                                exoBinding.llPlay.setVisibility(View.VISIBLE);
+                                exoBinding.llPause.setVisibility(View.GONE);
+                                exoBinding.progressBar.setVisibility(View.GONE);
+                            }
+                            exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
+                            exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+                            exoBinding.exoProgress.setDuration(player.getDuration());
+                            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
+                                    TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
                         }
-                        exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
-                        exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                        exoBinding.exoProgress.setDuration(player.getDuration());
-                        exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
-                                TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
                     }
 
                     @Override
@@ -1518,28 +1520,30 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }*/
 
             exoBinding.llPause.setOnClickListener(view -> {
-                player.setPlayWhenReady(false);
-                exoBinding.llPlay.setVisibility(View.VISIBLE);
-                exoBinding.llPause.setVisibility(View.GONE);
-                exoBinding.progressBar.setVisibility(View.GONE);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("source", GetSourceName(ctx));
-                p.putValue("playerType", "Main");
-                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-                    p.putValue("audioType", "Downloaded");
-                } else {
-                    p.putValue("audioType", "Streaming");
+                if (player != null){
+                    player.setPlayWhenReady(false);
+                    exoBinding.llPlay.setVisibility(View.VISIBLE);
+                    exoBinding.llPause.setVisibility(View.GONE);
+                    exoBinding.progressBar.setVisibility(View.GONE);
+                    p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("position", GetCurrentAudioPosition());
+                    p.putValue("source", GetSourceName(ctx));
+                    p.putValue("playerType", "Main");
+                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                        p.putValue("audioType", "Downloaded");
+                    } else {
+                        p.putValue("audioType", "Streaming");
+                    }
+                    p.putValue("bitRate", "");
+                    p.putValue("sound", String.valueOf(hundredVolume));
+                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
                 }
-                p.putValue("bitRate", "");
-                p.putValue("sound", String.valueOf(hundredVolume));
-                p.putValue("audioService", APP_SERVICE_STATUS);
-                BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
             });
 
-/*
-        exoBinding.llPlay.setOnClickListener(view -> {
+
+/*        exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.VISIBLE);
@@ -2136,13 +2140,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void callLLMoreViewQClicks() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (IsLock.equalsIgnoreCase("1")) {
-                binding.llMore.setClickable(false);
-                binding.llMore.setEnabled(false);
-                binding.llMore.setAlpha(0.6f);
+                binding.llMore.setClickable(true);
+                binding.llMore.setEnabled(true);
+                binding.llMore.setAlpha(1f);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                binding.llMore.setClickable(false);
-                binding.llMore.setEnabled(false);
-                binding.llMore.setAlpha(0.6f);
+                binding.llMore.setClickable(true);
+                binding.llMore.setEnabled(true);
+                binding.llMore.setAlpha(1f);
             } else {
                 binding.llMore.setClickable(true);
                 binding.llMore.setEnabled(true);

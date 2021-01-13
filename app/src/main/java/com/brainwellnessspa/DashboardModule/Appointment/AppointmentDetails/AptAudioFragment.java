@@ -55,6 +55,8 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -67,18 +69,18 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class AptAudioFragment extends Fragment {
     public static int comeRefreshData = 0;
     public FragmentManager f_manager;
-    FragmentAptAudioBinding binding;
-    String UserID, AudioFlag;
     public AudioManager audioManager;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
+    FragmentAptAudioBinding binding;
+    String UserID, AudioFlag;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     //    Handler handler3;
     int startTime;
     AudioListAdapter appointmentsAdapter;
     long myProgress = 0;
+    Properties p;
     private Handler handler1;
     private long currentDuration = 0;
-    Properties p;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -384,7 +386,11 @@ public class AptAudioFragment extends Fragment {
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 comeRefreshData = 1;
-                try {
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+               /* try {
                     miniPlayer = 1;
                     audioClick = true;
 
@@ -428,6 +434,65 @@ public class AptAudioFragment extends Fragment {
                     notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
+                }*/
+                if (audioPlay && AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
+                            }
+                        } else {
+                            audioClick = true;
+                            miniPlayer = 1;
+                        }
+                        Fragment fragment = new MiniPlayerFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, fragment)
+                                .commit();
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    } else {
+                        if (player != null) {
+                            miniPlayer = 1;
+                            player.seekTo(position, 0);
+                            player.setPlayWhenReady(true);
+                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedxx.edit();
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.commit();
+                            Fragment fragment = new MiniPlayerFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                        } else {
+                            ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
+
+                            listModelList2.add(listModelList.get(position));
+
+                            callTransFrag(position, listModelList2);
+                        }
+                    }
+                } else {
+                    ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
+
+                    listModelList2.add(listModelList.get(position));
+
+                    isDisclaimer = 0;
+                    disclaimerPlayed = 0;
+                    AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    listModelList2.add(position, mainPlayModel);
+                    callTransFrag(position, listModelList2);
                 }
             });
 
@@ -504,6 +569,43 @@ public class AptAudioFragment extends Fragment {
                     }
                 }
             });
+        }
+
+        private void callTransFrag(int position, ArrayList<AppointmentDetailModel.Audio> listModelList) {
+            try {
+                miniPlayer = 1;
+                audioClick = true;
+                callNewPlayerRelease();
+
+            /*Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();*/
+
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+
+                String json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
+                editor.commit();
+
+                boolean commit = editor.commit();
+                Fragment fragment = new MiniPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         private void getDownloadData() {

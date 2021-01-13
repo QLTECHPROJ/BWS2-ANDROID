@@ -657,6 +657,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         } else {
 //            prepareData(UserID, PlaylistID);
         }
+        if (comefrom_search == 4) {
+            prepareData(UserID, PlaylistID);
+        }
         if (comeRename == 1) {
             prepareData(UserID, PlaylistID);
         }
@@ -2193,7 +2196,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         editor.commit();
                         if (player != null) {
                             player.moveMediaItem(fromPosition, toPosition);
-                            playerNotificationManager.setPlayer(player);
                         }
                         callAddTransFrag();
                     }

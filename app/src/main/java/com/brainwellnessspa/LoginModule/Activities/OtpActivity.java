@@ -255,17 +255,7 @@ public class OtpActivity extends AppCompatActivity implements
                                             editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                             editor.putString(CONSTANTS.PREF_KEY_DeviceID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                                             editor.commit();
-                                         /*   Properties p = new Properties();
-                                            p.putValue("userId", UserID);
-                                            p.putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                                            p.putValue("deviceType", CONSTANTS.FLAG_ONE);
-                                            p.putValue("userName", otpModel.getResponseData().getName());
-                                            p.putValue("mobileNo", otpModel.getResponseData().getPhoneNumber());
-                                            p.putValue("plan", otpModel.getResponseData().getPlan());
-                                            p.putValue("planStatus", otpModel.getResponseData().getPlanStatus());
-                                            p.putValue("planStartDt", otpModel.getResponseData().getPlanExpiryDate());
-                                            p.putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate());
-                                            BWSApplication.addToSegment("Signed In", p, CONSTANTS.track);*/
+
 
                                             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
                                             String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));

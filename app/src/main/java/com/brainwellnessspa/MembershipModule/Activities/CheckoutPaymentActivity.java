@@ -57,7 +57,7 @@ import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
-    String MobileNo="", Code="", UserID,Name="";
+    String MobileNo = "", Code = "", UserID, Name = "";
     Context context;
     Activity activity;
     Dialog d;
