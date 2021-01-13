@@ -48,7 +48,6 @@ import retrofit2.Response;
 import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 
-
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
     public static String key = "", UserID;

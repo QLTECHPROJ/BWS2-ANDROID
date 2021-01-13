@@ -70,6 +70,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadPro
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";
@@ -997,5 +998,4 @@ public class AudioDownloadsFragment extends Fragment {
             }
         }
     }
-
 }
