@@ -2130,10 +2130,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                     if (pID.equalsIgnoreCase(PlaylistID)) {
-                        if (player != null) {
-                            player.moveMediaItem(fromPosition, toPosition);
-                            playerNotificationManager.setPlayer(player);
-                        }
+
                         if (fromPosition == pos) {
                             pos = toPosition;
                             String one = "1";
@@ -2164,12 +2161,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             pos = pos - 1;
                             String one = "6";
                             Log.e("one", one);
+                        }    ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+                        for (int i = 0; i < listModelList.size(); i++) {
+                            MainPlayModel mainPlayModel = new MainPlayModel();
+                            mainPlayModel.setID(listModelList.get(i).getID());
+                            mainPlayModel.setName(listModelList.get(i).getName());
+                            mainPlayModel.setAudioFile(listModelList.get(i).getAudioFile());
+                            mainPlayModel.setPlaylistID(listModelList.get(i).getPlaylistID());
+                            mainPlayModel.setAudioDirection(listModelList.get(i).getAudioDirection());
+                            mainPlayModel.setAudiomastercat(listModelList.get(i).getAudiomastercat());
+                            mainPlayModel.setAudioSubCategory(listModelList.get(i).getAudioSubCategory());
+                            mainPlayModel.setImageFile(listModelList.get(i).getImageFile());
+                            mainPlayModel.setLike(listModelList.get(i).getLike());
+                            mainPlayModel.setDownload(listModelList.get(i).getDownload());
+                            mainPlayModel.setAudioDuration(listModelList.get(i).getAudioDuration());
+                            mainPlayModelList.add(mainPlayModel);
                         }
                         SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shareddd.edit();
                         Gson gson = new Gson();
                         String json = gson.toJson(listModelList);
+                        String jsonz = gson.toJson(mainPlayModelList);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                         editor.putInt(CONSTANTS.PREF_KEY_position, pos);
                         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -2177,6 +2191,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                         editor.commit();
+                        if (player != null) {
+                            player.moveMediaItem(fromPosition, toPosition);
+                            playerNotificationManager.setPlayer(player);
+                        }
                         callAddTransFrag();
                     }
                 }
