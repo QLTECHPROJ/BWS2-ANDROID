@@ -430,8 +430,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         MyPlaylistId = PlaylistID;
                                         dialog.dismiss();
                                         Intent intent = new Intent(ctx, DashboardActivity.class);
-                                        intent.putExtra("New", New);
                                         intent.putExtra("Goplaylist", "1");
+                                        intent.putExtra("New", New);
                                         intent.putExtra("PlaylistID", PlaylistID);
                                         intent.putExtra("PlaylistName", name);
                                         intent.putExtra("PlaylistImage", "");

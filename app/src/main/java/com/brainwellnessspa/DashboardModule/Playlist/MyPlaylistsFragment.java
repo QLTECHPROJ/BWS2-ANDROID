@@ -807,7 +807,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             callObserveMethodGetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
 //                            GetMedia();
-                            getMediaByPer(PlaylistId, SongListSize);
+                            getMediaByPer(SongListSize);
                             binding.rlSearch.setVisibility(View.VISIBLE);
                             binding.llMore.setVisibility(View.VISIBLE);
                             binding.llReminder.setVisibility(View.VISIBLE);
@@ -971,13 +971,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
     }
 
-    private void getMediaByPer(String playlistID, int totalAudio) {
+    private void getMediaByPer(int totalAudio) {
         try {
             DatabaseClient
                     .getInstance(getActivity())
                     .getaudioDatabase()
                     .taskDao()
-                    .getCountDownloadProgress1("Complete", playlistID).observe(getActivity(), countx -> {
+                    .getCountDownloadProgress1("Complete", PlaylistID).observe(getActivity(), countx -> {
 //            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
                 count = countx.size();
                 if (downloadPlaylistDetailsList.size() != 0) {
@@ -989,7 +989,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     .getInstance(getActivity())
                                     .getaudioDatabase()
                                     .taskDao()
-                                    .getCountDownloadProgress1("Complete", playlistID).removeObserver(cs -> {
+                                    .getCountDownloadProgress1("Complete", PlaylistID).removeObserver(cs -> {
                             });
 //                            handler1.removeCallbacks(UpdateSongTime1);
                         } else {
@@ -1006,12 +1006,15 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 .getInstance(getActivity())
                                 .getaudioDatabase()
                                 .taskDao()
-                                .getCountDownloadProgress1("Complete", playlistID).removeObserver(cs -> {
+                                .getCountDownloadProgress1("Complete", PlaylistID).removeObserver(cs -> {
                         });
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
 //                        handler1.removeCallbacks(UpdateSongTime1);
                     }
+                }else{
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
                 }
                 callObserveMethodGetAllMedia();
             });
@@ -1372,7 +1375,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivDownloads.setVisibility(View.GONE);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
-            getMediaByPer(PlaylistID, SongListSize);
+            getMediaByPer( SongListSize);
             savePlaylist();
             saveAllMedia(playlistSongs, playlistSongs2, encodedBytes);
         } else {
@@ -1527,7 +1530,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
-                getMediaByPer(PlaylistID, SongListSize);
+                getMediaByPer( SongListSize);
                 super.onPostExecute(aVoid);
             }
         }
@@ -1605,7 +1608,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
-                getMediaByPer(PlaylistID, SongListSize);
+                getMediaByPer(SongListSize);
                 enableDisableDownload(false, "orange");
                 callObserveMethodGetAllMedia();
                 GetMedia();
