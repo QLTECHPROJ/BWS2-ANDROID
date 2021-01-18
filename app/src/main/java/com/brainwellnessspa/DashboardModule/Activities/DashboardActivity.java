@@ -47,7 +47,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
-    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "";
+    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "",New="";
     BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
     int BackClick = 0;
@@ -126,6 +126,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 //        BroadcastReceiver mReceiver = new ScreenReceiver();
 //        registerReceiver(mReceiver, filter);
         if (getIntent().hasExtra("Goplaylist")) {
+            New = getIntent().getStringExtra("New");
             Goplaylist = getIntent().getStringExtra("Goplaylist");
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");
@@ -136,7 +137,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("New", "0");
+            bundle.putString("New", New);
             bundle.putString("PlaylistID", PlaylistID);
             bundle.putString("PlaylistName", PlaylistName);
             bundle.putString("PlaylistImage", PlaylistImage);

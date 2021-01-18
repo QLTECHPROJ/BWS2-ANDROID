@@ -142,6 +142,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
                     resultIntent = new Intent(this, DashboardActivity.class);
+                    resultIntent.putExtra("New", "0");
                     resultIntent.putExtra("Goplaylist", "1");
                     resultIntent.putExtra("PlaylistID", id);
                     resultIntent.putExtra("PlaylistName", title);

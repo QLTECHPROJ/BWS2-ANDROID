@@ -356,6 +356,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         RefreshNew = New;
         if (New.equalsIgnoreCase("1")) {
             binding.llAddAudio.setVisibility(View.VISIBLE);
+            binding.pbProgress.setVisibility(View.GONE);
             binding.llDownloads.setVisibility(View.VISIBLE);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);

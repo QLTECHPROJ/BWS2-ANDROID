@@ -193,10 +193,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                 if (isDisclaimer == 1) {
                                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                                                 } else {
-                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created);
+                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created,"1");
                                                 }
                                             } else {
-                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created);
+                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created,"1");
                                             }
                                            /* Properties p = new Properties();
                                             p.putValue("userId", UserID);
@@ -287,7 +287,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         }
     }
 
-    private void callAddPlaylistFromPlaylist(String PlaylistID, String name, Dialog dialog, String d, String Created) {
+    private void callAddPlaylistFromPlaylist(String PlaylistID, String name, Dialog dialog, String d, String Created,String New) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
@@ -430,6 +430,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         MyPlaylistId = PlaylistID;
                                         dialog.dismiss();
                                         Intent intent = new Intent(ctx, DashboardActivity.class);
+                                        intent.putExtra("New", New);
                                         intent.putExtra("Goplaylist", "1");
                                         intent.putExtra("PlaylistID", PlaylistID);
                                         intent.putExtra("PlaylistName", name);
@@ -503,11 +504,11 @@ public class AddPlaylistActivity extends AppCompatActivity {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                     } else {
                         final Dialog dialogx = new Dialog(ctx);
-                        callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created);
+                        callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created,"0");
                     }
                 } else {
                     final Dialog dialogx = new Dialog(ctx);
-                    callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created);
+                    callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created,"0");
                 }
             });
         }
