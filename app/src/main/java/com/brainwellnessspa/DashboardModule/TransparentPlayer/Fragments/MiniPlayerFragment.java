@@ -1975,9 +1975,9 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void removeArray() {
-        if(!BWSApplication.isNetworkConnected(ctx)){
+//        if(!BWSApplication.isNetworkConnected(ctx)){
             relesePlayer();
-        }
+//        }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();

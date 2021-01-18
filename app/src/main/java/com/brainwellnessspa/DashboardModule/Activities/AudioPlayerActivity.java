@@ -1685,7 +1685,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llNext.setOnClickListener(view -> {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-                int pss = player.getCurrentWindowIndex(); 
+                int pss = player.getCurrentWindowIndex();
                 myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                 if (player != null) {
                     DatabaseClient
@@ -3167,9 +3167,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void removeArray() {
-        if(!BWSApplication.isNetworkConnected(ctx)){
+//        if(!BWSApplication.isNetworkConnected(ctx)){
             relesePlayer();
-        }
+//        }
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();
