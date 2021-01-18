@@ -750,11 +750,11 @@ public class AddAudioActivity extends AppCompatActivity {
                                 } else {
                                     ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
                                     listModelList2.add(modelList.get(position));
-                                    callTransFrag(position, listModelList2);
+                                    callTransFrag(0, listModelList2);
                                 }
                             } else {
                                 ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
-                                listModelList2.add(modelList.get(position));
+
                                 isDisclaimer = 0;
                                 disclaimerPlayed = 0;
                                 SearchBothModel.ResponseData mainPlayModel = new SearchBothModel.ResponseData();
@@ -768,8 +768,9 @@ public class AddAudioActivity extends AppCompatActivity {
                                 mainPlayModel.setLike("");
                                 mainPlayModel.setDownload("");
                                 mainPlayModel.setAudioDuration("00:48");
-                                listModelList2.add(position, mainPlayModel);
-                                callTransFrag(position, listModelList2);
+                                listModelList2.add( mainPlayModel);
+                                listModelList2.add(modelList.get(position));
+                                callTransFrag(0, listModelList2);
                             }
                            /* miniPlayer = 1;
                             audioClick = true;
@@ -1067,11 +1068,10 @@ public class AddAudioActivity extends AppCompatActivity {
                             } else {
                                 ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                                 listModelList2.add(listModel.get(position));
-                                callTransFrag(position, listModelList2);
+                                callTransFrag(0, listModelList2);
                             }
                         } else {
                             ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                            listModelList2.add(listModel.get(position));
                             isDisclaimer = 0;
                             disclaimerPlayed = 0;
                             SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
@@ -1085,8 +1085,9 @@ public class AddAudioActivity extends AppCompatActivity {
                             mainPlayModel.setLike("");
                             mainPlayModel.setDownload("");
                             mainPlayModel.setAudioDuration("00:48");
-                            listModelList2.add(position, mainPlayModel);
-                            callTransFrag(position, listModelList2);
+                            listModelList2.add(mainPlayModel);
+                            listModelList2.add(listModel.get(position));
+                            callTransFrag(0, listModelList2);
                         }
                        /* miniPlayer = 1;
                         audioClick = true;

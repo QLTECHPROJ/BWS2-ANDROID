@@ -454,11 +454,10 @@ public class AptAudioFragment extends Fragment {
                     } else {
                         ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
                         listModelList2.add(listModelList.get(position));
-                        callTransFrag(position, listModelList2);
+                        callTransFrag(0, listModelList2);
                     }
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
-                    listModelList2.add(listModelList.get(position));
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
@@ -472,8 +471,9 @@ public class AptAudioFragment extends Fragment {
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(position, mainPlayModel);
-                    callTransFrag(position, listModelList2);
+                    listModelList2.add(mainPlayModel);
+                    listModelList2.add(listModelList.get(position));
+                    callTransFrag(0, listModelList2);
                 }
             });
 

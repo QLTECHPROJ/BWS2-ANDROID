@@ -152,11 +152,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
+                callAddFrag();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 210);
                 binding.llSpace.setLayoutParams(params);
@@ -170,11 +166,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         }
         /* if (!AudioFlag.equalsIgnoreCase("0")) {
             comefromDownload = "1";
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
+            callAddFrag();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.setMargins(0, 8, 0, 210);
             binding.llSpace.setLayoutParams(params);
@@ -283,11 +275,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                         ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                     }
                                     if (player != null) {
-                                        Fragment fragment = new MiniPlayerFragment();
-                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                        fragmentManager1.beginTransaction()
-                                                .add(R.id.flContainer, fragment)
-                                                .commit();
+                                        callAddFrag();
                                     }
                                 }
                             }
@@ -504,10 +492,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Search Audio");
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                 editor.commit();
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment).commit();*/
+                callAddFrag();*/
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -528,11 +513,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     } else {
                         ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                         listModelList2.add(AudiolistsModel.get(position));
-                        callTransFrag(position, listModelList2);
+                        callTransFrag(0, listModelList2);
                     }
                 } else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                    listModelList2.add(AudiolistsModel.get(position));
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
@@ -546,8 +530,9 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(position, mainPlayModel);
-                    callTransFrag(position, listModelList2);
+                    listModelList2.add(mainPlayModel);
+                    listModelList2.add(AudiolistsModel.get(position));
+                    callTransFrag(0, listModelList2);
                 }
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

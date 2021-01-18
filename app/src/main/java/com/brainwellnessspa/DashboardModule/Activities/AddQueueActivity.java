@@ -760,8 +760,17 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                                 editor.commit();
                                                 comeFromAddToQueue = true;
-                                                if (player != null) {
-                                                    player.removeMediaItem(oldpos);
+                                                if(mainPlayModelList.size()==1){
+                                                     if (player != null) {
+                                                         player.removeMediaItem(oldpos);
+                                                         player.moveMediaItem(pos,0);
+                                                         player.setPlayWhenReady(true);
+                                                    }
+                                                }else {
+                                                    if (player != null) {
+                                                        player.removeMediaItem(oldpos);
+                                                        player.setPlayWhenReady(true);
+                                                    }
                                                 }
                                                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                                                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

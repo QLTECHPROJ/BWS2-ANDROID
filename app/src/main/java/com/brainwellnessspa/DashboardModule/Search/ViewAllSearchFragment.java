@@ -465,11 +465,10 @@ public class ViewAllSearchFragment extends Fragment {
                             } else {
                                 ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                                 listModelList2.add(AudiolistModel.get(position));
-                                callTransFrag(position, listModelList2);
+                                callTransFrag(0, listModelList2);
                             }
                         } else {
                             ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                            listModelList2.add(AudiolistModel.get(position));
                             isDisclaimer = 0;
                             disclaimerPlayed = 0;
                             SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
@@ -483,8 +482,9 @@ public class ViewAllSearchFragment extends Fragment {
                             mainPlayModel.setLike("");
                             mainPlayModel.setDownload("");
                             mainPlayModel.setAudioDuration("00:48");
-                            listModelList2.add(position, mainPlayModel);
-                            callTransFrag(position, listModelList2);
+                            listModelList2.add( mainPlayModel);
+                            listModelList2.add(AudiolistModel.get(position));
+                            callTransFrag(0, listModelList2);
                         }
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         params.setMargins(0, 6, 0, 260);

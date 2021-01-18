@@ -577,8 +577,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
         }
 //        binding.tvDireName.setText(R.string.Directions);
-//        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-
 //        callButtonText(position);
 //        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
 //            initializePlayerDisclaimer();
@@ -948,9 +946,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                         player.setPlayWhenReady(true);
                         position = player.getCurrentWindowIndex();
+                        if(mainPlayModelList.size()==1 && position == 1){
+                            position = 0;
+                        }
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -971,7 +972,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.llPlay.setVisibility(View.GONE);
                         exoBinding.llPause.setVisibility(View.GONE);
                         exoBinding.progressBar.setVisibility(View.VISIBLE);
-                        callButtonText(player.getCurrentWindowIndex());
+                        callButtonText(position);
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -993,6 +994,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
+                        setpleyerctrView();
                     }
 
                     @Override
@@ -1445,7 +1447,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (player != null) {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                             if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                                 exoBinding.llPlay.setVisibility(View.GONE);
                                 exoBinding.llPause.setVisibility(View.GONE);
@@ -1656,47 +1658,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             });
-
-/*
-        exoBinding.llPlay.setOnClickListener(view -> {
-            if (player != null) {
-                if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
-                        && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-//                    playerNotificationManager.setPlayer(player);
-                            player.seekTo(position, 0);
-                        }
-                        player.setPlayWhenReady(true);
-
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.VISIBLE);
-                exoBinding.progressBar.setVisibility(View.GONE);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("audioId", mainPlayModelList.get(position).getID());
-                p.putValue("audioName", mainPlayModelList.get(position).getName());
-                p.putValue("audioDescription", "");
-                p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                p.putValue("position", GetCurrentAudioPosition());
-                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
-                    p.putValue("audioType", "Downloaded");
-                }else {
-                    p.putValue("audioType", "Streaming");
-                }
-                p.putValue("source", GetSourceName(ctx));
-                p.putValue("playerType", "Main");
-                p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("bitRate", "");
-                p.putValue("sound", */
-            /*GetDeviceVolume(ctx)*//*
-"0");
-                BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
-            }
-        });
-*/
-
             exoBinding.llForwardSec.setOnClickListener(view -> {
                 try {
                     if (player.getDuration() - player.getCurrentPosition() <= 30000) {
@@ -1762,7 +1723,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llNext.setOnClickListener(view -> {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                int pss = player.getCurrentWindowIndex();
+                if(mainPlayModelList.size()==1 && position == 1){
+                    pss = 0;
+                }
+                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                 if (player != null) {
                     DatabaseClient
                             .getInstance(ctx)
@@ -1774,10 +1739,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         player.next();
                         p = new Properties();
                         p.putValue("userId", UserID);
-                        p.putValue("audioId", mainPlayModelList.get(player.getCurrentWindowIndex()).getID());
-                        p.putValue("audioName", mainPlayModelList.get(player.getCurrentWindowIndex()).getName());
-                        p.putValue("audioDuration", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioDuration());
-                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                        p.putValue("audioId", mainPlayModelList.get(pss).getID());
+                        p.putValue("audioName", mainPlayModelList.get(pss).getName());
+                        p.putValue("audioDuration", mainPlayModelList.get(pss).getAudioDuration());
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(pss).getName())) {
                             p.putValue("audioType", "Downloaded");
                         } else {
                             p.putValue("audioType", "Streaming");
@@ -1795,7 +1760,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPrev.setOnClickListener(view -> {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                int pss = player.getCurrentWindowIndex();
+                if(mainPlayModelList.size()==1 && position == 1){
+                    pss = 0;
+                }
+                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                 if (player != null) {
                     if (player.hasPrevious()) {
                         DatabaseClient
@@ -1807,10 +1776,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         player.previous();
                         p = new Properties();
                         p.putValue("userId", UserID);
-                        p.putValue("audioId", mainPlayModelList.get(player.getCurrentWindowIndex()).getID());
-                        p.putValue("audioName", mainPlayModelList.get(player.getCurrentWindowIndex()).getName());
-                        p.putValue("audioDuration", mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioDuration());
-                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                        p.putValue("audioId", mainPlayModelList.get(pss).getID());
+                        p.putValue("audioName", mainPlayModelList.get(pss).getName());
+                        p.putValue("audioDuration", mainPlayModelList.get(pss).getAudioDuration());
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(pss).getName())) {
                             p.putValue("audioType", "Downloaded");
                         } else {
                             p.putValue("audioType", "Streaming");
@@ -2606,8 +2575,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
-                if (!mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile().equalsIgnoreCase("")) {
-                    if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
+                int pss = 0;
+                if(mainPlayModelList.size()==1 && position == 1){
+                    pss = 0;
+                }
+                if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                    if (mainPlayModelList.get(pss).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
                             && (player.getDuration() - player.getCurrentPosition() <= 20)) {
 //                    playerNotificationManager.setPlayer(player);
                         player.seekTo(position, 0);
