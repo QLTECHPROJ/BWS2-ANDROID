@@ -663,15 +663,8 @@ public class AddQueueActivity extends AppCompatActivity {
                                     if (!comeFrom.equalsIgnoreCase("")) {
                                         mData.remove(position);
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                        int oldpos = pos ;
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
-                                            if (player != null) {
-                                                player.removeMediaItem(pos);
-                                                player.setPlayWhenReady(true);
-                                                audioRemove = true;
-                                                GlobalInitExoPlayer gb = new GlobalInitExoPlayer();
-                                                gb.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-//                                                playerNotificationManager.setPlayer(player);
-                                            }
                                             if (mData.size() != 0) {
                                                 if (pos == position && position < mData.size() - 1) {
                                                     pos = pos;
@@ -721,26 +714,22 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 String jsonz = gsonz.toJson(mainPlayModelList);
                                                 editor1.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                                                 editor1.commit();
-                                                Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                                                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                                ctx.startActivity(i);
+                                                if (player != null) {
+                                                    player.removeMediaItem(oldpos);
+                                                    player.setPlayWhenReady(true);
+                                                    audioRemove = true;
+                                                }
                                                 finish();
                                             }
                                             comeFromAddToQueue = true;
                                         }
-                                        Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                        ctx.startActivity(i);
                                         finish();
                                     } else {
                                         mainPlayModelList.remove(pos);
                                         arrayList1.remove(pos);
-                                        if (player != null) {
-                                            player.removeMediaItem(pos);
-                                            audioRemove = true;
-                                        }
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
+                                            int oldpos = pos ;
                                             if (mainPlayModelList.size() != 0) {
                                                 if (pos < mainPlayModelList.size() - 1) {
                                                     pos = pos;
@@ -772,6 +761,10 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                                 editor.commit();
                                                 comeFromAddToQueue = true;
+                                                if (player != null) {
+                                                    player.removeMediaItem(oldpos);
+                                                    audioRemove = true;
+                                                }
                                                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                                                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                 ctx.startActivity(i);
