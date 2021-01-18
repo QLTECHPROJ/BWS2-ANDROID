@@ -69,9 +69,9 @@ public class WebsiteFragment extends Fragment {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                 try {
-                    if (response.isSuccessful()) {
+                    ResourceListModel listModel = response.body();
+                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        ResourceListModel listModel = response.body();
                         WebsiteAdapter adapter = new WebsiteAdapter(listModel.getResponseData(), getActivity(), website);
                         binding.rvWebsiteList.setAdapter(adapter);
 

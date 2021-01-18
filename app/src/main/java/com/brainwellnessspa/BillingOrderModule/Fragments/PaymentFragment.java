@@ -80,27 +80,25 @@ public class PaymentFragment extends Fragment {
             listCall.enqueue(new Callback<CardListModel>() {
                 @Override
                 public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        try {
-                            CardListModel cardListModel = response.body();
-                            if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    try {
+                        CardListModel cardListModel = response.body();
+                        if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
 
-                                if (cardListModel.getResponseData().size() == 0) {
-                                    binding.rvCardList.setAdapter(null);
-                                    binding.rvCardList.setVisibility(View.GONE);
-                                } else {
-                                    binding.rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), UserID, binding.progressBar,
-                                            binding.progressBarHolder, binding.rvCardList);
-                                    binding.rvCardList.setAdapter(adapter);
-                                }
+                            if (cardListModel.getResponseData().size() == 0) {
+                                binding.rvCardList.setAdapter(null);
+                                binding.rvCardList.setVisibility(View.GONE);
                             } else {
-                                BWSApplication.showToast(cardListModel.getResponseMessage(), context);
+                                binding.rvCardList.setVisibility(View.VISIBLE);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), UserID, binding.progressBar,
+                                        binding.progressBarHolder, binding.rvCardList);
+                                binding.rvCardList.setAdapter(adapter);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } else {
+                            BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

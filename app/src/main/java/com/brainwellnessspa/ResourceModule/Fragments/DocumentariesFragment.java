@@ -71,8 +71,8 @@ public class DocumentariesFragment extends Fragment {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                 try {
-                    if (response.isSuccessful()) {
-                        ResourceListModel listModel = response.body();
+                    ResourceListModel listModel = response.body();
+                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
                         binding.rvDocumentariesList.setAdapter(adapter);
