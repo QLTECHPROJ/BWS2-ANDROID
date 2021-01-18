@@ -452,32 +452,13 @@ public class AptAudioFragment extends Fragment {
                                 .commit();
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        if (player != null) {
-                            miniPlayer = 1;
-                            player.seekTo(position, 0);
-                            player.setPlayWhenReady(true);
-                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedxx.edit();
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editor.commit();
-                            Fragment fragment = new MiniPlayerFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
-                        } else {
-                            ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
-
-                            listModelList2.add(listModelList.get(position));
-
-                            callTransFrag(position, listModelList2);
-                        }
+                        ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
+                        listModelList2.add(listModelList.get(position));
+                        callTransFrag(position, listModelList2);
                     }
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
-
                     listModelList2.add(listModelList.get(position));
-
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();

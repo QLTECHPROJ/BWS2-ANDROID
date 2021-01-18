@@ -3,6 +3,7 @@ package com.brainwellnessspa.RoomDataBase;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface AudioDetailsDao {
 // ORDER BY uid ASC
     List<String> geAllDataBYDownloaded1();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
 //    void insertMedia(DownloadAudioDetails downloadAudioDetails);  download
 

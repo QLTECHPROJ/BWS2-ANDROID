@@ -6,6 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -16,42 +22,31 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.MusicService;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentViewAllSearchBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -61,11 +56,11 @@ public class ViewAllSearchFragment extends Fragment {
     View view;
     String UserID, AudioFlag, Name;
     int startTime;
-    private long currentDuration = 0;
     long myProgress = 0, diff = 0;
     SuggestionAudioListsAdpater adpater;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
     ArrayList<SuggestedModel.ResponseData> AudiolistModel;
+    private long currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -79,7 +74,7 @@ public class ViewAllSearchFragment extends Fragment {
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
                         !AudioFlag.equalsIgnoreCase("SubPlayList") &&
                         !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (player!=null) {
+                    if (player != null) {
                         if (data.equalsIgnoreCase("play")) {
                             adpater.notifyDataSetChanged();
                         } else {
@@ -136,12 +131,14 @@ public class ViewAllSearchFragment extends Fragment {
     public void onPause() {
         super.onPause();
     }
+
     @Override
     public void onDestroy() {
 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
+
     private void callBack() {
         Fragment fragment = new SearchFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -160,11 +157,7 @@ public class ViewAllSearchFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
+                callAddFrag();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 6, 0, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -327,6 +320,14 @@ public class ViewAllSearchFragment extends Fragment {
 
     }
 
+    private void callAddFrag() {
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
+    }
+
     public class SuggestionAudioListsAdpater extends RecyclerView.Adapter<SuggestionAudioListsAdpater.MyViewHolder> {
         Context ctx;
         String songId;
@@ -369,12 +370,12 @@ public class ViewAllSearchFragment extends Fragment {
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(AudiolistModel.get(position).getID())) {
                     songId = myAudioId;
-                    if (player!=null) {
+                    if (player != null) {
                         if (!player.getPlayWhenReady()) {
                             holder.binding.equalizerview.stopBars();
-                        }else
+                        } else
                             holder.binding.equalizerview.animateBars();
-                    }else
+                    } else
                         holder.binding.equalizerview.stopBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
@@ -410,7 +411,7 @@ public class ViewAllSearchFragment extends Fragment {
                 } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     try {
-                        miniPlayer = 1;
+                       /* miniPlayer = 1;
                         audioClick = true;
                         callNewPlayerRelease();
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -443,7 +444,48 @@ public class ViewAllSearchFragment extends Fragment {
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)
-                                .commit();
+                                .commit();*/
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        if (audioPlay && (AudioFlag.equalsIgnoreCase("SearchAudio")
+                                && MyPlaylist.equalsIgnoreCase("Recommended Search Audio"))) {
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    if (!player.getPlayWhenReady()) {
+                                        player.setPlayWhenReady(true);
+                                    }
+                                } else {
+                                    audioClick = true;
+                                    miniPlayer = 1;
+                                }
+                                callAddFrag();
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                                listModelList2.add(AudiolistModel.get(position));
+                                callTransFrag(position, listModelList2);
+                            }
+                        } else {
+                            ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                            listModelList2.add(AudiolistModel.get(position));
+                            isDisclaimer = 0;
+                            disclaimerPlayed = 0;
+                            SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                            mainPlayModel.setID("0");
+                            mainPlayModel.setName("Disclaimer");
+                            mainPlayModel.setAudioFile("");
+                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                            mainPlayModel.setAudiomastercat("");
+                            mainPlayModel.setAudioSubCategory("");
+                            mainPlayModel.setImageFile("");
+                            mainPlayModel.setLike("");
+                            mainPlayModel.setDownload("");
+                            mainPlayModel.setAudioDuration("00:48");
+                            listModelList2.add(position, mainPlayModel);
+                            callTransFrag(position, listModelList2);
+                        }
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         params.setMargins(0, 6, 0, 260);
                         binding.llSpace.setLayoutParams(params);
@@ -467,7 +509,7 @@ public class ViewAllSearchFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", AudiolistModel.get(position).getID());
-                    i.putExtra("ScreenView","Recommended Search Audio");
+                    i.putExtra("ScreenView", "Recommended Search Audio");
                     i.putExtra("PlaylistID", "");
                     i.putExtra("PlaylistName", "");
                     i.putExtra("PlaylistImage", "");
@@ -476,6 +518,30 @@ public class ViewAllSearchFragment extends Fragment {
                     startActivity(i);
                 }
             });
+        }
+
+        private void callTransFrag(int position, ArrayList<SuggestedModel.ResponseData> listModelList) {
+            try {
+                miniPlayer = 1;
+                audioClick = true;
+                callNewPlayerRelease();
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+
+                String json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Recommended Search Audio");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
+                editor.commit();
+                callAddFrag();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -596,7 +662,7 @@ public class ViewAllSearchFragment extends Fragment {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
                     i.putExtra("PlaylistID", PlaylistModel.get(position).getID());
-                    i.putExtra("ScreenView","Recommended Search Playlist");
+                    i.putExtra("ScreenView", "Recommended Search Playlist");
                     i.putExtra("PlaylistName", PlaylistModel.get(position).getName());
                     i.putExtra("PlaylistImage", "");
                     i.putExtra("PlaylistType", "");

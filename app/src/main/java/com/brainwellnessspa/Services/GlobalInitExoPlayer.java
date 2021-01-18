@@ -160,6 +160,7 @@ public class GlobalInitExoPlayer extends Service {
             player.stop();
             player.release();
             player = null;
+            PlayerINIT = false;
         }
     }
 

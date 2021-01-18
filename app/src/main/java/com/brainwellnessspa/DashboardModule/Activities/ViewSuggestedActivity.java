@@ -56,6 +56,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.P
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -281,7 +282,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                         GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
                                         ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                     }
-                                    if(player!=null){
+                                    if (player != null) {
                                         Fragment fragment = new MiniPlayerFragment();
                                         FragmentManager fragmentManager1 = getSupportFragmentManager();
                                         fragmentManager1.beginTransaction()
@@ -308,6 +309,14 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
+    }
+
+    private void callAddFrag() {
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
     }
 
     public class AudiosListAdpater extends RecyclerView.Adapter<AudiosListAdpater.MyViewHolder> {
@@ -466,7 +475,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 
         private void CallTransFrag(int position) {
             try {
-                miniPlayer = 1;
+              /*  miniPlayer = 1;
                 audioClick = true;
                 callNewPlayerRelease();
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -498,11 +507,77 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment).commit();
+                        .add(R.id.flContainer, fragment).commit();*/
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                if (audioPlay && (AudioFlag.equalsIgnoreCase("SearchAudio")
+                        && MyPlaylist.equalsIgnoreCase("Recommended Search Audio"))) {
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
+                            }
+                        } else {
+                            audioClick = true;
+                            miniPlayer = 1;
+                        }
+                        callAddFrag();
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    } else {
+                        ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                        listModelList2.add(AudiolistsModel.get(position));
+                        callTransFrag(position, listModelList2);
+                    }
+                } else {
+                    ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                    listModelList2.add(AudiolistsModel.get(position));
+                    isDisclaimer = 0;
+                    disclaimerPlayed = 0;
+                    SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    listModelList2.add(position, mainPlayModel);
+                    callTransFrag(position, listModelList2);
+                }
+
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 210);
                 binding.llSpace.setLayoutParams(params);
                 notifyDataSetChanged();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void callTransFrag(int position, ArrayList<SuggestedModel.ResponseData> listModelList) {
+            try {
+                miniPlayer = 1;
+                audioClick = true;
+                callNewPlayerRelease();
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+
+                String json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Recommended Search Audio");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
+                editor.commit();
+                callAddFrag();
             } catch (Exception e) {
                 e.printStackTrace();
             }

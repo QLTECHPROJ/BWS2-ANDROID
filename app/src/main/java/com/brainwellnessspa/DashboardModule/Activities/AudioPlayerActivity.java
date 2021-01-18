@@ -2262,6 +2262,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void SaveMedia(int progress) {
 
         class SaveMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected void onPreExecute() {
+                BWSApplication.showProgressBar(binding.pbProgressBar,binding.progressBarHolder,activity);
+                super.onPreExecute();
+            }
 
             @Override
             protected Void doInBackground(Void... voids) {
@@ -2305,6 +2310,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                BWSApplication.hideProgressBar(binding.pbProgressBar,binding.progressBarHolder,activity);
                 GetMediaPer();
                 disableDownload();
                 super.onPostExecute(aVoid);

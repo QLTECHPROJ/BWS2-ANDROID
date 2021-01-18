@@ -36,7 +36,6 @@ import com.brainwellnessspa.DashboardModule.Models.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
@@ -49,10 +48,8 @@ import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +63,8 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -84,8 +82,8 @@ public class SearchFragment extends Fragment {
     FancyShowCaseQueue queue;
     SuggestionAudiosAdpater suggestionAudiosAdpater;
     long myProgress = 0, diff = 0;
-    private long currentDuration = 0;
     Properties p;
+    private long currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -544,6 +542,14 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    private void callAddFrag() {
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
+    }
+
     public class SerachListAdpater extends RecyclerView.Adapter<SerachListAdpater.MyViewHolder> {
         Context ctx;
         String UserID, songId;
@@ -655,7 +661,7 @@ public class SearchFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                        try {
+                    /*    try {
                             miniPlayer = 1;
                             audioClick = true;
                             callNewPlayerRelease();
@@ -697,6 +703,47 @@ public class SearchFragment extends Fragment {
                             notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                        }*/
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        if (audioPlay && (AudioFlag.equalsIgnoreCase("SearchModelAudio")
+                                && MyPlaylist.equalsIgnoreCase("Search Audio"))) {
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    if (!player.getPlayWhenReady()) {
+                                        player.setPlayWhenReady(true);
+                                    }
+                                } else {
+                                    audioClick = true;
+                                    miniPlayer = 1;
+                                }
+                                callAddFrag();
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
+                                listModelList2.add(modelList.get(position));
+                                callTransFrag(position, listModelList2);
+                            }
+                        } else {
+                            ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
+                            listModelList2.add(modelList.get(position));
+                            isDisclaimer = 0;
+                            disclaimerPlayed = 0;
+                            SearchBothModel.ResponseData mainPlayModel = new SearchBothModel.ResponseData();
+                            mainPlayModel.setID("0");
+                            mainPlayModel.setName("Disclaimer");
+                            mainPlayModel.setAudioFile("");
+                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                            mainPlayModel.setAudiomastercat("");
+                            mainPlayModel.setAudioSubCategory("");
+                            mainPlayModel.setImageFile("");
+                            mainPlayModel.setLike("");
+                            mainPlayModel.setDownload("");
+                            mainPlayModel.setAudioDuration("00:48");
+                            listModelList2.add(position, mainPlayModel);
+                            callTransFrag(position, listModelList2);
                         }
                     }
                 });
@@ -755,6 +802,31 @@ public class SearchFragment extends Fragment {
                 });
             }
         }
+
+        private void callTransFrag(int position, ArrayList<SearchBothModel.ResponseData> listModelList) {
+            try {
+                miniPlayer = 1;
+                audioClick = true;
+                callNewPlayerRelease();
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+
+                String json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Search Audio");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchModelAudio");
+                editor.commit();
+                callAddFrag();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
 
         @Override
         public int getItemCount() {
@@ -853,7 +925,7 @@ public class SearchFragment extends Fragment {
                     BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    try {
+                 /*   try {
                         miniPlayer = 1;
                         audioClick = true;
                         callNewPlayerRelease();
@@ -894,6 +966,47 @@ public class SearchFragment extends Fragment {
                         notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }*/
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    if (audioPlay && (AudioFlag.equalsIgnoreCase("SearchAudio")
+                            && MyPlaylist.equalsIgnoreCase("Recommended Search Audio"))) {
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                if (!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
+                                }
+                            } else {
+                                audioClick = true;
+                                miniPlayer = 1;
+                            }
+                            callAddFrag();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        } else {
+                            ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                            listModelList2.add(modelList.get(position));
+                            callTransFrag(position, listModelList2);
+                        }
+                    } else {
+                        ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                        listModelList2.add(modelList.get(position));
+                        isDisclaimer = 0;
+                        disclaimerPlayed = 0;
+                        SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                        mainPlayModel.setID("0");
+                        mainPlayModel.setName("Disclaimer");
+                        mainPlayModel.setAudioFile("");
+                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                        mainPlayModel.setAudiomastercat("");
+                        mainPlayModel.setAudioSubCategory("");
+                        mainPlayModel.setImageFile("");
+                        mainPlayModel.setLike("");
+                        mainPlayModel.setDownload("");
+                        mainPlayModel.setAudioDuration("00:48");
+                        listModelList2.add(position, mainPlayModel);
+                        callTransFrag(position, listModelList2);
                     }
                 }
             });
@@ -920,6 +1033,30 @@ public class SearchFragment extends Fragment {
                     startActivity(i);
                 }
             });
+        }
+
+        private void callTransFrag(int position, ArrayList<SuggestedModel.ResponseData> listModelList) {
+            try {
+                miniPlayer = 1;
+                audioClick = true;
+                callNewPlayerRelease();
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+
+                String json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Recommended Search Audio");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
+                editor.commit();
+                callAddFrag();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override

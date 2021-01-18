@@ -14,7 +14,7 @@ public class DatabaseClient {
     //our app database object
     private AudioDatabase cart;
 
-    private DatabaseClient(Context Ctx) {
+    public DatabaseClient(Context Ctx) {
         this.Ctx = Ctx;
 
         //creating the app database with Room database builder
