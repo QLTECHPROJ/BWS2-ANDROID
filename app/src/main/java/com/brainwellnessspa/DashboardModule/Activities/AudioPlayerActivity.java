@@ -922,7 +922,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 player.setWakeMode(C.WAKE_MODE_LOCAL);
                 player.setHandleWakeLock(true);
                 player.addListener(new ExoPlayer.EventListener() {
-
                     @Override
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                         Log.v("TAG", "Listener-onTracksChanged... ");
@@ -1223,6 +1222,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
                     }
                 });
+
                 exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
                     @Override
                     public void onScrubStart(TimeBar timeBar, long pos) {

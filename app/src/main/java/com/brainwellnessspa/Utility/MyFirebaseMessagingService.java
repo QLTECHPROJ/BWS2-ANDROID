@@ -133,15 +133,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (IsLock.equalsIgnoreCase("1")) {
                     resultIntent = new Intent(this, DashboardActivity.class);
                     taskStackBuilder.addParentStack(DashboardActivity.class);
+                   /* resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                            Intent.FLAG_ACTIVITY_NEW_TASK);*/
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     resultIntent = new Intent(this, DashboardActivity.class);
+                   /* resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                            Intent.FLAG_ACTIVITY_NEW_TASK);*/
                     taskStackBuilder.addParentStack(DashboardActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
                     resultIntent = new Intent(this, DashboardActivity.class);
+                   /* resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                            Intent.FLAG_ACTIVITY_NEW_TASK);*/
                     resultIntent.putExtra("New", "0");
                     resultIntent.putExtra("Goplaylist", "1");
                     resultIntent.putExtra("PlaylistID", id);
@@ -153,6 +162,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             } else {
                 resultIntent = new Intent(this, DashboardActivity.class);
+                /*resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);*/
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -165,7 +177,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-           
                 notificationChannel = new NotificationChannel(channelId, "Name", NotificationManager.IMPORTANCE_DEFAULT);
                 notificationChannel.setDescription("BWS Notification");
                 notificationChannel.setShowBadge(true);

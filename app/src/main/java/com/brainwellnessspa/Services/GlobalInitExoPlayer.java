@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Services;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -21,6 +22,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
+import android.webkit.WebSettings;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -87,7 +89,7 @@ public class GlobalInitExoPlayer extends Service {
     public static String PlayerCurrantAudioPostion = "0";
     Notification notification1;
     Intent playbackServiceIntent;
-    ArrayList<MainPlayModel> mainPlayModelList1=new ArrayList<>();
+    ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
     static Bitmap notification_artwork;
     /*MediaSessionCompat mediaSession = null;
     MediaSessionConnector mediaSessionConnector = null;*/
@@ -464,7 +466,7 @@ Appointment Audios dddd*/
                     player.prepare();
                 }
             }
-            InitNotificationAudioPLayer(ctx,mainPlayModelList);
+            InitNotificationAudioPLayer(ctx, mainPlayModelList);
         }
 //        playerNotificationManager.setPlayer(player);
     }
