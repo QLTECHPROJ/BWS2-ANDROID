@@ -1135,8 +1135,12 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.llPause.setVisibility(View.VISIBLE);
                 exoBinding.progressBar.setVisibility(View.GONE);
                 player.setPlayWhenReady(true);
-                if (!mainPlayModelList.get(player.getCurrentWindowIndex()).getAudioFile().equalsIgnoreCase("")) {
-                    if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
+                int pss = 0;
+                if(mainPlayModelList.size()==1 && position == 1){
+                    pss = 0;
+                }
+                if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                    if (mainPlayModelList.get(pss).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
                             && (player.getDuration() - player.getCurrentPosition() <= 20)) {
 //                    playerNotificationManager.setPlayer(player);
                         player.seekTo(position, 0);

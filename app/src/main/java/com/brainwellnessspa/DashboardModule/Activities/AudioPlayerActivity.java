@@ -1539,35 +1539,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
             });
 
-
-/*        exoBinding.llPlay.setOnClickListener(view -> {
-            if (player != null) {
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.VISIBLE);
-                exoBinding.progressBar.setVisibility(View.GONE);
-                player.setPlayWhenReady(true);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("source", GetSourceName(ctx));
-                p.putValue("playerType", "Main");
-                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
-                    p.putValue("audioType", "Downloaded");
-                }else {
-                    p.putValue("audioType", "Streaming");
-                }
-                p.putValue("bitRate", "");
-                p.putValue("sound", */
-            /*GetDeviceVolume(ctx)*//*
-"0");
-                BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
-            } else {
-                audioClick = true;
-                miniPlayer = 1;
-                initializePlayerDisclaimer();
-            }
-        });
-*/
 //        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
 //        player.setMediaItem(mediaItem1);
             callAllDisable(false);

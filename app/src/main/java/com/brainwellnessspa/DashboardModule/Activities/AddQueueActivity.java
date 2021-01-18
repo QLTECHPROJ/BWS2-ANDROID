@@ -63,11 +63,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.audioRemove;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AddQueueActivity extends AppCompatActivity {
@@ -732,19 +735,13 @@ public class AddQueueActivity extends AppCompatActivity {
                                             if (mainPlayModelList.size() != 0) {
                                                 if (pos < mainPlayModelList.size() - 1) {
                                                     pos = pos;
-                                                    player.seekTo(pos, 0);
                                                 } else if (pos == mainPlayModelList.size() - 1) {
                                                     pos = 0;
-                                                    player.seekTo(pos, 0);
                                                 } else if (pos == mainPlayModelList.size()) {
                                                     pos = 0;
-                                                    player.seekTo(pos, 0);
                                                 } else if (pos > mainPlayModelList.size()) {
                                                     pos = pos - 1;
-                                                    player.seekTo(pos, 0);
                                                 }
-
-                                                player.setPlayWhenReady(true);
                                                 SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedd.edit();
                                                 Gson gson = new Gson();
@@ -761,15 +758,13 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 editor.commit();
                                                 comeFromAddToQueue = true;
                                                 if(mainPlayModelList.size()==1){
-                                                     if (player != null) {
-                                                         player.removeMediaItem(oldpos);
-                                                         player.moveMediaItem(pos,0);
-                                                         player.setPlayWhenReady(true);
-                                                    }
+                                                    miniPlayer = 1;
+                                                    audioClick = true;
+                                                    callNewPlayerRelease();
                                                 }else {
                                                     if (player != null) {
                                                         player.removeMediaItem(oldpos);
-                                                        player.setPlayWhenReady(true);
+//                                                        player.seekTo(pos, 0);
                                                     }
                                                 }
                                                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
