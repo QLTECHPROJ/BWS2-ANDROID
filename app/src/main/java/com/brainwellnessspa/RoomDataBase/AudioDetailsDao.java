@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface AudioDetailsDao {
 
-    @Query("SELECT  DISTINCT(Name) , * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
 // ORDER BY uid ASC
     LiveData<List<DownloadAudioDetails>> geAllData1(String PlaylistId);
 

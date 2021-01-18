@@ -2274,6 +2274,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     GetMediaPer();
                 }
             } else {
+                GetMediaPer();
                 binding.llDownload.setClickable(true);
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
@@ -2539,8 +2540,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             isDisclaimer = 1;
             binding.tvNowPlaying.setText("");
         } else {
-            GetMedia2();
             GetMediaPer();
+            GetMedia2();
             binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
             isDisclaimer = 0;
         }
@@ -2670,6 +2671,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             if (downloadProgress == 100) {
                                 binding.pbProgress.setVisibility(View.GONE);
                                 binding.ivDownloads.setVisibility(View.VISIBLE);
+                                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                                binding.llDownload.setClickable(false);
+                                binding.llDownload.setEnabled(false);
+                                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                                 handler2.removeCallbacks(UpdateSongTime2);
                             } else {
                                 binding.pbProgress.setProgress(downloadProgress);
@@ -2679,12 +2684,20 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         } else {
                             binding.pbProgress.setVisibility(View.GONE);
                             binding.ivDownloads.setVisibility(View.VISIBLE);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.llDownload.setClickable(false);
+                            binding.llDownload.setEnabled(false);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                             handler2.removeCallbacks(UpdateSongTime2);
                         }
                         handler2.postDelayed(UpdateSongTime2, 10000);
                     } else {
                         binding.pbProgress.setVisibility(View.VISIBLE);
                         binding.ivDownloads.setVisibility(View.GONE);
+                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        binding.llDownload.setClickable(false);
+                        binding.llDownload.setEnabled(false);
+                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                         handler2.postDelayed(UpdateSongTime2, 10000);
                     }
                 }

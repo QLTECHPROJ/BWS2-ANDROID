@@ -764,7 +764,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 }else {
                                                     if (player != null) {
                                                         player.removeMediaItem(oldpos);
-//                                                        player.seekTo(pos, 0);
+                                                        player.seekTo(pos, 0);
                                                     }
                                                 }
                                                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
