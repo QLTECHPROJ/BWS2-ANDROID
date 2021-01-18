@@ -723,11 +723,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
                 url = mainPlayModelList.get(position).getAudioFile();
             }
-
-            if (audioRemove) {
-                callButtonText(position);
-                audioRemove = false;
-            }
 //            if (url.equalsIgnoreCase("") || url.isEmpty()) {
 //                isDisclaimer = 1;
 //                callAllDisable(false);
