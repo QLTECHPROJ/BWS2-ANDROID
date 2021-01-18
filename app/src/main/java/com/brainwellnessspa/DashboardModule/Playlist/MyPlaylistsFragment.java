@@ -100,6 +100,7 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment.ComeScreenMyPlaylist;
+import static com.brainwellnessspa.ReminderModule.Activities.ReminderActivity.ComeScreenRemiderPlaylist;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
@@ -671,6 +672,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         if (ComeScreenMyPlaylist == 1) {
             prepareData(UserID, PlaylistID);
         }
+        if (ComeScreenRemiderPlaylist == 1) {
+            prepareData(UserID, PlaylistID);
+        }
         super.onResume();
     }
 
@@ -851,17 +855,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     listCall1.enqueue(new Callback<ReminderStatusPlaylistModel>() {
                                         @Override
                                         public void onResponse(Call<ReminderStatusPlaylistModel> call1, Response<ReminderStatusPlaylistModel> response1) {
-                                            if (response1.isSuccessful()) {
-                                                try {
-                                                    ReminderStatusPlaylistModel listModel1 = response1.body();
-//                                                                prepareData(UserID, PlaylistID);
+                                            try {
+                                                ReminderStatusPlaylistModel listModel1 = response1.body();
+                                                BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
+                                                if (listModel1.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                     listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
                                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
-                                                    dialog.dismiss();
-                                                    BWSApplication.showToast(listModel1.getResponseMessage(), activity);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
+                                                    prepareData(UserID, PlaylistID);
+                                                } else {
                                                 }
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
                                         }
 

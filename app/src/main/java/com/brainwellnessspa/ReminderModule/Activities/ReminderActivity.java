@@ -71,6 +71,7 @@ public class ReminderActivity extends AppCompatActivity {
     SelectPlaylistAdapter adapter;
     TimePickerDialog timePickerDialog;
     Properties p, p1, p2;
+    public static int ComeScreenRemiderPlaylist = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -393,6 +394,7 @@ public class ReminderActivity extends AppCompatActivity {
                                         startActivity(i);
                                         finish();
                                     } else {
+                                        ComeScreenRemiderPlaylist = 1;
                                         finish();
                                     }
                                 } catch (Exception e) {
