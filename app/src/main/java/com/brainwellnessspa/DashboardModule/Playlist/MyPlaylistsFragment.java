@@ -133,7 +133,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static String RefreshNew = "";
     public static int disclaimerPlayed = 0;
     public static int isPlayPlaylist = 0;
-    public boolean RefreshPlaylist = false;
+    public static boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
     String TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     PlayListsAdpater adpater;
@@ -657,6 +657,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistIDs = PlaylistIDMS;
             prepareData(UserID, MyPlaylistIds);
             addToSearch = false;
+        }  else if (RefreshPlaylist) {
+            prepareData(UserID, PlaylistID);
         } else {
 //            prepareData(UserID, PlaylistID);
         }
@@ -721,6 +723,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 getActivity().finish();
                 //            comefrom_search = 0;
             }
+            RefreshPlaylist = false;
         } else {
             prepareData(UserID, PlaylistIDs);
             MyPlaylistIds = "";
@@ -960,6 +963,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callAddTransFrag() {
+        RefreshPlaylist = true;
         try {
             Fragment fragment = new MiniPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

@@ -50,6 +50,7 @@ import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.RefreshLikePlaylist;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -145,12 +146,6 @@ public class LikePlaylistsFragment extends Fragment {
 
             callNewPlayerRelease();
 
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -163,11 +158,22 @@ public class LikePlaylistsFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
             editor.commit();
+            callAddTransFrag();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    private void callAddTransFrag() {
+        try {
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void callRemoveLike(String id) {
         try {
             if (BWSApplication.isNetworkConnected(getActivity())) {

@@ -48,6 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
@@ -207,6 +208,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
+
                 Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
@@ -434,11 +436,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                 editor.commit();
                 try {
-                    Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -336,11 +336,7 @@ public class AddAudioActivity extends AppCompatActivity {
         }
         /*if (!AudioFlag.equalsIgnoreCase("0")) {
             comefromDownload = "1";
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
+         callAddTransFrag();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.setMargins(0, 8, 0, 210);
             binding.llSpace.setLayoutParams(params);
@@ -529,11 +525,7 @@ public class AddAudioActivity extends AppCompatActivity {
                                             GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
                                             ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                         }
-                                        Fragment fragment = new MiniPlayerFragment();
-                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                        fragmentManager1.beginTransaction()
-                                                .add(R.id.flContainer, fragment)
-                                                .commit();
+                                        callAddFrag();
 
                                     }
                                 }
@@ -802,11 +794,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Search Audio");
                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchModelAudio");
                             editor.commit();
-                            Fragment fragment = new MiniPlayerFragment();
-                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();*/
+                            callAddFrag();*/
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                             params.setMargins(0, 8, 0, 210);
                             binding.llSpace.setLayoutParams(params);
@@ -1028,11 +1016,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Recommended Search Audio");
                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                             editor.commit();
-                            Fragment fragment = new MiniPlayerFragment();
-                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
+                            callAddFrag();
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                             params.setMargins(0, 8, 0, 210);
                             binding.llSpace.setLayoutParams(params);
@@ -1120,11 +1104,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Recommended Search Audio");
                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                         editor.commit();
-                        Fragment fragment = new MiniPlayerFragment();
-                        FragmentManager fragmentManager1 = getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();*/
+                        callAddFrag();*/
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                         params.setMargins(0, 8, 0, 210);
                         binding.llSpace.setLayoutParams(params);

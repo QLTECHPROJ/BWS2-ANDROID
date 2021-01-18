@@ -67,6 +67,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -205,14 +206,6 @@ public class LikeAudiosFragment extends Fragment {
         try {
             miniPlayer = 1;
             audioClick = true;
-
-            callNewPlayerRelease();
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -225,29 +218,22 @@ public class LikeAudiosFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
             editor.commit();
+            callAddTransFrag();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void saveToPref(int pos, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
-        SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shareddd.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(listModelList2);
-        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-        editor.putInt(CONSTANTS.PREF_KEY_position, pos);
-        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
-        editor.commit();
+    private void callAddTransFrag() {
+
+
+        callNewPlayerRelease();
         Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
                 .add(R.id.flContainer, fragment)
                 .commit();
+
     }
 
     private void callRemoveLike(String id, int position, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
@@ -686,11 +672,6 @@ public class LikeAudiosFragment extends Fragment {
                         editor.putInt(CONSTANTS.PREF_KEY_position, pos);
                         editor.commit();
                         try {
-                            Fragment fragment = new MiniPlayerFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

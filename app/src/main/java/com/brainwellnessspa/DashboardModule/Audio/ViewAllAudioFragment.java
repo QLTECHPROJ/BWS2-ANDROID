@@ -53,6 +53,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 
@@ -325,12 +326,7 @@ public class ViewAllAudioFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-
+            caladdTransFrag();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(4, 6, 4, 280);
                 binding.llSpace.setLayoutParams(params);
@@ -348,11 +344,7 @@ public class ViewAllAudioFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 if (!AudioFlag.equalsIgnoreCase("0")) {
-                    Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
+                    openOnlyFragment();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 6, 0, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -595,11 +587,7 @@ public class ViewAllAudioFragment extends Fragment {
                     } else {
                         audioClick = true;
                         miniPlayer = 1;
-                    } /*Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();*/
+                    }
                     Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     getActivity().startActivity(i);
@@ -612,11 +600,7 @@ public class ViewAllAudioFragment extends Fragment {
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit(); /*Fragment fragment = new MiniPlayerFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();*/
+                        editor.commit();
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
@@ -654,11 +638,7 @@ public class ViewAllAudioFragment extends Fragment {
                     } else {
                         audioClick = true;
                         miniPlayer = 1;
-                    } /*Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();*/
+                    }
                     Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     getActivity().startActivity(i);
@@ -671,11 +651,7 @@ public class ViewAllAudioFragment extends Fragment {
                         SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedxx.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit();/* Fragment fragment = new MiniPlayerFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();*/
+                        editor.commit();
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
@@ -841,11 +817,7 @@ public class ViewAllAudioFragment extends Fragment {
                 miniPlayer = 1;
                 audioClick = true;
                 callNewPlayerRelease();
-                /*Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();*/
+
                 Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 getActivity().startActivity(i);
@@ -857,6 +829,7 @@ public class ViewAllAudioFragment extends Fragment {
     }
 
     private void openOnlyFragment() {
+
         Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
@@ -868,11 +841,7 @@ public class ViewAllAudioFragment extends Fragment {
         miniPlayer = 1;
         audioClick = true;
         callNewPlayerRelease();
-        Fragment fragment = new MiniPlayerFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flContainer, fragment)
-                .commit();
+        openOnlyFragment();
     }
 
    /* public class TopAudiolistAdapter extends RecyclerView.Adapter<TopAudiolistAdapter.MyViewHolder> {

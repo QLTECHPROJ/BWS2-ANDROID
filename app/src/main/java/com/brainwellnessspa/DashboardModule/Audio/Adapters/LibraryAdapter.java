@@ -176,11 +176,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                 } else {
                     audioClick = true;
                     miniPlayer = 1;
-                } /*Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();*/
+                }
                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
@@ -194,11 +190,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                     SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedxx.edit();
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.commit(); /*Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();*/
+                    editor.commit();
                     Intent i = new Intent(ctx, AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
@@ -267,11 +259,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             audioClick = true;
             callNewPlayerRelease();
 
-            /*Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();*/
 
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -285,11 +272,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, HomeView);
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-            editor.commit();/* Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();*/
+            editor.commit();
             Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);

@@ -43,6 +43,7 @@ import retrofit2.Response;
 
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
@@ -171,6 +172,7 @@ public class DownloadsActivity extends AppCompatActivity {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
+
                 Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
@@ -244,11 +246,7 @@ public class DownloadsActivity extends AppCompatActivity {
             AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
+
             }
         } catch (Exception e) {
             e.printStackTrace();

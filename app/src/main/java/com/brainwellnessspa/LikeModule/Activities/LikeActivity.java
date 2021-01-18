@@ -24,6 +24,7 @@ import com.google.android.material.tabs.TabLayout;
 import retrofit2.Callback;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 
 public class LikeActivity extends AppCompatActivity {
@@ -67,6 +68,7 @@ public class LikeActivity extends AppCompatActivity {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
+
                 Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
@@ -140,11 +142,7 @@ public class LikeActivity extends AppCompatActivity {
             AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
+
             }
         } catch (Exception e) {
             e.printStackTrace();

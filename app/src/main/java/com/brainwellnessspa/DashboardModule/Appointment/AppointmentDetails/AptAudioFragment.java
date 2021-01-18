@@ -55,6 +55,7 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -226,6 +227,7 @@ public class AptAudioFragment extends Fragment {
     }
 
     private void callAddTransFrag() {
+
         Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
@@ -425,11 +427,7 @@ public class AptAudioFragment extends Fragment {
                     editor.commit();
 
 
-                    Fragment fragment = new MiniPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
+                    callAddTransFrag();
 //                    handler3.postDelayed(UpdateSongTime3, 500);
                     notifyDataSetChanged();
                 } catch (Exception e) {
@@ -445,11 +443,7 @@ public class AptAudioFragment extends Fragment {
                             audioClick = true;
                             miniPlayer = 1;
                         }
-                        Fragment fragment = new MiniPlayerFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();
+                        callAddTransFrag();
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
@@ -558,12 +552,6 @@ public class AptAudioFragment extends Fragment {
                 audioClick = true;
                 callNewPlayerRelease();
 
-            /*Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();*/
-
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
@@ -579,11 +567,7 @@ public class AptAudioFragment extends Fragment {
                 editor.commit();
 
                 boolean commit = editor.commit();
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
+                callAddTransFrag();
             } catch (Exception e) {
                 e.printStackTrace();
             }

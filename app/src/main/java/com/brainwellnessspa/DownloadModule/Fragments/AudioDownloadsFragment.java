@@ -62,6 +62,7 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -457,11 +458,7 @@ public class AudioDownloadsFragment extends Fragment {
                                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                                     editor.commit();
                                     try {
-                                        Fragment fragment = new MiniPlayerFragment();
-                                        FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                                        fragmentManager1.beginTransaction()
-                                                .add(R.id.flContainer, fragment)
-                                                .commit();
+                                        callAddTransFrag();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -578,11 +575,7 @@ public class AudioDownloadsFragment extends Fragment {
                                 audioClick = true;
                                 miniPlayer = 1;
                             }
-                            Fragment fragment = new MiniPlayerFragment();
-                            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
+                            callAddTransFrag();
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
@@ -663,11 +656,7 @@ public class AudioDownloadsFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                 editor.commit();
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
+                callAddTransFrag();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -826,11 +815,7 @@ public class AudioDownloadsFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
             editor.commit();
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
+            callAddTransFrag();
         }
 
         private void getDownloadData() {
@@ -997,5 +982,14 @@ public class AudioDownloadsFragment extends Fragment {
                 this.binding = binding;
             }
         }
+    }
+
+    private void callAddTransFrag() {
+
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
     }
 }
