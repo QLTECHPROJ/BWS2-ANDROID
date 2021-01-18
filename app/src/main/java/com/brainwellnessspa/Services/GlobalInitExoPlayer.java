@@ -254,8 +254,6 @@ Appointment Audios dddd*/
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        String ViewType = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
         audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -363,7 +361,7 @@ Appointment Audios dddd*/
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_LOCAL);
         player.setHandleWakeLock(true);
-        player.seekTo(position, C.CONTENT_TYPE_MUSIC);
+        player.seekTo(position, 0);
         player.setForegroundMode(true);
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)

@@ -37,7 +37,7 @@ public interface AudioDetailsDao {
 // ORDER BY uid ASC
     List<String> geAllDataBYDownloaded1();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
 //    void insertMedia(DownloadAudioDetails downloadAudioDetails);  download
 
