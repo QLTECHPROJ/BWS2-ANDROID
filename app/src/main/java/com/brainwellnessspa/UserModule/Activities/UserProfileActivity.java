@@ -145,9 +145,9 @@ public class UserProfileActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
                         try {
-                            if (response.isSuccessful()) {
+                            ProfileUpdateModel viewModel = response.body();
+                            if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                ProfileUpdateModel viewModel = response.body();
                                 analytics.identify(new Traits()
                                         .putValue("userId", UserID)
                                         .putValue("userName", viewModel.getResponseData().getName())
@@ -237,9 +237,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        ProfileViewModel viewModel = response.body();
+                        if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            ProfileViewModel viewModel = response.body();
                             binding.etUser.addTextChangedListener(userTextWatcher);
                             binding.etCalendar.addTextChangedListener(userTextWatcher);
                             binding.etMobileNumber.addTextChangedListener(userTextWatcher);
@@ -420,9 +420,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<RemoveProfileModel> call, Response<RemoveProfileModel> response) {
                                     try {
-                                        if (response.isSuccessful()) {
-                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                            RemoveProfileModel viewModel = response.body();
+                                        RemoveProfileModel viewModel = response.body();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                             BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
                                             profileViewData(ctx);
                                         }

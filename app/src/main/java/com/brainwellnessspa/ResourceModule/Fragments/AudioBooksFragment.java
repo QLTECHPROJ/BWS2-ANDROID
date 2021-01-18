@@ -72,8 +72,8 @@ public class AudioBooksFragment extends Fragment {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                 try {
-                    if (response.isSuccessful()) {
-                        ResourceListModel listModel = response.body();
+                    ResourceListModel listModel = response.body();
+                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
                         binding.rvAudioBooksList.setAdapter(adapter);

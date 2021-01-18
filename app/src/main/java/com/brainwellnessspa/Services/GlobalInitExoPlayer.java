@@ -575,7 +575,7 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNavigationActionsInCompactView(false);
         }
 
-//        playerNotificationManager.setSmallIcon(R.drawable.round_app_logo);
+        playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
@@ -669,7 +669,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setRewindIncrementMs(0);
         playerNotificationManager.setUseNavigationActions(false);
         playerNotificationManager.setUseNavigationActionsInCompactView(false);
-//        playerNotificationManager.setSmallIcon(R.drawable.round_app_logo);
+        playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
