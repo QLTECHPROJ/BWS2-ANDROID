@@ -99,6 +99,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+import static com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment.ComeScreenMyPlaylist;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
@@ -544,18 +545,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     .geAllData12().observe(getActivity(), audioList -> {
                 if (audioList != null) {
                     downloadAudioDetailsList = audioList;
-                    onlySingleDownloaded=new ArrayList<>();
-                    if(downloadAudioDetailsList.size()!=0) {
+                    onlySingleDownloaded = new ArrayList<>();
+                    if (downloadAudioDetailsList.size() != 0) {
                         for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                             if (downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase("")) {
                                 onlySingleDownloaded.add(downloadAudioDetailsList.get(i).getName());
                             }
                         }
-                    }else{
+                    } else {
                         onlySingleDownloaded = new ArrayList<>();
                     }
                 } else {
-                    onlySingleDownloaded=new ArrayList<>();
+                    onlySingleDownloaded = new ArrayList<>();
                     downloadAudioDetailsList = new ArrayList<>();
                 }
             });
@@ -664,6 +665,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             prepareData(UserID, PlaylistID);
         }
         if (ComeScreenReminder == 1) {
+            prepareData(UserID, PlaylistID);
+        }
+        if (ComeScreenMyPlaylist == 1) {
             prepareData(UserID, PlaylistID);
         }
         super.onResume();
@@ -2164,7 +2168,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             pos = pos - 1;
                             String one = "6";
                             Log.e("one", one);
-                        }    ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+                        }
+                        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
                         for (int i = 0; i < listModelList.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
                             mainPlayModel.setID(listModelList.get(i).getID());
@@ -2423,13 +2428,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 holder.binding.pbProgress.setVisibility(View.GONE);
                 holder.binding.ivDownloads.setVisibility(View.VISIBLE);
             }
-            if(onlySingleDownloaded.size()!=0){
-                if(onlySingleDownloaded.contains(mData.get(position).getName())){
+            if (onlySingleDownloaded.size() != 0) {
+                if (onlySingleDownloaded.contains(mData.get(position).getName())) {
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
-                }else{
+                } else {
                     enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 }
-            }else{
+            } else {
                 enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
             }
            /* for (int i = 0; i < downloadAudioDetailsList.size(); i++) {

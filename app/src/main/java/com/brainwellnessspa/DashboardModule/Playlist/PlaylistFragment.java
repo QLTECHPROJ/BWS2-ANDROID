@@ -77,6 +77,7 @@ public class PlaylistFragment extends Fragment {
     ArrayList<MainPlayListModel.ResponseData> listModelList;
     public static String PlaylistSource = "";
     PlaylistAdapter playlistAdapter;
+    public static int ComeScreenMyPlaylist = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
@@ -520,7 +521,7 @@ public class PlaylistFragment extends Fragment {
                                                 BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                             } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
                                                     listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
-
+                                                ComeScreenMyPlaylist = 1;
                                                 callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0", "Your Created");
                                                 /*Properties p = new Properties();
                                                 p.putValue("userId", UserID);

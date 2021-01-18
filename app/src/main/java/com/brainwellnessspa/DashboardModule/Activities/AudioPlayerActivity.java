@@ -960,9 +960,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                         }
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
+
                         callButtonText(position);
                         p = new Properties();
                         p.putValue("userId", UserID);
