@@ -74,7 +74,6 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRel
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AddQueueActivity extends AppCompatActivity {
-    public static boolean comeFromAddToQueue = false;
     public AudioManager audioManager;
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "", audioFileName,
@@ -723,7 +722,6 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 }
                                                 finish();
                                             }
-                                            comeFromAddToQueue = true;
                                         }
                                         finish();
                                     } else {
@@ -756,17 +754,15 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                                 editor.commit();
-                                                comeFromAddToQueue = true;
-                                                if(mainPlayModelList.size()==1){
-                                                    miniPlayer = 1;
-                                                    audioClick = true;
-                                                    callNewPlayerRelease();
-                                                }else {
+//                                                if(mainPlayModelList.size()==1){
+//                                                    miniPlayer = 1;
+//                                                    audioClick = true;
+//                                                    callNewPlayerRelease();
+//                                                }else {
                                                     if (player != null) {
                                                         player.removeMediaItem(oldpos);
-                                                        player.seekTo(pos, 0);
                                                     }
-                                                }
+//                                                }
                                                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                                                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                 ctx.startActivity(i);

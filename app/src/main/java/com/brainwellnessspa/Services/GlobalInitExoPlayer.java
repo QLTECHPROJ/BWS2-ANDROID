@@ -495,11 +495,7 @@ Appointment Audios dddd*/
                             }.getType();
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
-                        int pos = players.getCurrentWindowIndex();
-                        if(mainPlayModelList1.size()==1){
-                            pos = 0;
-                        }
-                        return mainPlayModelList1.get(pos).getName();
+                        return mainPlayModelList1.get(players.getCurrentWindowIndex()).getName();
                     }
 
                     @Nullable
@@ -524,12 +520,7 @@ Appointment Audios dddd*/
                             }.getType();
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
-
-                        int pos = players.getCurrentWindowIndex();
-                        if(mainPlayModelList1.size()==1){
-                            pos = 0;
-                        }
-                        return mainPlayModelList1.get(pos).getAudioDirection();
+                        return mainPlayModelList1.get(players.getCurrentWindowIndex()).getAudioDirection();
                     }
 
                     @Nullable
@@ -543,12 +534,8 @@ Appointment Audios dddd*/
                             }.getType();
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
-                        int pos = players.getCurrentWindowIndex();
-                        if(mainPlayModelList1.size()==1){
-                            pos = 0;
-                        }
-                        getMediaBitmap(getBaseContext(), mainPlayModelList1.get(pos).getImageFile());
-//                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+                        getMediaBitmap(getBaseContext(), mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
                         return myBitmap;
                     }
                 },
@@ -575,9 +562,7 @@ Appointment Audios dddd*/
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         }
-        if(mainPlayModelList1.size()==1){
-            position = 0;
-        }
+
         if (!mainPlayModelList1.get(position).getAudioFile().equalsIgnoreCase("")) {
             playerNotificationManager.setFastForwardIncrementMs(30000);
             playerNotificationManager.setRewindIncrementMs(30000);
