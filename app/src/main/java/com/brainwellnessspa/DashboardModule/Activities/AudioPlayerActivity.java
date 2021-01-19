@@ -2694,7 +2694,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     public List<String> GetAllMedia() {
-       /* class GetTask extends AsyncTask<Void, Void, Void> {
+        class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 downloadAudioDetailsList = DatabaseClient
@@ -2707,54 +2707,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                audioClick = true;
                 MakeArray();
-//                if(mainPlayModelList.get(position).getAudioFile().equals("")){
-//                    getPrepareShowData();
-//                }
-//                mainPlayModelList2 = new ArrayList<>();
-//                mainPlayModelList2 = mainPlayModelList;
-
-                *//*if (downloadAudioDetailsList.size() != 0) {
-                    if (mainPlayModelList.get(position).getAudioFile().equals("")) {
-//                        ismyDes = true;
-//                        getPrepareShowData();
-                        mainPlayModelList2.remove(position);
-                    }
-                    int x = 0;
-                    downloadAudioDetailsListGloble = new ArrayList<>();
-                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                        if (x < mainPlayModelList2.size()) {
-                            if (downloadAudioDetailsList.get(i).equals(mainPlayModelList2.get(x).getName())) {
-                                DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                                getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
-                                break;
-                            }
-                        } else {
-                            MakeArray();
-                            Log.e("MakeArry Call", String.valueOf(x));
-                            break;
-                        }
-                        if (i == downloadAudioDetailsList.size() - 1) {
-                            x = x + 1;
-                            if (downloadAudioDetailsList.size() > 1) {
-                                i = 0;
-                            } else {
-                                MakeArray();
-                            }
-                            Log.e("again for Call", String.valueOf(x));
-                        }
-                    }
-                } else {
-                    MakeArray();
-                }*//*
-
                 super.onPostExecute(aVoid);
             }
         }
         GetTask st = new GetTask();
-        st.execute();*/
-        DatabaseClient
+        st.execute();
+       /* DatabaseClient
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
@@ -2768,7 +2727,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .taskDao()
                     .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
             });
-        });
+        });*/
         return downloadAudioDetailsList;
     }
 

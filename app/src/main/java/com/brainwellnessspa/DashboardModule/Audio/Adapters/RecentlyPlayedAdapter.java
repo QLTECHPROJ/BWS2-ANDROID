@@ -178,7 +178,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 ctx.startActivity(i);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
-                if (player != null) {
+               /* if (player != null) {
                     miniPlayer = 1;
                     player.seekTo(position, 0);
                     player.setPlayWhenReady(true);
@@ -189,7 +189,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     Intent i = new Intent(ctx, AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
-                } else {
+                } else {*/
                     ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                     if (!IsLock.equalsIgnoreCase("0")) {
                         SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -210,7 +210,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     }
                     callTransFrag(position, listModelList2);
                 }
-            }
+//            }
         } else {
             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
             if (!IsLock.equalsIgnoreCase("0")) {
