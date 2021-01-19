@@ -112,11 +112,19 @@ public class InvoiceReceiptFragment extends DialogFragment {
                             binding.tvOrderTotalAmountTitle.setText("Order Total:");
                             if (Flag.equalsIgnoreCase("1")) {
                                 binding.tvSession.setVisibility(View.GONE);
-                                binding.tvPaymentDetails.setVisibility(View.VISIBLE);
-                                binding.tvText.setVisibility(View.VISIBLE);
-                                binding.views.setVisibility(View.VISIBLE);
-                                binding.tvPaymentDetails.setText(listModel.getResponseData().getCardBrand() + " ending **** " +
-                                        listModel.getResponseData().getCardDigit() + "\n" + listModel.getResponseData().getEmail());
+                                if (listModel.getResponseData().getAmount().equalsIgnoreCase("0.00") ||
+                                        listModel.getResponseData().getAmount().equalsIgnoreCase("0") ||
+                                        listModel.getResponseData().getAmount().equalsIgnoreCase("")) {
+                                    binding.tvText.setVisibility(View.GONE);
+                                    binding.views.setVisibility(View.GONE);
+                                    binding.tvPaymentDetails.setVisibility(View.GONE);
+                                } else {
+                                    binding.tvPaymentDetails.setVisibility(View.VISIBLE);
+                                    binding.tvText.setVisibility(View.VISIBLE);
+                                    binding.views.setVisibility(View.VISIBLE);
+                                    binding.tvPaymentDetails.setText(listModel.getResponseData().getCardBrand() + " ending **** " +
+                                            listModel.getResponseData().getCardDigit() + "\n" + listModel.getResponseData().getEmail());
+                                }
                             } else if (Flag.equalsIgnoreCase("2")) {
                                 binding.tvSession.setVisibility(View.VISIBLE);
                                 binding.tvText.setVisibility(View.GONE);

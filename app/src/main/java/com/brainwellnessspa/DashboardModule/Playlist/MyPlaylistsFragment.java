@@ -623,6 +623,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onResume() {
+        binding.searchView.clearFocus();
+        searchEditText.setText("");
+        binding.searchView.setQuery("", false);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
