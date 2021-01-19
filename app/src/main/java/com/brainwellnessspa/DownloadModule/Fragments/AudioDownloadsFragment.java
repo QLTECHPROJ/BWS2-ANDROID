@@ -188,7 +188,7 @@ public class AudioDownloadsFragment extends Fragment {
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 9, 0, 190);
+            params.setMargins(0, 9, 0, 210);
             binding.llSpace.setLayoutParams(params);
         } else {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -133,12 +133,7 @@ public class CountrySelectActivity extends AppCompatActivity {
         binding.rvCountryList.setLayoutManager(mLayoutManager);
         binding.rvCountryList.setItemAnimator(new DefaultItemAnimator());
 
-    }
-
-    @Override
-    protected void onResume() {
         PrepareData();
-        super.onResume();
     }
 
     public void PrepareData() {
