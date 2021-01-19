@@ -233,6 +233,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = shared.edit();
                                                 editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
+                                                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
                                                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                                 editor.commit();

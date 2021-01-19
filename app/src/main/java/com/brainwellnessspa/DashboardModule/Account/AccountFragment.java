@@ -412,6 +412,7 @@ public class AccountFragment extends Fragment {
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
         edit.remove(CONSTANTS.PREF_KEY_MobileNo);
+        edit.remove(CONSTANTS.PREF_KEY_IsDisclimer);
         edit.remove(CONSTANTS.PREF_KEY_ExpDate);
         edit.remove(CONSTANTS.PREF_KEY_IsLock);
         edit.clear();
