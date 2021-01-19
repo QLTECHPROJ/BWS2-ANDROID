@@ -129,6 +129,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } else {
                     resultIntent = new Intent(this, DashboardActivity.class);
                     resultIntent.putExtra("Goplaylist", "1");
+                    resultIntent.putExtra("New", "0");
                     resultIntent.putExtra("PlaylistID", id);
                     resultIntent.putExtra("PlaylistName", title);
                     resultIntent.putExtra("PlaylistImage", "");
