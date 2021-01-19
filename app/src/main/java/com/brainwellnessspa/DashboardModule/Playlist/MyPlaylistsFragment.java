@@ -810,7 +810,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             callObserveMethodGetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
 //                            GetMedia();
-                            getMediaByPer(SongListSize);
+                            getMediaByPer(PlaylistId,SongListSize);
                             binding.rlSearch.setVisibility(View.VISIBLE);
                             binding.llMore.setVisibility(View.VISIBLE);
                             binding.llReminder.setVisibility(View.VISIBLE);
@@ -975,13 +975,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
     }
 
-    private void getMediaByPer(int totalAudio) {
+    private void getMediaByPer(String PlaylistId,int totalAudio) {
         try {
             DatabaseClient
                     .getInstance(getActivity())
                     .getaudioDatabase()
                     .taskDao()
-                    .getCountDownloadProgress1("Complete", PlaylistID).observe(getActivity(), countx -> {
+                    .getCountDownloadProgress1("Complete", PlaylistId).observe(getActivity(), countx -> {
 //            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
                 count = countx.size();
                 if (downloadPlaylistDetailsList.size() != 0) {
@@ -993,7 +993,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     .getInstance(getActivity())
                                     .getaudioDatabase()
                                     .taskDao()
-                                    .getCountDownloadProgress1("Complete", PlaylistID).removeObserver(cs -> {
+                                    .getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {
                             });
 //                            handler1.removeCallbacks(UpdateSongTime1);
                         } else {
@@ -1010,7 +1010,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 .getInstance(getActivity())
                                 .getaudioDatabase()
                                 .taskDao()
-                                .getCountDownloadProgress1("Complete", PlaylistID).removeObserver(cs -> {
+                                .getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {
                         });
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
@@ -1379,7 +1379,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivDownloads.setVisibility(View.GONE);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
-            getMediaByPer( SongListSize);
             savePlaylist();
             saveAllMedia(playlistSongs, playlistSongs2, encodedBytes);
         } else {
@@ -1534,7 +1533,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
-                getMediaByPer( SongListSize);
+                getMediaByPer(PlaylistID, SongListSize);
                 super.onPostExecute(aVoid);
             }
         }
@@ -1612,7 +1611,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
-                getMediaByPer(SongListSize);
+                getMediaByPer(PlaylistID,SongListSize);
                 enableDisableDownload(false, "orange");
                 callObserveMethodGetAllMedia();
                 GetMedia();
