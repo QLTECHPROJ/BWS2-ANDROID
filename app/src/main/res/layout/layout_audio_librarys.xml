@@ -60,7 +60,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="You can access more than 65 audio programs."
+                android:text="You can access more than 75 audio programs."
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

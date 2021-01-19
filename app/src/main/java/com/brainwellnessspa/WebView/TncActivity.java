@@ -54,7 +54,7 @@ public class TncActivity extends AppCompatActivity {
         binding.webView.setWebViewClient(new CustomWebViewClient());
 
         if (Web.equalsIgnoreCase("Tnc")) {
-            binding.tvTitle.setText(R.string.t_n_csm);
+            binding.tvTitle.setText(R.string.t_n_csf);
             binding.webView.loadUrl(Tnc);
         } else if (Web.equalsIgnoreCase("PrivacyPolicy")) {
             binding.tvTitle.setText(R.string.privacy_policy);
