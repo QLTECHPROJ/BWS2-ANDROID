@@ -59,7 +59,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.RefreshLikePlaylist;
@@ -486,7 +486,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                         }
                     } else {
                         isDisclaimer = 0;
-                        disclaimerPlayed = 0;
+
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
@@ -509,7 +509,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     }
                 } else {
                     isDisclaimer = 0;
-                    disclaimerPlayed = 0;
+
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     if (position != 0) {
                         listModelList2.addAll(listModelList);

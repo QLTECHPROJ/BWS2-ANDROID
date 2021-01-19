@@ -55,7 +55,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -611,7 +611,7 @@ public class ViewAllAudioFragment extends Fragment {
             } else {
 
                 isDisclaimer = 0;
-                disclaimerPlayed = 0;
+
                 ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                 ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
                 mainPlayModel.setID("0");
@@ -698,7 +698,7 @@ public class ViewAllAudioFragment extends Fragment {
                 }
 
                 isDisclaimer = 0;
-                disclaimerPlayed = 0;
+
                 ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
                 mainPlayModel.setID("0");
                 mainPlayModel.setName("Disclaimer");
@@ -769,7 +769,7 @@ public class ViewAllAudioFragment extends Fragment {
                 } else {
                     listModelList2 = new ArrayList<>();
                     isDisclaimer = 0;
-                    disclaimerPlayed = 0;
+
                     mainPlayModel.setID("0");
                     mainPlayModel.setName("Disclaimer");
                     mainPlayModel.setAudioFile("");

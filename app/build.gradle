@@ -10,7 +10,7 @@ android {
         applicationId "com.brainwellnessspa"
         minSdkVersion 20
         targetSdkVersion 30
-        versionCode 14
+        versionCode 15
         versionName "1.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

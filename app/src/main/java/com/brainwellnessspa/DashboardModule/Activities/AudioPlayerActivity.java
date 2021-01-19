@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -540,9 +541,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-//            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
-//                addDeclaimer();
-//            }
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
@@ -713,15 +711,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
                 url = mainPlayModelList.get(position).getAudioFile();
             }
-//            if (url.equalsIgnoreCase("") || url.isEmpty()) {
-//                isDisclaimer = 1;
-//                callAllDisable(false);
-//                binding.tvNowPlaying.setText("");
-//            } else {
-//                binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
-//                isDisclaimer = 0;
-//                callAllDisable(true);
-//            }
         }
         super.onResume();
     }
@@ -1346,6 +1335,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         if (state == ExoPlayer.STATE_ENDED) {
                             //player back ended
                             audioClick = true;
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
+                            editor.commit();
                             removeArray();
                             p = new Properties();
                             p.putValue("userId", UserID);
@@ -1482,16 +1475,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     Log.e("PlayerINIT", "exoBinding.progressBar.setVisibility(View.GONE);");
                 }
-            }  /*else if(player == null) {
-            if (isprogressbar) {
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.GONE);
-                exoBinding.progressBar.setVisibility(View.VISIBLE);
-                if(isDisclaimer == 1) {
-                    handler2.postDelayed(UpdateSongTime2, 2000);
-                }
             }
-        }*/
 
             exoBinding.llPause.setOnClickListener(view -> {
                 if (player != null) {
@@ -2881,9 +2865,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-//            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
-//                addDeclaimer();
-//            }
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());

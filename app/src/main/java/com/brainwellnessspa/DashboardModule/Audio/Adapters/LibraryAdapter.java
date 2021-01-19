@@ -31,9 +31,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -42,7 +43,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
     Context ctx;
     int index = -1;
     FragmentActivity activity;
-    String IsLock, HomeView;
+    String IsLock, HomeView,IsPlayDisclimer;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public LibraryAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
@@ -133,6 +134,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         });
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
+
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
             if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -236,19 +240,20 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                 listModelList2.addAll(listModelList);
             }
             isDisclaimer = 0;
-            disclaimerPlayed = 0;
-            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-            mainPlayModel.setID("0");
-            mainPlayModel.setName("Disclaimer");
-            mainPlayModel.setAudioFile("");
-            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-            mainPlayModel.setAudiomastercat("");
-            mainPlayModel.setAudioSubCategory("");
-            mainPlayModel.setImageFile("");
-            mainPlayModel.setLike("");
-            mainPlayModel.setDownload("");
-            mainPlayModel.setAudioDuration("00:48");
-            listModelList2.add(position, mainPlayModel);
+            if(IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                mainPlayModel.setID("0");
+                mainPlayModel.setName("Disclaimer");
+                mainPlayModel.setAudioFile("");
+                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                mainPlayModel.setAudiomastercat("");
+                mainPlayModel.setAudioSubCategory("");
+                mainPlayModel.setImageFile("");
+                mainPlayModel.setLike("");
+                mainPlayModel.setDownload("");
+                mainPlayModel.setAudioDuration("00:48");
+                listModelList2.add(position, mainPlayModel);
+            }
             callTransFrag(position, listModelList2);
         }
     }

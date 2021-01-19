@@ -56,7 +56,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
@@ -453,7 +453,7 @@ public class AptAudioFragment extends Fragment {
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
                     isDisclaimer = 0;
-                    disclaimerPlayed = 0;
+
                     AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
                     mainPlayModel.setID("0");
                     mainPlayModel.setName("Disclaimer");

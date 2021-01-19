@@ -45,7 +45,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
 
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -464,7 +464,7 @@ public class ViewAllSearchFragment extends Fragment {
                         } else {
                             ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                             isDisclaimer = 0;
-                            disclaimerPlayed = 0;
+                            
                             SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");

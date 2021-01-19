@@ -37,7 +37,7 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -241,7 +241,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                 listModelList2.addAll(listModelList);
             }
             isDisclaimer = 0;
-            disclaimerPlayed = 0;
+
             MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");

@@ -64,7 +64,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -85,8 +85,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     String PlaylistDescription, Created, UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute, PlaylistImageDetails;
     EditText searchEditText;
     Context ctx;
-    List<DownloadAudioDetails> playlistWiseAudiosDetails;
-    List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
     int startTime;
     long myProgress = 0, diff = 0, currentDuration = 0;
@@ -806,7 +804,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             }
                         } else {
                             isDisclaimer = 0;
-                            disclaimerPlayed = 0;
+
                             List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                             listModelList2.add(addDisclaimer);
                             listModelList2.addAll(listModelList);
@@ -814,7 +812,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             SegmentTag();
                         }
                     } else {
-                        getAllCompletedMedia(audioPlay, AudioFlag, pID, position, shared);
+                        getAllCompletedMedia(audioPlay, AudioFlag, pID, 0, shared);
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -857,7 +855,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         }
                     } else {
                         isDisclaimer = 0;
-                        disclaimerPlayed = 0;
+
                         List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                         if (position != 0) {
                             listModelList2.addAll(listModelList);
@@ -979,7 +977,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             pos = 0;
                         }
                         isDisclaimer = 0;
-                        disclaimerPlayed = 0;
+
                         listModelList2.add(pos, addDisclaimer);
                         callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName);
                         SegmentTag();

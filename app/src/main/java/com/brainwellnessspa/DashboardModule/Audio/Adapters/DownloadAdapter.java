@@ -36,7 +36,7 @@ import java.util.List;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -171,7 +171,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                             }
                         } else {
                             isDisclaimer = 0;
-                            disclaimerPlayed = 0;
+
                             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                             MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
                             mainPlayModel.setID("0");
@@ -260,7 +260,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                         pos = 0;
                     }
                     isDisclaimer = 0;
-                    disclaimerPlayed = 0;
+
                     MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
                     mainPlayModel.setID("0");
                     mainPlayModel.setName("Disclaimer");

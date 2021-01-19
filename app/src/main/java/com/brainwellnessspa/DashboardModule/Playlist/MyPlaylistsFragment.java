@@ -131,7 +131,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificati
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
-    public static int disclaimerPlayed = 0;
+    public static int
     public static int isPlayPlaylist = 0;
     public static boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
@@ -2536,7 +2536,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     } else {
                         isDisclaimer = 0;
-                        disclaimerPlayed = 0;
+
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
@@ -2591,7 +2591,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 } else {
                     isDisclaimer = 0;
-                    disclaimerPlayed = 0;
+
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     if (position != 0) {
                         listModelList2.addAll(listModelList);
@@ -2889,7 +2889,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 }
                             } else {
                                 isDisclaimer = 0;
-                                disclaimerPlayed = 0;
+
                                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                                 listModelList2.add(addDisclaimer);
                                 listModelList2.addAll(listModelList);
@@ -2929,7 +2929,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         } else {
                             isDisclaimer = 0;
-                            disclaimerPlayed = 0;
+
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                             listModelList2.add(addDisclaimer);
                             listModelList2.addAll(listModelList);
@@ -2982,7 +2982,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         } else {
                             isDisclaimer = 0;
-                            disclaimerPlayed = 0;
+
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                             if (position != 0) {
                                 listModelList2.addAll(listModelList);
@@ -3026,7 +3026,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     } else {
                         isDisclaimer = 0;
-                        disclaimerPlayed = 0;
+
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         if (position != 0) {
                             listModelList2.addAll(listModelList);
@@ -3191,7 +3191,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             pos = 0;
                         }
                         isDisclaimer = 0;
-                        disclaimerPlayed = 0;
+
                         listModelList2.add(pos, addDisclaimer);
                         callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID);
                         SegmentTag();

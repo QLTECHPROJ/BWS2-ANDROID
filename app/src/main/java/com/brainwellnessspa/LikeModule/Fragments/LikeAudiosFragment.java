@@ -68,7 +68,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -717,7 +717,7 @@ public class LikeAudiosFragment extends Fragment {
                     listModelList2.addAll(modelList);
                 }
                 isDisclaimer = 0;
-                disclaimerPlayed = 0;
+
                 listModelList2.add(pos, mainPlayModel);
                 callTransFrag(pos, listModelList2);
             }

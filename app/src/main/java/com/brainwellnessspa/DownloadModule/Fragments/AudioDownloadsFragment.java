@@ -63,7 +63,7 @@ import java.util.List;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
@@ -237,6 +237,7 @@ public class AudioDownloadsFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.GONE);
             binding.llSpace.setVisibility(View.VISIBLE);
+
             adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound, IsLock);
             LocalBroadcastManager.getInstance(getActivity())
                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
@@ -300,21 +301,6 @@ public class AudioDownloadsFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                   /* downloadedSingleAudio = getMyMedia();
-                    for (int f = 0; f < listModelList.size(); f++) {
-                        if(downloadedSingleAudio.size()!=0) {
-                            for (int i = 0; i < downloadedSingleAudio.size(); i++) {
-                                if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(listModelList.get(position).getName())) {
-                                        if (downloadedSingleAudio.get(i).getDownloadProgress() <= 100) {
-                                            //disableName.add(mData.get(position).getName());
-                                            notifyItemChanged(position);
-                                        }
-                                }
-                            }
-                        }
-                    }
-                    downloadedSingleAudio = getMyMedia();*/
-//                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
                         if (fileNameList.size() != 0) {
                             for (int i = 0; i < fileNameList.size(); i++) {
                                 if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -327,12 +313,9 @@ public class AudioDownloadsFragment extends Fragment {
                                             holder.binding.pbProgress.setVisibility(View.GONE);
                                             getDownloadData();
                                         }
-                                    } else {
-//                                        notifyItemChanged(i);
                                     }
                                 }
                             }
-//                            }
                         }
                         if (downloadProgress == 0) {
                             notifyDataSetChanged();
@@ -344,7 +327,6 @@ public class AudioDownloadsFragment extends Fragment {
                     }
                 }
             };
-
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -468,7 +450,7 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                         } else {
                             isDisclaimer = 0;
-                            disclaimerPlayed = 0;
+
                             List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                             mainPlayModel.setID("0");
@@ -608,7 +590,7 @@ public class AudioDownloadsFragment extends Fragment {
                             pos = 0;
                         }
                         isDisclaimer = 0;
-                        disclaimerPlayed = 0;
+
                         DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                         mainPlayModel.setID("0");
                         mainPlayModel.setName("Disclaimer");

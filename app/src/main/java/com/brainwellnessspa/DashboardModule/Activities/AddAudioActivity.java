@@ -60,7 +60,6 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeRename;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -748,7 +747,7 @@ public class AddAudioActivity extends AppCompatActivity {
                                 ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
 
                                 isDisclaimer = 0;
-                                disclaimerPlayed = 0;
+
                                 SearchBothModel.ResponseData mainPlayModel = new SearchBothModel.ResponseData();
                                 mainPlayModel.setID("0");
                                 mainPlayModel.setName("Disclaimer");
@@ -1057,7 +1056,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         } else {
                             ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                             isDisclaimer = 0;
-                            disclaimerPlayed = 0;
+
                             SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");
