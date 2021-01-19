@@ -140,17 +140,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     resultIntent = new Intent(this, DashboardActivity.class);
-                   /* resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                             Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);*/
+                            Intent.FLAG_ACTIVITY_NEW_TASK);
                     taskStackBuilder.addParentStack(DashboardActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
                     resultIntent = new Intent(this, DashboardActivity.class);
-                   /* resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                             Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);*/
+                            Intent.FLAG_ACTIVITY_NEW_TASK);
                     resultIntent.putExtra("New", "0");
                     resultIntent.putExtra("Goplaylist", "1");
                     resultIntent.putExtra("PlaylistID", id);
@@ -162,9 +162,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             } else {
                 resultIntent = new Intent(this, DashboardActivity.class);
-                /*resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);*/
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
