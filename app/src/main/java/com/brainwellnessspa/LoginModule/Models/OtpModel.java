@@ -105,6 +105,9 @@ public class OtpModel {
         @SerializedName("CountryName")
         @Expose
         private String countryName;
+        @SerializedName("shouldPlayDisclaimer")
+        @Expose
+        private String shouldPlayDisclaimer;
 
         public String getError() {
             return error;
@@ -250,5 +253,12 @@ public class OtpModel {
             this.countryName = countryName;
         }
 
+        public String getShouldPlayDisclaimer() {
+            return shouldPlayDisclaimer;
+        }
+
+        public void setShouldPlayDisclaimer(String shouldPlayDisclaimer) {
+            this.shouldPlayDisclaimer = shouldPlayDisclaimer;
+        }
     }
 }

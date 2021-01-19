@@ -92,6 +92,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_SplashKey = "SplashKey";
     public static final String PREF_KEY_AUDIO = "AUDIO";
     public static final String PREF_KEY_UserID = "UserID";
+    public static final String PREF_KEY_IsDisclimer = "IsDisclimer";
     public static final String PREF_KEY_LOGOUT = "Logout";
     public static final String PREF_KEY_LOGOUT_UserID = "UserID";
     public static final String PREF_KEY_LOGOUT_MobileNO = "MobileNO";

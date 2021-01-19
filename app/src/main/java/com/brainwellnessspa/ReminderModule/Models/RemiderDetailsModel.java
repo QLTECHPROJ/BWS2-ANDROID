@@ -79,6 +79,9 @@ public class RemiderDetailsModel {
         @SerializedName("ReminderId")
         @Expose
         private String reminderId;
+        @SerializedName("Created")
+        @Expose
+        private String created;
 
         public String getPlaylistId() {
             return playlistId;
@@ -150,6 +153,14 @@ public class RemiderDetailsModel {
 
         public void setReminderId(String reminderId) {
             this.reminderId = reminderId;
+        }
+
+        public String getCreated() {
+            return created;
+        }
+
+        public void setCreated(String created) {
+            this.created = created;
         }
     }
 }

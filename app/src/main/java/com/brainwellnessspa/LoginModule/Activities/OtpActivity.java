@@ -248,6 +248,7 @@ public class OtpActivity extends AppCompatActivity implements
                                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = shared.edit();
                                             editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
+                                            editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, otpModel.getResponseData().getShouldPlayDisclaimer());
                                             editor.putString(CONSTANTS.PREF_KEY_Name, otpModel.getResponseData().getName());
                                             editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
                                             editor.putString(CONSTANTS.PREF_KEY_Email, otpModel.getResponseData().getEmail());
