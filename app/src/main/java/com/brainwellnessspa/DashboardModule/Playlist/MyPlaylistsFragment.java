@@ -131,7 +131,6 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificati
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
-    public static int
     public static int isPlayPlaylist = 0;
     public static boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
@@ -2389,11 +2388,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     songId = myAudioId;
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
-                            holder.binding.equalizerview.stopBars();
+                            holder.binding.equalizerview.pause();
                         } else
-                            holder.binding.equalizerview.animateBars();
+                            holder.binding.equalizerview.resume(true);
                     } else
-                        holder.binding.equalizerview.stopBars();
+                        holder.binding.equalizerview.stop(true);
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
                     adpater.notifyDataSetChanged();
@@ -2772,11 +2771,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
                         if (player != null) {
                             if (!player.getPlayWhenReady()) {
-                                holder.binding.equalizerview.stopBars();
+                                holder.binding.equalizerview.pause();
                             } else
-                                holder.binding.equalizerview.animateBars();
+                                holder.binding.equalizerview.resume(true);
                         } else
-                            holder.binding.equalizerview.stopBars();
+                            holder.binding.equalizerview.stop(true);
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         songId = myAudioId;
@@ -2799,11 +2798,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
                         if (player != null) {
                             if (!player.getPlayWhenReady()) {
-                                holder.binding.equalizerview.stopBars();
+                                holder.binding.equalizerview.pause();
                             } else
-                                holder.binding.equalizerview.animateBars();
+                                holder.binding.equalizerview.resume(true);
                         } else
-                            holder.binding.equalizerview.stopBars();
+                            holder.binding.equalizerview.stop(true);
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         songId = myAudioId;

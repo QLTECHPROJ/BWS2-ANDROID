@@ -645,12 +645,11 @@ public class AudioFragment extends Fragment {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(model.get(position).getView());
                 if (model.get(position).getView().equalsIgnoreCase("My Downloads")) {
-                    DownloadAdapter myDownloadsAdapter = new DownloadAdapter(model.get(position).getDetails(), getActivity(), activity,
-                            model.get(position).getIsLock());
-                    IsLock = model.get(position).getIsLock();
-                    RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    IsLock = model.get(position).getIsLock();  RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
+                    DownloadAdapter myDownloadsAdapter = new DownloadAdapter(model.get(position).getDetails(), getActivity(), activity,
+                            IsLock);
                     holder.binding.rvMainAudio.setAdapter(myDownloadsAdapter);
                     if (model.get(position).getDetails() != null &&
                             model.get(position).getDetails().size() > 4) {

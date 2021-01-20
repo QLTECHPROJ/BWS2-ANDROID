@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityReminderBinding;
 import com.brainwellnessspa.databinding.SelectPlaylistLayoutBinding;
+import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 
 import java.text.DateFormat;
@@ -48,10 +50,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.lang.reflect.Type;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import com.google.gson.reflect.TypeToken;
+
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -65,7 +71,7 @@ public class ReminderActivity extends AppCompatActivity {
     int pos;
     Dialog dialog;
     String ReminderDay, ReminderId = "", am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
-    ArrayList<String> remiderDays = new ArrayList<>();
+    List<String> SelectedDay, remiderDays = new ArrayList<>();
     String ReminderDaySelected, ReminderDayTemp;
     private int mHour, mMinute;
     SelectPlaylistAdapter adapter;
@@ -93,7 +99,13 @@ public class ReminderActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             Time = getIntent().getStringExtra("Time");
             Day = getIntent().getStringExtra("Day");
+            String[] myArray = Day.split(",");
+            System.out.println("Contents of the array ::"+ Arrays.toString(myArray));
+            SelectedDay = Arrays.asList(myArray);
         }
+
+        Log.e("DayDayDayDay", Day);
+        Log.e("SelectedDaySelectedDay", TextUtils.join(",", SelectedDay));
 
         RefreshButton();
         ShowPlaylistName();
@@ -169,6 +181,7 @@ public class ReminderActivity extends AppCompatActivity {
                             minuteSting = "" + minute;
 //                        binding.tvTime.setText(hourOfDay + ":" + minute);
                         binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
+                        RefreshButton();
                         p2 = new Properties();
                         p2.putValue("userId", UserID);
                         p2.putValue("reminderId", ReminderId);
@@ -384,19 +397,22 @@ public class ReminderActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
                                 try {
-                                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                                    remiderDays.clear();
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     SetReminderModel listModel = response.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                                    if (ComeScreenReminder == 1) {
-                                        Intent i = new Intent(context, ReminderDetailsActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    } else {
-                                        ComeScreenRemiderPlaylist = 1;
-                                        finish();
+                                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                                        remiderDays.clear();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                        if (ComeScreenReminder == 1) {
+                                            Intent i = new Intent(context, ReminderDetailsActivity.class);
+                                            startActivity(i);
+                                            finish();
+                                        } else {
+                                            ComeScreenRemiderPlaylist = 1;
+                                            finish();
+                                        }
                                     }
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -422,14 +438,38 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     public void RefreshButton() {
-        if (!PlaylistName.equalsIgnoreCase("") && remiderDays.size() != 0) {
-            binding.btnSave.setEnabled(true);
-            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-            binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-        } else {
-            binding.btnSave.setEnabled(false);
-            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+        if (ComeFrom.equalsIgnoreCase("1")) {
+            if (remiderDays.equals(SelectedDay) && binding.tvTime.getText().toString().equalsIgnoreCase(Time)) {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+            } else if (!binding.tvTime.getText().toString().equalsIgnoreCase(Time)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (remiderDays.size() == 0) {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+            } else if (!remiderDays.equals(SelectedDay)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            }
+        } else if (ComeFrom.equalsIgnoreCase("")) {
+            if (!PlaylistName.equalsIgnoreCase("") && remiderDays.size() != 0) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+            }
         }
     }
 

@@ -602,11 +602,11 @@ public class SearchFragment extends Fragment {
                         songId = myAudioId;
                         if (player != null) {
                             if (!player.getPlayWhenReady()) {
-                                holder.binding.equalizerview.stopBars();
+                                holder.binding.equalizerview.pause();
                             } else
-                                holder.binding.equalizerview.animateBars();
+                                holder.binding.equalizerview.resume(true);
                         } else
-                            holder.binding.equalizerview.stopBars();
+                            holder.binding.equalizerview.stop(true);
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -885,11 +885,11 @@ public class SearchFragment extends Fragment {
                     songId = myAudioId;
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
-                            holder.binding.equalizerview.stopBars();
+                            holder.binding.equalizerview.pause();
                         } else
-                            holder.binding.equalizerview.animateBars();
+                            holder.binding.equalizerview.resume(true);
                     } else
-                        holder.binding.equalizerview.stopBars();
+                        holder.binding.equalizerview.stop(true);
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

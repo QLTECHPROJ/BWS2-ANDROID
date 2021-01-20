@@ -70,9 +70,9 @@ public class AppsFragment extends Fragment {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                 try {
-                    if (response.isSuccessful()) {
+                    ResourceListModel listModel = response.body();
+                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        ResourceListModel listModel = response.body();
                         AppsAdapter adapter = new AppsAdapter(listModel.getResponseData(), getActivity(), apps);
                         binding.rvAppsList.setAdapter(adapter);
 

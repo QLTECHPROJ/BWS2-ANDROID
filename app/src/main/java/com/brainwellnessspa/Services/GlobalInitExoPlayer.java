@@ -133,7 +133,7 @@ public class GlobalInitExoPlayer extends Service {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                try {
+                /*try {
                     if (songImg.equalsIgnoreCase("")) {
                         myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
                     } else {
@@ -146,7 +146,7 @@ public class GlobalInitExoPlayer extends Service {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
                 super.onPostExecute(aVoid);
             }
         }
@@ -575,7 +575,7 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNavigationActionsInCompactView(false);
         }
 
-        playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
+        playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
@@ -669,7 +669,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setRewindIncrementMs(0);
         playerNotificationManager.setUseNavigationActions(false);
         playerNotificationManager.setUseNavigationActionsInCompactView(false);
-        playerNotificationManager.setSmallIcon(R.drawable.dark_logo);
+        playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);

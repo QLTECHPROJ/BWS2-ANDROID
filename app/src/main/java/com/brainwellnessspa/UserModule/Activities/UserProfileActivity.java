@@ -193,7 +193,6 @@ public class UserProfileActivity extends AppCompatActivity {
                     Date date = cal.getTime();
                     SimpleDateFormat sdf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
                     String strDate = sdf.format(date);
-
                     ageYear = year;
                     ageMonth = monthOfYear;
                     ageDate = dayOfMonth;
@@ -216,14 +215,12 @@ public class UserProfileActivity extends AppCompatActivity {
     public int getAge(int year, int month, int day) {
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
-
         dob.set(year, month, day);
         int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
 
         if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
             age--;
         }
-
         Integer ageInt = new Integer(age);
         int ageS = ageInt;
         return ageS;
@@ -567,8 +564,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         String timeStamp =
-                new SimpleDateFormat("yyyyMMdd_HHmmss",
-                        Locale.getDefault()).format(new Date());
+                new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir =
                 getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -583,8 +579,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     TextWatcher userTextWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -622,7 +617,6 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-        }
+        public void afterTextChanged(Editable s) { }
     };
 }

@@ -85,10 +85,10 @@ public class BillingAddressFragment extends Fragment {
                     listCall.enqueue(new Callback<BillingAddressSaveModel>() {
                         @Override
                         public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
-                            if (response.isSuccessful()) {
+                            BillingAddressSaveModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
                                 try {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                    BillingAddressSaveModel listModel = response.body();
                                     BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                     /*Properties p = new Properties();
                                     p.putValue("userId", UserID);
@@ -127,9 +127,9 @@ public class BillingAddressFragment extends Fragment {
             @Override
             public void onResponse(Call<BillingAddressViewModel> call, Response<BillingAddressViewModel> response) {
                 try {
-                    if (response.isSuccessful()) {
+                    BillingAddressViewModel listModel = response.body();
+                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        BillingAddressViewModel listModel = response.body();
                         if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
                                 listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
                                 listModel.getResponseData().getName() == null) {
@@ -156,7 +156,6 @@ public class BillingAddressFragment extends Fragment {
                         binding.etCity.setText(listModel.getResponseData().getSuburb());
                         binding.etState.setText(listModel.getResponseData().getState());
                         binding.etPostCode.setText(listModel.getResponseData().getPostcode());
-
                         binding.etName.addTextChangedListener(billingTextWatcher);
                         binding.etEmail.addTextChangedListener(billingTextWatcher);
                         binding.etMobileNumber.addTextChangedListener(billingTextWatcher);

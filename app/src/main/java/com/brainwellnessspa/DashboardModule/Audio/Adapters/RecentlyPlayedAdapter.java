@@ -43,7 +43,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     FragmentActivity activity;
     String IsLock;
     int index = -1;
-    String HomeView;
+    String HomeView, IsPlayDisclimer;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
@@ -129,6 +129,8 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             }
         });
         holder.binding.llMainLayout.setOnClickListener(view -> {
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
             if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -190,26 +192,26 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
                 } else {*/
-                    ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-                    if (!IsLock.equalsIgnoreCase("0")) {
-                        SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                        String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
-                        Gson gson1 = new Gson();
-                        Type type1 = new TypeToken<List<String>>() {
-                        }.getType();
-                        List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
-                        int size = listModelList.size();
-                        for (int i = 0; i < size; i++) {
-                            if (UnlockAudioList.contains(listModelList.get(i).getID())) {
-                                listModelList2.add(listModelList.get(i));
-                            }
+                ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                if (!IsLock.equalsIgnoreCase("0")) {
+                    SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                    Gson gson1 = new Gson();
+                    Type type1 = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                    int size = listModelList.size();
+                    for (int i = 0; i < size; i++) {
+                        if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                            listModelList2.add(listModelList.get(i));
                         }
-                        position = 0;
-                    } else {
-                        listModelList2.addAll(listModelList);
                     }
-                    callTransFrag(position, listModelList2);
+                    position = 0;
+                } else {
+                    listModelList2.addAll(listModelList);
                 }
+                callTransFrag(position, listModelList2);
+            }
 //            }
         } else {
             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
@@ -231,19 +233,20 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 listModelList2.addAll(listModelList);
             }
             isDisclaimer = 0;
-
-            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-            mainPlayModel.setID("0");
-            mainPlayModel.setName("Disclaimer");
-            mainPlayModel.setAudioFile("");
-            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-            mainPlayModel.setAudiomastercat("");
-            mainPlayModel.setAudioSubCategory("");
-            mainPlayModel.setImageFile("");
-            mainPlayModel.setLike("");
-            mainPlayModel.setDownload("");
-            mainPlayModel.setAudioDuration("00:48");
-            listModelList2.add(position, mainPlayModel);
+            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                mainPlayModel.setID("0");
+                mainPlayModel.setName("Disclaimer");
+                mainPlayModel.setAudioFile("");
+                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                mainPlayModel.setAudiomastercat("");
+                mainPlayModel.setAudioSubCategory("");
+                mainPlayModel.setImageFile("");
+                mainPlayModel.setLike("");
+                mainPlayModel.setDownload("");
+                mainPlayModel.setAudioDuration("00:48");
+                listModelList2.add(position, mainPlayModel);
+            }
             callTransFrag(position, listModelList2);
         }
     }

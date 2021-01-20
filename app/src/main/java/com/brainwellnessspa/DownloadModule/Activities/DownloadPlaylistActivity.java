@@ -721,9 +721,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     songId = myAudioId;
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
-                            holder.binding.equalizerview.stopBars();
+                            holder.binding.equalizerview.pause();
                         } else {
-                            holder.binding.equalizerview.animateBars();
+                            holder.binding.equalizerview.resume(true);
                         }
                     } else
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);

@@ -65,15 +65,13 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         return new MyViewHolder(v);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         CardListModel.ResponseData listModel = listModelList.get(position);
         holder.binding.tvCardNo.setText(activity.getString(R.string.first_card_chars) + " " + listModel.getLast4());
         holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
                 listModel.getExpYear());
-        Glide.with(activity).load(listModel.getImage())
-                .thumbnail(0.05f)
+        Glide.with(activity).load(listModel.getImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.ivCardimg);
         if (listModel.getIsDefault().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {

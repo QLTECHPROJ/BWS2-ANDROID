@@ -13,19 +13,21 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/_20sdp"
             android:paddingRight="@dimen/_20sdp"
-            android:weightSum="2">
+            android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_weight="0.55"
-                android:gravity="center_horizontal">
+                android:layout_weight="0.26"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/_38sdp">
 
                 <ImageView
                     android:id="@+id/ivLogo"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_marginTop="@dimen/_50sdp"
+                    android:layout_width="@dimen/_140sdp"
+                    android:layout_height="@dimen/_140sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:src="@drawable/logo_design" />
 
             </LinearLayout>
@@ -33,9 +35,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_marginTop="@dimen/_38sdp"
-                android:layout_weight="0.85"
-                android:gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_weight="0.74"
+                android:gravity="center_horizontal|bottom"
                 android:orientation="vertical">
 
                 <TextView
@@ -52,7 +54,7 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_13sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
                     android:text="@string/enter_mobile_number"
@@ -63,7 +65,7 @@
                     android:id="@+id/cvBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_22sdp"
                     app:cardCornerRadius="@dimen/_8sdp">
 
                     <LinearLayout
@@ -175,21 +177,13 @@
                     android:id="@+id/tvSendCodeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:fontFamily="@font/montserrat_light"
                     android:gravity="center"
+                    android:layout_marginBottom="@dimen/_55sdp"
                     android:text="@string/send_code_text"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_13sdp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_0sdp"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:layout_weight="0.6"
-                android:gravity="center_horizontal|bottom"
-                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/btnSendCode"
@@ -207,7 +201,7 @@
                     android:id="@+id/tvRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="top|center"
                     android:paddingVertical="@dimen/_6sdp"
@@ -228,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
-                        android:paddingTop="@dimen/_13sdp"
+                        android:paddingTop="@dimen/_40sdp"
                         android:text="@string/privacy_policy_t_n_c"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />

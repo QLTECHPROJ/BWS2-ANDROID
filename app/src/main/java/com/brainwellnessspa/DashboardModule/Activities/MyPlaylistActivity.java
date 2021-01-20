@@ -81,6 +81,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
     List<String> fileNameList, playlistDownloadId, remainAudio;
     int SongListSize = 0, count;
+    EditText edtCreate;
+    TextView tvCancel, tvHeading;
+    Button btnSendCode;
   /*  private Handler handler1;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
@@ -238,10 +241,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
             dialog.setContentView(R.layout.create_palylist);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-            final TextView tvHeading = dialog.findViewById(R.id.tvHeading);
-            final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
+            edtCreate = dialog.findViewById(R.id.edtCreate);
+            tvCancel = dialog.findViewById(R.id.tvCancel);
+            tvHeading = dialog.findViewById(R.id.tvHeading);
+            btnSendCode = dialog.findViewById(R.id.btnSendCode);
             tvHeading.setText(R.string.Rename_your_playlist);
             btnSendCode.setText(R.string.Save);
             edtCreate.requestFocus();
@@ -249,9 +252,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
             int position1 = edtCreate.getText().length();
             Editable editObj = edtCreate.getText();
             Selection.setSelection(editObj, position1);
-            btnSendCode.setEnabled(true);
-            btnSendCode.setTextColor(getResources().getColor(R.color.white));
-            btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
             dialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss();
@@ -259,31 +259,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 }
                 return false;
             });
-
-            TextWatcher popupTextWatcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    String number = edtCreate.getText().toString().trim();
-                    if (!number.isEmpty()) {
-                        btnSendCode.setEnabled(true);
-                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                        btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
-                    } else {
-                        btnSendCode.setEnabled(false);
-                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                        btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            };
-
 
             edtCreate.addTextChangedListener(popupTextWatcher);
 
@@ -415,6 +390,37 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
         binding.llDownload.setOnClickListener(view -> callDownload());
     }
+
+    TextWatcher popupTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String number = edtCreate.getText().toString().trim();
+            if (number.equalsIgnoreCase(PlaylistName)) {
+                btnSendCode.setEnabled(false);
+                btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+            } else if (number.isEmpty()) {
+                btnSendCode.setEnabled(false);
+                btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+            } else {
+                btnSendCode.setEnabled(true);
+                btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+            }
+
+            /* */
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     private void CallObserverMethodGetAllMedia() {
         DatabaseClient

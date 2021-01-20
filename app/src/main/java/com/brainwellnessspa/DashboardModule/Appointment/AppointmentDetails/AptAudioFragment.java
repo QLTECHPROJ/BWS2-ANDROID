@@ -303,6 +303,7 @@ public class AptAudioFragment extends Fragment {
                     handler1.postDelayed(this, 300);
                 }
             };
+//            holder.binding.equalizerview.setcolo
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -313,11 +314,11 @@ public class AptAudioFragment extends Fragment {
                     songId = myAudioId;
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
-                            holder.binding.equalizerview.stopBars();
+                            holder.binding.equalizerview.pause();
                         } else
-                            holder.binding.equalizerview.animateBars();
+                            holder.binding.equalizerview.resume(true);
                     } else
-                        holder.binding.equalizerview.stopBars();
+                        holder.binding.equalizerview.stop(true);
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.ivPlayIcon.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);

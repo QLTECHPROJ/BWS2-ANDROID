@@ -33,7 +33,6 @@
 
     <application
         android:name=".BWSApplication"
-        android:allowBackup="true"
         android:fullBackupContent="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/square_app_icon"
@@ -43,8 +42,7 @@
         android:roundIcon="@drawable/round_app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        tools:ignore="UnusedAttribute">
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".DashboardModule.Activities.AudioPlayerActivity"

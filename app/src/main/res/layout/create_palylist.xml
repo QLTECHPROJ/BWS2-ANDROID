@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
-    android:gravity="center"
     android:background="@color/dark_blue_gray"
+    android:focusable="true"
     android:focusableInTouchMode="true"
+    android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="@dimen/_28sdp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -35,12 +35,12 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_24sdp"
             android:layout_marginTop="@dimen/_18sdp"
+            android:backgroundTint="@color/white"
+            android:focusable="true"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
-            android:focusable="true"
-            android:textCursorDrawable="@null"
-            android:backgroundTint="@color/white"
             android:textColor="@color/white"
+            android:textCursorDrawable="@null"
             android:textSize="@dimen/_18sdp" />
 
         <LinearLayout
@@ -59,12 +59,12 @@
                 android:layout_height="@dimen/_42sdp"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:background="@drawable/gray_round_cornor"
+                android:enabled="false"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingHorizontal="@dimen/_55sdp"
                 android:paddingVertical="@dimen/_4sdp"
-                android:enabled="false"
-                android:textAllCaps="true"
                 android:text="Create"
+                android:textAllCaps="true"
                 android:textColor="@color/white" />
 
             <TextView

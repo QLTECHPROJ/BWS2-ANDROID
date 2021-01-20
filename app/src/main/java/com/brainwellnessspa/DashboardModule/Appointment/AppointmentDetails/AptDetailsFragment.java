@@ -65,6 +65,7 @@ public class AptDetailsFragment extends Fragment {
         } else {
             binding.btnComplete.setVisibility(View.VISIBLE);
         }
+
         binding.btnComplete.setOnClickListener(view1 -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(appointmentDetail.getBookUrl()));

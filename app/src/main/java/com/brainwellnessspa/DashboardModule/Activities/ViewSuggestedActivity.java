@@ -347,11 +347,11 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     songId = myAudioId;
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
-                            holder.binds.equalizerview.stopBars();
+                            holder.binds.equalizerview.pause();
                         } else
-                            holder.binds.equalizerview.animateBars();
+                            holder.binds.equalizerview.resume(true);
                     } else
-                        holder.binds.equalizerview.stopBars();
+                        holder.binds.equalizerview.stop(true);
                     holder.binds.equalizerview.setVisibility(View.VISIBLE);
                     holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);

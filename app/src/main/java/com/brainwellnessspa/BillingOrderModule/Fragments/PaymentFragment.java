@@ -29,18 +29,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaymentFragment extends Fragment {
-    static Context context;
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
     String UserID;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_payment, container, false);
         View view = binding.getRoot();
-        context = getActivity();
-        SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvCardList.setLayoutManager(mLayoutManager);
@@ -51,7 +48,7 @@ public class PaymentFragment extends Fragment {
         BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);
 
         binding.llAddNewCard.setOnClickListener(view1 -> {
-            if (BWSApplication.isNetworkConnected(context)) {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), AddPaymentActivity.class);
                 i.putExtra("ComePayment", "1");
                 startActivity(i);
@@ -63,7 +60,6 @@ public class PaymentFragment extends Fragment {
             }
         });
 
-//        prepareCardList();
         return view;
     }
 
@@ -81,24 +77,19 @@ public class PaymentFragment extends Fragment {
                 @Override
                 public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    try {
-                        CardListModel cardListModel = response.body();
-                        if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-
-                            if (cardListModel.getResponseData().size() == 0) {
-                                binding.rvCardList.setAdapter(null);
-                                binding.rvCardList.setVisibility(View.GONE);
-                            } else {
-                                binding.rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), UserID, binding.progressBar,
-                                        binding.progressBarHolder, binding.rvCardList);
-                                binding.rvCardList.setAdapter(adapter);
-                            }
+                    CardListModel cardListModel = response.body();
+                    if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                        if (cardListModel.getResponseData().size() == 0) {
+                            binding.rvCardList.setAdapter(null);
+                            binding.rvCardList.setVisibility(View.GONE);
                         } else {
-                            BWSApplication.showToast(cardListModel.getResponseMessage(), context);
+                            binding.rvCardList.setVisibility(View.VISIBLE);
+                            adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), UserID, binding.progressBar,
+                                    binding.progressBarHolder, binding.rvCardList);
+                            binding.rvCardList.setAdapter(adapter);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        BWSApplication.showToast(cardListModel.getResponseMessage(), getActivity());
                     }
                 }
 

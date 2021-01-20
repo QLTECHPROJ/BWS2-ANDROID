@@ -107,9 +107,9 @@ public class FaqActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        FaqListModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            FaqListModel listModel = response.body();
                             faqListModel = listModel;
                         }
                     } catch (Exception e) {

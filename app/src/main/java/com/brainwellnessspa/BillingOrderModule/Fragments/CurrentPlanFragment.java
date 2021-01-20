@@ -80,7 +80,6 @@ public class CurrentPlanFragment extends Fragment {
             startActivity(i);
             getActivity().finish();
         });
-
         return view;
     }
 
@@ -90,10 +89,10 @@ public class CurrentPlanFragment extends Fragment {
         listCall.enqueue(new Callback<CurrentPlanVieViewModel>() {
             @Override
             public void onResponse(Call<CurrentPlanVieViewModel> call, Response<CurrentPlanVieViewModel> response) {
-                if (response.isSuccessful()) {
+                CurrentPlanVieViewModel listModel = response.body();
+                if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     try {
-                        CurrentPlanVieViewModel listModel = response.body();
                         binding.tvHeader.setText(listModel.getResponseData().getPlan());
                         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                                 5, 3, 1f, 0);
