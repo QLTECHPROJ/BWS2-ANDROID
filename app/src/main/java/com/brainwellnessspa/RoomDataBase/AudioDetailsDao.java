@@ -15,6 +15,10 @@ public interface AudioDetailsDao {
 // ORDER BY uid ASC
     LiveData<List<DownloadAudioDetails>> geAllData1(String PlaylistId);
 
+    @Query("SELECT DISTINCT(ID),ID,Name,AudioFile,AudioDirection,Audiomastercat,AudioSubCategory,ImageFile,`Like`,Download,AudioDuration,PlaylistId,IsSingle,IsDownload,DownloadProgress FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
+// ORDER BY uid ASC
+    LiveData<List<DownloadAudioDetailsUniq>> geAllDataz(String PlaylistId);
+
 //    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")// ORDER BY uid ASC
 //    List<DownloadAudioDetails> geAllData(String PlaylistId);
 

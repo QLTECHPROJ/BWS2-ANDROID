@@ -162,7 +162,7 @@ public class ViewAllAudioFragment extends Fragment {
                 .getInstance(getActivity())
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData1("").observe(getActivity(), audioList -> {
+                .geAllDataz("").observe(getActivity(), audioList -> {
             refreshData();
             binding.tvTitle.setText(Name);
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList = new ArrayList<>();

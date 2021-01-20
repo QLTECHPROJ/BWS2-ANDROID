@@ -63,14 +63,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.audioRemove;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class AddQueueActivity extends AppCompatActivity {
@@ -80,6 +76,7 @@ public class AddQueueActivity extends AppCompatActivity {
             AudioFile = "", PlaylistAudioId = "", AudioFlag;
     Context ctx;
     boolean downloadOrNot = false;
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     Activity activity;
     ArrayList<String> queue;
     ArrayList<AddToQueueModel> addToQueueModelList;
@@ -171,6 +168,7 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModelList = gson.fromJson(json1, type1);
         }
 
+        getDownloadData();
         GetAllMediaDownload();
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
@@ -387,7 +385,28 @@ public class AddQueueActivity extends AppCompatActivity {
         });
 
     }
-
+    private void getDownloadData() {
+        try {
+            SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+                if (fileNameList.contains(mainPlayModelList.get(position).getName())) {
+                }
+            } else {
+                fileNameList = new ArrayList<>();
+                playlistDownloadId = new ArrayList<>();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public List<String> GetAllMediaDownload() {
         DatabaseClient
                 .getInstance(this)
@@ -665,7 +684,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                     if (!comeFrom.equalsIgnoreCase("")) {
                                         mData.remove(position);
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                        int oldpos = pos ;
+                                        int oldpos = pos;
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
                                             if (mData.size() != 0) {
                                                 if (pos == position && position < mData.size() - 1) {
@@ -729,7 +748,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                         arrayList1.remove(pos);
                                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                         if (pID.equalsIgnoreCase(PlaylistId)) {
-                                            int oldpos = pos ;
+                                            int oldpos = pos;
                                             if (mainPlayModelList.size() != 0) {
                                                 if (pos < mainPlayModelList.size() - 1) {
                                                     pos = pos;
@@ -759,9 +778,9 @@ public class AddQueueActivity extends AppCompatActivity {
 //                                                    audioClick = true;
 //                                                    callNewPlayerRelease();
 //                                                }else {
-                                                    if (player != null) {
-                                                        player.removeMediaItem(oldpos);
-                                                    }
+                                                if (player != null) {
+                                                    player.removeMediaItem(oldpos);
+                                                }
 //                                                }
                                                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                                                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -854,28 +873,38 @@ public class AddQueueActivity extends AppCompatActivity {
                         downloadPlaylistId.addAll(playlistId1);
                     }
                 }
-                url1.add(audioFile);
-                name1.add(Name);
-                downloadPlaylistId.add("");
-                if (url1.size() != 0) {
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String urlJson = gson.toJson(url1);
-                    String nameJson = gson.toJson(name1);
-                    String playlistIdJson = gson.toJson(downloadPlaylistId);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
+                boolean entryNot = false;
+                for (int f = 0; f < fileNameList.size(); f++) {
+                    if (fileNameList.get(f).equalsIgnoreCase(mainPlayModelList.get(position).getName())
+                            && playlistDownloadId.get(f).equalsIgnoreCase("")) {
+                        entryNot = true;
+                        break;
+                    }
                 }
+                if (!entryNot) {
+                    url1.add(audioFile);
+                    name1.add(Name);
+                    downloadPlaylistId.add("");
+                    if (url1.size() != 0) {
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        String urlJson = gson.toJson(url1);
+                        String nameJson = gson.toJson(name1);
+                        String playlistIdJson = gson.toJson(downloadPlaylistId);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                        editor.commit();
+                    }
 //        fileNameList = url1;
-                if (!isDownloading) {
-                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                    downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                    if (!isDownloading) {
+                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                    }
+                    callDisableDownload();
+                    SaveMedia(i, 0);
                 }
-                callDisableDownload();
-                SaveMedia(i, 0);
             }
         }
     }
@@ -1609,9 +1638,25 @@ public class AddQueueActivity extends AppCompatActivity {
             if (audioList.size() != 0) {
                 callDisableDownload();
             } else {
-                binding.llDownload.setClickable(true);
-                binding.llDownload.setEnabled(true);
-                binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                boolean entryNot = false;
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
+                            && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                        entryNot = true;
+                        break;
+                    }
+                }
+                if (!entryNot) {
+                    binding.llDownload.setClickable(true);
+                    binding.llDownload.setEnabled(true);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                } else {
+                    binding.llDownload.setClickable(false);
+                    binding.llDownload.setEnabled(false);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                }
             }
         });
     }

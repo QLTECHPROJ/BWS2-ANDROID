@@ -37,8 +37,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
@@ -56,9 +54,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -71,12 +73,10 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadPro
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";
     FragmentDownloadsBinding binding;
-    List<DownloadAudioDetails> audioList;
     String UserID, AudioFlag, IsLock;
     AudioDownlaodsAdapter adapter;
     boolean isThreadStart = false;
@@ -110,7 +110,6 @@ public class AudioDownloadsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        callObserverMethod();
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -123,7 +122,6 @@ public class AudioDownloadsFragment extends Fragment {
             IsLock = getArguments().getString("IsLock");
         }
         handler1 = new Handler();
-        audioList = new ArrayList<>();
         Properties p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
@@ -142,10 +140,29 @@ public class AudioDownloadsFragment extends Fragment {
                 .getInstance(getActivity())
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData1("").observe(getActivity(), audioList -> {
+                .geAllDataz("").observe(getActivity(), audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
-                    getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList, IsLock);
+                  List<DownloadAudioDetails> audioList1 = new ArrayList<>();
+                    for (int i = 0; i < audioList.size(); i++) {
+                        DownloadAudioDetails dad = new DownloadAudioDetails();
+                        dad.setID(audioList.get(i).getID());
+                        dad.setName(audioList.get(i).getName());
+                        dad.setAudioFile(audioList.get(i).getAudioFile());
+                        dad.setAudioDirection(audioList.get(i).getAudioDirection());
+                        dad.setAudiomastercat(audioList.get(i).getAudiomastercat());
+                        dad.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
+                        dad.setImageFile(audioList.get(i).getImageFile());
+                        dad.setLike(audioList.get(i).getLike());
+                        dad.setDownload(audioList.get(i).getDownload());
+                        dad.setAudioDuration(audioList.get(i).getAudioDuration());
+                        dad.setPlaylistId(audioList.get(i).getPlaylistId());
+                        dad.setIsSingle(audioList.get(i).getIsSingle());
+                        dad.setIsDownload(audioList.get(i).getIsDownload());
+                        dad.setDownloadProgress(audioList.get(i).getDownloadProgress());
+                        audioList1.add(dad);
+                    }
+                    getDataList(audioList1, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList, IsLock);
                     binding.llError.setVisibility(View.GONE);
                     binding.rvDownloadsList.setVisibility(View.VISIBLE);
                 }
@@ -243,6 +260,15 @@ public class AudioDownloadsFragment extends Fragment {
                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvDownloadsList.setAdapter(adapter);
         }
+    }
+
+    private void callAddTransFrag() {
+
+        Fragment fragment = new MiniPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
     }
 
     public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
@@ -880,7 +906,7 @@ public class AudioDownloadsFragment extends Fragment {
                     .getInstance(getActivity())
                     .getaudioDatabase()
                     .taskDao()
-                    .geAllData1("").observe(getActivity(), audioList -> {
+                    .geAllDataz("").observe(getActivity(), audioList -> {
                 if (audioList.size() != 0) {
                     if (audioList.size() == 0) {
                         tvFound.setVisibility(View.VISIBLE);
@@ -889,7 +915,26 @@ public class AudioDownloadsFragment extends Fragment {
                         llError.setVisibility(View.GONE);
                         LocalBroadcastManager.getInstance(getActivity())
                                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                        adapter = new AudioDownlaodsAdapter(audioList, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound, IsLock);
+                        List<DownloadAudioDetails> audioList1 = new ArrayList<>();
+                        for (int i = 0; i < audioList.size(); i++) {
+                            DownloadAudioDetails dad = new DownloadAudioDetails();
+                            dad.setID(audioList.get(i).getID());
+                            dad.setName(audioList.get(i).getName());
+                            dad.setAudioFile(audioList.get(i).getAudioFile());
+                            dad.setAudioDirection(audioList.get(i).getAudioDirection());
+                            dad.setAudiomastercat(audioList.get(i).getAudiomastercat());
+                            dad.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
+                            dad.setImageFile(audioList.get(i).getImageFile());
+                            dad.setLike(audioList.get(i).getLike());
+                            dad.setDownload(audioList.get(i).getDownload());
+                            dad.setAudioDuration(audioList.get(i).getAudioDuration());
+                            dad.setPlaylistId(audioList.get(i).getPlaylistId());
+                            dad.setIsSingle(audioList.get(i).getIsSingle());
+                            dad.setIsDownload(audioList.get(i).getIsDownload());
+                            dad.setDownloadProgress(audioList.get(i).getDownloadProgress());
+                            audioList1.add(dad);
+                        }
+                        adapter = new AudioDownlaodsAdapter(audioList1, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound, IsLock);
                         rvDownloadsList.setAdapter(adapter);
                     }
                     llError.setVisibility(View.GONE);
@@ -964,14 +1009,5 @@ public class AudioDownloadsFragment extends Fragment {
                 this.binding = binding;
             }
         }
-    }
-
-    private void callAddTransFrag() {
-
-        Fragment fragment = new MiniPlayerFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flContainer, fragment)
-                .commit();
     }
 }
