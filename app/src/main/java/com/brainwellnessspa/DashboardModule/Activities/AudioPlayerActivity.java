@@ -62,6 +62,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.EventLogger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -901,6 +902,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (player != null) {
                 player.setWakeMode(C.WAKE_MODE_LOCAL);
                 player.setHandleWakeLock(true);
+                player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
@@ -1175,7 +1177,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     Log.e("Curr audio End", mainPlayModelList.get(position).getName());
                                 }
                             } catch (Exception e) {
-
+                                e.printStackTrace();
+                                Log.e("End State: ",e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
                        /* GetAllMedia();
@@ -1194,7 +1197,25 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onPlayerError(ExoPlaybackException error) {
-                        Log.i("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                        Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                        if (error.type == ExoPlaybackException.TYPE_SOURCE) {
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getSourceException().getMessage());
+                        }
+                        if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getRendererException().getMessage());
+                        }
+                        if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getUnexpectedException().getMessage());
+                        }
+                        if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                        }
+                        if (error.type == ExoPlaybackException.TYPE_OUT_OF_MEMORY) {
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getOutOfMemoryError().getMessage());
+                        }
+                        if (error.type == ExoPlaybackException.TYPE_TIMEOUT) {
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getTimeoutException().getMessage());
+                        }
                     }
                 });
 
@@ -1241,7 +1262,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onScrubStop(TimeBar timeBar, long pos, boolean canceled) {
-                        player.seekTo(position,pos);
+                        player.seekTo(position, pos);
                         exoBinding.exoProgress.setPosition(pos);
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
                                 TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos))));
@@ -1313,6 +1334,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             epAllClicks();
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("init player State: ",e.getMessage());
         }
     }
 
@@ -1578,7 +1600,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     if (player.getDuration() - player.getCurrentPosition() <= 30000) {
                         BWSApplication.showToast("Please Wait... ", ctx);
                     } else {
-                        player.seekTo(position,player.getCurrentPosition() + 30000);
+                        player.seekTo(position, player.getCurrentPosition() + 30000);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1588,7 +1610,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llBackWordSec.setOnClickListener(view -> {
                 try {
                     if (player.getCurrentPosition() > 30000) {
-                        player.seekTo(position,player.getCurrentPosition() - 30000);
+                        player.seekTo(position, player.getCurrentPosition() - 30000);
                     } else if (player.getCurrentPosition() < 30000) {
                         player.seekTo(position, 0);
                     }
@@ -1704,6 +1726,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("ep all State: ",e.getMessage());
         }
     }
 
@@ -2116,6 +2139,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 p.putValue("sound", String.valueOf(hundredVolume));
                 BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
                 if (!isDownloading) {
+                    isDownloading = true;
                     DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
                     downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
                 }

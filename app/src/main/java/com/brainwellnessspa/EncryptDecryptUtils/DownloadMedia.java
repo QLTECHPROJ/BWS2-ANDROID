@@ -355,10 +355,6 @@ public class DownloadMedia implements OnDownloadListener {
 
     @Override
     public void onError(Error error) {
-        downloadError = 1;
-        PRDownloader.resume(downloadIdOne);
-//        getPending(ctx);
-//        encrypt1(audioFile, fileNameList, playlistDownloadId);
     }
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {

@@ -209,7 +209,8 @@ public class OtpActivity extends AppCompatActivity implements
                         editor.apply();
                         editor.commit();
                     });
-                    fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                    SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                    fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
                 }
                 if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);

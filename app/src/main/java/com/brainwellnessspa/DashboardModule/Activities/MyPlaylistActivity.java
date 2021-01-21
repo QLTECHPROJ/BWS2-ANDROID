@@ -593,6 +593,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
         if (url.size() != 0) {
             if (!isDownloading) {
+                isDownloading = true;
                 DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
                 downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
             }

@@ -299,6 +299,7 @@ public class MiniPlayerFragment extends Fragment {
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 player.setWakeMode(C.WAKE_MODE_LOCAL);
                 player.setHandleWakeLock(true);
+                player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override
                     public void onPositionDiscontinuity(int reason) {
@@ -581,6 +582,7 @@ public class MiniPlayerFragment extends Fragment {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Log.e("End State: ",e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
                       /*GetAllMedia();
@@ -672,6 +674,7 @@ public class MiniPlayerFragment extends Fragment {
             epAllClicks();
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("init media State: ",e.getMessage());
         }
     }
 
@@ -754,6 +757,7 @@ public class MiniPlayerFragment extends Fragment {
 */
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("ep all click State: ",e.getMessage());
         }
     }
 

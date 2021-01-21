@@ -473,6 +473,7 @@ public class AptAudioFragment extends Fragment {
                     editor.commit();
                 }
                 if (!isDownloading) {
+                    isDownloading = true;
                     DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                     downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
                 }

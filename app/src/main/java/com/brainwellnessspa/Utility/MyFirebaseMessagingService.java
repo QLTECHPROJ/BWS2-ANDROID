@@ -180,6 +180,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationChannel.setShowBadge(true);
                 notificationChannel.enableLights(true);
                 notificationChannel.enableVibration(true);
+//                notificationChannel.setSound(defaultSoundUri,AudioAttributes.);
                 notificationBuilder.setSound(defaultSoundUri, AudioManager.STREAM_NOTIFICATION);
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationBuilder = new NotificationCompat.Builder(this, notificationChannel.getId());

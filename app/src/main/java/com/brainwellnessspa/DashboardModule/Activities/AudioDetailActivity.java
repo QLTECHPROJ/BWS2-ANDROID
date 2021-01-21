@@ -899,6 +899,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                     }
 //        fileNameList = url1;
                     if (!isDownloading) {
+                        isDownloading = true;
                         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
                         downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
                     }

@@ -1349,6 +1349,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             if (url.size() != 0) {
                 if (!isDownloading) {
+                    isDownloading = true;
                     DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                     downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
                 }
@@ -1420,6 +1421,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 downloadPlaylistId.add("");
                 if (url.size() != 0) {
                     if (!isDownloading) {
+                        isDownloading = true;
                         DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                         downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
                     }
