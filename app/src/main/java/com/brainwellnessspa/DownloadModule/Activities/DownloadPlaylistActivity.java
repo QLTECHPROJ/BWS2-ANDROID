@@ -982,6 +982,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName);
                         SegmentTag();
                     }
+                    notifyDataSetChanged();
                     super.onPostExecute(aVoid);
                 }
             }

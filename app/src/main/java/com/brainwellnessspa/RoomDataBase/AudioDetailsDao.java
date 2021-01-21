@@ -33,6 +33,10 @@ public interface AudioDetailsDao {
 // ORDER BY uid ASC
     List<String> geAllDataBYDownloaded(String IsDownload);
 
+    @Query("SELECT * FROM audio_table WHERE IsDownload !=:IsDownload")
+// ORDER BY uid ASC
+    LiveData<List<DownloadAudioDetails>> getNotDownloadData(String IsDownload);
+
     @Query("SELECT DISTINCT Name FROM audio_table WHERE IsDownload =:IsDownload")
 // ORDER BY uid ASC
         LiveData<List<String>> geAllDataBYDownloaded1(String IsDownload);

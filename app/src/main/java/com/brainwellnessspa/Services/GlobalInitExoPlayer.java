@@ -24,11 +24,13 @@ import android.os.ResultReceiver;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebSettings;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
@@ -43,6 +45,8 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -88,6 +92,8 @@ public class GlobalInitExoPlayer extends Service implements MediaSessionConnecto
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     MediaSessionCompat mediaSession;
+    List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
+    List<DownloadAudioDetails> notDownloadedData;
 //    MediaSessionConnector mediaSessionConnector;
     public static String Name, Desc;
     public static boolean isprogressbar = false;
@@ -1040,11 +1046,60 @@ Appointment Audios dddd*/
                     removeSharepref(ctx);
                 }
             }
-
+             if(!isDownloading) {
+                 getPending(ctx);
+             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return AudioFlag;
+    }
+
+    private void getPending(Context ctx) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getNotDownloadData("Complete").observe((LifecycleOwner) ctx, audioList -> {
+
+            notDownloadedData = new ArrayList<>();
+
+            if(audioList!=null) {
+                notDownloadedData.addAll(audioList);
+
+                if (notDownloadedData.size() != 0) {
+                    fileNameList = new ArrayList<>();
+                    audioFile = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+//                    Log.e("not downlodedData", TextUtils.join(",", notDownloadedData));
+                    for (int i = 0; i < notDownloadedData.size(); i++) {
+                        audioFile.add(notDownloadedData.get(i).getAudioFile());
+                        fileNameList.add(notDownloadedData.get(i).getName());
+                        playlistDownloadId.add(notDownloadedData.get(i).getPlaylistId());
+                    }
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String nameJson = gson.toJson(fileNameList);
+                    String urlJson = gson.toJson(audioFile);
+                    String playlistIdJson = gson.toJson(playlistDownloadId);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                    editor.commit();
+                    if (fileNameList.size() != 0) {
+                        DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                        downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
+                    }
+                }
+            }
+            DatabaseClient
+                    .getInstance(ctx)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .getNotDownloadData("Complete").removeObserver(audioListx -> {
+            });
+        });
     }
 
     private void removeSharepref(Context ctx) {

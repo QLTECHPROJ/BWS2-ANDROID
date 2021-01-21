@@ -494,8 +494,8 @@ public class ViewAllSearchFragment extends Fragment {
                         mainPlayModel.setDownload("");
                         mainPlayModel.setAudioDuration("00:48");
                         listModelList2.add(mainPlayModel);
-                        listModelList2.add(AudiolistModel.get(position));
                     }
+                    listModelList2.add(AudiolistModel.get(position));
                     callTransFrag(0, listModelList2);
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

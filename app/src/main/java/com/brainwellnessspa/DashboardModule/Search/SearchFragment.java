@@ -760,6 +760,7 @@ public class SearchFragment extends Fragment {
                 }
             } else {
                 ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
+                listModelList2.add(modelList.get(position));
                 isDisclaimer = 0;
                 if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                     SearchBothModel.ResponseData mainPlayModel = new SearchBothModel.ResponseData();
@@ -774,7 +775,6 @@ public class SearchFragment extends Fragment {
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("00:48");
                     listModelList2.add(mainPlayModel);
-                    listModelList2.add(modelList.get(position));
                 }
                 callTransFrag(0, listModelList2);
             }
@@ -993,8 +993,8 @@ public class SearchFragment extends Fragment {
                         mainPlayModel.setDownload("");
                         mainPlayModel.setAudioDuration("00:48");
                         listModelList2.add(mainPlayModel);
-                        listModelList2.add(modelList.get(position));
                     }
+                    listModelList2.add(modelList.get(position));
                     callTransFrag(0, listModelList2);
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

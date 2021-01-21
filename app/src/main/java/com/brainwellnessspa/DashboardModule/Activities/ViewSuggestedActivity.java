@@ -463,6 +463,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     }
                 } else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                    listModelList2.add(AudiolistsModel.get(position));
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                         SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
@@ -477,7 +478,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         mainPlayModel.setDownload("");
                         mainPlayModel.setAudioDuration("00:48");
                         listModelList2.add(mainPlayModel);
-                        listModelList2.add(AudiolistsModel.get(position));
                     }
                     callTransFrag(0, listModelList2);
                 }

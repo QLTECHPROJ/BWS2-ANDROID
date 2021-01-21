@@ -605,6 +605,7 @@ public class ViewAllAudioFragment extends Fragment {
             } else {
                 isDisclaimer = 0;
                 ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                listModelList2.addAll(listModelList);
                 if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                     ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
                     mainPlayModel.setID("0");
@@ -617,7 +618,6 @@ public class ViewAllAudioFragment extends Fragment {
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.addAll(listModelList);
                     listModelList2.add(position, mainPlayModel);
                 }
                 callTransFrag(position, listModelList2);

@@ -414,6 +414,7 @@ public class AptAudioFragment extends Fragment {
                     }
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
+                    listModelList2.add(listModelList.get(position));
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                         AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
@@ -428,7 +429,6 @@ public class AptAudioFragment extends Fragment {
                         mainPlayModel.setDownload("");
                         mainPlayModel.setAudioDuration("00:48");
                         listModelList2.add(mainPlayModel);
-                        listModelList2.add(listModelList.get(position));
                     }
                     callTransFrag(0, listModelList2);
                 }

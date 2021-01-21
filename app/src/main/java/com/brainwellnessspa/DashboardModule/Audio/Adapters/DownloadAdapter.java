@@ -165,6 +165,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                         } else {
                             isDisclaimer = 0;
                             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                            listModelList2.addAll(listModelList);
                             if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                                 MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
                                 mainPlayModel.setID("0");
@@ -177,7 +178,6 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                                 mainPlayModel.setLike("");
                                 mainPlayModel.setDownload("");
                                 mainPlayModel.setAudioDuration("00:48");
-                                listModelList2.addAll(listModelList);
                                 listModelList2.add(position, mainPlayModel);
                             }
                             callTransFrag(position, listModelList2);
