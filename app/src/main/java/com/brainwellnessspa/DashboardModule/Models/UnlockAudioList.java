@@ -61,6 +61,9 @@ public class UnlockAudioList {
         @Expose
         private List<String> iD = null;
 
+        @SerializedName("shouldPlayDisclaimer")
+        @Expose
+        private String shouldPlayDisclaimer;
         @SerializedName("UserData")
         @Expose
         private UserData userData;
@@ -79,6 +82,14 @@ public class UnlockAudioList {
 
         public void setID(List<String> iD) {
             this.iD = iD;
+        }
+
+        public String getShouldPlayDisclaimer() {
+            return shouldPlayDisclaimer;
+        }
+
+        public void setShouldPlayDisclaimer(String shouldPlayDisclaimer) {
+            this.shouldPlayDisclaimer = shouldPlayDisclaimer;
         }
 
         public UserData getUserData() {
@@ -141,9 +152,6 @@ public class UnlockAudioList {
             @SerializedName("CountryName")
             @Expose
             private String countryName;
-            @SerializedName("shouldPlayDisclaimer")
-            @Expose
-            private String shouldPlayDisclaimer;
 
             public String getUserID() {
                 return userID;
@@ -281,13 +289,6 @@ public class UnlockAudioList {
                 this.countryName = countryName;
             }
 
-            public String getShouldPlayDisclaimer() {
-                return shouldPlayDisclaimer;
-            }
-
-            public void setShouldPlayDisclaimer(String shouldPlayDisclaimer) {
-                this.shouldPlayDisclaimer = shouldPlayDisclaimer;
-            }
         }
     }
 }

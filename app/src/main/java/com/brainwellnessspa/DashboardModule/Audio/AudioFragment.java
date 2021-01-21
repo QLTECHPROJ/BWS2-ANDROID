@@ -351,10 +351,10 @@ public class AudioFragment extends Fragment {
                             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
+                            editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getShouldPlayDisclaimer());
                             Gson gson = new Gson();
                             editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
-                            editor.commit();
-                            if (!Identify) {
+                             if (!Identify) {
                                 analytics.identify(new Traits()
                                         .putValue("userId", UserID)
                                         .putValue("deviceId", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID))
@@ -368,13 +368,10 @@ public class AudioFragment extends Fragment {
                                         .putValue("planStartDt", listModel.getResponseData().getUserData().getPlanStartDt())
                                         .putValue("planExpiryDt", listModel.getResponseData().getUserData().getPlanExpiryDate())
                                         .putValue("clinikoId", listModel.getResponseData().getUserData().getClinikoId()));
-                                SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor1 = shared1.edit();
-                                editor1.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
-                                editor1.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getUserData().getShouldPlayDisclaimer());
-                                editor1.commit();
+                                editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                 Identify = true;
                             }
+                             editor.commit();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

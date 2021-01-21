@@ -85,7 +85,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
-public class GlobalInitExoPlayer extends Service implements MediaSessionConnector.PlaybackPreparer {
+public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnector.PlaybackPreparer */{
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false;
@@ -1118,7 +1118,7 @@ Appointment Audios dddd*/
         callNewPlayerRelease();
     }
 
-    @Override
+  /*  @Override
     public long getSupportedPrepareActions() {
         return 0;
     }
@@ -1146,7 +1146,7 @@ Appointment Audios dddd*/
     @Override
     public boolean onCommand(Player player, ControlDispatcher controlDispatcher, String command, @Nullable Bundle extras, @Nullable ResultReceiver cb) {
         return false;
-    }
+    }*/
 
     public class LocalBinder extends Binder {
         public GlobalInitExoPlayer getService() {
