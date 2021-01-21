@@ -11,6 +11,7 @@
     <string name="stripe_live_key">pk_live_nmRApzuiZfmKRruPcnpYhurb00tFp2EYYP</string>
 
     <string name="sign_in">Sign In</string>
+    <string name="reactive_plan">Please re-activate your membership plan</string>
     <string name="Foreground">Foreground</string>
     <string name="Background">Background</string>
     <string name="enter_phone_number">Enter Phone Number</string>

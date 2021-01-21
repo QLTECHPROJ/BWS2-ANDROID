@@ -69,7 +69,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioP
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
-public class AddQueueActivity extends AppCompatActivity {
+public class AudioDetailActivity extends AppCompatActivity {
     public AudioManager audioManager;
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "", audioFileName,
@@ -125,8 +125,8 @@ public class AddQueueActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_queue);
-        ctx = AddQueueActivity.this;
-        activity = AddQueueActivity.this;
+        ctx = AudioDetailActivity.this;
+        activity = AudioDetailActivity.this;
         oneAudioDetailsList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
 //        handler1 = new Handler();

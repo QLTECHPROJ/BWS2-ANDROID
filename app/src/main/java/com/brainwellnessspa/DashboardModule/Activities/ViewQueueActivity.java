@@ -1699,7 +1699,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private void callBack() {
         handler.removeCallbacks(UpdateSongTime);
         if (ComeFromQueue.equalsIgnoreCase("1")) {
-            Intent i = new Intent(ctx, AddQueueActivity.class);
+            Intent i = new Intent(ctx, AudioDetailActivity.class);
             i.putExtra("ID", AudioId);
             i.putExtra("play", play);
             startActivity(i);

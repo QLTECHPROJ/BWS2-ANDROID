@@ -97,6 +97,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         } else
             holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -106,19 +107,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                 return true;
             }
         });
+
         holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (IsLock.equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", listModelList.get(position).getID());
                     i.putExtra("ScreenView", "Audio Main Screen");
@@ -138,32 +137,27 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
             if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    callnewTrans(position);
+                    callMainTransFrag(position);
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 }
             } else if (IsLock.equalsIgnoreCase("2")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    callnewTrans(position);
+                    callMainTransFrag(position);
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 }
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
-                callnewTrans(position);
+                callMainTransFrag(position);
             }
         });
     }
 
-    private void callnewTrans(int position) {
+    private void callMainTransFrag(int position) {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -260,12 +254,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             miniPlayer = 1;
             audioClick = true;
             callNewPlayerRelease();
-
-
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-
             String json = gson.toJson(listModelList);
             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);

@@ -12,12 +12,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcel;
+import android.os.ResultReceiver;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -44,12 +47,14 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
+import com.google.android.exoplayer2.metadata.Metadata;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.gson.Gson;
@@ -76,25 +81,28 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
-public class GlobalInitExoPlayer extends Service {
+public class GlobalInitExoPlayer extends Service implements MediaSessionConnector.PlaybackPreparer {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false;
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
+    MediaSessionCompat mediaSession;
+//    MediaSessionConnector mediaSessionConnector;
     public static String Name, Desc;
     public static boolean isprogressbar = false;
     public static String APP_SERVICE_STATUS = "Foreground";
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0;
     public static int percent;
+    public MediaMetadataCompat metadata;
     public static String PlayerCurrantAudioPostion = "0";
     Notification notification1;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
     static Bitmap notification_artwork;
-    /*MediaSessionCompat mediaSession = null;
-    MediaSessionConnector mediaSessionConnector = null;*/
+    /*MediaSessionCompat mediaSession = null; aa static valo j kaik locho lage 6 yaa
+    haa ej lage 6 mane bi km k static che ne aetle ae dynamic set nai karva detu*/
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -576,7 +584,30 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNavigationActions(false);
             playerNotificationManager.setUseNavigationActionsInCompactView(false);
         }
+        mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
+        mediaSession.setActive(true);
+//        metadata = new MediaM
+//        mediaSession.setMetadata(metadata);
+//        mediaSessionConnector = new MediaSessionConnector(mediaSession);
+/*
+        mediaSessionConnector.setQueueNavigator(new MediaSessionConnector.QueueNavigator(mediaSession) {
+            @Override
+            public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
 
+
+                return new MediaDescriptionCompat.Builder()
+                        .setMediaId(mainPlayModelList1.get(player.getCurrentWindowIndex()).getID())
+                        .setIconBitmap(myBitmap)
+                        .setTitle(mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
+                        .setDescription(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
+                        .setExtras(extras)
+                        .build();
+            }
+        });
+*/
+
+//        mediaSessionConnector.setPlayer(player);
+        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
         playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
@@ -586,33 +617,6 @@ Appointment Audios dddd*/
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
-
-       /* MediaSessionCompat mediaSession = new MediaSessionCompat(ctx, "MEDIA_SESSION_TAG");
-        mediaSession.setActive(true);
-
-        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
-
-        MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
-        mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
-            @Override
-            public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-                Bundle extras = new Bundle();
-//                myBitmap = getMediaBitmap(getBaseContext(), mainPlayModelList.get(windowIndex).getImageFile());
-//                extras.putParcelable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
-//                extras.putParcelable(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, myBitmap);
-                return new MediaDescriptionCompat.Builder()
-                        .setMediaId(mainPlayModelList.get(windowIndex).getID())
-                        *//*.setIconBitmap(myBitmap)*//*
-                        .setTitle(mainPlayModelList.get(windowIndex).getName())
-                        .setDescription(mainPlayModelList.get(windowIndex).getAudioDirection())
-
-                        *//*.setSubtitle(mainPlayModelList.get(windowIndex).getSIZE() + " " +
-                                mainPlayModelList.get(windowIndex).getAudioDuration())
-                        .setExtras(extras)*//*
-                        .build();
-            }
-        });
-        mediaSessionConnector.setPlayer(player);*/
     }
 
     public void InitNotificationAudioPLayerD(Context ctx) {
@@ -1057,6 +1061,36 @@ Appointment Audios dddd*/
         editorr.clear();
         editorr.commit();
         callNewPlayerRelease();
+    }
+
+    @Override
+    public long getSupportedPrepareActions() {
+        return 0;
+    }
+
+    @Override
+    public void onPrepare(boolean playWhenReady) {
+
+    }
+
+    @Override
+    public void onPrepareFromMediaId(String mediaId, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public void onPrepareFromSearch(String query, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public void onPrepareFromUri(Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public boolean onCommand(Player player, ControlDispatcher controlDispatcher, String command, @Nullable Bundle extras, @Nullable ResultReceiver cb) {
+        return false;
     }
 
     public class LocalBinder extends Binder {

@@ -73,7 +73,7 @@ public class AptAudioFragment extends Fragment {
     public AudioManager audioManager;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     FragmentAptAudioBinding binding;
-    String UserID, AudioFlag;
+    String UserID, AudioFlag, IsPlayDisclimer;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     //    Handler handler3;
     int startTime;
@@ -393,47 +393,8 @@ public class AptAudioFragment extends Fragment {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-               /* try {
-                    miniPlayer = 1;
-                    audioClick = true;
-
-                    callNewPlayerRelease();
-
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
-                    AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(mainPlayModel);
-                    listModelList2.add(listModelList.get(position));
-
-                    String json = gson.toJson(listModelList2);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
-                    editor.commit();
-
-
-                    callAddTransFrag();
-//                    handler3.postDelayed(UpdateSongTime3, 500);
-                    notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 if (audioPlay && AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -454,20 +415,21 @@ public class AptAudioFragment extends Fragment {
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
                     isDisclaimer = 0;
-
-                    AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(mainPlayModel);
-                    listModelList2.add(listModelList.get(position));
+                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
+                        mainPlayModel.setID("0");
+                        mainPlayModel.setName("Disclaimer");
+                        mainPlayModel.setAudioFile("");
+                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                        mainPlayModel.setAudiomastercat("");
+                        mainPlayModel.setAudioSubCategory("");
+                        mainPlayModel.setImageFile("");
+                        mainPlayModel.setLike("");
+                        mainPlayModel.setDownload("");
+                        mainPlayModel.setAudioDuration("00:48");
+                        listModelList2.add(mainPlayModel);
+                        listModelList2.add(listModelList.get(position));
+                    }
                     callTransFrag(0, listModelList2);
                 }
             });

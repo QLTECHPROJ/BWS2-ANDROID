@@ -374,6 +374,13 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                     holder.binds.ivLock.setVisibility(View.VISIBLE);
                 }
+            } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("2")) {
+                if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binds.ivLock.setVisibility(View.GONE);
+                } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binds.ivLock.setVisibility(View.VISIBLE);
+                }
             } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
                     || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.binds.ivLock.setVisibility(View.GONE);
@@ -382,68 +389,35 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binds.llMainLayoutForPlayer.setOnClickListener(view -> {
                 if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binds.ivLock.setVisibility(View.GONE);
-                        CallTransFrag(position);
+                        callMainTransFrag(position);
                     } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binds.ivLock.setVisibility(View.VISIBLE);
-                    }
-                } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
-                        || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                    holder.binds.ivLock.setVisibility(View.GONE);
-                    CallTransFrag(position);
-
-                }
-            });
-
-            holder.binds.llRemoveAudio.setOnClickListener(view -> {
-                if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binds.ivLock.setVisibility(View.GONE);
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                            if (isDisclaimer == 1) {
-                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                            } else {
-                                callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
-                            }
-                        } else {
-                            callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
-                        }
-                    } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binds.ivLock.setVisibility(View.VISIBLE);
                         Intent i = new Intent(ctx, MembershipChangeActivity.class);
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     }
                 } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binds.ivLock.setVisibility(View.GONE);
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                            if (isDisclaimer == 1) {
-                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                            } else {
-                                callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
-                            }
-                        } else {
-                            callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
-                        }
+                        callMainTransFrag(position);
                     } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binds.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     }
                 } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                    holder.binds.ivLock.setVisibility(View.GONE);
+                    callMainTransFrag(position);
+                }
+            });
+
+            holder.binds.llRemoveAudio.setOnClickListener(view -> {
+                if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
+                } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
+                        || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -461,42 +435,14 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             });
         }
 
-        private void CallTransFrag(int position) {
+        private void callMainTransFrag(int position) {
             try {
-              /*  miniPlayer = 1;
-                audioClick = true;
-                callNewPlayerRelease();
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
-                mainPlayModel.setID("0");
-                mainPlayModel.setName("Disclaimer");
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                mainPlayModel.setAudiomastercat("");
-                mainPlayModel.setAudioSubCategory("");
-                mainPlayModel.setImageFile("");
-                mainPlayModel.setLike("");
-                mainPlayModel.setDownload("");
-                mainPlayModel.setAudioDuration("00:48");
-                listModelList2.add(mainPlayModel);
-                listModelList2.add(AudiolistsModel.get(position));
-                String json = gson.toJson(listModelList2);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "Search Audio");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
-                editor.commit();
-                callAddFrag();*/
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 if (audioPlay && (AudioFlag.equalsIgnoreCase("SearchAudio")
                         && MyPlaylist.equalsIgnoreCase("Recommended Search Audio"))) {
                     if (isDisclaimer == 1) {
@@ -518,20 +464,21 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 } else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                     isDisclaimer = 0;
-
-                    SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(mainPlayModel);
-                    listModelList2.add(AudiolistsModel.get(position));
+                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                        mainPlayModel.setID("0");
+                        mainPlayModel.setName("Disclaimer");
+                        mainPlayModel.setAudioFile("");
+                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                        mainPlayModel.setAudiomastercat("");
+                        mainPlayModel.setAudioSubCategory("");
+                        mainPlayModel.setImageFile("");
+                        mainPlayModel.setLike("");
+                        mainPlayModel.setDownload("");
+                        mainPlayModel.setAudioDuration("00:48");
+                        listModelList2.add(mainPlayModel);
+                        listModelList2.add(AudiolistsModel.get(position));
+                    }
                     callTransFrag(0, listModelList2);
                 }
 

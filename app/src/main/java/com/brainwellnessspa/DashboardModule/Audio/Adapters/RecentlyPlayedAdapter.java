@@ -108,15 +108,12 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         });
         holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
                 Intent i = new Intent(ctx, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
                 BWSApplication.showToast("Please re-activate your membership plan", ctx);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
                 i.putExtra("ScreenView", "Audio Main Screen");
@@ -134,32 +131,27 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
             if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    callnewTrans(position);
+                    callMainTransFrag(position);
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 }
             } else if (IsLock.equalsIgnoreCase("2")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    callnewTrans(position);
+                    callMainTransFrag(position);
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 }
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
-                callnewTrans(position);
+                callMainTransFrag(position);
             }
         });
     }
 
-    private void callnewTrans(int position) {
+    private void callMainTransFrag(int position) {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -180,18 +172,6 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 ctx.startActivity(i);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
-               /* if (player != null) {
-                    miniPlayer = 1;
-                    player.seekTo(position, 0);
-                    player.setPlayWhenReady(true);
-                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedxx.edit();
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.commit();
-                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    ctx.startActivity(i);
-                } else {*/
                 ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                 if (!IsLock.equalsIgnoreCase("0")) {
                     SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);

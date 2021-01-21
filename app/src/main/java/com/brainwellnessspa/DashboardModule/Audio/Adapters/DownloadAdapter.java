@@ -53,7 +53,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
-//        this.IsLock = IsLock;
+        this.IsLock = IsLock;
     }
 
     @NonNull
@@ -84,32 +84,27 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
+
         if (index == position) {
             holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
         } else
             holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
-        holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                index = position;
-                notifyDataSetChanged();
-                return true;
-            }
+        holder.binding.llMainLayout.setOnLongClickListener(v -> {
+            holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+            index = position;
+            notifyDataSetChanged();
+            return true;
         });
 
         holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
                 Intent i = new Intent(ctx, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
                 BWSApplication.showToast("Please re-activate your membership plan", ctx);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
                 i.putExtra("ScreenView", "Audio Main Screen");
@@ -127,15 +122,12 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
             try {
                 if (IsLock.equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

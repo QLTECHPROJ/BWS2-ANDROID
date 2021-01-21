@@ -14,7 +14,6 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -50,7 +49,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.CardModel;
 import com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity;
-import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
 import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
@@ -111,7 +110,6 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeRename;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
@@ -125,8 +123,6 @@ import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_L
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
@@ -3109,7 +3105,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("You can see details after the disclaimer", ctx);
                     } else {
-                        Intent i = new Intent(ctx, AddQueueActivity.class);
+                        Intent i = new Intent(ctx, AudioDetailActivity.class);
                         i.putExtra("play", "playlist");
                         i.putExtra("ID", mData.get(position).getID());
                         i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
@@ -3119,7 +3115,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         startActivity(i);
                     }
                 } else {
-                    Intent i = new Intent(ctx, AddQueueActivity.class);
+                    Intent i = new Intent(ctx, AudioDetailActivity.class);
                     i.putExtra("play", "playlist");
                     i.putExtra("ID", mData.get(position).getID());
                     i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());

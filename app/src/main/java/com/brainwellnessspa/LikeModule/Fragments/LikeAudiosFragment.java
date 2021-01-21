@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
@@ -585,7 +585,7 @@ public class LikeAudiosFragment extends Fragment {
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                    Intent i = new Intent(ctx, AddQueueActivity.class);
+                    Intent i = new Intent(ctx, AudioDetailActivity.class);
                     if (AudioFlag.equalsIgnoreCase("TopCategories")) {
                         i.putExtra("play", "TopCategories");
                     } else

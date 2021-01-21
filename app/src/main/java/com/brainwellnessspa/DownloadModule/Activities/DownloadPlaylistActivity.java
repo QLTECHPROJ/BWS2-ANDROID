@@ -37,7 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
@@ -895,7 +895,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("You can see details after the disclaimer", ctx);
                     } else {
-                        Intent i = new Intent(ctx, AddQueueActivity.class);
+                        Intent i = new Intent(ctx, AudioDetailActivity.class);
                         i.putExtra("play", "playlist");
                         i.putExtra("ID", mData.get(position).getID());
                         i.putExtra("PlaylistAudioId", "");
@@ -907,7 +907,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         startActivity(i);
                     }
                 } else {
-                    Intent i = new Intent(ctx, AddQueueActivity.class);
+                    Intent i = new Intent(ctx, AudioDetailActivity.class);
                     i.putExtra("play", "playlist");
                     i.putExtra("ID", mData.get(position).getID());
                     i.putExtra("PlaylistAudioId", "");

@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +41,6 @@ import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -223,7 +221,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             } else if (IsLock.equalsIgnoreCase("2")) {
                 BWSApplication.showToast("Please re-activate your membership plan", ctx);
             } else {
-                Intent i = new Intent(ctx, AddQueueActivity.class);
+                Intent i = new Intent(ctx, AudioDetailActivity.class);
                 if (AudioFlag.equalsIgnoreCase("TopCategories")) {
                     i.putExtra("play", "TopCategories");
                 } else
