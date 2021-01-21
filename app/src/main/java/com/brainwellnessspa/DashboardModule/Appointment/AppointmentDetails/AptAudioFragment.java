@@ -514,11 +514,9 @@ public class AptAudioFragment extends Fragment {
                 miniPlayer = 1;
                 audioClick = true;
                 callNewPlayerRelease();
-
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
-
                 String json = gson.toJson(listModelList);
                 editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_position, 0);
@@ -528,7 +526,6 @@ public class AptAudioFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
                 editor.commit();
-
                 boolean commit = editor.commit();
                 callAddTransFrag();
             } catch (Exception e) {

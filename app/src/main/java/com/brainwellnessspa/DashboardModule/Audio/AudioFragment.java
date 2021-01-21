@@ -371,7 +371,7 @@ public class AudioFragment extends Fragment {
                                 SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor1 = shared1.edit();
                                 editor1.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
-//                                editor1.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getUserData().getClinikoId());
+                                editor1.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getUserData().getShouldPlayDisclaimer());
                                 editor1.commit();
                                 Identify = true;
                             }

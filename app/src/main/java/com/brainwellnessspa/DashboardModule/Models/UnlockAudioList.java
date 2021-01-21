@@ -90,7 +90,6 @@ public class UnlockAudioList {
         }
 
         public class UserData {
-
             @SerializedName("UserID")
             @Expose
             private String userID;
@@ -142,6 +141,9 @@ public class UnlockAudioList {
             @SerializedName("CountryName")
             @Expose
             private String countryName;
+            @SerializedName("shouldPlayDisclaimer")
+            @Expose
+            private String shouldPlayDisclaimer;
 
             public String getUserID() {
                 return userID;
@@ -279,7 +281,13 @@ public class UnlockAudioList {
                 this.countryName = countryName;
             }
 
-        }
+            public String getShouldPlayDisclaimer() {
+                return shouldPlayDisclaimer;
+            }
 
+            public void setShouldPlayDisclaimer(String shouldPlayDisclaimer) {
+                this.shouldPlayDisclaimer = shouldPlayDisclaimer;
+            }
+        }
     }
 }
