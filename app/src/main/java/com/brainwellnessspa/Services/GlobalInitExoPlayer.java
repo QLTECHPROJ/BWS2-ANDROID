@@ -52,6 +52,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
+import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -578,20 +579,29 @@ Appointment Audios dddd*/
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         }
-
-        if (!mainPlayModelList1.get(position).getAudioFile().equalsIgnoreCase("")) {
-            playerNotificationManager.setFastForwardIncrementMs(30000);
-            playerNotificationManager.setRewindIncrementMs(30000);
-            playerNotificationManager.setUseNavigationActions(true);
-            playerNotificationManager.setUseNavigationActionsInCompactView(true);
-        } else {
-            playerNotificationManager.setFastForwardIncrementMs(0);
-            playerNotificationManager.setRewindIncrementMs(0);
-            playerNotificationManager.setUseNavigationActions(false);
-            playerNotificationManager.setUseNavigationActionsInCompactView(false);
+        if(position == mainPlayModelList1.size()-1){
+            playerNotificationManager.setUseNextAction(false);
+            playerNotificationManager.setUseNextActionInCompactView(true);
         }
+
         mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
         mediaSession.setActive(true);
+        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+        playerNotificationManager.setUseNextAction(true);
+        playerNotificationManager.setUseNextActionInCompactView(true);
+        playerNotificationManager.setUsePreviousAction(true);
+        playerNotificationManager.setUsePreviousActionInCompactView(true);
+        ControlDispatcher controlDispatcher = new DefaultControlDispatcher(30000,30000);
+        playerNotificationManager.setControlDispatcher(controlDispatcher);
+        playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
+        playerNotificationManager.setColor(Color.BLACK);
+        playerNotificationManager.setColorized(true);
+        playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
+        playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        playerNotificationManager.setUseChronometer(true);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        playerNotificationManager.setUsePlayPauseActions(true);
+        playerNotificationManager.setPlayer(player);
 //        metadata = new MediaM
 //        mediaSession.setMetadata(metadata);
 //        mediaSessionConnector = new MediaSessionConnector(mediaSession);
@@ -613,16 +623,6 @@ Appointment Audios dddd*/
 */
 
 //        mediaSessionConnector.setPlayer(player);
-        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
-        playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
-        playerNotificationManager.setColor(Color.BLACK);
-        playerNotificationManager.setColorized(true);
-        playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
-        playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        playerNotificationManager.setUsePlayPauseActions(true);
-        playerNotificationManager.setPlayer(player);
     }
 
     public void InitNotificationAudioPLayerD(Context ctx) {
@@ -677,10 +677,13 @@ Appointment Audios dddd*/
                     }
                 });
 
-        playerNotificationManager.setFastForwardIncrementMs(0);
-        playerNotificationManager.setRewindIncrementMs(0);
-        playerNotificationManager.setUseNavigationActions(false);
-        playerNotificationManager.setUseNavigationActionsInCompactView(false);
+        playerNotificationManager.setUseNextAction(false);
+        playerNotificationManager.setUsePreviousAction(false);
+        playerNotificationManager.setUseNextActionInCompactView(true);
+        playerNotificationManager.setUsePreviousActionInCompactView(true);
+        ControlDispatcher controlDispatcher = new DefaultControlDispatcher(0,0);
+        playerNotificationManager.setControlDispatcher(controlDispatcher);
+
         playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
