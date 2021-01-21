@@ -130,7 +130,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int isPlayPlaylist = 0;
     public static boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
-    String TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
+    String IsPlayDisclimer, TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     PlayListsAdpater adpater;
     PlayListsAdpater1 adpater1;
     PlayListsAdpater2 adpater2;
@@ -655,7 +655,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistIDs = PlaylistIDMS;
             prepareData(UserID, MyPlaylistIds);
             addToSearch = false;
-        }  else if (RefreshPlaylist) {
+        } else if (RefreshPlaylist) {
             prepareData(UserID, PlaylistID);
         } else {
 //            prepareData(UserID, PlaylistID);
@@ -808,7 +808,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             callObserveMethodGetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
 //                            GetMedia();
-                            getMediaByPer(PlaylistId,SongListSize);
+                            getMediaByPer(PlaylistId, SongListSize);
                             binding.rlSearch.setVisibility(View.VISIBLE);
                             binding.llMore.setVisibility(View.VISIBLE);
                             binding.llReminder.setVisibility(View.VISIBLE);
@@ -973,7 +973,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
     }
 
-    private void getMediaByPer(String PlaylistId,int totalAudio) {
+    private void getMediaByPer(String PlaylistId, int totalAudio) {
         try {
             DatabaseClient
                     .getInstance(getActivity())
@@ -1014,7 +1014,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         binding.ivDownloads.setVisibility(View.VISIBLE);
 //                        handler1.removeCallbacks(UpdateSongTime1);
                     }
-                }else{
+                } else {
                     binding.pbProgress.setVisibility(View.GONE);
                     binding.ivDownloads.setVisibility(View.VISIBLE);
                 }
@@ -1609,7 +1609,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
-                getMediaByPer(PlaylistID,SongListSize);
+                getMediaByPer(PlaylistID, SongListSize);
                 enableDisableDownload(false, "orange");
                 callObserveMethodGetAllMedia();
                 GetMedia();
@@ -2471,6 +2471,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             binding.ivPlaylistStatus.setOnClickListener(view -> {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -2531,9 +2533,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     } else {
                         isDisclaimer = 0;
-
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        listModelList2.add(addDisclaimer);
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            listModelList2.add(addDisclaimer);
+                        }
                         listModelList2.addAll(listModelList);
                         callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
                         SegmentTag();
@@ -2546,6 +2549,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -2590,9 +2595,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     if (position != 0) {
                         listModelList2.addAll(listModelList);
-                        listModelList2.add(pos, addDisclaimer);
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            listModelList2.add(pos, addDisclaimer);
+                        }
                     } else {
-                        listModelList2.add(addDisclaimer);
+
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            listModelList2.add(addDisclaimer);
+                        }
                         listModelList2.addAll(listModelList);
                     }
                     callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
@@ -2819,6 +2829,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
 
             binding.ivPlaylistStatus.setOnClickListener(view -> {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -2886,7 +2898,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 isDisclaimer = 0;
 
                                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                                listModelList2.add(addDisclaimer);
+
+                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                    listModelList2.add(addDisclaimer);
+                                }
                                 listModelList2.addAll(listModelList);
                                 callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                                 SegmentTag();
@@ -2926,7 +2941,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             isDisclaimer = 0;
 
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                            listModelList2.add(addDisclaimer);
+
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                listModelList2.add(addDisclaimer);
+                            }
                             listModelList2.addAll(listModelList);
                             callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                             SegmentTag();
@@ -2940,6 +2958,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -2981,9 +3001,15 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                             if (position != 0) {
                                 listModelList2.addAll(listModelList);
-                                listModelList2.add(position, addDisclaimer);
+
+                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                    listModelList2.add(position, addDisclaimer);
+                                }
                             } else {
-                                listModelList2.add(addDisclaimer);
+
+                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                    listModelList2.add(addDisclaimer);
+                                }
                                 listModelList2.addAll(listModelList);
                             }
                             callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
@@ -3025,9 +3051,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         if (position != 0) {
                             listModelList2.addAll(listModelList);
-                            listModelList2.add(position, addDisclaimer);
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                listModelList2.add(position, addDisclaimer);
+                            }
                         } else {
-                            listModelList2.add(addDisclaimer);
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                listModelList2.add(addDisclaimer);
+                            }
                             listModelList2.addAll(listModelList);
                         }
                         callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
@@ -3187,7 +3217,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                         isDisclaimer = 0;
 
-                        listModelList2.add(pos, addDisclaimer);
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            listModelList2.add(pos, addDisclaimer);
+                        }
                         callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID);
                         SegmentTag();
                     }

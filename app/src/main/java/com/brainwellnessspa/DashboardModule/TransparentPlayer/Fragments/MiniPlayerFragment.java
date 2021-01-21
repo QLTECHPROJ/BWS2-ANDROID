@@ -775,6 +775,10 @@ public class MiniPlayerFragment extends Fragment {
                         if (state == ExoPlayer.STATE_ENDED) {
                             //player back ended
                             audioClick = true;
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
+                            editor.commit();
                             removeArray();
                             p = new Properties();
                             p.putValue("userId", UserID);

@@ -376,7 +376,7 @@ public class AudioFragment extends Fragment {
                             Gson gson = new Gson();
                             editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
                             editor.commit();
-                            if(!Identify){
+                            if (!Identify) {
                                 analytics.identify(new Traits()
                                         .putValue("userId", UserID)
                                         .putValue("deviceId", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID))
@@ -393,7 +393,7 @@ public class AudioFragment extends Fragment {
                                 SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor1 = shared1.edit();
                                 editor1.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
-//                                editor1.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getUserData().getClinikoId());
+                                editor1.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getUserData().getShouldPlayDisclaimer());
                                 editor1.commit();
                                 Identify = true;
                             }
@@ -550,6 +550,7 @@ public class AudioFragment extends Fragment {
         }
     }*/
     }
+
     private void showTooltiop() {
         Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
         Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
@@ -646,7 +647,8 @@ public class AudioFragment extends Fragment {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(model.get(position).getView());
                 if (model.get(position).getView().equalsIgnoreCase("My Downloads")) {
-                    IsLock = model.get(position).getIsLock();  RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    IsLock = model.get(position).getIsLock();
+                    RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     DownloadAdapter myDownloadsAdapter = new DownloadAdapter(model.get(position).getDetails(), getActivity(), activity,

@@ -77,7 +77,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";
     FragmentDownloadsBinding binding;
-    String UserID, AudioFlag, IsLock;
+    String UserID, AudioFlag, IsLock, IsPlayDisclimer;
     AudioDownlaodsAdapter adapter;
     boolean isThreadStart = false;
     Runnable UpdateSongTime1;
@@ -143,7 +143,7 @@ public class AudioDownloadsFragment extends Fragment {
                 .geAllDataz("").observe(getActivity(), audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
-                  List<DownloadAudioDetails> audioList1 = new ArrayList<>();
+                    List<DownloadAudioDetails> audioList1 = new ArrayList<>();
                     for (int i = 0; i < audioList.size(); i++) {
                         DownloadAudioDetails dad = new DownloadAudioDetails();
                         dad.setID(audioList.get(i).getID());
@@ -444,6 +444,8 @@ public class AudioDownloadsFragment extends Fragment {
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                             if (isDisclaimer == 1) {
@@ -476,21 +478,22 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                         } else {
                             isDisclaimer = 0;
-
                             List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                            DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                            mainPlayModel.setID("0");
-                            mainPlayModel.setName("Disclaimer");
-                            mainPlayModel.setAudioFile("");
-                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                            mainPlayModel.setAudiomastercat("");
-                            mainPlayModel.setAudioSubCategory("");
-                            mainPlayModel.setImageFile("");
-                            mainPlayModel.setLike("");
-                            mainPlayModel.setDownload("");
-                            mainPlayModel.setAudioDuration("00:48");
                             listModelList2.addAll(listModelList);
-                            listModelList2.add(position, mainPlayModel);
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
+                                mainPlayModel.setID("0");
+                                mainPlayModel.setName("Disclaimer");
+                                mainPlayModel.setAudioFile("");
+                                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                                mainPlayModel.setAudiomastercat("");
+                                mainPlayModel.setAudioSubCategory("");
+                                mainPlayModel.setImageFile("");
+                                mainPlayModel.setLike("");
+                                mainPlayModel.setDownload("");
+                                mainPlayModel.setAudioDuration("00:48");
+                                listModelList2.add(position, mainPlayModel);
+                            }
                             callTransFrag(position, listModelList2);
                         }
                     } else {
@@ -616,19 +619,21 @@ public class AudioDownloadsFragment extends Fragment {
                             pos = 0;
                         }
                         isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
+                            mainPlayModel.setID("0");
+                            mainPlayModel.setName("Disclaimer");
+                            mainPlayModel.setAudioFile("");
+                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                            mainPlayModel.setAudiomastercat("");
+                            mainPlayModel.setAudioSubCategory("");
+                            mainPlayModel.setImageFile("");
+                            mainPlayModel.setLike("");
+                            mainPlayModel.setDownload("");
+                            mainPlayModel.setAudioDuration("00:48");
+                            listModelList2.add(pos, mainPlayModel);
+                        }
 
-                        DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                        mainPlayModel.setID("0");
-                        mainPlayModel.setName("Disclaimer");
-                        mainPlayModel.setAudioFile("");
-                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                        mainPlayModel.setAudiomastercat("");
-                        mainPlayModel.setAudioSubCategory("");
-                        mainPlayModel.setImageFile("");
-                        mainPlayModel.setLike("");
-                        mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("00:48");
-                        listModelList2.add(pos, mainPlayModel);
                         if (listModelList2.size() != 1) {
                             callTransFrag(pos, listModelList2);
                         } else {

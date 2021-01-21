@@ -82,7 +82,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String PlaylistDescription, Created, UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute, PlaylistImageDetails;
+    String IsPlayDisclimer, PlaylistDescription, Created, UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute, PlaylistImageDetails;
     EditText searchEditText;
     Context ctx;
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
@@ -744,6 +744,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             }
 
             binding.ivPlaylistStatus.setOnClickListener(view -> {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 if (isPlayPlaylist == 1) {
                     if (player != null) {
                         player.setPlayWhenReady(false);
@@ -806,7 +808,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             isDisclaimer = 0;
 
                             List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                            listModelList2.add(addDisclaimer);
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+
+                                listModelList2.add(addDisclaimer);
+                            }
                             listModelList2.addAll(listModelList);
                             callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
                             SegmentTag();
@@ -822,6 +827,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -859,9 +866,15 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                         if (position != 0) {
                             listModelList2.addAll(listModelList);
-                            listModelList2.add(holder.getAdapterPosition(), addDisclaimer);
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+
+                                listModelList2.add(holder.getAdapterPosition(), addDisclaimer);
+                            }
                         } else {
-                            listModelList2.add(addDisclaimer);
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+
+                                listModelList2.add(addDisclaimer);
+                            }
                             listModelList2.addAll(listModelList);
                         }
                         callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
@@ -977,8 +990,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             pos = 0;
                         }
                         isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
 
-                        listModelList2.add(pos, addDisclaimer);
+                            listModelList2.add(pos, addDisclaimer);
+                        }
                         callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName);
                         SegmentTag();
                     }
