@@ -460,7 +460,7 @@ public class PlaylistFragment extends Fragment {
                     startActivity(i);
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")) {
                     binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     binding.ivLock.setVisibility(View.GONE);
@@ -752,7 +752,7 @@ public class PlaylistFragment extends Fragment {
                     startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     if (MyDownloads.equalsIgnoreCase("1")) {

@@ -219,7 +219,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
             } else {
                 Intent i = new Intent(ctx, AudioDetailActivity.class);
                 if (AudioFlag.equalsIgnoreCase("TopCategories")) {
@@ -241,7 +241,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else {
                     callDownload();
                 }

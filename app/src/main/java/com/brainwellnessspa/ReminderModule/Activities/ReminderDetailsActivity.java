@@ -420,7 +420,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 holder.bind.llSwitchStatus.setClickable(true);
                 holder.bind.llSwitchStatus.setEnabled(true);
                 holder.bind.llSwitchStatus.setOnClickListener(view -> {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 });
             } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.bind.switchStatus.setClickable(true);

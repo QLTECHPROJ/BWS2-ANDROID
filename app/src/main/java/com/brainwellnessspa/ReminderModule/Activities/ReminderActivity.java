@@ -370,7 +370,7 @@ public class ReminderActivity extends AppCompatActivity {
                 i.putExtra("ComeFrom", "Plan");
                 startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                BWSApplication.showToast("Please re-activate your membership plan", context);
+                BWSApplication.showToast(getString(R.string.reactive_plan), context);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 if (PlaylistName.equalsIgnoreCase("")) {
                     BWSApplication.showToast("Please select playlist name", context);

@@ -437,7 +437,7 @@ public class ViewAllSearchFragment extends Fragment {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0") || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                     i.putExtra("AudioId", AudiolistModel.get(position).getID());
@@ -612,7 +612,7 @@ public class ViewAllSearchFragment extends Fragment {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     comefrom_search = 1;
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
@@ -641,7 +641,7 @@ public class ViewAllSearchFragment extends Fragment {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);

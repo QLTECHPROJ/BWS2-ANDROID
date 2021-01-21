@@ -489,7 +489,7 @@ public class ViewAllAudioFragment extends Fragment {
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     } else if (IsLock.equalsIgnoreCase("2")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                         i.putExtra("AudioId", listModelList.get(position).getID());
@@ -533,7 +533,7 @@ public class ViewAllAudioFragment extends Fragment {
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                     }
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

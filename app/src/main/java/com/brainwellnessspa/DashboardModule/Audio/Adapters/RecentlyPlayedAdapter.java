@@ -112,7 +112,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                BWSApplication.showToast(ctx.getString(R.string.reactive_plan), ctx);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
@@ -143,7 +143,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     callMainTransFrag(position);
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(ctx.getString(R.string.reactive_plan), ctx);
                 }
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 callMainTransFrag(position);

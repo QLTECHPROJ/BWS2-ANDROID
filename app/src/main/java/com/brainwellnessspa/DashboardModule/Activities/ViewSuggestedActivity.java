@@ -401,7 +401,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         callMainTransFrag(position);
                     } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     }
                 } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
@@ -415,7 +415,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -595,7 +595,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     comefromDownload = "0";
@@ -614,7 +614,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {

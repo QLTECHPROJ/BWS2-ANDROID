@@ -645,7 +645,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             callMainTransFrag(position);
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                            BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                            BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                         }
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         callMainTransFrag(position);
@@ -658,7 +658,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         String AudioID = modelList.get(position).getID();
                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -697,7 +697,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         comefromDownload = "0";
                         addToSearch = true;
@@ -713,7 +713,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -930,7 +930,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         callMainTransFrag(position);
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     }
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
@@ -944,7 +944,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     String AudioID = listModel.get(position).getID();
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -1126,7 +1126,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
@@ -1159,7 +1159,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);

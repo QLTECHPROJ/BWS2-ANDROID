@@ -437,7 +437,7 @@ public class AudioDownloadsFragment extends Fragment {
                     ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     comefromDownload = "1";
                     holder.binding.ivLock.setVisibility(View.GONE);

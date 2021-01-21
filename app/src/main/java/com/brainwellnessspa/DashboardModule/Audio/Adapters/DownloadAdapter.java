@@ -103,7 +103,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                BWSApplication.showToast(ctx.getString(R.string.reactive_plan), ctx);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
@@ -126,7 +126,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(ctx.getString(R.string.reactive_plan), ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);

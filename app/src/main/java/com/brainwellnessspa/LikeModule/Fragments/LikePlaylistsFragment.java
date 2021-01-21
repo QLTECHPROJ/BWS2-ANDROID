@@ -264,7 +264,7 @@ public class LikePlaylistsFragment extends Fragment {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     RefreshIconData = Integer.parseInt(modelList.get(position).getTotalAudio());
                     Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
@@ -322,7 +322,7 @@ public class LikePlaylistsFragment extends Fragment {
                         startActivity(i);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         comefrom_search = 4;

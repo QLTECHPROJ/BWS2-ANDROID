@@ -647,7 +647,7 @@ public class SearchFragment extends Fragment {
                             callMainTransFrag(position);
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                            BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                            BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                         }
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0")
                             || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
@@ -661,7 +661,7 @@ public class SearchFragment extends Fragment {
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", modelList.get(position).getID());
@@ -694,7 +694,7 @@ public class SearchFragment extends Fragment {
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         comefrom_search = 1;
                         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
@@ -717,7 +717,7 @@ public class SearchFragment extends Fragment {
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", "");
@@ -922,7 +922,7 @@ public class SearchFragment extends Fragment {
                         callMainTransFrag(position);
                     } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     }
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
@@ -936,7 +936,7 @@ public class SearchFragment extends Fragment {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", modelList.get(position).getID());
@@ -1143,7 +1143,7 @@ public class SearchFragment extends Fragment {
                     startActivity(i);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
