@@ -69,8 +69,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String flag = remoteMessage.getNotification().getBody();
             String id = remoteMessage.getData().get("id");
             String IsLock = remoteMessage.getData().get("IsLock");
-
-
             Log.e("bundle.....", "" + flag);
             sendNotification(title, message, flag, id, String.valueOf(m), IsLock);
 //                NotificationUtils notificationUtils = new NotificationUtils(this);

@@ -80,9 +80,9 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Downloaded Playlist Viewed", p, CONSTANTS.screen);
+        binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
-
         RefreshData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);

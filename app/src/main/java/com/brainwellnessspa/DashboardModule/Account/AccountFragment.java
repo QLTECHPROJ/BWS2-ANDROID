@@ -63,6 +63,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -258,24 +259,27 @@ public class AccountFragment extends Fragment {
                             @Override
                             public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
                                 dialog.hide();
+                                LogoutModel loginModel = response.body();
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                 try {
                                     if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                         return;
                                     }
                                     mLastClickTime = SystemClock.elapsedRealtime();
-                                    Intent i = new Intent(getActivity(), LoginActivity.class);
-                                    startActivity(i);
-                                    LogoutModel loginModel = response.body();
-                                    Properties p = new Properties();
-                                    p.putValue("userId", UserID);
-                                    p.putValue("deviceId", DeviceID);
-                                    p.putValue("deviceType", DeviceType);
-                                    p.putValue("userName", Name);
-                                    p.putValue("mobileNo", MobileNo);
-                                    BWSApplication.addToSegment("Signed Out", p, CONSTANTS.track);
-                                    analytics.flush();
-                                    analytics.reset();
+                                    if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        Intent i = new Intent(getActivity(), LoginActivity.class);
+                                        startActivity(i);
+                                        relesePlayer();
+                                        Properties p = new Properties();
+                                        p.putValue("userId", UserID);
+                                        p.putValue("deviceId", DeviceID);
+                                        p.putValue("deviceType", DeviceType);
+                                        p.putValue("userName", Name);
+                                        p.putValue("mobileNo", MobileNo);
+                                        BWSApplication.addToSegment("Signed Out", p, CONSTANTS.track);
+                                        analytics.flush();
+                                        analytics.reset();
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

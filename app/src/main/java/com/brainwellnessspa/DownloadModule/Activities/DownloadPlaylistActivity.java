@@ -726,6 +726,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             holder.binding.equalizerview.resume(true);
                         }
                     } else
+                        holder.binding.equalizerview.stop(true);
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

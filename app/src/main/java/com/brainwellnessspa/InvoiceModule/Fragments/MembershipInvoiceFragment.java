@@ -75,7 +75,7 @@ public class MembershipInvoiceFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
         binding.rvAIList.setItemAnimator(new DefaultItemAnimator());
-
+        binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your membership invoices will appear here");
         return view;
     }
@@ -95,9 +95,11 @@ public class MembershipInvoiceFragment extends Fragment {
 
     private void getDataList(ArrayList<InvoiceListModel.MemberShip> historyList) {
         if (historyList.size() == 0) {
-            binding.tvFound.setVisibility(View.VISIBLE);
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.rvAIList.setVisibility(View.GONE);
         } else {
             binding.llError.setVisibility(View.GONE);
+            binding.rvAIList.setVisibility(View.VISIBLE);
             MembershipInvoiceAdapter adapter = new MembershipInvoiceAdapter(historyList, getActivity());
             binding.rvAIList.setAdapter(adapter);
         }

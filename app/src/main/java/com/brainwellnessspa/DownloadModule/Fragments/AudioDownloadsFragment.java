@@ -62,6 +62,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
@@ -127,6 +128,7 @@ public class AudioDownloadsFragment extends Fragment {
         BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
+        binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your downloaded audios will appear here");
         RefreshData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -353,6 +355,7 @@ public class AudioDownloadsFragment extends Fragment {
                     }
                 }
             };
+
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -430,6 +433,8 @@ public class AudioDownloadsFragment extends Fragment {
             }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                ComeScreenAccount = 0;
+                comefromDownload = "1";
                 if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
