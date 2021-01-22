@@ -81,8 +81,8 @@ public interface AudioDetailsDao {
 //    @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
 //    List<DownloadPlaylistDetails> getPlaylist(String PlaylistId);
 
-    @Query("SELECT * FROM playlist_table ORDER BY uid DESC")
-    LiveData<List<DownloadPlaylistDetails>> getAllPlaylist1();
+    @Query("SELECT DISTINCT(playlistID),playlistID,playlistName,playlistDesc,IsReminder,playlistMastercat,playlistSubcat,playlistImage,PlaylistImageDetails,totalAudio,totalDuration,totalhour,totalminute,created,download,`like` FROM playlist_table ORDER BY uid DESC")
+    LiveData<List<DownloadPlaylistDetailsUnique>> getAllPlaylist1();
 
 //    @Query("SELECT * FROM playlist_table ORDER BY uid DESC")
 //    List<DownloadPlaylistDetails> getAllPlaylist();

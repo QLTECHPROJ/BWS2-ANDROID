@@ -159,28 +159,42 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                     ctx.startActivity(i);
                                 } else {
-                                    callTransFrag(position, listModelList);
+                                    callTransFrag(position, listModelList,true);
                                 }
                             }
                         } else {
-                            isDisclaimer = 0;
                             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                             listModelList2.addAll(listModelList);
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                                MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-                                mainPlayModel.setID("0");
-                                mainPlayModel.setName("Disclaimer");
-                                mainPlayModel.setAudioFile("");
-                                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                                mainPlayModel.setAudiomastercat("");
-                                mainPlayModel.setAudioSubCategory("");
-                                mainPlayModel.setImageFile("");
-                                mainPlayModel.setLike("");
-                                mainPlayModel.setDownload("");
-                                mainPlayModel.setAudioDuration("00:48");
-                                listModelList2.add(position, mainPlayModel);
+                            boolean audioc= false;
+                            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                            mainPlayModel.setID("0");
+                            mainPlayModel.setName("Disclaimer");
+                            mainPlayModel.setAudioFile("");
+                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                            mainPlayModel.setAudiomastercat("");
+                            mainPlayModel.setAudioSubCategory("");
+                            mainPlayModel.setImageFile("");
+                            mainPlayModel.setLike("");
+                            mainPlayModel.setDownload("");
+                            mainPlayModel.setAudioDuration("00:48");
+                            listModelList2.add(position, mainPlayModel);
+                            if(isDisclaimer == 1){
+                                if (player != null) {
+                                    player.setPlayWhenReady(true);
+                                    audioc = false;
+                                }else{
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                        audioc = true;
+                                    }
+                                }
+                            }else {
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                    audioc = true;
+                                }
                             }
-                            callTransFrag(position, listModelList2);
+                            callTransFrag(position, listModelList2,audioc);
                         }
                     } else {
                         getMedia(audioPlay, AudioFlag, position);
@@ -236,7 +250,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                             pos = 0;
                         }
                         if (listModelList2.size() != 0) {
-                            callTransFrag(pos, listModelList2);
+                            callTransFrag(pos, listModelList2,true);
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
@@ -253,26 +267,43 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     } else {
                         pos = 0;
                     }
-                    isDisclaimer = 0;
-                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                        MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-                        mainPlayModel.setID("0");
-                        mainPlayModel.setName("Disclaimer");
-                        mainPlayModel.setAudioFile("");
-                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                        mainPlayModel.setAudiomastercat("");
-                        mainPlayModel.setAudioSubCategory("");
-                        mainPlayModel.setImageFile("");
-                        mainPlayModel.setLike("");
-                        mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("00:48");
-                        listModelList2.add(pos, mainPlayModel);
+
+                    MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    listModelList2.add(pos, mainPlayModel);
+                    boolean audioc= false;
+                    if(isDisclaimer == 1){
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            audioc = false;
+                        }else{
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                audioc = true;
+                            }
+                        }
+                    }else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+
+                            audioc = true;
+                        }
                     }
                     if (listModelList2.size() != 1) {
-                        callTransFrag(pos, listModelList2);
+                        callTransFrag(pos, listModelList2,audioc);
                     } else {
                         BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                     }
+
                 }
                 super.onPostExecute(aVoid);
             }
@@ -281,12 +312,13 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         st.execute();
     }
 
-    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
+    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList,boolean audioc) {
         try {
             miniPlayer = 1;
-            audioClick = true;
-
-            callNewPlayerRelease();
+            audioClick = audioc;
+            if (audioc) {
+                callNewPlayerRelease();
+            }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();

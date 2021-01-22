@@ -119,6 +119,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 detail.setPlaylistName(audioList.get(i).getPlaylistName());
                 detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
                 detail.setPlaylistImageDetails(audioList.get(i).getPlaylistImageDetails());
+                detail.setCreated(audioList.get(i).getCreated());
                 listModelList.add(detail);
             }
             PlaylistAdapter adapter = new PlaylistAdapter(listModelList, IsLock);

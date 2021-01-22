@@ -513,7 +513,7 @@ public class ViewAllAudioFragment extends Fragment {
                         if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                             callnewTrans(position, listModelList);
                         } else {
-                            callTransFrag(position, listModelList);
+                            callTransFrag(position, listModelList,true);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -529,7 +529,7 @@ public class ViewAllAudioFragment extends Fragment {
                         if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                             callnewTrans(position, listModelList);
                         } else {
-                            callTransFrag(position, listModelList);
+                            callTransFrag(position, listModelList,true);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -542,7 +542,7 @@ public class ViewAllAudioFragment extends Fragment {
                     if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                         callnewTrans(position, listModelList);
                     } else {
-                        callTransFrag(position, listModelList);
+                        callTransFrag(position, listModelList,true);
                     }
                 }
             });
@@ -599,28 +599,42 @@ public class ViewAllAudioFragment extends Fragment {
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
                     } else {
-                        callTransFrag(position, listModelList);
+                        callTransFrag(position, listModelList,true);
                     }
                 }
             } else {
-                isDisclaimer = 0;
                 ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                 listModelList2.addAll(listModelList);
-                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                    ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(position, mainPlayModel);
+                ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+                mainPlayModel.setID("0");
+                mainPlayModel.setName("Disclaimer");
+                mainPlayModel.setAudioFile("");
+                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                mainPlayModel.setAudiomastercat("");
+                mainPlayModel.setAudioSubCategory("");
+                mainPlayModel.setImageFile("");
+                mainPlayModel.setLike("");
+                mainPlayModel.setDownload("");
+                mainPlayModel.setAudioDuration("00:48");
+                listModelList2.add(position, mainPlayModel);
+                boolean audioc= false;
+                if(isDisclaimer == 1){
+                    if (player != null) {
+                        player.setPlayWhenReady(true);
+                        audioc = false;
+                    }else{
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            audioc = true;
+                        }
+                    }
+                }else {
+                    isDisclaimer = 0;
+                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        audioc = true;
+                    }
                 }
-                callTransFrag(position, listModelList2);
+                callTransFrag(position, listModelList2,audioc);
             }
         } else {
             if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)) {
@@ -668,7 +682,7 @@ public class ViewAllAudioFragment extends Fragment {
                         } else {
                             listModelList2.addAll(listModelList);
                         }
-                        callTransFrag(position, listModelList2);
+                        callTransFrag(position, listModelList2,true);
                     }
                 }
             } else {
@@ -691,27 +705,41 @@ public class ViewAllAudioFragment extends Fragment {
                     listModelList2.addAll(listModelList);
                 }
 
-                isDisclaimer = 0;
-                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                    ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(position, mainPlayModel);
+                ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+                mainPlayModel.setID("0");
+                mainPlayModel.setName("Disclaimer");
+                mainPlayModel.setAudioFile("");
+                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                mainPlayModel.setAudiomastercat("");
+                mainPlayModel.setAudioSubCategory("");
+                mainPlayModel.setImageFile("");
+                mainPlayModel.setLike("");
+                mainPlayModel.setDownload("");
+                mainPlayModel.setAudioDuration("00:48");
+                listModelList2.add(position, mainPlayModel);
+                boolean audioc= false;
+                if(isDisclaimer == 1){
+                    if (player != null) {
+                        player.setPlayWhenReady(true);
+                        audioc = false;
+                    }else{
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            audioc = true;
+                        }
+                    }
+                }else {
+                    isDisclaimer = 0;
+                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                     audioc = true;
+                    }
                 }
-                callTransFrag(position, listModelList2);
+                callTransFrag(position, listModelList2,audioc);
             }
         }
     }
 
-    private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
+    private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList,boolean audioc) {
         try {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -735,7 +763,7 @@ public class ViewAllAudioFragment extends Fragment {
                         } else {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                         }
-                        openMyFragment();
+                        openMyFragment(true);
                     } else {
                         listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
@@ -759,25 +787,38 @@ public class ViewAllAudioFragment extends Fragment {
                             editord.commit();
                             openOnlyFragment();
                         } else {
-                            openMyFragment();
+                            openMyFragment(true);
                         }
                     }
                 } else {
                     listModelList2 = new ArrayList<>();
                     listModelList2.addAll(listModelList);
-                    isDisclaimer = 0;
-                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                        mainPlayModel.setID("0");
-                        mainPlayModel.setName("Disclaimer");
-                        mainPlayModel.setAudioFile("");
-                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                        mainPlayModel.setAudiomastercat("");
-                        mainPlayModel.setAudioSubCategory("");
-                        mainPlayModel.setImageFile("");
-                        mainPlayModel.setLike("");
-                        mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("00:48");
-                        listModelList2.add(position, mainPlayModel);
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    listModelList2.add(position, mainPlayModel);
+                    if(isDisclaimer == 1){
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            audioc = false;
+                        }else{
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                audioc = true;
+                            }
+                        }
+                    }else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            audioc = true;
+                        }
                     }
                     json = gson.toJson(listModelList2);
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
@@ -789,7 +830,7 @@ public class ViewAllAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                     editor.commit();
-                    openMyFragment();
+                    openMyFragment(audioc);
                 }
             } else {
                 json = gson.toJson(listModelList);
@@ -829,10 +870,12 @@ public class ViewAllAudioFragment extends Fragment {
                 .commit();
     }
 
-    private void openMyFragment() {
+    private void openMyFragment(boolean audioc) {
         miniPlayer = 1;
-        audioClick = true;
-        callNewPlayerRelease();
+        audioClick = audioc;
+        if(audioc) {
+            callNewPlayerRelease();
+        }
         openOnlyFragment();
     }
 }

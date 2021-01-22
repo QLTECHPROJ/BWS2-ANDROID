@@ -1,6 +1,5 @@
 package com.brainwellnessspa.Services;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,21 +11,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.session.MediaSession;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcel;
-import android.os.ResultReceiver;
-import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.WebSettings;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -34,7 +25,6 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
@@ -48,8 +38,6 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
@@ -57,9 +45,6 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
-import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
-import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
-import com.google.android.exoplayer2.metadata.Metadata;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.gson.Gson;
@@ -69,10 +54,10 @@ import com.segment.analytics.Properties;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -81,7 +66,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
@@ -105,12 +89,12 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0;
     public static int percent;
-    public MediaMetadataCompat metadata;
     public static String PlayerCurrantAudioPostion = "0";
+    static Bitmap notification_artwork;
+    public MediaMetadataCompat metadata;
     Notification notification1;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
-    static Bitmap notification_artwork;
     /*MediaSessionCompat mediaSession = null; aa static valo j kaik locho lage 6 yaa
     haa ej lage 6 mane bi km k static che ne aetle ae dynamic set nai karva detu*/
 
@@ -156,6 +140,19 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                         }
                     }
                 } catch (Exception e) {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        try {
+                            URL url = new URL(songImg);
+                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                            InputStream is = null;
+                            is = connection.getInputStream();
+                            myBitmap = BitmapFactory.decodeStream(is);
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+                    } else {
+                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    }
                     e.printStackTrace();
                     Log.e("get BitMap Error: ", e.getMessage());
                 }
@@ -1137,7 +1134,7 @@ Appointment Audios dddd*/
                     editor.commit();
                     if (fileNameList.size() != 0) {
                         DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                        downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
+                        downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId);
                     }
                 }
             }

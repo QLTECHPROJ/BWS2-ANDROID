@@ -10,18 +10,14 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.Audio.AudioFragment;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -212,7 +208,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                     } else {
                         listModelList2.addAll(listModelList);
                     }
-                    callTransFrag(position, listModelList2);
+                    callTransFrag(position, listModelList2,true);
                 }
             }
         } else {
@@ -234,30 +230,48 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             } else {
                 listModelList2.addAll(listModelList);
             }
-            isDisclaimer = 0;
-            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-                mainPlayModel.setID("0");
-                mainPlayModel.setName("Disclaimer");
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                mainPlayModel.setAudiomastercat("");
-                mainPlayModel.setAudioSubCategory("");
-                mainPlayModel.setImageFile("");
-                mainPlayModel.setLike("");
-                mainPlayModel.setDownload("");
-                mainPlayModel.setAudioDuration("00:48");
-                listModelList2.add(position, mainPlayModel);
+
+            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+            mainPlayModel.setID("0");
+            mainPlayModel.setName("Disclaimer");
+            mainPlayModel.setAudioFile("");
+            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+            mainPlayModel.setAudiomastercat("");
+            mainPlayModel.setAudioSubCategory("");
+            mainPlayModel.setImageFile("");
+            mainPlayModel.setLike("");
+            mainPlayModel.setDownload("");
+            mainPlayModel.setAudioDuration("00:48");
+            boolean audioc= false;
+            listModelList2.add(position, mainPlayModel);
+            if(isDisclaimer == 1){
+                if (player != null) {
+                    player.setPlayWhenReady(true);
+                    audioc = false;
+                }else{
+                    isDisclaimer = 0;
+                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        audioc = true;
+                    }
+                }
+            }else {
+                isDisclaimer = 0;
+                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+
+                    audioc = true;
+                }
             }
-            callTransFrag(position, listModelList2);
+            callTransFrag(position, listModelList2,audioc);
         }
     }
 
-    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
+    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList, boolean audioc) {
         try {
             miniPlayer = 1;
-            audioClick = true;
-            callNewPlayerRelease();
+            audioClick = audioc;
+            if (audioc){
+                callNewPlayerRelease();
+            }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();

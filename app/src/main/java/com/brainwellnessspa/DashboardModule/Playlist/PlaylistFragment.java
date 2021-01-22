@@ -379,6 +379,7 @@ public class PlaylistFragment extends Fragment {
                     detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
                     detail.setPlaylistImageDetails(audioList.get(i).getPlaylistImageDetails());
                     detail.setPlaylistId(audioList.get(i).getPlaylistID());
+                    detail.setCreated(audioList.get(i).getCreated());
                     details.add(detail);
                 }
                 for (int i = 0; i < responseData.size(); i++) {

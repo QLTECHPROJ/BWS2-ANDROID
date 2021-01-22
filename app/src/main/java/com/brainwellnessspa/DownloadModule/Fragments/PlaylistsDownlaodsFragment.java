@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -80,7 +79,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Downloaded Playlist Viewed", p, CONSTANTS.screen);
-        binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
         RefreshData();
@@ -130,10 +128,35 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 .taskDao()
                 .getAllPlaylist1().observe(getActivity(), audioList -> {
 
-            if (audioList.size() != 0) {
-                getDataList(audioList);
-                binding.llError.setVisibility(View.GONE);
-                binding.rvDownloadsList.setVisibility(View.VISIBLE);
+            if (audioList != null) {
+                if (audioList.size() != 0) {
+                    List<DownloadPlaylistDetails> audioList1 = new ArrayList<>();
+                    for (int i = 0; i < audioList.size(); i++) {
+                        DownloadPlaylistDetails detail = new DownloadPlaylistDetails();
+                        detail.setPlaylistID(audioList.get(i).getPlaylistID());
+                        detail.setPlaylistName(audioList.get(i).getPlaylistName());
+                        detail.setPlaylistDesc(audioList.get(i).getPlaylistDesc());
+                        detail.setIsReminder(audioList.get(i).getPlaylistDesc());
+                        detail.setPlaylistMastercat(audioList.get(i).getPlaylistMastercat());
+                        detail.setPlaylistSubcat(audioList.get(i).getPlaylistSubcat());
+                        detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
+                        detail.setPlaylistImageDetails(audioList.get(i).getPlaylistImageDetails());
+                        detail.setTotalAudio(audioList.get(i).getTotalAudio());
+                        detail.setTotalDuration(audioList.get(i).getTotalDuration());
+                        detail.setTotalhour(audioList.get(i).getTotalhour());
+                        detail.setTotalminute(audioList.get(i).getTotalminute());
+                        detail.setCreated(audioList.get(i).getCreated());
+                        detail.setDownload(audioList.get(i).getDownload());
+                        detail.setLike(audioList.get(i).getLike());
+                        audioList1.add(detail);
+                    }
+                    getDataList(audioList1);
+                    binding.llError.setVisibility(View.GONE);
+                    binding.rvDownloadsList.setVisibility(View.VISIBLE);
+                } else {
+                    binding.llError.setVisibility(View.VISIBLE);
+                    binding.rvDownloadsList.setVisibility(View.GONE);
+                }
             } else {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);

@@ -681,33 +681,39 @@ public class MiniPlayerFragment extends Fragment {
     private void epAllClicks() {
         try {
             exoBinding.llPause.setOnClickListener(view -> {
-                player.setPlayWhenReady(false);
-                exoBinding.llPlay.setVisibility(View.VISIBLE);
-                exoBinding.llPause.setVisibility(View.GONE);
-                exoBinding.progressBar.setVisibility(View.GONE);
-                localIntent.putExtra("MyData", "pause");
-                localBroadcastManager.sendBroadcast(localIntent);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("audioId", mainPlayModelList.get(position).getID());
-                p.putValue("audioName", mainPlayModelList.get(position).getName());
-                p.putValue("audioDescription", "");
-                p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                p.putValue("position", GetCurrentAudioPosition());
-                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-                    p.putValue("audioType", "Downloaded");
+                if(player!=null) {
+                    player.setPlayWhenReady(false);
+                    exoBinding.llPlay.setVisibility(View.VISIBLE);
+                    exoBinding.llPause.setVisibility(View.GONE);
+                    exoBinding.progressBar.setVisibility(View.GONE);
+                    localIntent.putExtra("MyData", "pause");
+                    localBroadcastManager.sendBroadcast(localIntent);
+                    p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("audioId", mainPlayModelList.get(position).getID());
+                    p.putValue("audioName", mainPlayModelList.get(position).getName());
+                    p.putValue("audioDescription", "");
+                    p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+                    p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+                    p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+                    p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+                    p.putValue("position", GetCurrentAudioPosition());
+                    if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                        p.putValue("audioType", "Downloaded");
+                    } else {
+                        p.putValue("audioType", "Streaming");
+                    }
+                    p.putValue("source", GetSourceName(ctx));
+                    p.putValue("playerType", "Mini");
+                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("bitRate", "");
+                    p.putValue("sound", String.valueOf(hundredVolume));
+                    BWSApplication.addToSegment("Audio Paused", p, CONSTANTS.track);
                 } else {
-                    p.putValue("audioType", "Streaming");
+                    audioClick = true;
+                    miniPlayer = 1;
+                    GetAllMedia();
                 }
-                p.putValue("source", GetSourceName(ctx));
-                p.putValue("playerType", "Mini");
-                p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("bitRate", "");
-                p.putValue("sound", String.valueOf(hundredVolume));
-                BWSApplication.addToSegment("Audio Paused", p, CONSTANTS.track);
             });
 
 /*

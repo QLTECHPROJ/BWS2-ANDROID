@@ -128,7 +128,6 @@ public class AudioDownloadsFragment extends Fragment {
         BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
-        binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your downloaded audios will appear here");
         RefreshData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -167,6 +166,10 @@ public class AudioDownloadsFragment extends Fragment {
                     getDataList(audioList1, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList, IsLock);
                     binding.llError.setVisibility(View.GONE);
                     binding.rvDownloadsList.setVisibility(View.VISIBLE);
+                }
+                else {
+                    binding.llError.setVisibility(View.VISIBLE);
+                    binding.rvDownloadsList.setVisibility(View.GONE);
                 }
             } else {
                 binding.llError.setVisibility(View.VISIBLE);
@@ -816,7 +819,7 @@ public class AudioDownloadsFragment extends Fragment {
                     notifyItemRemoved(position);
                     dialog.dismiss();
                 } catch(Exception e){
-
+                    Log.e("REmove Catch",e.getMessage());
                 }
             });
             tvGoBack.setOnClickListener(v -> dialog.dismiss());
