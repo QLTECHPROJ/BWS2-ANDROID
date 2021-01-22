@@ -379,6 +379,7 @@ Appointment Audios dddd*/
         player.setForegroundMode(true);
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
+                .setContentType(C.CONTENT_TYPE_MUSIC)
                 .build();
         player.setAudioAttributes(audioAttributes, /* handleAudioFocus= */ true);
         player.setPlayWhenReady(true);
