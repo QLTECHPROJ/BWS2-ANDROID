@@ -88,16 +88,17 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
-public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnector.PlaybackPreparer */{
+public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnector.PlaybackPreparer */ {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
-    public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false;
+    public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false, serviceRemoved = false;
     public static Bitmap myBitmap = null;
+    public static Intent intent;
     public static PlayerNotificationManager playerNotificationManager;
     MediaSessionCompat mediaSession;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
-//    MediaSessionConnector mediaSessionConnector;
+    //    MediaSessionConnector mediaSessionConnector;
     public static String Name, Desc;
     public static boolean isprogressbar = false;
     public static String APP_SERVICE_STATUS = "Foreground";
@@ -130,34 +131,41 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     }
 
     public static Bitmap getMediaBitmap(Context ctx, String songImg) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
+        class GetMedia extends AsyncTask<String, Void, Bitmap> {
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Bitmap doInBackground(String... params) {
                 try {
                     if (songImg.equalsIgnoreCase("")) {
                         myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
                     } else {
                         if (BWSApplication.isNetworkConnected(ctx)) {
                             URL url = new URL(songImg);
-                            HttpURLConnection connection  = (HttpURLConnection) url.openConnection();
+                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                            connection.setDoInput(true);
+                            connection.connect();
                             InputStream is = connection.getInputStream();
-
                             myBitmap = BitmapFactory.decodeStream(is);
+                            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                                Log.e("HttpURLConnection", "Server returned HTTP " + connection.getResponseCode()
+                                        + " " + connection.getResponseMessage());
+                            } else {
+                                Log.e("HttpURLConnection", "null");
+                            }
                         } else {
-                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(),R.drawable.disclaimer);
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("get BitMap Error: ",e.getMessage());
+                    Log.e("get BitMap Error: ", e.getMessage());
                 }
                 return null;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                myBitmap = myBitmap;
-                super.onPostExecute(aVoid);
+            protected void onPostExecute(Bitmap result) {
+//                myBitmap = result;
+                super.onPostExecute(result);
             }
         }
 
@@ -398,7 +406,7 @@ Appointment Audios dddd*/
 //            bindService(playbackServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("Notification errrr: ",e.getMessage());
+                Log.e("Notification errrr: ", e.getMessage());
             }
         }
         /*ComponentName componentName = new ComponentName(ctx, PlayerJobService.class);
@@ -438,6 +446,7 @@ Appointment Audios dddd*/
         player.setForegroundMode(true);
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
+                .setContentType(C.CONTENT_TYPE_MUSIC)
                 .build();
 
         player.setAudioAttributes(audioAttributes, true);
@@ -516,7 +525,7 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
-                        Intent intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent = new Intent(ctx, AudioPlayerActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                 Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -551,6 +560,22 @@ Appointment Audios dddd*/
                         }
                         getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
                         Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+
+                        /*Thread thread = new Thread(() -> {
+                            try {
+                                Uri uri = Uri.parse(cover_url);
+                                Bitmap bitmap = Glide.with(context)
+                                        .asBitmap()
+                                        .load(uri)
+                                        .submit().get();
+                                callback.onBitmap(bitmap);
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        thread.start();*/
                         return myBitmap;
                     }
                 },
@@ -558,6 +583,7 @@ Appointment Audios dddd*/
                 new PlayerNotificationManager.NotificationListener() {
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
+//                        getMediaBitmap(ctx, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
                         notification1 = notification;
                     }
 
@@ -576,7 +602,7 @@ Appointment Audios dddd*/
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         }
-        if(position == mainPlayModelList1.size()-1){
+        if (position == mainPlayModelList1.size() - 1) {
             playerNotificationManager.setUseNextAction(false);
             playerNotificationManager.setUseNextActionInCompactView(true);
         }
@@ -588,15 +614,15 @@ Appointment Audios dddd*/
         playerNotificationManager.setUseNextActionInCompactView(true);
         playerNotificationManager.setUsePreviousAction(true);
         playerNotificationManager.setUsePreviousActionInCompactView(true);
-        ControlDispatcher controlDispatcher = new DefaultControlDispatcher(30000,30000);
+        ControlDispatcher controlDispatcher = new DefaultControlDispatcher(30000, 30000);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
         playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
         playerNotificationManager.setColor(Color.BLACK);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//        playerNotificationManager.setUseChronometer(true);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
 //        metadata = new MediaM
@@ -637,7 +663,7 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
-                        Intent intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent = new Intent(ctx, AudioPlayerActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                 Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -678,7 +704,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setUsePreviousAction(false);
         playerNotificationManager.setUseNextActionInCompactView(true);
         playerNotificationManager.setUsePreviousActionInCompactView(true);
-        ControlDispatcher controlDispatcher = new DefaultControlDispatcher(0,0);
+        ControlDispatcher controlDispatcher = new DefaultControlDispatcher(0, 0);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
 
         playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
@@ -686,8 +712,8 @@ Appointment Audios dddd*/
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        playerNotificationManager.setUseChronometer(true);
-        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//        playerNotificationManager.setUseChronometer(true);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
     }
@@ -702,10 +728,16 @@ Appointment Audios dddd*/
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("Start Command: ",e.getMessage());
+            Log.e("Start Command: ", e.getMessage());
         }
         serviceConected = true;
         return START_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+//        stopService(intent);
+        super.onTaskRemoved(rootIntent);
     }
 
     @Nullable
@@ -778,7 +810,7 @@ Appointment Audios dddd*/
                 if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                     Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
                     }.getType();
-                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type),arrayList2 = new ArrayList<>();
+                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();
 
                     int size = arrayList.size();
                     for (int i = 0; i < size; i++) {
@@ -821,7 +853,7 @@ Appointment Audios dddd*/
                 } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
                     Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
                     }.getType();
-                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type),arrayList2  = new ArrayList<>();
+                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();
 
                     int size = arrayList.size();
                     for (int i = 0; i < size; i++) {
@@ -864,7 +896,7 @@ Appointment Audios dddd*/
                 } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
                     Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
                     }.getType();
-                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type),arrayList2  = new ArrayList<>();
+                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();
 
                     int size = arrayList.size();
                     for (int i = 0; i < size; i++) {
@@ -904,10 +936,10 @@ Appointment Audios dddd*/
                     } else {
                         removeSharepref(ctx);
                     }
-                }else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
                     Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
                     }.getType();
-                    ArrayList<SearchBothModel.ResponseData> arrayList = gson.fromJson(json, type),arrayList2  = new ArrayList<>();
+                    ArrayList<SearchBothModel.ResponseData> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();
 
                     int size = arrayList.size();
                     for (int i = 0; i < size; i++) {
@@ -947,10 +979,10 @@ Appointment Audios dddd*/
                     } else {
                         removeSharepref(ctx);
                     }
-                }else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
                     Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
                     }.getType();
-                    ArrayList<SuggestedModel.ResponseData> arrayList = gson.fromJson(json, type),arrayList2  = new ArrayList<>();
+                    ArrayList<SuggestedModel.ResponseData> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();
 
                     int size = arrayList.size();
                     for (int i = 0; i < size; i++) {
@@ -993,7 +1025,7 @@ Appointment Audios dddd*/
                 } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                     Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
                     }.getType();
-                    ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type),arrayList2  = new ArrayList<>();
+                    ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();
 
                     int size = arrayList.size();
                     for (int i = 0; i < size; i++) {
@@ -1051,7 +1083,7 @@ Appointment Audios dddd*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(!isDownloading) {
+        if (!isDownloading) {
             getPending(ctx);
         }
         return AudioFlag;
@@ -1069,8 +1101,9 @@ Appointment Audios dddd*/
                     .getInstance(ctx)
                     .getaudioDatabase()
                     .taskDao()
-                    .getNotDownloadData("Complete").removeObserver(audioListx -> {});
-            if(audioList!=null) {
+                    .getNotDownloadData("Complete").removeObserver(audioListx -> {
+            });
+            if (audioList != null) {
                 notDownloadedData.addAll(audioList);
 
                 if (notDownloadedData.size() != 0 && !isDownloading) {

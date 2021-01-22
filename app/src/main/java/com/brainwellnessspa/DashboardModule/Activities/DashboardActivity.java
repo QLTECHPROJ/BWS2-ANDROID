@@ -41,13 +41,14 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.serviceRemoved;
 
 public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;
     public static boolean audioPause = false, audioClick = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
-    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "",New="";
+    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
     BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
     int BackClick = 0;
@@ -75,7 +76,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 
             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
         }
-        registerReceiver(myNetworkReceiver=new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver(myNetworkReceiver = new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
@@ -256,6 +257,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 
     @Override
     protected void onDestroy() {
+//        serviceRemoved = true;
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
         relesePlayer();
         unregisterReceiver(myNetworkReceiver);

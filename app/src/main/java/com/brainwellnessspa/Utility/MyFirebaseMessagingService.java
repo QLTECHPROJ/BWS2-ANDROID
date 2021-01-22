@@ -131,9 +131,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (IsLock.equalsIgnoreCase("1")) {
                     resultIntent = new Intent(this, DashboardActivity.class);
                     taskStackBuilder.addParentStack(DashboardActivity.class);
-                   /* resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                             Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);*/
+                            Intent.FLAG_ACTIVITY_NEW_TASK);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else if (IsLock.equalsIgnoreCase("2")) {

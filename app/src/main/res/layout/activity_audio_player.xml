@@ -135,6 +135,39 @@
                                     android:scaleType="fitXY" />
 
                                 <LinearLayout
+                                    android:id="@+id/llDisclaimer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginTop="@dimen/_13sdp"
+                                    android:paddingVertical="@dimen/_5sdp"
+                                    android:paddingHorizontal="@dimen/_13sdp"
+                                    android:gravity="center"
+                                    android:layout_marginRight="@dimen/_13sdp"
+                                    android:background="@drawable/disclaimer_background"
+                                    android:orientation="horizontal"
+                                    android:elevation="@dimen/_40sdp">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_13sdp"
+                                        android:layout_height="@dimen/_13sdp"
+                                        android:src="@drawable/ic_disclaimer_info_icon"
+                                        android:tint="@color/white"
+                                        android:scaleType="fitXY" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_light"
+                                        android:gravity="start"
+                                        android:paddingLeft="@dimen/_9sdp"
+                                        android:text="@string/Disclaimer"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
                                     android:id="@+id/llDirection"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -314,8 +347,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_download_play_icon"
-                            app:tint="@color/black"
-                            android:visibility="visible" />
+                            android:visibility="visible"
+                            app:tint="@color/black" />
                     </RelativeLayout>
 
 

@@ -2,12 +2,14 @@ package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,13 +17,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -235,6 +241,32 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         });
 
+        binding.llDisclaimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.full_desc_layout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                tvTitle.setText(R.string.Disclaimer);
+                tvDesc.setText(R.string.Disclaimer_text);
+                dialog.setOnKeyListener((view, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
+
+                tvClose.setOnClickListener(view1 -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
+            }
+        });
         binding.llDownload.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 if (IsLock.equalsIgnoreCase("1")) {
@@ -1567,6 +1599,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPause.setOnClickListener(view -> {
                 try {
                     player.setPlayWhenReady(false);
+                    int pss = player.getCurrentWindowIndex();
+                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -1595,6 +1629,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             });
+
             exoBinding.llForwardSec.setOnClickListener(view -> {
                 try {
                     if (player.getDuration() - player.getCurrentPosition() <= 30000) {
@@ -2351,15 +2386,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
-
                 if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
                     if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
                             && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-//                    playerNotificationManager.setPlayer(player);
                         player.seekTo(position, 0);
                     }
                     player.setPlayWhenReady(true);
-
+                    int pss = player.getCurrentWindowIndex();
+                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
