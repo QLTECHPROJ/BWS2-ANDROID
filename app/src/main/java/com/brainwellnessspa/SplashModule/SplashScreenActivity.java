@@ -262,29 +262,26 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void GetAllMedia() {
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(SplashScreenActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded1();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                    FileUtils.deleteDownloadedFile1(getApplicationContext(), downloadAudioDetailsList.get(i));
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe(this, audioList -> {
+            if (audioList.size() != 0) {
+                for (int i = 0; i < audioList.size(); i++) {
+                    FileUtils.deleteDownloadedFile(getApplicationContext(), audioList.get(i).getName());
                 }
-                DeletallLocalCart();
-                super.onPostExecute(aVoid);
             }
-        }
-        GetTask st = new GetTask();
-        st.execute();
+            SharedPreferences preferences11 = getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit1 = preferences11.edit();
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadName);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadUrl);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId);
+            edit1.clear();
+            edit1.commit();
+            DeletallLocalCart();
+
+        });
     }
 
     private void DeletallLocalCart() {

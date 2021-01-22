@@ -111,7 +111,10 @@ public interface APIInterface {
             @Field("PlanFlag") String planFlag,
             @Field("TokenId") String CardId,
             @Field("MobileNo") String MobileNo,
-            @Field("CountryCode") String CountryCode);
+            @Field("CountryCode") String CountryCode,
+            @Field("Token") String token,
+            @Field("DeviceType") String deviceType,
+            @Field("DeviceID") String deviceID);
 
     /* TODO CheckoutGetCodeActivity */
     @POST("signupcheckout")
@@ -193,7 +196,10 @@ public interface APIInterface {
     /* TODO AudioFragment */
     @POST("unlockaudiolist")
     @FormUrlEncoded
-    Call<UnlockAudioList> getUnLockAudioList(@Field("UserID") String userID);
+    Call<UnlockAudioList> getUnLockAudioList(@Field("UserID") String userID,
+                                             @Field("Token") String token,
+                                             @Field("DeviceType") String deviceType,
+                                             @Field("DeviceID") String deviceID);
 
 
     /* TODO PlaylistFragment */

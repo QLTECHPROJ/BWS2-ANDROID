@@ -710,110 +710,114 @@ public class AudioDownloadsFragment extends Fragment {
                         .taskDao()
                         .geAllData1("").removeObserver(audioList1 -> {
                 });*/
-                String AudioFile = listModelList.get(position).getAudioFile();
-                String AudioName = listModelList.get(position).getName();
                 try {
-                    if (fileNameList.size() != 0) {
-                        for (int i = 0; i < fileNameList.size(); i++) {
-                            if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                    String AudioFile = listModelList.get(position).getAudioFile();
+                    String AudioName = listModelList.get(position).getName();
+                    try {
+                        if (fileNameList.size() != 0) {
+                            for (int i = 0; i < fileNameList.size(); i++) {
+                                if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
 //                                if (downloadProgress <= 100) {
-                                    PRDownloader.cancel(downloadIdOne);
+                                        PRDownloader.cancel(downloadIdOne);
 //                                }
-                                } else {
-                                    fileNameList.remove(i);
-                                    playlistDownloadId.remove(i);
-                                    audiofilelist.remove(i);
-                                    callObserverMethod();
-                                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shared.edit();
-                                    Gson gson = new Gson();
-                                    String urlJson = gson.toJson(audiofilelist);
-                                    String nameJson = gson.toJson(fileNameList);
-                                    String playlistIdJson = gson.toJson(playlistDownloadId);
-                                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                                    editor.commit();
+                                    } else {
+                                        fileNameList.remove(i);
+                                        playlistDownloadId.remove(i);
+                                        audiofilelist.remove(i);
+                                        callObserverMethod();
+                                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        Gson gson = new Gson();
+                                        String urlJson = gson.toJson(audiofilelist);
+                                        String nameJson = gson.toJson(fileNameList);
+                                        String playlistIdJson = gson.toJson(playlistDownloadId);
+                                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                                        editor.commit();
+                                    }
                                 }
                             }
                         }
+                    } catch (Exception e) {
+                        Log.e("DownloadHangCrash", e.getMessage());
                     }
-                } catch (Exception e) {
-                    Log.e("DownloadHangCrash", e.getMessage());
-                }
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                try {
-                    Properties p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("audioId", listModelList.get(position).getID());
-                    p.putValue("audioName", listModelList.get(position).getName());
-                    p.putValue("audioDescription", "");
-                    p.putValue("audioDuration", listModelList.get(position).getAudioDuration());
-                    p.putValue("directions", listModelList.get(position).getAudioDirection());
-                    p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
-                    p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
-                    p.putValue("audioService", APP_SERVICE_STATUS);
-                    p.putValue("audioType", "Downloaded");
-                    p.putValue("bitRate", "");
-                    BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                    try {
+                        Properties p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("audioId", listModelList.get(position).getID());
+                        p.putValue("audioName", listModelList.get(position).getName());
+                        p.putValue("audioDescription", "");
+                        p.putValue("audioDuration", listModelList.get(position).getAudioDuration());
+                        p.putValue("directions", listModelList.get(position).getAudioDirection());
+                        p.putValue("masterCategory", listModelList.get(position).getAudiomastercat());
+                        p.putValue("subCategory", listModelList.get(position).getAudioSubCategory());
+                        p.putValue("audioService", APP_SERVICE_STATUS);
+                        p.putValue("audioType", "Downloaded");
+                        p.putValue("bitRate", "");
+                        BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                listModelList.remove(position);
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                    if (player != null) {
-                        player.removeMediaItem(position);
-                    }
-                    if (pos == position && position < listModelList.size() - 1) {
+                    listModelList.remove(position);
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        if (player != null) {
+                            player.removeMediaItem(position);
+                        }
+                        if (pos == position && position < listModelList.size() - 1) {
 //                                            pos = pos + 1;
-                        if (isDisclaimer == 1) {
+                            if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                        } else {
+                            } else {
+                                if (player != null) {
+//                                player.seekTo(pos);
+                                    callTransparentFrag(pos, listModelList);
+                                } else {
+                                    callTransFrag(pos, listModelList);
+                                }
+                            }
+                        } else if (pos == position && position == listModelList.size() - 1) {
+                            pos = 0;
+                            if (isDisclaimer == 1) {
+//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                            } else {
+                                if (player != null) {
+//                                player.seekTo(pos);
+                                    callTransparentFrag(pos, listModelList);
+                                } else {
+                                    callTransFrag(pos, listModelList);
+                                }
+                            }
+                        } else if (pos < position && pos < listModelList.size() - 1) {
                             if (player != null) {
 //                                player.seekTo(pos);
                                 callTransparentFrag(pos, listModelList);
                             } else {
                                 callTransFrag(pos, listModelList);
                             }
-                        }
-                    } else if (pos == position && position == listModelList.size() - 1) {
-                        pos = 0;
-                        if (isDisclaimer == 1) {
-//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                        } else {
+                        } else if (pos > position && pos == listModelList.size()) {
+                            pos = pos - 1;
                             if (player != null) {
 //                                player.seekTo(pos);
                                 callTransparentFrag(pos, listModelList);
                             } else {
                                 callTransFrag(pos, listModelList);
                             }
-                        }
-                    } else if (pos < position && pos < listModelList.size() - 1) {
-                        if (player != null) {
-//                                player.seekTo(pos);
-                            callTransparentFrag(pos, listModelList);
-                        } else {
-                            callTransFrag(pos, listModelList);
-                        }
-                    } else if (pos > position && pos == listModelList.size()) {
-                        pos = pos - 1;
-                        if (player != null) {
-//                                player.seekTo(pos);
-                            callTransparentFrag(pos, listModelList);
-                        } else {
-                            callTransFrag(pos, listModelList);
                         }
                     }
+                    deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
+                    notifyItemRemoved(position);
+                    dialog.dismiss();
+                } catch(Exception e){
+
                 }
-                deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
-                notifyItemRemoved(position);
-                dialog.dismiss();
             });
             tvGoBack.setOnClickListener(v -> dialog.dismiss());
             dialog.show();

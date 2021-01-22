@@ -42,6 +42,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;
 import com.brainwellnessspa.databinding.MainAudioLayoutBinding;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -340,7 +341,23 @@ public class AudioFragment extends Fragment {
 
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID);
+            SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+            String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+            if (TextUtils.isEmpty(fcm_id)) {
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
+                    String newToken = instanceIdResult.getToken();
+                    Log.e("newToken", newToken);
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                    editor.putString(CONSTANTS.Token, newToken); //Friend
+                    editor.apply();
+                    editor.commit();
+                });
+                SharedPreferences sharedPreferences3 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
+            }
+            String deviceid = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID, fcm_id, CONSTANTS.FLAG_ONE, deviceid);
             listCall1.enqueue(new Callback<UnlockAudioList>() {
                 @Override
                 public void onResponse(Call<UnlockAudioList> call, Response<UnlockAudioList> response) {

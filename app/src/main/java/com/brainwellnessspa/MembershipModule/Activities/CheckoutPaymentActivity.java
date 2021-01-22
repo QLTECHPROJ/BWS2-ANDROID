@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ReplacementSpan;
 import android.util.Log;
@@ -27,15 +29,18 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.AddPayment.AddPaymentActivity;
 import com.brainwellnessspa.AddPayment.Model.AddCardModel;
+import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityCheckoutPaymentBinding;
 import com.brainwellnessspa.databinding.YeardialogBinding;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 import com.stripe.android.Stripe;
@@ -204,10 +209,25 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                     public void onSuccess(Token token) {
                         strToken = token.getId();
                         Log.e("strToken.............", "" + strToken);
+                        SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                        String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                        if (TextUtils.isEmpty(fcm_id)) {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
+                                String newToken = instanceIdResult.getToken();
+                                Log.e("newToken", newToken);
+                                SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                                editor.putString(CONSTANTS.Token, newToken); //Friend
+                                editor.apply();
+                                editor.commit();
+                            });
+                            SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                            fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
+                        }
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
+                                String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                                 String countryCode = Code.replace("+", "");
-                                Call<RegisterModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode);
+                                Call<RegisterModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode, fcm_id, CONSTANTS.FLAG_ONE, deviceid);
                                 listCall.enqueue(new Callback<RegisterModel>() {
                                     @Override
                                     public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
@@ -248,6 +268,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 p.putValue("cardExpiry", binding.textMonth.getText().toString());
                                                 p.putValue("mobileNo", MobileNo);
                                                 BWSApplication.addToSegment("Payment Info Added", p, CONSTANTS.track);*/
+                                                GetAllMedia();
                                                 Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
                                                 startActivity(i);
                                                 finish();
@@ -275,6 +296,74 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+    public void GetAllMedia() {
+
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe(this, audioList -> {
+            if (audioList.size() != 0) {
+                for (int i = 0; i < audioList.size(); i++) {
+                    FileUtils.deleteDownloadedFile(getApplicationContext(), audioList.get(i).getName());
+                }
+            }
+            SharedPreferences preferences11 = getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit1 = preferences11.edit();
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadName);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadUrl);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId);
+            edit1.clear();
+            edit1.commit();
+            DeletallLocalCart();
+
+        });
+    }
+
+    private void DeletallLocalCart() {
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient
+                        .getInstance(CheckoutPaymentActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAll();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                DeletallLocalCart1();
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeletallCart st = new DeletallCart();
+        st.execute();
+    }
+
+    public void DeletallLocalCart1() {
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient
+                        .getInstance(CheckoutPaymentActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAllPlalist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeletallCart st = new DeletallCart();
+        st.execute();
     }
 
     @Override

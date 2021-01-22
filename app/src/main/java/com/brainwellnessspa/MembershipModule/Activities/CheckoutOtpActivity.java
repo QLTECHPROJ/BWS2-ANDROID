@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.brainwellnessspa.BWSApplication;
@@ -208,21 +209,19 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         });
 
         binding.btnSendCode.setOnClickListener(view -> {
-            SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+            SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
             String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
             if (TextUtils.isEmpty(fcm_id)) {
-                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, new OnSuccessListener<InstanceIdResult>() {
-                    @Override
-                    public void onSuccess(InstanceIdResult instanceIdResult) {
-                        String newToken = instanceIdResult.getToken();
-                        Log.e("newToken", newToken);
-                        SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
-                        editor.putString(CONSTANTS.Token, newToken); //Friend
-                        editor.apply();
-                        editor.commit();
-                    }
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
+                    String newToken = instanceIdResult.getToken();
+                    Log.e("newToken", newToken);
+                    SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                    editor.putString(CONSTANTS.Token, newToken); //Friend
+                    editor.apply();
+                    editor.commit();
                 });
-                fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
             }
             if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
