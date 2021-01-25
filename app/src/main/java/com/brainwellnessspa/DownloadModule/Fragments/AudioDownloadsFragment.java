@@ -642,7 +642,6 @@ public class AudioDownloadsFragment extends Fragment {
                             pos = 0;
                         }
                         isDisclaimer = 0;
-                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");
@@ -654,11 +653,28 @@ public class AudioDownloadsFragment extends Fragment {
                             mainPlayModel.setLike("");
                             mainPlayModel.setDownload("");
                             mainPlayModel.setAudioDuration("00:48");
-                            listModelList2.add(pos, mainPlayModel);
+                        boolean audioc = true;
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(position, mainPlayModel);
+                            } else {
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(position, mainPlayModel);
+                                }
+                            }
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(position, mainPlayModel);
+                            }
                         }
-
                         if (listModelList2.size() != 1) {
-                            callTransFrag(pos, listModelList2, true);
+                            callTransFrag(pos, listModelList2, audioc);
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }

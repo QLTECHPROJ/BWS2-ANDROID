@@ -2537,13 +2537,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         }
                     } else {
-                        isDisclaimer = 0;
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                            listModelList2.add(addDisclaimer);
-                        }
                         listModelList2.addAll(listModelList);
-                        callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID, true);
+                        boolean audioc= true;
+                        if(isDisclaimer == 1){
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(position, addDisclaimer);
+                            } else{
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(position, addDisclaimer);
+                                }
+                            }
+                        }else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(position, addDisclaimer);
+                            }
+                        }
+                        callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID, audioc);
                         SegmentTag();
                     }
                     isPlayPlaylist = 1;
@@ -2597,22 +2613,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     }
                 } else {
-                    isDisclaimer = 0;
-
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                    if (position != 0) {
-                        listModelList2.addAll(listModelList);
-                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                            listModelList2.add(pos, addDisclaimer);
+                    listModelList2.addAll(listModelList);
+                    boolean audioc= true;
+                    if(isDisclaimer == 1){
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            audioc = false;
+                            listModelList2.add(position, addDisclaimer);
+                        } else{
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(position, addDisclaimer);
+                            }
                         }
-                    } else {
-
+                    }else {
+                        isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                            listModelList2.add(addDisclaimer);
+                            audioc = true;
+                            listModelList2.add(position, addDisclaimer);
                         }
-                        listModelList2.addAll(listModelList);
                     }
-                    callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID, true);
+                    callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID, audioc);
                     SegmentTag();
                 }
                 isPlayPlaylist = 1;
@@ -2904,15 +2927,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     }
                                 }
                             } else {
-                                isDisclaimer = 0;
-
                                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-
-                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                    listModelList2.add(addDisclaimer);
-                                }
                                 listModelList2.addAll(listModelList);
-                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, true);
+                                boolean audioc= true;
+                                if(isDisclaimer == 1){
+                                    if (player != null) {
+                                        player.setPlayWhenReady(true);
+                                        audioc = false;
+                                        listModelList2.add(position, addDisclaimer);
+                                    } else{
+                                        isDisclaimer = 0;
+                                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                            audioc = true;
+                                            listModelList2.add(position, addDisclaimer);
+                                        }
+                                    }
+                                }else {
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(position, addDisclaimer);
+                                    }
+                                }
+                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID,audioc );
                                 SegmentTag();
                             }
                         } else {
@@ -2949,15 +2986,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 }
                             }
                         } else {
-                            isDisclaimer = 0;
-
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-
-                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                listModelList2.add(addDisclaimer);
-                            }
                             listModelList2.addAll(listModelList);
-                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, true);
+                            boolean audioc= true;
+                            if(isDisclaimer == 1){
+                                if (player != null) {
+                                    player.setPlayWhenReady(true);
+                                    audioc = false;
+                                    listModelList2.add(position, addDisclaimer);
+                                } else{
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(position, addDisclaimer);
+                                    }
+                                }
+                            }else {
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(position, addDisclaimer);
+                                }
+                            }
+                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, audioc);
                             SegmentTag();
                         }
                     }
@@ -3009,23 +3060,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 }
                             }
                         } else {
-                            isDisclaimer = 0;
-
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                            if (position != 0) {
-                                listModelList2.addAll(listModelList);
-
+                            listModelList2.addAll(listModelList);
+                            boolean audioc= true;
+                            if(isDisclaimer == 1){
+                                if (player != null) {
+                                    player.setPlayWhenReady(true);
+                                    audioc = false;
+                                    listModelList2.add(position, addDisclaimer);
+                                } else{
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(position, addDisclaimer);
+                                    }
+                                }
+                            }else {
+                                isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
                                     listModelList2.add(position, addDisclaimer);
                                 }
-                            } else {
-
-                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                    listModelList2.add(addDisclaimer);
-                                }
-                                listModelList2.addAll(listModelList);
                             }
-                            callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, true);
+                            callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, audioc);
                             SegmentTag();
                         }
                     } else {
@@ -3061,21 +3118,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         }
                     } else {
-                        isDisclaimer = 0;
-
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        if (position != 0) {
-                            listModelList2.addAll(listModelList);
+                        listModelList2.addAll(listModelList);
+                        boolean audioc= true;
+                        if(isDisclaimer == 1){
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(position, addDisclaimer);
+                            } else{
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(position, addDisclaimer);
+                                }
+                            }
+                        }else {
+                            isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
                                 listModelList2.add(position, addDisclaimer);
                             }
-                        } else {
-                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                listModelList2.add(addDisclaimer);
-                            }
-                            listModelList2.addAll(listModelList);
                         }
-                        callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, true);
+                        callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, audioc);
                         SegmentTag();
                     }
                 }
@@ -3222,22 +3287,28 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     } else {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        for (int i = 0; i < listModelList.size(); i++) {
-                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
-                                listModelList2.add(listModelList.get(i));
+                        listModelList2.addAll(listModelList);
+                        boolean audioc= true;
+                        if(isDisclaimer == 1){
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(position, addDisclaimer);
+                            } else{
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(position, addDisclaimer);
+                                }
+                            }
+                        }else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(position, addDisclaimer);
                             }
                         }
-                        if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                            pos = position;
-                        } else {
-                            pos = 0;
-                        }
-                        isDisclaimer = 0;
-
-                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                            listModelList2.add(pos, addDisclaimer);
-                        }
-                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, audioc);
                         SegmentTag();
                     }
                     super.onPostExecute(aVoid);
