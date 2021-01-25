@@ -641,7 +641,6 @@ public class AudioDownloadsFragment extends Fragment {
                         } else {
                             pos = 0;
                         }
-                        isDisclaimer = 0;
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");
@@ -691,11 +690,7 @@ public class AudioDownloadsFragment extends Fragment {
                 miniPlayer = 1;
                 audioClick = audioc;
                 if (audioc) {
-                    if (player != null) {
-                        player.stop();
-                        player.release();
-                        player = null;
-                    }
+                    callNewPlayerRelease();
                 }
 
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

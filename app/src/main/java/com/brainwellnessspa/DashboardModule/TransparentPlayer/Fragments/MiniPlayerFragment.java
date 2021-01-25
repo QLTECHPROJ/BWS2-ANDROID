@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,40 +107,20 @@ public class MiniPlayerFragment extends Fragment {
     Intent localIntent;
     boolean isPrepared = false;
     PlayerControlView playerControlView;
+    int counterinit = 0;
     Properties p;
     private long mLastClickTime = 0;
-    /*    Handler handler1, handler2;
-        //    boolean ismyDes = false;
-        Runnable UpdateSongTime2 = new Runnable() {
+        Handler handler1;
+        Runnable UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
-                handler2.removeCallbacks(UpdateSongTime2);
-    //            audioClick = true;
-                initializePlayerDisclaimer();
-                Log.e("runaa", "run");
-            }
-        };
-        /*    Handler handler1, handler2;
-            //    boolean ismyDes = false;
-            Runnable UpdateSongTime2 = new Runnable() {
-                @Override
-                public void run() {
-                    handler2.removeCallbacks(UpdateSongTime2);
-        //            audioClick = true;
-                    initializePlayerDisclaimer();
-                    Log.e("runaa", "run");
-                }
-            };
-
-            Runnable UpdateSongTime1 = new Runnable() {
-                @Override
-                public void run() {
-                    handler1.removeCallbacks(UpdateSongTime1);
-        //                audioClick = true;
+                handler1.removeCallbacks(UpdateSongTime1);
+                if (counterinit <= 3) {
                     initializePlayer();
                     Log.e("run  saa", "runasca");
                 }
-            };*/
+            }
+        };
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -169,7 +150,7 @@ public class MiniPlayerFragment extends Fragment {
         filesDownloaded = new ArrayList<>();
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
                 , R.layout.fragment_mini_exo_custom, binding.playerControlView, false);
-//        handler1 = new Handler();
+        handler1 = new Handler();
 //        handler2 = new Handler();
         playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         localIntent = new Intent("play_pause_Action");
@@ -652,6 +633,8 @@ public class MiniPlayerFragment extends Fragment {
                     exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
+                    counterinit = 0;
+                    handler1.removeCallbacks(UpdateSongTime1);
                 } else {
                     if (audioClick) {
                         exoBinding.progressBar.setVisibility(View.GONE);
@@ -664,11 +647,11 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.llPause.setVisibility(View.VISIBLE);
                         Log.e("PlayerINIT", "exoBinding.progressBar.setVisibility(View.GONE);");
                     }
+                    handler1.postDelayed(UpdateSongTime1, 2000);
                 }/*else if (isprogressbar) {
                 exoBinding.llPlay.setVisibility(View.GONE);
                 exoBinding.llPause.setVisibility(View.GONE);
                 exoBinding.progressBar.setVisibility(View.VISIBLE);
-                handler1.postDelayed(UpdateSongTime1, 2000);
             }*/
             }
             epAllClicks();

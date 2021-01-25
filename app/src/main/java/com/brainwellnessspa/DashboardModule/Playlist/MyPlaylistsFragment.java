@@ -276,8 +276,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
-        });
-
+        }); 
         binding.llMore.setOnClickListener(view13 -> {
             handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
@@ -618,8 +617,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onResume() {
-        binding.searchView.clearFocus();
-        searchEditText.setText("");
         binding.searchView.setQuery("", false);
 
         view.setFocusableInTouchMode(true);
@@ -680,52 +677,58 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
-        binding.searchView.clearFocus();
-        if (MyPlaylistIds.equalsIgnoreCase("")) {
-            if (comefrom_search == 2) {
-                Bundle bundle = new Bundle();
-                Fragment playlistFragment = new ViewAllPlaylistFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, playlistFragment)
-                        .commit();
-                bundle.putString("GetLibraryID", GetPlaylistLibraryID);
-                bundle.putString("MyDownloads", MyDownloads);
-                playlistFragment.setArguments(bundle);
+//        binding.searchView.clearFocus();
+        if(getActivity().getCurrentFocus() == searchEditText || getActivity().getCurrentFocus() == binding.searchView) {
+            searchEditText.clearFocus();
+            binding.searchView.clearFocus();
+            searchEditText.setText("");
+        }else {
+            if (MyPlaylistIds.equalsIgnoreCase("")) {
+                if (comefrom_search == 2) {
+                    Bundle bundle = new Bundle();
+                    Fragment playlistFragment = new ViewAllPlaylistFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, playlistFragment)
+                            .commit();
+                    bundle.putString("GetLibraryID", GetPlaylistLibraryID);
+                    bundle.putString("MyDownloads", MyDownloads);
+                    playlistFragment.setArguments(bundle);
 //            comefrom_search = 0;
-            } else if (comefrom_search == 1) {
-                Fragment fragment = new SearchFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .commit();
-                comefrom_search = 0;
-            } else if (comefrom_search == 0) {
-                Fragment fragment = new PlaylistFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .commit();
-                comefrom_search = 0;
-            } else if (comefrom_search == 4) {
-                Intent i = new Intent(getActivity(), LikeActivity.class);
-                ComeFrom_LikePlaylist = true;
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(i);
-                getActivity().finish();
-                //            comefrom_search = 0;
-            } else if (comefrom_search == 3) {
-                Intent i = new Intent(getActivity(), DownloadsActivity.class);
-                ComeFrom_Playlist = true;
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(i);
-                getActivity().finish();
-                //            comefrom_search = 0;
+                } else if (comefrom_search == 1) {
+                    Fragment fragment = new SearchFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .commit();
+                    comefrom_search = 0;
+                } else if (comefrom_search == 0) {
+                    Fragment fragment = new PlaylistFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .commit();
+                    comefrom_search = 0;
+                } else if (comefrom_search == 4) {
+                    Intent i = new Intent(getActivity(), LikeActivity.class);
+                    ComeFrom_LikePlaylist = true;
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(i);
+                    getActivity().finish();
+                    //            comefrom_search = 0;
+                } else if (comefrom_search == 3) {
+                    Intent i = new Intent(getActivity(), DownloadsActivity.class);
+                    ComeFrom_Playlist = true;
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(i);
+                    getActivity().finish();
+                    //            comefrom_search = 0;
+                }
+                RefreshPlaylist = false;
+            } else {
+                prepareData(UserID, PlaylistIDs);
+                MyPlaylistIds = "";
             }
-            RefreshPlaylist = false;
-        } else {
-            prepareData(UserID, PlaylistIDs);
-            MyPlaylistIds = "";
         }
     }
 
