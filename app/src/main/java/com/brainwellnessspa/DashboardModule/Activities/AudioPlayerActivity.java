@@ -203,7 +203,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPlay.setVisibility(View.GONE);
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.progressBar.setVisibility(View.VISIBLE);
-
             MakeArray2();
             GetAllMedia();
         } else {
@@ -1361,6 +1360,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     Log.e("PlayerINIT", "exoBinding.progressBar.setVisibility(View.GONE);");
                 }
+                callRepeatShuffle();
             }
             callAllDisable(true);
             epAllClicks();
@@ -1551,15 +1551,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
                 }
             });
-
-//        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
-//        player.setMediaItem(mediaItem1);
             callAllDisable(false);
-//        player.setMediaItems(mediaItemList, position, 0);
-//        player.setPlayWhenReady(true);
-//        player.prepare();
-//        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-//        AudioPlayerActivity.player = player;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1819,7 +1811,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
-                player.setRepeatMode(Player.REPEAT_MODE_OFF);
+                if(player!=null) {
+                    player.setRepeatMode(Player.REPEAT_MODE_OFF);
+                }
             } else if (IsRepeat.equalsIgnoreCase("0")) {
                 if (queuePlay) {
                     binding.llRepeat.setEnabled(false);
@@ -1832,8 +1826,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.llRepeat.setEnabled(true);
                     binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                } if(player!=null) {
+                    player.setRepeatMode(Player.REPEAT_MODE_ONE);
                 }
-                player.setRepeatMode(Player.REPEAT_MODE_ONE);
             } else if (IsRepeat.equalsIgnoreCase("1")) {
                 if (queuePlay) {
                     binding.llRepeat.setEnabled(false);
@@ -1850,7 +1845,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.llRepeat.setEnabled(true);
                     binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 }
-                player.setRepeatMode(Player.REPEAT_MODE_ALL);
+                if(player!=null) {
+                    player.setRepeatMode(Player.REPEAT_MODE_ALL);
+                }
             }
         }
     }
@@ -1903,7 +1900,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            } else
 //                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
-            player.setRepeatMode(Player.REPEAT_MODE_ONE);
+            if(player!=null) {
+                player.setRepeatMode(Player.REPEAT_MODE_ONE);
+            }
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             p = new Properties();
@@ -1943,7 +1942,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             editor.commit();
-            player.setRepeatMode(Player.REPEAT_MODE_ALL);
+            if(player!=null) {
+                player.setRepeatMode(Player.REPEAT_MODE_ALL);
+            }
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             p = new Properties();
             p.putValue("userId", UserID);
@@ -1977,7 +1978,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             } else
 //                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 editor.commit();
-            player.setRepeatMode(Player.REPEAT_MODE_OFF);
+            if(player!=null) {
+                player.setRepeatMode(Player.REPEAT_MODE_OFF);
+            }
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             p = new Properties();

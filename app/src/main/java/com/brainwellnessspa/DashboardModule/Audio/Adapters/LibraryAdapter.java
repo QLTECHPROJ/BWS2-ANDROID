@@ -242,22 +242,24 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
             mainPlayModel.setAudioDuration("00:48");
-            listModelList2.add(position, mainPlayModel);
-            boolean audioc= false;
+            boolean audioc= true;
             if(isDisclaimer == 1){
                 if (player != null) {
                     player.setPlayWhenReady(true);
                     audioc = false;
+                    listModelList2.add(position, mainPlayModel);
                 } else{
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                         audioc = true;
+                        listModelList2.add(position, mainPlayModel);
                     }
                 }
             }else {
                 isDisclaimer = 0;
                 if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                    audioc = true;
+                    listModelList2.add(position, mainPlayModel);
                 }
             }
             callTransFrag(position, listModelList2,audioc);

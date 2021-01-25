@@ -242,22 +242,23 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
             mainPlayModel.setAudioDuration("00:48");
-            boolean audioc= false;
-            listModelList2.add(position, mainPlayModel);
+            boolean audioc= true;
             if(isDisclaimer == 1){
                 if (player != null) {
                     player.setPlayWhenReady(true);
                     audioc = false;
+                    listModelList2.add(position, mainPlayModel);
                 }else{
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                         audioc = true;
+                        listModelList2.add(position, mainPlayModel);
                     }
                 }
             }else {
                 isDisclaimer = 0;
                 if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-
+                    listModelList2.add(position, mainPlayModel);
                     audioc = true;
                 }
             }

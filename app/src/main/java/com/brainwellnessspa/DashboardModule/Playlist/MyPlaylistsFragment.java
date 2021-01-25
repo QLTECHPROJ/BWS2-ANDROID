@@ -2514,10 +2514,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     player.setPlayWhenReady(true);
                                 } else
                                     player.setPlayWhenReady(true);
-                                callAddTransFrag();
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                            } else
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                miniPlayer = 1;
+                                audioClick = true;
+                            }
+                            callAddTransFrag();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             myAudioId = mData.get(0).getID();
                             if (player != null) {
@@ -2572,9 +2574,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 player.setPlayWhenReady(true);
                             } else
                                 player.setPlayWhenReady(true);
+                        } else {
+                            miniPlayer = 1;
+                            audioClick = true;
+                        }
                             callAddTransFrag();
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         myAudioId = mData.get(pos).getID();
@@ -2877,10 +2881,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                             player.setPlayWhenReady(true);
                                         } else
                                             player.setPlayWhenReady(true);
-                                        callAddTransFrag();
-                                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                                    } else
-                                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                    } else{
+                                        miniPlayer = 1;
+                                        audioClick = true;
+                                    }
+                                    callAddTransFrag();
+                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                                 } else {
                                     myAudioId = mData.get(0).getID();
                                     if (player != null) {
@@ -2920,10 +2926,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         player.setPlayWhenReady(true);
                                     } else
                                         player.setPlayWhenReady(true);
-                                    callAddTransFrag();
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                                } else
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                } else{
+                                    miniPlayer = 1;
+                                    audioClick = true;
+                                }
+                                callAddTransFrag();
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 myAudioId = mData.get(0).getID();
                                 if (player != null) {
@@ -2979,10 +2987,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         player.setPlayWhenReady(true);
                                     } else
                                         player.setPlayWhenReady(true);
-                                    callAddTransFrag();
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                                } else
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                 }  else{
+                                    miniPlayer = 1;
+                                    audioClick = true;
+                                }
+                                callAddTransFrag();
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 if (player != null) {
                                     player.seekTo(position, 0);
@@ -3029,10 +3039,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     player.setPlayWhenReady(true);
                                 } else
                                     player.setPlayWhenReady(true);
-                                callAddTransFrag();
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                            } else
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else{
+                                miniPlayer = 1;
+                                audioClick = true;
+                            }
+                            callAddTransFrag();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
                                 player.seekTo(position, 0);
@@ -3184,10 +3196,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     player.setPlayWhenReady(true);
                                 } else
                                     player.setPlayWhenReady(true);
-                                callAddTransFrag();
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                            } else
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                miniPlayer = 1;
+                                audioClick = true;
+                            }
+                            callAddTransFrag();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             myAudioId = listModelList.get(0).getID();
 
