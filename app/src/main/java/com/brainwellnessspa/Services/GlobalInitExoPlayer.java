@@ -110,6 +110,7 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
             player.stop();
             player.release();
             player = null;
+            PlayerINIT = false;
         }
     }
 
@@ -139,19 +140,6 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                         }
                     }
                 } catch (Exception e) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        try {
-                            URL url = new URL(songImg);
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                            InputStream is = null;
-                            is = connection.getInputStream();
-                            myBitmap = BitmapFactory.decodeStream(is);
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    } else {
-                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
-                    }
                     e.printStackTrace();
                     Log.e("get BitMap Error: ", e.getMessage());
                 }

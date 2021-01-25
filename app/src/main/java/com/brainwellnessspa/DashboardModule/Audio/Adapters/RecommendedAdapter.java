@@ -242,7 +242,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
             mainPlayModel.setAudioDuration("00:48");
-            boolean audioc= true;
+            boolean audioc = true;
             if(isDisclaimer == 1){
                 if (player != null) {
                     player.setPlayWhenReady(true);

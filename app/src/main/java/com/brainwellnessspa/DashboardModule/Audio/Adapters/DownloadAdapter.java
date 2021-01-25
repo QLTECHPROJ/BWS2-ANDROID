@@ -250,6 +250,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                             pos = position;
                         } else {
                             pos = 0;
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                         if (listModelList2.size() != 0) {
                             callTransFrag(pos, listModelList2,true);
@@ -268,6 +269,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                         pos = position;
                     } else {
                         pos = 0;
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                     }
 
                     MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
@@ -286,25 +288,25 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                         if (player != null) {
                             player.setPlayWhenReady(true);
                             audioc = false;
-                            listModelList2.add(position, mainPlayModel);
+                            listModelList2.add(pos, mainPlayModel);
                         }else{
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
-                                listModelList2.add(position, mainPlayModel);
+                                listModelList2.add(pos, mainPlayModel);
                             }
                         }
                     }else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                            listModelList2.add(position, mainPlayModel);
+                            listModelList2.add(pos, mainPlayModel);
                             audioc = true;
                         }
                     }
-                    if (listModelList2.size() != 1) {
-                        callTransFrag(pos, listModelList2,audioc);
-                    } else {
+                    if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
                         BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                    }else{
+                        callTransFrag(pos, listModelList2, audioc);
                     }
 
                 }

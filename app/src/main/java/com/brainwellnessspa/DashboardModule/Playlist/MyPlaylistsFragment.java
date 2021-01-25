@@ -343,10 +343,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.rvPlayLists2.setItemAnimator(new DefaultItemAnimator());
 
         callObserveMethodGetAllMedia();
-        binding.llDownloads.setOnClickListener(view1 -> {
-            callObserveMethodGetAllMedia();
-            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
-        });
 
         RefreshNew = New;
         if (New.equalsIgnoreCase("1")) {
@@ -901,6 +897,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
                             downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
                             setData(listModel.getResponseData());
+                            binding.llDownloads.setOnClickListener(view1 -> {
+                                callObserveMethodGetAllMedia();
+                                callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
+                            });
 
                         }
                     }
@@ -3273,7 +3273,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             myAudioId = listModelList.get(0).getID();
-
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                             for (int i = 0; i < listModelList.size(); i++) {
                                 if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
@@ -3284,35 +3283,53 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 pos = position;
                             } else {
                                 pos = 0;
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
-                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                            if (listModelList2.size() != 0) {
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
                             SegmentTag();
-
                         }
                     } else {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        listModelList2.addAll(listModelList);
+                        for (int i = 0; i < listModelList.size(); i++) {
+                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                                listModelList2.add(listModelList.get(i));
+                            }
+                        }
+                        if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                            pos = position;
+                        } else {
+                            pos = 0;
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
                         boolean audioc = true;
                         if (isDisclaimer == 1) {
                             if (player != null) {
                                 player.setPlayWhenReady(true);
                                 audioc = false;
-                                listModelList2.add(position, addDisclaimer);
+                                listModelList2.add(pos, addDisclaimer);
                             } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
-                                    listModelList2.add(position, addDisclaimer);
+                                    listModelList2.add(pos, addDisclaimer);
                                 }
                             }
                         } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
-                                listModelList2.add(position, addDisclaimer);
+                                listModelList2.add(pos, addDisclaimer);
                             }
                         }
-                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, audioc);
+                        if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
+                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
                         SegmentTag();
                     }
                     super.onPostExecute(aVoid);

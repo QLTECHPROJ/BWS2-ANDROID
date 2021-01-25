@@ -3,7 +3,6 @@ package com.brainwellnessspa.RoomDataBase;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
@@ -39,7 +38,7 @@ public interface AudioDetailsDao {
 
     @Query("SELECT DISTINCT Name FROM audio_table WHERE IsDownload =:IsDownload")
 // ORDER BY uid ASC
-        LiveData<List<String>> geAllDataBYDownloaded1(String IsDownload);
+    LiveData<List<String>> geAllDataBYDownloaded1(String IsDownload);
 
     @Insert
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
@@ -81,7 +80,7 @@ public interface AudioDetailsDao {
 //    @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
 //    List<DownloadPlaylistDetails> getPlaylist(String PlaylistId);
 
-    @Query("SELECT DISTINCT(playlistID),playlistID,playlistName,playlistDesc,IsReminder,playlistMastercat,playlistSubcat,playlistImage,PlaylistImageDetails,totalAudio,totalDuration,totalhour,totalminute,created,download,`like` FROM playlist_table ORDER BY uid DESC")
+    @Query("SELECT DISTINCT (PlaylistID),PlaylistID,PlaylistName,PlaylistDesc,IsReminder,PlaylistMastercat,PlaylistSubcat,PlaylistImage,PlaylistImageDetails,TotalAudio,TotalDuration,Totalhour,Totalminute,Created,Download,`Like` FROM playlist_table ORDER BY uid DESC")
     LiveData<List<DownloadPlaylistDetailsUnique>> getAllPlaylist1();
 
 //    @Query("SELECT * FROM playlist_table ORDER BY uid DESC")
@@ -94,16 +93,16 @@ public interface AudioDetailsDao {
     void updateMediaByDownloadProgress(String IsDownload, int DownloadProgress, String PlaylistId, String Name);
 
     @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
-    LiveData<List<DownloadPlaylistDetails>>  getCountDownloadProgress1(String IsDownload, String PlaylistId);
+    LiveData<List<DownloadPlaylistDetails>> getCountDownloadProgress1(String IsDownload, String PlaylistId);
 
     @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
-    int getCountDownloadProgress(String IsDownload,String PlaylistId);
+    int getCountDownloadProgress(String IsDownload, String PlaylistId);
 
     @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
-        LiveData<List<DownloadAudioDetails>> getDownloadProgress1(String AudioFile, String PlaylistId);
+    LiveData<List<DownloadAudioDetails>> getDownloadProgress1(String AudioFile, String PlaylistId);
 
     @Query("SELECT * FROM audio_table WHERE DownloadProgress <=:DownloadProgress")
-        LiveData<List<DownloadAudioDetails>> getDownloadProgressRemain(int DownloadProgress);
+    LiveData<List<DownloadAudioDetails>> getDownloadProgressRemain(int DownloadProgress);
 
     @Query("SELECT DownloadProgress FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
     int getDownloadProgress(String AudioFile, String PlaylistId);

@@ -996,34 +996,54 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 pos = position;
                             } else {
                                 pos = 0;
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
-                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName,true);
+                            if (listModelList2.size() != 0) {
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
                             SegmentTag();
+
                         }
                     } else {
                         ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                        listModelList2.addAll(listModelList);
-                        boolean audioc= true;
-                        if(isDisclaimer == 1){
+                        for (int i = 0; i < listModelList.size(); i++) {
+                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                                listModelList2.add(listModelList.get(i));
+                            }
+                        }
+                        if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                            pos = position;
+                        } else {
+                            pos = 0;
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
+                        boolean audioc = true;
+                        if (isDisclaimer == 1) {
                             if (player != null) {
                                 player.setPlayWhenReady(true);
                                 audioc = false;
-                                listModelList2.add(position, addDisclaimer);
-                            } else{
+                                listModelList2.add(pos, addDisclaimer);
+                            } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
-                                    listModelList2.add(position, addDisclaimer);
+                                    listModelList2.add(pos, addDisclaimer);
                                 }
                             }
-                        }else {
+                        } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
-                                listModelList2.add(position, addDisclaimer);
+                                listModelList2.add(pos, addDisclaimer);
                             }
                         }
-                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName,audioc);
+                        if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
+                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
                         SegmentTag();
                     }
                     notifyDataSetChanged();

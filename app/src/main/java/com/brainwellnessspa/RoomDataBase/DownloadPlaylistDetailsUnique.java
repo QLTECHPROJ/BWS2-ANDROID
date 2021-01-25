@@ -6,43 +6,44 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 public class DownloadPlaylistDetailsUnique implements Serializable {
-    private String playlistID;
-    private String playlistName;
-    private String playlistDesc;
+    private String PlaylistID;
+    private String PlaylistName;
+    private String PlaylistDesc;
     private String IsReminder;
-    private String playlistMastercat;
-    private String playlistSubcat;
-    private String playlistImage;
+    private String PlaylistMastercat;
+    private String PlaylistSubcat;
+    private String PlaylistImage;
     private String PlaylistImageDetails;
-    private String totalAudio;
-    private String totalDuration;
-    private String totalhour;
-    private String totalminute;
-    private String created;
-    private String download;
-    private String like;
+    private String TotalAudio;
+    private String TotalDuration;
+    private String Totalhour;
+    private String Totalminute;
+    private String Created;
+    private String Download;
+    private String Like;
+
     public String getPlaylistID() {
-        return playlistID;
+        return PlaylistID;
     }
 
     public void setPlaylistID(String playlistID) {
-        this.playlistID = playlistID;
+        PlaylistID = playlistID;
     }
 
     public String getPlaylistName() {
-        return playlistName;
+        return PlaylistName;
     }
 
     public void setPlaylistName(String playlistName) {
-        this.playlistName = playlistName;
+        PlaylistName = playlistName;
     }
 
     public String getPlaylistDesc() {
-        return playlistDesc;
+        return PlaylistDesc;
     }
 
     public void setPlaylistDesc(String playlistDesc) {
-        this.playlistDesc = playlistDesc;
+        PlaylistDesc = playlistDesc;
     }
 
     public String getIsReminder() {
@@ -54,27 +55,27 @@ public class DownloadPlaylistDetailsUnique implements Serializable {
     }
 
     public String getPlaylistMastercat() {
-        return playlistMastercat;
+        return PlaylistMastercat;
     }
 
     public void setPlaylistMastercat(String playlistMastercat) {
-        this.playlistMastercat = playlistMastercat;
+        PlaylistMastercat = playlistMastercat;
     }
 
     public String getPlaylistSubcat() {
-        return playlistSubcat;
+        return PlaylistSubcat;
     }
 
     public void setPlaylistSubcat(String playlistSubcat) {
-        this.playlistSubcat = playlistSubcat;
+        PlaylistSubcat = playlistSubcat;
     }
 
     public String getPlaylistImage() {
-        return playlistImage;
+        return PlaylistImage;
     }
 
     public void setPlaylistImage(String playlistImage) {
-        this.playlistImage = playlistImage;
+        PlaylistImage = playlistImage;
     }
 
     public String getPlaylistImageDetails() {
@@ -86,58 +87,58 @@ public class DownloadPlaylistDetailsUnique implements Serializable {
     }
 
     public String getTotalAudio() {
-        return totalAudio;
+        return TotalAudio;
     }
 
     public void setTotalAudio(String totalAudio) {
-        this.totalAudio = totalAudio;
+        TotalAudio = totalAudio;
     }
 
     public String getTotalDuration() {
-        return totalDuration;
+        return TotalDuration;
     }
 
     public void setTotalDuration(String totalDuration) {
-        this.totalDuration = totalDuration;
+        TotalDuration = totalDuration;
     }
 
     public String getTotalhour() {
-        return totalhour;
+        return Totalhour;
     }
 
     public void setTotalhour(String totalhour) {
-        this.totalhour = totalhour;
+        Totalhour = totalhour;
     }
 
     public String getTotalminute() {
-        return totalminute;
+        return Totalminute;
     }
 
     public void setTotalminute(String totalminute) {
-        this.totalminute = totalminute;
+        Totalminute = totalminute;
     }
 
     public String getCreated() {
-        return created;
+        return Created;
     }
 
     public void setCreated(String created) {
-        this.created = created;
+        Created = created;
     }
 
     public String getDownload() {
-        return download;
+        return Download;
     }
 
     public void setDownload(String download) {
-        this.download = download;
+        Download = download;
     }
 
     public String getLike() {
-        return like;
+        return Like;
     }
 
     public void setLike(String like) {
-        this.like = like;
+        Like = like;
     }
 }

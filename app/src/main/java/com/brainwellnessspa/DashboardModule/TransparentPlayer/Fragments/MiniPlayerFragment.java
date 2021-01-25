@@ -110,17 +110,17 @@ public class MiniPlayerFragment extends Fragment {
     int counterinit = 0;
     Properties p;
     private long mLastClickTime = 0;
-        Handler handler1;
-        Runnable UpdateSongTime1 = new Runnable() {
-            @Override
-            public void run() {
-                handler1.removeCallbacks(UpdateSongTime1);
-                if (counterinit <= 3) {
-                    initializePlayer();
-                    Log.e("run  saa", "runasca");
-                }
+    Handler handler1;
+    Runnable UpdateSongTime1 = new Runnable() {
+        @Override
+        public void run() {
+            handler1.removeCallbacks(UpdateSongTime1);
+            if (counterinit <= 3) {
+                initializePlayer();
+                Log.e("run  saa", "runasca");
             }
-        };
+        }
+    };
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
