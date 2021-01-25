@@ -202,10 +202,13 @@ public class LikeAudiosFragment extends Fragment {
         }
     }
 
-    private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Audio> listModelList) {
+    private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Audio> listModelList, boolean audioc) {
         try {
             miniPlayer = 1;
-            audioClick = true;
+            audioClick = audioc;
+            if (audioc) {
+                callNewPlayerRelease();
+            }
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -678,7 +681,7 @@ public class LikeAudiosFragment extends Fragment {
                     } else {
                         listModelList2.addAll(modelList);
                     }
-                    callTransFrag(pos, listModelList2);
+                    callTransFrag(pos, listModelList2, true);
 //                    }
                 }
             } else {
@@ -700,22 +703,36 @@ public class LikeAudiosFragment extends Fragment {
                 } else {
                     listModelList2.addAll(modelList);
                 }
-                isDisclaimer = 0;
-                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                    LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(pos, mainPlayModel);
+                LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
+                mainPlayModel.setID("0");
+                mainPlayModel.setName("Disclaimer");
+                mainPlayModel.setAudioFile("");
+                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                mainPlayModel.setAudiomastercat("");
+                mainPlayModel.setAudioSubCategory("");
+                mainPlayModel.setImageFile("");
+                mainPlayModel.setLike("");
+                mainPlayModel.setDownload("");
+                mainPlayModel.setAudioDuration("00:48");
+                listModelList2.add(pos, mainPlayModel);
+                boolean audioc = false;
+                if (isDisclaimer == 1) {
+                    if (player != null) {
+                        player.setPlayWhenReady(true);
+                        audioc = false;
+                    } else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            audioc = true;
+                        }
+                    }
+                } else {
+                    isDisclaimer = 0;
+                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        audioc = true;
+                    }
                 }
-                callTransFrag(pos, listModelList2);
+                callTransFrag(pos, listModelList2, audioc);
             }
         }
 

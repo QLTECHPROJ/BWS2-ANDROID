@@ -99,7 +99,7 @@ public class MiniPlayerFragment extends Fragment {
     List<File> filesDownloaded;
     ArrayList<MainPlayModel> mainPlayModelList, mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
+    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag= "", id= "", name, url = "", playFrom = "";
     int position, listSize;
     Boolean queuePlay, audioPlay;
     LocalBroadcastManager localBroadcastManager;
@@ -582,7 +582,7 @@ public class MiniPlayerFragment extends Fragment {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Log.e("End State: ",e.getMessage());
+                                Log.e("End State: ", e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
                       /*GetAllMedia();
@@ -674,14 +674,14 @@ public class MiniPlayerFragment extends Fragment {
             epAllClicks();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("init media State: ",e.getMessage());
+            Log.e("init media State: ", e.getMessage());
         }
     }
 
     private void epAllClicks() {
         try {
             exoBinding.llPause.setOnClickListener(view -> {
-                if(player!=null) {
+                if (player != null) {
                     player.setPlayWhenReady(false);
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
@@ -763,7 +763,7 @@ public class MiniPlayerFragment extends Fragment {
 */
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("ep all click State: ",e.getMessage());
+            Log.e("ep all click State: ", e.getMessage());
         }
     }
 
@@ -1145,7 +1145,7 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.progressBar.setVisibility(View.GONE);
                 player.setPlayWhenReady(true);
                 int pss = 0;
-                if(mainPlayModelList.size()==1 && position == 1){
+                if (mainPlayModelList.size() == 1 && position == 1) {
                     pss = 0;
                 }
                 if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
@@ -1985,7 +1985,7 @@ public class MiniPlayerFragment extends Fragment {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-            relesePlayer();
+        relesePlayer();
 //        }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

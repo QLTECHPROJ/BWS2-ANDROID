@@ -1169,11 +1169,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
-                                     String myPlaylist, String playlistID) {
+                                     String myPlaylist, String playlistID, boolean audioc) {
         miniPlayer = 1;
-        audioClick = true;
-
-        callNewPlayerRelease();
+        audioClick = audioc;
+        if(audioc) {
+            callNewPlayerRelease();
+        }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
@@ -1235,7 +1236,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                             player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
-                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID, true);
                                         }
                                     }
                                 } else if (pos == position && position == mData.size() - 1) {
@@ -1248,7 +1249,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                             player.setPlayWhenReady(true);
                                             saveToPref(pos, mData);
                                         } else {
-                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID, true);
                                         }
                                     }
                                 } else if (pos < position && pos < mData.size() - 1) {
@@ -2529,7 +2530,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 editor.commit();
                                 callAddTransFrag();
                             } else {
-                                callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "myPlaylist", PlaylistID);
+                                callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "myPlaylist", PlaylistID, true);
                                 SegmentTag();
                             }
                         }
@@ -2540,7 +2541,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             listModelList2.add(addDisclaimer);
                         }
                         listModelList2.addAll(listModelList);
-                        callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
+                        callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID, true);
                         SegmentTag();
                     }
                     isPlayPlaylist = 1;
@@ -2587,7 +2588,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             editor.commit();
                             callAddTransFrag();
                         } else {
-                            callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID);
+                            callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID, true);
                             SegmentTag();
                         }
                     }
@@ -2607,7 +2608,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                         listModelList2.addAll(listModelList);
                     }
-                    callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
+                    callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID, true);
                     SegmentTag();
                 }
                 isPlayPlaylist = 1;
@@ -2892,7 +2893,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         editor.commit();
                                         callAddTransFrag();
                                     } else {
-                                        callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID);
+                                        callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID, true);
                                         SegmentTag();
                                     }
                                 }
@@ -2905,7 +2906,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     listModelList2.add(addDisclaimer);
                                 }
                                 listModelList2.addAll(listModelList);
-                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, true);
                                 SegmentTag();
                             }
                         } else {
@@ -2935,7 +2936,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     editor.commit();
                                     callAddTransFrag();
                                 } else {
-                                    callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID);
+                                    callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID, true);
                                     SegmentTag();
                                 }
                             }
@@ -2948,7 +2949,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 listModelList2.add(addDisclaimer);
                             }
                             listModelList2.addAll(listModelList);
-                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, true);
                             SegmentTag();
                         }
                     }
@@ -2993,7 +2994,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     editor.commit();
                                     callAddTransFrag();
                                 } else {
-                                    callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                                    callTransparentFrag(position, ctx, listModelList, "", PlaylistID, true);
                                     SegmentTag();
                                 }
                             }
@@ -3014,7 +3015,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 }
                                 listModelList2.addAll(listModelList);
                             }
-                            callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
+                            callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, true);
                             SegmentTag();
                         }
                     } else {
@@ -3043,7 +3044,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 editor.commit();
                                 callAddTransFrag();
                             } else {
-                                callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                                callTransparentFrag(position, ctx, listModelList, "", PlaylistID, true);
                                 SegmentTag();
                             }
                         }
@@ -3062,7 +3063,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                             listModelList2.addAll(listModelList);
                         }
-                        callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
+                        callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, true);
                         SegmentTag();
                     }
                 }
@@ -3201,7 +3202,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else {
                                 pos = 0;
                             }
-                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID);
+                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
                             SegmentTag();
 
                         }
@@ -3222,7 +3223,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
                             listModelList2.add(pos, addDisclaimer);
                         }
-                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID);
+                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
                         SegmentTag();
                     }
                     super.onPostExecute(aVoid);

@@ -613,9 +613,7 @@ Appointment Audios dddd*/
         playerNotificationManager.setUsePreviousActionInCompactView(true);
         ControlDispatcher controlDispatcher = new DefaultControlDispatcher(30000, 30000);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
-        playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
-        playerNotificationManager.setColor(Color.BLACK);
-        playerNotificationManager.setColorized(true);
+        playerNotificationManager.setSmallIcon(R.drawable.app_logo_transparent);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 //        playerNotificationManager.setUseChronometer(true);
@@ -704,9 +702,7 @@ Appointment Audios dddd*/
         ControlDispatcher controlDispatcher = new DefaultControlDispatcher(0, 0);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
 
-        playerNotificationManager.setSmallIcon(R.drawable.ic_stat_white_logo_design);
-        playerNotificationManager.setColor(Color.BLACK);
-        playerNotificationManager.setColorized(true);
+        playerNotificationManager.setSmallIcon(R.drawable.app_logo_transparent);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 //        playerNotificationManager.setUseChronometer(true);

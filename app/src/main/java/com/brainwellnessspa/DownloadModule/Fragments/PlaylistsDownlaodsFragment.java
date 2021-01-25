@@ -253,19 +253,24 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             } else {
                 isMyDownloading = false;
             }
-            if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
-                    listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
-                            listModelList.get(position).getTotalhour().equalsIgnoreCase("")
-                            && listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
-                holder.binding.tvTime.setText("0 Audio | 0h 0m");
-            } else {
-                if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
-                    holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() + " Audio | "
-                            + listModelList.get(position).getTotalhour() + "h 0m");
+
+            try {
+                if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
+                        listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
+                                listModelList.get(position).getTotalhour().equalsIgnoreCase("")
+                                && listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+                    holder.binding.tvTime.setText("0 Audio | 0h 0m");
                 } else {
-                    holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() +
-                            " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+                    if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+                        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() + " Audio | "
+                                + listModelList.get(position).getTotalhour() + "h 0m");
+                    } else {
+                        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() +
+                                " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,

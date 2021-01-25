@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Utility;
 
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -125,7 +126,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         activity = MyFirebaseMessagingService.this;
         taskStackBuilder = TaskStackBuilder.create(this);
         String channelId = context.getString(R.string.default_notification_channel_id);
+        CharSequence channelName = "Brain Wellness App";
+        int importance = 0;
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            importance = NotificationManager.IMPORTANCE_HIGH;
+        }
         try {
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
                 if (IsLock.equalsIgnoreCase("1")) {
@@ -167,19 +173,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             }
+
+//            Uri defaultSoundUri = Uri.parse("android.resource://"
+//                    + getApplicationContext().getPackageName() + "/" + R.raw.alert);
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-//            Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.alert);
-//            Uri soundUri = Uri.parse("android.resource://"
-//                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
-
+            long[] v = {500, 1000};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel = new NotificationChannel(channelId, "Name", NotificationManager.IMPORTANCE_DEFAULT);
-                notificationChannel.setDescription("BWS Notification");
-                notificationChannel.setShowBadge(true);
+                notificationChannel = new NotificationChannel(channelId, channelName, importance);
                 notificationChannel.enableLights(true);
                 notificationChannel.enableVibration(true);
+                notificationChannel.setDescription("YupIt Notification");
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationBuilder = new NotificationCompat.Builder(this, notificationChannel.getId());
             } else {
@@ -191,23 +195,42 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     notificationManager.createNotificationChannel(notificationChannel);
                 }
             }
-            notificationBuilder.setSmallIcon(R.drawable.square_app_icon);
+
+            notificationBuilder.setSmallIcon(R.drawable.app_logo_transparent);
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentTitle(title);
-            notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+            notificationBuilder.setOngoing(true);
+            notificationBuilder.setDefaults(Notification.DEFAULT_SOUND);
             notificationBuilder.setContentText(message);
             notificationBuilder.setColor(getResources().getColor(R.color.blue));
             notificationBuilder.setAutoCancel(true);
             notificationBuilder.setSound(defaultSoundUri);
+            notificationBuilder.setVibrate(v);
             notificationBuilder.setChannelId(channelId);
             notificationBuilder.setContentIntent(resultPendingIntent);
 
             Notification notification = notificationBuilder.build();
-
+            notification.flags = Notification.DEFAULT_SOUND;
+            /*notification.flags = Notification.FLAG_AUTO_CANCEL;
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if(alarmSound == null){
+                alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if(alarmSound == null){
+                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                }
+            }
+            notification.sound = alarmSound;
+            notification.defaults |= Notification.DEFAULT_VIBRATE;*/
             if (notificationManager != null) {
                 notificationManager.notify(Integer.parseInt(m), notification);
             }
+
+//            Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.alert);
+//            Uri soundUri = Uri.parse("android.resource://"
+//                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
+
+
         } catch (Exception e) {
             e.printStackTrace();
 //            Toast.makeText(context, e.getMessage() + channelId, Toast.LENGTH_SHORT).show();

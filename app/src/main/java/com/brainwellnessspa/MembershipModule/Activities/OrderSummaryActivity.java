@@ -63,23 +63,27 @@ public class OrderSummaryActivity extends AppCompatActivity {
         }
         BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen);
 
-        if (!comeFrom.equalsIgnoreCase("")) {
-            binding.tvTrialPeriod.setVisibility(View.GONE);
-            binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
-            binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
-            binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
-            binding.tvSubName.setText(listModelList2.get(position).getSubName());
-            binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
-            binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
-        } else {
-            binding.tvTrialPeriod.setVisibility(View.VISIBLE);
-            binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
-            binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
-            binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
-            binding.tvSubName.setText(listModelList.get(position).getSubName());
-            binding.tvTrialPeriod.setText(TrialPeriod);
-            binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
-            binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
+        try {
+            if (!comeFrom.equalsIgnoreCase("")) {
+                binding.tvTrialPeriod.setVisibility(View.GONE);
+                binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
+                binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
+                binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
+                binding.tvSubName.setText(listModelList2.get(position).getSubName());
+                binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+                binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+            } else {
+                binding.tvTrialPeriod.setVisibility(View.VISIBLE);
+                binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
+                binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
+                binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
+                binding.tvSubName.setText(listModelList.get(position).getSubName());
+                binding.tvTrialPeriod.setText(TrialPeriod);
+                binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
+                binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         binding.llBack.setOnClickListener(view -> {
@@ -94,46 +98,50 @@ public class OrderSummaryActivity extends AppCompatActivity {
         });
 
         binding.btnCheckout.setOnClickListener(view -> {
-            Properties p1 = new Properties();
-            if (!comeFrom.equalsIgnoreCase("")) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
+            try {
+                Properties p1 = new Properties();
+                if (!comeFrom.equalsIgnoreCase("")) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    p1.putValue("plan", listModelList2);
+                    p1.putValue("planStartDt ", "");
+                    p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
+                    p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
+                    p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
+                    Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
+                    i.putExtra("ComesTrue", ComesTrue);
+                    i.putExtra("comeFrom", "membership");
+                    i.putParcelableArrayListExtra("PlanData", listModelList2);
+                    i.putExtra("TrialPeriod", "");
+                    i.putExtra("position", position);
+                    startActivity(i);
+                    finish();
+                } else {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    p1.putValue("plan", listModelList);
+                    p1.putValue("planStartDt ", "");
+                    p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
+                    p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
+                    p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
+                    Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
+                    i.putExtra("Name", "");
+                    i.putExtra("Code", "");
+                    i.putExtra("MobileNo", "");
+                    i.putParcelableArrayListExtra("PlanData", listModelList);
+                    i.putExtra("TrialPeriod", TrialPeriod);
+                    i.putExtra("position", position);
+                    startActivity(i);
+                    finish();
                 }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                p1.putValue("plan", listModelList2);
-                p1.putValue("planStartDt ", "");
-                p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
-                p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
-                p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
-                i.putExtra("ComesTrue", ComesTrue);
-                i.putExtra("comeFrom", "membership");
-                i.putParcelableArrayListExtra("PlanData", listModelList2);
-                i.putExtra("TrialPeriod", "");
-                i.putExtra("position", position);
-                startActivity(i);
-                finish();
-            } else {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                p1.putValue("plan", listModelList);
-                p1.putValue("planStartDt ", "");
-                p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
-                p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
-                p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
-                Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
-                i.putExtra("Name", "");
-                i.putExtra("Code", "");
-                i.putExtra("MobileNo", "");
-                i.putParcelableArrayListExtra("PlanData", listModelList);
-                i.putExtra("TrialPeriod", TrialPeriod);
-                i.putExtra("position", position);
-                startActivity(i);
-                finish();
+                BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
         });
     }
 

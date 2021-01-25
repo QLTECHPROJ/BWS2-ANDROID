@@ -459,27 +459,41 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     } else {
                         ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                         listModelList2.add(AudiolistsModel.get(position));
-                        callTransFrag(0, listModelList2);
+                        callTransFrag(0, listModelList2, true);
                     }
                 } else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                     listModelList2.add(AudiolistsModel.get(position));
-                    isDisclaimer = 0;
-                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                        SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
-                        mainPlayModel.setID("0");
-                        mainPlayModel.setName("Disclaimer");
-                        mainPlayModel.setAudioFile("");
-                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                        mainPlayModel.setAudiomastercat("");
-                        mainPlayModel.setAudioSubCategory("");
-                        mainPlayModel.setImageFile("");
-                        mainPlayModel.setLike("");
-                        mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("00:48");
-                        listModelList2.add(mainPlayModel);
+                    SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    listModelList2.add(mainPlayModel);
+                    boolean audioc = false;
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            audioc = false;
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                audioc = true;
+                            }
+                        }
+                    } else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            audioc = true;
+                        }
                     }
-                    callTransFrag(0, listModelList2);
+                    callTransFrag(0, listModelList2, audioc);
                 }
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -491,11 +505,13 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             }
         }
 
-        private void callTransFrag(int position, ArrayList<SuggestedModel.ResponseData> listModelList) {
+        private void callTransFrag(int position, ArrayList<SuggestedModel.ResponseData> listModelList, boolean audioc) {
             try {
                 miniPlayer = 1;
-                audioClick = true;
-                callNewPlayerRelease();
+                audioClick = audioc;
+                if (audioc) {
+                    callNewPlayerRelease();
+                }
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();

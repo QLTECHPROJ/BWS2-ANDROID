@@ -385,6 +385,7 @@ public class AudioDetailActivity extends AppCompatActivity {
         });
 
     }
+
     private void getDownloadData() {
         try {
             SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -407,6 +408,7 @@ public class AudioDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     public List<String> GetAllMediaDownload() {
         DatabaseClient
                 .getInstance(this)
@@ -808,105 +810,109 @@ public class AudioDetailActivity extends AppCompatActivity {
     }
 
     private void callDownload() {
-        int i = position;
-        String audioFile = "", Name = "";
-        if (!comeFrom.equalsIgnoreCase("")) {
-            if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
-                Name = mDataDownload.get(i).getName();
-                audioFile = mDataDownload.get(i).getAudioFile();
-                if (audioFile.equalsIgnoreCase("")) {
-                    i = i + 1;
+        try {
+            int i = position;
+            String audioFile = "", Name = "";
+            if (!comeFrom.equalsIgnoreCase("")) {
+                if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
                     Name = mDataDownload.get(i).getName();
                     audioFile = mDataDownload.get(i).getAudioFile();
-                }
-            } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
-                Name = mDataLike.get(i).getName();
-                audioFile = mDataLike.get(i).getAudioFile();
-                if (audioFile.equalsIgnoreCase("")) {
-                    i = i + 1;
+                    if (audioFile.equalsIgnoreCase("")) {
+                        i = i + 1;
+                        Name = mDataDownload.get(i).getName();
+                        audioFile = mDataDownload.get(i).getAudioFile();
+                    }
+                } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
                     Name = mDataLike.get(i).getName();
                     audioFile = mDataLike.get(i).getAudioFile();
-                }
-            } else {
-                Name = mData.get(i).getName();
-                audioFile = mData.get(i).getAudioFile();
-                if (audioFile.equalsIgnoreCase("")) {
-                    i = i + 1;
+                    if (audioFile.equalsIgnoreCase("")) {
+                        i = i + 1;
+                        Name = mDataLike.get(i).getName();
+                        audioFile = mDataLike.get(i).getAudioFile();
+                    }
+                } else {
                     Name = mData.get(i).getName();
                     audioFile = mData.get(i).getAudioFile();
+                    if (audioFile.equalsIgnoreCase("")) {
+                        i = i + 1;
+                        Name = mData.get(i).getName();
+                        audioFile = mData.get(i).getAudioFile();
+                    }
                 }
-            }
-        } else {
-            Name = mainPlayModelList.get(i).getName();
-            audioFile = mainPlayModelList.get(i).getAudioFile();
-            if (audioFile.equalsIgnoreCase("")) {
-                i = i + 1;
+            } else {
                 Name = mainPlayModelList.get(i).getName();
                 audioFile = mainPlayModelList.get(i).getAudioFile();
+                if (audioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    Name = mainPlayModelList.get(i).getName();
+                    audioFile = mainPlayModelList.get(i).getAudioFile();
+                }
             }
-        }
-        if (downloadAudioDetailsList.contains(Name)) {
-            callDisableDownload();
-            SaveMedia(i, 100);
-        } else {
             if (downloadAudioDetailsList.contains(Name)) {
                 callDisableDownload();
                 SaveMedia(i, 100);
             } else {
-                List<String> url1 = new ArrayList<>();
-                List<String> name1 = new ArrayList<>();
-                List<String> downloadPlaylistId = new ArrayList<>();
-                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                Gson gson1 = new Gson();
-                String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
-                String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
-                String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
-                if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
-                    Type type = new TypeToken<List<String>>() {
-                    }.getType();
-                    List<String> fileNameList = gson1.fromJson(json, type);
-                    List<String> audioFile1 = gson1.fromJson(json1, type);
-                    List<String> playlistId1 = gson1.fromJson(json2, type);
-                    if (fileNameList.size() != 0) {
-                        url1.addAll(audioFile1);
-                        name1.addAll(fileNameList);
-                        downloadPlaylistId.addAll(playlistId1);
-                    }
-                }
-                boolean entryNot = false;
-                for (int f = 0; f < fileNameList.size(); f++) {
-                    if (fileNameList.get(f).equalsIgnoreCase(mainPlayModelList.get(position).getName())
-                            && playlistDownloadId.get(f).equalsIgnoreCase("")) {
-                        entryNot = true;
-                        break;
-                    }
-                }
-                if (!entryNot) {
-                    url1.add(audioFile);
-                    name1.add(Name);
-                    downloadPlaylistId.add("");
-                    if (url1.size() != 0) {
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        Gson gson = new Gson();
-                        String urlJson = gson.toJson(url1);
-                        String nameJson = gson.toJson(name1);
-                        String playlistIdJson = gson.toJson(downloadPlaylistId);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                        editor.commit();
-                    }
-//        fileNameList = url1;
-                    if (!isDownloading) {
-                        isDownloading = true;
-                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
-                    }
+                if (downloadAudioDetailsList.contains(Name)) {
                     callDisableDownload();
-                    SaveMedia(i, 0);
+                    SaveMedia(i, 100);
+                } else {
+                    List<String> url1 = new ArrayList<>();
+                    List<String> name1 = new ArrayList<>();
+                    List<String> downloadPlaylistId = new ArrayList<>();
+                    SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                    Gson gson1 = new Gson();
+                    String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+                    String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+                    String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+                    if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                        Type type = new TypeToken<List<String>>() {
+                        }.getType();
+                        List<String> fileNameList = gson1.fromJson(json, type);
+                        List<String> audioFile1 = gson1.fromJson(json1, type);
+                        List<String> playlistId1 = gson1.fromJson(json2, type);
+                        if (fileNameList.size() != 0) {
+                            url1.addAll(audioFile1);
+                            name1.addAll(fileNameList);
+                            downloadPlaylistId.addAll(playlistId1);
+                        }
+                    }
+                    boolean entryNot = false;
+                    for (int f = 0; f < fileNameList.size(); f++) {
+                        if (fileNameList.get(f).equalsIgnoreCase(mainPlayModelList.get(position).getName())
+                                && playlistDownloadId.get(f).equalsIgnoreCase("")) {
+                            entryNot = true;
+                            break;
+                        }
+                    }
+                    if (!entryNot) {
+                        url1.add(audioFile);
+                        name1.add(Name);
+                        downloadPlaylistId.add("");
+                        if (url1.size() != 0) {
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            String urlJson = gson.toJson(url1);
+                            String nameJson = gson.toJson(name1);
+                            String playlistIdJson = gson.toJson(downloadPlaylistId);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                            editor.commit();
+                        }
+//        fileNameList = url1;
+                        if (!isDownloading) {
+                            isDownloading = true;
+                            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                            downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                        }
+                        callDisableDownload();
+                        SaveMedia(i, 0);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

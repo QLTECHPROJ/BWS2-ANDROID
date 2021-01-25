@@ -1210,7 +1210,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Log.e("End State: ",e.getMessage());
+                                Log.e("End State: ", e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
                        /* GetAllMedia();
@@ -1366,7 +1366,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             epAllClicks();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("init player State: ",e.getMessage());
+            Log.e("init player State: ", e.getMessage());
         }
     }
 
@@ -1693,75 +1693,83 @@ public class AudioPlayerActivity extends AppCompatActivity {
             });
 
             exoBinding.llNext.setOnClickListener(view -> {
-                GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-                int pss = player.getCurrentWindowIndex();
-                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
-                if (player != null) {
-                    DatabaseClient
-                            .getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
-                    });
-                    if (player.hasNext()) {
-                        player.next();
-                        p = new Properties();
-                        p.putValue("userId", UserID);
-                        p.putValue("audioId", mainPlayModelList.get(pss).getID());
-                        p.putValue("audioName", mainPlayModelList.get(pss).getName());
-                        p.putValue("audioDuration", mainPlayModelList.get(pss).getAudioDuration());
-                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(pss).getName())) {
-                            p.putValue("audioType", "Downloaded");
-                        } else {
-                            p.putValue("audioType", "Streaming");
-                        }
-                        p.putValue("source", GetSourceName(ctx));
-                        p.putValue("playerType", "Main");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
-                        p.putValue("bitRate", "");
-                        p.putValue("sound", String.valueOf(hundredVolume));
-                        BWSApplication.addToSegment("Audio Next Clicked", p, CONSTANTS.track);
-                    }
-                }
-            });
-
-            exoBinding.llPrev.setOnClickListener(view -> {
-                GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-                int pss = player.getCurrentWindowIndex();
-                myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
-                if (player != null) {
-                    if (player.hasPrevious()) {
+                try {
+                    if (player != null) {
+                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                        int pss = player.getCurrentWindowIndex();
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                         DatabaseClient
                                 .getInstance(ctx)
                                 .getaudioDatabase()
                                 .taskDao()
                                 .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                         });
-                        player.previous();
-                        p = new Properties();
-                        p.putValue("userId", UserID);
-                        p.putValue("audioId", mainPlayModelList.get(pss).getID());
-                        p.putValue("audioName", mainPlayModelList.get(pss).getName());
-                        p.putValue("audioDuration", mainPlayModelList.get(pss).getAudioDuration());
-                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(pss).getName())) {
-                            p.putValue("audioType", "Downloaded");
-                        } else {
-                            p.putValue("audioType", "Streaming");
+                        if (player.hasNext()) {
+                            player.next();
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("audioId", mainPlayModelList.get(pss).getID());
+                            p.putValue("audioName", mainPlayModelList.get(pss).getName());
+                            p.putValue("audioDuration", mainPlayModelList.get(pss).getAudioDuration());
+                            if (downloadAudioDetailsList.contains(mainPlayModelList.get(pss).getName())) {
+                                p.putValue("audioType", "Downloaded");
+                            } else {
+                                p.putValue("audioType", "Streaming");
+                            }
+                            p.putValue("source", GetSourceName(ctx));
+                            p.putValue("playerType", "Main");
+                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("bitRate", "");
+                            p.putValue("sound", String.valueOf(hundredVolume));
+                            BWSApplication.addToSegment("Audio Next Clicked", p, CONSTANTS.track);
                         }
-                        p.putValue("source", GetSourceName(ctx));
-                        p.putValue("playerType", "Main");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
-                        p.putValue("bitRate", "");
-                        p.putValue("sound", String.valueOf(hundredVolume));
-                        BWSApplication.addToSegment("Audio Previous Clicked", p, CONSTANTS.track);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            exoBinding.llPrev.setOnClickListener(view -> {
+                try {
+                    if (player != null) {
+                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                        int pss = player.getCurrentWindowIndex();
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
+                        if (player.hasPrevious()) {
+                            DatabaseClient
+                                    .getInstance(ctx)
+                                    .getaudioDatabase()
+                                    .taskDao()
+                                    .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
+                            });
+                            player.previous();
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("audioId", mainPlayModelList.get(pss).getID());
+                            p.putValue("audioName", mainPlayModelList.get(pss).getName());
+                            p.putValue("audioDuration", mainPlayModelList.get(pss).getAudioDuration());
+                            if (downloadAudioDetailsList.contains(mainPlayModelList.get(pss).getName())) {
+                                p.putValue("audioType", "Downloaded");
+                            } else {
+                                p.putValue("audioType", "Streaming");
+                            }
+                            p.putValue("source", GetSourceName(ctx));
+                            p.putValue("playerType", "Main");
+                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("bitRate", "");
+                            p.putValue("sound", String.valueOf(hundredVolume));
+                            BWSApplication.addToSegment("Audio Previous Clicked", p, CONSTANTS.track);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("ep all State: ",e.getMessage());
+            Log.e("ep all State: ", e.getMessage());
         }
     }
 

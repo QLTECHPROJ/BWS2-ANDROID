@@ -410,27 +410,42 @@ public class AptAudioFragment extends Fragment {
                     } else {
                         ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
                         listModelList2.add(listModelList.get(position));
-                        callTransFrag(0, listModelList2);
+                        callTransFrag(0, listModelList2, true);
                     }
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
-                    listModelList2.add(listModelList.get(position));
-                    isDisclaimer = 0;
-                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
-                        AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
-                        mainPlayModel.setID("0");
-                        mainPlayModel.setName("Disclaimer");
-                        mainPlayModel.setAudioFile("");
-                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                        mainPlayModel.setAudiomastercat("");
-                        mainPlayModel.setAudioSubCategory("");
-                        mainPlayModel.setImageFile("");
-                        mainPlayModel.setLike("");
-                        mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("00:48");
-                        listModelList2.add(mainPlayModel);
+
+                    AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    listModelList2.add(mainPlayModel);
+                    boolean audioc = false;
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            audioc = false;
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                audioc = true;
+                            }
+                        }
+                    } else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            audioc = true;
+                        }
                     }
-                    callTransFrag(0, listModelList2);
+                    listModelList2.add(listModelList.get(position));
+                    callTransFrag(0, listModelList2, audioc);
                 }
             });
 
@@ -510,11 +525,13 @@ public class AptAudioFragment extends Fragment {
             });
         }
 
-        private void callTransFrag(int position, ArrayList<AppointmentDetailModel.Audio> listModelList) {
+        private void callTransFrag(int position, ArrayList<AppointmentDetailModel.Audio> listModelList, boolean audioc) {
             try {
                 miniPlayer = 1;
-                audioClick = true;
-                callNewPlayerRelease();
+                audioClick = audioc;
+                if (audioc) {
+                    callNewPlayerRelease();
+                }
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
