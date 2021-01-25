@@ -789,13 +789,13 @@ public class AddAudioActivity extends AppCompatActivity {
                             audioc = false;
                         } else {
                             isDisclaimer = 0;
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
                             }
                         }
                     } else {
                         isDisclaimer = 0;
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
                         }
                     }
@@ -1028,13 +1028,13 @@ public class AddAudioActivity extends AppCompatActivity {
                             audioc = false;
                         } else {
                             isDisclaimer = 0;
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
                             }
                         }
                     } else {
                         isDisclaimer = 0;
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
                         }
                     }

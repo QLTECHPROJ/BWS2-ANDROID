@@ -809,7 +809,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             isDisclaimer = 0;
 
                             List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
 
                                 listModelList2.add(addDisclaimer);
                             }
@@ -867,12 +867,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                         if (position != 0) {
                             listModelList2.addAll(listModelList);
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
 
                                 listModelList2.add(holder.getAdapterPosition(), addDisclaimer);
                             }
                         } else {
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
 
                                 listModelList2.add(addDisclaimer);
                             }
@@ -991,7 +991,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             pos = 0;
                         }
                         isDisclaimer = 0;
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
 
                             listModelList2.add(pos, addDisclaimer);
                         }

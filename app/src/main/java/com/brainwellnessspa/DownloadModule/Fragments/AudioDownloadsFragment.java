@@ -505,13 +505,13 @@ public class AudioDownloadsFragment extends Fragment {
                                     audioc = false;
                                 } else {
                                     isDisclaimer = 0;
-                                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                         audioc = true;
                                     }
                                 }
                             } else {
                                 isDisclaimer = 0;
-                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
                                 }
                             }
@@ -640,7 +640,7 @@ public class AudioDownloadsFragment extends Fragment {
                             pos = 0;
                         }
                         isDisclaimer = 0;
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");

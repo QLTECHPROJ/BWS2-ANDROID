@@ -248,14 +248,14 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                     listModelList2.add(position, mainPlayModel);
                 }else{
                     isDisclaimer = 0;
-                    if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                         audioc = true;
                         listModelList2.add(position, mainPlayModel);
                     }
                 }
             }else {
                 isDisclaimer = 0;
-                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                     audioc = true;
                     listModelList2.add(position, mainPlayModel);
                 }

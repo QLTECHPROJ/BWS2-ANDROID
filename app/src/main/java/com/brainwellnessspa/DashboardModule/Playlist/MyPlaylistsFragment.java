@@ -2539,7 +2539,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         isDisclaimer = 0;
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             listModelList2.add(addDisclaimer);
                         }
                         listModelList2.addAll(listModelList);
@@ -2602,12 +2602,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     if (position != 0) {
                         listModelList2.addAll(listModelList);
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             listModelList2.add(pos, addDisclaimer);
                         }
                     } else {
 
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             listModelList2.add(addDisclaimer);
                         }
                         listModelList2.addAll(listModelList);
@@ -2908,7 +2908,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
 
-                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     listModelList2.add(addDisclaimer);
                                 }
                                 listModelList2.addAll(listModelList);
@@ -2953,7 +2953,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
 
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 listModelList2.add(addDisclaimer);
                             }
                             listModelList2.addAll(listModelList);
@@ -3015,12 +3015,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             if (position != 0) {
                                 listModelList2.addAll(listModelList);
 
-                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     listModelList2.add(position, addDisclaimer);
                                 }
                             } else {
 
-                                if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     listModelList2.add(addDisclaimer);
                                 }
                                 listModelList2.addAll(listModelList);
@@ -3066,11 +3066,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         if (position != 0) {
                             listModelList2.addAll(listModelList);
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 listModelList2.add(position, addDisclaimer);
                             }
                         } else {
-                            if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 listModelList2.add(addDisclaimer);
                             }
                             listModelList2.addAll(listModelList);
@@ -3234,7 +3234,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                         isDisclaimer = 0;
 
-                        if (IsPlayDisclimer.equalsIgnoreCase("1") && isDisclaimer == 0) {
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             listModelList2.add(pos, addDisclaimer);
                         }
                         callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
