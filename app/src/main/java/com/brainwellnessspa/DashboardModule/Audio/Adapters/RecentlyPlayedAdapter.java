@@ -33,7 +33,6 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -190,7 +189,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 } else {
                     listModelList2.addAll(listModelList);
                 }
-                callTransFrag(position, listModelList2,true);
+                callTransFrag(position, listModelList2, true);
             }
 //            }
         } else {
@@ -223,35 +222,35 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
             mainPlayModel.setAudioDuration("00:48");
-            boolean audioc= true;
-            if(isDisclaimer == 1){
+            boolean audioc = true;
+            if (isDisclaimer == 1) {
                 if (player != null) {
                     player.setPlayWhenReady(true);
                     audioc = false;
                     listModelList2.add(position, mainPlayModel);
-                } else{
+                } else {
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                         audioc = true;
                         listModelList2.add(position, mainPlayModel);
                     }
                 }
-            }else {
+            } else {
                 isDisclaimer = 0;
                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                     audioc = true;
                     listModelList2.add(position, mainPlayModel);
                 }
             }
-            callTransFrag(position, listModelList2,audioc);
+            callTransFrag(position, listModelList2, audioc);
         }
     }
 
-    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList,boolean audioc) {
+    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList, boolean audioc) {
         try {
             miniPlayer = 1;
             audioClick = audioc;
-            if(audioc) {
+            if (audioc) {
                 callNewPlayerRelease();
             }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

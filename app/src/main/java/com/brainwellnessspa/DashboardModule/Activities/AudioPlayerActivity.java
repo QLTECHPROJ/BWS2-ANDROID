@@ -203,6 +203,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPlay.setVisibility(View.GONE);
             exoBinding.llPause.setVisibility(View.GONE);
             exoBinding.progressBar.setVisibility(View.VISIBLE);
+//            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             MakeArray2();
             GetAllMedia();
         } else {
@@ -285,7 +286,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
     }
-
     private void MakeArray2() {
         audioClick = false;
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -2141,7 +2141,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 audioFile1 = gson1.fromJson(json1, type);
                 playlistDownloadId = gson1.fromJson(json2, type);
             }
-            boolean entryNot = false;
+          /* boolean entryNot = false;
             for (int i = 0; i < fileNameList.size(); i++) {
                 if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
                         && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -2149,7 +2149,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     break;
                 }
             }
-            if (!entryNot) {
+            if (!entryNot) {*/
                 audioFile1.add(mainPlayModelList.get(position).getAudioFile());
                 fileNameList.add(mainPlayModelList.get(position).getName());
                 playlistDownloadId.add("");
@@ -2193,7 +2193,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 binding.ivDownloads.setVisibility(View.GONE);
                 GetMediaPer();
                 SaveMedia(0);
-            }
+          // }
         }
     }
 
@@ -2586,7 +2586,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     public List<String> GetAllMedia() {
-        class GetTask extends AsyncTask<Void, Void, Void> {
+      /*  class GetTask extends AsyncTask<Void, Void, Void> {
+
             @Override
             protected Void doInBackground(Void... voids) {
                 downloadAudioDetailsList = DatabaseClient
@@ -2599,19 +2600,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 MakeArray();
                 super.onPostExecute(aVoid);
             }
         }
         GetTask st = new GetTask();
-        st.execute();
-       /* DatabaseClient
+        st.execute();*/
+        DatabaseClient
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
                 .geAllDataBYDownloaded1("Complete").observe(this, audioList -> {
             downloadAudioDetailsList = audioList;
-//            audioClick = true;
             MakeArray();
             DatabaseClient
                     .getInstance(this)
@@ -2619,7 +2620,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .taskDao()
                     .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
             });
-        });*/
+        });
         return downloadAudioDetailsList;
     }
 
@@ -2660,6 +2661,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray() {
+         DatabaseClient
+            .getInstance(this)
+            .getaudioDatabase()
+            .taskDao()
+            .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {});
+
         audioClick = true;
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");

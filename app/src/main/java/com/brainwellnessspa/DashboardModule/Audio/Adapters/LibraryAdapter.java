@@ -230,7 +230,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             } else {
                 listModelList2.addAll(listModelList);
             }
-
             MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");
