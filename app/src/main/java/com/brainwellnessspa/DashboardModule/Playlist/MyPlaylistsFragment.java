@@ -621,6 +621,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.searchView.clearFocus();
         searchEditText.setText("");
         binding.searchView.setQuery("", false);
+
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -1172,7 +1173,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                      String myPlaylist, String playlistID, boolean audioc) {
         miniPlayer = 1;
         audioClick = audioc;
-        if(audioc) {
+        if (audioc) {
             callNewPlayerRelease();
         }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -2539,20 +2540,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
-                        boolean audioc= true;
-                        if(isDisclaimer == 1){
+                        boolean audioc = true;
+                        if (isDisclaimer == 1) {
                             if (player != null) {
                                 player.setPlayWhenReady(true);
                                 audioc = false;
                                 listModelList2.add(position, addDisclaimer);
-                            } else{
+                            } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
                                     listModelList2.add(position, addDisclaimer);
                                 }
                             }
-                        }else {
+                        } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
@@ -2594,8 +2595,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             miniPlayer = 1;
                             audioClick = true;
                         }
-                            callAddTransFrag();
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        callAddTransFrag();
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         myAudioId = mData.get(pos).getID();
                         if (player != null) {
@@ -2615,20 +2616,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 } else {
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     listModelList2.addAll(listModelList);
-                    boolean audioc= true;
-                    if(isDisclaimer == 1){
+                    boolean audioc = true;
+                    if (isDisclaimer == 1) {
                         if (player != null) {
                             player.setPlayWhenReady(true);
                             audioc = false;
                             listModelList2.add(position, addDisclaimer);
-                        } else{
+                        } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
                                 listModelList2.add(position, addDisclaimer);
                             }
                         }
-                    }else {
+                    } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
@@ -2904,7 +2905,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                             player.setPlayWhenReady(true);
                                         } else
                                             player.setPlayWhenReady(true);
-                                    } else{
+                                    } else {
                                         miniPlayer = 1;
                                         audioClick = true;
                                     }
@@ -2929,27 +2930,27 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else {
                                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                                 listModelList2.addAll(listModelList);
-                                boolean audioc= true;
-                                if(isDisclaimer == 1){
+                                boolean audioc = true;
+                                if (isDisclaimer == 1) {
                                     if (player != null) {
                                         player.setPlayWhenReady(true);
                                         audioc = false;
                                         listModelList2.add(position, addDisclaimer);
-                                    } else{
+                                    } else {
                                         isDisclaimer = 0;
                                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                             audioc = true;
                                             listModelList2.add(position, addDisclaimer);
                                         }
                                     }
-                                }else {
+                                } else {
                                     isDisclaimer = 0;
                                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                         audioc = true;
                                         listModelList2.add(position, addDisclaimer);
                                     }
                                 }
-                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID,audioc );
+                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, audioc);
                                 SegmentTag();
                             }
                         } else {
@@ -2963,7 +2964,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         player.setPlayWhenReady(true);
                                     } else
                                         player.setPlayWhenReady(true);
-                                } else{
+                                } else {
                                     miniPlayer = 1;
                                     audioClick = true;
                                 }
@@ -2988,20 +2989,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else {
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                             listModelList2.addAll(listModelList);
-                            boolean audioc= true;
-                            if(isDisclaimer == 1){
+                            boolean audioc = true;
+                            if (isDisclaimer == 1) {
                                 if (player != null) {
                                     player.setPlayWhenReady(true);
                                     audioc = false;
                                     listModelList2.add(position, addDisclaimer);
-                                } else{
+                                } else {
                                     isDisclaimer = 0;
                                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                         audioc = true;
                                         listModelList2.add(position, addDisclaimer);
                                     }
                                 }
-                            }else {
+                            } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
@@ -3038,7 +3039,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         player.setPlayWhenReady(true);
                                     } else
                                         player.setPlayWhenReady(true);
-                                 }  else{
+                                } else {
                                     miniPlayer = 1;
                                     audioClick = true;
                                 }
@@ -3062,20 +3063,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else {
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                             listModelList2.addAll(listModelList);
-                            boolean audioc= true;
-                            if(isDisclaimer == 1){
+                            boolean audioc = true;
+                            if (isDisclaimer == 1) {
                                 if (player != null) {
                                     player.setPlayWhenReady(true);
                                     audioc = false;
                                     listModelList2.add(position, addDisclaimer);
-                                } else{
+                                } else {
                                     isDisclaimer = 0;
                                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                         audioc = true;
                                         listModelList2.add(position, addDisclaimer);
                                     }
                                 }
-                            }else {
+                            } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
@@ -3096,7 +3097,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     player.setPlayWhenReady(true);
                                 } else
                                     player.setPlayWhenReady(true);
-                            } else{
+                            } else {
                                 miniPlayer = 1;
                                 audioClick = true;
                             }
@@ -3120,20 +3121,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
-                        boolean audioc= true;
-                        if(isDisclaimer == 1){
+                        boolean audioc = true;
+                        if (isDisclaimer == 1) {
                             if (player != null) {
                                 player.setPlayWhenReady(true);
                                 audioc = false;
                                 listModelList2.add(position, addDisclaimer);
-                            } else{
+                            } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
                                     listModelList2.add(position, addDisclaimer);
                                 }
                             }
-                        }else {
+                        } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
@@ -3288,20 +3289,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
-                        boolean audioc= true;
-                        if(isDisclaimer == 1){
+                        boolean audioc = true;
+                        if (isDisclaimer == 1) {
                             if (player != null) {
                                 player.setPlayWhenReady(true);
                                 audioc = false;
                                 listModelList2.add(position, addDisclaimer);
-                            } else{
+                            } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                     audioc = true;
                                     listModelList2.add(position, addDisclaimer);
                                 }
                             }
-                        }else {
+                        } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
