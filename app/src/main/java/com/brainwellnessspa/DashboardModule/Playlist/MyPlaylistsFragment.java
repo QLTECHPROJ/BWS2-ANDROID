@@ -2953,7 +2953,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         listModelList2.add(position, addDisclaimer);
                                     }
                                 }
-                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, audioc);
+                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistName, audioc);
                                 SegmentTag();
                             }
                         } else {
@@ -3059,7 +3059,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     editor.commit();
                                     callAddTransFrag();
                                 } else {
-                                    callTransparentFrag(position, ctx, listModelList, "", PlaylistID, true);
+                                    callTransparentFrag(position, ctx, listModelList, "", PlaylistName, true);
                                     SegmentTag();
                                 }
                             }
@@ -3086,7 +3086,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     listModelList2.add(position, addDisclaimer);
                                 }
                             }
-                            callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, audioc);
+                            callTransparentFrag(position, ctx, listModelList2, "", PlaylistName, audioc);
                             SegmentTag();
                         }
                     } else {
@@ -3286,7 +3286,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                             if (listModelList2.size() != 0) {
-                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
@@ -3326,7 +3326,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         }
                         if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
-                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
+                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
