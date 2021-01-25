@@ -877,14 +877,14 @@ public class AudioDetailActivity extends AppCompatActivity {
                         }
                     }
                     boolean entryNot = false;
-                    for (int f = 0; f < fileNameList.size(); f++) {
+                 /*   for (int f = 0; f < fileNameList.size(); f++) {
                         if (fileNameList.get(f).equalsIgnoreCase(mainPlayModelList.get(position).getName())
                                 && playlistDownloadId.get(f).equalsIgnoreCase("")) {
                             entryNot = true;
                             break;
                         }
                     }
-                    if (!entryNot) {
+                    if (!entryNot) {*/
                         url1.add(audioFile);
                         name1.add(Name);
                         downloadPlaylistId.add("");
@@ -908,7 +908,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                         }
                         callDisableDownload();
                         SaveMedia(i, 0);
-                    }
+//                    }
                 }
             }
         } catch (Exception e) {
