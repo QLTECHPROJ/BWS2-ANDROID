@@ -229,7 +229,6 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             } else {
                 listModelList2.addAll(listModelList);
             }
-            boolean audioc= true;
             MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");
@@ -241,6 +240,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
             mainPlayModel.setAudioDuration("00:48");
+            boolean audioc= true;
             if(isDisclaimer == 1){
                 if (player != null) {
                     player.setPlayWhenReady(true);

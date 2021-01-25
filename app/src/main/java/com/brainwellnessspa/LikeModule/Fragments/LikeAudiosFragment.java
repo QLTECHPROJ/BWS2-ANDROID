@@ -714,22 +714,24 @@ public class LikeAudiosFragment extends Fragment {
                 mainPlayModel.setLike("");
                 mainPlayModel.setDownload("");
                 mainPlayModel.setAudioDuration("00:48");
-                listModelList2.add(pos, mainPlayModel);
-                boolean audioc = false;
+                boolean audioc = true;
                 if (isDisclaimer == 1) {
                     if (player != null) {
                         player.setPlayWhenReady(true);
                         audioc = false;
+                        listModelList2.add(pos, mainPlayModel);
                     } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
+                            listModelList2.add(pos, mainPlayModel);
                         }
                     }
                 } else {
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                         audioc = true;
+                        listModelList2.add(pos, mainPlayModel);
                     }
                 }
                 callTransFrag(pos, listModelList2, audioc);

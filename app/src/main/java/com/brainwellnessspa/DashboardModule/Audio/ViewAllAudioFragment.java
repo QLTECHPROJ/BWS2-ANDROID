@@ -806,7 +806,6 @@ public class ViewAllAudioFragment extends Fragment {
                     mainPlayModel.setImageFile("");
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
                     if(isDisclaimer == 1){
                         if (player != null) {
                             player.setPlayWhenReady(true);

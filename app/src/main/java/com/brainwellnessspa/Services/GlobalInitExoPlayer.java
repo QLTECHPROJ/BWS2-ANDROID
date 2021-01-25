@@ -95,8 +95,7 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     Notification notification1;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
-    /*MediaSessionCompat mediaSession = null; aa static valo j kaik locho lage 6 yaa
-    haa ej lage 6 mane bi km k static che ne aetle ae dynamic set nai karva detu*/
+    /*MediaSessionCompat mediaSession = null;*/
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {

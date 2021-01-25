@@ -491,22 +491,24 @@ public class ViewAllSearchFragment extends Fragment {
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.add(mainPlayModel);
-                    boolean audioc = false;
+                    boolean audioc = true;
                     if (isDisclaimer == 1) {
                         if (player != null) {
                             player.setPlayWhenReady(true);
                             audioc = false;
+                            listModelList2.add(mainPlayModel);
                         } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
+                                listModelList2.add(mainPlayModel);
                             }
                         }
                     } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
+                            listModelList2.add(mainPlayModel);
                         }
                     }
                     listModelList2.add(AudiolistModel.get(position));
