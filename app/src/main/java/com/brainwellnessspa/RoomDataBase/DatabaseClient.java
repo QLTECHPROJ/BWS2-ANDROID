@@ -5,6 +5,9 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 
 public class DatabaseClient {

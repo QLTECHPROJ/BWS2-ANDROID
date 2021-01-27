@@ -176,6 +176,11 @@ public class AudioDownloadsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
+            DatabaseClient
+                    .getInstance(getActivity())
+                    .getaudioDatabase()
+                    .taskDao()
+                    .geAllDataz("").removeObserver(audioListx -> {});
         });
 
     }
@@ -992,9 +997,15 @@ public class AudioDownloadsFragment extends Fragment {
                         llError.setVisibility(View.VISIBLE);
                         rvDownloadsList.setVisibility(View.GONE);
                     }
+
+                    DatabaseClient
+                            .getInstance(getActivity())
+                            .getaudioDatabase()
+                            .taskDao()
+                            .geAllDataz("").removeObserver(audioListx -> {});
                 });
             }catch (Exception e){
-
+                Log.e("RemovedownloadException",e.getMessage());
             }
         }
 
