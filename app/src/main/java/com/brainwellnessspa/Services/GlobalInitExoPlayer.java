@@ -11,17 +11,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.MediaMetadata;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -50,8 +56,12 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.audio.AudioAttributes;
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -84,10 +94,10 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     public static Bitmap myBitmap = null;
     public static Intent intent;
     public static PlayerNotificationManager playerNotificationManager;
-    MediaSessionCompat mediaSession;
+    public static MediaSessionCompat mediaSession;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
-    //    MediaSessionConnector mediaSessionConnector;
+    public static MediaSessionConnector mediaSessionConnector;
     public static String Name, Desc;
     public static boolean isprogressbar = false;
     public static String APP_SERVICE_STATUS = "Foreground";
@@ -95,8 +105,6 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0;
     public static int percent;
     public static String PlayerCurrantAudioPostion = "0";
-    static Bitmap notification_artwork;
-    public MediaMetadataCompat metadata;
     Notification notification1;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
@@ -138,7 +146,7 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                                 Log.e("HttpURLConnection", "Server returned HTTP " + connection.getResponseCode()
                                         + " " + connection.getResponseMessage());
                             } else {
-                                Log.e("HttpURLConnection", "null"  + connection.getResponseCode()
+                                Log.e("HttpURLConnection", "null" + connection.getResponseCode()
                                         + " " + connection.getResponseMessage());
                             }
                         } else {
@@ -483,6 +491,19 @@ Appointment Audios dddd*/
 //        playerNotificationManager.setPlayer(player);
     }
 
+   /* @NonNull
+    @Override
+    public SimpleExoPlayer createPlayer(Context ctx) {
+        return new ToroExoPlayer(toro.context, renderersFactory, trackSelector, loadControl,
+                new DefaultBandwidthMeter(), ctx.getc.drmSessionManager, Util.getLooper());
+    }
+
+    public static Looper getCurrentOrMainLooper() {
+        @Nullable Looper myLooper = Looper.myLooper();
+        return myLooper != null ? myLooper : Looper.getMainLooper();
+    }
+*/
+
     public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList2) {
         int position = 0;
         SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -593,13 +614,37 @@ Appointment Audios dddd*/
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         }
         if (position == mainPlayModelList1.size() - 1) {
-            playerNotificationManager.setUseNextAction(false);
+            playerNotificationManager.setUseNextAction(true);
             playerNotificationManager.setUseNextActionInCompactView(true);
         }
 
-//        mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
-//        mediaSession.setActive(true);
-//        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+/*
+        try {
+            mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
+            mediaSession.setActive(true);
+            playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+
+            mediaSessionConnector = new MediaSessionConnector(mediaSession);
+            mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
+                @Override
+                public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
+                    Bundle extras = new Bundle();
+                    extras.putInt(MediaMetadataCompat.METADATA_KEY_DURATION, -1);
+
+                    return new MediaDescriptionCompat.Builder()
+                            .setMediaId(mainPlayModelList1.get(player.getCurrentWindowIndex()).getID())
+                            .setIconBitmap(myBitmap)
+                            .setTitle(mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
+                            .setDescription(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
+                            .setExtras(extras)
+                            .build();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+*/
+
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
         playerNotificationManager.setUsePreviousAction(true);
