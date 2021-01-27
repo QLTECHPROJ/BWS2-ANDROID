@@ -872,15 +872,15 @@ public class AudioDetailActivity extends AppCompatActivity {
                         downloadPlaylistId.addAll(playlistId1);
                     }
                 }
-                /*boolean entryNot = false;
+                boolean entryNot = false;
                 for (int f = 0; f < fileNameList.size(); f++) {
-                    if (fileNameList.get(f).equalsIgnoreCase(mainPlayModelList.get(position).getName())
+                    if (fileNameList.get(f).equalsIgnoreCase(Name)
                             && playlistDownloadId.get(f).equalsIgnoreCase("")) {
                         entryNot = true;
                         break;
                     }
                 }
-                if (!entryNot) {*/
+                if (!entryNot) {
                     url1.add(audioFile);
                 name1.add(Name);
                 downloadPlaylistId.add("");
@@ -904,7 +904,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                     }
                     callDisableDownload();
                     SaveMedia(i, 0);
-//                }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1414,7 +1414,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                         } else {
                             PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                         }
-                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId);
+                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId,audioFileName);
                         binding.cvImage.setVisibility(View.VISIBLE);
                         binding.llLike.setVisibility(View.VISIBLE);
                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
@@ -1633,7 +1633,7 @@ public class AudioDetailActivity extends AppCompatActivity {
 
     }
 
-    public void GetMedia(String AudioFile, Context ctx, String download, String PlayListId) {
+    public void GetMedia(String AudioFile, Context ctx, String download, String PlayListId, String audioFileName) {
         DatabaseClient
                 .getInstance(this)
                 .getaudioDatabase()
@@ -1643,11 +1643,13 @@ public class AudioDetailActivity extends AppCompatActivity {
                 callDisableDownload();
             } else {
                 boolean entryNot = false;
-                for (int i = 0; i < fileNameList.size(); i++) {
-                    if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
-                            && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                        entryNot = true;
-                        break;
+                if(fileNameList.size()!=0) {
+                    for (int i = 0; i < fileNameList.size(); i++) {
+                        if (fileNameList.get(i).equalsIgnoreCase(audioFileName)
+                                && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                            entryNot = true;
+                            break;
+                        }
                     }
                 }
                 if (!entryNot) {
