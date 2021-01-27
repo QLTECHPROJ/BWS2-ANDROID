@@ -113,7 +113,6 @@ public class AudioDownloadsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        callObserverMethod();
         super.onViewCreated(view, savedInstanceState);
     }
 

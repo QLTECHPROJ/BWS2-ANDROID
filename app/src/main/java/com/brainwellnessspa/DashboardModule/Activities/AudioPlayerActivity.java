@@ -131,6 +131,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Properties p;
     long oldSeekPosition = 0;
     Handler handler2;
+    public boolean downloadClick = false;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -267,21 +268,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 dialog.setCancelable(false);
             }
         });
-        binding.llDownload.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    ctx.startActivity(i);
-                } else if (IsLock.equalsIgnoreCase("2")) {
-                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                } else {
-                    callDownload();
-                }
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-            }
-        });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
@@ -968,7 +955,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                         }
-
+                        getDownloadData();
+                        GetMediaPer();
                         callButtonText(position);
                         p = new Properties();
                         p.putValue("userId", UserID);
@@ -1698,6 +1686,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                         });
                         if (player.hasNext()) {
+                            callButtonText(position + 1);
                             player.next();
                             p = new Properties();
                             p.putValue("userId", UserID);
@@ -1725,6 +1714,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPrev.setOnClickListener(view -> {
                 try {
                     if (player != null) {
+                        callButtonText(position - 1);
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
@@ -2122,6 +2112,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void callDownload() {
+        downloadClick = true;
         if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
             disableDownload();
             SaveMedia(100);
@@ -2205,7 +2196,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void SaveMedia(int progressx) {
-
+        downloadClick = true;
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -2395,6 +2386,21 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
             isDisclaimer = 0;
         }
+        binding.llDownload.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                if (IsLock.equalsIgnoreCase("1")) {
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    ctx.startActivity(i);
+                } else if (IsLock.equalsIgnoreCase("2")) {
+                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                } else {
+                    callDownload();
+                }
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            }
+        });
         exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
                 if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
@@ -2613,7 +2619,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 .taskDao()
                 .geAllDataBYDownloaded1("Complete").observe(this, audioList -> {
             downloadAudioDetailsList = audioList;
-            MakeArray();
+            if(!downloadClick) {
+                MakeArray();
+            }
             DatabaseClient
                     .getInstance(this)
                     .getaudioDatabase()

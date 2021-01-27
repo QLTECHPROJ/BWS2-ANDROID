@@ -852,64 +852,59 @@ public class AudioDetailActivity extends AppCompatActivity {
                 callDisableDownload();
                 SaveMedia(i, 100);
             } else {
-                if (downloadAudioDetailsList.contains(Name)) {
-                    callDisableDownload();
-                    SaveMedia(i, 100);
-                } else {
-                    List<String> url1 = new ArrayList<>();
-                    List<String> name1 = new ArrayList<>();
-                    List<String> downloadPlaylistId = new ArrayList<>();
-                    SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                    Gson gson1 = new Gson();
-                    String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
-                    String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
-                    String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
-                    if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
-                        Type type = new TypeToken<List<String>>() {
-                        }.getType();
-                        List<String> fileNameList = gson1.fromJson(json, type);
-                        List<String> audioFile1 = gson1.fromJson(json1, type);
-                        List<String> playlistId1 = gson1.fromJson(json2, type);
-                        if (fileNameList.size() != 0) {
-                            url1.addAll(audioFile1);
-                            name1.addAll(fileNameList);
-                            downloadPlaylistId.addAll(playlistId1);
-                        }
+                List<String> url1 = new ArrayList<>();
+                List<String> name1 = new ArrayList<>();
+                List<String> downloadPlaylistId = new ArrayList<>();
+                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                Gson gson1 = new Gson();
+                String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+                String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+                String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+                if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                    Type type = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> fileNameList = gson1.fromJson(json, type);
+                    List<String> audioFile1 = gson1.fromJson(json1, type);
+                    List<String> playlistId1 = gson1.fromJson(json2, type);
+                    if (fileNameList.size() != 0) {
+                        url1.addAll(audioFile1);
+                        name1.addAll(fileNameList);
+                        downloadPlaylistId.addAll(playlistId1);
                     }
-                    boolean entryNot = false;
-                 /*   for (int f = 0; f < fileNameList.size(); f++) {
-                        if (fileNameList.get(f).equalsIgnoreCase(mainPlayModelList.get(position).getName())
-                                && playlistDownloadId.get(f).equalsIgnoreCase("")) {
-                            entryNot = true;
-                            break;
-                        }
-                    }
-                    if (!entryNot) {*/
-                        url1.add(audioFile);
-                        name1.add(Name);
-                        downloadPlaylistId.add("");
-                        if (url1.size() != 0) {
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String urlJson = gson.toJson(url1);
-                            String nameJson = gson.toJson(name1);
-                            String playlistIdJson = gson.toJson(downloadPlaylistId);
-                            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                            editor.commit();
-                        }
-//        fileNameList = url1;
-                        if (!isDownloading) {
-                            isDownloading = true;
-                            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                            downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
-                        }
-                        callDisableDownload();
-                        SaveMedia(i, 0);
-//                    }
                 }
+                /*boolean entryNot = false;
+                for (int f = 0; f < fileNameList.size(); f++) {
+                    if (fileNameList.get(f).equalsIgnoreCase(mainPlayModelList.get(position).getName())
+                            && playlistDownloadId.get(f).equalsIgnoreCase("")) {
+                        entryNot = true;
+                        break;
+                    }
+                }
+                if (!entryNot) {*/
+                    url1.add(audioFile);
+                name1.add(Name);
+                downloadPlaylistId.add("");
+                if (url1.size() != 0) {
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String urlJson = gson.toJson(url1);
+                    String nameJson = gson.toJson(name1);
+                    String playlistIdJson = gson.toJson(downloadPlaylistId);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                    editor.commit();
+                }
+//        fileNast = url1;
+                    if (!isDownloading) {
+                        isDownloading = true;
+                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                    }
+                    callDisableDownload();
+                    SaveMedia(i, 0);
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -918,9 +913,10 @@ public class AudioDetailActivity extends AppCompatActivity {
 
     private void SaveMedia(int i, int progress) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
+            DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
             @Override
             protected Void doInBackground(Void... voids) {
-                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+
                 p = new Properties();
                 if (!comeFrom.equalsIgnoreCase("")) {
                     if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
@@ -1004,6 +1000,16 @@ public class AudioDetailActivity extends AppCompatActivity {
                 p.putValue("bitRate", "");
                 p.putValue("sound", String.valueOf(hundredVolume));
                 BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
+
+                DatabaseClient.getInstance(activity)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .insertMedia(downloadAudioDetails);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
                 SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -1060,15 +1066,6 @@ public class AudioDetailActivity extends AppCompatActivity {
                     }
 //                callAddTransFrag();
                 }
-                DatabaseClient.getInstance(activity)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .insertMedia(downloadAudioDetails);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
                 callDisableDownload();
                 super.onPostExecute(aVoid);
             }
