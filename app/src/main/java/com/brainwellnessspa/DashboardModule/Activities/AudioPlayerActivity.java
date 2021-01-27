@@ -1679,13 +1679,21 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
                         myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
-                        DatabaseClient
+
+                        if (player.hasNext()) {
+                            handler2.removeCallbacks(UpdateSongTime2);
+                            DatabaseClient
                                 .getInstance(ctx)
                                 .getaudioDatabase()
                                 .taskDao()
                                 .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
-                        });
-                        if (player.hasNext()) {
+                                });
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setVisibility(View.VISIBLE);
+                            binding.pbProgress.setVisibility(View.GONE);
                             callButtonText(position + 1);
                             player.next();
                             p = new Properties();
@@ -1714,7 +1722,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPrev.setOnClickListener(view -> {
                 try {
                     if (player != null) {
-                        callButtonText(position - 1);
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
@@ -1726,7 +1733,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     .taskDao()
                                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                             });
+                            handler2.removeCallbacks(UpdateSongTime2);
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setVisibility(View.VISIBLE);
+                            binding.pbProgress.setVisibility(View.GONE);
                             player.previous();
+                            callButtonText(position - 1);
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("audioId", mainPlayModelList.get(pss).getID());
