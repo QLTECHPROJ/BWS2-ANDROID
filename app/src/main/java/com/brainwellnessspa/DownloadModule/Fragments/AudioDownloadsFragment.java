@@ -925,7 +925,7 @@ public class AudioDownloadsFragment extends Fragment {
                             .getInstance(ctx)
                             .getaudioDatabase()
                             .taskDao()
-                            .getLastIdByuId1(audioFile).observe(getActivity(), audioList -> {
+                            .getLastIdByuId1(audioFile).observe((LifecycleOwner) ctx, audioList -> {
                         DatabaseClient
                                 .getInstance(ctx)
                                 .getaudioDatabase()
