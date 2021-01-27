@@ -196,6 +196,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             }
 
+            notificationBuilder.setOnlyAlertOnce(true);
+            notificationBuilder.setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL);
             notificationBuilder.setSmallIcon(R.drawable.app_logo_transparent);
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));

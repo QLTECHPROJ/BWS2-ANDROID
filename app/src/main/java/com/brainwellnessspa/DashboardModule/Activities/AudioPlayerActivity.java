@@ -132,6 +132,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     long oldSeekPosition = 0;
     Handler handler2;
     public boolean downloadClick = false;
+    private long mLastClickTime = 0;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -167,11 +168,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
                 handler2.postDelayed(this, 10000);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
     };
-    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,6 +273,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
     }
+
     private void MakeArray2() {
         audioClick = false;
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -1816,7 +1817,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
-                if(player!=null) {
+                if (player != null) {
                     player.setRepeatMode(Player.REPEAT_MODE_OFF);
                 }
             } else if (IsRepeat.equalsIgnoreCase("0")) {
@@ -1831,7 +1832,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.llRepeat.setEnabled(true);
                     binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-                } if(player!=null) {
+                }
+                if (player != null) {
                     player.setRepeatMode(Player.REPEAT_MODE_ONE);
                 }
             } else if (IsRepeat.equalsIgnoreCase("1")) {
@@ -1850,7 +1852,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.llRepeat.setEnabled(true);
                     binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 }
-                if(player!=null) {
+                if (player != null) {
                     player.setRepeatMode(Player.REPEAT_MODE_ALL);
                 }
             }
@@ -1905,7 +1907,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //            } else
 //                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
-            if(player!=null) {
+            if (player != null) {
                 player.setRepeatMode(Player.REPEAT_MODE_ONE);
             }
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
@@ -1947,7 +1949,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             editor.commit();
-            if(player!=null) {
+            if (player != null) {
                 player.setRepeatMode(Player.REPEAT_MODE_ALL);
             }
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
@@ -1983,7 +1985,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             } else
 //                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 editor.commit();
-            if(player!=null) {
+            if (player != null) {
                 player.setRepeatMode(Player.REPEAT_MODE_OFF);
             }
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -2156,50 +2158,50 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
             }
             if (!entryNot) {*/
-                audioFile1.add(mainPlayModelList.get(position).getAudioFile());
-                fileNameList.add(mainPlayModelList.get(position).getName());
-                playlistDownloadId.add("");
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                String nameJson = gson.toJson(fileNameList);
-                String urlJson = gson.toJson(audioFile1);
-                String playlistIdJson = gson.toJson(playlistDownloadId);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editor.commit();
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("audioId", mainPlayModelList.get(position).getID());
-                p.putValue("audioName", mainPlayModelList.get(position).getName());
-                p.putValue("audioDescription", "");
-                p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                p.putValue("position", GetCurrentAudioPosition());
-                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-                    p.putValue("audioType", "Downloaded");
-                } else {
-                    p.putValue("audioType", "Streaming");
-                }
-                p.putValue("source", GetSourceName(ctx));
-                p.putValue("playerType", "Main");
-                p.putValue("bitRate", "");
-                p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("sound", String.valueOf(hundredVolume));
-                BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
-                if (!isDownloading) {
-                    isDownloading = true;
-                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                    downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
-                }
-                binding.pbProgress.setVisibility(View.VISIBLE);
-                binding.ivDownloads.setVisibility(View.GONE);
-                GetMediaPer();
-                SaveMedia(0);
-          // }
+            audioFile1.add(mainPlayModelList.get(position).getAudioFile());
+            fileNameList.add(mainPlayModelList.get(position).getName());
+            playlistDownloadId.add("");
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String nameJson = gson.toJson(fileNameList);
+            String urlJson = gson.toJson(audioFile1);
+            String playlistIdJson = gson.toJson(playlistDownloadId);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editor.commit();
+            p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("audioId", mainPlayModelList.get(position).getID());
+            p.putValue("audioName", mainPlayModelList.get(position).getName());
+            p.putValue("audioDescription", "");
+            p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+            p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+            p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+            p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+            p.putValue("position", GetCurrentAudioPosition());
+            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                p.putValue("audioType", "Downloaded");
+            } else {
+                p.putValue("audioType", "Streaming");
+            }
+            p.putValue("source", GetSourceName(ctx));
+            p.putValue("playerType", "Main");
+            p.putValue("bitRate", "");
+            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("sound", String.valueOf(hundredVolume));
+            BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
+            if (!isDownloading) {
+                isDownloading = true;
+                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
+            }
+            binding.pbProgress.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setVisibility(View.GONE);
+            GetMediaPer();
+            SaveMedia(0);
+            // }
         }
     }
 
@@ -2634,7 +2636,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 .taskDao()
                 .geAllDataBYDownloaded1("Complete").observe(this, audioList -> {
             downloadAudioDetailsList = audioList;
-            if(!downloadClick) {
+            if (!downloadClick) {
                 MakeArray();
             }
             DatabaseClient
@@ -2684,11 +2686,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray() {
-         DatabaseClient
-            .getInstance(this)
-            .getaudioDatabase()
-            .taskDao()
-            .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {});
+        DatabaseClient
+                .getInstance(this)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+        });
 
         audioClick = true;
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);

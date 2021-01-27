@@ -18,9 +18,13 @@ import android.os.IBinder;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.brainwellnessspa.BWSApplication;
@@ -44,6 +48,7 @@ import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
@@ -133,7 +138,8 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                                 Log.e("HttpURLConnection", "Server returned HTTP " + connection.getResponseCode()
                                         + " " + connection.getResponseMessage());
                             } else {
-                                Log.e("HttpURLConnection", "null");
+                                Log.e("HttpURLConnection", "null"  + connection.getResponseCode()
+                                        + " " + connection.getResponseMessage());
                             }
                         } else {
                             myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
@@ -600,10 +606,13 @@ Appointment Audios dddd*/
         playerNotificationManager.setUsePreviousActionInCompactView(true);
         ControlDispatcher controlDispatcher = new DefaultControlDispatcher(30000, 30000);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
+//        playerNotificationManager.setSmallIcon(R.drawable.my_drawable_image);
         playerNotificationManager.setSmallIcon(R.drawable.app_logo_transparent);
+        playerNotificationManager.setColor(ContextCompat.getColor(ctx, R.color.blue));
+        playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-//        playerNotificationManager.setUseChronometer(true);
+        playerNotificationManager.setUseChronometer(true);
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
@@ -688,11 +697,12 @@ Appointment Audios dddd*/
         playerNotificationManager.setUsePreviousActionInCompactView(true);
         ControlDispatcher controlDispatcher = new DefaultControlDispatcher(0, 0);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
-
         playerNotificationManager.setSmallIcon(R.drawable.app_logo_transparent);
+        playerNotificationManager.setColor(ContextCompat.getColor(ctx, R.color.blue));
+        playerNotificationManager.setColorized(true);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_NONE);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-//        playerNotificationManager.setUseChronometer(true);
+        playerNotificationManager.setUseChronometer(true);
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);

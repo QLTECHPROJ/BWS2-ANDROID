@@ -257,7 +257,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_logo_transparent" />
-<!--
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
@@ -269,7 +268,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue" />
--->
 
         <provider
             android:name="androidx.core.content.FileProvider"
