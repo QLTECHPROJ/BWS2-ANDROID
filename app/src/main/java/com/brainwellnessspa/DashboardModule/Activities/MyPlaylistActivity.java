@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
@@ -40,6 +41,7 @@ import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
@@ -62,6 +64,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.RefreshIconData;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
@@ -84,6 +87,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     EditText edtCreate;
     TextView tvCancel, tvHeading;
     Button btnSendCode;
+    AudioDatabase DB;
   /*  private Handler handler1;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
@@ -147,7 +151,11 @@ public class MyPlaylistActivity extends AppCompatActivity {
         remainAudio = new ArrayList<>();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
         playlistSongsList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         playlistWiseAudioDetails = new ArrayList<>();
@@ -617,7 +625,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
     }
 
     private void savePlaylist() {
-        class SaveMedia extends AsyncTask<Void, Void, Void> {
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
+        /*  class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient.getInstance(ctx)
@@ -636,11 +645,30 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }
         }
         SaveMedia st = new SaveMedia();
-        st.execute();
+        st.execute();*/
     }
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
-        class SaveMedia extends AsyncTask<Void, Void, Void> {
+        DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+        for (int i = 0; i < playlistSongs.size(); i++) {
+            downloadAudioDetails.setID(playlistSongs.get(i).getID());
+            downloadAudioDetails.setName(playlistSongs.get(i).getName());
+            downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
+            downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
+            downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
+            downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
+            downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
+            downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
+            downloadAudioDetails.setDownload("1");
+            downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
+            downloadAudioDetails.setIsSingle("0");
+            downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
+            downloadAudioDetails.setIsDownload("pending");
+            downloadAudioDetails.setDownloadProgress(0);
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        }
+        enableDisableDownload(false, "orange");
+        /*class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
@@ -677,7 +705,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         }
 
         SaveMedia st = new SaveMedia();
-        st.execute();
+        st.execute();*/
     }
 
     @Override

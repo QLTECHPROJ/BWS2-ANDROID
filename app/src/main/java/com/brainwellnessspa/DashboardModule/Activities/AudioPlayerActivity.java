@@ -46,6 +46,7 @@ import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
@@ -95,6 +96,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
@@ -1570,16 +1572,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void epAllClicks() {
         try {
             if (listSize == 1) {
-                if (listSize == 1) {
-                    exoBinding.llNext.setEnabled(false);
-                    exoBinding.llPrev.setEnabled(false);
+                exoBinding.llNext.setEnabled(false);
+                exoBinding.llPrev.setEnabled(false);
 //            exoBinding.llShuffle.setEnabled(false);
 //            exoBinding.llShuffle.setClickable(false);
 //            IsShuffle = "";
 //            exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                    exoBinding.llNext.setAlpha(0.6f);
-                    exoBinding.llPrev.setAlpha(0.6f);
-                }
+                exoBinding.llNext.setAlpha(0.6f);
+                exoBinding.llPrev.setAlpha(0.6f);
             }
 
             exoBinding.llPause.setOnClickListener(view -> {
@@ -2133,7 +2133,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             disableDownload();
             SaveMedia(100);
         } else {
-          /*  fileNameList = new ArrayList<>();
+            fileNameList = new ArrayList<>();
             audioFile1 = new ArrayList<>();
             playlistDownloadId = new ArrayList<>();
             SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -2165,7 +2165,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 isDownloading = true;
                 DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
                 downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
-            }*/
+            }
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);
             GetMediaPer();
