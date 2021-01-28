@@ -621,7 +621,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
         SongListSize = playlistSongsList.size();
         savePlaylist();
         saveAllMedia(playlistSongsList, encodedBytes);
-
     }
 
     private void savePlaylist() {
@@ -649,8 +648,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
     }
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
-        DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
         for (int i = 0; i < playlistSongs.size(); i++) {
+            DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
             downloadAudioDetails.setID(playlistSongs.get(i).getID());
             downloadAudioDetails.setName(playlistSongs.get(i).getName());
             downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());

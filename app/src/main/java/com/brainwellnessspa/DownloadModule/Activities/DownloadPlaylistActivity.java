@@ -497,12 +497,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     private void getMedia(String playlistID) {
-        DatabaseClient
-                .getInstance(this)
-                .getaudioDatabase()
-                .taskDao()
-                .getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
-
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
             adpater = new PlayListsAdpater(audioList, ctx);
             LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvPlayLists.setAdapter(adpater);
@@ -521,6 +516,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
 
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId));
+        deletePlaylist(PlaylistID);
      /*   class DeleteMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -534,7 +530,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
 //                notifyItemRemoved(position);
-                deletePlaylist(PlaylistID);
                 super.onPostExecute(aVoid);
             }
         }

@@ -1561,7 +1561,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2, byte[] encodedBytes) {
 
-           DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
                 p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
@@ -1587,6 +1586,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 p.putValue("sound", String.valueOf(hundredVolume));
                 BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
                 for (int i = 0; i < playlistSongs.size(); i++) {
+                    DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
                     downloadAudioDetails.setID(playlistSongs.get(i).getID());
                     downloadAudioDetails.setName(playlistSongs.get(i).getName());
                     downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());

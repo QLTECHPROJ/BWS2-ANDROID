@@ -619,6 +619,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId));
 
+            deletePlaylist(PlaylistId);
           /*  class DeleteMedia extends AsyncTask<Void, Void, Void> {
                 @Override
                 protected Void doInBackground(Void... voids) {
@@ -632,7 +633,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void aVoid) {
 //                notifyItemRemoved(position);
-                    deletePlaylist(PlaylistId);
                     super.onPostExecute(aVoid);
                 }
             }
