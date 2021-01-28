@@ -7,8 +7,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
+import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -25,6 +27,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
@@ -44,6 +47,7 @@ public class DownloadMedia implements OnDownloadListener {
     byte[] encodedBytes;
     Properties p;
     String UserID;
+    AudioDatabase DB;
     //    LocalBroadcastManager localBroadcastManager;
 //    Intent localIntent;
     List<String> fileNameList, audioFile, playlistDownloadId;
@@ -60,7 +64,11 @@ public class DownloadMedia implements OnDownloadListener {
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
         BWSApplication.showToast("Downloading file...", ctx);
-
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
 //        localIntent = new Intent("DownloadProgress");
 //        localBroadcastManager = LocalBroadcastManager.getInstance(context);
 // Setting timeout globally for the download network requests:
@@ -358,7 +366,8 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
-        class SaveMedia extends AsyncTask<Void, Void, Void> {
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename));
+        /*class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient.getInstance(ctx)
@@ -375,13 +384,10 @@ public class DownloadMedia implements OnDownloadListener {
             }
         }
         SaveMedia st = new SaveMedia();
-        st.execute();
+        st.execute();*/
     }
     private void getPending(Context ctx) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
+        DB.taskDao()
                 .getNotDownloadData("Complete").observe((LifecycleOwner) ctx, audioList -> {
 
             notDownloadedData = new ArrayList<>();
@@ -413,10 +419,7 @@ public class DownloadMedia implements OnDownloadListener {
                     }
                 }
             }
-            DatabaseClient
-                    .getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
+            DB.taskDao()
                     .getNotDownloadData("Complete").removeObserver(audioListx -> {
             });
         });

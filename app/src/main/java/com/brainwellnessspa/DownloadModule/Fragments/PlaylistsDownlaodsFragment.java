@@ -28,12 +28,14 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
@@ -52,6 +54,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
@@ -65,6 +68,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     Runnable UpdateSongTime1;
     Handler handler1;
     boolean isMyDownloading = false;
+    AudioDatabase DB;
     Properties p;
 
     @Override
@@ -75,6 +79,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             UserID = getArguments().getString("UserID");
             IsLock = getArguments().getString("IsLock");
         }
+        DB = Room.databaseBuilder(getActivity(),
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
         playlistList = new ArrayList<>();
         p = new Properties();
         p.putValue("userId", UserID);
@@ -607,7 +616,10 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
-            class DeleteMedia extends AsyncTask<Void, Void, Void> {
+
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId));
+
+          /*  class DeleteMedia extends AsyncTask<Void, Void, Void> {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     DatabaseClient.getInstance(applicationContext)
@@ -625,11 +637,14 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 }
             }
             DeleteMedia st = new DeleteMedia();
-            st.execute();
+            st.execute();*/
         }
 
         private void deletePlaylist(String playlistId) {
-            class DeleteMedia extends AsyncTask<Void, Void, Void> {
+
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId));
+            GetAllMedia(ctx);
+         /*   class DeleteMedia extends AsyncTask<Void, Void, Void> {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     DatabaseClient.getInstance(ctx)
@@ -642,12 +657,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     playlistList = new ArrayList<>();
-                    GetAllMedia(ctx);
                     super.onPostExecute(aVoid);
                 }
             }
             DeleteMedia st = new DeleteMedia();
-            st.execute();
+            st.execute();*/
         }
 
    /*     private void GetAllMedia(FragmentActivity activity) {
@@ -671,11 +685,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }*/
 
         public void GetPlaylistMedia(String playlistID) {
-            DatabaseClient
-                    .getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
-                    .getAllAudioByPlaylist1(playlistID).observe(this.ctx, audioList -> {
+            DB.taskDao().getAllAudioByPlaylist1(playlistID).observe(this.ctx, audioList -> {
                 deleteDownloadFile(ctx.getApplicationContext(), playlistID);
                 try {
                     for (int i = 0; i < audioList.size(); i++) {

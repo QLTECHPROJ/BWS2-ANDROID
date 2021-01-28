@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,7 +46,6 @@ import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
@@ -70,7 +68,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.google.android.exoplayer2.util.Assertions;
-import com.google.android.exoplayer2.util.EventLogger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -79,8 +76,6 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
@@ -91,7 +86,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.os.AsyncTask.execute;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -101,7 +95,6 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
@@ -113,6 +106,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 public class AudioPlayerActivity extends AppCompatActivity {
     public AudioManager audioManager;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
+    public boolean downloadClick = false;
     List<String> downloadAudioDetailsList;
     List<String> downloadAudioDetailsListGloble;
     AudioPlayerCustomLayoutBinding exoBinding;
@@ -137,8 +131,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Properties p;
     long oldSeekPosition = 0;
     Handler handler2;
-    public boolean downloadClick = false;
-    private long mLastClickTime = 0;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -179,6 +171,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
     };
     AudioDatabase DB;
+    private long mLastClickTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1695,11 +1689,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         if (player.hasNext()) {
                             handler2.removeCallbacks(UpdateSongTime2);
                             DatabaseClient
-                                .getInstance(ctx)
-                                .getaudioDatabase()
-                                .taskDao()
-                                .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
-                                });
+                                    .getInstance(ctx)
+                                    .getaudioDatabase()
+                                    .taskDao()
+                                    .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
+                            });
                             enableDownload();
                             binding.ivDownloads.setVisibility(View.VISIBLE);
                             binding.pbProgress.setVisibility(View.GONE);
@@ -2139,7 +2133,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             disableDownload();
             SaveMedia(100);
         } else {
-            fileNameList = new ArrayList<>();
+          /*  fileNameList = new ArrayList<>();
             audioFile1 = new ArrayList<>();
             playlistDownloadId = new ArrayList<>();
             SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -2154,15 +2148,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 audioFile1 = gson1.fromJson(json1, type);
                 playlistDownloadId = gson1.fromJson(json2, type);
             }
-          /* boolean entryNot = false;
-            for (int i = 0; i < fileNameList.size(); i++) {
-                if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
-                        && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                    entryNot = true;
-                    break;
-                }
-            }
-            if (!entryNot) {*/
             audioFile1.add(mainPlayModelList.get(position).getAudioFile());
             fileNameList.add(mainPlayModelList.get(position).getName());
             playlistDownloadId.add("");
@@ -2180,12 +2165,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 isDownloading = true;
                 DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
                 downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
-            }
+            }*/
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);
             GetMediaPer();
             disableDownload();
-            SaveMedia(0);
+            SaveMedia(100);
             p = new Properties();
             p.putValue("userId", UserID);
             p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -2217,6 +2202,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         binding.llDownload.setClickable(false);
         binding.llDownload.setEnabled(false);
     }
+
     private void enableDownload() {
         binding.llDownload.setClickable(true);
         binding.llDownload.setEnabled(true);
@@ -2311,6 +2297,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         downloadAudioDetails.setDownloadProgress(progressx);
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
     }
+
     public void GetMedia2() {
         DatabaseClient
                 .getInstance(ctx)
@@ -2329,7 +2316,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {});
+                        .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
+                });
             } else {
                 boolean entryNot = false;
                 for (int i = 0; i < fileNameList.size(); i++) {
@@ -2352,7 +2340,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {});
+                        .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
+                });
             }
         });
        /* downloadAudioDetailsList1 = new ArrayList<>();

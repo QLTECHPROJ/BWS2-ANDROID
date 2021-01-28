@@ -35,6 +35,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
@@ -42,6 +43,7 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlay
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -63,6 +65,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -85,6 +88,7 @@ public class AudioDownloadsFragment extends Fragment {
     boolean isThreadStart = false;
     Runnable UpdateSongTime1;
     View view;
+    AudioDatabase DB;
     private Handler handler1;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -127,6 +131,11 @@ public class AudioDownloadsFragment extends Fragment {
         handler1 = new Handler();
         Properties p = new Properties();
         p.putValue("userId", UserID);
+        DB = Room.databaseBuilder(getActivity(),
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
         BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
@@ -138,12 +147,8 @@ public class AudioDownloadsFragment extends Fragment {
         return view;
     }
 
-    private void callObserverMethod() {
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .geAllDataz("").observe(getActivity(), audioList -> {
+    public void callObserverMethod() {
+       DB.taskDao().geAllDataz("").observe(getActivity(), audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
                     List<DownloadAudioDetails> audioList1 = new ArrayList<>();
@@ -176,11 +181,7 @@ public class AudioDownloadsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
-            DatabaseClient
-                    .getInstance(getActivity())
-                    .getaudioDatabase()
-                    .taskDao()
-                    .geAllDataz("").removeObserver(audioListx -> {});
+            DB.taskDao().geAllDataz("").removeObserver(audioListx -> {});
         });
 
     }
@@ -764,7 +765,6 @@ public class AudioDownloadsFragment extends Fragment {
                                         fileNameList.remove(i);
                                         playlistDownloadId.remove(i);
                                         audiofilelist.remove(i);
-                                        callObserverMethod();
                                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         Gson gson = new Gson();
@@ -855,7 +855,6 @@ public class AudioDownloadsFragment extends Fragment {
                     notifyItemRemoved(position);
                     dialog.dismiss();
                 } catch (Exception e) {
-                    Log.e("REmove Catch", e.getMessage());
                 }
             });
             tvGoBack.setOnClickListener(v -> dialog.dismiss());
@@ -912,7 +911,23 @@ public class AudioDownloadsFragment extends Fragment {
         }
 
         private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
-            class DeleteMedia extends AsyncTask<Void, Void, Void> {
+
+            AudioDatabase.databaseWriteExecutor.execute(() -> {
+                DB.taskDao().deleteByAudioFile(audioFile, "");
+            });
+
+            DB.taskDao().getLastIdByuId1(audioFile).observe((LifecycleOwner) ctx, audioList -> {
+                DB.taskDao().getLastIdByuId1(audioFile).removeObserver(audioListx -> {});
+                    if (audioList.size() == 0) {
+                        try {
+                            FileUtils.deleteDownloadedFile(applicationContext, audioName);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+            callObserverMethod();
+          /*  class DeleteMedia extends AsyncTask<Void, Void, Void> {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     DatabaseClient.getInstance(applicationContext)
@@ -945,109 +960,13 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                         }
                     });
-                    listModelList = new ArrayList<>();
 //                    listModelList = GetAllMedia(ctx);
                     super.onPostExecute(aVoid);
                 }
             }
             DeleteMedia st = new DeleteMedia();
-            st.execute();
+            st.execute();*/
         }
-
-        private void CallObserverMethod2() {
-            try {
-                DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataz("").observe((LifecycleOwner) getActivity(), audioList -> {
-                    if (audioList.size() != 0) {
-                        if (audioList.size() == 0) {
-                            tvFound.setVisibility(View.VISIBLE);
-                            llError.setVisibility(View.VISIBLE);
-                        } else {
-                            llError.setVisibility(View.GONE);
-                            LocalBroadcastManager.getInstance(getActivity())
-                                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                            List<DownloadAudioDetails> audioList1 = new ArrayList<>();
-                            for (int i = 0; i < audioList.size(); i++) {
-                                DownloadAudioDetails dad = new DownloadAudioDetails();
-                                dad.setID(audioList.get(i).getID());
-                                dad.setName(audioList.get(i).getName());
-                                dad.setAudioFile(audioList.get(i).getAudioFile());
-                                dad.setAudioDirection(audioList.get(i).getAudioDirection());
-                                dad.setAudiomastercat(audioList.get(i).getAudiomastercat());
-                                dad.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
-                                dad.setImageFile(audioList.get(i).getImageFile());
-                                dad.setLike(audioList.get(i).getLike());
-                                dad.setDownload(audioList.get(i).getDownload());
-                                dad.setAudioDuration(audioList.get(i).getAudioDuration());
-                                dad.setPlaylistId(audioList.get(i).getPlaylistId());
-                                dad.setIsSingle(audioList.get(i).getIsSingle());
-                                dad.setIsDownload(audioList.get(i).getIsDownload());
-                                dad.setDownloadProgress(audioList.get(i).getDownloadProgress());
-                                audioList1.add(dad);
-                            }
-                            adapter = new AudioDownlaodsAdapter(audioList1, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound, IsLock);
-                            rvDownloadsList.setAdapter(adapter);
-                        }
-                        llError.setVisibility(View.GONE);
-                        rvDownloadsList.setVisibility(View.VISIBLE);
-                    } else {
-                        llError.setVisibility(View.VISIBLE);
-                        rvDownloadsList.setVisibility(View.GONE);
-                    }
-
-                    DatabaseClient
-                            .getInstance(getActivity())
-                            .getaudioDatabase()
-                            .taskDao()
-                            .geAllDataz("").removeObserver(audioListx -> {});
-                });
-            }catch (Exception e){
-                Log.e("RemovedownloadException",e.getMessage());
-            }
-        }
-
-        /*public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
-            downloadAudioDetailsList = new ArrayList<>();
-            class GetTask extends AsyncTask<Void, Void, Void> {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    downloadAudioDetailsList = DatabaseClient
-                            .getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .geAllData("");
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    if (downloadAudioDetailsList.size() != 0) {
-                        if (downloadAudioDetailsList.size() == 0) {
-                            tvFound.setVisibility(View.VISIBLE);
-                        } else {
-                            llError.setVisibility(View.GONE);
-                            LocalBroadcastManager.getInstance(getActivity())
-                                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                            adapter = new AudioDownlaodsAdapter(downloadAudioDetailsList, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound);
-                            rvDownloadsList.setAdapter(adapter);
-                        }
-                        llError.setVisibility(View.GONE);
-                        rvDownloadsList.setVisibility(View.VISIBLE);
-                    } else {
-                        llError.setVisibility(View.VISIBLE);
-                        rvDownloadsList.setVisibility(View.GONE);
-                    }
-                    super.onPostExecute(aVoid);
-                }
-            }
-
-            GetTask st = new GetTask();
-            st.execute();
-            return downloadAudioDetailsList;
-        }*/
 
         @Override
         public int getItemViewType(int position) {

@@ -35,6 +35,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
@@ -42,6 +43,7 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
@@ -61,6 +63,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -88,6 +91,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     Context ctx;
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
     int startTime;
+    AudioDatabase DB;
     long myProgress = 0, diff = 0, currentDuration = 0;
     private List<DownloadPlaylistDetails> listModelList;
     //    private Runnable UpdateSongTime3;
@@ -140,6 +144,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         ctx = DownloadPlaylistActivity.this;
         addDisclaimer();
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
         ComeScreenAccount = 0;
         if (getIntent() != null) {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
@@ -501,12 +510,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     public void GetPlaylistMedia(String playlistID) {
-        DatabaseClient
-                .getInstance(this)
-                .getaudioDatabase()
-                .taskDao()
-                .getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
-
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
             deleteDownloadFile(getApplicationContext(), playlistID);
             for (int i = 0; i < audioList.size(); i++) {
                 GetSingleMedia(audioList.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
@@ -515,7 +519,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
-        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId));
+     /*   class DeleteMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient.getInstance(applicationContext)
@@ -533,7 +539,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             }
         }
         DeleteMedia st = new DeleteMedia();
-        st.execute();
+        st.execute();*/
     }
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
@@ -574,7 +580,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     private void deletePlaylist(String playlistId) {
-        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+ /*       class DeleteMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient.getInstance(ctx)
@@ -591,6 +597,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         }
         DeleteMedia st = new DeleteMedia();
         st.execute();
+*/
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId));
     }
 
     private void addDisclaimer() {
