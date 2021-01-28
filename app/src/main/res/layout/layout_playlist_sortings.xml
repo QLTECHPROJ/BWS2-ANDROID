@@ -2,30 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/_10sdp"
-    android:layout_marginTop="@dimen/_180sdp"
+    android:layout_marginTop="@dimen/_60sdp"
     android:layout_marginRight="@dimen/_20sdp"
     android:orientation="horizontal"
     android:weightSum="1">
 
+    <LinearLayout
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginLeft="@dimen/_48sdp"
-        android:layout_weight="0.66"
+        android:layout_weight="0.9"
         android:orientation="vertical"
         android:paddingRight="@dimen/_5sdp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:fontFamily="@font/montserrat_semi_bold"
-            android:text="Resources"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_20sdp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:text="Reorder"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_20sdp" />
+
+        </LinearLayout>
 
 
         <TextView
@@ -37,7 +46,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:gravity="start"
             android:lineSpacingExtra="@dimen/_4sdp"
-            android:text="Explore resources to help you improve your mental wellbeing"
+            android:text="Drag and drop to arrange the audios in the order you like"
             android:textColor="@color/white"
             android:textSize="@dimen/_14sdp" />
 
@@ -81,5 +90,4 @@
 
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -255,6 +255,12 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
                                                 editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
                                                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                                 editor.commit();
                                                 Properties p = new Properties();
@@ -297,6 +303,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             }
         });
     }
+
     public void GetAllMedia() {
 
         DatabaseClient

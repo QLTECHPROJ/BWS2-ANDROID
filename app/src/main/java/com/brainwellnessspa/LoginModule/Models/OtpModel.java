@@ -78,6 +78,9 @@ public class OtpModel {
         @SerializedName("Email")
         @Expose
         private String email;
+        @SerializedName("FirstLogin")
+        @Expose
+        private String firstLogin;
         @SerializedName("PhoneNumber")
         @Expose
         private String phoneNumber;
@@ -90,9 +93,6 @@ public class OtpModel {
         @SerializedName("Suburb")
         @Expose
         private String suburb;
-        @SerializedName("FirstLogin")
-        @Expose
-        private String firstLogin;
         @SerializedName("Image")
         @Expose
         private String image;
@@ -132,6 +132,7 @@ public class OtpModel {
         public void setCustomerId(String customerId) {
             this.customerId = customerId;
         }
+
 
         public String getPlan() {
             return plan;

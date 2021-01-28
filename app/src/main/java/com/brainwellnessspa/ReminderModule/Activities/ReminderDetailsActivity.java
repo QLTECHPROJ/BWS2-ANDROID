@@ -53,7 +53,7 @@ import retrofit2.Response;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
-    String UserID;
+    String UserID, ReminderFirstLogin = "";
     Context ctx;
     Activity activity;
     ArrayList<String> remiderIds = new ArrayList<>();
@@ -105,23 +105,27 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
             }
         });
+        showTooltiop();
     }
 
     @Override
     protected void onResume() {
         prepareData();
-//        showTooltiop();
         super.onResume();
     }
 
     private void showTooltiop() {
-        Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
-        Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        ReminderFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, ""));
 
-        fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.layout_reminder_status, view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+        if (ReminderFirstLogin.equalsIgnoreCase("1")) {
+            Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
+            Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
+
+            fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
+                    .customView(R.layout.layout_reminder_status, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
@@ -137,29 +141,28 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         }
                     });*/
 
-                }).closeOnTouch(false)
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                /*.focusOn(checkBox)*/.closeOnTouch(false)
-                .build();
+                    }).closeOnTouch(false)
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    /*.focusOn(checkBox)*/.closeOnTouch(false)
+                    .build();
 
-        fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.layout_reminder_remove, view -> {
-                    view.findViewById(R.id.rlSearch);
-                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                    rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
+            fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
+                    .customView(R.layout.layout_reminder_remove, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
 
-
-        queue = new FancyShowCaseQueue()
-                .add(fancyShowCaseView11)
-                .add(fancyShowCaseView21);
-
-       /* IsRegisters = "false";
-        IsRegisters1 = "false";*/
+            queue = new FancyShowCaseQueue()
+                    .add(fancyShowCaseView11)
+                    .add(fancyShowCaseView21);
+            queue.show();
+        }
+//        ReminderFirstLogin = "0";
     }
 
     @Override

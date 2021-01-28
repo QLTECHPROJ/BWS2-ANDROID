@@ -60,6 +60,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
@@ -74,7 +75,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class SearchFragment extends Fragment {
     public static int comefrom_search = 0;
     FragmentSearchBinding binding;
-    String UserID, AudioFlag, IsPlayDisclimer;
+    String UserID, AudioFlag, IsPlayDisclimer, SearchFirstLogin = "";
     EditText searchEditText;
     SerachListAdpater serachListAdpater;
     int startTime;
@@ -138,7 +139,8 @@ public class SearchFragment extends Fragment {
             binding.llError.setVisibility(View.GONE);
             binding.searchView.setQuery("", false);
         });
-//        showTooltiop();
+
+        showTooltiop();
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
@@ -176,13 +178,17 @@ public class SearchFragment extends Fragment {
     }
 
     private void showTooltiop() {
-        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
-        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        SearchFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_SearchFirstLogin, ""));
 
-        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_search_audioplay, view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+        if (SearchFirstLogin.equalsIgnoreCase("1")) {
+            Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+            Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+
+            fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_search_audioplay, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
@@ -198,29 +204,29 @@ public class SearchFragment extends Fragment {
                         }
                     });*/
 
-                }).closeOnTouch(false)
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
-                .build();
+                    }).closeOnTouch(false)
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
+                    .build();
 
-        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_search_addplaylist, view -> {
-                    view.findViewById(R.id.rlSearch);
-                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                    rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
+            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_search_addplaylist, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
 
 
-        queue = new FancyShowCaseQueue()
-                .add(fancyShowCaseView11)
-                .add(fancyShowCaseView21);
-        queue.show();
-       /* IsRegisters = "false";
-        IsRegisters1 = "false";*/
+            queue = new FancyShowCaseQueue()
+                    .add(fancyShowCaseView11)
+                    .add(fancyShowCaseView21);
+            queue.show();
+        }
+        //        SearchFirstLogin = "0";
     }
 
     @Override

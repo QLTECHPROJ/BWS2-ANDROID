@@ -43,7 +43,7 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:text="Lorem ipsum dolor sit amet, \nconsetetur sadipscing elitr,\nsed diam nonumy eirmod"
+                android:text="Follow these directions while listening to the audios"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

@@ -26,7 +26,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Downloads"
+                    android:text="Download"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_20sdp" />
 
@@ -50,7 +50,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Let's you download your \nplaylist to your device"
+                android:text="Download your playlist to your device"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

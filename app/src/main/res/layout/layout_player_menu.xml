@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:text="3 Dots"
+                android:text="Audio details"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_20sdp" />
 
@@ -49,7 +49,7 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:text="Provides you with all the\n playlist's details"
+                android:text="Get more info and explore audio options"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

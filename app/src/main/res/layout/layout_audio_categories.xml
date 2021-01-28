@@ -60,7 +60,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="This shows various audio categories"
+                android:text="Explore audios across various audio categories"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

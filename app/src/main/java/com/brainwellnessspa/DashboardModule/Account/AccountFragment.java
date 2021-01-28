@@ -62,6 +62,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
@@ -80,7 +81,7 @@ public class AccountFragment extends Fragment {
     public static int ComeScreenAccount = 0;
     public static boolean logout = false;
     FragmentAccountBinding binding;
-    String UserID, MobileNo, Email, DeviceType, DeviceID, Name, UserName;
+    String UserID, MobileNo, Email, DeviceType, DeviceID, Name, UserName, AccountFirstLogin = "";
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
     private long mLastClickTime = 0;
@@ -326,6 +327,8 @@ public class AccountFragment extends Fragment {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
+
+        showTooltiop();
         return view;
     }
 
@@ -333,19 +336,23 @@ public class AccountFragment extends Fragment {
     public void onResume() {
         ComeScreenAccount = 1;
         comefromDownload = "0";
-        //        showTooltiop();
         profileViewData(getActivity());
         super.onResume();
     }
 
     private void showTooltiop() {
-        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
-        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        AccountFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AccountFirstLogin, ""));
 
-        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_account_downloads, view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+        if (AccountFirstLogin.equalsIgnoreCase("1")) {
+            Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+            Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+//            getActivity().onBackPressed();
+
+            fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_account_downloads, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
@@ -361,42 +368,39 @@ public class AccountFragment extends Fragment {
                         }
                     });*/
 
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llDownloads).closeOnTouch(false)
-                .build();
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.llDownloads).closeOnTouch(false)
+                    .build();
 
-        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_account_billingorder, (OnViewInflateListener) view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
-                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation)
-                .exitAnimation(exitAnimation).focusOn(binding.llBillingOrder)
-                .closeOnTouch(false).build();
+            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_account_billingorder, (OnViewInflateListener) view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation)
+                    .exitAnimation(exitAnimation).focusOn(binding.llBillingOrder)
+                    .closeOnTouch(false).build();
 
-        fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_account_resources, view -> {
-                    view.findViewById(R.id.rlSearch);
-                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                    rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llResource).closeOnTouch(false).build();
+            fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_account_resources, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.llResource).closeOnTouch(false).build();
 
-        queue = new FancyShowCaseQueue()
-                .add(fancyShowCaseView11)
-                .add(fancyShowCaseView21)
-                .add(fancyShowCaseView31);
-        queue.show();
-       /* IsRegisters = "false";
-        IsRegisters1 = "false";*/
-    }
+            queue = new FancyShowCaseQueue()
+                    .add(fancyShowCaseView11)
+                    .add(fancyShowCaseView21)
+                    .add(fancyShowCaseView31);
+            queue.show();
+        }
 
-    void clearData(Dialog dialog) {
-
+//        AccountFirstLogin = "0";
     }
 
     void DeleteCall(Dialog dialog) {

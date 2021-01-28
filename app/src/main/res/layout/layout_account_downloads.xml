@@ -35,7 +35,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:gravity="start"
             android:lineSpacingExtra="@dimen/_4sdp"
-            android:text="All your downloaded audios &amp; playlists"
+            android:text="Explore your downloaded audios &amp; playlists"
             android:textColor="@color/white"
             android:textSize="@dimen/_14sdp" />
 

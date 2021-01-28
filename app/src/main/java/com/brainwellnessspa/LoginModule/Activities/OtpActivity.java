@@ -251,6 +251,12 @@ public class OtpActivity extends AppCompatActivity implements
                                             editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
                                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, otpModel.getResponseData().getShouldPlayDisclaimer());
                                             editor.putString(CONSTANTS.PREF_KEY_Name, otpModel.getResponseData().getName());
+                                            editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                            editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                            editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                            editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                            editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                            editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, otpModel.getResponseData().getFirstLogin());
                                             editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
                                             editor.putString(CONSTANTS.PREF_KEY_Email, otpModel.getResponseData().getEmail());
                                             editor.putString(CONSTANTS.PREF_KEY_DeviceType, CONSTANTS.FLAG_ONE);

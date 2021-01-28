@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:text="Search (Add)"
+                android:text="Search"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_20sdp" />
 
@@ -46,7 +46,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:gravity="start"
             android:lineSpacingExtra="@dimen/_4sdp"
-            android:text="Find the audio or bundle you wish to add to your playlist."
+            android:text="Find the audio or playlist you wish to add"
             android:textColor="@color/white"
             android:textSize="@dimen/_14sdp" />
 
@@ -73,7 +73,7 @@
                     android:paddingTop="@dimen/_8sdp"
                     android:paddingRight="@dimen/_25sdp"
                     android:paddingBottom="@dimen/_8sdp"
-                    android:text="Done"
+                    android:text="Next"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_18sdp" />

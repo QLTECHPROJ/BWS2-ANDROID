@@ -130,6 +130,14 @@ public class CONSTANTS {
 //    public static final String PREF_KEY_removedDownloadPlaylistId = "removedDownloadPlaylistId";
     public static final String PREF_KEY_CardID = "CardID";
     public static final String PREF_KEY_Name = "Name";
+    public static final String PREF_KEY_PlayerFirstLogin = "PlayerFirstLogin";
+    public static final String PREF_KEY_AudioFirstLogin = "AudioFirstLogin";
+    public static final String PREF_KEY_AccountFirstLogin = "AccountFirstLogin";
+    public static final String PREF_KEY_ReminderFirstLogin = "ReminderFirstLogin";
+    public static final String PREF_KEY_SearchFirstLogin = "SearchFirstLogin";
+    public static final String PREF_KEY_PlaylistFirstLogin = "PlaylistFirstLogin";
+//    public static final String PREF_KEY_FirstLogin = "FirstLogin";
+//    public static final String PREF_KEY_FirstLogin = "FirstLogin";
     public static final String PREF_KEY_Image = "Image";
     public static final String PREF_KEY_Plan = "Plan";
 

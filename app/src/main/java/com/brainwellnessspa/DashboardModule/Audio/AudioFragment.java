@@ -76,9 +76,9 @@ public class AudioFragment extends Fragment {
     public static boolean exit = false;
     public static String IsLock = "0";
     FragmentAudioBinding binding;
-    String UserID, AudioFlag, expDate;
+    String UserID, AudioFlag, expDate, AudioFirstLogin = "";
     boolean Identify;
-    List<String> fileNameList = new ArrayList<>(), audioFile= new ArrayList<>(), playlistDownloadId= new ArrayList<>();
+    List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
@@ -135,7 +135,7 @@ public class AudioFragment extends Fragment {
                 }
             }
         }
-//        showTooltiop();
+        showTooltiop();
         return view;
     }
 
@@ -316,7 +316,7 @@ public class AudioFragment extends Fragment {
                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getShouldPlayDisclaimer());
                             Gson gson = new Gson();
                             editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
-                             if (!Identify) {
+                            if (!Identify) {
                                 analytics.identify(new Traits()
                                         .putValue("userId", UserID)
                                         .putValue("deviceId", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID))
@@ -333,7 +333,7 @@ public class AudioFragment extends Fragment {
                                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                 Identify = true;
                             }
-                             editor.commit();
+                            editor.commit();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -489,13 +489,16 @@ public class AudioFragment extends Fragment {
     }
 
     private void showTooltiop() {
-        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
-        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        AudioFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AudioFirstLogin, ""));
+        if(AudioFirstLogin.equalsIgnoreCase("1")){
+            Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+            Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
 
-        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_audio_librarys, view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+            fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_audio_librarys, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
@@ -511,39 +514,40 @@ public class AudioFragment extends Fragment {
                         }
                     });*/
 
-                }).closeOnTouch(false)
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
-                .build();
+                    }).closeOnTouch(false)
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
+                    .build();
 
-        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_audio_addplaylist, (OnViewInflateListener) view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
-                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation)
-                .exitAnimation(exitAnimation)/*.focusOn(binding.llBillingOrder)*/
-                .closeOnTouch(false).build();
+            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_audio_addplaylist, (OnViewInflateListener) view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation)
+                    .exitAnimation(exitAnimation)/*.focusOn(binding.llBillingOrder)*/
+                    .closeOnTouch(false).build();
 
-        fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_audio_categories, view -> {
-                    view.findViewById(R.id.rlSearch);
-                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                    rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
+            fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_audio_categories, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
 
 
-        queue = new FancyShowCaseQueue()
-                .add(fancyShowCaseView11)
-                .add(fancyShowCaseView21)
-                .add(fancyShowCaseView31);
-        queue.show();
-       /* IsRegisters = "false";
-        IsRegisters1 = "false";*/
+            queue = new FancyShowCaseQueue()
+                    .add(fancyShowCaseView11)
+                    .add(fancyShowCaseView21)
+                    .add(fancyShowCaseView31);
+            queue.show();
+        }
+
+//        AudioFirstLogin = "0";
     }
 
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {

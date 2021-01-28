@@ -133,7 +133,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int isPlayPlaylist = 0;
     public static boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
-    String IsPlayDisclimer, TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
+    String PlaylistFirstLogin, IsPlayDisclimer, TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     PlayListsAdpater adpater;
     PlayListsAdpater1 adpater1;
     PlayListsAdpater2 adpater2;
@@ -154,7 +154,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     SubPlayListModel.ResponseData.PlaylistSong songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
-    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41, fancyShowCaseView51;
     FancyShowCaseQueue queue;
     private Handler handler2;
     private long totalDuration, currentDuration = 0;
@@ -285,7 +285,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
-        }); 
+        });
         binding.llMore.setOnClickListener(view13 -> {
             handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
@@ -339,7 +339,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         });
 
-//        showTooltiop();
+        showTooltiop();
 
         RecyclerView.LayoutManager playList1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists1.setLayoutManager(playList1);
@@ -390,13 +390,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void showTooltiop() {
-        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
-        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        PlaylistFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, ""));
 
-        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_playlist_reminder, view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+        if (PlaylistFirstLogin.equalsIgnoreCase("1")) {
+            Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+            Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+
+            fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_playlist_reminder, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
@@ -412,49 +416,60 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     });*/
 
-                }).closeOnTouch(false)
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llReminder).closeOnTouch(false)
-                .build();
+                    }).closeOnTouch(false)
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.llReminder).closeOnTouch(false)
+                    .build();
 
-        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_playlist_downloads, (OnViewInflateListener) view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
-                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation)
-                .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
-                .closeOnTouch(false).build();
+            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_playlist_downloads, (OnViewInflateListener) view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation)
+                    .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
+                    .closeOnTouch(false).build();
 
-        fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_playlist_details, view -> {
-                    view.findViewById(R.id.rlSearch);
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llMore).closeOnTouch(false).build();
+            fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_playlist_details, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.llMore).closeOnTouch(false).build();
 
-        fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.layout_playlist_searches, view -> {
-                    view.findViewById(R.id.rlSearch);
-                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                    rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.rlSearch).closeOnTouch(false).build();
+            fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_playlist_searches, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.rlSearch).closeOnTouch(false).build();
+            fancyShowCaseView51 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_playlist_sortings, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    /*.focusOn(binding.rlSearch)*/.closeOnTouch(false).build();
 
+            queue = new FancyShowCaseQueue()
+                    .add(fancyShowCaseView11)
+                    .add(fancyShowCaseView21)
+                    .add(fancyShowCaseView31)
+                    .add(fancyShowCaseView41)
+                    .add(fancyShowCaseView51);
+            queue.show();
+        }
 
-        queue = new FancyShowCaseQueue()
-                .add(fancyShowCaseView11)
-                .add(fancyShowCaseView21)
-                .add(fancyShowCaseView31).add(fancyShowCaseView41);
-        queue.show();
-       /* IsRegisters = "false";
-        IsRegisters1 = "false";*/
+//       PlaylistFirstLogin = "0";
     }
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
@@ -1561,60 +1576,60 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2, byte[] encodedBytes) {
 
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
-                p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
-                p.putValue("playlistDescription", downloadPlaylistDetails.getPlaylistDesc());
-                if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("1")) {
-                    p.putValue("playlistType", "Created");
-                } else if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("0")) {
-                    p.putValue("playlistType", "Default");
-                }
+        p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
+        p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
+        p.putValue("playlistDescription", downloadPlaylistDetails.getPlaylistDesc());
+        if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("1")) {
+            p.putValue("playlistType", "Created");
+        } else if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("0")) {
+            p.putValue("playlistType", "Default");
+        }
 
-                if (downloadPlaylistDetails.getTotalhour().equalsIgnoreCase("")) {
-                    p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.getTotalminute() + "m");
-                } else if (downloadPlaylistDetails.getTotalminute().equalsIgnoreCase("")) {
-                    p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h 0m");
-                } else {
-                    p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h " + downloadPlaylistDetails.getTotalminute() + "m");
-                }
-                p.putValue("audioCount", downloadPlaylistDetails.getTotalAudio());
-                p.putValue("source", "Downloaded Playlists");
-                p.putValue("playerType", "Mini");
-                p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("sound", String.valueOf(hundredVolume));
-                BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
-                for (int i = 0; i < playlistSongs.size(); i++) {
-                    DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-                    downloadAudioDetails.setID(playlistSongs.get(i).getID());
-                    downloadAudioDetails.setName(playlistSongs.get(i).getName());
-                    downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
-                    downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
-                    downloadAudioDetails.setPlaylistId(PlaylistID);
-                    downloadAudioDetails.setDownload("1");
-                    downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
-                    downloadAudioDetails.setIsSingle("0");
-                    if (downloadAudioDetailsList.size() != 0) {
-                        for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
-                            if (playlistSongs.get(i).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
-                                downloadAudioDetails.setIsDownload("Complete");
-                                downloadAudioDetails.setDownloadProgress(100);
-                                break;
-                            } else {
-                                downloadAudioDetails.setIsDownload("pending");
-                                downloadAudioDetails.setDownloadProgress(0);
-                            }
-
-                        }
+        if (downloadPlaylistDetails.getTotalhour().equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.getTotalminute() + "m");
+        } else if (downloadPlaylistDetails.getTotalminute().equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h 0m");
+        } else {
+            p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h " + downloadPlaylistDetails.getTotalminute() + "m");
+        }
+        p.putValue("audioCount", downloadPlaylistDetails.getTotalAudio());
+        p.putValue("source", "Downloaded Playlists");
+        p.putValue("playerType", "Mini");
+        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("sound", String.valueOf(hundredVolume));
+        BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
+        for (int i = 0; i < playlistSongs.size(); i++) {
+            DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+            downloadAudioDetails.setID(playlistSongs.get(i).getID());
+            downloadAudioDetails.setName(playlistSongs.get(i).getName());
+            downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
+            downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
+            downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
+            downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
+            downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
+            downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
+            downloadAudioDetails.setPlaylistId(PlaylistID);
+            downloadAudioDetails.setDownload("1");
+            downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
+            downloadAudioDetails.setIsSingle("0");
+            if (downloadAudioDetailsList.size() != 0) {
+                for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
+                    if (playlistSongs.get(i).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                        downloadAudioDetails.setIsDownload("Complete");
+                        downloadAudioDetails.setDownloadProgress(100);
+                        break;
+                    } else {
+                        downloadAudioDetails.setIsDownload("pending");
+                        downloadAudioDetails.setDownloadProgress(0);
                     }
-                    AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+
                 }
-         getMediaByPer(PlaylistID, SongListSize);
+            }
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        }
+        getMediaByPer(PlaylistID, SongListSize);
         enableDisableDownload(false, "orange");
         callObserveMethodGetAllMedia();
         GetMedia();
@@ -1666,9 +1681,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         downloadAudioDetails.setDownloadProgress(progress);
 
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
-                    callObserveMethodGetAllMedia();
-                    GetMedia();
-                    disableDownload(llDownload, ivDownloads);
+        callObserveMethodGetAllMedia();
+        GetMedia();
+        disableDownload(llDownload, ivDownloads);
        /* class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -3365,7 +3380,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 listModelList2.add(pos, addDisclaimer);
                             }
                         }
-                        if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
+                        if (listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() == 1) {
                             callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);

@@ -26,7 +26,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="@string/Reminder"
+                    android:text="Reminder"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_20sdp" />
 
@@ -50,7 +50,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Notifies you of the time you \nhave chosen to play your \nplaylist"
+                android:text="Set a reminder to notify you to listen to the playlist"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

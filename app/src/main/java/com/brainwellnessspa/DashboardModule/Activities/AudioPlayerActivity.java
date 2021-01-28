@@ -118,7 +118,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     ActivityAudioPlayerBinding binding;
     ArrayList<MainPlayModel> mainPlayModelList, mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "";
+    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "", PlayerFirstLogin = "";
     int position, listSize;
     Context ctx;
     Activity activity;
@@ -206,6 +206,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        handler1 = new Handler();
         handler2 = new Handler();
         miniPlayer = 1;
+        showTooltiop();
         if (audioClick) {
 //            audioClick = false;
             exoBinding.llPlay.setVisibility(View.GONE);
@@ -286,7 +287,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-//        showTooltiop();
         Gson gson = new Gson();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
@@ -613,13 +613,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void showTooltiop() {
-        Animation enterAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
-        Animation exitAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        PlayerFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlayerFirstLogin, ""));
 
-        fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.layout_player_menu, view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+        if (PlayerFirstLogin.equalsIgnoreCase("1")) {
+            Animation enterAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
+            Animation exitAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom);
+
+            fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
+                    .customView(R.layout.layout_player_menu, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
@@ -635,47 +639,47 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                     });*/
 
-                }).closeOnTouch(false)
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llMore).closeOnTouch(false)
-                .build();
+                    }).closeOnTouch(false)
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.llMore).closeOnTouch(false)
+                    .build();
 
-        fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.layout_player_directions, (OnViewInflateListener) view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
-                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation)
-                .exitAnimation(exitAnimation).focusOn(exoBinding.llHighlights)
-                .closeOnTouch(false).build();
+            fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
+                    .customView(R.layout.layout_player_directions, (OnViewInflateListener) view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation)
+                    .exitAnimation(exitAnimation).focusOn(exoBinding.llHighlights)
+                    .closeOnTouch(false).build();
 
-        fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.layout_player_options, view -> {
-                    view.findViewById(R.id.rlSearch);
-                    ImageView ivOptions = view.findViewById(R.id.ivOptions);
-                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                    Glide.with(ctx)
-                            .load(R.drawable.highlight_icons)
-                            .asGif()
-                            .placeholder(R.drawable.highlight_icons)
-                            .crossFade()
-                            .into(ivOptions);
-                    rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llBottom).closeOnTouch(false).build();
+            fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
+                    .customView(R.layout.layout_player_options, view -> {
+                        view.findViewById(R.id.rlSearch);
+                        ImageView ivOptions = view.findViewById(R.id.ivOptions);
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        Glide.with(ctx)
+                                .load(R.drawable.highlight_icons)
+                                .asGif()
+                                .placeholder(R.drawable.highlight_icons)
+                                .crossFade()
+                                .into(ivOptions);
+                        rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.llBottom).closeOnTouch(false).build();
 
 
-        queue = new FancyShowCaseQueue()
-                .add(fancyShowCaseView11)
-                .add(fancyShowCaseView21)
-                .add(fancyShowCaseView31);
-        queue.show();
-       /* IsRegisters = "false";
-        IsRegisters1 = "false";*/
+            queue = new FancyShowCaseQueue()
+                    .add(fancyShowCaseView11)
+                    .add(fancyShowCaseView21)
+                    .add(fancyShowCaseView31);
+            queue.show();
+        }
 
+//        PlayerFirstLogin = "0";
     }
 
     @Override
