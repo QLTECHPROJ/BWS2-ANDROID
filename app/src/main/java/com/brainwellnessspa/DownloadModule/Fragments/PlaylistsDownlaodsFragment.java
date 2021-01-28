@@ -403,10 +403,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         if (isMyDownloading) {
                             handler1.removeCallbacks(UpdateSongTime1);
                         }
-                        DatabaseClient
-                                .getInstance(getActivity())
-                                .getaudioDatabase()
-                                .taskDao()
+                        DB.taskDao()
                                 .getAllPlaylist1().removeObserver(audioList -> {
                         });
                         getDownloadData(listModelList.get(position).getPlaylistID());
@@ -482,6 +479,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                    editor.apply();
                     editor.commit();
                     if (playlistDownloadId.get(0).equalsIgnoreCase(playlistID)) {
                         PRDownloader.cancel(downloadIdOne);

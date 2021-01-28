@@ -2303,27 +2303,18 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     public void GetMedia2() {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
+        DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
             if (audiolist.size() != 0) {
                 disableDownload();
-                if (audiolist.get(0).getDownloadProgress() == 100) {
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
-                    binding.pbProgress.setVisibility(View.GONE);
-                } else {
-                    GetMediaPer();
-                }
-                DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
-                });
+//                if (audiolist.get(0).getDownloadProgress() == 100) {
+//                    binding.ivDownloads.setVisibility(View.VISIBLE);
+//                    binding.pbProgress.setVisibility(View.GONE);
+//                } else {
+//                    GetMediaPer();
+//                }
+              DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {});
             } else {
-                boolean entryNot = false;
+               /* boolean entryNot = false;
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
                             && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -2331,21 +2322,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                if (!entryNot) {
-                    GetMediaPer();
+                if (!entryNot) {*/
                     enableDownload();
                     binding.ivDownloads.setVisibility(View.VISIBLE);
                     binding.pbProgress.setVisibility(View.GONE);
-                } else {
+            /*    } else {
                     GetMediaPer();
                     disableDownload();
-                }
-                DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
-                });
+                }*/
+                DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> { });
             }
         });
        /* downloadAudioDetailsList1 = new ArrayList<>();
@@ -2614,6 +2599,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         handler2.postDelayed(UpdateSongTime2, 10000);
                     } else {
                         binding.pbProgress.setVisibility(View.VISIBLE);
+                        binding.pbProgress.setProgress(0);
                         binding.ivDownloads.setVisibility(View.GONE);
                         disableDownload();
                         handler2.postDelayed(UpdateSongTime2, 10000);
@@ -3369,10 +3355,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void getPrepareShowData() {
         binding.tvDireName.setText(R.string.Directions);
         callButtonText(position);
-
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        String  IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
 //            if(!ismyDes) {
-            initializePlayerDisclaimer();
+            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                initializePlayerDisclaimer();
+            }else{
+                removeArray();
+            }
         } else {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);

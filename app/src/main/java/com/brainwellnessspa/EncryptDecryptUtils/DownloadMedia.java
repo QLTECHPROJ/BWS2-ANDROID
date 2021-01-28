@@ -137,6 +137,9 @@ public class DownloadMedia implements OnDownloadListener {
                         fileNameList.remove(0);
                         audioFile.remove(0);
                         playlistDownloadId.remove(0);
+                        filename = "";
+                        downloadProgress = 0;
+                        downloadProgress2= 0;
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         String urlJson = gson.toJson(audioFile);
@@ -146,24 +149,14 @@ public class DownloadMedia implements OnDownloadListener {
                         editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                         editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                         editor.commit();
-                        fileNameList = new ArrayList<>();
-                        audioFile = new ArrayList<>();
-                        playlistDownloadId = new ArrayList<>();
-                        SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                        String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                        String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                        if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                            Type type = new TypeToken<List<String>>() {
-                            }.getType();
-                            fileNameList = gson.fromJson(jsony, type);
-                            audioFile = gson.fromJson(json1, type);
-                            playlistDownloadId = gson.fromJson(jsonq, type);
-                        }
-                        if (fileNameList.size() != 0) {
+                        if(fileNameList.size() == 0){
+                            isDownloading = false;
+                            filename = "";
+                            downloadProgress = 0;
+                            downloadProgress2= 0;
+                        } else if (fileNameList.size() != 0) {
                             encrypt1(audioFile, fileNameList, playlistDownloadId);
                         }
-
                     }
                 }).start(this);
         return encodedBytes;

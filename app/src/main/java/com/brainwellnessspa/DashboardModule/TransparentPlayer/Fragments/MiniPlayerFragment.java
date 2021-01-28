@@ -2293,10 +2293,15 @@ public class MiniPlayerFragment extends Fragment {
             e.printStackTrace();
         }*/
         callButtonText(position);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        String  IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
 //            if(!ismyDes) {
-            initializePlayerDisclaimer();
-//            }
+            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                initializePlayerDisclaimer();
+            }else{
+                removeArray();
+            }
         } else {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
