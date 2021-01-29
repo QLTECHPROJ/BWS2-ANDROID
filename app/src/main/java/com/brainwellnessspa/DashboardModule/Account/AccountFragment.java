@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -75,13 +76,15 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
+
 
 public class AccountFragment extends Fragment {
     public static int ComeScreenReminder = 0;
     public static int ComeScreenAccount = 0;
     public static boolean logout = false;
     FragmentAccountBinding binding;
-    String UserID, MobileNo, Email, DeviceType, DeviceID, Name, UserName, AccountFirstLogin = "";
+    String UserID, MobileNo, Email, DeviceType, DeviceID, Name, UserName, AccountFirstLogin = "0";
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
     private long mLastClickTime = 0;
@@ -342,13 +345,11 @@ public class AccountFragment extends Fragment {
 
     private void showTooltiop() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        AccountFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AccountFirstLogin, ""));
+        AccountFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0"));
 
         if (AccountFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
             Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
-//            getActivity().onBackPressed();
-
             fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_account_downloads, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
@@ -368,11 +369,9 @@ public class AccountFragment extends Fragment {
                         }
                     });*/
 
-                    })
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llDownloads).closeOnTouch(false)
-                    .build();
+                    .focusOn(binding.llDownloads).closeOnTouch(false).build();
 
             fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_account_billingorder, (OnViewInflateListener) view -> {
@@ -385,9 +384,11 @@ public class AccountFragment extends Fragment {
 
             fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_account_resources, view -> {
-                        view.findViewById(R.id.rlSearch);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                        rlDone.setOnClickListener(v -> {
+                            fancyShowCaseView31.hide();
+                            tutorial = true;
+                        });
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
@@ -398,9 +399,27 @@ public class AccountFragment extends Fragment {
                     .add(fancyShowCaseView21)
                     .add(fancyShowCaseView31);
             queue.show();
-        }
 
-//        AccountFirstLogin = "0";
+            OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+        } else {
+            OnBackPressedCallback callback = new OnBackPressedCallback(false) {
+                @Override
+                public void handleOnBackPressed() {
+
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+        }
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0");
+        editor.commit();
+        tutorial = false;
     }
 
     void DeleteCall(Dialog dialog) {

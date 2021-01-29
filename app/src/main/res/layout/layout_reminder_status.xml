@@ -8,37 +8,51 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_160sdp"
-        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_100sdp"
         android:orientation="horizontal"
         android:weightSum="1">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            android:gravity="right">
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="0.80"
+            android:orientation="vertical"
+            android:paddingRight="@dimen/_5sdp">
 
-            <!--
-                        <ImageView
-                            android:id="@+id/ivLine"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/_15sdp"
-                            android:src="@drawable/showcase_dot_line"
-                            app:tint="@color/white" />
-            -->
+        </LinearLayout>
 
-        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_weight="0.20">
+
+            <ImageView
+                android:layout_width="@dimen/_64sdp"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/reminder_switch_icon" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginLeft="@dimen/_70sdp"
-            android:layout_marginRight="@dimen/_22sdp"
-            android:layout_weight="0.9"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_weight="0.65"
             android:orientation="vertical"
             android:paddingRight="@dimen/_5sdp">
 
@@ -46,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/montserrat_semi_bold"
                 android:text="Reminder"
                 android:textColor="@color/white"
@@ -92,6 +107,22 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.35"
+            android:gravity="right">
+
+            <ImageView
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_gravity="center"
+                android:rotation="180"
+                android:layout_marginRight="@dimen/_30sdp"
+                android:src="@drawable/highlights_arrow" />
+
+
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout

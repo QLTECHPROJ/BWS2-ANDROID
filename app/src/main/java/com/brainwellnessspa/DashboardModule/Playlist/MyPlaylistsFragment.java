@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -131,9 +132,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
     public static int isPlayPlaylist = 0;
-    public static boolean RefreshPlaylist = false;
+    public static boolean RefreshPlaylist = false, playtutorial = false;
     FragmentMyPlaylistsBinding binding;
-    String PlaylistFirstLogin, IsPlayDisclimer, TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
+    String PlaylistFirstLogin = "0", IsPlayDisclimer, TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     PlayListsAdpater adpater;
     PlayListsAdpater1 adpater1;
     PlayListsAdpater2 adpater2;
@@ -286,6 +287,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
+
         binding.llMore.setOnClickListener(view13 -> {
             handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
@@ -339,7 +341,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         });
 
-        showTooltiop();
 
         RecyclerView.LayoutManager playList1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists1.setLayoutManager(playList1);
@@ -383,7 +384,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         view = binding.getRoot();
         return view;
@@ -391,7 +391,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void showTooltiop() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        PlaylistFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, ""));
+        PlaylistFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0"));
 
         if (PlaylistFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
@@ -419,7 +419,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }).closeOnTouch(false)
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llReminder).closeOnTouch(false)
+                    .focusOn(binding.llReminder).closeOnTouch(true)
                     .build();
 
             fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
@@ -429,47 +429,93 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation)
                     .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
-                    .closeOnTouch(false).build();
+                    .closeOnTouch(true).build();
 
             fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_details, view -> {
-                        view.findViewById(R.id.rlSearch);
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llMore).closeOnTouch(false).build();
+                    .focusOn(binding.llMore).closeOnTouch(true).build();
 
             fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_searches, view -> {
-                        view.findViewById(R.id.rlSearch);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        TextView tvclick = view.findViewById(R.id.tvclick);
+                        if (MyCreated.equalsIgnoreCase("1")) {
+                            tvclick.setText("Next");
+                        } else {
+                            tvclick.setText("Done");
+                        }
                         rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.rlSearch).closeOnTouch(false).build();
+                    .focusOn(binding.rlSearch).closeOnTouch(true).build();
+
             fancyShowCaseView51 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_sortings, view -> {
-                        view.findViewById(R.id.rlSearch);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
+                        rlDone.setOnClickListener(v -> {
+                            fancyShowCaseView51.hide();
+                            playtutorial = true;
+                        });
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    /*.focusOn(binding.rlSearch)*/.closeOnTouch(false).build();
+                    .closeOnTouch(true).build();
 
-            queue = new FancyShowCaseQueue()
-                    .add(fancyShowCaseView11)
-                    .add(fancyShowCaseView21)
-                    .add(fancyShowCaseView31)
-                    .add(fancyShowCaseView41)
-                    .add(fancyShowCaseView51);
-            queue.show();
+
+            if (MyCreated.equalsIgnoreCase("1")) {
+                queue = new FancyShowCaseQueue()
+                        .add(fancyShowCaseView11)
+                        .add(fancyShowCaseView21)
+                        .add(fancyShowCaseView31)
+                        .add(fancyShowCaseView41)
+                        .add(fancyShowCaseView51);
+                queue.show();
+                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if (playtutorial) {
+                            callBack();
+                        }
+                    }
+                };
+                requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+            } else {
+                queue = new FancyShowCaseQueue()
+                        .add(fancyShowCaseView11)
+                        .add(fancyShowCaseView21)
+                        .add(fancyShowCaseView31)
+                        .add(fancyShowCaseView41);
+                queue.show();
+                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if (playtutorial) {
+                            callBack();
+                        }
+                    }
+                };
+                requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+            }
+
+        } else {
+            OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    callBack();
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         }
-
-//       PlaylistFirstLogin = "0";
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
+        editor.commit();
     }
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
@@ -639,16 +685,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.searchView.clearFocus();
         searchEditText.setText("");
         binding.searchView.setQuery("", false);
-
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                callBack();
-                return true;
-            }
-            return false;
-        });
 
         if (ComeFindAudio == 2) {
             binding.searchView.requestFocus();
@@ -1086,6 +1122,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
         MyCreated = listModel.getCreated();
+        showTooltiop();
         if (listModel.getPlaylistName().equalsIgnoreCase("") ||
                 listModel.getPlaylistName() == null) {
             binding.tvLibraryName.setText(R.string.My_Playlist);

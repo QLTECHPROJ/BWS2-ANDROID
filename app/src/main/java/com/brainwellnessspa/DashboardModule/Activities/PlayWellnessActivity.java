@@ -393,7 +393,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         callRepeatShuffle();
 
-//        showTooltiop();
+//        showTooltiop(); no need
 
         */
 /* if (isMediaStart *//*
@@ -548,7 +548,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
                 .customView(R.layout.layout_player_options, view -> {
-                    view.findViewById(R.id.rlSearch);
+
                     ImageView ivOptions = view.findViewById(R.id.ivOptions);
                     RelativeLayout rlDone = view.findViewById(R.id.rlDone);
                     Glide.with(ctx)

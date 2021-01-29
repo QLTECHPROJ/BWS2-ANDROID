@@ -53,12 +53,12 @@ import retrofit2.Response;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
-    String UserID, ReminderFirstLogin = "";
+    String UserID, ReminderFirstLogin = "0";
     Context ctx;
     Activity activity;
     ArrayList<String> remiderIds = new ArrayList<>();
     RemiderDetailsAdapter adapter;
-    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21;
+    FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2;
     FancyShowCaseQueue queue;
     public static String comeBack = "";
     RemiderDetailsModel listReminderModel;
@@ -105,64 +105,12 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
             }
         });
-        showTooltiop();
     }
 
     @Override
     protected void onResume() {
         prepareData();
         super.onResume();
-    }
-
-    private void showTooltiop() {
-        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        ReminderFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, ""));
-
-        if (ReminderFirstLogin.equalsIgnoreCase("1")) {
-            Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
-            Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
-
-            fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
-                    .customView(R.layout.layout_reminder_status, view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
-                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
-                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView11.hide();
-                        }
-                    });
-                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            queue.cancel(true);
-                        }
-                    });*/
-
-                    }).closeOnTouch(false)
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    /*.focusOn(checkBox)*/.closeOnTouch(false)
-                    .build();
-
-            fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
-                    .customView(R.layout.layout_reminder_remove, view -> {
-                        view.findViewById(R.id.rlSearch);
-                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
-                    })
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
-
-            queue = new FancyShowCaseQueue()
-                    .add(fancyShowCaseView11)
-                    .add(fancyShowCaseView21);
-            queue.show();
-        }
-//        ReminderFirstLogin = "0";
     }
 
     @Override
@@ -185,13 +133,13 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             adapter = new RemiderDetailsAdapter(listModel.getResponseData());
                             binding.rvReminderDetails.setAdapter(adapter);
                             binding.btnAddReminder.setVisibility(View.VISIBLE);
+                            showTooltiop();
                             if (listModel.getResponseData().size() == 0) {
                                 binding.llError.setVisibility(View.VISIBLE);
                                 binding.rvReminderDetails.setVisibility(View.GONE);
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvReminderDetails.setVisibility(View.VISIBLE);
-                                queue.show();
                             }
 
                             if (remiderIds.size() == 0) {
@@ -271,6 +219,54 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             dialog.show();
             dialog.setCancelable(false);
         });
+    }
+
+    private void showTooltiop() {
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        ReminderFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0"));
+
+        if (ReminderFirstLogin.equalsIgnoreCase("1")) {
+            Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
+            Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
+            fancyShowCaseView1 = new FancyShowCaseView.Builder(activity)
+                    .customView(R.layout.layout_reminder_status, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView1.hide());
+                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
+                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView11.hide();
+                        }
+                    });
+                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            queue.cancel(true);
+                        }
+                    });*/
+
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
+
+            fancyShowCaseView2 = new FancyShowCaseView.Builder(activity)
+                    .customView(R.layout.layout_reminder_remove, view -> {
+                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        rlDone.setOnClickListener(v -> {
+                            fancyShowCaseView2.hide();
+                        });
+                    })
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
+
+            queue = new FancyShowCaseQueue().add(fancyShowCaseView1).add(fancyShowCaseView2);
+            queue.show();
+        }
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0");
+        editor.commit();
     }
 
     public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
