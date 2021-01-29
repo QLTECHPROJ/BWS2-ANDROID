@@ -93,8 +93,8 @@ public class DownloadMedia implements OnDownloadListener {
 
 //                        localBroadcastManager.sendBroadcast(localIntent);
                         updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
+                        downloadProgress2 = downloadProgress;
                     }
-                    downloadProgress2 = downloadProgress;
                 })/*.setOnStartOrResumeListener(() -> {
 //                    if (Status.PAUSED == status) {
 //                        PRDownloader.resume(downloadIdOne);
@@ -326,11 +326,11 @@ public class DownloadMedia implements OnDownloadListener {
 //                LocalBroadcastManager.getInstance(context).unregisterReceiver(listener);
                 encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
+                BWSApplication.showToast("Download Complete...", ctx);
                 downloadProgress = 0;
                 filename = "";
                 isDownloading = false;
                 getPending(ctx);
-                BWSApplication.showToast("Download Complete...", ctx);
             }
         } catch (Exception e) {
             e.printStackTrace();

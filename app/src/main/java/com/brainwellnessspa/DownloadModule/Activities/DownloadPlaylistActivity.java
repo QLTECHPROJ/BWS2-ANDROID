@@ -998,7 +998,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                 pos = position;
                             } else {
-                                pos = 0;
+//                                pos = 0;
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                             if (listModelList2.size() != 0) {
@@ -1018,16 +1018,20 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         }
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
-                        } else {
-                            pos = 0;
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                        }
-                        boolean audioc = true;
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                player.setPlayWhenReady(true);
-                                audioc = false;
-                                listModelList2.add(pos, addDisclaimer);
+
+                            boolean audioc = true;
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    player.setPlayWhenReady(true);
+                                    audioc = false;
+                                    listModelList2.add(pos, addDisclaimer);
+                                } else {
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(pos, addDisclaimer);
+                                    }
+                                }
                             } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
@@ -1035,16 +1039,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                     listModelList2.add(pos, addDisclaimer);
                                 }
                             }
-                        } else {
-                            isDisclaimer = 0;
-                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                audioc = true;
-                                listModelList2.add(pos, addDisclaimer);
+                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
-                        }
-                        if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
-                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
-                        } else {
+                        }else {
+//                            pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                          SegmentTag();

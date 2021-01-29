@@ -627,14 +627,15 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                             if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                 pos = position;
-                            } else {
-                                pos = 0;
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                            }
-                            if (listModelList2.size() != 0) {
                                 callTransFrag(pos, listModelList2, true);
                             } else {
+//                                pos = 0;
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
+                            if (listModelList2.size() == 0) {
+//                                callTransFrag(pos, listModelList2, true);
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            } else {
                             }
                         }
                     } else {
@@ -646,10 +647,7 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
-                        } else {
-                            pos = 0;
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                        }
+
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");
@@ -661,12 +659,19 @@ public class AudioDownloadsFragment extends Fragment {
                             mainPlayModel.setLike("");
                             mainPlayModel.setDownload("");
                             mainPlayModel.setAudioDuration("00:48");
-                        boolean audioc = true;
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                player.setPlayWhenReady(true);
-                                audioc = false;
-                                listModelList2.add(pos, mainPlayModel);
+                            boolean audioc = true;
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    player.setPlayWhenReady(true);
+                                    audioc = false;
+                                    listModelList2.add(pos, mainPlayModel);
+                                } else {
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(pos, mainPlayModel);
+                                    }
+                                }
                             } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
@@ -674,17 +679,14 @@ public class AudioDownloadsFragment extends Fragment {
                                     listModelList2.add(pos, mainPlayModel);
                                 }
                             }
-                        } else {
-                            isDisclaimer = 0;
-                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                audioc = true;
-                                listModelList2.add(pos, mainPlayModel);
+                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            } else {
+                                callTransFrag(pos, listModelList2, audioc);
                             }
-                        }
-                        if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
+                        }else {
+//                            pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                        }else{
-                            callTransFrag(pos, listModelList2, audioc);
                         }
                     }
                     super.onPostExecute(aVoid);

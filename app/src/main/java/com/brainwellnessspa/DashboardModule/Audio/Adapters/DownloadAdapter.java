@@ -249,7 +249,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
                         } else {
-                            pos = 0;
+//                            pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                         if (listModelList2.size() != 0) {
@@ -267,46 +267,47 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     }
                     if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                         pos = position;
-                    } else {
-                        pos = 0;
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                    }
 
-                    MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    boolean audioc= true;
-                    if(isDisclaimer == 1){
-                        if (player != null) {
-                            player.setPlayWhenReady(true);
-                            audioc = false;
-                            listModelList2.add(pos, mainPlayModel);
-                        }else{
+
+                        MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                        mainPlayModel.setID("0");
+                        mainPlayModel.setName("Disclaimer");
+                        mainPlayModel.setAudioFile("");
+                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                        mainPlayModel.setAudiomastercat("");
+                        mainPlayModel.setAudioSubCategory("");
+                        mainPlayModel.setImageFile("");
+                        mainPlayModel.setLike("");
+                        mainPlayModel.setDownload("");
+                        mainPlayModel.setAudioDuration("00:48");
+                        boolean audioc = true;
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(pos, mainPlayModel);
+                            } else {
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(pos, mainPlayModel);
+                                }
+                            }
+                        } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                audioc = true;
                                 listModelList2.add(pos, mainPlayModel);
+                                audioc = true;
                             }
                         }
-                    }else {
-                        isDisclaimer = 0;
-                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                            listModelList2.add(pos, mainPlayModel);
-                            audioc = true;
+                        if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        } else {
+                            callTransFrag(pos, listModelList2, audioc);
                         }
-                    }
-                    if(listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size()==1){
+                    }else {
+//                        pos = 0;
                         BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                    }else{
-                        callTransFrag(pos, listModelList2, audioc);
                     }
 
                 }

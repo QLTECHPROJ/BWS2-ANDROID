@@ -1447,11 +1447,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     fileNameList = name;
                     playlistDownloadId = downloadPlaylistId;
                 }
-                String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-                SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads, 100);
+                SaveMedia(playlistSongs, position, llDownload, ivDownloads, 0);
             } else {
-                String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-                SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads, 0);
+                SaveMedia( playlistSongs, position, llDownload, ivDownloads, 100);
             }
             SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -1635,7 +1633,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         st.execute();*/
     }
 
-    private void SaveMedia(byte[] encodeBytes, String dirPath, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, RelativeLayout llDownload, ImageView ivDownloads, int progress) {
+    private void SaveMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, RelativeLayout llDownload, ImageView ivDownloads, int progress) {
         DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
         downloadAudioDetails.setID(playlistSongs.get(i).getID());
         downloadAudioDetails.setName(playlistSongs.get(i).getName());
@@ -3309,7 +3307,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                 pos = position;
                             } else {
-                                pos = 0;
+//                                pos = 0;
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                             if (listModelList2.size() != 0) {
@@ -3328,16 +3326,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
-                        } else {
-                            pos = 0;
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                        }
-                        boolean audioc = true;
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                player.setPlayWhenReady(true);
-                                audioc = false;
-                                listModelList2.add(pos, addDisclaimer);
+
+                            boolean audioc = true;
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    player.setPlayWhenReady(true);
+                                    audioc = false;
+                                    listModelList2.add(pos, addDisclaimer);
+                                } else {
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(pos, addDisclaimer);
+                                    }
+                                }
                             } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
@@ -3345,16 +3347,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     listModelList2.add(pos, addDisclaimer);
                                 }
                             }
-                        } else {
-                            isDisclaimer = 0;
-                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                audioc = true;
-                                listModelList2.add(pos, addDisclaimer);
+                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
-                        }
-                        if (listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() == 1) {
-                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                         } else {
+//                            pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                         SegmentTag();

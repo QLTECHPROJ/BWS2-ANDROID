@@ -132,7 +132,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
     boolean isPrepared = false;
     Properties p;
     long oldSeekPosition = 0;
-    Handler handler2;
+    Handler handler2,handler1;
+    int counterinit = 0;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -172,6 +173,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }
     };
+
+    Runnable UpdateSongTime1 = new Runnable() {
+        @Override
+        public void run() {
+            handler1.removeCallbacks(UpdateSongTime1);
+            if (counterinit <= 3) {
+                initializePlayer();
+                Log.e("run  saa", "runasca");
+            }
+        }
+    };
     AudioDatabase DB;
     private long mLastClickTime = 0;
 
@@ -186,6 +198,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 , R.layout.audio_player_custom_layout, binding.playerControlView, false);
         binding.playerControlView.addView(exoBinding.getRoot());
         PlayerStatus = "Main";
+        handler1 = new Handler();
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
                 "Audio_database")
@@ -1348,6 +1361,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                 exoBinding.exoProgress.setDuration(player.getDuration());
                 setpleyerctrView();
+
+                handler1.removeCallbacks(UpdateSongTime1);
             } else {
                 if (audioClick) {
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -1360,6 +1375,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     Log.e("PlayerINIT", "exoBinding.progressBar.setVisibility(View.GONE);");
                 }
+                handler1.postDelayed(UpdateSongTime1, 2000);
                 callRepeatShuffle();
             }
             callAllDisable(true);
@@ -2174,7 +2190,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.ivDownloads.setVisibility(View.GONE);
             GetMediaPer();
             disableDownload();
-            SaveMedia(100);
+            SaveMedia(0);
             p = new Properties();
             p.putValue("userId", UserID);
             p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -2305,13 +2321,16 @@ public class AudioPlayerActivity extends AppCompatActivity {
     public void GetMedia2() {
         DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
             if (audiolist.size() != 0) {
+
                 disableDownload();
-//                if (audiolist.get(0).getDownloadProgress() == 100) {
-//                    binding.ivDownloads.setVisibility(View.VISIBLE);
-//                    binding.pbProgress.setVisibility(View.GONE);
-//                } else {
-//                    GetMediaPer();
-//                }
+                if (audiolist.get(0).getDownloadProgress() == 100) {
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setVisibility(View.GONE);
+                } else {
+                    binding.ivDownloads.setVisibility(View.GONE);
+                    binding.pbProgress.setVisibility(View.VISIBLE);
+                    GetMediaPer();
+                }
               DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {});
             } else {
                /* boolean entryNot = false;
@@ -2589,6 +2608,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 binding.pbProgress.setVisibility(View.VISIBLE);
                                 binding.ivDownloads.setVisibility(View.GONE);
                                 disableDownload();
+                                handler2.postDelayed(UpdateSongTime2, 10000);
                             }
                         } else {
                             binding.pbProgress.setVisibility(View.GONE);
@@ -2596,7 +2616,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             disableDownload();
                             handler2.removeCallbacks(UpdateSongTime2);
                         }
-                        handler2.postDelayed(UpdateSongTime2, 10000);
                     } else {
                         binding.pbProgress.setVisibility(View.VISIBLE);
                         binding.pbProgress.setProgress(0);
