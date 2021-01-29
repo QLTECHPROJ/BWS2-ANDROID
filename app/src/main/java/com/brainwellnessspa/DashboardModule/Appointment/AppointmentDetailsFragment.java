@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -76,22 +77,19 @@ public class AppointmentDetailsFragment extends Fragment {
         }
         getAppointmentData();
         binding.llBack.setOnClickListener(view1 -> callBack());
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                callBack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         return view;
     }
 
     @Override
     public void onResume() {
-
         RefreshData();
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                callBack();
-                return true;
-            }
-            return false;
-        });
         super.onResume();
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -81,7 +82,13 @@ public class SessionsFragment extends Fragment {
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvSessionList.setLayoutManager(recentlyPlayed);
         binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
-
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                callBack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         return view;
     }
 
@@ -91,15 +98,6 @@ public class SessionsFragment extends Fragment {
         if (view == null) {
             return;
         }
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                callBack();
-                return true;
-            }
-            return false;
-        });
 
         if (ComeFromAppointmentDetail == 1) {
             prepareSessionList();

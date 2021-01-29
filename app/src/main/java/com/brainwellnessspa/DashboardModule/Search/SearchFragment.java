@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
@@ -45,6 +46,7 @@ import com.brainwellnessspa.databinding.DownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentSearchBinding;
 import com.brainwellnessspa.databinding.GlobalSearchLayoutBinding;
 import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding;
+import com.brainwellnessspa.databinding.SearchAudioLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -66,6 +68,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -75,7 +78,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class SearchFragment extends Fragment {
     public static int comefrom_search = 0;
     FragmentSearchBinding binding;
-    String UserID, AudioFlag, IsPlayDisclimer, SearchFirstLogin = "";
+    String UserID, AudioFlag, IsPlayDisclimer, SearchFirstLogin = "0";
     EditText searchEditText;
     SerachListAdpater serachListAdpater;
     int startTime;
@@ -179,7 +182,7 @@ public class SearchFragment extends Fragment {
 
     private void showTooltiop() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        SearchFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_SearchFirstLogin, ""));
+        SearchFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_SearchFirstLogin, "0"));
 
         if (SearchFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
@@ -204,29 +207,45 @@ public class SearchFragment extends Fragment {
                         }
                     });*/
 
-                    }).closeOnTouch(false)
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
+                    .closeOnTouch(false)
                     .build();
 
             fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_search_addplaylist, view -> {
-                        view.findViewById(R.id.rlSearch);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
+                        rlDone.setOnClickListener(v -> {
+                            fancyShowCaseView21.hide();
+                            tutorial = true;
+                        });
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
-
+                    .closeOnTouch(false).build();
 
             queue = new FancyShowCaseQueue()
                     .add(fancyShowCaseView11)
                     .add(fancyShowCaseView21);
             queue.show();
+            OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+        } else {
+            OnBackPressedCallback callback = new OnBackPressedCallback(false) {
+                @Override
+                public void handleOnBackPressed() {
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         }
-        //        SearchFirstLogin = "0";
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "0");
+        editor.commit();
     }
 
     @Override
@@ -863,8 +882,8 @@ public class SearchFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.downloads_layout, parent, false);
+            SearchAudioLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.search_audio_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -1082,9 +1101,9 @@ public class SearchFragment extends Fragment {
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            DownloadsLayoutBinding binding;
+            SearchAudioLayoutBinding binding;
 
-            public MyViewHolder(DownloadsLayoutBinding binding) {
+            public MyViewHolder(SearchAudioLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
             }

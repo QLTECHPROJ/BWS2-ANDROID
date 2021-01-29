@@ -45,13 +45,12 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.serviceRemoved;
 
 public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;
-    public static boolean audioPause = false, audioClick = false;
+    public static boolean audioPause = false, audioClick = false, tutorial = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
     BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
-    int BackClick = 0;
     MyNetworkReceiver myNetworkReceiver;
 
     @Override
@@ -225,9 +224,10 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 
     @Override
     public void onBackPressed() {
-        if (BackClick == 1) {
+        if (tutorial) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
         }
+
         if (invoiceToDashboard == 1) {
             finishAffinity();
             deleteCache(DashboardActivity.this);

@@ -67,6 +67,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
 import static com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
@@ -76,11 +77,11 @@ public class AudioFragment extends Fragment {
     public static boolean exit = false;
     public static String IsLock = "0";
     FragmentAudioBinding binding;
-    String UserID, AudioFlag, expDate, AudioFirstLogin = "";
+    String UserID, AudioFlag, expDate, AudioFirstLogin = "0";
     boolean Identify;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
-    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
+    FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2, fancyShowCaseView3;
     FancyShowCaseQueue queue;
     MainAudioListAdapter adapter;
 
@@ -228,7 +229,6 @@ public class AudioFragment extends Fragment {
 //                        binding.rvMainAudioList.setAdapter(adapter);
 //                        GetAllMedia(getActivity(), listModel.getResponseData());
                             callObserverMethod(listModel.getResponseData());
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -490,15 +490,18 @@ public class AudioFragment extends Fragment {
 
     private void showTooltiop() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        AudioFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AudioFirstLogin, ""));
-        if(AudioFirstLogin.equalsIgnoreCase("1")){
+        AudioFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0"));
+//        audio_main_icon
+//                add_audio_main_icon
+//        audio_categories_icon
+        if (AudioFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
             Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
 
-            fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+            fancyShowCaseView1 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_audio_librarys, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                        rlNext.setOnClickListener(v -> fancyShowCaseView1.hide());
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
@@ -514,40 +517,40 @@ public class AudioFragment extends Fragment {
                         }
                     });*/
 
-                    }).closeOnTouch(false)
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
-                    .build();
-
-            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_audio_addplaylist, (OnViewInflateListener) view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation)
-                    .exitAnimation(exitAnimation)/*.focusOn(binding.llBillingOrder)*/
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .closeOnTouch(false).build();
 
-            fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+            fancyShowCaseView2 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_audio_addplaylist, (OnViewInflateListener) view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView2.hide());
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation)
+                    .exitAnimation(exitAnimation)
+                    .closeOnTouch(false).build();
+
+            fancyShowCaseView3 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_audio_categories, view -> {
-                        view.findViewById(R.id.rlSearch);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                        rlDone.setOnClickListener(v -> {
+                            fancyShowCaseView3.hide();
+                        });
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
-
+                    .closeOnTouch(false).build();
 
             queue = new FancyShowCaseQueue()
-                    .add(fancyShowCaseView11)
-                    .add(fancyShowCaseView21)
-                    .add(fancyShowCaseView31);
+                    .add(fancyShowCaseView1)
+                    .add(fancyShowCaseView2)
+                    .add(fancyShowCaseView3);
             queue.show();
         }
-
-//        AudioFirstLogin = "0";
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0");
+        editor.commit();
     }
 
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {

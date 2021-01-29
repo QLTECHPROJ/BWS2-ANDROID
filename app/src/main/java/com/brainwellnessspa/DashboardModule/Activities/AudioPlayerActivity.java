@@ -118,7 +118,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     ActivityAudioPlayerBinding binding;
     ArrayList<MainPlayModel> mainPlayModelList, mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "", PlayerFirstLogin = "";
+    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "", PlayerFirstLogin = "0";
     int position, listSize;
     Context ctx;
     Activity activity;
@@ -627,7 +627,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void showTooltiop() {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        PlayerFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlayerFirstLogin, ""));
+        PlayerFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0"));
 
         if (PlayerFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
@@ -652,8 +652,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                     });*/
 
-                    }).closeOnTouch(false)
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .focusOn(binding.llMore).closeOnTouch(false)
                     .build();
@@ -669,7 +668,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
                     .customView(R.layout.layout_player_options, view -> {
-                        view.findViewById(R.id.rlSearch);
                         ImageView ivOptions = view.findViewById(R.id.ivOptions);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
                         Glide.with(ctx)
@@ -691,8 +689,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .add(fancyShowCaseView31);
             queue.show();
         }
-
-//        PlayerFirstLogin = "0";
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0");
+        editor.commit();
     }
 
     @Override
@@ -2321,16 +2321,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
     public void GetMedia2() {
         DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
             if (audiolist.size() != 0) {
-
-                disableDownload();
-                if (audiolist.get(0).getDownloadProgress() == 100) {
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                binding.ivDownloads.setVisibility(View.VISIBLE);
                     binding.pbProgress.setVisibility(View.GONE);
-                } else {
-                    binding.ivDownloads.setVisibility(View.GONE);
-                    binding.pbProgress.setVisibility(View.VISIBLE);
-                    GetMediaPer();
-                }
+                disableDownload();
+//                if (audiolist.get(0).getDownloadProgress() == 100) {
+//                    binding.ivDownloads.setVisibility(View.VISIBLE);
+//                    binding.pbProgress.setVisibility(View.GONE);
+//                } else {
+//                    binding.ivDownloads.setVisibility(View.GONE);
+//                    binding.pbProgress.setVisibility(View.VISIBLE);
+//                    GetMediaPer();
+//                }
               DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {});
             } else {
                /* boolean entryNot = false;
@@ -2342,14 +2343,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }
                 }
                 if (!entryNot) {*/
-                    enableDownload();
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
-                    binding.pbProgress.setVisibility(View.GONE);
+                enableDownload();
+                binding.ivDownloads.setVisibility(View.VISIBLE);
+                binding.pbProgress.setVisibility(View.GONE);
             /*    } else {
                     GetMediaPer();
                     disableDownload();
                 }*/
-                DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> { });
+                DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
+                });
             }
         });
        /* downloadAudioDetailsList1 = new ArrayList<>();
@@ -2748,7 +2750,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-//        showTooltiop();
+//        showTooltiop(); no need
         Gson gson = new Gson();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
@@ -3375,12 +3377,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
         binding.tvDireName.setText(R.string.Directions);
         callButtonText(position);
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        String  IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+        String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
 //            if(!ismyDes) {
             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                 initializePlayerDisclaimer();
-            }else{
+            } else {
                 removeArray();
             }
         } else {
