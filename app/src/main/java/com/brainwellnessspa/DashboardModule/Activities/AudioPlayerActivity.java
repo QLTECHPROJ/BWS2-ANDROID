@@ -112,7 +112,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     List<String> downloadAudioDetailsList;
     List<String> downloadAudioDetailsListGloble;
     AudioPlayerCustomLayoutBinding exoBinding;
-    byte[] descriptor;
     Bitmap myBitmap = null;
     List<File> filesDownloaded;
     ActivityAudioPlayerBinding binding;
@@ -124,15 +123,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Activity activity;
     List<String> fileNameList = new ArrayList<>(), audioFile1 = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     Boolean queuePlay, audioPlay;
-    int notificationId = 1234, downloadPercentage = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList1;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
     PlayerControlView playerControlView;
-    boolean isPrepared = false;
     Properties p;
     long oldSeekPosition = 0;
-    Handler handler2,handler1;
+    Handler handler2, handler1;
     int counterinit = 0;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
@@ -162,7 +159,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             } else {
                                 binding.pbProgress.setVisibility(View.VISIBLE);
                                 binding.ivDownloads.setVisibility(View.GONE);
-                            handler2.removeCallbacks(UpdateSongTime2);
+                                handler2.removeCallbacks(UpdateSongTime2);
                             }
                         }
                     }
@@ -219,7 +216,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        handler1 = new Handler();
         handler2 = new Handler();
         miniPlayer = 1;
-        showTooltiop();
+        showTooltips();
         if (audioClick) {
 //            audioClick = false;
             exoBinding.llPlay.setVisibility(View.GONE);
@@ -625,7 +622,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private void showTooltiop() {
+    private void showTooltips() {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         PlayerFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0"));
 
@@ -1448,23 +1445,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 }
                             } catch (Exception e) {
                             }
-//                        isprogressbar = false;
                         } else if (state == ExoPlayer.STATE_BUFFERING) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
                         }
                     }
-//                @Override
-//                public void onIsLoadingChanged(boolean isLoading) {
-//                    isPrepared = isLoading;
-                  /*  if (isLoading) {
-                        exoBinding.llPlay.setVisibility(View.GONE);
-                        exoBinding.llPause.setVisibility(View.GONE);
-                        exoBinding.progressBar.setVisibility(View.VISIBLE);
-                        Log.e("Isloading", "BigLoadingggggggggggggggggg");
-                    }*/
-//                }
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
@@ -2316,7 +2302,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.pbProgress.setVisibility(View.VISIBLE);
                     GetMediaPer();
                 }
-              DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {});
+                DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
+                });
             } else {
                /* boolean entryNot = false;
                 for (int i = 0; i < fileNameList.size(); i++) {
@@ -2734,7 +2721,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-//        showTooltiop(); no need
+//        showTooltips(); no need
         Gson gson = new Gson();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));

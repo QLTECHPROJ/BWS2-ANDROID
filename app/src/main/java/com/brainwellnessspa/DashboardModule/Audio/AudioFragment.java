@@ -1,5 +1,7 @@
 package com.brainwellnessspa.DashboardModule.Audio;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.PathInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -140,7 +143,7 @@ public class AudioFragment extends Fragment {
                 }
             }
         }
-        showTooltiop();
+        showTooltips();
         return view;
     }
 
@@ -492,7 +495,7 @@ public class AudioFragment extends Fragment {
     }*/
     }
 
-    private void showTooltiop() {
+    private void showTooltips() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         AudioFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0"));
         if (AudioFirstLogin.equalsIgnoreCase("1")) {
@@ -503,6 +506,15 @@ public class AudioFragment extends Fragment {
                     .customView(R.layout.layout_audio_librarys, view -> {
                         ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
                         rlNext.setOnClickListener(v -> fancyShowCaseView1.hide());
 
                       /*  MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
@@ -534,6 +546,17 @@ public class AudioFragment extends Fragment {
             fancyShowCaseView2 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_audio_addplaylist, (OnViewInflateListener) view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
+
                         rlNext.setOnClickListener(v -> fancyShowCaseView2.hide());
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation)
@@ -543,6 +566,16 @@ public class AudioFragment extends Fragment {
             fancyShowCaseView3 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_audio_categories, view -> {
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
                         rlDone.setOnClickListener(v -> {
                             fancyShowCaseView3.hide();
                         });

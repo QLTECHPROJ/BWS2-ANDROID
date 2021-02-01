@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Search;
 
+import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -139,7 +140,7 @@ public class SearchFragment extends Fragment {
             binding.searchView.setQuery("", false);
         });
 
-        showTooltiop();
+        showTooltips();
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
@@ -166,15 +167,16 @@ public class SearchFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvSerachList.setLayoutManager(layoutManager);
         binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvDownloadsList.setLayoutManager(layoutManager);
+        RecyclerView.LayoutManager layoutDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        binding.rvDownloadsList.setLayoutManager(layoutDownloads);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
+        binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         return view;
     }
 
-    private void showTooltiop() {
+    private void showTooltips() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         SearchFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_SearchFirstLogin, "0"));
 
@@ -185,6 +187,16 @@ public class SearchFragment extends Fragment {
             fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_search_audioplay, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
                         rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
@@ -194,6 +206,16 @@ public class SearchFragment extends Fragment {
             fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_search_addplaylist, view -> {
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
                         rlDone.setOnClickListener(v -> {
                             fancyShowCaseView21.hide();
                             tutorial = true;
