@@ -520,6 +520,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
                     String nameJson = gson.toJson(fileNameList);
+                    fileNameList1 = new ArrayList<>();
+                    fileNameList1 = fileNameList;
                     String urlJson = gson.toJson(audioFile);
                     String playlistIdJson = gson.toJson(playlistDownloadId);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
@@ -527,6 +529,15 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                     editor.apply();
                     editor.commit();
+                    for (int i = 1; i < fileNameList1.size(); i++) {
+                        if (playlistDownloadId.get(i).equalsIgnoreCase(playlistID)) {
+                            Log.e("cancel name id", "My id " + i + fileNameList1.get(i));
+                            fileNameList.remove(i);
+                            audioFile.remove(i);
+                            playlistDownloadId.remove(i);
+                            Log.e("cancel id", "My id " + playlistDownloadId.size() + i);
+                        }
+                    }
                     if (playlistDownloadId.get(0).equalsIgnoreCase(playlistID)) {
                         PRDownloader.cancel(downloadIdOne);
                         filename = "";
