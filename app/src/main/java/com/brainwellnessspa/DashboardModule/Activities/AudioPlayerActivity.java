@@ -160,9 +160,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     getDownloadData();
                                 }
                             } else {
-                                binding.pbProgress.setVisibility(View.GONE);
-                                binding.ivDownloads.setVisibility(View.VISIBLE);
-                                handler2.removeCallbacks(UpdateSongTime2);
+                                binding.pbProgress.setVisibility(View.VISIBLE);
+                                binding.ivDownloads.setVisibility(View.GONE);
+                            handler2.removeCallbacks(UpdateSongTime2);
                             }
                         }
                     }
@@ -2321,17 +2321,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
     public void GetMedia2() {
         DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
             if (audiolist.size() != 0) {
-                binding.ivDownloads.setVisibility(View.VISIBLE);
-                    binding.pbProgress.setVisibility(View.GONE);
-                disableDownload();
-//                if (audiolist.get(0).getDownloadProgress() == 100) {
-//                    binding.ivDownloads.setVisibility(View.VISIBLE);
+//                binding.ivDownloads.setVisibility(View.VISIBLE);
 //                    binding.pbProgress.setVisibility(View.GONE);
-//                } else {
-//                    binding.ivDownloads.setVisibility(View.GONE);
-//                    binding.pbProgress.setVisibility(View.VISIBLE);
-//                    GetMediaPer();
-//                }
+                disableDownload();
+                if (audiolist.get(0).getDownloadProgress() == 100) {
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setVisibility(View.GONE);
+                } else {
+                    binding.ivDownloads.setVisibility(View.GONE);
+                    binding.pbProgress.setVisibility(View.VISIBLE);
+                    GetMediaPer();
+                }
               DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {});
             } else {
                /* boolean entryNot = false;
