@@ -569,6 +569,7 @@ public class ViewAllAudioFragment extends Fragment {
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+        int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
         if (Name.equalsIgnoreCase("My Downloads")) {
@@ -588,13 +589,15 @@ public class ViewAllAudioFragment extends Fragment {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if (player != null) {
-                        player.seekTo(position, 0);
-                        player.setPlayWhenReady(true);
-                        miniPlayer = 1;
-                        SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedxx.edit();
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit();
+                        if(position != positionSaved) {
+                            player.seekTo(position, 0);
+                            player.setPlayWhenReady(true);
+                            miniPlayer = 1;
+                            SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedxx.edit();
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.commit();
+                        }
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
@@ -654,18 +657,7 @@ public class ViewAllAudioFragment extends Fragment {
                     getActivity().startActivity(i);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
-                    if (player != null) {
-                        player.seekTo(position, 0);
-                        player.setPlayWhenReady(true);
-                        miniPlayer = 1;
-                        SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedxx.edit();
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.commit();
-                        Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        getActivity().startActivity(i);
-                    } else {
+                    if( MyPlaylist.equalsIgnoreCase(getString(R.string.recently_played))){
                         ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                         if (!IsLock.equalsIgnoreCase("0")) {
                             SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -684,7 +676,42 @@ public class ViewAllAudioFragment extends Fragment {
                         } else {
                             listModelList2.addAll(listModelList);
                         }
-                        callTransFrag(position, listModelList2,true);
+                        callTransFrag(position, listModelList2, true);
+                    }else {
+                        if (player != null) {
+                            if (position != positionSaved) {
+                                player.seekTo(position, 0);
+                                player.setPlayWhenReady(true);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
+                            }
+                            Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            getActivity().startActivity(i);
+                        } else {
+                            ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                            if (!IsLock.equalsIgnoreCase("0")) {
+                                SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+                                Gson gson1 = new Gson();
+                                Type type1 = new TypeToken<List<String>>() {
+                                }.getType();
+                                List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
+                                int size = listModelList.size();
+                                for (int i = 0; i < size; i++) {
+                                    if (UnlockAudioList.contains(listModelList.get(i).getID())) {
+                                        listModelList2.add(listModelList.get(i));
+                                    }
+                                }
+                                position = 0;
+                            } else {
+                                listModelList2.addAll(listModelList);
+                            }
+                            callTransFrag(position, listModelList2, true);
+                        }
                     }
                 }
             } else {
@@ -756,6 +783,7 @@ public class ViewAllAudioFragment extends Fragment {
                 boolean audioPlay = shared1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
+                int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                 SharedPreferences shared11 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 String IsPlayDisclimer = (shared11.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 if (audioPlay && AudioFlag.equalsIgnoreCase("TopCategories") && catName.equalsIgnoreCase(Category)) {
@@ -782,13 +810,14 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                         editor.commit();
                         if (player != null) {
+                            if(position != positionSaved) {
                             player.seekTo(position, 0);
                             player.setPlayWhenReady(true);
                             miniPlayer = 1;
                             SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editord = sharedxx.edit();
                             editord.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editord.commit();
+                            editord.commit();}
                             openOnlyFragment();
                         } else {
                             openMyFragment(true);

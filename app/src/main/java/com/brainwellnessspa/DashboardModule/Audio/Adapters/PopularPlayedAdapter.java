@@ -161,6 +161,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+        int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") ||
                 AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
@@ -178,13 +179,15 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if (player != null) {
-                    player.seekTo(position, 0);
-                    player.setPlayWhenReady(true);
-                    miniPlayer = 1;
-                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedxx.edit();
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.commit();
+                    if(position != positionSaved) {
+                        player.seekTo(position, 0);
+                        player.setPlayWhenReady(true);
+                        miniPlayer = 1;
+                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedxx.edit();
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.commit();
+                    }
                     Intent i = new Intent(ctx, AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
