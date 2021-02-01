@@ -1386,6 +1386,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         if (state == ExoPlayer.STATE_ENDED) {
                             //player back ended
                             audioClick = true;
+                            isDisclaimer = 0;
                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
@@ -3043,6 +3044,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
         relesePlayer();
 //        }
+
+        isDisclaimer = 0;
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();

@@ -768,6 +768,7 @@ public class MiniPlayerFragment extends Fragment {
                         if (state == ExoPlayer.STATE_ENDED) {
                             //player back ended
                             audioClick = true;
+                            isDisclaimer = 0;
                             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
@@ -1609,9 +1610,6 @@ public class MiniPlayerFragment extends Fragment {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-//            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
-//                addDeclaimer();
-//            }
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
@@ -1924,9 +1922,6 @@ public class MiniPlayerFragment extends Fragment {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-//            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
-//                addDeclaimer();
-//            }
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
@@ -1970,6 +1965,8 @@ public class MiniPlayerFragment extends Fragment {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
         relesePlayer();
 //        }
+
+        isDisclaimer = 0;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();
