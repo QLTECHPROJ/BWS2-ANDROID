@@ -2,8 +2,10 @@ package com.brainwellnessspa.DownloadModule.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -25,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,12 +68,21 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     List<DownloadPlaylistDetails> playlistList;
     String UserID, AudioFlag, IsLock;
     PlaylistsDownloadsAdapter adapter;
-    Runnable UpdateSongTime1;
-    Handler handler1;
+//    Runnable UpdateSongTime1;
+//    Handler handler1;
     boolean isMyDownloading = false;
     AudioDatabase DB;
     Properties p;
-
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), remainAudio = new ArrayList<>();
+    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getDownloadData();
+            if (intent.hasExtra("Progress")) {
+                adapter.notifyDataSetChanged();
+            }
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
@@ -103,19 +115,55 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             GetAllMedia(getActivity());
             comeDeletePlaylist = 0;
         }
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
         GetAllMedia(getActivity());
         RefreshData();
         super.onResume();
+    }
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener1);
+        super.onDestroy();
     }
 
     @Override
     public void onPause() {
         if (isMyDownloading) {
-            handler1.removeCallbacks(UpdateSongTime1);
+//            handler1.removeCallbacks(UpdateSongTime1);
         }
         super.onPause();
     }
-
+    private void getDownloadData() {
+        try {
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+                if (fileNameList.size() != 0) {
+//                    handler1.postDelayed(UpdateSongTime1, 30000);
+                } else {
+//                    handler1.removeCallbacks(UpdateSongTime1);
+                    fileNameList = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+                    isMyDownloading = false;
+                }
+            } else {
+//                handler1.removeCallbacks(UpdateSongTime1);
+                fileNameList = new ArrayList<>();
+                playlistDownloadId = new ArrayList<>();
+                isMyDownloading = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void RefreshData() {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -198,7 +246,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         LinearLayout llError;
         TextView tvFound;
         RecyclerView rvDownloadsList;
-        List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), remainAudio = new ArrayList<>();
         private List<DownloadPlaylistDetails> listModelList;
 
         public PlaylistsDownloadsAdapter(List<DownloadPlaylistDetails> listModelList, FragmentActivity ctx, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList) {
@@ -207,7 +254,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             this.llError = llError;
             this.tvFound = tvFound;
             this.rvDownloadsList = rvDownloadsList;
-            handler1 = new Handler();
             oneAudioDetailsList = new ArrayList<>();
             getDownloadData();
         }
@@ -225,7 +271,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
             holder.binding.equalizerview.setVisibility(View.GONE);
-            UpdateSongTime1 = new Runnable() {
+ /*           UpdateSongTime1 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -242,7 +288,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     }
 
                 }
-            };
+            };*/
         /*if(fileNameList.size()!=0){
             if(playlistDownloadId.contains(listModelList.get(position).getPlaylistID())){
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -258,8 +304,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         break;
                     }
                 }
-
             } else {
+                holder.binding.pbProgress.setVisibility(View.GONE);
                 isMyDownloading = false;
             }
 
@@ -314,7 +360,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
                     } else if (IsLock.equalsIgnoreCase("0")
                             || IsLock.equalsIgnoreCase("")) {
-                        handler1.removeCallbacks(UpdateSongTime1);
+//                        handler1.removeCallbacks(UpdateSongTime1);
                         DatabaseClient
                                 .getInstance(ctx)
                                 .getaudioDatabase()
@@ -401,12 +447,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     Btn.setOnClickListener(v -> {
 //                        try {
                         if (isMyDownloading) {
-                            handler1.removeCallbacks(UpdateSongTime1);
+//                            handler1.removeCallbacks(UpdateSongTime1);
                         }
                         DB.taskDao()
                                 .getAllPlaylist1().removeObserver(audioList -> {
                         });
-                        getDownloadData(listModelList.get(position).getPlaylistID());
+                        getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
                         GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                         Properties p = new Properties();
                         p.putValue("userId", UserID);
@@ -441,7 +487,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             });
         }
 
-        private void getDownloadData(String playlistID) {
+        private void getDownloadDataForDelete(String playlistID) {
             List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
             try {
                 SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
@@ -491,37 +537,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
         }
 
-        private void getDownloadData() {
-            try {
-                SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                Gson gson = new Gson();
-                String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                    Type type = new TypeToken<List<String>>() {
-                    }.getType();
-                    fileNameList = gson.fromJson(jsony, type);
-                    playlistDownloadId = gson.fromJson(jsonq, type);
-                    if (fileNameList.size() != 0) {
-                        handler1.postDelayed(UpdateSongTime1, 30000);
-                    } else {
-                        handler1.removeCallbacks(UpdateSongTime1);
-                        fileNameList = new ArrayList<>();
-                        playlistDownloadId = new ArrayList<>();
-                        isMyDownloading = false;
-                    }
-                } else {
-                    handler1.removeCallbacks(UpdateSongTime1);
-                    fileNameList = new ArrayList<>();
-                    playlistDownloadId = new ArrayList<>();
-                    isMyDownloading = false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
             DatabaseClient
                     .getInstance(ctx)
@@ -537,11 +552,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         pbProgress.setProgress(downloadProgress1);
                         isMyDownloading = true;
 //                    getMediaByPer(playlistID,totalAudio,pbProgress);
-                        handler1.postDelayed(UpdateSongTime1, 30000);
+//                        handler1.postDelayed(UpdateSongTime1, 30000);
                     } else {
                         getDownloadData();
                         pbProgress.setVisibility(View.GONE);
-                        handler1.removeCallbacks(UpdateSongTime1);
+//                        handler1.removeCallbacks(UpdateSongTime1);
                         isMyDownloading = false;
                         notifyDataSetChanged();
                         DatabaseClient

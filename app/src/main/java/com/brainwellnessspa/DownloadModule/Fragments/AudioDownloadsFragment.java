@@ -86,10 +86,11 @@ public class AudioDownloadsFragment extends Fragment {
     String UserID, AudioFlag, IsLock, IsPlayDisclimer;
     AudioDownlaodsAdapter adapter;
     boolean isThreadStart = false;
-    Runnable UpdateSongTime1;
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
+    //    Runnable UpdateSongTime1;
     View view;
     AudioDatabase DB;
-    private Handler handler1;
+//    private Handler handler1;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -114,6 +115,15 @@ public class AudioDownloadsFragment extends Fragment {
             }
         }
     };
+    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getDownloadData();
+            if (intent.hasExtra("Progress")) {
+                adapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -128,7 +138,7 @@ public class AudioDownloadsFragment extends Fragment {
             UserID = getArguments().getString("UserID");
             IsLock = getArguments().getString("IsLock");
         }
-        handler1 = new Handler();
+//        handler1 = new Handler();
         Properties p = new Properties();
         p.putValue("userId", UserID);
         DB = Room.databaseBuilder(getActivity(),
@@ -186,12 +196,46 @@ public class AudioDownloadsFragment extends Fragment {
 
     }
 
+    private void getDownloadData() {
+        try {
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+                audiofilelist = gson.fromJson(jsonx, type);
+                if (fileNameList.size() != 0) {
+//                        handler1.postDelayed(UpdateSongTime1, 30000);
+                } else {
+                    audiofilelist = new ArrayList<>();
+                    fileNameList = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+                    isThreadStart = false;
+                }
+            } else {
+                fileNameList = new ArrayList<>();
+                audiofilelist = new ArrayList<>();
+                playlistDownloadId = new ArrayList<>();
+                isThreadStart = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onResume() {
         callObserverMethod();
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
 //        audioList = GetAllMedia(getActivity());
 
         super.onResume();
@@ -201,7 +245,7 @@ public class AudioDownloadsFragment extends Fragment {
     @Override
     public void onPause() {
         if (isThreadStart) {
-            handler1.removeCallbacks(UpdateSongTime1);
+//            handler1.removeCallbacks(UpdateSongTime1);
         }
         super.onPause();
     }
@@ -209,6 +253,7 @@ public class AudioDownloadsFragment extends Fragment {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener1);
         super.onDestroy();
     }
 
@@ -290,9 +335,6 @@ public class AudioDownloadsFragment extends Fragment {
         LinearLayout llError;
         RecyclerView rvDownloadsList;
         TextView tvFound;
-        List<DownloadAudioDetails> downloadAudioDetailsList;
-
-        List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
         //    Handler handler3;
         int startTime;
         long myProgress = 0;
@@ -334,7 +376,7 @@ public class AudioDownloadsFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull AudioDownlaodsAdapter.MyViewHolder holder, int position) {
 //        handler3 = new Handler();
-            UpdateSongTime1 = new Runnable() {
+        /*    UpdateSongTime1 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -365,7 +407,7 @@ public class AudioDownloadsFragment extends Fragment {
                     }
                 }
             };
-
+*/
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -380,11 +422,13 @@ public class AudioDownloadsFragment extends Fragment {
                             } else {
                                 holder.binding.pbProgress.setVisibility(View.GONE);
                             }
-                            handler1.postDelayed(UpdateSongTime1, 30000);
+//                            handler1.postDelayed(UpdateSongTime1, 30000);
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                            handler1.postDelayed(UpdateSongTime1, 30000);
+//                            handler1.postDelayed(UpdateSongTime1, 30000);
                         }
+                    } else{
+                        holder.binding.pbProgress.setVisibility(View.GONE);
                     }
                 }
             } else {
@@ -458,6 +502,7 @@ public class AudioDownloadsFragment extends Fragment {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                     IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
@@ -467,25 +512,27 @@ public class AudioDownloadsFragment extends Fragment {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 if (player != null) {
-                                    player.seekTo(holder.getAdapterPosition(), 0);
-                                    player.setPlayWhenReady(true);
-                                    miniPlayer = 1;
-                                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedxx.edit();
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(listModelList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-                                    editor.commit();
-                                    try {
-                                        callAddTransFrag();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                    if(position != positionSaved) {
+                                        player.seekTo(holder.getAdapterPosition(), 0);
+                                        player.setPlayWhenReady(true);
+                                        miniPlayer = 1;
+                                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedxx.edit();
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(listModelList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+                                        editor.commit();
+                                        try {
+                                            callAddTransFrag();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 } else {
                                     callTransFrag(position, listModelList, true);
@@ -607,6 +654,8 @@ public class AudioDownloadsFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     int pos = 0;
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (isDisclaimer == 1) {
                             if (player != null) {
@@ -626,17 +675,18 @@ public class AudioDownloadsFragment extends Fragment {
                                     listModelList2.add(listModelList.get(i));
                                 }
                             }
-                            if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                                pos = position;
-                                callTransFrag(pos, listModelList2, true);
-                            } else {
+                            if(position != positionSaved) {
+                                if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                                    pos = position;
+                                    callTransFrag(pos, listModelList2, true);
+                                } else {
 //                                pos = 0;
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                }
                             }
                             if (listModelList2.size() == 0) {
 //                                callTransFrag(pos, listModelList2, true);
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                            } else {
                             }
                         }
                     } else {
@@ -680,7 +730,7 @@ public class AudioDownloadsFragment extends Fragment {
                                     listModelList2.add(pos, mainPlayModel);
                                 }
                             }
-                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
+                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
                                 callTransFrag(pos, listModelList2, audioc);
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
@@ -854,7 +904,7 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                         }
                     }
-                    deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
+                    deleteDownloadFile(AudioFile, AudioName, position);
                     notifyItemRemoved(position);
                     dialog.dismiss();
                 } catch (Exception e) {
@@ -881,55 +931,23 @@ public class AudioDownloadsFragment extends Fragment {
             callAddTransFrag();
         }
 
-        private void getDownloadData() {
-            try {
-                SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                Gson gson = new Gson();
-                String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                    Type type = new TypeToken<List<String>>() {
-                    }.getType();
-                    fileNameList = gson.fromJson(jsony, type);
-                    playlistDownloadId = gson.fromJson(jsonq, type);
-                    audiofilelist = gson.fromJson(jsonx, type);
-                    if (fileNameList.size() != 0) {
-                        handler1.postDelayed(UpdateSongTime1, 30000);
-                    } else {
-                        audiofilelist = new ArrayList<>();
-                        fileNameList = new ArrayList<>();
-                        playlistDownloadId = new ArrayList<>();
-                        isThreadStart = false;
-                    }
-                } else {
-                    fileNameList = new ArrayList<>();
-                    audiofilelist = new ArrayList<>();
-                    playlistDownloadId = new ArrayList<>();
-                    isThreadStart = false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
+        private void deleteDownloadFile(String audioFile, String audioName, int position) {
 
             AudioDatabase.databaseWriteExecutor.execute(() -> {
                 DB.taskDao().deleteByAudioFile(audioFile, "");
             });
 
             DB.taskDao().getLastIdByuId1(audioFile).observe((LifecycleOwner) ctx, audioList -> {
-                DB.taskDao().getLastIdByuId1(audioFile).removeObserver(audioListx -> {});
-                    if (audioList.size() == 0) {
+                    if (audioList.size() == 0 || audioList == null) {
                         try {
-                            FileUtils.deleteDownloadedFile(applicationContext, audioName);
+                            FileUtils.deleteDownloadedFile(ctx, audioName);
                         } catch (Exception e) {
 
                         }
                     }
+                callObserverMethod();
+                DB.taskDao().getLastIdByuId1(audioFile).removeObserver(audioListx -> {});
                 });
-            callObserverMethod();
           /*  class DeleteMedia extends AsyncTask<Void, Void, Void> {
                 @Override
                 protected Void doInBackground(Void... voids) {

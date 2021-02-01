@@ -3384,7 +3384,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     listModelList2.add(pos, addDisclaimer);
                                 }
                             }
-                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
+                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
                                 callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);

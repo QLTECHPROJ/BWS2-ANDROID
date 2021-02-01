@@ -1,17 +1,17 @@
 package com.brainwellnessspa.EncryptDecryptUtils;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.downloader.Error;
@@ -48,15 +48,15 @@ public class DownloadMedia implements OnDownloadListener {
     Properties p;
     String UserID;
     AudioDatabase DB;
-    //    LocalBroadcastManager localBroadcastManager;
-//    Intent localIntent;
+        LocalBroadcastManager lBM;
+    Intent localIntent;
     List<String> fileNameList, audioFile, playlistDownloadId;
 
-    //    private BroadcastReceiver listener = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//        }
-//    };
+        private BroadcastReceiver listener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        }
+    };
 
     public DownloadMedia(Context ctx) {
         this.ctx = ctx;
@@ -69,8 +69,8 @@ public class DownloadMedia implements OnDownloadListener {
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
-//        localIntent = new Intent("DownloadProgress");
-//        localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        localIntent = new Intent("DownloadProgress");
+        lBM = LocalBroadcastManager.getInstance(ctx);
 // Setting timeout globally for the download network requests:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
@@ -89,9 +89,7 @@ public class DownloadMedia implements OnDownloadListener {
                     if (downloadProgress == downloadProgress2 + 10) {
                        /* localIntent.putExtra("Progress", downloadProgress);
                         localIntent.putExtra("name", FILE_NAME.get(0));
-                        localBroadcastManager.sendBroadcast(localIntent);*/
-
-//                        localBroadcastManager.sendBroadcast(localIntent);
+                        lBM.sendBroadcast(localIntent);*/
                         updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
                         downloadProgress2 = downloadProgress;
                     }
@@ -108,7 +106,7 @@ public class DownloadMedia implements OnDownloadListener {
                     }
                 }).setOnCancelListener(() -> {
                     downloadIdOne = 0;
-//                    LocalBroadcastManager.getInstance(context).unregisterReceiver(listener);
+                    LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
                     filename = "";
                     if (logout) {
                         SharedPreferences preferences11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
@@ -192,10 +190,6 @@ public class DownloadMedia implements OnDownloadListener {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         try {
-//            byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
-//            encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-//            saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
-//            localBroadcastManager.sendBroadcast(localIntent);
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
             SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson1 = new Gson();
@@ -323,7 +317,6 @@ public class DownloadMedia implements OnDownloadListener {
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
             if (fileNameList.size() != 0) {
-//                LocalBroadcastManager.getInstance(context).unregisterReceiver(listener);
                 encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
                 BWSApplication.showToast("Download Complete...", ctx);
@@ -337,20 +330,7 @@ public class DownloadMedia implements OnDownloadListener {
             downloadError = 1;
             isDownloading = false;
             Log.e("error in encrypt", e.getMessage());
-        } /*else {
-            try {
-                downloadError = 0;
-                byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileName));
-                encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-                saveFile(encodedBytes, FileUtils.getFilePath(context, fileName));
-                BWSApplication.showToast("Download Complete...", context);
-            } catch (Exception e) {
-//            BWSApplication.showToast("File Decryption failed.\nException: " + e.getMessage(), context);
-                e.printStackTrace();
-                downloadError = 1;
-                Log.e("error in encrypt", e.getMessage());
-            }
-        }*/
+        }
 
     }
 
@@ -360,6 +340,8 @@ public class DownloadMedia implements OnDownloadListener {
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename));
+           localIntent.putExtra("Progress", downloadProgress);
+           lBM.sendBroadcast(localIntent);
         /*class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -372,7 +354,7 @@ public class DownloadMedia implements OnDownloadListener {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-//                localBroadcastManager.sendBroadcast(localIntent);
+//                lBM.sendBroadcast(localIntent);
                 super.onPostExecute(aVoid);
             }
         }
@@ -417,57 +399,4 @@ public class DownloadMedia implements OnDownloadListener {
             });
         });
     }
-
-    /*private void SaveDownloadFile(){
-        class SaveMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
-                    encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-                    saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    downloadError = 1;
-                    isDownloading = false;
-                    Log.e("error in encrypt", e.getMessage());
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                try {
-                    updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
-                    fileNameList.remove(0);
-                    audioFile.remove(0);
-                    playlistDownloadId.remove(0);
-                    SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String urlJson = gson.toJson(audioFile);
-                    String nameJson = gson.toJson(fileNameList);
-                    String playlistIdJson = gson.toJson(playlistDownloadId);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
-                    if (fileNameList.size() != 0) {
-                        encrypt1(audioFile, fileNameList, playlistDownloadId);
-                    } else {
-                        downloadProgress = 0;
-                        filename = "";
-                        isDownloading = false;
-                        BWSApplication.showToast("Download Complete...", context);
-                    }
-                } catch (Exception e) {
-
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();
-    }
-     */
 }

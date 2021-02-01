@@ -300,7 +300,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                                 audioc = true;
                             }
                         }
-                        if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
+                        if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
                             callTransFrag(pos, listModelList2, audioc);
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
