@@ -42,7 +42,6 @@ import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.databinding.DownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentSearchBinding;
 import com.brainwellnessspa.databinding.GlobalSearchLayoutBinding;
 import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding;
@@ -81,14 +80,11 @@ public class SearchFragment extends Fragment {
     String UserID, AudioFlag, IsPlayDisclimer, SearchFirstLogin = "0";
     EditText searchEditText;
     SerachListAdpater serachListAdpater;
-    int startTime;
     int listSize = 0;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21;
     FancyShowCaseQueue queue;
     SuggestionAudiosAdpater suggestionAudiosAdpater;
-    long myProgress = 0, diff = 0;
     Properties p;
-    private long currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -167,11 +163,9 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        binding.rvSerachList.setLayoutManager(recentlyPlayed);
-        binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        binding.rvSerachList.setLayoutManager(layoutManager);
+        binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
         binding.rvDownloadsList.setLayoutManager(layoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -192,21 +186,6 @@ public class SearchFragment extends Fragment {
                     .customView(R.layout.layout_search_audioplay, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
-                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
-                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView11.hide();
-                        }
-                    });
-                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            queue.cancel(true);
-                        }
-                    });*/
-
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .closeOnTouch(false)

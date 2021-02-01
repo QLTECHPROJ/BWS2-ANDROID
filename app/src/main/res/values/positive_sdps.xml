@@ -96,4 +96,5 @@
     <dimen name="_230sdp">230.00dp</dimen>
     <dimen name="_240sdp">240.00dp</dimen>
     <dimen name="_260sdp">260.00dp</dimen>
+    <dimen name="_280sdp">280.00dp</dimen>
 </resources>

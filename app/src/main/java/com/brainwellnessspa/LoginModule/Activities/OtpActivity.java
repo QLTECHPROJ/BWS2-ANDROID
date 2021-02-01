@@ -20,7 +20,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +30,6 @@ import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.SmsReceiver;
-import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,7 +40,6 @@ import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.LoginModule.Models.OtpModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 
@@ -54,11 +51,9 @@ import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 import com.brainwellnessspa.databinding.ActivityOtpBinding;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 

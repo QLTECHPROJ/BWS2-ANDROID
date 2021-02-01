@@ -151,14 +151,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     List<String> fileNameList, playlistDownloadId, onlySingleDownloaded;
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
-    List<DownloadAudioDetails> playlistWiseAudiosDetails;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
-    SubPlayListModel.ResponseData.PlaylistSong songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41, fancyShowCaseView51;
     FancyShowCaseQueue queue;
     private Handler handler2;
-    private long totalDuration, currentDuration = 0;
     Properties p;
     AudioDatabase DB;
     public AudioManager audioManager;
@@ -398,47 +395,31 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
 
             fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_playlist_reminder, view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
-                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
-                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView11.hide();
-                        }
-                    });
-                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            queue.cancel(true);
-                        }
-                    });*/
-
-                    }).closeOnTouch(false)
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llReminder).closeOnTouch(true)
-                    .build();
-
-            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_playlist_downloads, (OnViewInflateListener) view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
-                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation)
-                    .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
-                    .closeOnTouch(true).build();
-
-            fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_details, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
+                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llMore).closeOnTouch(true).build();
+                    .focusOn(binding.llMore).closeOnTouch(false).build();
+
+            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_playlist_reminder, view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                    .focusOn(binding.llReminder).closeOnTouch(false)
+                    .build();
+
+            fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                    .customView(R.layout.layout_playlist_downloads, (OnViewInflateListener) view -> {
+                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .enterAnimation(enterAnimation)
+                    .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
+                    .closeOnTouch(false).build();
 
             fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_searches, view -> {
@@ -453,7 +434,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.rlSearch).closeOnTouch(true).build();
+                    .focusOn(binding.rlSearch).closeOnTouch(false).build();
 
             fancyShowCaseView51 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_sortings, view -> {
@@ -465,7 +446,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .closeOnTouch(true).build();
+                    .closeOnTouch(false).build();
 
 
             if (MyCreated.equalsIgnoreCase("1")) {

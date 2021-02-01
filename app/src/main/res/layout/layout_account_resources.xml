@@ -37,7 +37,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:gravity="start"
             android:lineSpacingExtra="@dimen/_4sdp"
-            android:text="Explore resources to help you improve your mental wellbeing"
+            android:text="Explore resources to help you improve your mental wellbeing "
             android:textColor="@color/white"
             android:textSize="@dimen/_14sdp" />
 

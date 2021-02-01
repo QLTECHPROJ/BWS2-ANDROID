@@ -27,8 +27,6 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlay
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -52,13 +50,10 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
-
 public class ViewAllPlaylistFragment extends Fragment {
     public static String GetPlaylistLibraryID = "";
     FragmentViewAllPlaylistBinding binding;
     String GetLibraryID, Name, UserID, AudioFlag, MyDownloads, ScreenView = "";
-    List<DownloadPlaylistDetails> playlistList;
-    List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     View view;
 
     @Override
@@ -187,9 +182,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     editorr.clear();
                     editorr.commit();
                     callNewPlayerRelease();
-
                 }
-
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
@@ -235,9 +228,9 @@ public class ViewAllPlaylistFragment extends Fragment {
                     @Override
                     public void onResponse(Call<ViewAllPlayListModel> call, Response<ViewAllPlayListModel> response) {
                         try {
-                            if (response.isSuccessful()) {
+                            ViewAllPlayListModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                ViewAllPlayListModel listModel = response.body();
                                 binding.tvTitle.setText(listModel.getResponseData().getView());
                                 ScreenView = listModel.getResponseData().getView();
                                 PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
@@ -337,51 +330,48 @@ public class ViewAllPlaylistFragment extends Fragment {
                 }
 
             });
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (IsLock.equalsIgnoreCase("1")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        startActivity(i);
-                    } else if (IsLock.equalsIgnoreCase("2")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
-                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        /*if (MyDownloads.equalsIgnoreCase("1")) {
+            holder.binding.rlMainLayout.setOnClickListener(view -> {
+                if (IsLock.equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
+                } else if (IsLock.equalsIgnoreCase("2")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    /*if (MyDownloads.equalsIgnoreCase("1")) {
 //                            getMedia(listModelList.get(position).getPlaylistID());
-                            Intent i = new Intent(getActivity(), DownloadPlaylistActivity.class);
-                            i.putExtra("New", "0");
-                            i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                            i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
-                            i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                            i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
-                            i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
-                            i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
-                            i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
-                            i.putExtra("MyDownloads", "1");
-                            getActivity().startActivity(i);
-                        } else {*/
-                        Bundle bundle = new Bundle();
-                        comefrom_search = 2;
-                        GetPlaylistLibraryID = GetLibraryID;
-                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        bundle.putString("New", "0");
-                        bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                        bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                        bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                        bundle.putString("MyDownloads", MyDownloads);
-                        bundle.putString("ScreenView", ScreenView);
-                        bundle.putString("PlaylistType", listModelList.get(position).getCreated());
-                        myPlaylistsFragment.setArguments(bundle);
-                        fragmentManager1.beginTransaction()
-                                .replace(R.id.flContainer, myPlaylistsFragment)
-                                .commit();
+                        Intent i = new Intent(getActivity(), DownloadPlaylistActivity.class);
+                        i.putExtra("New", "0");
+                        i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                        i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                        i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
+                        i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
+                        i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
+                        i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
+                        i.putExtra("MyDownloads", "1");
+                        getActivity().startActivity(i);
+                    } else {*/
+                    Bundle bundle = new Bundle();
+                    comefrom_search = 2;
+                    GetPlaylistLibraryID = GetLibraryID;
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
+                    bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
+                    bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                    bundle.putString("MyDownloads", MyDownloads);
+                    bundle.putString("ScreenView", ScreenView);
+                    bundle.putString("PlaylistType", listModelList.get(position).getCreated());
+                    myPlaylistsFragment.setArguments(bundle);
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, myPlaylistsFragment)
+                            .commit();
 //                        }
-                    }
                 }
             });
         }
@@ -400,52 +390,4 @@ public class ViewAllPlaylistFragment extends Fragment {
             }
         }
     }
-/*
-    private void getMedia(String playlistID) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                playlistWiseAudioDetails = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist(playlistID);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                player = 1;
-                        audioClick = true;
-                        if(player!=null){
-                player.stop();
-                            player.release();
-                                player = null;
-                        }
-
-
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(playlistWiseAudioDetails);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                editor.commit();
-                try {
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
-    }*/
 }

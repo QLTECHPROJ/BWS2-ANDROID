@@ -34,9 +34,6 @@
                 android:layout_gravity="center"
                 android:src="@drawable/reminder_switch_icon" />
         </LinearLayout>
-
-
-
     </LinearLayout>
 
     <LinearLayout

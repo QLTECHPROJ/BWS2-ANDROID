@@ -26,7 +26,6 @@ import android.text.TextWatcher;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;

@@ -34,8 +34,6 @@
             android:paddingRight="@dimen/_5sdp">
 
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout

@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,7 +45,6 @@ import java.util.List;
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
 import me.toptas.fancyshowcase.FocusShape;
-import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,10 +58,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     RemiderDetailsAdapter adapter;
     FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2;
     FancyShowCaseQueue queue;
-    public static String comeBack = "";
     RemiderDetailsModel listReminderModel;
     Properties p;
-//    CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,21 +228,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     .customView(R.layout.layout_reminder_status, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         rlNext.setOnClickListener(v -> fancyShowCaseView1.hide());
-                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
-                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
-                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView11.hide();
-                        }
-                    });
-                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            queue.cancel(true);
-                        }
-                    });*/
-
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
 

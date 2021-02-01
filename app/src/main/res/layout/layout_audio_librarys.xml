@@ -3,20 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/_90sdp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/_110sdp">
 
     <ImageView
+        android:id="@+id/ivLibraryImage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_260sdp"
+        android:layout_height="@dimen/_280sdp"
         android:scaleType="fitXY"
         android:src="@drawable/audio_main_icon" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_18sdp"
         android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_18sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -26,14 +27,13 @@
             android:layout_height="match_parent"
             android:layout_weight="0.4"
             android:gravity="center">
+
             <ImageView
                 android:layout_width="@dimen/_90sdp"
                 android:layout_height="@dimen/_90sdp"
                 android:layout_gravity="center"
                 android:rotation="180"
                 android:src="@drawable/right_down_arrow_highlights" />
-
-
         </RelativeLayout>
 
         <LinearLayout

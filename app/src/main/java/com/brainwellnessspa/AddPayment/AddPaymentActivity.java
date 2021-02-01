@@ -25,7 +25,6 @@ import androidx.databinding.DataBindingUtil;
 
 import com.brainwellnessspa.AddPayment.Model.AddCardModel;
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
 import com.brainwellnessspa.BillingOrderModule.Activities.PaymentActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -54,7 +53,7 @@ public class AddPaymentActivity extends AppCompatActivity {
     Activity activity;
     Dialog d;
     int a = 0;
-    String card_id, TrialPeriod, comeFrom = "", ComesTrue, strToken, ComePayment = "", UserID;
+    String TrialPeriod, comeFrom = "", ComesTrue, strToken, ComePayment = "", UserID;
     int year, month;
     int position;
     YeardialogBinding binding1;

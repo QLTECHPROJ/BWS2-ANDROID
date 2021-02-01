@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:fontFamily="@font/montserrat_semi_bold"
-            android:text="Biiling &amp; Order"
+            android:text="Billing &amp; Order"
             android:textColor="@color/white"
             android:textSize="@dimen/_20sdp" />
 

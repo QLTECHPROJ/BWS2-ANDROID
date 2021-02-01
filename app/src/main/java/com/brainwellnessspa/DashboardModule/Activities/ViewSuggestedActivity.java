@@ -70,10 +70,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     String UserID, AudioFlag, Name, PlaylistID;
     ArrayList<SuggestedModel.ResponseData> AudiolistsModel;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
-    int startTime;
     AudiosListAdpater adpater;
-    long myProgress = 0, diff = 0;
-    private long currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

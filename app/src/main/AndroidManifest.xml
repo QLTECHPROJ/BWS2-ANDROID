@@ -20,11 +20,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <uses-permission
@@ -50,7 +52,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-<!--        pendinginten.....stickyintent-->
+        <!--        pendinginten.....stickyintent-->
         <activity
             android:name=".LikeModule.Activities.PlaylistLikeActivity"
             android:configChanges="orientation|screenSize"
@@ -76,11 +78,11 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-      <!--  <activity
-            android:name=".DownloadModule.Activities.DownloadedPlaylist"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />-->
+        <!--  <activity
+              android:name=".DownloadModule.Activities.DownloadedPlaylist"
+              android:configChanges="orientation|screenSize"
+              android:screenOrientation="portrait"
+              android:windowSoftInputMode="adjustPan" />-->
         <activity
             android:name=".BillingOrderModule.Activities.PaymentActivity"
             android:configChanges="orientation|screenSize"
@@ -138,11 +140,11 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-   <!--     <activity
-            android:name=".DashboardModule.Activities.PlayWellnessActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />-->
+        <!--     <activity
+                 android:name=".DashboardModule.Activities.PlayWellnessActivity"
+                 android:configChanges="orientation|screenSize"
+                 android:screenOrientation="portrait"
+                 android:windowSoftInputMode="adjustPan" />-->
         <activity
             android:name=".MembershipModule.Activities.CheckoutPaymentActivity"
             android:configChanges="orientation|screenSize"
@@ -251,9 +253,7 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_logo_transparent" />
@@ -261,9 +261,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/app_logo_transparent" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
@@ -278,13 +275,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <receiver android:name = ".Utility.MyNetworkReceiver"
-            android:enabled="true" >
+
+        <receiver
+            android:name=".Utility.MyNetworkReceiver"
+            android:enabled="true">
             <intent-filter>
-                <action android:name ="android.net.conn.CONNECTIVITY_CHANGE"
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
-                <action android:name="android.net.wifi.STATE_CHANGE"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
         <receiver
@@ -301,33 +301,33 @@
             android:exported="true"/>-->
         <service
             android:name=".Services.GlobalInitExoPlayer"
-            android:process=":externalProcess"
-            android:exported="true"/>
-
-      <!--  <service            android:foregroundServiceType="mediaPlayback"
-            android:name=".Utility.MusicService"
-            android:enabled="true"
             android:exported="true"
-            tools:ignore="Instantiatable">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".Utility.MyService"
-            android:enabled="true"
-            android:exported="true" />-->
-      <!--  <service
-            android:name=".Utility.MyFirebaseMessagingService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name= "com.google.firebase.MESSAGING_EVENT" />
-&lt;!&ndash;                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />&ndash;&gt;
-            </intent-filter>
-        </service>-->
+            android:process=":externalProcess" />
+
+        <!--  <service            android:foregroundServiceType="mediaPlayback"
+              android:name=".Utility.MusicService"
+              android:enabled="true"
+              android:exported="true"
+              tools:ignore="Instantiatable">
+              <intent-filter>
+                  <action android:name="android.intent.action.MEDIA_BUTTON" />
+                  <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                  <action android:name="android.media.browse.MediaBrowserService" />
+              </intent-filter>
+          </service>
+          <service
+              android:name=".Utility.MyService"
+              android:enabled="true"
+              android:exported="true" />-->
+        <!--  <service
+              android:name=".Utility.MyFirebaseMessagingService"
+              android:enabled="true"
+              android:exported="true">
+              <intent-filter>
+                  <action android:name= "com.google.firebase.MESSAGING_EVENT" />
+  &lt;!&ndash;                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />&ndash;&gt;
+              </intent-filter>
+          </service>-->
 
         <service
             android:name=".Utility.MyFirebaseMessagingService"

@@ -72,8 +72,6 @@ public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
     String UserID, Check = "", AudioFlag;
     View view;
-    List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
-    List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     MainPlayListAdapter adapter;
     ArrayList<MainPlayListModel.ResponseData> listModelList;
     public static String PlaylistSource = "";
@@ -594,68 +592,6 @@ public class PlaylistFragment extends Fragment {
             }
         }
     }
-
-   /* private void getMedia(String playlistID) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                playlistWiseAudioDetails = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist(playlistID);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                player = 1;
-                        audioClick = true;
-                        if(player!=null){
-                player.stop();
-                            player.release();
-                                player = null;
-                        }
-
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                mainPlayModel.setID("0");
-                mainPlayModel.setName("Disclaimer");
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                mainPlayModel.setAudiomastercat("");
-                mainPlayModel.setAudioSubCategory("");
-                mainPlayModel.setImageFile("");
-                mainPlayModel.setLike("");
-                mainPlayModel.setDownload("");
-                mainPlayModel.setAudioDuration("00:48");
-                listModelList2.add(mainPlayModel);
-                listModelList2.addAll(playlistWiseAudioDetails);
-
-                String json = gson.toJson(listModelList2);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
-                editor.commit();
-                try {
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
-    }*/
 
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         Context ctx;

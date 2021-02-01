@@ -6,19 +6,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -72,10 +67,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String IsLock = remoteMessage.getData().get("IsLock");
             Log.e("bundle.....", "" + flag);
             sendNotification(title, message, flag, id, String.valueOf(m), IsLock);
-//                NotificationUtils notificationUtils = new NotificationUtils(this);
-//                notificationUtils.playNotificationSound();
-//            NotificationUtils.setNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), this);
-
         }
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
@@ -130,7 +121,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int importance = 0;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            importance = NotificationManager.IMPORTANCE_HIGH;
+            importance = NotificationManager.IMPORTANCE_DEFAULT;
         }
         try {
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
@@ -181,8 +172,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             long[] v = {500, 1000};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 notificationChannel = new NotificationChannel(channelId, channelName, importance);
-                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(Color.GRAY);
                 notificationChannel.enableVibration(true);
+                notificationChannel.enableLights(true);
                 notificationChannel.setDescription("YupIt Notification");
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationBuilder = new NotificationCompat.Builder(this, notificationChannel.getId());
@@ -203,36 +195,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentTitle(title);
             notificationBuilder.setOngoing(true);
-            notificationBuilder.setDefaults(Notification.DEFAULT_SOUND);
+            notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
             notificationBuilder.setContentText(message);
             notificationBuilder.setColor(getResources().getColor(R.color.blue));
             notificationBuilder.setAutoCancel(true);
             notificationBuilder.setSound(defaultSoundUri);
             notificationBuilder.setVibrate(v);
+            notificationBuilder.setContentInfo("Info");
             notificationBuilder.setChannelId(channelId);
             notificationBuilder.setContentIntent(resultPendingIntent);
 
             Notification notification = notificationBuilder.build();
             notification.flags = Notification.DEFAULT_SOUND;
-            /*notification.flags = Notification.FLAG_AUTO_CANCEL;
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            if(alarmSound == null){
-                alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                if(alarmSound == null){
-                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                }
-            }
-            notification.sound = alarmSound;
-            notification.defaults |= Notification.DEFAULT_VIBRATE;*/
+
             if (notificationManager != null) {
                 notificationManager.notify(Integer.parseInt(m), notification);
             }
-
-//            Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.alert);
-//            Uri soundUri = Uri.parse("android.resource://"
-//                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
-
-
         } catch (Exception e) {
             e.printStackTrace();
 //            Toast.makeText(context, e.getMessage() + channelId, Toast.LENGTH_SHORT).show();

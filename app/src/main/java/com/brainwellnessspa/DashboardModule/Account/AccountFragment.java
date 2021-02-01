@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -14,7 +13,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -53,7 +51,6 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.segment.analytics.Properties;
-import com.segment.analytics.Traits;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
@@ -77,7 +74,6 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRel
 import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
-
 
 public class AccountFragment extends Fragment {
     public static int ComeScreenReminder = 0;
@@ -296,27 +292,6 @@ public class AccountFragment extends Fragment {
                         });
                     }
                 });
-/*
-                Btn.setOnTouchListener((view1, event) -> {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN: {
-                            Button views = (Button) view1;
-                            views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
-                            view1.invalidate();
-                            break;
-                        }
-                        case MotionEvent.ACTION_UP:
-
-                        case MotionEvent.ACTION_CANCEL: {
-                            Button views = (Button) view1;
-                            views.getBackground().clearColorFilter();
-                            views.invalidate();
-                            break;
-                        }
-                    }
-                    return true;
-                });
-*/
 
                 tvGoBack.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -354,21 +329,6 @@ public class AccountFragment extends Fragment {
                     .customView(R.layout.layout_account_downloads, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
-                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
-                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView11.hide();
-                        }
-                    });
-                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            queue.cancel(true);
-                        }
-                    });*/
-
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .focusOn(binding.llDownloads).closeOnTouch(false).build();
@@ -389,8 +349,7 @@ public class AccountFragment extends Fragment {
                             fancyShowCaseView31.hide();
                             tutorial = true;
                         });
-                    })
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .focusOn(binding.llResource).closeOnTouch(false).build();
 

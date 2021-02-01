@@ -79,10 +79,7 @@ public class AddAudioActivity extends AppCompatActivity {
     int listSize = 0;
     SuggestedAdpater suggestedAdpater;
     //    Handler handler3;
-    int startTime;
-    long myProgress = 0, diff = 0;
     Properties p;
-    private long currentDuration = 0;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -164,18 +161,13 @@ public class AddAudioActivity extends AppCompatActivity {
             callback();
         });
 
-        RecyclerView.LayoutManager suggested = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-        binding.rvSuggestedList.setLayoutManager(suggested);
-        binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
-
-        RecyclerView.LayoutManager serachList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-        binding.rvSerachList.setLayoutManager(serachList);
-        binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
-
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-        binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
+        binding.rvSuggestedList.setLayoutManager(manager);
+        binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
+        binding.rvSerachList.setLayoutManager(manager);
+        binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
-
+        binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -204,9 +196,9 @@ public class AddAudioActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        SearchBothModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            SearchBothModel listModel = response.body();
                             if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
                                 if (listModel.getResponseData().size() == 0) {
                                     binding.rvSerachList.setVisibility(View.GONE);

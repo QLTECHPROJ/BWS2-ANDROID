@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -40,8 +41,11 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;
 import com.brainwellnessspa.databinding.MainAudioLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -491,17 +495,23 @@ public class AudioFragment extends Fragment {
     private void showTooltiop() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         AudioFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0"));
-//        audio_main_icon
-//                add_audio_main_icon
-//        audio_categories_icon
         if (AudioFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
             Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
 
             fancyShowCaseView1 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_audio_librarys, view -> {
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         rlNext.setOnClickListener(v -> fancyShowCaseView1.hide());
+
+                      /*  MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+                                1, 1, 1f, 10);
+                        ivLibraryImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                        ivLibraryImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                        ivLibraryImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                         Glide.with(getActivity()).load(R.drawable.audio_main_icon).thumbnail(0.05f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivLibraryImage);*/
                    /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {

@@ -68,7 +68,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class PlaylistLikeActivity extends AppCompatActivity {
     ActivityPlaylistLikeBinding binding;
-    String UserID, AudioFlag, PlaylistID, PlaylistName, SearchFlag, PlaylistImage;
+    String UserID, AudioFlag, PlaylistID, SearchFlag;
     Context ctx;
     PlayListsAdpater adpater;
     Activity activity;

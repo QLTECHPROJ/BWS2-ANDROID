@@ -637,21 +637,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .customView(R.layout.layout_player_menu, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
-                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
-                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView11.hide();
-                        }
-                    });
-                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            queue.cancel(true);
-                        }
-                    });*/
-
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .focusOn(binding.llMore).closeOnTouch(false)
@@ -681,8 +666,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .focusOn(binding.llBottom).closeOnTouch(false).build();
-
-
             queue = new FancyShowCaseQueue()
                     .add(fancyShowCaseView11)
                     .add(fancyShowCaseView21)

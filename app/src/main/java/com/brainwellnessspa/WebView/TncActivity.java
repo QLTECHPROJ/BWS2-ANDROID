@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -20,7 +19,6 @@ public class TncActivity extends AppCompatActivity {
     String Web;
     Activity activity;
     String Tnc = AppUtils.tncs_url;
-    ProgressDialog progressDialog;
     String PrivacyPolicy = AppUtils.privacy_policy_url;
 
     @Override
@@ -45,7 +43,6 @@ public class TncActivity extends AppCompatActivity {
 
                 } else {
                     binding.progressBar.setVisibility(View.VISIBLE);
-
                 }
             }
         });

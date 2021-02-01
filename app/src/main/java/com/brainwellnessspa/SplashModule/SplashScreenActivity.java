@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -26,7 +24,6 @@ import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
-import com.brainwellnessspa.LoginModule.Activities.OtpActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
@@ -36,24 +33,18 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivitySplashScreenBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.segment.analytics.Analytics;
-import com.segment.analytics.Properties;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.getKey;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
     public static String key = "", UserID;
     String flag, id, title, message, IsLock;
     public static Analytics analytics;
-    List<String> downloadAudioDetailsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +167,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                         }
                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
-
                             GetAllMedia();
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Brain Wellness Spa");
@@ -206,7 +196,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                                     });
                             builder.create().show();
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
-
                             GetAllMedia();
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Required");
@@ -298,7 +287,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 DeletallLocalCart1();
                 super.onPostExecute(aVoid);
             }
@@ -321,7 +309,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 super.onPostExecute(aVoid);
             }
         }

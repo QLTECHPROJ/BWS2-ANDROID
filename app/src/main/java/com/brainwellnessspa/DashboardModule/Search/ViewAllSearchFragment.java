@@ -56,8 +56,6 @@ public class ViewAllSearchFragment extends Fragment {
     FragmentViewAllSearchBinding binding;
     View view;
     String UserID, AudioFlag, Name;
-    int startTime;
-    long myProgress = 0, diff = 0;
     SuggestionAudioListsAdpater adpater;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
     ArrayList<SuggestedModel.ResponseData> AudiolistModel;

@@ -8,8 +8,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_110sdp">
+
+        <ImageView
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="@dimen/_160sdp"
+            android:layout_weight="0.4"
+            android:scaleType="fitXY"
+            android:src="@drawable/add_audio_main_icon" />
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6">
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_110sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -18,17 +41,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:gravity="right">
+            android:gravity="center">
 
-            <!--
-                        <ImageView
-                            android:id="@+id/ivLine"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/_15sdp"
-                            android:src="@drawable/showcase_dot_line"
-                            app:tint="@color/white" />
-            -->
+            <ImageView
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_gravity="center"
+                android:rotation="180"
+                android:src="@drawable/right_down_arrow_highlights" />
 
         </RelativeLayout>
 
@@ -92,6 +112,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
