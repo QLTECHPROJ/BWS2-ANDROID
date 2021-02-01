@@ -1760,8 +1760,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             enableDownload();
                             binding.ivDownloads.setVisibility(View.VISIBLE);
                             binding.pbProgress.setVisibility(View.GONE);
-                            player.previous();
                             callButtonText(position - 1);
+                            player.previous();
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("audioId", mainPlayModelList.get(pss).getID());

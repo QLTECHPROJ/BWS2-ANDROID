@@ -347,6 +347,7 @@ public class AudioDownloadsFragment extends Fragment {
                                                 notifyItemChanged(position);
                                             }
                                         } else {
+                                            notifyDataSetChanged();
                                             holder.binding.pbProgress.setVisibility(View.GONE);
                                             getDownloadData();
                                         }
@@ -680,9 +681,9 @@ public class AudioDownloadsFragment extends Fragment {
                                 }
                             }
                             if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() != 1) {
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                            } else {
                                 callTransFrag(pos, listModelList2, audioc);
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                         }else {
 //                            pos = 0;
