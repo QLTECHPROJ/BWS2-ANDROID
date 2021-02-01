@@ -423,6 +423,7 @@ public class AptAudioFragment extends Fragment {
                     }
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
+                    listModelList2.add(listModelList.get(position));
                     AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
                     mainPlayModel.setID("0");
                     mainPlayModel.setName("Disclaimer");
@@ -439,22 +440,21 @@ public class AptAudioFragment extends Fragment {
                         if (player != null) {
                             player.setPlayWhenReady(true);
                             audioc = false;
-                            listModelList2.add(mainPlayModel);
+                            listModelList2.add(0,mainPlayModel);
                         } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
-                                listModelList2.add(mainPlayModel);
+                                listModelList2.add(0,mainPlayModel);
                             }
                         }
                     } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
-                            listModelList2.add(mainPlayModel);
+                            listModelList2.add(0,mainPlayModel);
                         }
                     }
-                    listModelList2.add(listModelList.get(position));
                     callTransFrag(0, listModelList2, audioc);
                 }
             });
