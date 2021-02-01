@@ -91,6 +91,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/ivLibraryImage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_240sdp"
         android:scaleType="fitXY"

@@ -123,6 +123,7 @@
             android:layout_weight="0.15">
 
             <ImageView
+                android:id="@+id/ivLibraryImage"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_gravity="center"

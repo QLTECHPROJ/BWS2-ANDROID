@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -129,7 +131,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             adapter = new RemiderDetailsAdapter(listModel.getResponseData());
                             binding.rvReminderDetails.setAdapter(adapter);
                             binding.btnAddReminder.setVisibility(View.VISIBLE);
-                            showTooltiop();
+                            showTooltips();
                             if (listModel.getResponseData().size() == 0) {
                                 binding.llError.setVisibility(View.VISIBLE);
                                 binding.rvReminderDetails.setVisibility(View.GONE);
@@ -217,7 +219,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void showTooltiop() {
+    private void showTooltips() {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         ReminderFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0"));
 
@@ -227,6 +229,16 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             fancyShowCaseView1 = new FancyShowCaseView.Builder(activity)
                     .customView(R.layout.layout_reminder_status, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
                         rlNext.setOnClickListener(v -> fancyShowCaseView1.hide());
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
@@ -234,6 +246,16 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             fancyShowCaseView2 = new FancyShowCaseView.Builder(activity)
                     .customView(R.layout.layout_reminder_remove, view -> {
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
                         rlDone.setOnClickListener(v -> {
                             fancyShowCaseView2.hide();
                         });

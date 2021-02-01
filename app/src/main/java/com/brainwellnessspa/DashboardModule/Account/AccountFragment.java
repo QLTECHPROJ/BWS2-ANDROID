@@ -306,7 +306,7 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        showTooltiop();
+        showTooltips();
         return view;
     }
 
@@ -318,7 +318,7 @@ public class AccountFragment extends Fragment {
         super.onResume();
     }
 
-    private void showTooltiop() {
+    private void showTooltips() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         AccountFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0"));
 

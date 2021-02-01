@@ -393,7 +393,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         callRepeatShuffle();
 
-//        showTooltiop(); no need
+//        showTooltips(); no need
 
         */
 /* if (isMediaStart *//*
@@ -506,7 +506,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
     }
 
-    private void showTooltiop() {
+    private void showTooltips() {
         Animation enterAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
         Animation exitAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom);
 

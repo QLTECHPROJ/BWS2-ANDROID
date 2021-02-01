@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Playlist;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -386,7 +387,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         return view;
     }
 
-    private void showTooltiop() {
+    private void showTooltips() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         PlaylistFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0"));
 
@@ -438,7 +439,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             fancyShowCaseView51 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_sortings, view -> {
+                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
+                        anim.setDuration(600);
+                        anim.addUpdateListener(animation -> {
+                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start();
                         rlDone.setOnClickListener(v -> {
                             fancyShowCaseView51.hide();
                             playtutorial = true;
@@ -447,7 +458,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
                     .closeOnTouch(false).build();
-
 
             if (MyCreated.equalsIgnoreCase("1")) {
                 queue = new FancyShowCaseQueue()
@@ -1087,6 +1097,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void setData(SubPlayListModel.ResponseData listModel) {
         GlobalListModel = listModel;
+        MyCreated = listModel.getCreated();
+        showTooltips();
         /*if (downloadAudioDetailsList.size() != 0) {
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                 for (int f = 0; i < listModel.getPlaylistSongs().size(); i++) {
@@ -1102,8 +1114,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
-        MyCreated = listModel.getCreated();
-        showTooltiop();
         if (listModel.getPlaylistName().equalsIgnoreCase("") ||
                 listModel.getPlaylistName() == null) {
             binding.tvLibraryName.setText(R.string.My_Playlist);
@@ -1467,7 +1477,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 SaveMedia(playlistSongs, position, llDownload, ivDownloads, 0);
             } else {
-                SaveMedia( playlistSongs, position, llDownload, ivDownloads, 100);
+                SaveMedia(playlistSongs, position, llDownload, ivDownloads, 100);
             }
             SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -3105,7 +3115,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 if (player != null) {
-                                    if(position != positionSaved) {
+                                    if (position != positionSaved) {
                                         player.seekTo(position, 0);
                                         player.setPlayWhenReady(true);
                                         miniPlayer = 1;
@@ -3165,7 +3175,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                if(position != positionSaved) {
+                                if (position != positionSaved) {
                                     player.seekTo(position, 0);
                                     player.setPlayWhenReady(true);
                                     miniPlayer = 1;
@@ -3337,7 +3347,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     listModelList2.add(listModelList.get(i));
                                 }
                             }
-                            if(position != positionSaved) {
+                            if (position != positionSaved) {
                                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                     pos = position;
                                 } else {
