@@ -426,6 +426,7 @@ public class AudioDownloadsFragment extends Fragment {
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
 //                            handler1.postDelayed(UpdateSongTime1, 30000);
+                            break;
                         }
                     } else{
                         holder.binding.pbProgress.setVisibility(View.GONE);

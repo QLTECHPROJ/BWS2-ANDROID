@@ -39,7 +39,6 @@ import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
-import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
@@ -782,8 +781,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                         if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                             if (isDisclaimer == 1) {
                                 if (player != null) {
@@ -854,6 +853,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
@@ -869,14 +869,16 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                player.seekTo(position, 0);
-                                player.setPlayWhenReady(true);
-                                miniPlayer = 1;
-                                SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                editor.commit();
-                                callAddTranFrag();
+                                if(holder.getAdapterPosition() != positionSaved) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    miniPlayer = 1;
+                                    SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                    editor.commit();
+                                    callAddTranFrag();
+                                }
                             } else {
                                 callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName, true);
                                 SegmentTag();
@@ -1006,12 +1008,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 //                                pos = 0;
                                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                                 }
-                            }
                             if (listModelList2.size() != 0) {
                                 callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
+                        }
                             SegmentTag();
 
                         }

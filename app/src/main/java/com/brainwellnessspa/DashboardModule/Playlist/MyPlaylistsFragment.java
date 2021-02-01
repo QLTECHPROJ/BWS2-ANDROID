@@ -2554,6 +2554,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(listModelList.get(0).getPlaylistID())) {
                         if (isDisclaimer == 1) {
                             if (player != null) {
@@ -2570,14 +2571,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else {
                             myAudioId = mData.get(0).getID();
                             if (player != null) {
-                                player.seekTo(position, 0);
-                                player.setPlayWhenReady(true);
-                                miniPlayer = 1;
-                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                editor.commit();
-                                callAddTransFrag();
+                                if(position != positionSaved) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    miniPlayer = 1;
+                                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                    editor.commit();
+                                    callAddTransFrag();
+                                }
                             } else {
                                 callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "myPlaylist", PlaylistID, true);
                                 SegmentTag();
@@ -2647,13 +2650,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         myAudioId = mData.get(pos).getID();
                         if (player != null) {
-                            if(position != positionSaved) {
-                                player.seekTo(position, 0);
+                            if(pos != positionSaved) {
+                                player.seekTo(pos, 0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
                                 SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.putInt(CONSTANTS.PREF_KEY_position, pos);
                                 editor.commit();
                                 callAddTransFrag();
                             }
@@ -2945,6 +2948,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (MyDownloads.equalsIgnoreCase("1")) {
                         if (BWSApplication.isNetworkConnected(ctx)) {
                             if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
@@ -2963,14 +2967,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 } else {
                                     myAudioId = mData.get(0).getID();
                                     if (player != null) {
-                                        player.seekTo(position, 0);
-                                        player.setPlayWhenReady(true);
-                                        miniPlayer = 1;
-                                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedxx.edit();
-                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                        editor.commit();
-                                        callAddTransFrag();
+                                        if(position != positionSaved) {
+                                            player.seekTo(position, 0);
+                                            player.setPlayWhenReady(true);
+                                            miniPlayer = 1;
+                                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedxx.edit();
+                                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                            editor.commit();
+                                            callAddTransFrag();
+                                        }
                                     } else {
                                         callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID, true);
                                         SegmentTag();
@@ -3022,14 +3028,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else {
                                 myAudioId = mData.get(0).getID();
                                 if (player != null) {
-                                    player.seekTo(position, 0);
-                                    player.setPlayWhenReady(true);
-                                    miniPlayer = 1;
-                                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedxx.edit();
-                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                    editor.commit();
-                                    callAddTransFrag();
+                                    if(position != positionSaved) {
+                                        player.seekTo(position, 0);
+                                        player.setPlayWhenReady(true);
+                                        miniPlayer = 1;
+                                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedxx.edit();
+                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                        editor.commit();
+                                        callAddTransFrag();
+                                    }
                                 } else {
                                     callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID, true);
                                     SegmentTag();
@@ -3243,7 +3251,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 .replace(R.id.flContainer, fragment)
                                 .commit();
                     });
-
                     tvGoBack.setOnClickListener(viewd -> dialog.dismiss());
                     dialog.show();
                     dialog.setCancelable(false);
@@ -3260,7 +3267,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 holder.binding.llMore.setEnabled(false);
                 holder.binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }
-
             holder.binding.llMore.setOnClickListener(view -> {
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -3338,12 +3344,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                                pos = 0;
                                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                                 }
-                            }
                             if (listModelList2.size() != 0) {
                                 callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
+                        }
                             SegmentTag();
                         }
                     } else {
