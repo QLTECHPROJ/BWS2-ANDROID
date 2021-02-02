@@ -2391,6 +2391,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 @Override
                 public void run() {
                     try {
+                        getDownloadData();
 //                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
                         if (fileNameList.size() != 0) {
                             for (int i = 0; i < fileNameList.size(); i++) {
@@ -2491,9 +2492,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             handler2.postDelayed(UpdateSongTime2, 3000);
                             break;
                         }
-                    }else{
-                        holder.binding.pbProgress.setVisibility(View.GONE);
-                        holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                    }else if(i == fileNameList.size()-1){
+                        binding.pbProgress.setVisibility(View.GONE);
+                        handler2.removeCallbacks(UpdateSongTime2);
                     }
                 }
             } else {

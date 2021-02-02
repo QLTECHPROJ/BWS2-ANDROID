@@ -137,8 +137,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
+                getDownloadData();
+                GetMediaPer();
 //                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
-                if (fileNameList.size() != 0) {
+           /*     if (fileNameList.size() != 0) {
                     for (int i = 0; i < fileNameList.size(); i++) {
                         if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())) {
                             if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mainPlayModelList.get(position).getName())) {
@@ -164,6 +166,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 handler2.removeCallbacks(UpdateSongTime2);
                                 break;
                             }
+                        }else if(i == fileNameList.size()-1){
+                            binding.pbProgress.setVisibility(View.GONE);
                         }
                     }
                 }else{
@@ -171,6 +175,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     binding.ivDownloads.setVisibility(View.VISIBLE);
                 }
                 handler2.postDelayed(this, 10000);
+                getDownloadData();*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -2595,6 +2600,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 disableDownload();
                                 handler2.postDelayed(UpdateSongTime2, 10000);
                             }
+                            break;
                         } else {
                             binding.pbProgress.setVisibility(View.GONE);
                             binding.ivDownloads.setVisibility(View.VISIBLE);
@@ -2609,6 +2615,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         handler2.postDelayed(UpdateSongTime2, 10000);
                         break;
                     }
+                }else if(i == fileNameList.size()-1){
+                    binding.pbProgress.setVisibility(View.GONE);
+                    handler2.removeCallbacks(UpdateSongTime2);
                 }
             }
         } else {

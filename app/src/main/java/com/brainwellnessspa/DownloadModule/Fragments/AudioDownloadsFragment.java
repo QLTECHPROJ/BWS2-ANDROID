@@ -422,12 +422,15 @@ public class AudioDownloadsFragment extends Fragment {
                                 holder.binding.pbProgress.setVisibility(View.GONE);
                             }
 //                            handler1.postDelayed(UpdateSongTime1, 30000);
-                        } else {
-                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
-//                            handler1.postDelayed(UpdateSongTime1, 30000);
                             break;
+                        } else {
+                            holder.binding.pbProgress.setProgress(0);
+                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+
+                            break;
+//                            handler1.postDelayed(UpdateSongTime1, 30000);
                         }
-                    } else{
+                    }else if(i == fileNameList.size()-1){
                         holder.binding.pbProgress.setVisibility(View.GONE);
                     }
                 }
