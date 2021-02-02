@@ -506,8 +506,8 @@ public class AudioFragment extends Fragment {
                     .customView(R.layout.layout_audio_librarys, view -> {
                         ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
-                        anim.setDuration(600);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
                             ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
                             ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
@@ -547,8 +547,8 @@ public class AudioFragment extends Fragment {
                     .customView(R.layout.layout_audio_addplaylist, (OnViewInflateListener) view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
-                        anim.setDuration(600);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
                             ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
                             ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
@@ -567,8 +567,8 @@ public class AudioFragment extends Fragment {
                     .customView(R.layout.layout_audio_categories, view -> {
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
                         ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
-                        anim.setDuration(600);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
                             ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
                             ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());

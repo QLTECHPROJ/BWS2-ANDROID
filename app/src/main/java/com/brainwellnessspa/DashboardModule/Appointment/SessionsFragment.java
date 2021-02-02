@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -34,12 +32,8 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentSessionsBinding;
 import com.brainwellnessspa.databinding.SessionListLayoutBinding;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,9 +42,6 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetailsFragment.ComeFromAppointmentDetail;
 import static com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetailsFragment.ComesessionScreen;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class SessionsFragment extends Fragment {
     FragmentSessionsBinding binding;
@@ -134,8 +125,8 @@ public class SessionsFragment extends Fragment {
     private void prepareSessionList() {
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-             globalInitExoPlayer.UpdateMiniPlayer(getActivity());
-             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            globalInitExoPlayer.UpdateMiniPlayer(getActivity());
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
 

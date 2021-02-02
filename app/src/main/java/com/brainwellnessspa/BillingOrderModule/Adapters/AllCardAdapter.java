@@ -2,6 +2,7 @@ package com.brainwellnessspa.BillingOrderModule.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -36,8 +37,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHolder> {
     private List<CardListModel.ResponseData> listModelList;
@@ -77,7 +76,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         if (listModel.getIsDefault().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {
             holder.binding.ivCheck.setImageResource(R.drawable.ic_checked_icon);
             card_id = listModel.getCustomer();
-            SharedPreferences shared = activity.getSharedPreferences(CONSTANTS.PREF_KEY_CardID, MODE_PRIVATE);
+            SharedPreferences shared = activity.getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_CardID, card_id);
             editor.commit();

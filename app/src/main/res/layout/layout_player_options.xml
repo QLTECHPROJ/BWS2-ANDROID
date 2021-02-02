@@ -92,6 +92,10 @@
         android:layout_height="@dimen/_0sdp"
         android:layout_weight="0.15">
 
+        <ImageView
+            android:id="@+id/ivGif"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
     <LinearLayout

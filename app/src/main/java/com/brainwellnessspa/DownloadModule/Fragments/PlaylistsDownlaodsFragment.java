@@ -582,7 +582,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
   /*  void getDownloadData() {
-        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {

@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
@@ -60,6 +61,7 @@ import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
 import com.brainwellnessspa.databinding.AudioPlayerCustomLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -625,7 +627,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void showTooltips() {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         PlayerFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0"));
-
+//        main_player
         if (PlayerFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
             Animation exitAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom);
@@ -651,13 +653,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
             fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
                     .customView(R.layout.layout_player_options, view -> {
                         ImageView ivOptions = view.findViewById(R.id.ivOptions);
+                        ImageView ivGif = view.findViewById(R.id.ivGif);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        Glide.with(ctx)
-                                .load(R.drawable.highlight_icons)
-                                .asGif()
-                                .placeholder(R.drawable.highlight_icons)
-                                .crossFade()
-                                .into(ivOptions);
+//                        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
+//                        Glide.with(activity).load(R.raw.main_player).into(imageViewTarget);
+                        /*final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        anim.setDuration(1500);
+                        anim.addUpdateListener(animation -> {
+                            ivGif.setScaleX((Float) animation.getAnimatedValue());
+                            ivGif.setScaleY((Float) animation.getAnimatedValue());
+                        });
+                        anim.setRepeatCount(ValueAnimator.INFINITE);
+                        anim.setRepeatMode(ValueAnimator.REVERSE);
+                        anim.start()*/;
                         rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)

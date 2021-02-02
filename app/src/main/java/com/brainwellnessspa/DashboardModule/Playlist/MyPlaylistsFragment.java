@@ -100,7 +100,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment.ComeScreenMyPlaylist;
@@ -148,7 +147,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     //    List<DownloadAudioDetails> playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
-    Dialog dialog;
     List<String> fileNameList, playlistDownloadId, onlySingleDownloaded;
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
@@ -388,7 +386,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void showTooltips() {
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         PlaylistFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0"));
 
         if (PlaylistFirstLogin.equalsIgnoreCase("1")) {
@@ -402,7 +400,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llMore).closeOnTouch(false).build();
+                    .focusOn(binding.llMore).closeOnTouch(true).build();
 
             fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
                     .customView(R.layout.layout_playlist_reminder, view -> {
@@ -441,8 +439,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     .customView(R.layout.layout_playlist_sortings, view -> {
                         ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
-                        anim.setDuration(600);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
                             ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
                             ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
@@ -1076,7 +1074,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void getDownloadData() {
         try {
-            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson = new Gson();
             String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
             String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
@@ -1379,7 +1377,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
                 }
             }
-            SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson1 = new Gson();
             String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
             String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
@@ -1436,7 +1434,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 List<String> url = new ArrayList<>();
                 List<String> name = new ArrayList<>();
                 List<String> downloadPlaylistId = new ArrayList<>();
-                SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 Gson gson1 = new Gson();
                 String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
                 String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
@@ -1962,7 +1960,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public void getDeleteDownloadData() {
         List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
         try {
-            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson = new Gson();
             String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
             String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));

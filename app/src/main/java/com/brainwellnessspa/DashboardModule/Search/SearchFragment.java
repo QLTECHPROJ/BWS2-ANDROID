@@ -188,8 +188,8 @@ public class SearchFragment extends Fragment {
                     .customView(R.layout.layout_search_audioplay, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
-                        anim.setDuration(600);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
                             ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
                             ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
@@ -207,8 +207,8 @@ public class SearchFragment extends Fragment {
                     .customView(R.layout.layout_search_addplaylist, view -> {
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
                         ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.5f, 1f);
-                        anim.setDuration(600);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
                             ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
                             ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());

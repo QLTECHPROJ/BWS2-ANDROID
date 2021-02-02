@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -36,11 +35,9 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAppointmentBinding;
 import com.brainwellnessspa.databinding.PreviousAppointmentsLayoutBinding;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,16 +45,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class AppointmentFragment extends Fragment {
     FragmentAppointmentBinding binding;
     String UserID, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     Activity activity;
     Properties p;
+    GsonBuilder gsonBuilder;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
@@ -75,23 +70,24 @@ public class AppointmentFragment extends Fragment {
         }
         p = new Properties();
         p.putValue("userId", UserID);
+        /*Gson gson;
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+        p.putValue("products", gson.toJson(productProperties));*/
         BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
         ComeScreenAccount = 0;
         comefromDownload = "0";
-        binding.cvSetSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://brainwellnessspa.com.au/bookings/services.php"));
-                startActivity(i);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("bookingLink", "https://brainwellnessspa.com.au/bookings/services.php");
-                BWSApplication.addToSegment("Book a New Appointment Clicked", p, CONSTANTS.track);
-            }
+        binding.cvSetSession.setOnClickListener(view1 -> {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://brainwellnessspa.com.au/bookings/services.php"));
+            startActivity(i);
+            p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("bookingLink", "https://brainwellnessspa.com.au/bookings/services.php");
+            BWSApplication.addToSegment("Book a New Appointment Clicked", p, CONSTANTS.track);
         });
         return view;
     }
@@ -304,7 +300,6 @@ public class AppointmentFragment extends Fragment {
     }
 
     private void callAddTransFrag() {
-
         Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()

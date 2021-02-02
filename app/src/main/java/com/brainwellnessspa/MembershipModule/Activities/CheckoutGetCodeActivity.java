@@ -143,7 +143,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 String countryCode = binding.tvCountryCode.getText().toString().replace("+", "");
-                SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
+                SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
                 String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
                 if (key.equalsIgnoreCase("")) {
                     key = getKey(ctx);

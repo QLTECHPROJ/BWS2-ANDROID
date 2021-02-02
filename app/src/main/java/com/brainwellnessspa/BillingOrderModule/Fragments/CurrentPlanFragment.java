@@ -37,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 /*Active => Cancel button
@@ -109,7 +108,7 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvPlan.setText("Active Since: " + listModel.getResponseData().getActivate());
                         }
 
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().getExpireDate());
                         editor.putString(CONSTANTS.PREF_KEY_IsLock, IsLock);
