@@ -30,6 +30,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
+import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
@@ -92,11 +93,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             ScreenView = getIntent().getStringExtra("ScreenView");
         }
-
-        p = new Properties();
-        p.putValue("userId", UserID);
-        p.putValue("source", ScreenView);
-        BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(view -> {
             comefrom_search = 0;
@@ -268,6 +264,23 @@ public class AddPlaylistActivity extends AppCompatActivity {
 //                                binding.rvPlayLists.setVisibility(View.GONE);
 //                            } else {
                             binding.rvPlayLists.setVisibility(View.VISIBLE);
+
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("source", ScreenView);
+                            ArrayList<SegmentPlaylist> section = new ArrayList<>();
+                            for (int i = 0; i < model.getResponseData().size(); i++) {
+                                SegmentPlaylist e = new SegmentPlaylist();
+                                e.setPlaylistId(model.getResponseData().get(i).getID());
+                                e.setPlaylistName(model.getResponseData().get(i).getName());
+                                e.setPlaylistType(model.getResponseData().get(i).getCreated());
+                                e.setPlaylistDuration(model.getResponseData().get(i).getTotalhour() + "h " +model.getResponseData().get(i).getTotalminute() + "m");
+                                e.setAudioCount(model.getResponseData().get(i).getTotalAudio());
+                                section.add(e);
+                            }
+                            Gson gson = new Gson();
+                            p.putValue("playlists", gson.toJson(section));
+                            BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
                             AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
                             binding.rvPlayLists.setAdapter(addPlaylistAdapter);
 //                            }

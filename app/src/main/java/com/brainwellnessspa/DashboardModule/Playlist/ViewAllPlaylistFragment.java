@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
+import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
+import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -36,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -117,6 +120,22 @@ public class ViewAllPlaylistFragment extends Fragment {
                 detail.setCreated(audioList.get(i).getCreated());
                 listModelList.add(detail);
             }
+            Properties p = new Properties();
+            ArrayList<SegmentPlaylist> section = new ArrayList<>();
+            for (int i = 0; i < audioList.size(); i++) {
+                SegmentPlaylist e = new SegmentPlaylist();
+                e.setPlaylistId(audioList.get(i).getPlaylistID());
+                e.setPlaylistName(audioList.get(i).getPlaylistName());
+                e.setPlaylistType(audioList.get(i).getCreated());
+                e.setPlaylistDuration(audioList.get(i).getTotalhour() + "h " +audioList.get(i).getTotalminute() + "m");
+                e.setAudioCount(audioList.get(i).getTotalAudio());
+                section.add(e);
+            }
+            p.putValue("userId", UserID);
+            Gson gson = new Gson();
+            p.putValue("playlists", gson.toJson(section));
+            p.putValue("section", ScreenView);
+            BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen);
             PlaylistAdapter adapter = new PlaylistAdapter(listModelList, IsLock);
             binding.rvMainAudio.setAdapter(adapter);
         });
@@ -233,6 +252,22 @@ public class ViewAllPlaylistFragment extends Fragment {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                 binding.tvTitle.setText(listModel.getResponseData().getView());
                                 ScreenView = listModel.getResponseData().getView();
+                                Properties p = new Properties();
+                                ArrayList<SegmentPlaylist> section = new ArrayList<>();
+                                for (int i = 0; i < listModel.getResponseData().getDetails().size(); i++) {
+                                    SegmentPlaylist e = new SegmentPlaylist();
+                                    e.setPlaylistId(listModel.getResponseData().getDetails().get(i).getPlaylistID());
+                                    e.setPlaylistName(listModel.getResponseData().getDetails().get(i).getPlaylistName());
+                                    e.setPlaylistType(listModel.getResponseData().getDetails().get(i).getCreated());
+                                    e.setPlaylistDuration(listModel.getResponseData().getDetails().get(i).getTotalhour() + "h " +listModel.getResponseData().getDetails().get(i).getTotalminute() + "m");
+                                    e.setAudioCount(listModel.getResponseData().getDetails().get(i).getTotalAudio());
+                                    section.add(e);
+                                }
+                                p.putValue("userId", UserID);
+                                Gson gson = new Gson();
+                                p.putValue("playlists", gson.toJson(section));
+                                p.putValue("section", ScreenView);
+                                BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen);
                                 PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
                                 binding.rvMainAudio.setAdapter(adapter);
                             }

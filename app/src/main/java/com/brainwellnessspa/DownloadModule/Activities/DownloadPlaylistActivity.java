@@ -838,7 +838,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             SegmentTag();
                         }
                     } else {
-                        getAllCompletedMedia(audioPlay, AudioFlag, pID, 0, shared);
+                        getAllCompletedMedia(audioPlay, AudioFlag, pID, 0);
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -911,7 +911,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         SegmentTag();
                     }
                 } else {
-                    getAllCompletedMedia(audioPlay, AudioFlag, pID, position, shared);
+                    getAllCompletedMedia(audioPlay, AudioFlag, pID, position);
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -964,7 +964,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             });
         }
 
-        private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position, SharedPreferences shared) {
+        private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position) {
             class GetTask extends AsyncTask<Void, Void, Void> {
                 List<String> downloadAudioDetailsList = new ArrayList<>();
 
@@ -980,6 +980,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     int pos = 0;
                     if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
@@ -1004,16 +1005,16 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             if(position != positionSaved) {
                                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                     pos = position;
+                                    if (listModelList2.size() != 0) {
+                                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
+                                    } else {
+                                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                    }
                                 } else {
 //                                pos = 0;
                                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                                 }
-                            if (listModelList2.size() != 0) {
-                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
-                            } else {
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
-                        }
                             SegmentTag();
 
                         }

@@ -234,8 +234,6 @@ public class AudioDownloadsFragment extends Fragment {
         RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
 //        audioList = GetAllMedia(getActivity());
 
         super.onResume();
@@ -311,11 +309,12 @@ public class AudioDownloadsFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.GONE);
             binding.llSpace.setVisibility(View.VISIBLE);
-
             adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound, IsLock);
+            binding.rvDownloadsList.setAdapter(adapter);
             LocalBroadcastManager.getInstance(getActivity())
                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-            binding.rvDownloadsList.setAdapter(adapter);
+            LocalBroadcastManager.getInstance(getActivity())
+                    .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
         }
     }
 

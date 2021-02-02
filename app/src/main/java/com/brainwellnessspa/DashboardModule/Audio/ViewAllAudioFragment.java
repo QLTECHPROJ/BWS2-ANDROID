@@ -24,6 +24,7 @@ import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivi
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
+import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -39,6 +40,7 @@ import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
@@ -83,33 +85,6 @@ public class ViewAllAudioFragment extends Fragment {
             ID = getArguments().getString("ID");
             Name = getArguments().getString("Name");
             Category = getArguments().getString("Category");
-        }
-
-        if (Name.equalsIgnoreCase(getString(R.string.recently_played))) {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            BWSApplication.addToSegment("Recently Played Viewed", p, CONSTANTS.screen);
-        } else if (Name.equalsIgnoreCase("My Downloads")) {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            BWSApplication.addToSegment("My Downloads Viewed", p, CONSTANTS.screen);
-        } else if (Name.equalsIgnoreCase(getString(R.string.Library))) {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            BWSApplication.addToSegment("Library List Viewed", p, CONSTANTS.screen);
-        } else if (Name.equalsIgnoreCase(getString(R.string.get_inspired))) {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            BWSApplication.addToSegment("Get Inspired List Viewed ", p, CONSTANTS.screen);
-        } else if (Name.equalsIgnoreCase(getString(R.string.popular))) {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            BWSApplication.addToSegment("Popular List Viewed", p, CONSTANTS.screen);
-        } else if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            p.putValue("categoryName", Category);
-            BWSApplication.addToSegment("Top Categories Item Viewed", p, CONSTANTS.screen);
         }
 
         view.setFocusableInTouchMode(true);
@@ -181,6 +156,22 @@ public class ViewAllAudioFragment extends Fragment {
                 mainPlayModel.setAudioDuration(audioList.get(i).getAudioDuration());
                 listModelList.add(mainPlayModel);
             }
+            ArrayList<SegmentAudio> section = new ArrayList<>();
+            for (int i = 0; i < audioList.size(); i++) {
+                SegmentAudio e = new SegmentAudio();
+                e.setAudioId(audioList.get(i).getID());
+                e.setAudioName(audioList.get(i).getName());
+                e.setMasterCategory(audioList.get(i).getAudiomastercat());
+                e.setSubCategory(audioList.get(i).getAudioSubCategory());
+                e.setAudioDuration(audioList.get(i).getAudioDirection());
+                section.add(e);
+            }
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            Gson gson = new Gson();
+            p.putValue("audios", gson.toJson(section));
+            p.putValue("source", Name);
+            BWSApplication.addToSegment("Explore ViewAll Screen Viewed", p, CONSTANTS.screen);
             AudiolistAdapter adapter = new AudiolistAdapter(listModelList, IsLock);
             binding.rvMainAudio.setAdapter(adapter);
         });
@@ -247,6 +238,33 @@ public class ViewAllAudioFragment extends Fragment {
                             } else {
                                 binding.tvTitle.setText(Category);
                             }
+                            ArrayList<SegmentAudio> section = new ArrayList<>();
+                            for (int i = 0; i < listModel.getResponseData().getDetails().size(); i++) {
+                                SegmentAudio e = new SegmentAudio();
+                                e.setAudioId(listModel.getResponseData().getDetails().get(i).getID());
+                                e.setAudioName(listModel.getResponseData().getDetails().get(i).getName());
+                                e.setMasterCategory(listModel.getResponseData().getDetails().get(i).getAudiomastercat());
+                                e.setSubCategory(listModel.getResponseData().getDetails().get(i).getAudioSubCategory());
+                                e.setAudioDuration(listModel.getResponseData().getDetails().get(i).getAudioDirection());
+                                section.add(e);
+                            }
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            Gson gson = new Gson();
+                            p.putValue("audios", gson.toJson(section));
+                            if (Name.equalsIgnoreCase(getString(R.string.recently_played))) {
+                                p.putValue("source", Name);
+                            } else if (Name.equalsIgnoreCase(getString(R.string.Library))) {
+                                p.putValue("source", Name);
+                            } else if (Name.equalsIgnoreCase(getString(R.string.get_inspired))) {
+                                p.putValue("source", Name);
+                            } else if (Name.equalsIgnoreCase(getString(R.string.popular))) {
+                                p.putValue("source", Name);
+                            } else if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
+                                p.putValue("categoryName", Category);
+                                p.putValue("source", Name);
+                            }
+                            BWSApplication.addToSegment("Explore ViewAll Screen Viewed", p, CONSTANTS.screen);
                             AudiolistAdapter adapter = new AudiolistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
                             binding.rvMainAudio.setAdapter(adapter);
                         }

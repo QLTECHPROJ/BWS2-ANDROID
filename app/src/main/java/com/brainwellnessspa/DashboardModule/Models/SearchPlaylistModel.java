@@ -131,6 +131,10 @@ public class SearchPlaylistModel implements Parcelable {
         @Expose
         private String totalminute;
 
+        @SerializedName("Created")
+        @Expose
+        private String created;
+
         public ResponseData(Parcel in) {
             iD = in.readString();
             name = in.readString();
@@ -143,6 +147,7 @@ public class SearchPlaylistModel implements Parcelable {
             totalAudio = in.readString();
             totalhour = in.readString();
             totalminute = in.readString();
+            created = in.readString();
         }
 
         public String getID() {
@@ -225,12 +230,21 @@ public class SearchPlaylistModel implements Parcelable {
             this.subCat = subCat;
         }
 
+
         public String getDownload() {
             return download;
         }
 
         public void setDownload(String download) {
             this.download = download;
+        }
+
+        public String getCreated() {
+            return created;
+        }
+
+        public void setCreated(String created) {
+            this.created = created;
         }
 
         @Override
@@ -251,6 +265,7 @@ public class SearchPlaylistModel implements Parcelable {
             parcel.writeString(totalAudio);
             parcel.writeString(totalhour);
             parcel.writeString(totalminute);
+            parcel.writeString(created);
         }
     }
 }

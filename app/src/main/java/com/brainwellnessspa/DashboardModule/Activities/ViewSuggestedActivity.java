@@ -27,6 +27,8 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.SearchPlaylistModel;
+import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
+import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
@@ -42,6 +44,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -177,11 +180,43 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         binding.rvMainAudio.setLayoutManager(layoutManager);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         if (Name.equalsIgnoreCase("Recommended  Audios")) {
+            ArrayList<SegmentAudio> section = new ArrayList<>();
+            for (int i = 0; i < AudiolistsModel.size(); i++) {
+                SegmentAudio e = new SegmentAudio();
+                e.setAudioId(AudiolistsModel.get(i).getID());
+                e.setAudioName(AudiolistsModel.get(i).getName());
+                e.setMasterCategory(AudiolistsModel.get(i).getAudiomastercat());
+                e.setSubCategory(AudiolistsModel.get(i).getAudioSubCategory());
+                e.setAudioDuration(AudiolistsModel.get(i).getAudioDirection());
+                section.add(e);
+            }
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            Gson gson = new Gson();
+            p.putValue("audios", gson.toJson(section));
+            p.putValue("source", "Search Screen");
+            BWSApplication.addToSegment("Recommended Audios List Viewed", p, CONSTANTS.screen);
             adpater = new AudiosListAdpater(AudiolistsModel);
             LocalBroadcastManager.getInstance(ViewSuggestedActivity.this)
                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvMainAudio.setAdapter(adpater);
         } else if (Name.equalsIgnoreCase("Recommended Playlist")) {
+            ArrayList<SegmentPlaylist> section = new ArrayList<>();
+            for (int i = 0; i < PlaylistModel.size(); i++) {
+                SegmentPlaylist e = new SegmentPlaylist();
+                e.setPlaylistId(PlaylistModel.get(i).getID());
+                e.setPlaylistName(PlaylistModel.get(i).getName());
+                e.setPlaylistType(PlaylistModel.get(i).getCreated());
+                e.setPlaylistDuration(PlaylistModel.get(i).getTotalhour() + "h " +PlaylistModel.get(i).getTotalminute() + "m");
+                e.setAudioCount(PlaylistModel.get(i).getTotalAudio());
+                section.add(e);
+            }
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            Gson gson = new Gson();
+            p.putValue("playlists", gson.toJson(section));
+            p.putValue("source", "Search Screen");
+            BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
             SuggestionPlayListsAdpater adpater = new SuggestionPlayListsAdpater(PlaylistModel);
             binding.rvMainAudio.setAdapter(adpater);
         }

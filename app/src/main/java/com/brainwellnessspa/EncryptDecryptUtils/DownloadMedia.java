@@ -3,7 +3,9 @@ package com.brainwellnessspa.EncryptDecryptUtils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -14,6 +16,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
@@ -50,6 +53,7 @@ public class DownloadMedia implements OnDownloadListener {
     AudioDatabase DB;
         LocalBroadcastManager lBM;
     Intent localIntent;
+    MyNetworkReceiver myNetworkReceiver;
     List<String> fileNameList, audioFile, playlistDownloadId;
 
         private BroadcastReceiver listener = new BroadcastReceiver() {
@@ -70,6 +74,8 @@ public class DownloadMedia implements OnDownloadListener {
                 .addMigrations(MIGRATION_1_2)
                 .build();
         localIntent = new Intent("DownloadProgress");
+        ctx.registerReceiver(myNetworkReceiver = new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
         lBM = LocalBroadcastManager.getInstance(ctx);
 // Setting timeout globally for the download network requests:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
@@ -389,6 +395,7 @@ public class DownloadMedia implements OnDownloadListener {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                     editor.commit();
                     if (fileNameList.size() != 0) {
+                        isDownloading = true;
                         DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                         downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
                     }

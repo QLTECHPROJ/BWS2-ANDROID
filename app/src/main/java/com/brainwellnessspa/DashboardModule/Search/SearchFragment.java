@@ -50,6 +50,7 @@ import com.brainwellnessspa.databinding.SearchAudioLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
@@ -120,10 +121,16 @@ public class SearchFragment extends Fragment {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         ComeScreenAccount = 0;
         comefromDownload = "0";
-
+        ArrayList<String> section = new ArrayList<>();
+        section.add("Recommended Audios");
+        section.add("Recommended Playlists");
+        Gson gson;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("source", "Search Screen");
+        p.putValue("sections", gson.toJson(section));
         BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);

@@ -162,9 +162,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 binding.pbProgress.setVisibility(View.VISIBLE);
                                 binding.ivDownloads.setVisibility(View.GONE);
                                 handler2.removeCallbacks(UpdateSongTime2);
+                                break;
                             }
                         }
                     }
+                }else{
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
                 }
                 handler2.postDelayed(this, 10000);
             } catch (Exception e) {
@@ -2603,6 +2607,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         binding.ivDownloads.setVisibility(View.GONE);
                         disableDownload();
                         handler2.postDelayed(UpdateSongTime2, 10000);
+                        break;
                     }
                 }
             }

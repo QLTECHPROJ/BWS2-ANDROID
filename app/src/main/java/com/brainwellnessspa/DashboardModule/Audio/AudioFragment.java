@@ -1,6 +1,5 @@
 package com.brainwellnessspa.DashboardModule.Audio;
 
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.PathInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,13 +42,11 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;
 import com.brainwellnessspa.databinding.MainAudioLayoutBinding;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
@@ -74,7 +70,6 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
 import static com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
@@ -107,9 +102,6 @@ public class AudioFragment extends Fragment {
         binding.rvMainAudioList.setLayoutManager(manager);
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
         prepareDisplayData();
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
 
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -137,6 +129,7 @@ public class AudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                     editor.commit();*/
                     if (fileNameList.size() != 0) {
+                        isDownloading = true;
                         DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                         downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
                     }
@@ -235,6 +228,17 @@ public class AudioFragment extends Fragment {
 //                        adapter = new MainAudioListAdapter(listModel.getResponseData(),getActivity());
 //                        binding.rvMainAudioList.setAdapter(adapter);
 //                        GetAllMedia(getActivity(), listModel.getResponseData());
+                            ArrayList<String> section = new ArrayList<>();
+                            for (int i = 0; i < listModel.getResponseData().size(); i++) {
+                                section.add(listModel.getResponseData().get(i).getView());
+                            }
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            Gson gson;
+                            GsonBuilder gsonBuilder = new GsonBuilder();
+                            gson = gsonBuilder.create();
+                            p.putValue("sections", gson.toJson(section));
+                            BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
                             callObserverMethod(listModel.getResponseData());
                         }
                     } catch (Exception e) {

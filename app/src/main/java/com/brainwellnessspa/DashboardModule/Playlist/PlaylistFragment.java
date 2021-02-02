@@ -50,6 +50,7 @@ import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
@@ -87,10 +88,6 @@ public class PlaylistFragment extends Fragment {
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         ComeScreenAccount = 0;
         comefromDownload = "0";
-
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen);
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
@@ -171,6 +168,17 @@ public class PlaylistFragment extends Fragment {
 //                            adapter = new MainPlayListAdapter();
 //                            binding.rvMainPlayList.setAdapter(adapter);
                             GetPlaylistDetail(listModel.getResponseData());
+                            ArrayList<String> section = new ArrayList<>();
+                            for (int i = 0; i < listModel.getResponseData().size(); i++) {
+                                section.add(listModel.getResponseData().get(i).getView());
+                            }
+                            Properties p = new Properties();
+                            p.putValue("userId", UserID);
+                            Gson gson;
+                            GsonBuilder gsonBuilder = new GsonBuilder();
+                            gson = gsonBuilder.create();
+                            p.putValue("sections", gson.toJson(section));
+                            BWSApplication.addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

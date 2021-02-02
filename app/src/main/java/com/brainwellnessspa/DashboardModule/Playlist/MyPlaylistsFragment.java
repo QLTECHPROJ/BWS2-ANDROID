@@ -2489,7 +2489,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
                             handler2.postDelayed(UpdateSongTime2, 3000);
+                            break;
                         }
+                    }else{
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                        holder.binding.ivDownloads.setVisibility(View.VISIBLE);
                     }
                 }
             } else {
@@ -3017,7 +3021,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 SegmentTag();
                             }
                         } else {
-                            getAllCompletedMedia(audioPlay, AudioFlag, pID, 0, shared);
+                            getAllCompletedMedia(audioPlay, AudioFlag, pID, 0);
                         }
                     } else {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
@@ -3155,7 +3159,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             SegmentTag();
                         }
                     } else {
-                        getAllCompletedMedia(audioPlay, AudioFlag, pID, position, shared);
+                        getAllCompletedMedia(audioPlay, AudioFlag, pID, position);
                     }
                 } else {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
@@ -3306,7 +3310,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
         }
 
-        private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position, SharedPreferences shared) {
+        private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position) {
             class GetTask extends AsyncTask<Void, Void, Void> {
                 List<String> downloadAudioDetailsList = new ArrayList<>();
 
@@ -3323,6 +3327,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     int pos = 0;
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                         if (isDisclaimer == 1) {
@@ -3348,16 +3353,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             if (position != positionSaved) {
                                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                     pos = position;
+                                    if (listModelList2.size() != 0) {
+                                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
+                                    } else {
+                                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                    }
                                 } else {
 //                                pos = 0;
                                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                                 }
-                            if (listModelList2.size() != 0) {
-                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
-                            } else {
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
-                        }
                             SegmentTag();
                         }
                     } else {

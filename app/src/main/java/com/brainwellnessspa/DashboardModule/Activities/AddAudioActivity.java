@@ -46,6 +46,7 @@ import com.brainwellnessspa.databinding.GlobalSearchLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
@@ -115,9 +116,16 @@ public class AddAudioActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        ArrayList<String> section = new ArrayList<>();
+        section.add("Recommended Audios");
+        section.add("Recommended Playlists");
+        Gson gson;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         p = new Properties();
         p.putValue("userId", UserID);
-        p.putValue("source", "Add Audio Screen");
+        p.putValue("source", "Search Screen");
+        p.putValue("sections", gson.toJson(section));
         BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
 
         binding.searchView.onActionViewExpanded();

@@ -73,7 +73,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     boolean isMyDownloading = false;
     AudioDatabase DB;
     Properties p;
-    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), remainAudio = new ArrayList<>();
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     private BroadcastReceiver listener1 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -115,8 +115,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             GetAllMedia(getActivity());
             comeDeletePlaylist = 0;
         }
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
         GetAllMedia(getActivity());
         RefreshData();
         super.onResume();
@@ -235,6 +233,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             binding.llError.setVisibility(View.GONE);
             adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), binding.llError, binding.tvFound, binding.rvDownloadsList);
             binding.rvDownloadsList.setAdapter(adapter);
+            LocalBroadcastManager.getInstance(getActivity())
+                    .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
         }
     }
 

@@ -1154,6 +1154,7 @@ Appointment Audios dddd*/
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                     editor.commit();
                     if (fileNameList.size() != 0) {
+                        isDownloading = true;
                         DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                         downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId);
                     }
