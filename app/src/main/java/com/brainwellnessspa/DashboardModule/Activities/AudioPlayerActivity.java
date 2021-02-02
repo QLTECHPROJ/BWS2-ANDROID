@@ -655,9 +655,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         ImageView ivOptions = view.findViewById(R.id.ivOptions);
                         ImageView ivGif = view.findViewById(R.id.ivGif);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-//                        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
-//                        Glide.with(activity).load(R.raw.main_player).into(imageViewTarget);
-                        /*final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
+                        Glide.with(activity).load(R.raw.main_player_highlight).into(imageViewTarget);
+                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
                         anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
                             ivGif.setScaleX((Float) animation.getAnimatedValue());
@@ -665,12 +665,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         });
                         anim.setRepeatCount(ValueAnimator.INFINITE);
                         anim.setRepeatMode(ValueAnimator.REVERSE);
-                        anim.start()*/;
+                        anim.start();
                         rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llBottom).closeOnTouch(false).build();
+                    /*.focusOn(binding.llBottom)*/.closeOnTouch(false).build();
             queue = new FancyShowCaseQueue()
                     .add(fancyShowCaseView11)
                     .add(fancyShowCaseView21)

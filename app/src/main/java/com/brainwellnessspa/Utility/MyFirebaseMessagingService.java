@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -165,9 +164,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             }
 
-//            Uri defaultSoundUri = Uri.parse("android.resource://"
-//                    + getApplicationContext().getPackageName() + "/" + R.raw.alert);
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri defaultSoundUri = Uri.parse("android.resource://"
+                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
+//            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             long[] v = {500, 1000};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

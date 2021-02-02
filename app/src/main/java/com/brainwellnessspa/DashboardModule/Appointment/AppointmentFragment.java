@@ -68,13 +68,7 @@ public class AppointmentFragment extends Fragment {
             appointmentImage = bundle.getString("appointmentImage");
             appointmentMainName = bundle.getString("appointmentMainName");
         }
-        p = new Properties();
-        p.putValue("userId", UserID);
-        /*Gson gson;
-        gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
-        p.putValue("products", gson.toJson(productProperties));*/
-        BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
+
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
@@ -204,6 +198,13 @@ public class AppointmentFragment extends Fragment {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 NextSessionViewModel listModel = response.body();
                                 binding.tvNextSessionTitle.setText(R.string.Next_Session);
+                                p = new Properties();
+                                p.putValue("userId", UserID);
+                                /*Gson gson;
+                                gsonBuilder = new GsonBuilder();
+                                gson = gsonBuilder.create();
+                                p.putValue("products", gson.toJson(productProperties));*/
+                                BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
                                 if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
                                     binding.cvShowSession.setVisibility(View.GONE);
                                     binding.cvSetSession.setVisibility(View.VISIBLE);
@@ -273,16 +274,16 @@ public class AppointmentFragment extends Fragment {
                 listCall1.enqueue(new Callback<PreviousAppointmentsModel>() {
                     @Override
                     public void onResponse(Call<PreviousAppointmentsModel> call, Response<PreviousAppointmentsModel> response) {
-                        if (response.isSuccessful()) {
-                            try {
+                        try {
+                            PreviousAppointmentsModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                PreviousAppointmentsModel listModel = response.body();
                                 binding.tvPreviousAppointments.setText(R.string.Previous_Appointments);
                                 PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity());
                                 binding.rvPreviousData.setAdapter(appointmentsAdapter);
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
