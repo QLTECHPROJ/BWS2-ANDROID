@@ -142,6 +142,7 @@ public class WebsiteFragment extends Fragment {
                 i.putExtra("mastercat", listModelList.get(position).getMasterCategory());
                 i.putExtra("subcat", listModelList.get(position).getSubCategory());
                 startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             });
         }
 

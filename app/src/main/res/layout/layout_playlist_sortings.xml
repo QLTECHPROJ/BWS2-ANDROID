@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_60sdp"
+        android:layout_marginTop="@dimen/_130sdp"
         android:orientation="horizontal"
         android:weightSum="1">
 
@@ -128,6 +128,7 @@
                 android:layout_height="@dimen/_40sdp"
                 android:layout_gravity="center"
                 android:rotation="180"
+                android:layout_marginLeft="@dimen/_4sdp"
                 android:src="@drawable/playlist_sorting_icon" />
         </LinearLayout>
 

@@ -108,11 +108,10 @@ public class LikePlaylistsFragment extends Fragment {
                 @Override
                 public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        LikesHistoryModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            LikesHistoryModel listModel = response.body();
                             List<LikesHistoryModel.ResponseData.Playlist> listDataModel = listModel.getResponseData().getPlaylist();
-
                             if (listDataModel.size() == 0) {
                                 binding.tvFound.setVisibility(View.VISIBLE);
                                 binding.llError.setVisibility(View.VISIBLE);

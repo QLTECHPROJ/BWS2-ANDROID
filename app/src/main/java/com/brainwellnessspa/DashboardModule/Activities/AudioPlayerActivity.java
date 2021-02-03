@@ -664,8 +664,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         ImageView ivOptions = view.findViewById(R.id.ivOptions);
                         ImageView ivGif = view.findViewById(R.id.ivGif);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
-                        Glide.with(activity).load(R.raw.highlight_main_player).into(imageViewTarget);
+                        Glide.with(activity).load(R.drawable.highlight_main_player).asGif().into(ivGif);
+//                        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
+//                        Glide.with(activity).load(R.raw.highlight_main_player).into(imageViewTarget);
                         final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
                         anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {

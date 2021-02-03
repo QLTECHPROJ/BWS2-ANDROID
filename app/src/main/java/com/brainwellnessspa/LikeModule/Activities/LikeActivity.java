@@ -58,6 +58,69 @@ public class LikeActivity extends AppCompatActivity {
         ComeScreenAccount = 0;
         comefromDownload = "1";
         callMembershipMediaPlayer();
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<LikesHistoryModel> listCall = APIClient.getClient().getLikeAudioPlaylistListing(UserID);
+            listCall.enqueue(new Callback<LikesHistoryModel>() {
+                @Override
+                public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
+                    try {
+                        LikesHistoryModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LikesHistoryModel> call, Throwable t) {
+                }
+            });
+
+            Call<LikesHistoryModel> listCalls = APIClient.getClient().getLikeAudioPlaylistListing(UserID);
+            listCalls.enqueue(new Callback<LikesHistoryModel>() {
+                @Override
+                public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
+                    try {
+                        LikesHistoryModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            List<LikesHistoryModel.ResponseData.Playlist> listDataModel = listModel.getResponseData().getPlaylist();
+                           /* p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("id", appointmentDetailModel.getResponseData().getId());
+                            p.putValue("name", appointmentDetailModel.getResponseData().getName());
+                            p.putValue("desc", appointmentDetailModel.getResponseData().getDesc());
+                            p.putValue("status", appointmentDetailModel.getResponseData().getStatus());
+                            p.putValue("facilitator", appointmentDetailModel.getResponseData().getFacilitator());
+                            p.putValue("userName", appointmentDetailModel.getResponseData().getUserName());
+                            p.putValue("date", appointmentDetailModel.getResponseData().getDate());
+                            p.putValue("time", appointmentDetailModel.getResponseData().getTime());
+                            p.putValue("bookUrl", appointmentDetailModel.getResponseData().getBookUrl());
+                            p.putValue("booklet", appointmentDetailModel.getResponseData().getBooklet());
+                            p.putValue("myAnswers", appointmentDetailModel.getResponseData().getMyAnswers());
+
+                            for (int i = 0; i < appointmentDetailModel.getResponseData().getAudio().size(); i++) {
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getID());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getName());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudiomastercat());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudioSubCategory());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudioDuration());
+                            }
+                            p.putValue("sessionAudios", gson.toJson(section));
+                            BWSApplication.addToSegment("Appointment Session Details Viewed", p, CONSTANTS.screen);*/
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LikesHistoryModel> call, Throwable t) {
+                }
+            });
+        } else {
+        }
         super.onResume();
     }
 
@@ -68,7 +131,6 @@ public class LikeActivity extends AppCompatActivity {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
-
                 Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

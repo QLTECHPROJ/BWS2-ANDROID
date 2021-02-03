@@ -325,7 +325,7 @@ public class DownloadsActivity extends AppCompatActivity {
         }
 
         p.putValue("userId", UserID);
-    /*    DB.taskDao().geAllDataz("").observe(this, audioList -> {
+      /*  DB.taskDao().geAllDataz("").observe(this, audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
                     List<DownloadAudioDetails> audioList1 = new ArrayList<>();

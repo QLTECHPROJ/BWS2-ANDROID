@@ -116,6 +116,7 @@ public class ReminderActivity extends AppCompatActivity {
                 Intent i = new Intent(context, ReminderDetailsActivity.class);
                 startActivity(i);
                 finish();
+                overridePendingTransition(0, 0);
             } else {
                 ComeScreenAccount = 1;
                 comefromDownload = "0";
@@ -408,6 +409,7 @@ public class ReminderActivity extends AppCompatActivity {
                                             Intent i = new Intent(context, ReminderDetailsActivity.class);
                                             startActivity(i);
                                             finish();
+                                            overridePendingTransition(0, 0);
                                         } else {
                                             ComeScreenRemiderPlaylist = 1;
                                             finish();
@@ -574,6 +576,7 @@ public class ReminderActivity extends AppCompatActivity {
             Intent i = new Intent(context, ReminderDetailsActivity.class);
             startActivity(i);
             finish();
+            overridePendingTransition(0, 0);
         } else {
             ComeScreenAccount = 1;
             comefromDownload = "0";

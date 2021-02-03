@@ -168,7 +168,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 try {
                     String data = intent.getStringExtra("MyData");
                     Log.d("play_pause_Action", data);
-
                     SharedPreferences sharedw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -411,7 +410,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
                         }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                         .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                        .focusOn(binding.llReminder).closeOnTouch(false)
+                        .focusOn(binding.llReminder).closeOnTouch(true)
                         .build();
 
                 fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
@@ -421,7 +420,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                         .enterAnimation(enterAnimation)
                         .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
-                        .closeOnTouch(false).build();
+                        .closeOnTouch(true).build();
 
                 fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
                         .customView(R.layout.layout_playlist_searches, view -> {
@@ -436,7 +435,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         })
                         .focusShape(FocusShape.ROUNDED_RECTANGLE)
                         .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                        .focusOn(binding.rlSearch).closeOnTouch(false).build();
+                        .focusOn(binding.rlSearch).closeOnTouch(true).build();
 
                 fancyShowCaseView51 = new FancyShowCaseView.Builder(getActivity())
                         .customView(R.layout.layout_playlist_sortings, view -> {

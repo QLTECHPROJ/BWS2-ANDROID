@@ -140,7 +140,6 @@ public class LikeAudiosFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
@@ -170,9 +169,9 @@ public class LikeAudiosFragment extends Fragment {
                 @Override
                 public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        LikesHistoryModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            LikesHistoryModel listModel = response.body();
                             List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
                             if (listDataModel.size() == 0) {
                                 binding.tvFound.setVisibility(View.VISIBLE);
