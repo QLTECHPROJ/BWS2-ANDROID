@@ -149,19 +149,24 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 if (player != null) {
-                                    player.seekTo(position, 0);
-                                    player.setPlayWhenReady(true);
-                                    miniPlayer = 1;
-                                    SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedxx.edit();
-                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                    editor.commit();
-                                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    ctx.startActivity(i);
-                                    activity.overridePendingTransition(0, 0);
-                                } else {
-                                    callTransFrag(position, listModelList,true);
+                                    int ix = player.getMediaItemCount();
+                                    if (ix < listModelList.size()) {
+                                        callTransFrag(position, listModelList, true);
+                                    } else {
+                                        player.seekTo(position, 0);
+                                        player.setPlayWhenReady(true);
+                                        miniPlayer = 1;
+                                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedxx.edit();
+                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                        editor.commit();
+                                        Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                        ctx.startActivity(i);
+                                        activity.overridePendingTransition(0, 0);
+                                    }
+                                } else{
+                                        callTransFrag(position, listModelList, true);
                                 }
                             }
                         } else {
@@ -304,7 +309,11 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                             }
                         }
                         if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
-                            callTransFrag(pos, listModelList2, audioc);
+                            if(listModelList2.size()!=0) {
+                                callTransFrag(pos, listModelList2, audioc);
+                            }else{
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }

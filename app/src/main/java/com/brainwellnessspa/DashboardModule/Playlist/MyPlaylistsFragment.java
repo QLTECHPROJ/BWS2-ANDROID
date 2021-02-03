@@ -150,16 +150,26 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     DownloadPlaylistDetails downloadPlaylistDetails;
     List<String> fileNameList, playlistDownloadId, onlySingleDownloaded;
     ItemTouchHelper touchHelper;
-    Runnable UpdateSongTime2;
+//    Runnable UpdateSongTime2;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41, fancyShowCaseView51;
     FancyShowCaseQueue queue;
-    private Handler handler2;
+//    private Handler handler2;
     Properties p;
     AudioDatabase DB;
     public AudioManager audioManager;
     int RefreshIcon, SongListSize = 0, count = 0, hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
+    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getDownloadData();
+            if(!MyDownloads.equalsIgnoreCase("1") && MyCreated.equalsIgnoreCase("1"))
+            if (intent.hasExtra("Progress")) {
+                adpater1.notifyDataSetChanged();
+            }
+        }
+    };
 
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -231,7 +241,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        handler2 = new Handler();
+//        handler2 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = getActivity();
@@ -286,7 +296,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         });
 
         binding.llMore.setOnClickListener(view13 -> {
-            handler2.removeCallbacks(UpdateSongTime2);
+//            handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
             i.putExtra("PlaylistName", PlaylistName);
@@ -661,6 +671,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener1);
         super.onDestroy();
     }
 
@@ -1206,6 +1217,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             touchHelper = new ItemTouchHelper(callback);
                             touchHelper.attachToRecyclerView(binding.rvPlayLists1);
                             binding.rvPlayLists1.setAdapter(adpater);
+
+                            LocalBroadcastManager.getInstance(getActivity())
+                                    .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
                         } else {
                             adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                             binding.rvPlayLists2.setAdapter(adpater2);
@@ -1265,7 +1279,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     try {
                         if (response.isSuccessful()) {
-                            handler2.removeCallbacks(UpdateSongTime2);
+//                            handler2.removeCallbacks(UpdateSongTime2);
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                             SucessModel listModel = response.body();
                             mData.remove(position);
@@ -1555,7 +1569,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 callAddTransFrag();
             }
-            handler2.postDelayed(UpdateSongTime2, 2000);
+//            handler2.postDelayed(UpdateSongTime2, 3000);
         }
     }
 
@@ -2395,7 +2409,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
-            UpdateSongTime2 = new Runnable() {
+/*            UpdateSongTime2 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -2403,8 +2417,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
                         if (fileNameList.size() != 0) {
                             for (int i = 0; i < fileNameList.size(); i++) {
-                                if (fileNameList.get(i).equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
-                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
+                                if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase( mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
                                         if (downloadProgress <= 100) {
                                             if (BWSApplication.isNetworkConnected(ctx)) {
                                                 notifyItemChanged(position);
@@ -2430,7 +2444,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                     }
                 }
-            };
+            };*/
             holder.binding.llMainLayout.setVisibility(View.VISIBLE);
             holder.binding.llDownload.setVisibility(View.VISIBLE);
             holder.binding.llRemove.setVisibility(View.VISIBLE);
@@ -2493,19 +2507,21 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 holder.binding.ivDownloads.setVisibility(View.VISIBLE);
 //                                handler2.removeCallbacks(UpdateSongTime2);
                             }
-                            handler2.postDelayed(UpdateSongTime2, 3000);
+//                            handler2.postDelayed(UpdateSongTime2, 3000);
+                            break;
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
-                            handler2.postDelayed(UpdateSongTime2, 3000);
+//                            handler2.postDelayed(UpdateSongTime2, 3000);
                             break;
                         }
                     } else if (i == fileNameList.size() - 1) {
-                        binding.pbProgress.setVisibility(View.GONE);
-                        handler2.removeCallbacks(UpdateSongTime2);
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                        holder.binding.ivDownloads.setVisibility(View.VISIBLE);
                     }
                 }
             } else {
+//                handler2.removeCallbacks(UpdateSongTime2);
                 holder.binding.pbProgress.setVisibility(View.GONE);
                 holder.binding.ivDownloads.setVisibility(View.VISIBLE);
             }
@@ -2727,7 +2743,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             try {
                 holder.binding.llRemove.setOnClickListener(view -> {
-                    handler2.removeCallbacks(UpdateSongTime2);
+//                    handler2.removeCallbacks(UpdateSongTime2);
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -2989,18 +3005,24 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     myAudioId = mData.get(0).getID();
                                     if (player != null) {
                                         if (position != positionSaved) {
-                                            player.seekTo(position, 0);
-                                            player.setPlayWhenReady(true);
-                                            miniPlayer = 1;
-                                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = sharedxx.edit();
-                                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                            editor.commit();
-                                            callAddTransFrag();
+                                            int ix = player.getMediaItemCount();
+                                            if (ix < listModelList.size()) {
+                                                callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID, true);
+                                                SegmentTag();
+                                            } else {
+                                                player.seekTo(position, 0);
+                                                player.setPlayWhenReady(true);
+                                                miniPlayer = 1;
+                                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedxx.edit();
+                                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                                editor.commit();
+                                                callAddTransFrag();
+                                            }
                                         }
                                     } else {
                                         callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistID, true);
-                                        SegmentTag();
+                                         SegmentTag();
                                     }
                                 }
                             } else {
@@ -3127,14 +3149,19 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else {
                                 if (player != null) {
                                     if (position != positionSaved) {
-                                        player.seekTo(position, 0);
-                                        player.setPlayWhenReady(true);
-                                        miniPlayer = 1;
-                                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedxx.edit();
-                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                        editor.commit();
-                                        callAddTransFrag();
+                                        int ix = player.getMediaItemCount();
+                                        if (ix < listModelList.size()) {
+                                            callTransparentFrag(position, ctx, listModelList, "", PlaylistName, true);
+                                        } else {
+                                            player.seekTo(position, 0);
+                                            player.setPlayWhenReady(true);
+                                            miniPlayer = 1;
+                                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedxx.edit();
+                                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                            editor.commit();
+                                            callAddTransFrag();
+                                        }
                                     }
                                 } else {
                                     callTransparentFrag(position, ctx, listModelList, "", PlaylistName, true);
@@ -3405,9 +3432,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 }
                             }
                             if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
-                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
-                            } else {
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                if (listModelList2.size() != 0) {
+                                    callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
+                                } else {
+                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                }
                             }
                         } else {
 //                            pos = 0;

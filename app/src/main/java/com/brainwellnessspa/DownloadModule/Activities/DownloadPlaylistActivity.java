@@ -797,14 +797,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             } else {
                                 if (player != null) {
                                     if(position != positionSaved) {
-                                        player.seekTo(position, 0);
-                                        player.setPlayWhenReady(true);
-                                        miniPlayer = 1;
-                                        SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedxx.edit();
-                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                        editor.commit();
-                                        callAddTranFrag();
+                                        int ix = player.getMediaItemCount();
+                                        if (ix < listModelList.size()) {
+                                            callTransparentFrag(0, ctx, listModelList, "", PlaylistName, true);
+                                        } else {
+                                            player.seekTo(position, 0);
+                                            player.setPlayWhenReady(true);
+                                            miniPlayer = 1;
+                                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedxx.edit();
+                                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                            editor.commit();
+                                            callAddTranFrag();
+                                        }
                                     }
                                 } else {
                                     callTransparentFrag(0, ctx, listModelList, "", PlaylistName, true);
@@ -870,14 +875,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else {
                             if (player != null) {
                                 if(holder.getAdapterPosition() != positionSaved) {
-                                    player.seekTo(position, 0);
-                                    player.setPlayWhenReady(true);
-                                    miniPlayer = 1;
-                                    SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedxx.edit();
-                                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                    editor.commit();
-                                    callAddTranFrag();
+                                    int ix = player.getMediaItemCount();
+                                    if (ix < listModelList.size()) {
+                                        callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName, true);
+                                    } else {
+                                        player.seekTo(position, 0);
+                                        player.setPlayWhenReady(true);
+                                        miniPlayer = 1;
+                                        SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedxx.edit();
+                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                        editor.commit();
+                                        callAddTranFrag();
+                                    }
                                 }
                             } else {
                                 callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName, true);
@@ -1049,7 +1059,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 }
                             }
                             if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
-                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
+                                if(listModelList2.size()!=0) {
+                                    callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
+                                }else{
+                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                }
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }

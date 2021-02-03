@@ -515,25 +515,30 @@ public class AudioDownloadsFragment extends Fragment {
                             } else {
                                 if (player != null) {
                                     if(position != positionSaved) {
-                                        player.seekTo(holder.getAdapterPosition(), 0);
-                                        player.setPlayWhenReady(true);
-                                        miniPlayer = 1;
-                                        SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedxx.edit();
-                                        Gson gson = new Gson();
-                                        String json = gson.toJson(listModelList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-                                        editor.commit();
-                                        try {
-                                            callAddTransFrag();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
+                                        int i = player.getMediaItemCount();
+                                        if(i<listModelList.size()){
+                                            callTransFrag(position, listModelList, true);
+                                        }else {
+                                            player.seekTo(holder.getAdapterPosition(), 0);
+                                            player.setPlayWhenReady(true);
+                                            miniPlayer = 1;
+                                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedxx.edit();
+                                            Gson gson = new Gson();
+                                            String json = gson.toJson(listModelList);
+                                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+                                            editor.commit();
+                                            try {
+                                                callAddTransFrag();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
                                         }
                                     }
                                 } else {
@@ -700,7 +705,6 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
-
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");
@@ -733,7 +737,11 @@ public class AudioDownloadsFragment extends Fragment {
                                 }
                             }
                             if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
-                                callTransFrag(pos, listModelList2, audioc);
+                                if(listModelList2.size()!=0) {
+                                    callTransFrag(pos, listModelList2, audioc);
+                                }else{
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                }
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
@@ -756,7 +764,6 @@ public class AudioDownloadsFragment extends Fragment {
                 if (audioc) {
                     callNewPlayerRelease();
                 }
-
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
