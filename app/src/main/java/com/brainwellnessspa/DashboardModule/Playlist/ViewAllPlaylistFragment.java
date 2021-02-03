@@ -147,8 +147,6 @@ public class ViewAllPlaylistFragment extends Fragment {
         fragmentManager1.beginTransaction()
                 .replace(R.id.flContainer, audioFragment)
                 .commit();
-        Bundle bundle = new Bundle();
-        audioFragment.setArguments(bundle);
     }
 
     @Override

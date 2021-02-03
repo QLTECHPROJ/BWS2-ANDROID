@@ -38,10 +38,6 @@ public class BillingAddressFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Billing Address Screen Viewed", p, CONSTANTS.screen);
-
         binding.btnSave.setEnabled(false);
         binding.btnSave.setTextColor(getResources().getColor(R.color.white));
         binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
@@ -165,6 +161,18 @@ public class BillingAddressFragment extends Fragment {
                         binding.etCity.addTextChangedListener(billingTextWatcher);
                         binding.etState.addTextChangedListener(billingTextWatcher);
                         binding.etPostCode.addTextChangedListener(billingTextWatcher);
+                        Properties p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("fullName", listModel.getResponseData().getName());
+                        p.putValue("emailId", listModel.getResponseData().getEmail());
+                        p.putValue("mobile", listModel.getResponseData().getPhoneNumber());
+                        p.putValue("country", listModel.getResponseData().getCountry());
+                        p.putValue("address1", listModel.getResponseData().getAddress1());
+                        p.putValue("address2", listModel.getResponseData().getAddress2());
+                        p.putValue("suburb", listModel.getResponseData().getSuburb());
+                        p.putValue("state", listModel.getResponseData().getState());
+                        p.putValue("postcode", listModel.getResponseData().getPostcode());
+                        BWSApplication.addToSegment("Billing Address Screen Viewed", p, CONSTANTS.screen);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -11,17 +12,29 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
+import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.LikeModule.Fragments.LikeAudiosFragment;
 import com.brainwellnessspa.LikeModule.Fragments.LikePlaylistsFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityLikeBinding;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.segment.analytics.Properties;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 
@@ -32,24 +45,37 @@ public class LikeActivity extends AppCompatActivity {
     public static int RefreshLikePlaylist = 0;
     ActivityLikeBinding binding;
     Activity activity;
-    String AudioFlag, UserID;
+    String AudioFlag, UserID, tabType = "";
     Context ctx;
+    Properties p;
+    GsonBuilder gsonBuilder;
+    Gson gson;
+    ArrayList<SegmentAudio> audioSection;
+    ArrayList<SegmentPlaylist> playlistSection;
+    List<LikesHistoryModel.ResponseData.Playlist> playlistDataModel;
+    List<LikesHistoryModel.ResponseData.Audio> audioDataModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_like);
+        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = LikeActivity.this;
         ctx = LikeActivity.this;
         ComeScreenAccount = 0;
         comefromDownload = "1";
-        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        audioSection = new ArrayList<>();
+        playlistSection = new ArrayList<>();
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+
         binding.llBack.setOnClickListener(view -> {
             comefromDownload = "0";
             ComeScreenAccount = 1;
             finish();
         });
+        prepareAllData();
         prepareData();
     }
 
@@ -58,69 +84,6 @@ public class LikeActivity extends AppCompatActivity {
         ComeScreenAccount = 0;
         comefromDownload = "1";
         callMembershipMediaPlayer();
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            Call<LikesHistoryModel> listCall = APIClient.getClient().getLikeAudioPlaylistListing(UserID);
-            listCall.enqueue(new Callback<LikesHistoryModel>() {
-                @Override
-                public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
-                    try {
-                        LikesHistoryModel listModel = response.body();
-                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<LikesHistoryModel> call, Throwable t) {
-                }
-            });
-
-            Call<LikesHistoryModel> listCalls = APIClient.getClient().getLikeAudioPlaylistListing(UserID);
-            listCalls.enqueue(new Callback<LikesHistoryModel>() {
-                @Override
-                public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
-                    try {
-                        LikesHistoryModel listModel = response.body();
-                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            List<LikesHistoryModel.ResponseData.Playlist> listDataModel = listModel.getResponseData().getPlaylist();
-                           /* p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("id", appointmentDetailModel.getResponseData().getId());
-                            p.putValue("name", appointmentDetailModel.getResponseData().getName());
-                            p.putValue("desc", appointmentDetailModel.getResponseData().getDesc());
-                            p.putValue("status", appointmentDetailModel.getResponseData().getStatus());
-                            p.putValue("facilitator", appointmentDetailModel.getResponseData().getFacilitator());
-                            p.putValue("userName", appointmentDetailModel.getResponseData().getUserName());
-                            p.putValue("date", appointmentDetailModel.getResponseData().getDate());
-                            p.putValue("time", appointmentDetailModel.getResponseData().getTime());
-                            p.putValue("bookUrl", appointmentDetailModel.getResponseData().getBookUrl());
-                            p.putValue("booklet", appointmentDetailModel.getResponseData().getBooklet());
-                            p.putValue("myAnswers", appointmentDetailModel.getResponseData().getMyAnswers());
-
-                            for (int i = 0; i < appointmentDetailModel.getResponseData().getAudio().size(); i++) {
-                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getID());
-                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getName());
-                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudiomastercat());
-                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudioSubCategory());
-                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudioDuration());
-                            }
-                            p.putValue("sessionAudios", gson.toJson(section));
-                            BWSApplication.addToSegment("Appointment Session Details Viewed", p, CONSTANTS.screen);*/
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<LikesHistoryModel> call, Throwable t) {
-                }
-            });
-        } else {
-        }
         super.onResume();
     }
 
@@ -142,73 +105,6 @@ public class LikeActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-      /*  try {
-            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-            String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
-            Gson gson1 = new Gson();
-            Type type1 = new TypeToken<List<String>>() {
-            }.getType();
-            List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
-            if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
-                    || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
-                String audioID = "";
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                Gson gson = new Gson();
-                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                }.getType();
-                ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
-
-                if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                    arrayList.remove(0);
-                }
-                audioID = arrayList.get(0).getID();
-
-                if (UnlockAudioList.contains(audioID)) {
-                } else {
-                    SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editorr = sharedm.edit();
-                    editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                    editorr.remove(CONSTANTS.PREF_KEY_audioList);
-                    editorr.remove(CONSTANTS.PREF_KEY_position);
-                    editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                    editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                    editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                    editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                    editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                    editorr.clear();
-                    editorr.commit();
-
-                    callNewPlayerRelease();
-                }
-
-            } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editorr = sharedm.edit();
-                editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                editorr.remove(CONSTANTS.PREF_KEY_audioList);
-                editorr.remove(CONSTANTS.PREF_KEY_position);
-                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                editorr.clear();
-                editorr.commit();
-
-                callNewPlayerRelease();
-            }
-            SharedPreferences shared22 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                comefromDownload = "1";
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
     public void prepareData() {
@@ -217,7 +113,7 @@ public class LikeActivity extends AppCompatActivity {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audios"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount());
+        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), binding.tabLayout.getTabCount());
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
         if (ComeFrom_LikePlaylist) {
@@ -230,6 +126,43 @@ public class LikeActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0) {
+                    tabType = "Audio Tab";
+                    p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("tabType", "Audio Tab");
+                    for (int i = 0; i < audioDataModel.size(); i++) {
+                        SegmentAudio e = new SegmentAudio();
+                        e.setAudioId(audioDataModel.get(i).getID());
+                        e.setAudioName(audioDataModel.get(i).getName());
+                        e.setMasterCategory(audioDataModel.get(i).getAudiomastercat());
+                        e.setSubCategory(audioDataModel.get(i).getAudioSubCategory());
+                        e.setAudioDuration(audioDataModel.get(i).getAudioDuration());
+                        audioSection.add(e);
+                    }
+                    p.putValue("likedAudios", gson.toJson(audioSection));
+                    BWSApplication.addToSegment("Liked Screen Viewed", p, CONSTANTS.screen);
+                } else if (tab.getPosition() == 1) {
+                    tabType = "Playlist Tab";
+                    p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("tabType", "Playlist Tab");
+                    for (int i = 0; i < playlistDataModel.size(); i++) {
+                        SegmentPlaylist e = new SegmentPlaylist();
+                        e.setPlaylistId(playlistDataModel.get(i).getPlaylistId());
+                        e.setPlaylistName(playlistDataModel.get(i).getPlaylistName());
+                        if (playlistDataModel.get(i).getCreated().equalsIgnoreCase("1")) {
+                            e.setPlaylistType("Created");
+                        } else {
+                            e.setPlaylistType("Default");
+                        }
+                        e.setPlaylistDuration(playlistDataModel.get(i).getTotalDuration());
+                        e.setAudioCount(playlistDataModel.get(i).getTotalAudio());
+                        playlistSection.add(e);
+                    }
+                    p.putValue("likedPlaylists", gson.toJson(playlistSection));
+                    BWSApplication.addToSegment("Liked Screen Viewed", p, CONSTANTS.screen);
+                }
             }
 
             @Override
@@ -253,18 +186,9 @@ public class LikeActivity extends AppCompatActivity {
 
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
-        Callback<LikesHistoryModel> likesHistoryModelCallback;
-        private Context myContext;
 
-        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
+        public TabAdapter(FragmentManager fm, int totalTabs) {
             super(fm);
-            this.myContext = myContext;
-            this.totalTabs = totalTabs;
-        }
-
-        public TabAdapter(FragmentManager fm, Callback<LikesHistoryModel> likesHistoryModelCallback, int totalTabs) {
-            super(fm);
-            this.likesHistoryModelCallback = likesHistoryModelCallback;
             this.totalTabs = totalTabs;
         }
 
@@ -289,6 +213,51 @@ public class LikeActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return totalTabs;
+        }
+    }
+
+    public void prepareAllData() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<LikesHistoryModel> listCall = APIClient.getClient().getLikeAudioPlaylistListing(UserID);
+            listCall.enqueue(new Callback<LikesHistoryModel>() {
+                @Override
+                public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
+                    try {
+                        LikesHistoryModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
+                            audioDataModel = listDataModel;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LikesHistoryModel> call, Throwable t) {
+                }
+            });
+
+            Call<LikesHistoryModel> listCalls = APIClient.getClient().getLikeAudioPlaylistListing(UserID);
+            listCalls.enqueue(new Callback<LikesHistoryModel>() {
+                @Override
+                public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
+                    try {
+                        LikesHistoryModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            List<LikesHistoryModel.ResponseData.Playlist> listDataModel = listModel.getResponseData().getPlaylist();
+                            playlistDataModel = listDataModel;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LikesHistoryModel> call, Throwable t) {
+                }
+            });
+        } else {
         }
     }
 }

@@ -133,7 +133,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
     public static int isPlayPlaylist = 0;
-    public static boolean RefreshPlaylist = false, playtutorial = false,ComeBackPlaylist = false;
+    public static boolean RefreshPlaylist = false, playtutorial = false, ComeBackPlaylist = false;
     FragmentMyPlaylistsBinding binding;
     String PlaylistFirstLogin = "0", IsPlayDisclimer, TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     PlayListsAdpater adpater;
@@ -467,15 +467,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             .add(fancyShowCaseView41)
                             .add(fancyShowCaseView51);
                     queue.show();
-                    OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                        @Override
-                        public void handleOnBackPressed() {
-                            if (playtutorial) {
-                                callBack();
-                            }
-                        }
-                    };
-                    requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
                 } else {
                     queue = new FancyShowCaseQueue()
                             .add(fancyShowCaseView11)
@@ -483,26 +474,26 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             .add(fancyShowCaseView31)
                             .add(fancyShowCaseView41);
                     queue.show();
-                    OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                        @Override
-                        public void handleOnBackPressed() {
-                            if (playtutorial) {
-                                callBack();
-                            }
-                        }
-                    };
-                    requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-                }
 
-            } /*else {
+                }
                 OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if (playtutorial) {
+                            callBack();
+                        }
+                    }
+                };
+                requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+            } else {
+               /* OnBackPressedCallback callback = new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
                         callBack();
                     }
                 };
-                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-            }*/
+                requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);*/
+            }
             SharedPreferences.Editor editor = shareddedd.edit();
             editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
             editor.commit();
@@ -675,24 +666,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onResume() {
-
         binding.searchView.clearFocus();
         searchEditText.setText("");
         binding.searchView.setQuery("", false);
 
-        try {
-            OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                    callBack();
-                }
-            };
-            requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                callBack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         if (ComeFindAudio == 2) {
             binding.searchView.requestFocus();
             searchEditText.setText("");
@@ -760,18 +744,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
-            } else if (comefrom_search == 0) {
-                Intent i = new Intent(getActivity(), DashboardActivity.class);
-                ComeBackPlaylist = true;
-                startActivity(i);
-                getActivity().finish();
-                getActivity().overridePendingTransition(0, 0);
-                /*Fragment fragments = new PlaylistFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, fragments)
-                        .commit();*/
-                comefrom_search = 0;
             } else if (comefrom_search == 4) {
                 Intent i = new Intent(getActivity(), LikeActivity.class);
                 ComeFrom_LikePlaylist = true;
@@ -788,6 +760,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 getActivity().finish();
                 getActivity().overridePendingTransition(0, 0);
                 //            comefrom_search = 0;
+            } else {
+                /*Intent i = new Intent(getActivity(), DashboardActivity.class);
+                ComeBackPlaylist = true;
+                startActivity(i);
+                getActivity().finish();
+                getActivity().overridePendingTransition(0, 0);*/
+                Fragment fragments = new PlaylistFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, fragments)
+                        .commit();
+                comefrom_search = 0;
             }
             RefreshPlaylist = false;
         } else {
@@ -2516,7 +2500,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             handler2.postDelayed(UpdateSongTime2, 3000);
                             break;
                         }
-                    }else if(i == fileNameList.size()-1){
+                    } else if (i == fileNameList.size() - 1) {
                         binding.pbProgress.setVisibility(View.GONE);
                         handler2.removeCallbacks(UpdateSongTime2);
                     }
