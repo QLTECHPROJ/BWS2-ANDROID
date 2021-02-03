@@ -33,6 +33,11 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAppointmentDetailsBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.segment.analytics.Properties;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,9 +51,13 @@ public class AppointmentDetailsFragment extends Fragment {
     View view;
     public static int ComeFromAppointmentDetail = 0;
     public static int ComesessionScreen = 0;
-    String UserId, appointmentTypeId, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
+    String UserID, appointmentTypeId, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     AppointmentDetailModel globalAppointmentDetailModel;
     LinearLayout.LayoutParams params;
+    Properties p;
+    GsonBuilder gsonBuilder;
+    Gson gson;
+    ArrayList<String> section;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +65,7 @@ public class AppointmentDetailsFragment extends Fragment {
         view = binding.getRoot();
         activity = getActivity();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
@@ -65,7 +74,12 @@ public class AppointmentDetailsFragment extends Fragment {
             appointmentName = getArguments().getString("appointmentName");
             appointmentImage = getArguments().getString("appointmentImage");
         }
+        section = new ArrayList<>();
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+
         getAppointmentData();
+
         binding.llBack.setOnClickListener(view1 -> callBack());
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -202,16 +216,15 @@ public class AppointmentDetailsFragment extends Fragment {
     private void getAppointmentData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AppointmentDetailModel> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);
+            Call<AppointmentDetailModel> listCall = APIClient.getClient().getAppointmentDetails(UserID, appointmentTypeId);
             listCall.enqueue(new Callback<AppointmentDetailModel>() {
                 @Override
                 public void onResponse(Call<AppointmentDetailModel> call, Response<AppointmentDetailModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        AppointmentDetailModel appointmentDetailModel = response.body();
+                        if (appointmentDetailModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            AppointmentDetailModel appointmentDetailModel = response.body();
                             globalAppointmentDetailModel = appointmentDetailModel;
-
                             if (appointmentDetailModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 if (appointmentDetailModel.getResponseData().getAudio().size() == 0
                                         && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
@@ -337,10 +350,41 @@ public class AppointmentDetailsFragment extends Fragment {
                                     Intent i = new Intent(Intent.ACTION_VIEW);
                                     i.setData(Uri.parse(globalAppointmentDetailModel.getResponseData().getBookUrl()));
                                     startActivity(i);
+                                    BWSApplication.showToast("Complete the booklet", getActivity());
+                                    p = new Properties();
+                                    p.putValue("userId", UserID);
+                                    p.putValue("sessionId", appointmentDetailModel.getResponseData().getId());
+                                    p.putValue("sessionName", appointmentDetailModel.getResponseData().getName());
+                                    p.putValue("bookletUrl", appointmentDetailModel.getResponseData().getBookUrl());
+                                    BWSApplication.addToSegment("Complete Booklet Clicked", p, CONSTANTS.track);
                                 });
                             } else {
                                 BWSApplication.showToast(appointmentDetailModel.getResponseMessage(), getActivity());
                             }
+
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("id", appointmentDetailModel.getResponseData().getId());
+                            p.putValue("name", appointmentDetailModel.getResponseData().getName());
+                            p.putValue("desc", appointmentDetailModel.getResponseData().getDesc());
+                            p.putValue("status", appointmentDetailModel.getResponseData().getStatus());
+                            p.putValue("facilitator", appointmentDetailModel.getResponseData().getFacilitator());
+                            p.putValue("userName", appointmentDetailModel.getResponseData().getUserName());
+                            p.putValue("date", appointmentDetailModel.getResponseData().getDate());
+                            p.putValue("time", appointmentDetailModel.getResponseData().getTime());
+                            p.putValue("bookUrl", appointmentDetailModel.getResponseData().getBookUrl());
+                            p.putValue("booklet", appointmentDetailModel.getResponseData().getBooklet());
+                            p.putValue("myAnswers", appointmentDetailModel.getResponseData().getMyAnswers());
+
+                            for (int i = 0; i < appointmentDetailModel.getResponseData().getAudio().size(); i++) {
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getID());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getName());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudiomastercat());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudioSubCategory());
+                                section.add(appointmentDetailModel.getResponseData().getAudio().get(i).getAudioDuration());
+                            }
+                            p.putValue("sessionAudios", gson.toJson(section));
+                            BWSApplication.addToSegment("Appointment Session Details Viewed", p, CONSTANTS.screen);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

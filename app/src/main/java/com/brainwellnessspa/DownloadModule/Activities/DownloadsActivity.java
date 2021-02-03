@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -15,10 +16,15 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
@@ -42,6 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -56,6 +63,8 @@ public class DownloadsActivity extends AppCompatActivity {
     String UserID, AudioFlag;
     public static boolean ComeFrom_Playlist = false;
     Context ctx;
+    Properties p;
+    AudioDatabase DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +77,12 @@ public class DownloadsActivity extends AppCompatActivity {
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("My Downloads Screen Viewed", p, CONSTANTS.screen);
-
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
+        p = new Properties();
         binding.llBack.setOnClickListener(view -> {
             ComeScreenAccount = 1;
             comefromDownload = "0";
@@ -145,6 +156,11 @@ public class DownloadsActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0) {
+                    p.putValue("tabType", "Audio Tab");
+                } else if (tab.getPosition() == 1) {
+                    p.putValue("tabType", "Playlist Tab");
+                }
             }
 
             @Override
@@ -172,7 +188,6 @@ public class DownloadsActivity extends AppCompatActivity {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
-
                 Fragment fragment = new MiniPlayerFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
@@ -302,11 +317,77 @@ public class DownloadsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        p = new Properties();
         prepareData1();
         if (comeDeletePlaylist == 1) {
             prepareData1();
             comeDeletePlaylist = 0;
         }
+
+        p.putValue("userId", UserID);
+    /*    DB.taskDao().geAllDataz("").observe(this, audioList -> {
+            if (audioList != null) {
+                if (audioList.size() != 0) {
+                    List<DownloadAudioDetails> audioList1 = new ArrayList<>();
+                    for (int i = 0; i < audioList.size(); i++) {
+                        DownloadAudioDetails dad = new DownloadAudioDetails();
+                        dad.setID(audioList.get(i).getID());
+                        dad.setName(audioList.get(i).getName());
+                        dad.setAudioFile(audioList.get(i).getAudioFile());
+                        dad.setAudioDirection(audioList.get(i).getAudioDirection());
+                        dad.setAudiomastercat(audioList.get(i).getAudiomastercat());
+                        dad.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
+                        dad.setImageFile(audioList.get(i).getImageFile());
+                        dad.setLike(audioList.get(i).getLike());
+                        dad.setDownload(audioList.get(i).getDownload());
+                        dad.setAudioDuration(audioList.get(i).getAudioDuration());
+                        dad.setPlaylistId(audioList.get(i).getPlaylistId());
+                        dad.setIsSingle(audioList.get(i).getIsSingle());
+                        dad.setIsDownload(audioList.get(i).getIsDownload());
+                        dad.setDownloadProgress(audioList.get(i).getDownloadProgress());
+                        audioList1.add(dad);
+                    }
+                } else {
+                }
+            } else {
+
+            }
+            DB.taskDao().geAllDataz("").removeObserver(audioListx -> {});
+        });
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getAllPlaylist1().observe(this, audioList -> {
+
+            if (audioList != null) {
+                if (audioList.size() != 0) {
+                    List<DownloadPlaylistDetails> audioList1 = new ArrayList<>();
+                    for (int i = 0; i < audioList.size(); i++) {
+                        DownloadPlaylistDetails detail = new DownloadPlaylistDetails();
+                        detail.setPlaylistID(audioList.get(i).getPlaylistID());
+                        detail.setPlaylistName(audioList.get(i).getPlaylistName());
+                        detail.setPlaylistDesc(audioList.get(i).getPlaylistDesc());
+                        detail.setIsReminder(audioList.get(i).getPlaylistDesc());
+                        detail.setPlaylistMastercat(audioList.get(i).getPlaylistMastercat());
+                        detail.setPlaylistSubcat(audioList.get(i).getPlaylistSubcat());
+                        detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
+                        detail.setPlaylistImageDetails(audioList.get(i).getPlaylistImageDetails());
+                        detail.setTotalAudio(audioList.get(i).getTotalAudio());
+                        detail.setTotalDuration(audioList.get(i).getTotalDuration());
+                        detail.setTotalhour(audioList.get(i).getTotalhour());
+                        detail.setTotalminute(audioList.get(i).getTotalminute());
+                        detail.setCreated(audioList.get(i).getCreated());
+                        detail.setDownload(audioList.get(i).getDownload());
+                        detail.setLike(audioList.get(i).getLike());
+                        audioList1.add(detail);
+                    }
+                } else {
+                }
+            } else {
+            }
+        });*/
+        BWSApplication.addToSegment("My Download Screen Viewed", p, CONSTANTS.screen);
         super.onResume();
     }
 }

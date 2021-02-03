@@ -149,6 +149,11 @@ public class AppointmentInvoiceFragment extends Fragment {
                 p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
                 p.putValue("invoiceType", "Appointment");
                 p.putValue("invoiceAmount", listModelList.get(position).getAmount());
+                p.putValue("invoiceDate", listModelList.get(position).getDate());
+                p.putValue("invoiceCurrency", "");
+                p.putValue("plan", "");
+                p.putValue("planStartDt", "");
+                p.putValue("planExpiryDt", "");
                 BWSApplication.addToSegment("Invoice Downloaded", p, CONSTANTS.track);
             });
         }

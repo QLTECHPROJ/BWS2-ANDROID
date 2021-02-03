@@ -274,7 +274,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 e.setPlaylistId(model.getResponseData().get(i).getID());
                                 e.setPlaylistName(model.getResponseData().get(i).getName());
                                 e.setPlaylistType(model.getResponseData().get(i).getCreated());
-                                e.setPlaylistDuration(model.getResponseData().get(i).getTotalhour() + "h " +model.getResponseData().get(i).getTotalminute() + "m");
+                                e.setPlaylistDuration(model.getResponseData().get(i).getTotalhour() + "h " + model.getResponseData().get(i).getTotalminute() + "m");
                                 e.setAudioCount(model.getResponseData().get(i).getTotalAudio());
                                 section.add(e);
                             }
@@ -441,7 +441,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         comefrom_search = 0;
                                         addToPlayList = true;
                                         MyPlaylistId = PlaylistID;
-                                        dialog.dismiss();
                                         Intent intent = new Intent(ctx, DashboardActivity.class);
                                         intent.putExtra("Goplaylist", "1");
                                         intent.putExtra("New", New);
@@ -451,6 +450,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         intent.putExtra("PlaylistType", Created);
                                         startActivity(intent);
                                         finish();
+                                        overridePendingTransition(0, 0);
+                                        dialog.dismiss();
                                     });
 
                                     tvCancel.setOnClickListener(v -> {

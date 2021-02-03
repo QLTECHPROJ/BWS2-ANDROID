@@ -636,7 +636,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void showTooltips() {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         PlayerFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0"));
-//        main_player
+
         if (PlayerFirstLogin.equalsIgnoreCase("1")) {
             Animation enterAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
             Animation exitAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom);
@@ -665,7 +665,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         ImageView ivGif = view.findViewById(R.id.ivGif);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
                         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
-                        Glide.with(activity).load(R.raw.main_player_highlight).into(imageViewTarget);
+                        Glide.with(activity).load(R.raw.highlight_main_player).into(imageViewTarget);
                         final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
                         anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {

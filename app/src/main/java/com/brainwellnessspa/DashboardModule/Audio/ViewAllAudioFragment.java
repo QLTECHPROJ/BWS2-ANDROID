@@ -604,6 +604,7 @@ public class ViewAllAudioFragment extends Fragment {
                     Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     getActivity().startActivity(i);
+                    getActivity().overridePendingTransition(0, 0);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if (player != null) {
@@ -619,6 +620,7 @@ public class ViewAllAudioFragment extends Fragment {
                         Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         getActivity().startActivity(i);
+                        getActivity().overridePendingTransition(0, 0);
                     } else {
                         callTransFrag(position, listModelList,true);
                     }
@@ -673,6 +675,7 @@ public class ViewAllAudioFragment extends Fragment {
                     Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     getActivity().startActivity(i);
+                    getActivity().overridePendingTransition(0, 0);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if( MyPlaylist.equalsIgnoreCase(getString(R.string.recently_played))){
@@ -709,6 +712,7 @@ public class ViewAllAudioFragment extends Fragment {
                             Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             getActivity().startActivity(i);
+                            getActivity().overridePendingTransition(0, 0);
                         } else {
                             ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                             if (!IsLock.equalsIgnoreCase("0")) {
@@ -906,6 +910,7 @@ public class ViewAllAudioFragment extends Fragment {
                 Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 getActivity().startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             }
 
         } catch (Exception e) {

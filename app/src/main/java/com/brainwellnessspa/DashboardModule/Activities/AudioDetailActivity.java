@@ -460,6 +460,7 @@ public class AudioDetailActivity extends AppCompatActivity {
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);
             finish();
+            overridePendingTransition(0, 0);
         }
     }
 
@@ -794,6 +795,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                                                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                 ctx.startActivity(i);
                                                 finish();
+                                                overridePendingTransition(0, 0);
                                             }
                                         }
                                     }

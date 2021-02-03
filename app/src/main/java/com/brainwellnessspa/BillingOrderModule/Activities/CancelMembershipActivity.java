@@ -66,7 +66,14 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         });
 
         binding.youtubeView.initialize(API_KEY, this);
-
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("plan", "");
+        p.putValue("planStatus", "");
+        p.putValue("planStartDt", "");
+        p.putValue("planExpiryDt", "");
+        p.putValue("planAmount", "");
+        BWSApplication.addToSegment("Cancel Subscription Viewed", p, CONSTANTS.screen);
         if (player != null) {
             if (player.getPlayWhenReady()) {
                 player.setPlayWhenReady(false);
@@ -165,11 +172,11 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                             BWSApplication.showToast(model.getResponseMessage(), ctx);
                                             dialog.dismiss();
                                             String CancelReason = binding.edtCancelBox.getText().toString();
-                                            Properties p = new Properties();
+                                            /*Properties p = new Properties();
                                             p.putValue("userId", UserID);
                                             p.putValue("cancelId", CancelId);
                                             p.putValue("cancelReason", CancelReason);
-                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
+                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);*/
                                             if (player != null) {
                                                 if (player.getPlayWhenReady()) {
                                                     player.setPlayWhenReady(false);

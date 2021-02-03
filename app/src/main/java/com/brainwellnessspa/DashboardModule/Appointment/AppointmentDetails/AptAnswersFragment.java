@@ -45,8 +45,8 @@ public class AptAnswersFragment extends Fragment {
             p.putValue("userId", UserID);
             p.putValue("sessionId", appointmentDetail.getId());
             p.putValue("sessionName", appointmentDetail.getName());
-            p.putValue("documentUrl", appointmentDetail.getMyAnswers());
-            BWSApplication.addToSegment("Appointment Booklet Pdf Download Clicked", p, CONSTANTS.track);
+            p.putValue("myAnswersUrl", appointmentDetail.getMyAnswers());
+            BWSApplication.addToSegment("My Answer Download PDF Clicked", p, CONSTANTS.track);
         });
         return view;
     }

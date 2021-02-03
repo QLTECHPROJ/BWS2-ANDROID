@@ -39,8 +39,11 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityResourceBinding;
 import com.brainwellnessspa.databinding.FilterListLayoutBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -62,6 +65,10 @@ public class ResourceActivity extends AppCompatActivity {
     TextView tvAll;
     LayoutInflater li;
     View promptsView;
+    Properties p, p4;
+    ArrayList<String> section;
+    GsonBuilder gsonBuilder;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +82,11 @@ public class ResourceActivity extends AppCompatActivity {
         });
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        p4 = new Properties();
+        p4.putValue("userId", UserID);
+        section = new ArrayList<>();
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         binding.viewPager.setOffscreenPageLimit(5);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio Books"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Podcasts"));
@@ -88,18 +99,23 @@ public class ResourceActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
                 CurruntTab = tab.getPosition();
-                Properties p = new Properties();
+                p = new Properties();
                 p.putValue("userId", UserID);
                 if (tab.getPosition() == 0) {
                     p.putValue("resourceType", "Audio Books");
+                    p4.putValue("resourceType", "Audio Books");
                 } else if (tab.getPosition() == 1) {
                     p.putValue("resourceType", "Podcasts");
+                    p4.putValue("resourceType", "Podcasts");
                 } else if (tab.getPosition() == 2) {
                     p.putValue("resourceType", "Apps");
+                    p4.putValue("resourceType", "Apps");
                 } else if (tab.getPosition() == 3) {
                     p.putValue("resourceType", "Websites");
+                    p4.putValue("resourceType", "Websites");
                 } else if (tab.getPosition() == 4) {
                     p.putValue("resourceType", "Documentaries");
+                    p4.putValue("resourceType", "Documentaries");
                 }
                 BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen);
             }
@@ -193,6 +209,10 @@ public class ResourceActivity extends AppCompatActivity {
                             ResourceFilterModel listModel = response.body();
                             ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox, tvAll, ivFilter);
                             rvFilterList.setAdapter(adapter);
+                            for (int i = 0; i < listModel.getResponseData().size(); i++) {
+                                section.add(listModel.getResponseData().get(i).getCategoryName());
+                            }
+                            p4.putValue("allMasterCategory", gson.toJson(section));
                         }
 
                     } catch (Exception e) {
@@ -243,6 +263,8 @@ public class ResourceActivity extends AppCompatActivity {
                 Category = listModel.get(position).getCategoryName();
                 setAdapter();
                 dialogBox.dismiss();
+                p4.putValue("masterCategory", listModel.get(position).getCategoryName());
+                BWSApplication.addToSegment("Resources Filter Clicked", p4, CONSTANTS.screen);
             });
             if (listModel.get(position).getCategoryName().equalsIgnoreCase(Category)) {
                 ivFilter.setVisibility(View.INVISIBLE);

@@ -1,6 +1,8 @@
 package com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetails;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -21,11 +23,15 @@ import com.segment.analytics.Properties;
 public class AptBookletFragment extends Fragment {
     FragmentAptBookletBinding binding;
     AppointmentDetailModel.ResponseData appointmentDetail;
+    String UserID;
+    Properties p;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_booklet, container, false);
         View view = binding.getRoot();
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelable("AppointmentDetail");
         }
@@ -35,6 +41,12 @@ public class AptBookletFragment extends Fragment {
             i.setData(Uri.parse(appointmentDetail.getBooklet()));
             startActivity(i);
             BWSApplication.showToast("Complete the booklet", getActivity());
+            p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("sessionId", appointmentDetail.getId());
+            p.putValue("sessionName", appointmentDetail.getName());
+            p.putValue("bookletUrl", appointmentDetail.getBookUrl());
+            BWSApplication.addToSegment("Complete Booklet Clicked", p, CONSTANTS.track);
         });
         return view;
     }

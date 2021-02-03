@@ -98,7 +98,16 @@ public class ReminderActivity extends AppCompatActivity {
 
         Log.e("DayDayDayDay", Day);
         Log.e("SelectedDaySelectedDay", TextUtils.join(",", SelectedDay));
-
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("reminderId", "");
+        p.putValue("playlistId", "");
+        p.putValue("playlistName", "");
+        p.putValue("playlistType", "");
+        p.putValue("reminderStatus", "");
+        p.putValue("reminderTime", "");
+        p.putValue("reminderDay", "");
+        BWSApplication.addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         RefreshButton();
         ShowPlaylistName();
 

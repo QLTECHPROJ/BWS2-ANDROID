@@ -169,6 +169,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
+                activity.overridePendingTransition(0, 0);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
@@ -269,6 +270,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);
+            activity.overridePendingTransition(0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

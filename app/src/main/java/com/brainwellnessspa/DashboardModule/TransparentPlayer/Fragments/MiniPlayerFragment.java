@@ -223,6 +223,7 @@ public class MiniPlayerFragment extends Fragment {
             Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);
+            activity.overridePendingTransition(0, 0);
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

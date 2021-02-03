@@ -53,6 +53,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.CardModel;
 import com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
@@ -132,7 +133,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
     public static int isPlayPlaylist = 0;
-    public static boolean RefreshPlaylist = false, playtutorial = false;
+    public static boolean RefreshPlaylist = false, playtutorial = false,ComeBackPlaylist = false;
     FragmentMyPlaylistsBinding binding;
     String PlaylistFirstLogin = "0", IsPlayDisclimer, TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistDescription = "", PlaylistType = "", ScreenView = "", UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     PlayListsAdpater adpater;
@@ -244,6 +245,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 .addMigrations(MIGRATION_1_2)
                 .build();
         addDisclaimer();
+
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -386,125 +388,128 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void showTooltips() {
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        PlaylistFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0"));
+        try {
+            SharedPreferences shareddedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            PlaylistFirstLogin = (shareddedd.getString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0"));
 
-        if (PlaylistFirstLogin.equalsIgnoreCase("1")) {
-            Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
-            Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+            if (PlaylistFirstLogin.equalsIgnoreCase("1")) {
+                Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+                Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
 
-            fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_playlist_details, view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                    })
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llMore).closeOnTouch(true).build();
+                fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                        .customView(R.layout.layout_playlist_details, view -> {
+                            RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                            rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                        })
+                        .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                        .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                        .focusOn(binding.llMore).closeOnTouch(true).build();
 
-            fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_playlist_reminder, view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
-                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.llReminder).closeOnTouch(false)
-                    .build();
+                fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                        .customView(R.layout.layout_playlist_reminder, view -> {
+                            RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                            rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                        }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                        .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                        .focusOn(binding.llReminder).closeOnTouch(false)
+                        .build();
 
-            fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_playlist_downloads, (OnViewInflateListener) view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
-                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation)
-                    .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
-                    .closeOnTouch(false).build();
+                fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                        .customView(R.layout.layout_playlist_downloads, (OnViewInflateListener) view -> {
+                            RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                            rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
+                        }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                        .enterAnimation(enterAnimation)
+                        .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
+                        .closeOnTouch(false).build();
 
-            fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_playlist_searches, view -> {
-                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        TextView tvclick = view.findViewById(R.id.tvclick);
-                        if (MyCreated.equalsIgnoreCase("1")) {
-                            tvclick.setText("Next");
-                        } else {
-                            tvclick.setText("Done");
+                fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
+                        .customView(R.layout.layout_playlist_searches, view -> {
+                            RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                            TextView tvclick = view.findViewById(R.id.tvclick);
+                            if (MyCreated.equalsIgnoreCase("1")) {
+                                tvclick.setText("Next");
+                            } else {
+                                tvclick.setText("Done");
+                            }
+                            rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
+                        })
+                        .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                        .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                        .focusOn(binding.rlSearch).closeOnTouch(false).build();
+
+                fancyShowCaseView51 = new FancyShowCaseView.Builder(getActivity())
+                        .customView(R.layout.layout_playlist_sortings, view -> {
+                            ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
+                            RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                            final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
+                            anim.setDuration(1500);
+                            anim.addUpdateListener(animation -> {
+                                ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
+                                ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
+                            });
+                            anim.setRepeatCount(ValueAnimator.INFINITE);
+                            anim.setRepeatMode(ValueAnimator.REVERSE);
+                            anim.start();
+                            rlDone.setOnClickListener(v -> {
+                                fancyShowCaseView51.hide();
+                                playtutorial = true;
+                            });
+                        })
+                        .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                        .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                        .closeOnTouch(false).build();
+
+                if (MyCreated.equalsIgnoreCase("1")) {
+                    queue = new FancyShowCaseQueue()
+                            .add(fancyShowCaseView11)
+                            .add(fancyShowCaseView21)
+                            .add(fancyShowCaseView31)
+                            .add(fancyShowCaseView41)
+                            .add(fancyShowCaseView51);
+                    queue.show();
+                    OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                        @Override
+                        public void handleOnBackPressed() {
+                            if (playtutorial) {
+                                callBack();
+                            }
                         }
-                        rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
-                    })
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .focusOn(binding.rlSearch).closeOnTouch(false).build();
-
-            fancyShowCaseView51 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_playlist_sortings, view -> {
-                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
-                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
-                        anim.setDuration(1500);
-                        anim.addUpdateListener(animation -> {
-                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
-                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
-                        });
-                        anim.setRepeatCount(ValueAnimator.INFINITE);
-                        anim.setRepeatMode(ValueAnimator.REVERSE);
-                        anim.start();
-                        rlDone.setOnClickListener(v -> {
-                            fancyShowCaseView51.hide();
-                            playtutorial = true;
-                        });
-                    })
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                    .closeOnTouch(false).build();
-
-            if (MyCreated.equalsIgnoreCase("1")) {
-                queue = new FancyShowCaseQueue()
-                        .add(fancyShowCaseView11)
-                        .add(fancyShowCaseView21)
-                        .add(fancyShowCaseView31)
-                        .add(fancyShowCaseView41)
-                        .add(fancyShowCaseView51);
-                queue.show();
-                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        if (playtutorial) {
-                            callBack();
+                    };
+                    requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+                } else {
+                    queue = new FancyShowCaseQueue()
+                            .add(fancyShowCaseView11)
+                            .add(fancyShowCaseView21)
+                            .add(fancyShowCaseView31)
+                            .add(fancyShowCaseView41);
+                    queue.show();
+                    OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                        @Override
+                        public void handleOnBackPressed() {
+                            if (playtutorial) {
+                                callBack();
+                            }
                         }
-                    }
-                };
-                requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-            } else {
-                queue = new FancyShowCaseQueue()
-                        .add(fancyShowCaseView11)
-                        .add(fancyShowCaseView21)
-                        .add(fancyShowCaseView31)
-                        .add(fancyShowCaseView41);
-                queue.show();
-                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        if (playtutorial) {
-                            callBack();
-                        }
-                    }
-                };
-                requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-            }
-
-        } else {
-            OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                    callBack();
+                    };
+                    requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
                 }
-            };
-            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
+            } /*else {
+                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        callBack();
+                    }
+                };
+                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+            }*/
+            SharedPreferences.Editor editor = shareddedd.edit();
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
-        editor.commit();
     }
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
@@ -671,9 +676,23 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onResume() {
+
         binding.searchView.clearFocus();
         searchEditText.setText("");
         binding.searchView.setQuery("", false);
+
+        try {
+            OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    callBack();
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         if (ComeFindAudio == 2) {
             binding.searchView.requestFocus();
@@ -723,7 +742,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
-//        binding.searchView.clearFocus();
         if (MyPlaylistIds.equalsIgnoreCase("")) {
             if (comefrom_search == 2) {
                 Bundle bundle = new Bundle();
@@ -744,11 +762,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .commit();
                 comefrom_search = 0;
             } else if (comefrom_search == 0) {
-                Fragment fragment = new PlaylistFragment();
+                Intent i = new Intent(getActivity(), DashboardActivity.class);
+                ComeBackPlaylist = true;
+                startActivity(i);
+                getActivity().finish();
+                getActivity().overridePendingTransition(0, 0);
+                /*Fragment fragments = new PlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
-                        .commit();
+                        .replace(R.id.flContainer, fragments)
+                        .commit();*/
                 comefrom_search = 0;
             } else if (comefrom_search == 4) {
                 Intent i = new Intent(getActivity(), LikeActivity.class);
@@ -756,6 +779,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 getActivity().finish();
+                getActivity().overridePendingTransition(0, 0);
                 //            comefrom_search = 0;
             } else if (comefrom_search == 3) {
                 Intent i = new Intent(getActivity(), DownloadsActivity.class);
@@ -763,6 +787,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 getActivity().finish();
+                getActivity().overridePendingTransition(0, 0);
                 //            comefrom_search = 0;
             }
             RefreshPlaylist = false;
@@ -2584,7 +2609,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else {
                             myAudioId = mData.get(0).getID();
                             if (player != null) {
-                                if(position != positionSaved) {
+                                if (position != positionSaved) {
                                     player.seekTo(position, 0);
                                     player.setPlayWhenReady(true);
                                     miniPlayer = 1;
@@ -2663,7 +2688,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         myAudioId = mData.get(pos).getID();
                         if (player != null) {
-                            if(pos != positionSaved) {
+                            if (pos != positionSaved) {
                                 player.seekTo(pos, 0);
                                 player.setPlayWhenReady(true);
                                 miniPlayer = 1;
@@ -2980,7 +3005,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 } else {
                                     myAudioId = mData.get(0).getID();
                                     if (player != null) {
-                                        if(position != positionSaved) {
+                                        if (position != positionSaved) {
                                             player.seekTo(position, 0);
                                             player.setPlayWhenReady(true);
                                             miniPlayer = 1;
@@ -3041,7 +3066,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else {
                                 myAudioId = mData.get(0).getID();
                                 if (player != null) {
-                                    if(position != positionSaved) {
+                                    if (position != positionSaved) {
                                         player.seekTo(position, 0);
                                         player.setPlayWhenReady(true);
                                         miniPlayer = 1;

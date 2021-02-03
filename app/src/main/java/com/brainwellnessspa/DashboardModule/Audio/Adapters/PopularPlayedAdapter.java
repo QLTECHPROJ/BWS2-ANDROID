@@ -176,6 +176,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
+                activity.overridePendingTransition(0, 0);
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if (player != null) {
@@ -191,6 +192,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                     Intent i = new Intent(ctx, AudioPlayerActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ctx.startActivity(i);
+                    activity.overridePendingTransition(0, 0);
                 } else {
                     ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                     if (!IsLock.equalsIgnoreCase("0")) {
@@ -289,6 +291,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);
+            activity.overridePendingTransition(0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

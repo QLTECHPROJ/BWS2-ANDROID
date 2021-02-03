@@ -15,6 +15,8 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityFaqBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
@@ -29,6 +31,10 @@ public class FaqActivity extends AppCompatActivity {
     private ArrayList<FaqListModel.ResponseData> modelList;
     Activity activity;
     String UserID;
+    ArrayList<String> section;
+    GsonBuilder gsonBuilder;
+    Gson gson;
+    Properties p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +44,17 @@ public class FaqActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         modelList = new ArrayList<>();
+        section = new ArrayList<>();
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         PrepareData();
         binding.llBack.setOnClickListener(view -> finish());
-
-        Properties p = new Properties();
+        p = new Properties();
         p.putValue("userId", UserID);
+        section.add("Audio");
+        section.add("Playlist");
+        section.add("General");
+        p.putValue("faqCategories", gson.toJson(section));
         BWSApplication.addToSegment("FAQ Viewed", p, CONSTANTS.screen);
         binding.llAudio.setOnClickListener(view -> {
             try {
@@ -57,6 +69,7 @@ public class FaqActivity extends AppCompatActivity {
                 i.putExtra("Flag", "Audio");
                 i.putParcelableArrayListExtra("faqListModel", modelList);
                 startActivity(i);
+                overridePendingTransition(0, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,6 +88,7 @@ public class FaqActivity extends AppCompatActivity {
                 i.putExtra("Flag", "General");
                 i.putExtra("faqListModel", modelList);
                 startActivity(i);
+                overridePendingTransition(0, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,6 +107,7 @@ public class FaqActivity extends AppCompatActivity {
                 i.putExtra("Flag", "Playlist");
                 i.putExtra("faqListModel", modelList);
                 startActivity(i);
+                overridePendingTransition(0, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }

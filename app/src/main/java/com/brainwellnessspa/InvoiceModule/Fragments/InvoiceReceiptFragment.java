@@ -49,21 +49,7 @@ public class InvoiceReceiptFragment extends DialogFragment {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.receipt_dialog_background_inset);
         }
-        try {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            p.putValue("invoiceId", InvoiceID);
-            if (Flag.equalsIgnoreCase("1")) {
-                p.putValue("invoiceType", "Memebrship");
-            } else if (Flag.equalsIgnoreCase("2")) {
-                p.putValue("invoiceType", "Appointment");
-            }
 
-            p.putValue("invoiceAmount", InvoiceAmount);
-            BWSApplication.addToSegment("Invoice Clicked", p, CONSTANTS.track);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return view;
     }
 
@@ -99,9 +85,9 @@ public class InvoiceReceiptFragment extends DialogFragment {
                 @Override
                 public void onResponse(Call<InvoiceDetailModel> call, Response<InvoiceDetailModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        InvoiceDetailModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            InvoiceDetailModel listModel = response.body();
                             InvoiceAmount = "$" + listModel.getResponseData().getTotalAmount();
                             binding.tvFromTitle.setText("From");
                             binding.tvDateTitle.setText("Order Date:");
@@ -110,6 +96,26 @@ public class InvoiceReceiptFragment extends DialogFragment {
                             binding.tvItemsTitle.setText("Items:");
                             binding.tvGstTitle.setText("GST:");
                             binding.tvOrderTotalAmountTitle.setText("Order Total:");
+                            try {
+                                Properties p = new Properties();
+                                p.putValue("userId", UserID);
+                                p.putValue("invoiceId", InvoiceID);
+                                if (Flag.equalsIgnoreCase("1")) {
+                                    p.putValue("invoiceType", "Memebrship");
+                                } else if (Flag.equalsIgnoreCase("2")) {
+                                    p.putValue("invoiceType", "Appointment");
+                                }
+
+                                p.putValue("invoiceAmount", listModel.getResponseData().getAmount());
+                                p.putValue("invoiceDate", listModel.getResponseData().getInvoiceDate());
+                                p.putValue("invoiceCurrency", "");
+                                p.putValue("plan", "");
+                                p.putValue("planStartDt", "");
+                                p.putValue("planExpiryDt", "");
+                                BWSApplication.addToSegment("Invoice Clicked", p, CONSTANTS.track);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             if (Flag.equalsIgnoreCase("1")) {
                                 binding.tvSession.setVisibility(View.GONE);
                                 if (listModel.getResponseData().getAmount().equalsIgnoreCase("0.00") ||

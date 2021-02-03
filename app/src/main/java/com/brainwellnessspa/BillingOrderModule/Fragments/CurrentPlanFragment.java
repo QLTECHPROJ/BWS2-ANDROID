@@ -50,7 +50,7 @@ public class CurrentPlanFragment extends Fragment {
     private long mLastClickTime = 0;
     FeaturedListAdpater adpater;
     public static String invoicePayId, PlanStatus = "";
-
+    CurrentPlanVieViewModel planVieViewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,6 +92,7 @@ public class CurrentPlanFragment extends Fragment {
                 if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     try {
+                        planVieViewModel = listModel;
                         binding.tvHeader.setText(listModel.getResponseData().getPlan());
                         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                                 5, 3, 1f, 0);

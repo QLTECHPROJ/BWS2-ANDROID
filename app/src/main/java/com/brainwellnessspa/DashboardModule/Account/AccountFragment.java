@@ -119,6 +119,7 @@ public class AccountFragment extends Fragment {
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(getActivity(), UserProfileActivity.class);
             startActivity(i);
+            getActivity().overridePendingTransition(0, 0);
         });
 
         binding.llDownloads.setOnClickListener(view12 -> {
@@ -128,6 +129,7 @@ public class AccountFragment extends Fragment {
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(getActivity(), DownloadsActivity.class);
             startActivity(i);
+            getActivity().overridePendingTransition(0, 0);
         });
 
         binding.llFavorites.setOnClickListener(view12 -> {
@@ -138,6 +140,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), LikeActivity.class);
                 startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -153,6 +156,7 @@ public class AccountFragment extends Fragment {
                 Intent i = new Intent(getActivity(), InvoiceActivity.class);
                 i.putExtra("ComeFrom", "");
                 startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -166,6 +170,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), BillingOrderActivity.class);
                 startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -179,6 +184,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), ResourceActivity.class);
                 startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -193,6 +199,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
                 startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -206,6 +213,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), FaqActivity.class);
                 startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -218,7 +226,6 @@ public class AccountFragment extends Fragment {
                 dialog.setContentView(R.layout.logout_layout);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                 final Button Btn = dialog.findViewById(R.id.Btn);
 
@@ -230,67 +237,65 @@ public class AccountFragment extends Fragment {
                     return false;
                 });
 
-                Btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        callNewPlayerRelease();
-                        DeleteCall(dialog);
-                        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(NOTIFICATION_ID);
-                        SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
-                        String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                        if (TextUtils.isEmpty(fcm_id)) {
-                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
-                                @Override
-                                public void onSuccess(InstanceIdResult instanceIdResult) {
-                                    String newToken = instanceIdResult.getToken();
-                                    Log.e("newToken", newToken);
-                                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                                    editor.putString(CONSTANTS.Token, newToken); //Friend
-                                    editor.apply();
-                                    editor.commit();
-                                }
-                            });
-                            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                        }
-                        Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
-                        listCall.enqueue(new Callback<LogoutModel>() {
+                Btn.setOnClickListener(v -> {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    callNewPlayerRelease();
+                    DeleteCall(dialog);
+                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(NOTIFICATION_ID);
+                    SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                    String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                    if (TextUtils.isEmpty(fcm_id)) {
+                        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
                             @Override
-                            public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                                dialog.hide();
-                                LogoutModel loginModel = response.body();
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                try {
-                                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                        return;
-                                    }
-                                    mLastClickTime = SystemClock.elapsedRealtime();
-                                    if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        Intent i = new Intent(getActivity(), LoginActivity.class);
-                                        startActivity(i);
-                                        relesePlayer();
-                                        Properties p = new Properties();
-                                        p.putValue("userId", UserID);
-                                        p.putValue("deviceId", DeviceID);
-                                        p.putValue("deviceType", DeviceType);
-                                        p.putValue("userName", Name);
-                                        p.putValue("mobileNo", MobileNo);
-                                        BWSApplication.addToSegment("Signed Out", p, CONSTANTS.track);
-                                        analytics.flush();
-                                        analytics.reset();
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<LogoutModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            public void onSuccess(InstanceIdResult instanceIdResult) {
+                                String newToken = instanceIdResult.getToken();
+                                Log.e("newToken", newToken);
+                                SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                                editor.putString(CONSTANTS.Token, newToken); //Friend
+                                editor.apply();
+                                editor.commit();
                             }
                         });
+                        fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                     }
+                    Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
+                    listCall.enqueue(new Callback<LogoutModel>() {
+                        @Override
+                        public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                            dialog.hide();
+                            LogoutModel loginModel = response.body();
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            try {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    Intent i = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(i);
+                                    getActivity().overridePendingTransition(0, 0);
+                                    relesePlayer();
+                                    Properties p1 = new Properties();
+                                    p1.putValue("userId", UserID);
+                                    p1.putValue("deviceId", DeviceID);
+                                    p1.putValue("deviceType", DeviceType);
+                                    p1.putValue("userName", Name);
+                                    p1.putValue("mobileNo", MobileNo);
+                                    BWSApplication.addToSegment("Signed Out", p1, CONSTANTS.track);
+                                    analytics.flush();
+                                    analytics.reset();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LogoutModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        }
+                    });
                 });
 
                 tvGoBack.setOnClickListener(new View.OnClickListener() {

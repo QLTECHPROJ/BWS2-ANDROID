@@ -139,14 +139,13 @@ public class AudioDownloadsFragment extends Fragment {
             IsLock = getArguments().getString("IsLock");
         }
 //        handler1 = new Handler();
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
+
         DB = Room.databaseBuilder(getActivity(),
                 AudioDatabase.class,
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
-        BWSApplication.addToSegment("Downloaded Audio Viewed", p, CONSTANTS.screen);
+
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
         binding.tvFound.setText("Your downloaded audios will appear here");
@@ -580,11 +579,11 @@ public class AudioDownloadsFragment extends Fragment {
                     } else {
                         getMedia(audioPlay, AudioFlag, position);
                     }
-                    /*Properties p = new Properties();
+                    Properties p = new Properties();
                     p.putValue("userId", UserID);
                     p.putValue("audioId", listModelList.get(position).getID());
                     p.putValue("audioName", listModelList.get(position).getName());
-                    BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);*/
+                    BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
                 }
 //            handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();

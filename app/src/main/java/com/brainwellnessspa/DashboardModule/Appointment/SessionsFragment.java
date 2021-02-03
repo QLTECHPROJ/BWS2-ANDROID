@@ -32,8 +32,11 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentSessionsBinding;
 import com.brainwellnessspa.databinding.SessionListLayoutBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -49,6 +52,9 @@ public class SessionsFragment extends Fragment {
     Activity activity;
     View view;
     Properties p;
+    GsonBuilder gsonBuilder;
+    Gson gson;
+    ArrayList<String> section;
     String UserID, appointmentName, appointmentMainName, appointmentImage, appointmentTypeId, AudioFlag;
 
     @Override
@@ -66,7 +72,9 @@ public class SessionsFragment extends Fragment {
             appointmentImage = getArguments().getString("appointmentImage");
             appointmentMainName = getArguments().getString("appointmentMainName");
         }
-
+        section = new ArrayList<>();
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         binding.llBack.setOnClickListener(view1 -> callBack());
         Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -227,10 +235,9 @@ public class SessionsFragment extends Fragment {
                 listCall.enqueue(new Callback<SessionListModel>() {
                     @Override
                     public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
-                        if (response.isSuccessful()) {
                             try {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 SessionListModel listModel = response.body();
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
                                     MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
@@ -242,13 +249,29 @@ public class SessionsFragment extends Fragment {
                                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                                     SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
                                     binding.rvSessionList.setAdapter(appointmentsAdapter);
+
+                                    p = new Properties();
+                                    p.putValue("userId", UserID);
+                                    for (int i = 0; i < listModel.getResponseData().size(); i++) {
+                                        section.add(listModel.getResponseData().get(i).getId());
+                                        section.add(listModel.getResponseData().get(i).getCatName());
+                                        section.add(listModel.getResponseData().get(i).getName());
+                                        section.add(listModel.getResponseData().get(i).getDescInfusion());
+                                        section.add(listModel.getResponseData().get(i).getDesc());
+                                        section.add(listModel.getResponseData().get(i).getCatMenual());
+                                        section.add(listModel.getResponseData().get(i).getDate());
+                                        section.add(listModel.getResponseData().get(i).getDuration());
+                                        section.add(listModel.getResponseData().get(i).getTime());
+                                        section.add(listModel.getResponseData().get(i).getStatus());
+                                    }
+                                    p.putValue("appointmentSessions", gson.toJson(section));
+                                    BWSApplication.addToSegment("Appointment Session Listing Viewed", p, CONSTANTS.screen);
                                 } else {
                                     BWSApplication.showToast(listModel.getResponseMessage(), activity);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        }
                     }
 
                     @Override

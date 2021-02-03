@@ -38,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,7 +53,10 @@ public class AppointmentFragment extends Fragment {
     String UserID, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     Activity activity;
     Properties p;
+    ArrayList<String> section, previoussection;
     GsonBuilder gsonBuilder;
+    Gson gson;
+    NextSessionViewModel nextSessionViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
@@ -68,7 +72,10 @@ public class AppointmentFragment extends Fragment {
             appointmentImage = bundle.getString("appointmentImage");
             appointmentMainName = bundle.getString("appointmentMainName");
         }
-
+        section = new ArrayList<>();
+        previoussection = new ArrayList<>();
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
@@ -194,17 +201,12 @@ public class AppointmentFragment extends Fragment {
                     @Override
                     public void onResponse(Call<NextSessionViewModel> call, Response<NextSessionViewModel> response) {
                         try {
-                            if (response.isSuccessful()) {
+                            NextSessionViewModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                NextSessionViewModel listModel = response.body();
+                                nextSessionViewModel = listModel;
                                 binding.tvNextSessionTitle.setText(R.string.Next_Session);
-                                p = new Properties();
-                                p.putValue("userId", UserID);
-                                /*Gson gson;
-                                gsonBuilder = new GsonBuilder();
-                                gson = gsonBuilder.create();
-                                p.putValue("products", gson.toJson(productProperties));*/
-                                BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
+
                                 if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
                                     binding.cvShowSession.setVisibility(View.GONE);
                                     binding.cvSetSession.setVisibility(View.VISIBLE);
@@ -281,6 +283,29 @@ public class AppointmentFragment extends Fragment {
                                 binding.tvPreviousAppointments.setText(R.string.Previous_Appointments);
                                 PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity());
                                 binding.rvPreviousData.setAdapter(appointmentsAdapter);
+                                p = new Properties();
+                                p.putValue("userId", UserID);
+                                if (nextSessionViewModel.getResponseData().getResponse().equalsIgnoreCase("")) {
+                                    p.putValue("nextSession", "");
+                                }else {
+                                    section.add(nextSessionViewModel.getResponseData().getId());
+                                    section.add(nextSessionViewModel.getResponseData().getName());
+                                    section.add(nextSessionViewModel.getResponseData().getDate());
+                                    section.add(nextSessionViewModel.getResponseData().getDuration());
+                                    section.add(nextSessionViewModel.getResponseData().getTime());
+                                    section.add(nextSessionViewModel.getResponseData().getTask().getTitle());
+                                    section.add(nextSessionViewModel.getResponseData().getTask().getSubtitle());
+                                    section.add(nextSessionViewModel.getResponseData().getTask().getAudioTask());
+                                    section.add(nextSessionViewModel.getResponseData().getTask().getBookletTask());
+                                    p.putValue("nextSession", gson.toJson(section));
+                                }
+
+                                for (int i = 0; i < listModel.getResponseData().size(); i++) {
+                                    previoussection.add(listModel.getResponseData().get(i).getCategory());
+                                    previoussection.add(listModel.getResponseData().get(i).getCatMenual());
+                                }
+                                p.putValue("previousAppointments", gson.toJson(previoussection));
+                                BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -292,6 +317,8 @@ public class AppointmentFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 });
+
+
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }

@@ -68,7 +68,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     List<DownloadPlaylistDetails> playlistList;
     String UserID, AudioFlag, IsLock;
     PlaylistsDownloadsAdapter adapter;
-//    Runnable UpdateSongTime1;
+    //    Runnable UpdateSongTime1;
 //    Handler handler1;
     boolean isMyDownloading = false;
     AudioDatabase DB;
@@ -83,6 +83,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
         }
     };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
@@ -97,9 +98,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 .addMigrations(MIGRATION_1_2)
                 .build();
         playlistList = new ArrayList<>();
-        p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Downloaded Playlist Viewed", p, CONSTANTS.screen);
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
         RefreshData();
@@ -119,6 +117,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         RefreshData();
         super.onResume();
     }
+
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener1);
@@ -132,6 +131,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
         super.onPause();
     }
+
     private void getDownloadData() {
         try {
             SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
@@ -162,6 +162,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     public void RefreshData() {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -384,13 +385,14 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         i.putExtra("Created", listModelList.get(position).getCreated());
                         i.putExtra("MyDownloads", "1");
                         ctx.startActivity(i);
+                        Properties p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                        p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                        p.putValue("playlistType", "");
+                        BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
 //                        BWSApplication.showToast("Opened", ctx);
-                        /*Properties p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("playlistId", listModelList.get(position).getPlaylistID());
-                    p.putValue("playlistName", listModelList.get(position).getPlaylistName());
-                    p.putValue("playlistType", "");
-                    BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);*/
+
         /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());

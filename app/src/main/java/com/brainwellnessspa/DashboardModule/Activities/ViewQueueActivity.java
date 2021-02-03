@@ -335,6 +335,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 finish();
+                overridePendingTransition(0, 0);
             } else {
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
@@ -347,6 +348,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 finish();
+                overridePendingTransition(0, 0);
             }
 
         });
@@ -1720,6 +1722,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();
+            overridePendingTransition(0, 0);
         }
     }
 

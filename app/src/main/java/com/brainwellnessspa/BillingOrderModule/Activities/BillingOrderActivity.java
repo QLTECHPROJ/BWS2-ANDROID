@@ -42,6 +42,11 @@ public class BillingOrderActivity extends AppCompatActivity {
 
         Properties p = new Properties();
         p.putValue("userId", UserID);
+        p.putValue("plan", "");
+        p.putValue("planStatus", "");
+        p.putValue("planStartDt", "");
+        p.putValue("planExpiryDt", "");
+        p.putValue("planAmount", "");
         BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen);
 
         binding.viewPager.setOffscreenPageLimit(3);

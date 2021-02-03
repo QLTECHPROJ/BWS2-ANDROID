@@ -50,7 +50,6 @@ public class NextSessionViewModel {
     }
 
     public class ResponseData {
-
         @SerializedName("Response")
         @Expose
         private String response;
@@ -130,7 +129,6 @@ public class NextSessionViewModel {
         }
 
         public class Task {
-
             @SerializedName("title")
             @Expose
             private String title;
