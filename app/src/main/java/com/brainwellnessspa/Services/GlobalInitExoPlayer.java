@@ -13,8 +13,11 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -44,6 +47,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.gson.Gson;
@@ -91,7 +95,6 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     Notification notification1;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
-    /*MediaSessionCompat mediaSession = null;*/
 
     public static void callNewPlayerRelease(/*Context ctx*/) {
         if (player != null) {
@@ -601,11 +604,26 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNextActionInCompactView(true);
         }
 
-/*
         try {
             mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
             mediaSession.setActive(true);
             playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+            mediaSession.setPlaybackState(
+                    new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
+                                    // Playback position.
+                                    // Used to update the elapsed time and the progress bar.
+                                    player.getCurrentPosition(),
+                                    // Playback speed.
+                                    // Determines the rate at which the elapsed time changes.
+                                    0)
+                            // isSeekable.
+                            // Adding the SEEK_TO action indicates that seeking is supported
+                            // and makes the seekbar position marker draggable. If this is not
+                            // supplied seek will be disabled but progress will still be shown.
+                            .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
+                            .build()
+            );
+            /*playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
 
             mediaSessionConnector = new MediaSessionConnector(mediaSession);
             mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
@@ -622,11 +640,10 @@ Appointment Audios dddd*/
                             .setExtras(extras)
                             .build();
                 }
-            });
+            });*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-*/
 
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
