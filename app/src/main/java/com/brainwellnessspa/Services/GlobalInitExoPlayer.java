@@ -874,16 +874,21 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
+                        }else{
+                            audioClick = true;
                         }
-                    }
-
-                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    } else {
-                        removeSharepref(ctx);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.apply();
+                        editor.commit();
                     }
                 } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
                     Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
@@ -917,16 +922,21 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
+                        }else{
+                            audioClick = true;
                         }
-                    }
-
-                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    } else {
-                        removeSharepref(ctx);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.apply();
+                        editor.commit();
                     }
                 } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
                     Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
@@ -960,16 +970,21 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
+                        }else{
+                            audioClick = true;
                         }
-                    }
-
-                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    } else {
-                        removeSharepref(ctx);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.apply();
+                        editor.commit();
                     }
                 } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
                     Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
@@ -1003,16 +1018,21 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
+                        }else{
+                            audioClick = true;
                         }
-                    }
-
-                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    } else {
-                        removeSharepref(ctx);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.apply();
+                        editor.commit();
                     }
                 } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
                     Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
@@ -1046,16 +1066,21 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
+                        }else{
+                            audioClick = true;
                         }
-                    }
-
-                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    } else {
-                        removeSharepref(ctx);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.apply();
+                        editor.commit();
                     }
                 } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                     Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
@@ -1089,28 +1114,24 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
+                        }else{
+                            audioClick = true;
                         }
-                    }
-
-                    if (arrayList2.size() != 0) {
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                    } else {
-                        removeSharepref(ctx);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.apply();
+                        editor.commit();
                     }
                 }
-                if (arrayList1.size() != 0) {
-                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
-                    editor.apply();
-                    editor.commit();
-                } else {
+                if (arrayList1.size() == 0) {
                     removeSharepref(ctx);
                 }
             }
