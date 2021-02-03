@@ -610,7 +610,7 @@ public class LikeAudiosFragment extends Fragment {
                 if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        callTransFragss(holder.getAdapterPosition());
+                        callTransFragss(position);
                         notifyDataSetChanged();
                     } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -622,7 +622,7 @@ public class LikeAudiosFragment extends Fragment {
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
                     if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        callTransFragss(holder.getAdapterPosition());
+                        callTransFragss(position);
                         notifyDataSetChanged();
                     } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -631,7 +631,7 @@ public class LikeAudiosFragment extends Fragment {
                     }
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    callTransFragss(holder.getAdapterPosition());
+                    callTransFragss(position);
                     notifyDataSetChanged();
                 }
             });

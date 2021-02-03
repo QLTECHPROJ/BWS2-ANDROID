@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
@@ -20,6 +21,7 @@ import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -33,6 +35,7 @@ import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
@@ -46,6 +49,8 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
     FragmentActivity activity;
     String IsLock = "", IsPlayDisclimer;
     int index = -1;
+    List<String> downloadAudioDetailsList = new ArrayList<>();
+    AudioDatabase DB;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public DownloadAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
@@ -216,7 +221,15 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
     }
 
     private void getMedia(boolean audioPlay, String AudioFlag, int position) {
-        class GetTask extends AsyncTask<Void, Void, Void> {
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
+            downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete");
+        });
+      /*  class GetTask extends AsyncTask<Void, Void, Void> {
             List<String> downloadAudioDetailsList = new ArrayList<>();
 
             @Override
@@ -230,7 +243,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Void aVoid) {*/
                 int pos = 0;
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     if (isDisclaimer == 1) {
@@ -323,11 +336,11 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     }
 
                 }
-                super.onPostExecute(aVoid);
+         /*       super.onPostExecute(aVoid);
             }
         }
         GetTask st = new GetTask();
-        st.execute();
+        st.execute();*/
     }
 
     private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList,boolean audioc) {

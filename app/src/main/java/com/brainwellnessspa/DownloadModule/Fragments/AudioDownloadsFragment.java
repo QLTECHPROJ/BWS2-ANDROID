@@ -84,6 +84,7 @@ public class AudioDownloadsFragment extends Fragment {
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
     //    Runnable UpdateSongTime1;
     View view;
+    List<String> downloadAudioDetailsList = new ArrayList<>();
     AudioDatabase DB;
 //    private Handler handler1;
     private BroadcastReceiver listener = new BroadcastReceiver() {
@@ -514,7 +515,7 @@ public class AudioDownloadsFragment extends Fragment {
                                         if(i<listModelList.size()){
                                             callTransFrag(position, listModelList, true);
                                         }else {
-                                            player.seekTo(holder.getAdapterPosition(), 0);
+                                            player.seekTo(position, 0);
                                             player.setPlayWhenReady(true);
                                             miniPlayer = 1;
                                             SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -624,12 +625,6 @@ public class AudioDownloadsFragment extends Fragment {
                                 deleteAudio(holder.getAdapterPosition());
                             }
                         }
-
-                      /*  if (name.equalsIgnoreCase(listModelList.get(position).getName())) {
-                            BWSApplication.showToast("Currently this audio is in player,so you can't delete this audio as of now", ctx);
-                        } else {
-                            deleteAudio(holder.getAdapterPosition());
-                        }*/
                     } else {
                         deleteAudio(holder.getAdapterPosition());
                     }
@@ -640,7 +635,10 @@ public class AudioDownloadsFragment extends Fragment {
         }
 
         private void getMedia(boolean audioPlay, String AudioFlag, int position) {
-            class GetTask extends AsyncTask<Void, Void, Void> {
+            AudioDatabase.databaseWriteExecutor.execute(() -> {
+                downloadAudioDetailsList =  DB.taskDao().geAllDataBYDownloaded("Complete");
+            });
+           /* class GetTask extends AsyncTask<Void, Void, Void> {
                 List<String> downloadAudioDetailsList = new ArrayList<>();
 
                 @Override
@@ -654,7 +652,7 @@ public class AudioDownloadsFragment extends Fragment {
                 }
 
                 @Override
-                protected void onPostExecute(Void aVoid) {
+                protected void onPostExecute(Void aVoid) {*/
                     int pos = 0;
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -745,11 +743,11 @@ public class AudioDownloadsFragment extends Fragment {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                     }
-                    super.onPostExecute(aVoid);
+                   /* super.onPostExecute(aVoid);
                 }
             }
             GetTask st = new GetTask();
-            st.execute();
+            st.execute();*/
         }
 
         private void callTransFrag(int position, List<DownloadAudioDetails> listModelList, boolean audioc) {
