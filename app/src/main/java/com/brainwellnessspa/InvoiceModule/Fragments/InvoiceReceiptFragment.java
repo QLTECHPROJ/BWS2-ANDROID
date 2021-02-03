@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceDetailModel;
 import com.brainwellnessspa.R;
@@ -49,7 +48,6 @@ public class InvoiceReceiptFragment extends DialogFragment {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.receipt_dialog_background_inset);
         }
-
         return view;
     }
 
@@ -105,7 +103,6 @@ public class InvoiceReceiptFragment extends DialogFragment {
                                 } else if (Flag.equalsIgnoreCase("2")) {
                                     p.putValue("invoiceType", "Appointment");
                                 }
-
                                 p.putValue("invoiceAmount", listModel.getResponseData().getAmount());
                                 p.putValue("invoiceDate", listModel.getResponseData().getInvoiceDate());
                                 p.putValue("invoiceCurrency", "");

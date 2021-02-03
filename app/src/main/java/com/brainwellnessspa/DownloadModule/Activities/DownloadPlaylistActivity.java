@@ -100,7 +100,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-
                 SharedPreferences sharedw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -796,7 +795,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 if (player != null) {
-                                    if(position != positionSaved) {
+                                    if (position != positionSaved) {
                                         int ix = player.getMediaItemCount();
                                         if (ix < listModelList.size()) {
                                             callTransparentFrag(0, ctx, listModelList, "", PlaylistName, true);
@@ -874,7 +873,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                if(holder.getAdapterPosition() != positionSaved) {
+                                if (holder.getAdapterPosition() != positionSaved) {
                                     int ix = player.getMediaItemCount();
                                     if (ix < listModelList.size()) {
                                         callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName, true);
@@ -1012,7 +1011,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 }
                             }
 
-                            if(position != positionSaved) {
+                            if (position != positionSaved) {
                                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                     pos = position;
                                     if (listModelList2.size() != 0) {
@@ -1059,19 +1058,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 }
                             }
                             if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
-                                if(listModelList2.size()!=0) {
+                                if (listModelList2.size() != 0) {
                                     callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
-                                }else{
+                                } else {
                                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                                 }
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
-                        }else {
+                        } else {
 //                            pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
-                         SegmentTag();
+                        SegmentTag();
                     }
                     notifyDataSetChanged();
                     super.onPostExecute(aVoid);

@@ -13,6 +13,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
+import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
+import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
@@ -23,6 +25,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityInvoiceBinding;
+import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
@@ -43,7 +46,7 @@ public class InvoiceActivity extends AppCompatActivity {
     Activity activity;
     public static int invoiceToDashboard = 0;
     public static int invoiceToRecepit = 0;
-
+    Properties p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,29 +65,25 @@ public class InvoiceActivity extends AppCompatActivity {
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen);
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (invoiceToRecepit == 0) {
-                    if (ComeFrom.equalsIgnoreCase("1")) {
-                        invoiceToDashboard = 1;
-                        Intent i = new Intent(context, DashboardActivity.class);
-                        startActivity(i);
-                        finish();
-                    } else {
-                        ComeScreenAccount = 1;
-                        comefromDownload = "0";
-                        finish();
-                    }
-                } else if (invoiceToRecepit == 1) {
-                    ComeScreenAccount = 1;
-                    comefromDownload = "0";
+        binding.llBack.setOnClickListener(view -> {
+            if (invoiceToRecepit == 0) {
+                if (ComeFrom.equalsIgnoreCase("1")) {
+                    invoiceToDashboard = 1;
                     Intent i = new Intent(context, DashboardActivity.class);
                     startActivity(i);
                     finish();
-                }else {
-
+                } else {
+                    ComeScreenAccount = 1;
+                    comefromDownload = "0";
+                    finish();
                 }
+            } else if (invoiceToRecepit == 1) {
+                ComeScreenAccount = 1;
+                comefromDownload = "0";
+                Intent i = new Intent(context, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            } else {
             }
         });
         prepareData();
@@ -103,9 +102,9 @@ public class InvoiceActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<InvoiceListModel> call, Response<InvoiceListModel> response) {
                     try {
-                        if (response.isSuccessful()) {
+                        InvoiceListModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            InvoiceListModel listModel = response.body();
                             appointmentList = new ArrayList<>();
                             memberShipList = new ArrayList<>();
                             appointmentList = listModel.getResponseData().getAppointment();
@@ -115,7 +114,7 @@ public class InvoiceActivity extends AppCompatActivity {
                             binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Appointment"));
                             binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-                            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), InvoiceActivity.this, binding.tabLayout.getTabCount());
+                            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), binding.tabLayout.getTabCount());
                             binding.viewPager.setAdapter(adapter);
                             binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
@@ -123,6 +122,28 @@ public class InvoiceActivity extends AppCompatActivity {
                                 @Override
                                 public void onTabSelected(TabLayout.Tab tab) {
                                     binding.viewPager.setCurrentItem(tab.getPosition());
+                                    p = new Properties();
+                                    p.putValue("userId", UserID);
+                                    if (tab.getPosition() == 0) {
+                                        p.putValue("invoiceType", "Memebrship");
+                                        ArrayList<SegmentMembership> section1 = new ArrayList<>();
+                                        SegmentMembership e = new SegmentMembership();
+                                        Gson gson = new Gson();
+                                        for (int i = 0; i < memberShipList.size(); i++) {
+                                            e.setInvoiceId(memberShipList.get(i).getInvoiceId());
+                                            e.setInvoiceAmount(memberShipList.get(i).getAmount());
+                                            e.setInvoiceDate(memberShipList.get(i).getDate());
+                                            e.setInvoiceCurrency("");
+                                            e.setPlan("");
+                                            e.setPlanStartDt("");
+                                            e.setPlanExpiryDt("");
+                                            section1.add(e);
+                                        }
+                                        p.putValue("membership", gson.toJson(section1));
+                                    } else if (tab.getPosition() == 1) {
+                                        p.putValue("invoiceType", "Appointment");
+                                    }
+                                    BWSApplication.addToSegment("Invoice Screen Viewed", p, CONSTANTS.screen);
                                 }
 
                                 @Override
@@ -170,25 +191,16 @@ public class InvoiceActivity extends AppCompatActivity {
             Intent i = new Intent(context, DashboardActivity.class);
             startActivity(i);
             finish();
-        }else {
+        } else {
 
         }
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
-        private Context myContext;
-        Callback<InvoiceListModel> modelCallback;
 
-        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
+        public TabAdapter(FragmentManager fm, int totalTabs) {
             super(fm);
-            this.myContext = myContext;
-            this.totalTabs = totalTabs;
-        }
-
-        public TabAdapter(FragmentManager fm, Callback<InvoiceListModel> callback, int totalTabs) {
-            super(fm);
-            this.modelCallback = callback;
             this.totalTabs = totalTabs;
         }
 

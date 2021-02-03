@@ -120,7 +120,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int importance = 0;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            importance = NotificationManager.IMPORTANCE_DEFAULT;
+            importance = NotificationManager.IMPORTANCE_HIGH;
         }
         try {
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
@@ -174,7 +174,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationChannel.setLightColor(Color.GRAY);
                 notificationChannel.enableVibration(true);
                 notificationChannel.enableLights(true);
-                notificationChannel.setDescription("YupIt Notification");
+                notificationChannel.setDescription("BWS Notification");
+                notificationChannel.setVibrationPattern(v);
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationBuilder = new NotificationCompat.Builder(this, notificationChannel.getId());
             } else {
@@ -187,25 +188,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             }
 
-            notificationBuilder.setOnlyAlertOnce(true);
-            notificationBuilder.setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL);
+            notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH | NotificationCompat.PRIORITY_MAX);
             notificationBuilder.setSmallIcon(R.drawable.app_logo_transparent);
-            notificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentTitle(title);
-            notificationBuilder.setOngoing(true);
-            notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
+            notificationBuilder.setDefaults(Notification.DEFAULT_ALL | Notification.FLAG_AUTO_CANCEL);
             notificationBuilder.setContentText(message);
             notificationBuilder.setColor(getResources().getColor(R.color.blue));
+            notificationBuilder.setShowWhen(true);
+            notificationBuilder.setCategory(NotificationCompat.CATEGORY_REMINDER);
             notificationBuilder.setAutoCancel(true);
             notificationBuilder.setSound(defaultSoundUri);
-            notificationBuilder.setVibrate(v);
-            notificationBuilder.setContentInfo("Info");
             notificationBuilder.setChannelId(channelId);
             notificationBuilder.setContentIntent(resultPendingIntent);
 
             Notification notification = notificationBuilder.build();
-            notification.flags = Notification.DEFAULT_SOUND;
+            notification.flags = Notification.DEFAULT_ALL;
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
 
             if (notificationManager != null) {
                 notificationManager.notify(Integer.parseInt(m), notification);

@@ -19,7 +19,6 @@ import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
-import com.brainwellnessspa.DownloadModule.Models.DownloadlistModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -44,8 +43,8 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 public class DownloadsActivity extends AppCompatActivity {
     public static boolean ComeFrom_Playlist = false;
     ActivityDownloadsBinding binding;
-    ArrayList<DownloadlistModel.Audio> audioList;
-    ArrayList<DownloadlistModel.Playlist> playlistList;
+    List<DownloadAudioDetails> audioDownloadList;
+    List<DownloadPlaylistDetails> playlistList;
     String UserID, AudioFlag;
     Context ctx;
     Properties p;
@@ -84,29 +83,11 @@ public class DownloadsActivity extends AppCompatActivity {
     }
 
     public void prepareData() {
-     /*   if (BWSApplication.isNetworkConnected(ctx)) {
-            Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
-            listCall.enqueue(new Callback<ProfileViewModel>() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
-                    try {
-                        ProfileViewModel viewModel = response.body();
-                        IsLock = viewModel.getResponseData().getIsLock();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ProfileViewModel> call, Throwable t) {
-                }
-            });
-        }
-*/
         ComeScreenAccount = 0;
         comefromDownload = "1";
         callMembershipMediaPlayer();
+        audioDownloadList = new ArrayList<>();
+        playlistList = new ArrayList<>();
 /*        if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<DownloadlistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID);
@@ -115,10 +96,6 @@ public class DownloadsActivity extends AppCompatActivity {
                 public void onResponse(Call<DownloadlistModel> call, Response<DownloadlistModel> response) {
                     if (response.isSuccessful()) {*/
 //                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-
-        audioList = new ArrayList<>();
-        playlistList = new ArrayList<>();
-
 
 //                        audioList = listModel.getResponseData().getAudio();
 //                        playlistList = listModel.getResponseData().getPlaylist();
@@ -141,10 +118,42 @@ public class DownloadsActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
+                p = new Properties();
+                p.putValue("userId", UserID);
                 if (tab.getPosition() == 0) {
                     p.putValue("tabType", "Audio Tab");
+                    SegmentAudio e = new SegmentAudio();
+                    ArrayList<SegmentAudio> section = new ArrayList<>();
+                    for (int i = 0; i < audioDownloadList.size(); i++) {
+                        e.setAudioId(audioDownloadList.get(i).getID());
+                        e.setAudioName(audioDownloadList.get(i).getName());
+                        e.setMasterCategory(audioDownloadList.get(i).getAudiomastercat());
+                        e.setSubCategory(audioDownloadList.get(i).getAudioSubCategory());
+                        e.setAudioDuration(audioDownloadList.get(i).getAudioDirection());
+                        section.add(e);
+                    }
+                    Gson gson = new Gson();
+                    p.putValue("audios", gson.toJson(section));
+                    BWSApplication.addToSegment("My Download Screen Viewed", p, CONSTANTS.screen);
                 } else if (tab.getPosition() == 1) {
                     p.putValue("tabType", "Playlist Tab");
+                    ArrayList<SegmentPlaylist> section1 = new ArrayList<>();
+                    SegmentPlaylist e = new SegmentPlaylist();
+                    for (int i = 0; i < playlistList.size(); i++) {
+                        e.setPlaylistId(playlistList.get(i).getPlaylistID());
+                        e.setPlaylistName(playlistList.get(i).getPlaylistName());
+                        if (playlistList.get(i).getCreated().equalsIgnoreCase("1")) {
+                            e.setPlaylistType("Created");
+                        } else {
+                            e.setPlaylistType("Default");
+                        }
+                        e.setPlaylistDuration(playlistList.get(i).getTotalDuration());
+                        e.setAudioCount(playlistList.get(i).getTotalAudio());
+                        section1.add(e);
+                    }
+                    Gson gson = new Gson();
+                    p.putValue("playlists", gson.toJson(section1));
+                    BWSApplication.addToSegment("My Download Screen Viewed", p, CONSTANTS.screen);
                 }
             }
 
@@ -255,15 +264,12 @@ public class DownloadsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        p = new Properties();
         prepareData1();
         if (comeDeletePlaylist == 1) {
             prepareData1();
             comeDeletePlaylist = 0;
         }
 
-        p.putValue("userId", UserID);
-        ArrayList<SegmentAudio> section = new ArrayList<>();
         DB.taskDao().geAllDataz("").observe(this, audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
@@ -285,21 +291,11 @@ public class DownloadsActivity extends AppCompatActivity {
                         dad.setIsDownload(audioList.get(i).getIsDownload());
                         dad.setDownloadProgress(audioList.get(i).getDownloadProgress());
                         audioList1.add(dad);
-                        SegmentAudio e = new SegmentAudio();
-                        e.setAudioId(audioList.get(i).getID());
-                        e.setAudioName(audioList.get(i).getName());
-                        e.setMasterCategory(audioList.get(i).getAudiomastercat());
-                        e.setSubCategory(audioList.get(i).getAudioSubCategory());
-                        e.setAudioDuration(audioList.get(i).getAudioDirection());
-                        section.add(e);
-
-                        Gson gson = new Gson();
-                        p.putValue("audios", gson.toJson(section));
+                        audioDownloadList = audioList1;
                     }
                 } else {
                 }
             } else {
-
             }
             DB.taskDao().geAllDataz("").removeObserver(audioListx -> {
             });
@@ -313,8 +309,6 @@ public class DownloadsActivity extends AppCompatActivity {
             if (audioList != null) {
                 if (audioList.size() != 0) {
                     List<DownloadPlaylistDetails> audioList1 = new ArrayList<>();
-
-                    ArrayList<SegmentPlaylist> section1 = new ArrayList<>();
                     for (int i = 0; i < audioList.size(); i++) {
                         DownloadPlaylistDetails detail = new DownloadPlaylistDetails();
                         detail.setPlaylistID(audioList.get(i).getPlaylistID());
@@ -333,23 +327,13 @@ public class DownloadsActivity extends AppCompatActivity {
                         detail.setDownload(audioList.get(i).getDownload());
                         detail.setLike(audioList.get(i).getLike());
                         audioList1.add(detail);
-                        SegmentPlaylist e = new SegmentPlaylist();
-                        e.setPlaylistId(audioList.get(i).getPlaylistID());
-                        e.setPlaylistName(audioList.get(i).getPlaylistName());
-                        e.setPlaylistType(audioList.get(i).getCreated());
-                        e.setPlaylistDuration(audioList.get(i).getTotalhour() + "h " + audioList.get(i).getTotalminute() + "m");
-                        e.setAudioCount(audioList.get(i).getTotalAudio());
-                        section1.add(e);
+                        playlistList = audioList1;
                     }
-
-                    Gson gson = new Gson();
-                    p.putValue("playlists", gson.toJson(section1));
                 } else {
                 }
             } else {
             }
         });
-        BWSApplication.addToSegment("My Download Screen Viewed", p, CONSTANTS.screen);
         super.onResume();
     }
 

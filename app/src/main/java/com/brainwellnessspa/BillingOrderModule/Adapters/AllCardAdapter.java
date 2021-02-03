@@ -22,6 +22,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.BillingOrderModule.Models.SegmentPayment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.BWSApplication;
@@ -31,7 +32,10 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.CardsListLayoutBinding;
+import com.google.gson.Gson;
+import com.segment.analytics.Properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,17 +45,17 @@ import retrofit2.Response;
 public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHolder> {
     private List<CardListModel.ResponseData> listModelList;
     FragmentActivity activity;
-    String card_id, userId;
+    String card_id, UserID;
     ProgressBar ImgV;
     FrameLayout progressBarHolder;
     RecyclerView rvCardList;
     AllCardAdapter adapter;
 
-    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ProgressBar ImgV,
+    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String UserID, ProgressBar ImgV,
                           FrameLayout progressBarHolder, RecyclerView rvCardList) {
         this.listModelList = listModelList;
         this.activity = activity;
-        this.userId = userId;
+        this.UserID = UserID;
         this.ImgV = ImgV;
         this.progressBarHolder = progressBarHolder;
         this.rvCardList = rvCardList;
@@ -87,20 +91,20 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         holder.binding.llAddNewCard.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(activity)) {
                 BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-                Call<CardListModel> listCall = APIClient.getClient().getChangeCard(userId, listModel.getCustomer());
+                Call<CardListModel> listCall = APIClient.getClient().getChangeCard(UserID, listModel.getCustomer());
                 listCall.enqueue(new Callback<CardListModel>() {
                     @Override
                     public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
                         try {
-                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                             CardListModel cardListModel = response.body();
                             if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
+                                BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                                 if (cardListModel.getResponseData().size() == 0) {
                                     rvCardList.setAdapter(null);
                                     rvCardList.setVisibility(View.GONE);
                                 } else {
                                     rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, UserID, ImgV, progressBarHolder, rvCardList);
                                     rvCardList.setAdapter(adapter);
                                 }
                                 BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
@@ -154,7 +158,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                     case MotionEvent.ACTION_UP:
                         if (BWSApplication.isNetworkConnected(activity)) {
                             BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-                            Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
+                            Call<CardModel> listCall = APIClient.getClient().getRemoveCard(UserID, listModel.getCustomer());
                             listCall.enqueue(new Callback<CardModel>() {
                                 @Override
                                 public void onResponse(Call<CardModel> call, Response<CardModel> response) {
@@ -219,7 +223,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     private void getCardList() {
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-            Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
+            Call<CardListModel> listCall = APIClient.getClient().getCardLists(UserID);
             listCall.enqueue(new Callback<CardListModel>() {
                 @Override
                 public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
@@ -233,7 +237,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                     rvCardList.setVisibility(View.GONE);
                                 } else {
                                     rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, UserID, ImgV, progressBarHolder, rvCardList);
                                     rvCardList.setAdapter(adapter);
                                 }
 

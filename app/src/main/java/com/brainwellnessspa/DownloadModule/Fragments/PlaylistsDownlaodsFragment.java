@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -241,9 +239,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
     public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
         FragmentActivity ctx;
-        List<DownloadAudioDetails> playlistWiseAudioDetails;
         List<DownloadAudioDetails> oneAudioDetailsList;
-        List<DownloadPlaylistDetails> playlistList;
         LinearLayout llError;
         TextView tvFound;
         RecyclerView rvDownloadsList;
@@ -642,9 +638,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
-
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId));
-
             deletePlaylist(PlaylistId);
           /*  class DeleteMedia extends AsyncTask<Void, Void, Void> {
                 @Override
@@ -667,7 +661,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         private void deletePlaylist(String playlistId) {
-
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId));
             GetAllMedia(ctx);
          /*   class DeleteMedia extends AsyncTask<Void, Void, Void> {

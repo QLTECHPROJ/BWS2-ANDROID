@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -37,7 +36,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 
 public class LikeActivity extends AppCompatActivity {
@@ -100,7 +98,6 @@ public class LikeActivity extends AppCompatActivity {
                         .add(R.id.flContainer, fragment)
                         .commit();
                 comefromDownload = "1";
-
             }
         } catch (Exception e) {
             e.printStackTrace();

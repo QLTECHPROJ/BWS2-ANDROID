@@ -26,6 +26,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
+import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
+import com.brainwellnessspa.ResourceModule.Models.SegmentResource;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
@@ -55,7 +58,7 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
-    String UserID, Category = "";
+    String UserID, Category = "", tabFlag = "1";
     Activity activity;
     int CurruntTab = 0;
     Dialog dialogBox;
@@ -69,12 +72,15 @@ public class ResourceActivity extends AppCompatActivity {
     ArrayList<String> section;
     GsonBuilder gsonBuilder;
     Gson gson;
+    Context ctx;
+    ResourceListModel resourceListModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource);
         activity = ResourceActivity.this;
+        ctx = ResourceActivity.this;
         binding.llBack.setOnClickListener(view -> {
             ComeScreenAccount = 1;
             comefromDownload = "0";
@@ -102,22 +108,66 @@ public class ResourceActivity extends AppCompatActivity {
                 p = new Properties();
                 p.putValue("userId", UserID);
                 if (tab.getPosition() == 0) {
+                    tabFlag = CONSTANTS.FLAG_ONE;
                     p.putValue("resourceType", "Audio Books");
                     p4.putValue("resourceType", "Audio Books");
                 } else if (tab.getPosition() == 1) {
+                    tabFlag = CONSTANTS.FLAG_TWO;
                     p.putValue("resourceType", "Podcasts");
                     p4.putValue("resourceType", "Podcasts");
                 } else if (tab.getPosition() == 2) {
+                    tabFlag = CONSTANTS.FLAG_THREE;
                     p.putValue("resourceType", "Apps");
                     p4.putValue("resourceType", "Apps");
                 } else if (tab.getPosition() == 3) {
+                    tabFlag = CONSTANTS.FLAG_FOUR;
                     p.putValue("resourceType", "Websites");
                     p4.putValue("resourceType", "Websites");
                 } else if (tab.getPosition() == 4) {
+                    tabFlag = CONSTANTS.FLAG_FIVE;
                     p.putValue("resourceType", "Documentaries");
                     p4.putValue("resourceType", "Documentaries");
                 }
-                BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen);
+
+                Call<ResourceListModel> listCalls = APIClient.getClient().getResourcLists(UserID, tabFlag, Category);
+                listCalls.enqueue(new Callback<ResourceListModel>() {
+                    @Override
+                    public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                        try {
+                            ResourceListModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                resourceListModel = listModel;
+                                ArrayList<String> allResourceType = new ArrayList<>();
+                                Gson gson = new Gson();
+                                allResourceType.add("Audio Books");
+                                allResourceType.add("Podcasts");
+                                allResourceType.add("Apps");
+                                allResourceType.add("Websites");
+                                allResourceType.add("Documentaries");
+                                p.putValue("allResourceType", gson.toJson(allResourceType));
+                                ArrayList<SegmentResource> section1 = new ArrayList<>();
+                                SegmentResource e = new SegmentResource();
+                                Gson gsons = new Gson();
+                                for (int i = 0; i < resourceListModel.getResponseData().size(); i++) {
+                                    e.setResourceId(resourceListModel.getResponseData().get(i).getID());
+                                    e.setResourceName(resourceListModel.getResponseData().get(i).getTitle());
+                                    e.setAuthor(resourceListModel.getResponseData().get(i).getAuthor());
+                                    e.setMasterCategory(resourceListModel.getResponseData().get(i).getMasterCategory());
+                                    section1.add(e);
+                                }
+                                p.putValue("resources", gsons.toJson(section1));
+                                BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    }
+                });
+
             }
 
             @Override
@@ -164,7 +214,7 @@ public class ResourceActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            prepareData(activity, rvFilterList, dialogBox, tvAll, ivFilter);
+            prepareData(rvFilterList, dialogBox, tvAll, ivFilter);
             tvAll.setOnClickListener(view1 -> {
                 Category = "";
                 setAdapter();
@@ -176,7 +226,7 @@ public class ResourceActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        prepareData(activity, rvFilterList, dialogBox, tvAll, ivFilter);
+        prepareData(rvFilterList, dialogBox, tvAll, ivFilter);
         super.onResume();
     }
 
@@ -189,7 +239,7 @@ public class ResourceActivity extends AppCompatActivity {
 
     private void setAdapter() {
         if (BWSApplication.isNetworkConnected(activity)) {
-            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
+            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), binding.tabLayout.getTabCount());
             binding.viewPager.setAdapter(adapter);
             binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
             binding.viewPager.setCurrentItem(CurruntTab);
@@ -198,48 +248,44 @@ public class ResourceActivity extends AppCompatActivity {
         }
     }
 
-    void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox, TextView tvAll, ImageView ivFilter) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            Call<ResourceFilterModel> listCall = APIClient.getClient().getResourcFilterLists(UserID);
-            listCall.enqueue(new Callback<ResourceFilterModel>() {
-                @Override
-                public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            ResourceFilterModel listModel = response.body();
-                            ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox, tvAll, ivFilter);
+    void prepareData(RecyclerView rvFilterList, Dialog dialogBox, TextView tvAll, ImageView ivFilter) {
+        try {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                Call<ResourceFilterModel> listCall = APIClient.getClient().getResourcFilterLists(UserID);
+                listCall.enqueue(new Callback<ResourceFilterModel>() {
+                    @Override
+                    public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
+                        ResourceFilterModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), dialogBox, tvAll, ivFilter);
                             rvFilterList.setAdapter(adapter);
                             for (int i = 0; i < listModel.getResponseData().size(); i++) {
                                 section.add(listModel.getResponseData().get(i).getCategoryName());
                             }
                             p4.putValue("allMasterCategory", gson.toJson(section));
                         }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
 
-                @Override
-                public void onFailure(Call<ResourceFilterModel> call, Throwable t) {
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
+                    @Override
+                    public void onFailure(Call<ResourceFilterModel> call, Throwable t) {
+                    }
+                });
+            } else {
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public class ResourceFilterAdapter extends RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder> {
-        Context ctx;
         Dialog dialogBox;
         private List<ResourceFilterModel.ResponseData> listModel;
         private TextView tvAll;
         ImageView ivFilter;
 
-        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox, TextView tvAll,
+        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Dialog dialogBox, TextView tvAll,
                                      ImageView ivFilter) {
             this.listModel = listModel;
-            this.ctx = ctx;
             this.dialogBox = dialogBox;
             this.tvAll = tvAll;
             this.ivFilter = ivFilter;
@@ -294,11 +340,9 @@ public class ResourceActivity extends AppCompatActivity {
 
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
-        private Context myContext;
 
-        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
+        public TabAdapter(FragmentManager fm, int totalTabs) {
             super(fm);
-            this.myContext = myContext;
             this.totalTabs = totalTabs;
         }
 

@@ -918,7 +918,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     i.putExtra("ReminderId", "");
                                     i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
                                     i.putExtra("Time", listModel.getResponseData().getReminderTime());
+                                    i.putExtra("IsCheck", listModel.getResponseData().getIsReminder());
                                     i.putExtra("Day", listModel.getResponseData().getReminderDay());
+                                    i.putExtra("ReminderDay", "");
                                     startActivity(i);
                                 } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), PorterDuff.Mode.SRC_IN);

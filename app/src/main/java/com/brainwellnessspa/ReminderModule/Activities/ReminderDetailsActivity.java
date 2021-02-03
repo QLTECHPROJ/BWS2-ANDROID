@@ -31,14 +31,17 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.BillingOrderModule.Models.SegmentPayment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.RemiderDetailsModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderStatusModel;
+import com.brainwellnessspa.ReminderModule.Models.SegmentReminder;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityReminderDetailsBinding;
 import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding;
+import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
@@ -76,10 +79,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
         binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());
 
-        p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen);
-
         /*ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(binding.rvReminderDetails);*/
 
@@ -97,6 +96,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 i.putExtra("Time", "");
                 i.putExtra("Day", "");
                 i.putExtra("ReminderDay", "");
+                i.putExtra("IsCheck", "");
                 startActivity(i);
                 finish();
             } else {
@@ -132,14 +132,35 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             binding.rvReminderDetails.setAdapter(adapter);
                             binding.btnAddReminder.setVisibility(View.VISIBLE);
                             showTooltips();
+                            p = new Properties();
+                            p.putValue("userId", UserID);
                             if (listModel.getResponseData().size() == 0) {
                                 binding.llError.setVisibility(View.VISIBLE);
                                 binding.rvReminderDetails.setVisibility(View.GONE);
+                                p.putValue("reminders ", "");
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvReminderDetails.setVisibility(View.VISIBLE);
+                                ArrayList<SegmentReminder> section1 = new ArrayList<>();
+                                SegmentReminder e = new SegmentReminder();
+                                Gson gson = new Gson();
+                                for (int i = 0; i < listModel.getResponseData().size(); i++) {
+                                    e.setReminderId(listModel.getResponseData().get(i).getReminderId());
+                                    e.setPlaylistId(listModel.getResponseData().get(i).getPlaylistId());
+                                    e.setPlaylistName(listModel.getResponseData().get(i).getPlaylistName());
+                                    e.setPlaylistType("");
+                                    if (listModel.getResponseData().get(i).getIsCheck().equalsIgnoreCase("1")) {
+                                        e.setReminderStatus("on");
+                                    } else {
+                                        e.setReminderStatus("off");
+                                    }
+                                    e.setReminderTime(listModel.getResponseData().get(i).getReminderTime());
+                                    e.setReminderDay(listModel.getResponseData().get(i).getReminderDay());
+                                    section1.add(e);
+                                }
+                                p.putValue("reminders ", gson.toJson(section1));
                             }
-
+                            BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen);
                             if (remiderIds.size() == 0) {
                                 binding.llSelectAll.setVisibility(View.GONE);
                                 binding.btnAddReminder.setVisibility(View.VISIBLE);
@@ -190,8 +211,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
                             try {
-                                if (response.isSuccessful()) {
-                                    DeleteRemiderModel model = response.body();
+                                DeleteRemiderModel model = response.body();
+                                if (model.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     remiderIds.clear();
                                     BWSApplication.showToast(model.getResponseMessage(), ctx);
                                     dialog.dismiss();
@@ -447,6 +468,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 i.putExtra("Time", model.get(position).getReminderTime());
                 i.putExtra("Day", model.get(position).getRDay());
                 i.putExtra("ReminderDay", model.get(position).getReminderDay());
+                i.putExtra("IsCheck", model.get(position).getIsCheck());
                 startActivity(i);
                 finish();
             });

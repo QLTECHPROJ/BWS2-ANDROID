@@ -68,9 +68,9 @@ public class AppointmentInvoiceFragment extends Fragment {
             appointmentList = getArguments().getParcelableArrayList("appointmentInvoiceFragment");
         }
 
-        Properties p = new Properties();
+      /*  Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Appointment Invoice  Screen Viewed", p, CONSTANTS.screen);
+        BWSApplication.addToSegment("Appointment Invoice  Screen Viewed", p, CONSTANTS.screen);*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
@@ -101,7 +101,7 @@ public class AppointmentInvoiceFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.GONE);
             binding.rvAIList.setVisibility(View.VISIBLE);
-            AppointmentInvoiceAdapter adapter = new AppointmentInvoiceAdapter(historyList, getActivity());
+            AppointmentInvoiceAdapter adapter = new AppointmentInvoiceAdapter(historyList);
             binding.rvAIList.setAdapter(adapter);
         }
     }
@@ -109,11 +109,9 @@ public class AppointmentInvoiceFragment extends Fragment {
 
     public class AppointmentInvoiceAdapter extends RecyclerView.Adapter<AppointmentInvoiceAdapter.MyViewHolder> {
         private List<InvoiceListModel.Appointment> listModelList;
-        Context ctx;
 
-        public AppointmentInvoiceAdapter(List<InvoiceListModel.Appointment> listModelList, Context ctx) {
+        public AppointmentInvoiceAdapter(List<InvoiceListModel.Appointment> listModelList) {
             this.listModelList = listModelList;
-            this.ctx = ctx;
         }
 
         @NonNull
@@ -136,8 +134,6 @@ public class AppointmentInvoiceFragment extends Fragment {
                 receiptFragment.setCancelable(true);
                 receiptFragment.setValues(listModelList.get(position).getInvoiceNumber(), "2");
                 receiptFragment.show(fragmentManager, "receipt");
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
             });
 
             holder.binding.llDownloads.setVisibility(View.GONE);

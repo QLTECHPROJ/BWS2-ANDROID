@@ -68,9 +68,9 @@ public class MembershipInvoiceFragment extends Fragment {
             memberShipList = getArguments().getParcelableArrayList("membershipInvoiceFragment");
         }
 
-        Properties p = new Properties();
+     /*   Properties p = new Properties();
         p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Membership Invoice Screen Viewed", p, CONSTANTS.screen);
+        BWSApplication.addToSegment("Membership Invoice Screen Viewed", p, CONSTANTS.screen);*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
@@ -100,18 +100,16 @@ public class MembershipInvoiceFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.GONE);
             binding.rvAIList.setVisibility(View.VISIBLE);
-            MembershipInvoiceAdapter adapter = new MembershipInvoiceAdapter(historyList, getActivity());
+            MembershipInvoiceAdapter adapter = new MembershipInvoiceAdapter(historyList);
             binding.rvAIList.setAdapter(adapter);
         }
     }
 
     public class MembershipInvoiceAdapter extends RecyclerView.Adapter<MembershipInvoiceAdapter.MyViewHolder> {
         private List<InvoiceListModel.MemberShip> listModelList;
-        Context ctx;
 
-        public MembershipInvoiceAdapter(List<InvoiceListModel.MemberShip> listModelList, Context ctx) {
+        public MembershipInvoiceAdapter(List<InvoiceListModel.MemberShip> listModelList) {
             this.listModelList = listModelList;
-            this.ctx = ctx;
         }
 
         @NonNull

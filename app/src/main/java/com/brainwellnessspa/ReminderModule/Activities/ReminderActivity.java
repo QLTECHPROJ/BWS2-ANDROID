@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.Arrays;
 
 import androidx.annotation.NonNull;
@@ -62,7 +63,7 @@ public class ReminderActivity extends AppCompatActivity {
     Context context;
     int pos;
     Dialog dialog;
-    String ReminderDay, ReminderId = "", am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
+    String IsCheck = "", ReminderDay = "", ReminderId = "", am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime = "";
     List<String> SelectedDay, remiderDays = new ArrayList<>();
     String ReminderDaySelected, ReminderDayTemp;
     private int mHour, mMinute;
@@ -87,12 +88,14 @@ public class ReminderActivity extends AppCompatActivity {
             ReminderId = getIntent().getStringExtra("ReminderId");
             ReminderDay = getIntent().getStringExtra("ReminderDay");
         }
-
+        if (getIntent().getExtras() != null) {
+            IsCheck = getIntent().getStringExtra("Time");
+        }
         if (getIntent().getExtras() != null) {
             Time = getIntent().getStringExtra("Time");
             Day = getIntent().getStringExtra("Day");
             String[] myArray = Day.split(",");
-            System.out.println("Contents of the array ::"+ Arrays.toString(myArray));
+            System.out.println("Contents of the array ::" + Arrays.toString(myArray));
             SelectedDay = Arrays.asList(myArray);
         }
 
@@ -100,13 +103,17 @@ public class ReminderActivity extends AppCompatActivity {
         Log.e("SelectedDaySelectedDay", TextUtils.join(",", SelectedDay));
         Properties p = new Properties();
         p.putValue("userId", UserID);
-        p.putValue("reminderId", "");
-        p.putValue("playlistId", "");
-        p.putValue("playlistName", "");
+        p.putValue("reminderId", ReminderId);
+        p.putValue("playlistId", PlaylistID);
+        p.putValue("playlistName", PlaylistName);
         p.putValue("playlistType", "");
-        p.putValue("reminderStatus", "");
-        p.putValue("reminderTime", "");
-        p.putValue("reminderDay", "");
+        if (IsCheck.equalsIgnoreCase("1")) {
+            p.putValue("reminderStatus", "on");
+        } else {
+            p.putValue("reminderStatus", "off");
+        }
+        p.putValue("reminderTime", Time);
+        p.putValue("reminderDay", ReminderDay);
         BWSApplication.addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         RefreshButton();
         ShowPlaylistName();

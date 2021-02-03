@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.AddPayment.AddPaymentActivity;
 import com.brainwellnessspa.AddPayment.Model.AddCardModel;
+import com.brainwellnessspa.BillingOrderModule.Models.SegmentPayment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
@@ -41,6 +42,7 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityCheckoutPaymentBinding;
 import com.brainwellnessspa.databinding.YeardialogBinding;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 import com.stripe.android.Stripe;
@@ -110,14 +112,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding1 = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.yeardialog, null, false);
         d.setContentView(binding1.getRoot());
-
-        try {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
 
        /* binding.etNumber.addTextChangedListener(addCardTextWatcher);
@@ -266,14 +260,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 Properties p = new Properties();
                                                 p.putValue("userId", UserID);
                                                 BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
-
-                                                /*Properties p = new Properties();
-                                                p.putValue("cardNumber", binding.etNumber.getText().toString());
-                                                p.putValue("cardHolderName", binding.etName.getText().toString());
-                                                p.putValue("cardType", "");
-                                                p.putValue("cardExpiry", binding.textMonth.getText().toString());
-                                                p.putValue("mobileNo", MobileNo);
-                                                BWSApplication.addToSegment("Payment Info Added", p, CONSTANTS.track);*/
                                                 GetAllMedia();
                                                 Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
                                                 startActivity(i);
