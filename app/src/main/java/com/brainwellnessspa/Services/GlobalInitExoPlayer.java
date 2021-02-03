@@ -19,6 +19,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -604,25 +605,27 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNextActionInCompactView(true);
         }
 
-        try {
+        /*try {
             mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
             mediaSession.setActive(true);
             playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
             mediaSession.setPlaybackState(
                     new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
-                                    // Playback position.
-                                    // Used to update the elapsed time and the progress bar.
-                                    player.getCurrentPosition(),
-                                    // Playback speed.
-                                    // Determines the rate at which the elapsed time changes.
-                                    0)
+                            // Playback position.
+                            // Used to update the elapsed time and the progress bar.
+                            player.getCurrentWindowIndex(),
+                            // Playback speed.
+                            // Determines the rate at which the elapsed time changes.
+                            1)
                             // isSeekable.
                             // Adding the SEEK_TO action indicates that seeking is supported
                             // and makes the seekbar position marker draggable. If this is not
                             // supplied seek will be disabled but progress will still be shown.
                             .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
-                            .build()
-            );
+                            .build());
+            } catch (Exception e) {
+            e.printStackTrace();
+        }*/
             /*playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
 
             mediaSessionConnector = new MediaSessionConnector(mediaSession);
@@ -641,9 +644,7 @@ Appointment Audios dddd*/
                             .build();
                 }
             });*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
