@@ -1053,12 +1053,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).observe(getActivity(), countx -> {
 //            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
                 count = countx.size();
-//                if (downloadPlaylistDetailsList.size() != 0) {
+                if (downloadPlaylistDetailsList.size() != 0) {
                     if (count <= totalAudio) {
                         if (count == totalAudio) {
                             binding.pbProgress.setVisibility(View.GONE);
                             binding.ivDownloads.setVisibility(View.VISIBLE);
-                            enableDisableDownload(false, "orange");
+//                            enableDisableDownload(false, "orange");
                             DatabaseClient
                                     .getInstance(getActivity())
                                     .getaudioDatabase()
@@ -1072,7 +1072,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             binding.pbProgress.setVisibility(View.VISIBLE);
                             binding.ivDownloads.setVisibility(View.GONE);
                             binding.pbProgress.setProgress(downloadProgress1);
-                            enableDisableDownload(false, "orange");
+//                            enableDisableDownload(false, "orange");
 //                        getMediaByPer(playlistID, totalAudio);
 //                             handler1.postDelayed(UpdateSongTime1, 500);
                         }
@@ -1083,10 +1083,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         binding.ivDownloads.setVisibility(View.VISIBLE);
 //                        handler1.removeCallbacks(UpdateSongTime1);
                     }
-//                } else {
-//                    binding.pbProgress.setVisibility(View.GONE);
-//                    binding.ivDownloads.setVisibility(View.VISIBLE);
-//                }
+                } else {
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                }
                 callObserveMethodGetAllMedia();
             });
         } catch (Exception e) {
