@@ -607,8 +607,8 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNextActionInCompactView(true);
         }
 
-        /*try {
-            mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
+        try {
+           /* mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
             mediaSession.setActive(true);
             playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
             mediaSession.setPlaybackState(
@@ -625,9 +625,8 @@ Appointment Audios dddd*/
                             // and makes the seekbar position marker draggable. If this is not
                             // supplied seek will be disabled but progress will still be shown.
                             .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
-                            .build());
-
-            mediaSession.setMetadata(
+                            .build());*/
+           /* mediaSession.setMetadata(
                     MediaMetadataCompat.fromMediaMetadata(new MediaMetadataCompat.Builder()
                             // Title.
                             .putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
@@ -643,11 +642,11 @@ Appointment Audios dddd*/
                             // indicator won't be shown on the seekbar.
                             .putLong(MediaMetadata.METADATA_KEY_DURATION, Long.valueOf(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDuration())) // 4
 
-                            .build()));
+                            .build()));*/
 
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
             /*playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
 
             mediaSessionConnector = new MediaSessionConnector(mediaSession);
