@@ -450,28 +450,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         DB.taskDao()
                                 .getAllPlaylist1().removeObserver(audioList -> {
                         });
-                        getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
-                        GetPlaylistMedia(listModelList.get(position).getPlaylistID());
-                        Properties p = new Properties();
-                        p.putValue("userId", UserID);
-                        p.putValue("playlistId", listModelList.get(position).getPlaylistID());
-                        p.putValue("playlistName", listModelList.get(position).getPlaylistName());
-                        if (listModelList.get(position).getCreated().equalsIgnoreCase("1")) {
-                            p.putValue("playlistType", "Created");
-                        } else if (listModelList.get(position).getCreated().equalsIgnoreCase("0")) {
-                            p.putValue("playlistType", "Default");
-                        }
-                        p.putValue("audioCount", listModelList.get(position).getTotalAudio());
-                        p.putValue("playlistDescription", listModelList.get(position).getPlaylistDesc());
-                        if (listModelList.get(position).getTotalhour().equalsIgnoreCase("")) {
-                            p.putValue("playlistDuration", "0h " + listModelList.get(position).getTotalminute() + "m");
-                        } else if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
-                            p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h 0m");
-                        } else {
-                            p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
-                        }
-                        p.putValue("source", "Downloaded Playlists");
-                        BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
+                        getDownloadDataForDelete(listModelList.get(position).getPlaylistID(),position);
 //                        } catch (Exception e) {
 //                        }
                         notifyItemRemoved(position);
@@ -485,7 +464,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             });
         }
 
-        private void getDownloadDataForDelete(String playlistID) {
+        private void getDownloadDataForDelete(String playlistID, int position) {
             List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
             try {
                 SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
@@ -540,6 +519,28 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         PRDownloader.cancel(downloadIdOne);
                         filename = "";
                     }
+
+                    GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                    p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                    if (listModelList.get(position).getCreated().equalsIgnoreCase("1")) {
+                        p.putValue("playlistType", "Created");
+                    } else if (listModelList.get(position).getCreated().equalsIgnoreCase("0")) {
+                        p.putValue("playlistType", "Default");
+                    }
+                    p.putValue("audioCount", listModelList.get(position).getTotalAudio());
+                    p.putValue("playlistDescription", listModelList.get(position).getPlaylistDesc());
+                    if (listModelList.get(position).getTotalhour().equalsIgnoreCase("")) {
+                        p.putValue("playlistDuration", "0h " + listModelList.get(position).getTotalminute() + "m");
+                    } else if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+                        p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h 0m");
+                    } else {
+                        p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+                    }
+                    p.putValue("source", "Downloaded Playlists");
+                    BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

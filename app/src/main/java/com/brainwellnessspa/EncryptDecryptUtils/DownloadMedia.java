@@ -68,6 +68,7 @@ public class DownloadMedia implements OnDownloadListener {
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
         BWSApplication.showToast("Downloading file...", ctx);
+        Log.e("Downloading file..",String.valueOf(downloadProgress));
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
                 "Audio_database")
@@ -326,6 +327,7 @@ public class DownloadMedia implements OnDownloadListener {
                 encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
                 BWSApplication.showToast("Download Complete...", ctx);
+                Log.e("Downloading file..",String.valueOf(downloadProgress));
                 downloadProgress = 0;
                 filename = "";
                 isDownloading = false;

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
@@ -664,7 +665,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         ImageView ivOptions = view.findViewById(R.id.ivOptions);
                         ImageView ivGif = view.findViewById(R.id.ivGif);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        Glide.with(activity).load(R.drawable.highlight_main_player).asGif().into(ivGif);
+                        Glide.with(activity).load(R.raw.highlight_main_player).placeholder(R.drawable.highlight_main_player).into(ivGif);
 //                        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
 //                        Glide.with(activity).load(R.raw.highlight_main_player).into(imageViewTarget);
                         final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);

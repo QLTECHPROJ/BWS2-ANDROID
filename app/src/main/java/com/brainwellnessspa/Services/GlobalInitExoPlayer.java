@@ -10,12 +10,14 @@ import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
+import android.media.MediaMetadata;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -617,13 +619,33 @@ Appointment Audios dddd*/
                             // Playback speed.
                             // Determines the rate at which the elapsed time changes.
                             1)
+
                             // isSeekable.
                             // Adding the SEEK_TO action indicates that seeking is supported
                             // and makes the seekbar position marker draggable. If this is not
                             // supplied seek will be disabled but progress will still be shown.
                             .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
                             .build());
-            } catch (Exception e) {
+
+            mediaSession.setMetadata(
+                    MediaMetadataCompat.fromMediaMetadata(new MediaMetadataCompat.Builder()
+                            // Title.
+                            .putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
+                            // Artist.
+                            // Could also be the channel name or TV series.
+                            .putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
+                            // Album art.
+                            // Could also be a screenshot or hero image for video content
+                            // The URI scheme needs to be "content", "file", or "android.resource".
+                            .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioFile())
+                            // Duration.
+                            // If duration isn't set, such as for live broadcasts, then the progress
+                            // indicator won't be shown on the seekbar.
+                            .putLong(MediaMetadata.METADATA_KEY_DURATION, Long.valueOf(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDuration())) // 4
+
+                            .build()));
+
+        } catch (Exception e) {
             e.printStackTrace();
         }*/
             /*playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
@@ -644,7 +666,6 @@ Appointment Audios dddd*/
                             .build();
                 }
             });*/
-
 
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
@@ -739,8 +760,8 @@ Appointment Audios dddd*/
 
         playerNotificationManager.setUseNextAction(false);
         playerNotificationManager.setUsePreviousAction(false);
-        playerNotificationManager.setUseNextActionInCompactView(true);
-        playerNotificationManager.setUsePreviousActionInCompactView(true);
+        playerNotificationManager.setUseNextActionInCompactView(false);
+        playerNotificationManager.setUsePreviousActionInCompactView(false);
         ControlDispatcher controlDispatcher = new DefaultControlDispatcher(0, 0);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
         playerNotificationManager.setSmallIcon(R.drawable.noti_app_logo_icon);
@@ -875,7 +896,7 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
-                        }else{
+                        } else {
                             audioClick = true;
                         }
                         String jsonx = gson.toJson(arrayList1);
@@ -923,7 +944,7 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
-                        }else{
+                        } else {
                             audioClick = true;
                         }
                         String jsonx = gson.toJson(arrayList1);
@@ -971,7 +992,7 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
-                        }else{
+                        } else {
                             audioClick = true;
                         }
                         String jsonx = gson.toJson(arrayList1);
@@ -1019,7 +1040,7 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
-                        }else{
+                        } else {
                             audioClick = true;
                         }
                         String jsonx = gson.toJson(arrayList1);
@@ -1067,7 +1088,7 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
-                        }else{
+                        } else {
                             audioClick = true;
                         }
                         String jsonx = gson.toJson(arrayList1);
@@ -1115,7 +1136,7 @@ Appointment Audios dddd*/
                         if (player != null) {
                             callNewPlayerRelease();
                             audioClick = true;
-                        }else{
+                        } else {
                             audioClick = true;
                         }
                         String jsonx = gson.toJson(arrayList1);
