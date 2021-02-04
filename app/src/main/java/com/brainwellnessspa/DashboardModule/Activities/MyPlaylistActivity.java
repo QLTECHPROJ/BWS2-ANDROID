@@ -66,6 +66,8 @@ import retrofit2.Response;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.RefreshIconData;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.hundredVolume;
 
 public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
@@ -647,6 +649,31 @@ public class MyPlaylistActivity extends AppCompatActivity {
     }
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
+
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
+        p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
+        p.putValue("playlistDescription", downloadPlaylistDetails.getPlaylistDesc());
+        if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("1")) {
+            p.putValue("playlistType", "Created");
+        } else if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("0")) {
+            p.putValue("playlistType", "Default");
+        }
+
+        if (downloadPlaylistDetails.getTotalhour().equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.getTotalminute() + "m");
+        } else if (downloadPlaylistDetails.getTotalminute().equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h 0m");
+        } else {
+            p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h " + downloadPlaylistDetails.getTotalminute() + "m");
+        }
+        p.putValue("audioCount", downloadPlaylistDetails.getTotalAudio());
+        p.putValue("source", "Downloaded Playlists");
+        p.putValue("playerType", "Mini");
+        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("sound", String.valueOf(hundredVolume));
+        BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
         for (int i = 0; i < playlistSongs.size(); i++) {
             DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
             downloadAudioDetails.setID(playlistSongs.get(i).getID());
@@ -657,15 +684,28 @@ public class MyPlaylistActivity extends AppCompatActivity {
             downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
             downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
             downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
+            downloadAudioDetails.setPlaylistId(PlaylistID);
             downloadAudioDetails.setDownload("1");
             downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
             downloadAudioDetails.setIsSingle("0");
-            downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
-            downloadAudioDetails.setIsDownload("pending");
-            downloadAudioDetails.setDownloadProgress(0);
+            if (downloadAudioDetailsList.size() != 0) {
+                for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
+                    if (playlistSongs.get(i).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                        downloadAudioDetails.setIsDownload("Complete");
+                        downloadAudioDetails.setDownloadProgress(100);
+                        break;
+                    } else {
+                        downloadAudioDetails.setIsDownload("pending");
+                        downloadAudioDetails.setDownloadProgress(0);
+                    }
+
+                }
+            }else{
+                downloadAudioDetails.setIsDownload("pending");
+                downloadAudioDetails.setDownloadProgress(0);
+            }
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
         }
-        enableDisableDownload(false, "orange");
         /*class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {

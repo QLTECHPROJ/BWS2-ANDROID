@@ -1421,7 +1421,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (!isDownloading) {
                     isDownloading = true;
                     DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                    downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+                    downloadMedia.encrypt1(url, name, downloadPlaylistId);
                 }
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
@@ -1575,7 +1575,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void savePlaylist() {
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
+//        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
 //        enableDisableDownload(false, "orange");
         GetPlaylistDetail(PlaylistID);
 //        GetMedia();
@@ -1652,9 +1652,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
 
                 }
+            }else{
+                downloadAudioDetails.setIsDownload("pending");
+                downloadAudioDetails.setDownloadProgress(0);
             }
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
         }
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
+
         savePlaylist();
         /*   class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
