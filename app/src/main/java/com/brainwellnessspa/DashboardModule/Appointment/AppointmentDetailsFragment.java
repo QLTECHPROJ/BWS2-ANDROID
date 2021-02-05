@@ -107,9 +107,9 @@ public class AppointmentDetailsFragment extends Fragment {
 
     public void RefreshData() {
         try {
-             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-           globalInitExoPlayer.UpdateMiniPlayer(getActivity());
-           SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+            globalInitExoPlayer.UpdateMiniPlayer(getActivity());
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new MiniPlayerFragment();
@@ -118,17 +118,17 @@ public class AppointmentDetailsFragment extends Fragment {
                         .add(R.id.flContainer, fragment)
                         .commit();
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 290);
+                params.setMargins(0, 0, 0, 310);
                 binding.llViewOne.setLayoutParams(params);
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 290);
+                params.setMargins(0, 0, 0, 310);
                 binding.llViewTwo.setLayoutParams(params);
             } else {
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 130);
+                params.setMargins(0, 0, 0, 290);
                 binding.llViewOne.setLayoutParams(params);
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 130);
+                params.setMargins(0, 0, 0, 290);
                 binding.llViewTwo.setLayoutParams(params);
             }
         } catch (Exception e) {
