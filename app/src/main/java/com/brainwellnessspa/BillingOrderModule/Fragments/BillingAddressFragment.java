@@ -61,7 +61,7 @@ public class BillingAddressFragment extends Fragment {
                 } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
                     binding.tlMobileNumber.setError("please enter mobile number");
                 } else if (binding.etCountry.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlCountry.setError("Please enter a valid country");
+                    binding.tlCountry.setError("Country is required");
                 } else if (binding.etAddressLine1.getText().toString().equalsIgnoreCase("")) {
                     binding.tlAddressLine1.setError("Address Line is required");
                 } else if (binding.etCity.getText().toString().equalsIgnoreCase("")) {

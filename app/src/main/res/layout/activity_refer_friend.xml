@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".ReferralModule.ReferFriendActivity">
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="@string/Refer_A_Friend"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlLayout"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp">
+
+                    <ImageView
+                        android:id="@+id/ivReferImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_24sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_34sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <TextView
+                        android:id="@+id/tvDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_34sdp"
+                        android:layout_marginTop="@dimen/_14sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_12sdp" />
+
+
+                    <LinearLayout
+                        android:id="@+id/llCodeCopy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:background="@drawable/dashed_line"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/_24sdp"
+                        android:paddingVertical="@dimen/_14sdp">
+
+                        <TextView
+                            android:id="@+id/tvCodeCopy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:lineSpacingExtra="@dimen/_4sdp"
+                            android:text="BL4AA"
+                            android:textColor="@color/blue"
+                            android:textSize="@dimen/_20sdp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_30sdp"
+                            android:src="@drawable/ic_copy_link_blue_icon" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/llShare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_34sdp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_12sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="center"
+                            android:lineSpacingExtra="@dimen/_4sdp"
+                            android:text="@string/Share"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_20sdp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_share_icon" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:background="#66E6E6E6" />
+
+                    <TextView
+                        android:id="@+id/tvInviteTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_15sdp" />
+
+
+                    <TextView
+                        android:id="@+id/tvInviteRules"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:background="@drawable/round_gray_cornor"
+                        android:paddingTop="@dimen/_22sdp"
+                        android:paddingBottom="@dimen/_10sdp"
+                        android:weightSum="3">
+
+                        <LinearLayout
+                            android:id="@+id/llCopyLink"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.8"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="@dimen/_29sdp"
+                                android:layout_height="@dimen/_29sdp"
+                                android:src="@drawable/ic_copy_link_gray_icon" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="center|top"
+                                android:lineSpacingExtra="@dimen/_4sdp"
+                                android:text="@string/Copy_Link"
+                                android:textColor="@color/text_title"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llFriendRegisterd"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1.4"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="@dimen/_29sdp"
+                                android:layout_height="@dimen/_29sdp"
+                                android:src="@drawable/ic_friends_registered_icon" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="center|top"
+                                android:lineSpacingExtra="@dimen/_4sdp"
+                                android:text="@string/Friends_registered_successfully"
+                                android:textColor="@color/text_title"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llEarnCash"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.8"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="@dimen/_29sdp"
+                                android:layout_height="@dimen/_29sdp"
+                                android:src="@drawable/ic_earn_cash_rewards_icon" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="center|top"
+                                android:lineSpacingExtra="@dimen/_4sdp"
+                                android:text="@string/Earn_cash_rewards"
+                                android:textColor="@color/text_title"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/btnReferred"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:background="@drawable/extra_round_cornor"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingHorizontal="@dimen/_55sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:text="@string/Refer_A_Friend"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</layout>

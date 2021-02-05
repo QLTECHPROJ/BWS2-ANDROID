@@ -25,9 +25,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"
+        android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <uses-permission
@@ -46,13 +47,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".ReferralModule.ContactBookActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ReferralModule.ReferFriendActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".DashboardModule.Activities.AudioPlayerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".LikeModule.Activities.LikeActivity"
             android:configChanges="orientation|screenSize"
@@ -73,11 +82,13 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <!--  <activity
+        <!--
+  <activity
               android:name=".DownloadModule.Activities.DownloadedPlaylist"
               android:configChanges="orientation|screenSize"
               android:screenOrientation="portrait"
-              android:windowSoftInputMode="adjustPan" />-->
+              android:windowSoftInputMode="adjustPan" />
+        -->
         <activity
             android:name=".BillingOrderModule.Activities.PaymentActivity"
             android:configChanges="orientation|screenSize"
@@ -135,11 +146,13 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <!--     <activity
+        <!--
+     <activity
                  android:name=".DashboardModule.Activities.PlayWellnessActivity"
                  android:configChanges="orientation|screenSize"
                  android:screenOrientation="portrait"
-                 android:windowSoftInputMode="adjustPan" />-->
+                 android:windowSoftInputMode="adjustPan" />
+        -->
         <activity
             android:name=".MembershipModule.Activities.CheckoutPaymentActivity"
             android:configChanges="orientation|screenSize"
@@ -213,6 +226,7 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -252,15 +266,12 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_logo_transparent" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -284,7 +295,7 @@
                     tools:ignore="BatteryLife" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.intent.action.PROVIDER_CHANGED" />
-                <!--                <action android:name="android.intent.action.PROXY_CHANGE" />-->
+                <!-- <action android:name="android.intent.action.PROXY_CHANGE" /> -->
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
@@ -295,17 +306,19 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
-        <!--<service
+        <!--
+<service
             android:name=".Services.PlayerJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:process=":externalProcess"
-            android:exported="true"/>-->
+            android:exported="true"/>
+        -->
         <service
             android:name=".Services.GlobalInitExoPlayer"
             android:exported="true"
             android:process=":externalProcess" />
-
-        <!--  <service            android:foregroundServiceType="mediaPlayback"
+        <!--
+  <service            android:foregroundServiceType="mediaPlayback"
               android:name=".Utility.MusicService"
               android:enabled="true"
               android:exported="true"
@@ -319,8 +332,10 @@
           <service
               android:name=".Utility.MyService"
               android:enabled="true"
-              android:exported="true" />-->
-        <!--  <service
+              android:exported="true" />
+        -->
+        <!--
+  <service
               android:name=".Utility.MyFirebaseMessagingService"
               android:enabled="true"
               android:exported="true">
@@ -328,8 +343,8 @@
                   <action android:name= "com.google.firebase.MESSAGING_EVENT" />
   &lt;!&ndash;                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />&ndash;&gt;
               </intent-filter>
-          </service>-->
-
+          </service>
+        -->
         <service
             android:name=".Utility.MyFirebaseMessagingService"
             android:exported="false"
@@ -340,6 +355,7 @@
         </service>
 
         <receiver android:name=".Services.NotificationActionService" />
+
         <service android:name=".Services.OnClearFromRecentService" />
     </application>
 

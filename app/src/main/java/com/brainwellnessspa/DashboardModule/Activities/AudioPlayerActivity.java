@@ -1474,7 +1474,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (player != null) {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                             if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                                 exoBinding.llPlay.setVisibility(View.GONE);
                                 exoBinding.llPause.setVisibility(View.GONE);
@@ -1595,7 +1594,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 try {
                     player.setPlayWhenReady(false);
                     int pss = player.getCurrentWindowIndex();
-                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -1693,7 +1691,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
 
                         if (player.hasNext()) {
                             handler2.removeCallbacks(UpdateSongTime2);
@@ -1737,7 +1734,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                         if (player.hasPrevious()) {
                             DatabaseClient
                                     .getInstance(ctx)
@@ -2480,7 +2476,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }
                     player.setPlayWhenReady(true);
                     int pss = player.getCurrentWindowIndex();
-                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);

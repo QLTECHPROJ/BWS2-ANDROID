@@ -3,7 +3,8 @@
 
     <string name="segment_key_foram">X3sYYbQtro7xHI31AJppjMQ20AZlPdlS</string>
     <string name="segment_key_SunnySir">2ClHzzCF1JFEDocqe0Az8KSV4ybDcUdm</string>//sunny sir id
-    <string name="segment_key_real">Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy</string> // terri@brainwellnessspa.com.au  0pybC!FH#z20
+    <string name="segment_key_real">Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy</string>
+    // terri@brainwellnessspa.com.au 0pybC!FH#z20
     <string name="mansi_segment_key">"Zvo5vSa1Ih8CdMVilkKqzNf9UHMVTFuO"</string>
     <string name="ResponseCodesuccess">200</string>
     <string name="ResponseCodefail">401</string>
@@ -276,4 +277,18 @@
     <string name="download_ads_unsupported">IMA does not support offline ads</string>
 
     <string name="prefer_extension_decoders">Prefer extension decoders</string>
+    <string name="Refer_A_Friend">Refer A Friend</string>
+    <string name="Promo_Code">Promo Code</string>
+    <string name="Apply">Apply</string>
+    <string name="Enter_promo_code_here">Enter promo code here</string>
+    <string name="refer_title">Refer to your friend and Get a cash reward of $1</string>
+    <string name="refer_desc">Share this link with your friend and after they install, both of you will get $1 cash rewards.</string>
+    <string name="Share">Share</string>
+    <string name="Invite_Friends">Invite Friends</string>
+    <string name="refer_invite_title">To understand how referral works.</string>
+    <string name="refer_invite_rules_click">View invitation Rules</string>
+    <string name="Copy_Link">Copy Link</string>
+    <string name="Friends_registered_successfully">Friends registered successfully</string>
+    <string name="Earn_cash_rewards">Earn cash rewards</string>
+    <string name="Favourites">Favourites</string>
 </resources>

@@ -33,4 +33,5 @@
     <color name="title">#777777</color>
     <color name="dark_yellow">#f89552</color>
     <color name="green_dark">#00ac5c</color>
+    <color name="text_title">#2a3042</color>
 </resources>

@@ -3,11 +3,14 @@ package com.brainwellnessspa.MembershipModule.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import com.brainwellnessspa.BWSApplication;
@@ -30,6 +33,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
     private long mLastClickTime = 0;
+    Context ctx;
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        ctx = OrderSummaryActivity.this;
+        activity = OrderSummaryActivity.this;
         if (getIntent() != null) {
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
 //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
@@ -54,7 +60,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
         if (getIntent() != null) {
             ComesTrue = getIntent().getStringExtra("ComesTrue");
         }
-
+        binding.edtCode.addTextChangedListener(promoCodeTextWatcher);
         Properties p = new Properties();
         if (!comeFrom.equalsIgnoreCase("")) {
             p.putValue("plan", listModelList2);
@@ -88,7 +94,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             if (!comeFrom.equalsIgnoreCase("")) {
-                Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
+                Intent i = new Intent(ctx, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", ComesTrue);
                 startActivity(i);
                 finish();
@@ -96,6 +102,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.btnApply.setOnClickListener(v -> BWSApplication.showToast("Promo code applied", ctx));
 
         binding.btnCheckout.setOnClickListener(view -> {
             try {
@@ -110,7 +118,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                     p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                     p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
                     p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                    Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
+                    Intent i = new Intent(ctx, PaymentActivity.class);
                     i.putExtra("ComesTrue", ComesTrue);
                     i.putExtra("comeFrom", "membership");
                     i.putParcelableArrayListExtra("PlanData", listModelList2);
@@ -128,7 +136,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                     p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
                     p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
                     p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
-                    Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
+                    Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
                     i.putExtra("Name", "");
                     i.putExtra("Code", "");
                     i.putExtra("MobileNo", "");
@@ -148,14 +156,37 @@ public class OrderSummaryActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!comeFrom.equalsIgnoreCase("")) {
-            Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
+            Intent i = new Intent(ctx, MembershipChangeActivity.class);
             i.putExtra("ComeFrom", ComesTrue);
             startActivity(i);
             finish();
         } else {
-            Intent i = new Intent(OrderSummaryActivity.this, MembershipActivity.class);
+            Intent i = new Intent(ctx, MembershipActivity.class);
             startActivity(i);
             finish();
         }
     }
+
+    private TextWatcher promoCodeTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String number = binding.edtCode.getText().toString().trim();
+            if (number.isEmpty()) {
+                binding.btnApply.setEnabled(false);
+                binding.btnApply.setTextColor(getResources().getColor(R.color.gray));
+            } else {
+                binding.btnApply.setEnabled(true);
+                binding.btnApply.setTextColor(getResources().getColor(R.color.dark_yellow));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
 }

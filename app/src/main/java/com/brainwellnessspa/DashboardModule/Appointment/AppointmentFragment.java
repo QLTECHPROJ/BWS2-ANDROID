@@ -114,7 +114,7 @@ public class AppointmentFragment extends Fragment {
                 binding.llSpace.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 6, 0, 50);
+                params.setMargins(0, 6, 0, 130);
                 binding.llSpace.setLayoutParams(params);
             }
         } catch (Exception e) {
@@ -185,7 +185,7 @@ public class AppointmentFragment extends Fragment {
                 binding.llSpace.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(10, 8, 10, 50);
+                params.setMargins(10, 8, 10, 130);
                 binding.llSpace.setLayoutParams(params);
             }
         } catch (Exception e) {

@@ -356,13 +356,17 @@ public class BWSApplication extends Application {
     }
 
     public static void showToast(String message, Context context) {
-        Toast toast = new Toast(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
-        TextView tvMessage = view.findViewById(R.id.tvMessage);
-        tvMessage.setText(message);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-        toast.setView(view);
-        toast.show();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            Toast toast = new Toast(context);
+            View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
+            TextView tvMessage = view.findViewById(R.id.tvMessage);
+            tvMessage.setText(message);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
+            toast.setView(view);
+            toast.show();
+        }else {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static String getProgressDisplayLine(long currentBytes, long totalBytes) {

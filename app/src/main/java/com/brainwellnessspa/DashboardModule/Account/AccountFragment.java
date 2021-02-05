@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -27,7 +29,9 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
+import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
@@ -61,6 +65,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
@@ -239,8 +244,9 @@ public class AccountFragment extends Fragment {
 
                 Btn.setOnClickListener(v -> {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    callNewPlayerRelease();
                     DeleteCall(dialog);
+                    relesePlayer();
+                    deleteCache(getActivity());
                     NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(NOTIFICATION_ID);
                     SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
@@ -275,7 +281,6 @@ public class AccountFragment extends Fragment {
                                     Intent i = new Intent(getActivity(), LoginActivity.class);
                                     startActivity(i);
                                     getActivity().overridePendingTransition(0, 0);
-                                    relesePlayer();
                                     Properties p1 = new Properties();
                                     p1.putValue("userId", UserID);
                                     p1.putValue("deviceId", DeviceID);

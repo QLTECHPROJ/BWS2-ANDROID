@@ -26,6 +26,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.MembershipModule.Activities.MembershipActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.ReferralModule.ReferFriendActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.WebView.TncActivity;
@@ -81,6 +82,11 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             binding.edtNumber.setText(MobileNo);
         }
+
+       /* binding.tvSendCodeText.setOnClickListener(v -> {
+            Intent i = new Intent(ctx, ReferFriendActivity.class);
+            startActivity(i);
+        });*/
 
         if (SegmentTag == 0) {
             Properties p = new Properties();
