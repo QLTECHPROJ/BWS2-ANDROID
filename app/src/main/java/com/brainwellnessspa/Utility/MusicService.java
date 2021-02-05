@@ -665,10 +665,10 @@ public class MusicService extends Service {
                 }
             }
         }
-*/
-
         GetMedia st = new GetMedia();
         st.execute();
+*/
+
     }
 
     public static PendingIntent playbackAction(int actionNumber, Context context) {
