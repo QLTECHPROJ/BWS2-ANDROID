@@ -499,34 +499,36 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     playlistDownloadId = gson.fromJson(jsonq, type);
 
                     if (playlistDownloadId.size() != 0) {
-                        for (int i = 1; i < fileNameList1.size(); i++) {
-                            if (playlistDownloadId.get(i).equalsIgnoreCase(playlistID)) {
-                                fileNameList.remove(i);
-                                audioFile.remove(i);
-                                playlistDownloadId.remove(i);
+                        if (playlistDownloadId.contains(playlistID)) {
+                            for (int i = 1; i < fileNameList1.size() - 1; i++) {
+                                if (playlistDownloadId.get(i).equalsIgnoreCase(playlistID)) {
+                                    fileNameList.remove(i);
+                                    audioFile.remove(i);
+                                    playlistDownloadId.remove(i);
+                                }
                             }
-                        }
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        String nameJson = gson.toJson(fileNameList);
-                        String urlJson = gson.toJson(audioFile);
-                        String playlistIdJson = gson.toJson(playlistDownloadId);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                        editor.apply();
-                        editor.commit();
-                        if (playlistDownloadId.get(0).equalsIgnoreCase(playlistID)) {
-                            PRDownloader.cancel(downloadIdOne);
-                            filename = "";
-                            downloadProgress = 0;
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            String nameJson = gson.toJson(fileNameList);
+                            String urlJson = gson.toJson(audioFile);
+                            String playlistIdJson = gson.toJson(playlistDownloadId);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                            editor.apply();
+                            editor.commit();
+                            if (playlistDownloadId.get(0).equalsIgnoreCase(playlistID)) {
+                                PRDownloader.cancel(downloadIdOne);
+                                filename = "";
+                                downloadProgress = 0;
+                            }
                         }
                     }
                 }
             } catch (Exception e) {
 //                getDownloadDataForDelete(playlistID);
                 e.printStackTrace();
-                Log.e("Download Playlist ","Download Playlist remove issue"+e.getMessage());
+                Log.e("Download Playlist ","Download Playlist remove issue:- "+e.getMessage());
             }
 
 

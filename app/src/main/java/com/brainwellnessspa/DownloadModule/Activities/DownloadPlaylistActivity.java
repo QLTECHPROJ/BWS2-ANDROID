@@ -392,7 +392,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 if (playlistDownloadId.size() != 0) {
                     if (playlistDownloadId.contains(PlaylistID)) {
                         Log.e("cancel", String.valueOf(playlistDownloadId.size()));
-                        for (int i = 1; i < fileNameList1.size(); i++) {
+                        for (int i = 1; i < fileNameList1.size() - 1; i++) {
                             if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
                                 Log.e("cancel name id", "My id " + i + fileNameList1.get(i));
                                 fileNameList.remove(i);
@@ -401,20 +401,20 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 Log.e("cancel id", "My id " + playlistDownloadId.size() + i);
                             }
                         }
-                    }
 
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    String nameJson = gson.toJson(fileNameList);
-                    String urlJson = gson.toJson(audioFile);
-                    String playlistIdJson = gson.toJson(playlistDownloadId);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
-                    if (playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
-                        PRDownloader.cancel(downloadIdOne);
-                        filename = "";
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        String nameJson = gson.toJson(fileNameList);
+                        String urlJson = gson.toJson(audioFile);
+                        String playlistIdJson = gson.toJson(playlistDownloadId);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                        editor.commit();
+                        if (playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
+                            PRDownloader.cancel(downloadIdOne);
+                            filename = "";
+                        }
                     }
                 }
             }

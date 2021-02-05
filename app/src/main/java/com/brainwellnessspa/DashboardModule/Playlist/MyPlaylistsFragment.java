@@ -1923,26 +1923,27 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 playlistDownloadId = gson.fromJson(jsonq, type);
 
                 if (playlistDownloadId.size() != 0) {
-                    playlistDownloadId.contains(PlaylistID);
-                    for (int i = 1; i < fileNameList1.size(); i++) {
-                        if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                            fileNameList.remove(i);
-                            audioFile.remove(i);
-                            playlistDownloadId.remove(i);
+                    if (playlistDownloadId.contains(PlaylistID)) {
+                        for (int i = 1; i < fileNameList1.size() - 1; i++) {
+                            if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                                fileNameList.remove(i);
+                                audioFile.remove(i);
+                                playlistDownloadId.remove(i);
+                            }
                         }
-                    }
-                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    String nameJson = gson.toJson(fileNameList);
-                    String urlJson = gson.toJson(audioFile);
-                    String playlistIdJson = gson.toJson(playlistDownloadId);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
-                    if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
-                        PRDownloader.cancel(downloadIdOne);
-                        filename = "";
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        String nameJson = gson.toJson(fileNameList);
+                        String urlJson = gson.toJson(audioFile);
+                        String playlistIdJson = gson.toJson(playlistDownloadId);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                        editor.commit();
+                        if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
+                            PRDownloader.cancel(downloadIdOne);
+                            filename = "";
+                        }
                     }
                 }
             }
