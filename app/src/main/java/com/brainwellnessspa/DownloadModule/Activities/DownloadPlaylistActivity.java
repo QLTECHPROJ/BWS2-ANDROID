@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -43,7 +42,6 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlay
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
@@ -66,8 +64,6 @@ import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-
-
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -421,7 +417,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         } catch (Exception e) {
 //            getDownloadData();
             e.printStackTrace();
-            Log.e("Download Playlist ","Download Playlist remove issue"+e.getMessage());        }
+            Log.e("Download Playlist ", "Download Playlist remove issue" + e.getMessage());
+        }
     }
 
     @Override
@@ -442,7 +439,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
             deleteDownloadFile(getApplicationContext(), playlistID);
             if (audioList.size() != 0) {
-                GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,0);
+                GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, 0);
             }
         });
     }
@@ -471,24 +468,24 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         st.execute();*/
     }
 
-     public void GetSingleMedia(String AudioFile, Context ctx,String playlistID,List<DownloadAudioDetails> audioList,int i) {
-            DB.taskDao().getLastIdByuId1(AudioFile).observe(this, audioList1 -> {
-                try {
-                    if (audioList1.size() != 0) {
-                        if (audioList1.size() == 1) {
-                            FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
-                        }
+    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
+        DB.taskDao().getLastIdByuId1(AudioFile).observe(this, audioList1 -> {
+            try {
+                if (audioList1.size() != 0) {
+                    if (audioList1.size() == 1) {
+                        FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
                     }
-
-                    if (i < audioList.size() - 1) {
-                        GetSingleMedia(audioList.get(i+1).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,i+1);
-                        Log.e("DownloadMedia Call", String.valueOf(i + 1));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
-            });
+                if (i < audioList.size() - 1) {
+                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, i + 1);
+                    Log.e("DownloadMedia Call", String.valueOf(i + 1));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
        /* class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -687,7 +684,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
 //                    handler3.removeCallbacks(UpdateSongTime3);
             }
-
+            if (position == 0) {
+                AudioDatabase.databaseWriteExecutor.execute(() -> {
+                    downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete");
+                });
+            }
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
@@ -739,7 +740,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                     if (position != positionSaved) {
                                         int ix = player.getMediaItemCount();
                                         if (ix < listModelList.size()) {
-                                            callTransparentFrag(0, ctx, listModelList, "", PlaylistName, true);
+                                            callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistName, true);
                                         } else {
                                             player.seekTo(position, 0);
                                             player.setPlayWhenReady(true);
@@ -752,7 +753,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                         }
                                     }
                                 } else {
-                                    callTransparentFrag(0, ctx, listModelList, "", PlaylistName, true);
+                                    callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistName, true);
                                     SegmentTag();
                                 }
                             }
@@ -814,7 +815,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                if(position != positionSaved) {
+                                if (position != positionSaved) {
                                     int ix = player.getMediaItemCount();
                                     if (ix < listModelList.size()) {
                                         callTransparentFrag(position, ctx, listModelList, "", PlaylistName, true);
@@ -915,116 +916,98 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         }
 
         private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position) {
-            AudioDatabase.databaseWriteExecutor.execute(() -> {
-                downloadAudioDetailsList =  DB.taskDao().geAllDataBYDownloaded("Complete");
-            });
 
-            /*class GetTask extends AsyncTask<Void, Void, Void> {
-                List<String> downloadAudioDetailsList = new ArrayList<>();
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    downloadAudioDetailsList = DatabaseClient
-                            .getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .geAllDataBYDownloaded("Complete");
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {*/
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                    int pos = 0;
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                if (!player.getPlayWhenReady()) {
-                                    player.setPlayWhenReady(true);
-                                } else
-                                    player.setPlayWhenReady(true);
-                                callAddTranFrag();
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                            } else
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else {
-                            ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                            for (int i = 0; i < listModelList.size(); i++) {
-                                if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
-                                    listModelList2.add(listModelList.get(i));
-                                }
-                            }
-
-                            if (position != positionSaved) {
-                                if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                                    pos = position;
-                                    if (listModelList2.size() != 0) {
-                                        callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
-                                    } else {
-                                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                                    }
-                                } else {
-//                                pos = 0;
-                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                                }
-                            }
-                            SegmentTag();
-
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            int pos = 0;
+            if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                if (isDisclaimer == 1) {
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
+                            player.setPlayWhenReady(true);
+                        } else
+                            player.setPlayWhenReady(true);
+                        callAddTranFrag();
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    } else
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                } else {
+                    ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                    for (int i = 0; i < listModelList.size(); i++) {
+                        if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                            listModelList2.add(listModelList.get(i));
                         }
-                    } else {
-                        ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                        for (int i = 0; i < listModelList.size(); i++) {
-                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
-                                listModelList2.add(listModelList.get(i));
-                            }
-                        }
+                    }
+
+                    if (position != positionSaved) {
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
-
-                            boolean audioc = true;
-                            if (isDisclaimer == 1) {
-                                if (player != null) {
-                                    player.setPlayWhenReady(true);
-                                    audioc = false;
-                                    listModelList2.add(pos, addDisclaimer);
-                                } else {
-                                    isDisclaimer = 0;
-                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                        audioc = true;
-                                        listModelList2.add(pos, addDisclaimer);
-                                    }
-                                }
-                            } else {
-                                isDisclaimer = 0;
-                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                    audioc = true;
-                                    listModelList2.add(pos, addDisclaimer);
-                                }
-                            }
-                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
-                                if (listModelList2.size() != 0) {
-                                    callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
-                                } else {
-                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                                }
+                            if (listModelList2.size() != 0) {
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                             } else {
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                         } else {
-//                            pos = 0;
+//                                pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
-                        SegmentTag();
                     }
-                    notifyDataSetChanged();
-                  /*  super.onPostExecute(aVoid);
+                    SegmentTag();
+
                 }
+            } else {
+                ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                for (int i = 0; i < listModelList.size(); i++) {
+                    if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                        listModelList2.add(listModelList.get(i));
+                    }
+                }
+                if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                    pos = position;
+
+                    boolean audioc = true;
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            audioc = false;
+                            listModelList2.add(pos, addDisclaimer);
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(pos, addDisclaimer);
+                            }
+                        }
+                    } else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                            audioc = true;
+                            listModelList2.add(pos, addDisclaimer);
+                        }
+                    }
+                    if (listModelList2.size() != 0) {
+                        if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
+                            if (listModelList2.size() != 0) {
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
+                        } else if (listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() > 1) {
+                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
+                    } else {
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                    }
+                } else {
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                }
+                SegmentTag();
             }
-            GetTask st = new GetTask();
-            st.execute();
-*/
+            notifyDataSetChanged();
         }
+
         @Override
         public int getItemCount() {
             return listFilterData.size();

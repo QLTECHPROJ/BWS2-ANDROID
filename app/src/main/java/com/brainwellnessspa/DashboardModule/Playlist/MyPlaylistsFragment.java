@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -1053,24 +1052,26 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).observe(getActivity(), countx -> {
                 count = countx.size();
 //                if (downloadPlaylistDetailsList.size() != 0) {
-                    if (count <= totalAudio) {
-                        if (count == totalAudio) {
-                            binding.pbProgress.setVisibility(View.GONE);
-                            binding.ivDownloads.setVisibility(View.VISIBLE);
-                            DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {});
-                        } else {
-                            long progressPercent = count * 100 / totalAudio;
-                            int downloadProgress1 = (int) progressPercent;
-                            binding.pbProgress.setVisibility(View.VISIBLE);
-                            binding.ivDownloads.setVisibility(View.GONE);
-                            binding.pbProgress.setProgress(downloadProgress1);
-                            getMediaByPer(PlaylistID, SongListSize);
-                        }
-                    } else {
-                        DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {});
+                if (count <= totalAudio) {
+                    if (count == totalAudio) {
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
+                        DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {
+                        });
+                    } else {
+                        long progressPercent = count * 100 / totalAudio;
+                        int downloadProgress1 = (int) progressPercent;
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                        binding.ivDownloads.setVisibility(View.GONE);
+                        binding.pbProgress.setProgress(downloadProgress1);
+                        getMediaByPer(PlaylistID, SongListSize);
                     }
+                } else {
+                    DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {
+                    });
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                }
 //                } else {
 //                    binding.pbProgress.setVisibility(View.GONE);
 //                    binding.ivDownloads.setVisibility(View.VISIBLE);
@@ -1621,7 +1622,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
 
                 }
-            }else{
+            } else {
                 downloadAudioDetails.setIsDownload("pending");
                 downloadAudioDetails.setDownloadProgress(0);
             }
@@ -1833,7 +1834,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
             deleteDownloadFile(getActivity(), playlistID);
             if (audioList.size() != 0) {
-                GetSingleMedia(audioList.get(0).getAudioFile(), getActivity().getApplicationContext(), playlistID,audioList,0);
+                GetSingleMedia(audioList.get(0).getAudioFile(), getActivity().getApplicationContext(), playlistID, audioList, 0);
             }
         });
         /*playlistWiseAudioDetails = new ArrayList<>();
@@ -1886,7 +1887,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         st.execute();*/
     }
 
-    public void GetSingleMedia(String AudioFile, Context ctx,String playlistID,List<DownloadAudioDetails> audioList,int i) {
+    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
         DB.taskDao().getLastIdByuId1(AudioFile).observe(getActivity(), audioList1 -> {
             try {
                 if (audioList1.size() != 0) {
@@ -1896,7 +1897,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
 
                 if (i < audioList.size() - 1) {
-                    GetSingleMedia(audioList.get(i+1).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,i+1);
+                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, i + 1);
                     Log.e("DownloadMedia Call", String.valueOf(i + 1));
                 }
             } catch (Exception e) {
@@ -1950,7 +1951,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         } catch (Exception e) {
 //            getDeleteDownloadData();
             e.printStackTrace();
-            Log.e("Download Playlist ","Download Playlist remove issue"+e.getMessage());
+            Log.e("Download Playlist ", "Download Playlist remove issue" + e.getMessage());
         }
     }
 
@@ -2592,7 +2593,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 260);
                 binding.llSpace.setLayoutParams(params);
-                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -2877,6 +2878,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             }
 
+            if (position == 0) {
+                AudioDatabase.databaseWriteExecutor.execute(() -> {
+                    downloadAudios = DB.taskDao().geAllDataBYDownloaded("Complete");
+                });
+            }
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
@@ -3284,111 +3290,96 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position) {
-            AudioDatabase.databaseWriteExecutor.execute(() -> {
-                downloadAudios =  DB.taskDao().geAllDataBYDownloaded("Complete");
-            });
-            /*class GetTask extends AsyncTask<Void, Void, Void> {
-                List<String> downloadAudioDetailsList = new ArrayList<>();
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    downloadAudioDetailsList = DatabaseClient
-                            .getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .geAllDataBYDownloaded("Complete");
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {*/
-                    int pos = 0;
-                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                if (!player.getPlayWhenReady()) {
-                                    player.setPlayWhenReady(true);
-                                } else
-                                    player.setPlayWhenReady(true);
-                            } else {
-                                miniPlayer = 1;
-                                audioClick = true;
-                            }
-                            callAddTransFrag();
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else {
-                            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                            for (int i = 0; i < listModelList.size(); i++) {
-                                if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
-                                    listModelList2.add(listModelList.get(i));
-                                }
-                            }
-                            if (position != positionSaved) {
-                                if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                                    positionSaved = position;
-                                    myAudioId = listModelList.get(position).getID();
-                                    if (listModelList2.size() != 0) {
-                                        callTransparentFrag(position, ctx, listModelList2, "", PlaylistName, true);
-                                    } else {
-                                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                                    }
-                                } else {
-//                                pos = 0;
-                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                                }
-                            }
-                            SegmentTag();
-                        }
+            int pos = 0;
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                if (isDisclaimer == 1) {
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
+                            player.setPlayWhenReady(true);
+                        } else
+                            player.setPlayWhenReady(true);
                     } else {
-                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        for (int i = 0; i < listModelList.size(); i++) {
-                            if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
-                                listModelList2.add(listModelList.get(i));
-                            }
+                        miniPlayer = 1;
+                        audioClick = true;
+                    }
+                    callAddTransFrag();
+                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                } else {
+                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
+                    for (int i = 0; i < listModelList.size(); i++) {
+                        if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                            listModelList2.add(listModelList.get(i));
                         }
+                    }
+                    if (position != positionSaved) {
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                            pos = position;
-
-                            boolean audioc = true;
-                            if (isDisclaimer == 1) {
-                                if (player != null) {
-                                    player.setPlayWhenReady(true);
-                                    audioc = false;
-                                    listModelList2.add(pos, addDisclaimer);
-                                } else {
-                                    isDisclaimer = 0;
-                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                        audioc = true;
-                                        listModelList2.add(pos, addDisclaimer);
-                                    }
-                                }
+                            positionSaved = position;
+                            myAudioId = listModelList.get(position).getID();
+                            if (listModelList2.size() != 0) {
+                                callTransparentFrag(position, ctx, listModelList2, "", PlaylistName, true);
                             } else {
-                                isDisclaimer = 0;
-                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                    audioc = true;
-                                    listModelList2.add(pos, addDisclaimer);
-                                }
-                            }
-                            if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
-                                if (listModelList2.size() != 0) {
-                                    callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
-                                } else {
-                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                                }
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                         } else {
-//                            pos = 0;
+//                                pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
-                        SegmentTag();
                     }
-                  /*  super.onPostExecute(aVoid);
+                    SegmentTag();
                 }
+            } else {
+                ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
+                for (int i = 0; i < listModelList.size(); i++) {
+                    if (downloadAudioDetailsList.contains(listModelList.get(i).getName())) {
+                        listModelList2.add(listModelList.get(i));
+                    }
+                }
+                if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                    pos = position;
+
+                    boolean audioc = true;
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            audioc = false;
+                            listModelList2.add(pos, addDisclaimer);
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(pos, addDisclaimer);
+                            }
+                        }
+                    } else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                            audioc = true;
+                            listModelList2.add(pos, addDisclaimer);
+                        }
+                    }
+
+                    if (listModelList2.size() != 0) {
+                        if (!listModelList2.get(pos).getAudioFile().equalsIgnoreCase("")) {
+                            if (listModelList2.size() != 0) {
+                                callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
+                        } else if (listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() > 1) {
+                            callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
+                    } else {
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                    }
+                } else {
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                }
+                SegmentTag();
             }
-            GetTask st = new GetTask();
-            st.execute();*/
         }
 
         @Override
