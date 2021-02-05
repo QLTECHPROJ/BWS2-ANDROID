@@ -3,6 +3,7 @@ package com.brainwellnessspa.MembershipModule.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.room.Room;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,7 +12,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
@@ -35,7 +35,9 @@ import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -57,6 +59,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planFlag;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planId;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.price;
@@ -77,6 +80,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     String strToken;
     private long mLastClickTime = 0;
 
+    AudioDatabase DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +98,11 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             position = getIntent().getIntExtra("position", 0);
         }
 
+        DB = Room.databaseBuilder(CheckoutPaymentActivity.this,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
         binding.llBack.setOnClickListener(view -> {
             Intent i = new Intent(context, OrderSummaryActivity.class);
             i.putParcelableArrayListExtra("PlanData", listModelList);
@@ -315,6 +324,13 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     }
 
     private void DeletallLocalCart() {
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
+            DB.taskDao().deleteAll();
+        }); AudioDatabase.databaseWriteExecutor.execute(() -> {
+            DB.taskDao().deleteAllPlalist();
+        });
+    }
+        /*
         class DeletallCart extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -357,7 +373,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         }
         DeletallCart st = new DeletallCart();
         st.execute();
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

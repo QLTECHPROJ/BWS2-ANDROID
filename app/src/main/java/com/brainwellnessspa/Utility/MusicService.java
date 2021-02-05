@@ -17,7 +17,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -557,6 +556,7 @@ public class MusicService extends Service {
 
     public static void getMediaBitmep(Context context, PlaybackStatus playbackStatus, String songName, String songImg,
                                       String songAudioDirection, String songAudioFile, String songId, String songDuration) {
+/*
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -596,7 +596,8 @@ public class MusicService extends Service {
                     int drw_previous = R.drawable.ic_skip_previous_black_24dp;
                     int drw_next = R.drawable.ic_skip_next_black_24dp;
                     //create notification
-                  /*  MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                  */
+/*  MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songAudioDirection);
                     builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, songName);
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, songImg);
@@ -611,7 +612,8 @@ public class MusicService extends Service {
                                     PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
                                     PlaybackStateCompat.ACTION_SEEK_TO).build();
 
-                    mediaSession.setPlaybackState(playbackStateCompat);*/
+                    mediaSession.setPlaybackState(playbackStateCompat);*//*
+
 
                     notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_music_note)
@@ -627,14 +629,19 @@ public class MusicService extends Service {
                             .addAction(notificationAction, "Play", play_pauseAction)
                             .addAction(drw_next, "Next", playbackAction(2, context))
                             .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                                    /*.setMediaSession(mediaSession.getSessionToken())*/
+                                    */
+/*.setMediaSession(mediaSession.getSessionToken())*//*
+
                                     .setShowActionsInCompactView(0, 1, 2))
                             .setDeleteIntent(
                                     MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .build();
-                    /* TODO: temp comment*/
-                   /* ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                    */
+/* TODO: temp comment*//*
+
+                   */
+/* ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -651,12 +658,14 @@ public class MusicService extends Service {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }*/
+                    }*//*
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+*/
 
         GetMedia st = new GetMedia();
         st.execute();

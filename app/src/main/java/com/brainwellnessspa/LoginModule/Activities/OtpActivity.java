@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -25,8 +24,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.room.Room;
 
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.SmsReceiver;
@@ -43,6 +44,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
@@ -72,6 +74,7 @@ public class OtpActivity extends AppCompatActivity implements
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
     public static int comeLogin = 0;
+    AudioDatabase DB;
     List<DownloadAudioDetails> downloadAudioDetails = new ArrayList<>();
     private BroadcastReceiver receiver;
 //    AppEventsLogger logger;
@@ -86,11 +89,15 @@ public class OtpActivity extends AppCompatActivity implements
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
         }
-
         activity = OtpActivity.this;
 //        logger = AppEventsLogger.newLogger(this);
         binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + MobileNo);
 
+        DB = Room.databaseBuilder(this,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
         editTexts = new EditText[]{binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4};
         binding.edtOTP1.addTextChangedListener(new PinTextWatcher(0));
         binding.edtOTP2.addTextChangedListener(new PinTextWatcher(1));
@@ -403,91 +410,19 @@ public class OtpActivity extends AppCompatActivity implements
         finish();
     }
 
-   /* public void GetAllMedia() {
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetails = DatabaseClient
-                        .getInstance(OtpActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllData1();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                if (downloadAudioDetails.size() != 0) {
-                    for (int i = 0; i < downloadAudioDetails.size(); i++) {
-                        FileUtils.deleteDownloadedFile(getApplicationContext(), downloadAudioDetails.get(i).getName());
-                    }
-                }
-                SharedPreferences preferences11 = getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit1 = preferences11.edit();
-                edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadName);
-                edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadUrl);
-                edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId);
-                edit1.clear();
-                edit1.commit();
-                DeletallLocalCart();
-            }
-        }
-        GetTask st = new GetTask();
-        st.execute();
+    public void DeletallLocalCart() {
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
+            DB.taskDao().deleteAll();
+        });
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
+            DB.taskDao().deleteAllPlalist();
+            Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
+            startActivity(i);
+            finish();
+        });
     }
 
-    public void GetAllMedia2() {
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetails = DatabaseClient
-                        .getInstance(OtpActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllData1();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                List<String> fileNameList = new ArrayList<>();
-                List<String> audioFile = new ArrayList<>();
-                List<String> playlistDownloadId = new ArrayList<>();
-
-                if (downloadAudioDetails.size() != 0) {
-                    for (int i = 0; i < downloadAudioDetails.size(); i++) {
-                        if (downloadAudioDetails.get(i).getDownloadProgress() < 100) {
-                            fileNameList.add(downloadAudioDetails.get(i).getName());
-                            audioFile.add(downloadAudioDetails.get(i).getAudioFile());
-                            playlistDownloadId.add(downloadAudioDetails.get(i).getPlaylistId());
-                        }
-                    }
-                }
-                Gson gson = new Gson();
-                SharedPreferences sharedxc = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editorxc = sharedxc.edit();
-                String nameJson = gson.toJson(fileNameList);
-                String urlJson = gson.toJson(audioFile);
-                String playlistIdJson = gson.toJson(playlistDownloadId);
-                editorxc.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editorxc.commit();
-                isDownloading = false;
-                Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
-                startActivity(i);
-                finish();
-            }
-        }
-
-        GetTask st = new GetTask();
-        st.execute();
-    }*/
-
-    public void DeletallLocalCart() {
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
+  /*      class DeletallCart extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient
@@ -531,7 +466,7 @@ public class OtpActivity extends AppCompatActivity implements
         }
         DeletallCart st = new DeletallCart();
         st.execute();
-    }
+    }*/
 
     @Override
     public void onOTPReceived(String otp) {

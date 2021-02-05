@@ -2,13 +2,13 @@ package com.brainwellnessspa.SplashModule;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.room.Room;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +24,9 @@ import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
+import com.brainwellnessspa.LoginModule.Activities.OtpActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.Utility.APIClient;
@@ -38,6 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.getKey;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -46,6 +49,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     String flag, id, title, message, IsLock;
     public static Analytics analytics;
 
+    AudioDatabase DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (key.equalsIgnoreCase("")) {
             key = getKey(SplashScreenActivity.this);
         }
+        DB = Room.databaseBuilder(SplashScreenActivity.this,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 //        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);
         getLatasteUpdate(SplashScreenActivity.this);
@@ -274,7 +283,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void DeletallLocalCart() {
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
+            DB.taskDao().deleteAll();
+        }); AudioDatabase.databaseWriteExecutor.execute(() -> {
+            DB.taskDao().deleteAllPlalist();
+        });
+      /*  class DeletallCart extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient
@@ -292,9 +306,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         }
         DeletallCart st = new DeletallCart();
-        st.execute();
+        st.execute();*/
     }
 
+/*
     public void DeletallLocalCart1() {
         class DeletallCart extends AsyncTask<Void, Void, Void> {
             @Override
@@ -315,4 +330,5 @@ public class SplashScreenActivity extends AppCompatActivity {
         DeletallCart st = new DeletallCart();
         st.execute();
     }
+*/
 }

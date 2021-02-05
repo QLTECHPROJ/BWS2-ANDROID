@@ -13,17 +13,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -194,7 +191,7 @@ public class BWSApplication extends Application {
     }
 
     private static void getMediaBitmep(MainPlayModel track, Context context, int playbutton) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
+   /*     class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
@@ -268,7 +265,7 @@ public class BWSApplication extends Application {
         }
 
         GetMedia st = new GetMedia();
-        st.execute();
+        st.execute();*/
     }
 
   /*  public static void createChannel(Context ctx) {
