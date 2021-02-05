@@ -39,7 +39,6 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -118,34 +117,47 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     }
 
     public static Bitmap getMediaBitmap(Context ctx, String songImg) {
-        AudioDatabase.databaseWriteExecutor.execute(() -> {
-            try {
-                if (songImg.equalsIgnoreCase("")) {
-                    myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
-                } else {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        URL url = new URL(songImg);
-                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                            connection.setDoInput(true);
-                        connection.connect();
-                        InputStream is = connection.getInputStream();
-                        myBitmap = BitmapFactory.decodeStream(is);
-                        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                            Log.e("HttpURLConnection", "Server returned HTTP " + connection.getResponseCode()
-                                    + " " + connection.getResponseMessage());
-                        } else {
-                            Log.e("HttpURLConnection", "null" + connection.getResponseCode()
-                                    + " " + connection.getResponseMessage());
-                        }
-                    } else {
+        class GetMedia extends AsyncTask<String, Void, Bitmap> {
+            @Override
+            protected Bitmap doInBackground(String... params) {
+                try {
+                    if (songImg.equalsIgnoreCase("")) {
                         myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    } else {
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            URL url = new URL(songImg);
+                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                            connection.setDoInput(true);
+                            connection.connect();
+                            InputStream is = connection.getInputStream();
+                            myBitmap = BitmapFactory.decodeStream(is);
+                            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                                Log.e("HttpURLConnection", "Server returned HTTP " + connection.getResponseCode()
+                                        + " " + connection.getResponseMessage());
+                            } else {
+                                Log.e("HttpURLConnection", "null" + connection.getResponseCode()
+                                        + " " + connection.getResponseMessage());
+                            }
+                        } else {
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("get BitMap Error: ", e.getMessage());
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("get BitMap Error: ", e.getMessage());
+                return null;
             }
-        });
+
+            @Override
+            protected void onPostExecute(Bitmap result) {
+//                myBitmap = result;
+                super.onPostExecute(result);
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
         return myBitmap;
     }
 
@@ -547,7 +559,7 @@ Appointment Audios dddd*/
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
                         getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
-//                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
 
                         /*Thread thread = new Thread(() -> {
                             try {

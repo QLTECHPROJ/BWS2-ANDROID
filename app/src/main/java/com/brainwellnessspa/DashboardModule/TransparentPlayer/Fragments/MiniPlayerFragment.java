@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -309,8 +310,8 @@ public class MiniPlayerFragment extends Fragment {
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
 
+                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedz.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -356,6 +357,7 @@ public class MiniPlayerFragment extends Fragment {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
@@ -852,6 +854,7 @@ public class MiniPlayerFragment extends Fragment {
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (player != null) {
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                             if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                                 exoBinding.llPlay.setVisibility(View.GONE);
                                 exoBinding.llPause.setVisibility(View.GONE);
@@ -1024,7 +1027,6 @@ public class MiniPlayerFragment extends Fragment {
         }
     }
 
-/*
     private void getDownloadMedia(DownloadMedia downloadMedia, String name, int i) {
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             File fileDescriptor = null;
@@ -1036,8 +1038,7 @@ public class MiniPlayerFragment extends Fragment {
 
                 downloadAudioDetailsListGloble.add(name);
                 fileDescriptor = new File(FileUtils.getFilePath(ctx, name));
-             */
-/*   descriptor = downloadMedia.decrypt(name);
+             /*   descriptor = downloadMedia.decrypt(name);
                 try {
                     if (descriptor != null) {
                         fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
@@ -1052,8 +1053,7 @@ public class MiniPlayerFragment extends Fragment {
                         e1.printStackTrace();
                     }
                     e.printStackTrace();
-                }*//*
-
+                }*/
                 Log.e("Download do in bg Call", String.valueOf(x) + ":-" + name);
                 return null;
             }
@@ -1086,15 +1086,13 @@ public class MiniPlayerFragment extends Fragment {
                         Log.e("again for Call", String.valueOf(x));
                     }
                 }
-             */
-/*   if (x < mainPlayModelList.size() - 1) {
+             /*   if (x < mainPlayModelList.size() - 1) {
 //                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(x), x);
                     Log.e("DownloadMedia Call", String.valueOf(x));
                 } else {
 //                    MakeArray();
                     Log.e("MakeArry Call", String.valueOf(x));
-                }*//*
-
+                }*/
 //                }
                 super.onPostExecute(aVoid);
             }
@@ -1103,7 +1101,6 @@ public class MiniPlayerFragment extends Fragment {
         getDownloadMedia st = new getDownloadMedia();
         st.execute();
     }
-*/
 
     private void callButtonText(int ps) {
 //        simpleSeekbar.setMax(100);
@@ -1951,6 +1948,7 @@ public class MiniPlayerFragment extends Fragment {
             editor.commit();
 
         }
+//        myBitmap = getMediaBitmap(ctx,mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
 //        callButtonText(position);
 //        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
 //            initializePlayerDisclaimer();
@@ -2287,6 +2285,11 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void getPrepareShowData() {
+        /*try {
+            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
