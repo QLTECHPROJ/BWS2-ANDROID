@@ -157,9 +157,9 @@ public class ReminderActivity extends AppCompatActivity {
 //            mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = Integer.parseInt(min[0]);
             String displayAmPm = min[1];
-            if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
+           /* if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
                 mHour = mHour + 12;
-            }
+            }*/
 
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {

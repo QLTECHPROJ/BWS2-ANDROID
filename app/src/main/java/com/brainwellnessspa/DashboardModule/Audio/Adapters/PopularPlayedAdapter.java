@@ -41,20 +41,18 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-    String IsLock, HomeView, IsPlayDisclimer;
+    String HomeView, IsPlayDisclimer;
     int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
-    public PopularPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                                String IsLock, String HomeView) {
+    public PopularPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,String HomeView) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
-        this.IsLock = IsLock;
         this.HomeView = HomeView;
     }
 
@@ -208,7 +206,11 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                                 listModelList2.add(listModelList.get(i));
                             }
                         }
-                        position = 0;
+                        if(position<listModelList2.size()){
+                            position = position;
+                        }else {
+                            position = 0;
+                        }
                     } else {
                         listModelList2.addAll(listModelList);
                     }
@@ -230,7 +232,11 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                         listModelList2.add(listModelList.get(i));
                     }
                 }
-                position = 0;
+                if(position<listModelList2.size()){
+                    position = position;
+                }else {
+                    position = 0;
+                }
             } else {
                 listModelList2.addAll(listModelList);
             }

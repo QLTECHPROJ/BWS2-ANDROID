@@ -516,8 +516,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             DB.taskDao()
                     .getPlaylist1(PlaylistID).observe(getActivity(), audioList -> {
                 downloadPlaylistDetailsList = new ArrayList<>();
-                downloadPlaylistDetailsList = audioList;
-                if (downloadPlaylistDetailsList.size() != 0) {
+                downloadPlaylistDetailsList.addAll(audioList);
+                if (audioList.size() != 0) {
                     enableDisableDownload(false, "orange");
                     getMediaByPer(PlaylistID, SongListSize);
                     removeobserver();
@@ -1051,42 +1051,30 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     private void getMediaByPer(String PlaylistId, int totalAudio) {
         try {
             DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).observe(getActivity(), countx -> {
-//            GetPlaylistDetail(downloadPlaylistDetails.getDownload());
                 count = countx.size();
-                if (downloadPlaylistDetailsList.size() != 0) {
+//                if (downloadPlaylistDetailsList.size() != 0) {
                     if (count <= totalAudio) {
                         if (count == totalAudio) {
                             binding.pbProgress.setVisibility(View.GONE);
                             binding.ivDownloads.setVisibility(View.VISIBLE);
-//                            enableDisableDownload(false, "orange");
-                            DatabaseClient
-                                    .getInstance(getActivity())
-                                    .getaudioDatabase()
-                                    .taskDao()
-                                    .getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {
-                            });
-//                            handler1.removeCallbacks(UpdateSongTime1);
+                            DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {});
                         } else {
                             long progressPercent = count * 100 / totalAudio;
                             int downloadProgress1 = (int) progressPercent;
                             binding.pbProgress.setVisibility(View.VISIBLE);
                             binding.ivDownloads.setVisibility(View.GONE);
                             binding.pbProgress.setProgress(downloadProgress1);
-//                            enableDisableDownload(false, "orange");
-//                        getMediaByPer(playlistID, totalAudio);
-//                             handler1.postDelayed(UpdateSongTime1, 500);
+                            getMediaByPer(PlaylistID, SongListSize);
                         }
                     } else {
-                        DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {
-                        });
+                        DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId).removeObserver(cs -> {});
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
-//                        handler1.removeCallbacks(UpdateSongTime1);
                     }
-                } else {
-                    binding.pbProgress.setVisibility(View.GONE);
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
-                }
+//                } else {
+//                    binding.pbProgress.setVisibility(View.GONE);
+//                    binding.ivDownloads.setVisibility(View.VISIBLE);
+//                }
                 callObserveMethodGetAllMedia();
             });
         } catch (Exception e) {
@@ -1578,30 +1566,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void savePlaylist() {
 //        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
-//        enableDisableDownload(false, "orange");
-
-        GetPlaylistDetail(PlaylistID);
-        getMediaByPer(PlaylistID,SongListSize);
-//        GetMedia();
-        /*class SaveMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .insertPlaylist(downloadPlaylistDetails);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                llDownload.setClickable(false);
-//                llDownload.setEnabled(false);
-                super.onPostExecute(aVoid);
-            }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();*/
+//        downloadPlaylistDetailsList = GetPlaylistDetail("1");
     }
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs) {
@@ -1662,33 +1627,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
         }
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
-
-        savePlaylist();
-        /*   class SaveMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                    DatabaseClient.getInstance(getActivity())
-                            .getaudioDatabase()
-                            .taskDao()
-                            .insertMedia(downloadAudioDetails);
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                llDownload.setClickable(false);
-//                llDownload.setEnabled(false);
-
-
-                super.onPostExecute(aVoid);
-            }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();*/
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
+            DB.taskDao().insertPlaylist(downloadPlaylistDetails);
+            downloadPlaylistDetailsList = GetPlaylistDetail("1");
+            getMediaByPer(PlaylistID, SongListSize);
+        });
+//        savePlaylist();
     }
 
     private void SaveMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, RelativeLayout llDownload, ImageView ivDownloads, int progress) {
@@ -1886,11 +1830,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     public void GetPlaylistMedia(String playlistID) {
-        DB.taskDao()
-                .getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
             deleteDownloadFile(getActivity(), playlistID);
-            for (int i = 0; i < audioList.size(); i++) {
-                GetSingleMedia(audioList.get(i).getAudioFile(), getActivity(), playlistID);
+            if (audioList.size() != 0) {
+                GetSingleMedia(audioList.get(0).getAudioFile(), getActivity().getApplicationContext(), playlistID,audioList,0);
             }
         });
         /*playlistWiseAudioDetails = new ArrayList<>();
@@ -1943,44 +1886,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         st.execute();*/
     }
 
-    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-      /*  class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                oneAudioDetailsList = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(AudioFile);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                try {
-                    if (oneAudioDetailsList.size() != 0) {
-                        if (oneAudioDetailsList.size() == 1) {
-                            FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia sts = new GetMedia();
-        sts.execute();*/
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getLastIdByuId1(AudioFile).observe(getActivity(), audioList -> {
+    public void GetSingleMedia(String AudioFile, Context ctx,String playlistID,List<DownloadAudioDetails> audioList,int i) {
+        DB.taskDao().getLastIdByuId1(AudioFile).observe(getActivity(), audioList1 -> {
             try {
-                if (audioList.size() != 0) {
-                    if (audioList.size() == 1) {
-                        FileUtils.deleteDownloadedFile(ctx, audioList.get(0).getName());
+                if (audioList1.size() != 0) {
+                    if (audioList1.size() == 1) {
+                        FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
                     }
+                }
+
+                if (i < audioList.size() - 1) {
+                    GetSingleMedia(audioList.get(i+1).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,i+1);
+                    Log.e("DownloadMedia Call", String.valueOf(i + 1));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -2014,23 +1931,25 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             playlistDownloadId.remove(i);
                         }
                     }
-                }
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                String nameJson = gson.toJson(fileNameList);
-                String urlJson = gson.toJson(audioFile);
-                String playlistIdJson = gson.toJson(playlistDownloadId);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editor.commit();
-                if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
-                    PRDownloader.cancel(downloadIdOne);
-                    filename = "";
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    String nameJson = gson.toJson(fileNameList);
+                    String urlJson = gson.toJson(audioFile);
+                    String playlistIdJson = gson.toJson(playlistDownloadId);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                    editor.commit();
+                    if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
+                        PRDownloader.cancel(downloadIdOne);
+                        filename = "";
+                    }
                 }
             }
         } catch (Exception e) {
+//            getDeleteDownloadData();
             e.printStackTrace();
+            Log.e("Download Playlist ","Download Playlist remove issue"+e.getMessage());
         }
     }
 

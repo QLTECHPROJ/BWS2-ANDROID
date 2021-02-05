@@ -47,18 +47,16 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-    String IsLock = "", IsPlayDisclimer;
+    String  IsPlayDisclimer;
     int index = -1;
     List<String> downloadAudioDetailsList = new ArrayList<>();
     AudioDatabase DB;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
-    public DownloadAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                           String IsLock) {
+    public DownloadAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
-        this.IsLock = IsLock;
     }
 
     @NonNull

@@ -38,19 +38,18 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
+import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-    String IsLock, HomeView, IsPlayDisclimer;
+    String HomeView, IsPlayDisclimer;
     int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
-    public RecommendedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                              String IsLock, String HomeView) {
+    public RecommendedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,String HomeView) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
-        this.IsLock = IsLock;
         this.HomeView = HomeView;
     }
 
@@ -210,7 +209,11 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                                 listModelList2.add(listModelList.get(i));
                             }
                         }
-                        position = 0;
+                        if(position<listModelList2.size()){
+                            position = position;
+                        }else {
+                            position = 0;
+                        }
                     } else {
                         listModelList2.addAll(listModelList);
                     }
@@ -232,7 +235,11 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                         listModelList2.add(listModelList.get(i));
                     }
                 }
-                position = 0;
+                if(position<listModelList2.size()){
+                    position = position;
+                }else {
+                    position = 0;
+                }
             } else {
                 listModelList2.addAll(listModelList);
             }

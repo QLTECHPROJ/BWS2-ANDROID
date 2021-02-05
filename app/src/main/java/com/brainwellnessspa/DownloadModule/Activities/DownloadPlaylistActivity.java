@@ -210,72 +210,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        /*
-        try {
-            SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-            String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
-            Gson gson1 = new Gson();
-            Type type1 = new TypeToken<List<String>>() {
-            }.getType();
-            List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
-            if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
-                    || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
-                String audioID = "";
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                Gson gson = new Gson();
-                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                }.getType();
-                ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
-
-                if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                    arrayList.remove(0);
-                }
-                audioID = arrayList.get(0).getID();
-                if (UnlockAudioList.contains(audioID)) {
-                } else {
-                    SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editorr = sharedm.edit();
-                    editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                    editorr.remove(CONSTANTS.PREF_KEY_audioList);
-                    editorr.remove(CONSTANTS.PREF_KEY_position);
-                    editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                    editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                    editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                    editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                    editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                    editorr.clear();
-                    editorr.commit();
-
-                    callNewPlayerRelease();
-                }
-
-            } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editorr = sharedm.edit();
-                editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                editorr.remove(CONSTANTS.PREF_KEY_audioList);
-                editorr.remove(CONSTANTS.PREF_KEY_position);
-                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                editorr.clear();
-                editorr.commit();
-
-                callNewPlayerRelease();
-            }
-            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                comefromDownload = "1";
-                callAddTranFrag();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.UpdateMiniPlayer(ctx);
@@ -468,25 +402,26 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             }
                         }
                     }
-                }
 
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                String nameJson = gson.toJson(fileNameList);
-                String urlJson = gson.toJson(audioFile);
-                String playlistIdJson = gson.toJson(playlistDownloadId);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editor.commit();
-                if (playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
-                    PRDownloader.cancel(downloadIdOne);
-                    filename = "";
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    String nameJson = gson.toJson(fileNameList);
+                    String urlJson = gson.toJson(audioFile);
+                    String playlistIdJson = gson.toJson(playlistDownloadId);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                    editor.commit();
+                    if (playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
+                        PRDownloader.cancel(downloadIdOne);
+                        filename = "";
+                    }
                 }
             }
         } catch (Exception e) {
+//            getDownloadData();
             e.printStackTrace();
-        }
+            Log.e("Download Playlist ","Download Playlist remove issue"+e.getMessage());        }
     }
 
     @Override
@@ -506,8 +441,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     public void GetPlaylistMedia(String playlistID) {
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID).observe(this, audioList -> {
             deleteDownloadFile(getApplicationContext(), playlistID);
-            for (int i = 0; i < audioList.size(); i++) {
-                GetSingleMedia(audioList.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
+            if (audioList.size() != 0) {
+                GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,0);
             }
         });
     }
@@ -536,18 +471,24 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         st.execute();*/
     }
 
-    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-        DatabaseClient
-                .getInstance(this)
-                .getaudioDatabase()
-                .taskDao()
-                .getLastIdByuId1(AudioFile).observe(this, audioList -> {
-            if (audioList.size() != 0) {
-                if (audioList.size() == 1) {
-                    FileUtils.deleteDownloadedFile(ctx, audioList.get(0).getName());
+     public void GetSingleMedia(String AudioFile, Context ctx,String playlistID,List<DownloadAudioDetails> audioList,int i) {
+            DB.taskDao().getLastIdByuId1(AudioFile).observe(this, audioList1 -> {
+                try {
+                    if (audioList1.size() != 0) {
+                        if (audioList1.size() == 1) {
+                            FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
+                        }
+                    }
+
+                    if (i < audioList.size() - 1) {
+                        GetSingleMedia(audioList.get(i+1).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,i+1);
+                        Log.e("DownloadMedia Call", String.valueOf(i + 1));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }
-        });
+
+            });
        /* class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
