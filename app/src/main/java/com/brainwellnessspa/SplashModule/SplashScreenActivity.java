@@ -74,6 +74,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .addMigrations(MIGRATION_1_2)
                 .build();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        FirebaseCrashlytics.getInstance().setUserId(UserID);
 //        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);
         getLatasteUpdate(SplashScreenActivity.this);
         MediaController mediaController = new MediaController(this);

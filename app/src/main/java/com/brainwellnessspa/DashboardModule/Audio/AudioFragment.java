@@ -2,8 +2,12 @@ package com.brainwellnessspa.DashboardModule.Audio;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -44,6 +49,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;
 import com.brainwellnessspa.databinding.MainAudioLayoutBinding;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -94,6 +100,7 @@ public class AudioFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Identify = (shared1.getBoolean(CONSTANTS.PREF_KEY_Identify, false));
+        FirebaseCrashlytics.getInstance().setUserId(UserID);
         ComeScreenAccount = 0;
         comefromDownload = "0";
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -141,7 +148,38 @@ public class AudioFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (requestCode == 15695) {
+                PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+                boolean isIgnoringBatteryOptimizations = false;
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations( getActivity().getPackageName());
+                if (isIgnoringBatteryOptimizations) {
+                    // Ignoring battery optimization
+
+                } else {
+                    // Not ignoring battery optimization
+
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onResume() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String packageName = getActivity().getPackageName();
+            PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+            boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
+            if (!isIgnoringBatteryOptimizations) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivityForResult(intent, 15695);
+            }
+        }
         prepareDisplayData();
         prepareData();
         ComeScreenAccount = 0;

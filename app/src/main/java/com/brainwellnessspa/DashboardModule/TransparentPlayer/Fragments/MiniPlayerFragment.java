@@ -1132,6 +1132,8 @@ public class MiniPlayerFragment extends Fragment {
                 int pss = 0;
                 if (mainPlayModelList.size() == 1 && position == 1) {
                     pss = 0;
+                }else{
+                    pss = position;
                 }
                 if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
                     if (mainPlayModelList.get(pss).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
