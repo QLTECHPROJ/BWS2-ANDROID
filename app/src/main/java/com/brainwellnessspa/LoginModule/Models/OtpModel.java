@@ -108,6 +108,12 @@ public class OtpModel {
         @SerializedName("shouldPlayDisclaimer")
         @Expose
         private String shouldPlayDisclaimer;
+        @SerializedName("UserPromocode")
+        @Expose
+        private String userPromocode;
+        @SerializedName("ReferLink")
+        @Expose
+        private String referLink;
 
         public String getError() {
             return error;
@@ -260,6 +266,22 @@ public class OtpModel {
 
         public void setShouldPlayDisclaimer(String shouldPlayDisclaimer) {
             this.shouldPlayDisclaimer = shouldPlayDisclaimer;
+        }
+
+        public String getUserPromocode() {
+            return userPromocode;
+        }
+
+        public void setUserPromocode(String userPromocode) {
+            this.userPromocode = userPromocode;
+        }
+
+        public String getReferLink() {
+            return referLink;
+        }
+
+        public void setReferLink(String referLink) {
+            this.referLink = referLink;
         }
     }
 }

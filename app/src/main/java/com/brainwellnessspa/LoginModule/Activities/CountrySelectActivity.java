@@ -49,7 +49,7 @@ public class CountrySelectActivity extends AppCompatActivity {
     Context ctx;
     int position;
     Activity activity;
-    String Name, Code, MobileNo, Check, searchFilter, TrialPeriod;
+    String Name = "", Code = "", MobileNo = "", Check, searchFilter, TrialPeriod, Promocode = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,9 @@ public class CountrySelectActivity extends AppCompatActivity {
             listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             position = getIntent().getIntExtra("position", 0);
         }
+        if (getIntent().getExtras() != null) {
+            Promocode = getIntent().getStringExtra(CONSTANTS.Promocode);
+        }
 
         binding.llBack.setOnClickListener(view -> {
             if (Check.equalsIgnoreCase("0")) {
@@ -81,6 +84,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                 i.putParcelableArrayListExtra("PlanData", listModelList);
                 i.putExtra("TrialPeriod", TrialPeriod);
                 i.putExtra("position", position);
+                i.putExtra("Promocode", Promocode);
                 startActivity(i);
                 finish();
             } else if (Check.equalsIgnoreCase("1")) {
@@ -178,6 +182,7 @@ public class CountrySelectActivity extends AppCompatActivity {
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", TrialPeriod);
             i.putExtra("position", position);
+            i.putExtra("Promocode", Promocode);
             startActivity(i);
             finish();
         } else if (Check.equalsIgnoreCase("1")) {
@@ -224,6 +229,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                     i.putParcelableArrayListExtra("PlanData", listModelList);
                     i.putExtra("TrialPeriod", TrialPeriod);
                     i.putExtra("position", position);
+                    i.putExtra("Promocode", Promocode);
                     ctx.startActivity(i);
                     finish();
                 } else if (Check.equalsIgnoreCase("1")) {

@@ -1,6 +1,7 @@
 package com.brainwellnessspa.Services;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -29,6 +30,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
@@ -415,11 +417,20 @@ Appointment Audios dddd*/
         }*/
     }
 
-    @Override
+   /* @Override
     public void onDestroy() {
         super.onDestroy();
-        relesePlayer();
-    }
+        if (player != null) {
+            playerNotificationManager.setPlayer(null);
+            player.stop();
+            player.release();
+            player = null;
+            PlayerINIT = false;
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+            stopForeground(true);
+        }
+    }*/
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         relesePlayer();
@@ -792,7 +803,11 @@ Appointment Audios dddd*/
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-//        stopService(intent);
+        BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        stopForeground(true);
+//        playerNotificationManager.cancel(notificationId);
         super.onTaskRemoved(rootIntent);
     }
 

@@ -103,6 +103,7 @@ public class PaymentActivity extends AppCompatActivity {
             i.putParcelableArrayListExtra("PlanData", listModelList2);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);
+            i.putExtra("Promocode", "");
             startActivity(i);
             finish();
         });
@@ -405,6 +406,7 @@ public class PaymentActivity extends AppCompatActivity {
         i.putParcelableArrayListExtra("PlanData", listModelList2);
         i.putExtra("TrialPeriod", "");
         i.putExtra("position", position);
+        i.putExtra("Promocode", "");
         startActivity(i);
         finish();
     }

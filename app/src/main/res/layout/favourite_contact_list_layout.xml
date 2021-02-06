@@ -2,8 +2,12 @@
 <layout>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/cvMainLayout"
+        android:layout_width="@dimen/_260sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_14sdp"
+        android:layout_marginRight="@dimen/_10sdp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -12,34 +16,57 @@
 
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_18sdp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_copy_link_blue_icon" />
+                    android:id="@+id/ivContactIcon"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_60sdp"
+                    android:padding="@dimen/_4sdp"
+                    android:src="@drawable/ic_user_circle_icon" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_14sdp"
-                android:layout_marginRight="@dimen/_18sdp"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_14sdp"
-                android:layout_weight="0.7"
+                android:layout_weight="0.75"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvName"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16sdp" />
 
                 <TextView
+                    android:id="@+id/tvNumber"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/montserrat_light"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp" />
 
             </LinearLayout>
 

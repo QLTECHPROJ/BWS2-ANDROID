@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
     String TrialPeriod, comeFrom = "", UserId,/* renewPlanFlag, renewPlanId, */
-            ComesTrue;
+            ComesTrue, Promocode = "", OldPromocode = "";
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
@@ -60,14 +60,23 @@ public class OrderSummaryActivity extends AppCompatActivity {
         if (getIntent() != null) {
             ComesTrue = getIntent().getStringExtra("ComesTrue");
         }
+
+        if (getIntent().getExtras() != null) {
+            OldPromocode = getIntent().getStringExtra(CONSTANTS.Promocode);
+        }
         binding.edtCode.addTextChangedListener(promoCodeTextWatcher);
         Properties p = new Properties();
+
         if (!comeFrom.equalsIgnoreCase("")) {
             p.putValue("plan", listModelList2);
         } else {
             p.putValue("plan", listModelList);
         }
         BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen);
+
+        if (!OldPromocode.equalsIgnoreCase("")) {
+            binding.edtCode.setText(OldPromocode);
+        }
 
         try {
             if (!comeFrom.equalsIgnoreCase("")) {
@@ -107,6 +116,11 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         binding.btnCheckout.setOnClickListener(view -> {
             try {
+                if (binding.edtCode.getText().toString().equalsIgnoreCase("")) {
+                    Promocode = "";
+                } else {
+                    Promocode = binding.edtCode.getText().toString();
+                }
                 Properties p1 = new Properties();
                 if (!comeFrom.equalsIgnoreCase("")) {
                     if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -143,6 +157,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                     i.putParcelableArrayListExtra("PlanData", listModelList);
                     i.putExtra("TrialPeriod", TrialPeriod);
                     i.putExtra("position", position);
+                    i.putExtra("Promocode", Promocode);
                     startActivity(i);
                     finish();
                 }

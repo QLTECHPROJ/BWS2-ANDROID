@@ -59,6 +59,7 @@ public class CONSTANTS {
     public static String Web = "Web";
     public static String Check = "Check";
     public static String Name = "Name";
+    public static String Promocode = "Promocode";
     public static String Like = "Like";
     public static String Download = "Download";
     public static String position = "position";
@@ -92,6 +93,9 @@ public class CONSTANTS {
     public static final String PREF_KEY_SplashKey = "SplashKey";
     public static final String PREF_KEY_AUDIO = "AUDIO";
     public static final String PREF_KEY_UserID = "UserID";
+    public static final String PREF_KEY_Referral = "Referral";
+    public static final String PREF_KEY_UserPromocode = "UserPromocode";
+    public static final String PREF_KEY_ReferLink = "ReferLink";
     public static final String PREF_KEY_IsDisclimer = "IsDisclimer";
     public static final String PREF_KEY_LOGOUT = "Logout";
     public static final String PREF_KEY_LOGOUT_UserID = "UserID";

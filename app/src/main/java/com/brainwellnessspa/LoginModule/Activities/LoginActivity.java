@@ -83,11 +83,6 @@ public class LoginActivity extends AppCompatActivity {
             binding.edtNumber.setText(MobileNo);
         }
 
-       /* binding.tvSendCodeText.setOnClickListener(v -> {
-            Intent i = new Intent(ctx, ReferFriendActivity.class);
-            startActivity(i);
-        });*/
-
         if (SegmentTag == 0) {
             Properties p = new Properties();
             BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen);

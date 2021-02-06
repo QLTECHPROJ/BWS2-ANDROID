@@ -197,45 +197,43 @@ public class OtpActivity extends AppCompatActivity implements
             finish();
         });
 
-        binding.btnSendCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
-                String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                if (TextUtils.isEmpty(fcm_id)) {
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
-                        String newToken = instanceIdResult.getToken();
-                        Log.e("newToken", newToken);
-                        SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                        editor.putString(CONSTANTS.Token, newToken); //Friend
-                        editor.apply();
-                        editor.commit();
-                    });
-                    SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
-                    fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
-                }
-                if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
-                            binding.edtOTP1.getText().toString() + "" +
-                                    binding.edtOTP2.getText().toString() + "" +
-                                    binding.edtOTP3.getText().toString() + "" +
-                                    binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
-                            Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
-                    listCall.enqueue(new Callback<OtpModel>() {
-                        @Override
-                        public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
-                            try {
-                                if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    OtpModel otpModel = response.body();
-                                    if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        binding.txtError.setVisibility(View.GONE);
-                                        if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
-                                                otpModel.getResponseData().getError().equalsIgnoreCase("")) {
-                                            String UserID = otpModel.getResponseData().getUserID();
-                                            String MobileNO = otpModel.getResponseData().getPhoneNumber();
-                                            analytics.identify(new Traits()
+        binding.btnSendCode.setOnClickListener(view -> {
+            SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+            String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+            if (TextUtils.isEmpty(fcm_id)) {
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
+                    String newToken = instanceIdResult.getToken();
+                    Log.e("newToken", newToken);
+                    SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                    editor.putString(CONSTANTS.Token, newToken); //Friend
+                    editor.apply();
+                    editor.commit();
+                });
+                SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
+            }
+            if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
+                        binding.edtOTP1.getText().toString() + "" +
+                                binding.edtOTP2.getText().toString() + "" +
+                                binding.edtOTP3.getText().toString() + "" +
+                                binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
+                        Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
+                listCall.enqueue(new Callback<OtpModel>() {
+                    @Override
+                    public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                OtpModel otpModel = response.body();
+                                if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    binding.txtError.setVisibility(View.GONE);
+                                    if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
+                                            otpModel.getResponseData().getError().equalsIgnoreCase("")) {
+                                        String UserID = otpModel.getResponseData().getUserID();
+                                        String MobileNO = otpModel.getResponseData().getPhoneNumber();
+                                        analytics.identify(new Traits()
                                                 .putValue("userId", UserID)
                                                 .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
                                                 .putValue("deviceType", CONSTANTS.FLAG_ONE)
@@ -248,67 +246,65 @@ public class OtpActivity extends AppCompatActivity implements
                                                 .putValue("planStartDt", otpModel.getResponseData().getPlanStartDt())
                                                 .putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate())
                                                 .putValue("clinikoId", otpModel.getResponseData().getClinikoId()));
-                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = shared.edit();
-                                            editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
-                                            editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, otpModel.getResponseData().getShouldPlayDisclaimer());
-                                            editor.putString(CONSTANTS.PREF_KEY_Name, otpModel.getResponseData().getName());
-                                            editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, otpModel.getResponseData().getFirstLogin());
-                                            editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, otpModel.getResponseData().getFirstLogin());
-                                            editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, otpModel.getResponseData().getFirstLogin());
-                                            editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, otpModel.getResponseData().getFirstLogin());
-                                            editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, otpModel.getResponseData().getFirstLogin());
-                                            editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, otpModel.getResponseData().getFirstLogin());
-                                            editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
-                                            editor.putString(CONSTANTS.PREF_KEY_Email, otpModel.getResponseData().getEmail());
-                                            editor.putString(CONSTANTS.PREF_KEY_DeviceType, CONSTANTS.FLAG_ONE);
-                                            editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
-                                            editor.putString(CONSTANTS.PREF_KEY_DeviceID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                                            editor.commit();
+                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
+                                        editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, otpModel.getResponseData().getShouldPlayDisclaimer());
+                                        editor.putString(CONSTANTS.PREF_KEY_Name, otpModel.getResponseData().getName());
+                                        editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                        editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                        editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                        editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                        editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                        editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, otpModel.getResponseData().getFirstLogin());
+                                        editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
+                                        editor.putString(CONSTANTS.PREF_KEY_Email, otpModel.getResponseData().getEmail());
+                                        editor.putString(CONSTANTS.PREF_KEY_DeviceType, CONSTANTS.FLAG_ONE);
+                                        editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                        editor.putString(CONSTANTS.PREF_KEY_DeviceID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                                        editor.commit();
 
+                                        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
+                                        String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
+                                        String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
 
-                                            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
-                                            String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
-                                            String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
-
-                                            if (!UserID.equalsIgnoreCase(Logout_UserID)
-                                                    && !MobileNO.equalsIgnoreCase(Logout_MobileNo)) {
+                                        if (!UserID.equalsIgnoreCase(Logout_UserID)
+                                                && !MobileNO.equalsIgnoreCase(Logout_MobileNo)) {
 //                                                GetAllMedia();
-                                                callObserve1();
-                                            } else {
+                                            callObserve1();
+                                        } else {
 //                                                GetAllMedia2();
-                                                callObserve2();
-                                            }
-
-                                            Log.e("New UserId MobileNo", UserID + "....." + MobileNO);
-                                            Log.e("Old UserId MobileNo", Logout_UserID + "....." + Logout_MobileNo);
-                                            logout = false;
-                                            BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
-                                        } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
-                                            binding.txtError.setText(otpModel.getResponseMessage());
-                                            binding.txtError.setVisibility(View.VISIBLE);
+                                            callObserve2();
                                         }
-                                    } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                        binding.txtError.setText(otpModel.getResponseMessage());
-                                        binding.txtError.setVisibility(View.VISIBLE);
-                                    } else {
+
+                                        Log.e("New UserId MobileNo", UserID + "....." + MobileNO);
+                                        Log.e("Old UserId MobileNo", Logout_UserID + "....." + Logout_MobileNo);
+                                        logout = false;
+                                        BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
+                                    } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
                                         binding.txtError.setText(otpModel.getResponseMessage());
                                         binding.txtError.setVisibility(View.VISIBLE);
                                     }
+                                } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                    binding.txtError.setText(otpModel.getResponseMessage());
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                } else {
+                                    binding.txtError.setText(otpModel.getResponseMessage());
+                                    binding.txtError.setVisibility(View.VISIBLE);
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<OtpModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), OtpActivity.this);
-                }
+                    @Override
+                    public void onFailure(Call<OtpModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), OtpActivity.this);
             }
         });
     }

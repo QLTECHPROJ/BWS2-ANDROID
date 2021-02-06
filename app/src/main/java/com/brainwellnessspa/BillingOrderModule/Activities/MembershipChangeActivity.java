@@ -220,6 +220,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);
+            i.putExtra("Promocode", "");
         }
 
         @Override

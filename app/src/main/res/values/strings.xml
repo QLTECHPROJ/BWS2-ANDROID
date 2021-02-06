@@ -291,4 +291,8 @@
     <string name="Friends_registered_successfully">Friends registered successfully</string>
     <string name="Earn_cash_rewards">Earn cash rewards</string>
     <string name="Favourites">Favourites</string>
+    <string name="Refer_friend">Refer a friend</string>
+    <string name="Refer_Friend">Refer a Friend</string>
+    <string name="Invite">Invite</string>
+    <string name="ok">ok</string>
 </resources>

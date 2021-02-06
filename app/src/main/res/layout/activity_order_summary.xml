@@ -63,7 +63,6 @@
                     android:paddingBottom="@dimen/_16sdp"
                     android:weightSum="1">
 
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -231,7 +230,7 @@
                     android:layout_marginTop="@dimen/_56sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="left"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:text="@string/Promo_Code"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
@@ -240,7 +239,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:background="@drawable/round_gray_cornor"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/_16sdp"
@@ -264,7 +263,6 @@
                             android:backgroundTint="@color/dim_light_gray"
                             android:fontFamily="@font/montserrat_medium"
                             android:hint="@string/Enter_promo_code_here"
-                            android:maxLength="10"
                             android:paddingVertical="@dimen/_12sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textColorHint="@color/dark_blue_gray"

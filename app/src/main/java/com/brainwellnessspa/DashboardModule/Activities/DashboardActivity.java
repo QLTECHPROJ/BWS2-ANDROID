@@ -39,6 +39,9 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
@@ -243,7 +246,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
             if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
+                finishAffinity();
                 return;
             }
 

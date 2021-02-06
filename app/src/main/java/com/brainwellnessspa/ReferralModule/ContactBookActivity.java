@@ -1,27 +1,60 @@
 package com.brainwellnessspa.ReferralModule;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.ContactsContract;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityContactBookBinding;
+import com.brainwellnessspa.databinding.ContactListLayoutBinding;
+import com.brainwellnessspa.databinding.FavouriteContactListLayoutBinding;
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactBookActivity extends AppCompatActivity {
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 90;
     ActivityContactBookBinding binding;
     Context ctx;
+    String UserPromocode, ReferLink, UserID;
     Activity activity;
     EditText searchEditText;
+    List<ContactlistModel> contactlistModel;
+    ContactListAdapter contactListAdapter;
+    FavContactListAdapter favContactListAdapter;
+    List<ContactlistModel> userList = new ArrayList<>();
+    List<FavContactlistModel> favUserList = new ArrayList<>();
+    ArrayList<String> sendNameList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +63,12 @@ public class ContactBookActivity extends AppCompatActivity {
         ctx = ContactBookActivity.this;
         activity = ContactBookActivity.this;
 
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE);
+        UserPromocode = (shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, ""));
+        ReferLink = (shareded.getString(CONSTANTS.PREF_KEY_ReferLink, ""));
+        contactlistModel = new ArrayList();
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
@@ -52,29 +91,272 @@ public class ContactBookActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String search) {
-                /*try {
-                    if (adpater2 != null) {
-                        adpater2.getFilter().filter(search);
-                        SearchFlag = search;
-                        Log.e("searchsearch", "" + search);
-                    }
+                try {
+                    contactListAdapter.getFilter().filter(search);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
                 return false;
             }
         });
+
+        binding.llBack.setOnClickListener(v -> finish());
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         binding.rvFavContactList.setLayoutManager(mLayoutManager);
         binding.rvFavContactList.setItemAnimator(new DefaultItemAnimator());
 
-        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-        binding.rvContactList.setLayoutManager(mLayoutManager1);
+        binding.rvContactList.setHasFixedSize(true);
+        RecyclerView.LayoutManager mlistLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+        binding.rvContactList.setLayoutManager(mlistLayoutManager);
         binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
-        prepareData();
+        withoutSearch();
     }
 
-    private void prepareData() {
+    @Override
+    protected void onResume() {
+        binding.searchView.clearFocus();
+        searchEditText.setText("");
+        binding.searchView.setQuery("", false);
+        super.onResume();
+    }
 
+    private void withoutSearch() {
+        if (ContextCompat.checkSelfPermission(ctx,
+                Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(ctx,
+                Manifest.permission.WRITE_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.WRITE_CONTACTS},
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+            Intent intent = new Intent();
+            String manufacturer = Build.MANUFACTURER;
+            if ("xiaomi".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+            } else if ("oppo".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
+            } else if ("vivo".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
+            }
+
+            List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            if (list.size() > 0) {
+                startActivity(intent);
+            }
+        } else {
+            String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.PHOTO_URI};
+            Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    projection, null, null,
+                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+            Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "starred=?",
+                    new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+            String lastPhoneName = " ";
+            if (phones.getCount() > 0) {
+                while (phones.moveToNext()) {
+                    String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    String contactId = phones.getString(phones.getColumnIndex(ContactsContract.Contacts._ID));
+                    String photoUri = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                    if (!name.equalsIgnoreCase(lastPhoneName)) {
+                        lastPhoneName = name;
+                        ContactlistModel user = new ContactlistModel();
+                        user.setContactName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                        user.setContactNumber(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                        userList.add(user);
+                    }
+                }
+            }
+            phones.close();
+
+            if (cur.getCount() > 0) {
+                while (cur.moveToNext()) {
+                    String name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    if (!name.equalsIgnoreCase(lastPhoneName)) {
+                        lastPhoneName = name;
+                        FavContactlistModel user = new FavContactlistModel();
+                        user.setContactName(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                        user.setContactNumber(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                        favUserList.add(user);
+                    }
+                }
+            }
+            cur.close();
+            contactListAdapter = new ContactListAdapter(userList, sendNameList);
+            binding.rvContactList.setAdapter(contactListAdapter);
+        }
+
+        favContactListAdapter = new FavContactListAdapter(favUserList);
+        binding.rvFavContactList.setAdapter(favContactListAdapter);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    withoutSearch();
+                } else {
+                    AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
+                    buildermain.setMessage("Please Allow Contact Permission");
+                    buildermain.setCancelable(true);
+                    buildermain.setPositiveButton(
+                            getString(R.string.ok),
+                            (dialogmain, id1) -> {
+                                dialogmain.dismiss();
+                            });
+                    AlertDialog alert11 = buildermain.create();
+                    alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+                    alert11.show();
+                    alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
+                }
+                return;
+            }
+        }
+    }
+
+    public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.MyViewHolder> implements Filterable {
+        List<ContactlistModel> contactlistModel;
+        private List<ContactlistModel> listFilterContact;
+        private ArrayList<String> sendNameList2;
+
+        public ContactListAdapter(List<ContactlistModel> contactlistModel, ArrayList<String> sendNameList2) {
+            this.contactlistModel = contactlistModel;
+            this.listFilterContact = contactlistModel;
+            this.sendNameList2 = sendNameList2;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.contact_list_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            ContactlistModel model = listFilterContact.get(position);
+            holder.binding.tvName.setText(model.getContactName());
+            holder.binding.tvNumber.setText(model.getContactNumber());
+            holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_gray_cornor_normal);
+            holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.gray));
+            holder.binding.BtnInvite.setOnClickListener(v -> {
+                holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal);
+                holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.white));
+                notifyDataSetChanged();
+                Uri uri = Uri.parse("smsto:" + model.getContactNumber());
+                Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                // smsIntent.setData(uri);
+                smsIntent.putExtra("sms_body", "Hey, login this portal using this link\n" + ReferLink);
+                startActivity(smsIntent);
+                finish();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return listFilterContact.size();
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    final FilterResults filterResults = new FilterResults();
+                    String charString = charSequence.toString();
+                    if (charString.isEmpty()) {
+                        listFilterContact = contactlistModel;
+                    } else {
+                        List<ContactlistModel> filteredList = new ArrayList<>();
+                        for (ContactlistModel row : contactlistModel) {
+                            if (row.getContactName().toLowerCase().contains(charString.toLowerCase())) {
+                                filteredList.add(row);
+                            }
+                        }
+                        listFilterContact = filteredList;
+                    }
+                    filterResults.values = listFilterContact;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    if (listFilterContact.size() == 0) {
+                        binding.llError.setVisibility(View.VISIBLE);
+                        binding.rvContactList.setVisibility(View.GONE);
+                        binding.rvContactList.setAdapter(null);
+                    } else {
+                        binding.llError.setVisibility(View.GONE);
+                        binding.rvContactList.setVisibility(View.VISIBLE);
+                        listFilterContact = (ArrayList<ContactlistModel>) filterResults.values;
+                        notifyDataSetChanged();
+                    }
+                }
+            };
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ContactListLayoutBinding binding;
+
+            public MyViewHolder(ContactListLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    public class FavContactListAdapter extends RecyclerView.Adapter<FavContactListAdapter.MyViewHolder> {
+        List<FavContactlistModel> favcontactlistModel;
+
+        public FavContactListAdapter(List<FavContactlistModel> contactlistModel) {
+            this.favcontactlistModel = contactlistModel;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            FavouriteContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.favourite_contact_list_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.tvName.setText(favcontactlistModel.get(position).getContactName());
+            holder.binding.tvNumber.setText(favcontactlistModel.get(position).getContactNumber());
+            holder.binding.cvMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notifyDataSetChanged();
+                    Uri uri = Uri.parse("smsto:" + favcontactlistModel.get(position).getContactNumber());
+                    Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                    // smsIntent.setData(uri);
+                    smsIntent.putExtra("sms_body", "Hey, login this portal using this link\n" + ReferLink);
+                    startActivity(smsIntent);
+                    finish();
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return favcontactlistModel.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            FavouriteContactListLayoutBinding binding;
+
+            public MyViewHolder(FavouriteContactListLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
     }
 }
+

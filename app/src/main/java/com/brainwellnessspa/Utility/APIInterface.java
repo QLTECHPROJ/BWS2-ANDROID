@@ -114,7 +114,8 @@ public interface APIInterface {
             @Field("CountryCode") String CountryCode,
             @Field("Token") String token,
             @Field("DeviceType") String deviceType,
-            @Field("DeviceID") String deviceID);
+            @Field("DeviceID") String deviceID,
+            @Field("ReferCode") String referCode);
 
     /* TODO CheckoutGetCodeActivity */
     @POST("signupcheckout")

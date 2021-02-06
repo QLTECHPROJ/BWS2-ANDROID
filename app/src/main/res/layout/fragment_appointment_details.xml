@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@+id/btnComplete"
-                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_110sdp"
                     android:overScrollMode="never">
 
                     <LinearLayout

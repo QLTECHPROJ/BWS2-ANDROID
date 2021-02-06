@@ -67,7 +67,7 @@ import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
-    String MobileNo = "", Code = "", UserID, Name = "";
+    String MobileNo = "", Code = "", UserID, Name = "", Promocode = "";
     Context context;
     Activity activity;
     Dialog d;
@@ -81,6 +81,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     private long mLastClickTime = 0;
 
     AudioDatabase DB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +94,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             MobileNo = getIntent().getStringExtra("MobileNo");
             Code = getIntent().getStringExtra("Code");
             Name = getIntent().getStringExtra(CONSTANTS.Name);
+            Promocode = getIntent().getStringExtra(CONSTANTS.Promocode);
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
             listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             position = getIntent().getIntExtra("position", 0);
@@ -103,12 +105,14 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
+
         binding.llBack.setOnClickListener(view -> {
             Intent i = new Intent(context, OrderSummaryActivity.class);
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", TrialPeriod);
             i.putExtra("Name", Name);
             i.putExtra("position", position);
+            i.putExtra("Promocode", Promocode);
             startActivity(i);
             finish();
         });
@@ -230,7 +234,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                                 String countryCode = Code.replace("+", "");
-                                Call<RegisterModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode, fcm_id, CONSTANTS.FLAG_ONE, deviceid);
+                                Call<RegisterModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo,
+                                        countryCode, fcm_id, CONSTANTS.FLAG_ONE, deviceid, Promocode);
                                 listCall.enqueue(new Callback<RegisterModel>() {
                                     @Override
                                     public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
@@ -238,41 +243,46 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                         try {
                                             RegisterModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                                keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                analytics.identify(new Traits()
-                                                        .putValue("userId", UserID)
-                                                        .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
-                                                        .putValue("deviceType", CONSTANTS.FLAG_ONE)
-                                                        .putValue("countryCode", Code)
-                                                        .putValue("countryName", Name)
-                                                        .putValue("userName", cardModel.getResponseData().getName())
-                                                        .putValue("mobileNo", cardModel.getResponseData().getPhoneNumber())
-                                                        .putValue("plan", cardModel.getResponseData().getPlan())
-                                                        .putValue("planStatus", cardModel.getResponseData().getPlanStatus())
-                                                        .putValue("planStartDt", cardModel.getResponseData().getPlanStartDt())
-                                                        .putValue("planExpiryDt", cardModel.getResponseData().getPlanExpiryDate())
-                                                        .putValue("clinikoId", cardModel.getResponseData().getClinikoId()));
-                                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                                                SharedPreferences.Editor editor = shared.edit();
-                                                editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
-                                                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
-                                                editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
-                                                editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
-                                                editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");
-                                                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "1");
-                                                editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
-                                                editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
-                                                editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
-                                                editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
-                                                editor.commit();
-                                                Properties p = new Properties();
-                                                p.putValue("userId", UserID);
-                                                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
-                                                GetAllMedia();
-                                                Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
-                                                startActivity(i);
-                                                finish();
+                                                if (cardModel.getResponseData().getIsPromocode().equalsIgnoreCase("1")) {
+                                                    InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                    keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                                    analytics.identify(new Traits()
+                                                            .putValue("userId", UserID)
+                                                            .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
+                                                            .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                                            .putValue("countryCode", Code)
+                                                            .putValue("countryName", Name)
+                                                            .putValue("userName", cardModel.getResponseData().getName())
+                                                            .putValue("mobileNo", cardModel.getResponseData().getPhoneNumber())
+                                                            .putValue("plan", cardModel.getResponseData().getPlan())
+                                                            .putValue("planStatus", cardModel.getResponseData().getPlanStatus())
+                                                            .putValue("planStartDt", cardModel.getResponseData().getPlanStartDt())
+                                                            .putValue("planExpiryDt", cardModel.getResponseData().getPlanExpiryDate())
+                                                            .putValue("clinikoId", cardModel.getResponseData().getClinikoId()));
+                                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                                    SharedPreferences.Editor editor = shared.edit();
+                                                    editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
+                                                    editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                    editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
+                                                    editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");
+                                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "1");
+                                                    editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
+                                                    editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
+                                                    editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
+                                                    editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                                    editor.commit();
+                                                    Properties p = new Properties();
+                                                    p.putValue("userId", UserID);
+                                                    BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
+                                                    GetAllMedia();
+                                                    Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
+                                                    startActivity(i);
+                                                    finish();
+                                                } else if (cardModel.getResponseData().getIsPromocode().equalsIgnoreCase("0") ||
+                                                        cardModel.getResponseData().getIsPromocode().equalsIgnoreCase("")) {
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                }
                                             } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                                 BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             } else {
@@ -300,7 +310,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     }
 
     public void GetAllMedia() {
-
         DatabaseClient
                 .getInstance(this)
                 .getaudioDatabase()
@@ -326,7 +335,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     private void DeletallLocalCart() {
         AudioDatabase.databaseWriteExecutor.execute(() -> {
             DB.taskDao().deleteAll();
-        }); AudioDatabase.databaseWriteExecutor.execute(() -> {
+        });
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
             DB.taskDao().deleteAllPlalist();
         });
     }
@@ -381,6 +391,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         i.putParcelableArrayListExtra("PlanData", listModelList);
         i.putExtra("TrialPeriod", TrialPeriod);
         i.putExtra("position", position);
+        i.putExtra("Promocode", Promocode);
         startActivity(i);
         finish();
     }

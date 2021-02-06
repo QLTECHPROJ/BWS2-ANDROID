@@ -106,6 +106,9 @@ private ResponseData responseData;
         @SerializedName("CountryName")
         @Expose
         private String countryName;
+        @SerializedName("IsPromocode")
+        @Expose
+        private String IsPromocode;
 
         public String getCardId() {
             return cardId;
@@ -257,6 +260,14 @@ private ResponseData responseData;
 
         public void setCountryName(String countryName) {
             this.countryName = countryName;
+        }
+
+        public String getIsPromocode() {
+            return IsPromocode;
+        }
+
+        public void setIsPromocode(String isPromocode) {
+            IsPromocode = isPromocode;
         }
     }
 }

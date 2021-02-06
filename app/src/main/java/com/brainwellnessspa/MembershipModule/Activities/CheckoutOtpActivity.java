@@ -54,7 +54,7 @@ import static com.brainwellnessspa.BWSApplication.getKey;
 
 public class CheckoutOtpActivity extends AppCompatActivity implements
         SmsReceiver.OTPReceiveListener {
-    String Name, Code, MobileNo;
+    String Name, Code, MobileNo, Promocode;
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
     Activity activity;
@@ -83,6 +83,11 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             position = getIntent().getIntExtra("position", 0);
         }
+
+        if (getIntent().getExtras() != null){
+            Promocode = getIntent().getStringExtra(CONSTANTS.Promocode);
+        }
+
         activity = CheckoutOtpActivity.this;
         ctx = CheckoutOtpActivity.this;
 //        logger = AppEventsLogger.newLogger(this);
@@ -190,6 +195,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", TrialPeriod);
             i.putExtra("position", position);
+            i.putExtra("Promocode", Promocode);
             startActivity(i);
             finish();
         });
@@ -204,6 +210,10 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             i.putExtra("MobileNo", MobileNo);
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);
+            i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("position", position);
+            i.putExtra("Promocode", Promocode);
             startActivity(i);
             finish();
         });
@@ -247,6 +257,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                                 i.putParcelableArrayListExtra("PlanData", listModelList);
                                 i.putExtra("TrialPeriod", TrialPeriod);
                                 i.putExtra("position", position);
+                                i.putExtra("Promocode", Promocode);
                                 startActivity(i);
                                 finish();
                             } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
@@ -307,6 +318,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         i.putParcelableArrayListExtra("PlanData", listModelList);
         i.putExtra("TrialPeriod", TrialPeriod);
         i.putExtra("position", position);
+        i.putExtra("Promocode", Promocode);
         startActivity(i);
         finish();
     }

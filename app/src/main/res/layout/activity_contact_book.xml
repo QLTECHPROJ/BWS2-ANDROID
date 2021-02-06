@@ -86,7 +86,6 @@
             android:layout_height="match_parent"
             android:layout_below="@id/rlSearch">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -99,7 +98,7 @@
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_bold"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:text="@string/Favourites"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
@@ -109,16 +108,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
-                    android:overScrollMode="never" />
+                    android:nestedScrollingEnabled="true"
+                    android:overScrollMode="never"
+                    android:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvContactList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
-                    android:overScrollMode="never" />
+                    android:nestedScrollingEnabled="true"
+                    android:overScrollMode="never"
+                    android:visibility="visible"
+                    tools:listitem="@layout/contact_list_layout" />
+
+                <LinearLayout
+                    android:id="@+id/llError"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvFound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
+                        android:text="No result found"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_16sdp" />
+
+                </LinearLayout>
 
             </LinearLayout>
+
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout

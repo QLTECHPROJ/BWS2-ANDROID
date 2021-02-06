@@ -31,11 +31,14 @@ import androidx.fragment.app.Fragment;
 
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
+import com.brainwellnessspa.ReferralModule.ReferFriendActivity;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.brainwellnessspa.BWSApplication;
@@ -54,6 +57,8 @@ import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.installations.InstallationTokenResult;
 import com.segment.analytics.Properties;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
@@ -67,6 +72,7 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -76,7 +82,6 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
 
@@ -210,6 +215,15 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        binding.llRefer.setOnClickListener(v -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), ReferFriendActivity.class);
+            startActivity(i);
+        });
+
         binding.llFaq.setOnClickListener(view18 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -243,25 +257,33 @@ public class AccountFragment extends Fragment {
                 });
 
                 Btn.setOnClickListener(v -> {
+                    relesePlayer();
+                    /*NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(notificationId);
+                    notificationManager.cancelAll();*/
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     DeleteCall(dialog);
-                    relesePlayer();
                     deleteCache(getActivity());
-                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(NOTIFICATION_ID);
                     SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                     String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                     if (TextUtils.isEmpty(fcm_id)) {
-                        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
-                            @Override
-                            public void onSuccess(InstanceIdResult instanceIdResult) {
-                                String newToken = instanceIdResult.getToken();
-                                Log.e("newToken", newToken);
-                                SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                                editor.putString(CONSTANTS.Token, newToken); //Friend
-                                editor.apply();
-                                editor.commit();
-                            }
+                       /* FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(getActivity(), task -> {
+                            String newToken = task.getResult();
+                            Log.e("newToken", newToken);
+                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                            editor.putString(CONSTANTS.Token, newToken); //Friend
+                            editor.apply();
+                            editor.commit();
+                        })*/
+
+
+                        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
+                            String newToken = instanceIdResult.getToken();
+                            Log.e("newToken", newToken);
+                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                            editor.putString(CONSTANTS.Token, newToken); //Friend
+                            editor.apply();
+                            editor.commit();
                         });
                         fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                     }
@@ -280,6 +302,7 @@ public class AccountFragment extends Fragment {
                                 if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     Intent i = new Intent(getActivity(), LoginActivity.class);
                                     startActivity(i);
+                                    getActivity().finish();
                                     getActivity().overridePendingTransition(0, 0);
                                     Properties p1 = new Properties();
                                     p1.putValue("userId", UserID);
@@ -408,11 +431,25 @@ public class AccountFragment extends Fragment {
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
         edit.remove(CONSTANTS.PREF_KEY_MobileNo);
+        edit.remove(CONSTANTS.PREF_KEY_Name);
         edit.remove(CONSTANTS.PREF_KEY_IsDisclimer);
         edit.remove(CONSTANTS.PREF_KEY_ExpDate);
         edit.remove(CONSTANTS.PREF_KEY_IsLock);
+        edit.remove(CONSTANTS.PREF_KEY_PlayerFirstLogin);
+        edit.remove(CONSTANTS.PREF_KEY_AudioFirstLogin);
+        edit.remove(CONSTANTS.PREF_KEY_PlaylistFirstLogin);
+        edit.remove(CONSTANTS.PREF_KEY_AccountFirstLogin);
+        edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin);
+        edit.remove(CONSTANTS.PREF_KEY_SearchFirstLogin);
+        edit.remove(CONSTANTS.PREF_KEY_Email);
+        edit.remove(CONSTANTS.PREF_KEY_DeviceType);
+        edit.remove(CONSTANTS.PREF_KEY_Identify);
+        edit.remove(CONSTANTS.PREF_KEY_DeviceID);
+//        edit.remove(CONSTANTS.PREF_KEY_UserPromocode);
+//        edit.remove(CONSTANTS.PREF_KEY_ReferLink);
         edit.clear();
         edit.commit();
+
         SharedPreferences preferencesx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         SharedPreferences.Editor editx = preferencesx.edit();
         editx.remove(CONSTANTS.PREF_KEY_IsRepeat);
@@ -461,7 +498,11 @@ public class AccountFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         ProfileViewModel viewModel = response.body();
                         binding.tvViewProfile.setVisibility(View.VISIBLE);
-
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_UserPromocode, viewModel.getResponseData().getUserReferCode());
+                        editor.putString(CONSTANTS.PREF_KEY_ReferLink, viewModel.getResponseData().getReferLink());
+                        editor.commit();
                         if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
                                 viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
                                 viewModel.getResponseData().getName() == null) {

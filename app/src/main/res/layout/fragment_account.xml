@@ -294,6 +294,30 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/llRefer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_60sdp"
+                                    android:layout_height="@dimen/_56sdp"
+                                    android:padding="@dimen/_1sdp"
+                                    android:src="@drawable/ic_resource_icon" />
+
+                                <TextView
+                                    android:id="@+id/tvRefer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_18sdp"
+                                    android:fontFamily="@font/montserrat_semi_bold"
+                                    android:gravity="left"
+                                    android:text="@string/Refer_Friend"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_16sdp" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/llFaq"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

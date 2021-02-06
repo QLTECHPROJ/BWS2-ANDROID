@@ -8,6 +8,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.MembershipModule.Activities.MembershipActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityReferFriendBinding;
 
@@ -24,6 +26,7 @@ public class ReferFriendActivity extends AppCompatActivity {
     ActivityReferFriendBinding binding;
     Context ctx;
     Activity activity;
+    String UserPromocode, ReferLink, UserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +34,17 @@ public class ReferFriendActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_refer_friend);
         ctx = ReferFriendActivity.this;
         activity = ReferFriendActivity.this;
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE);
+        UserPromocode = (shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, ""));
+        ReferLink = (shareded.getString(CONSTANTS.PREF_KEY_ReferLink, ""));
         prepareData();
+        binding.tvCodeCopy.setText(UserPromocode);
 
+        binding.llBack.setOnClickListener(v -> {
+            finish();
+        });
         binding.llCodeCopy.setOnClickListener(v -> {
             ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             ClipData clipData = ClipData.newPlainText("text", binding.tvCodeCopy.getText());
@@ -46,7 +58,7 @@ public class ReferFriendActivity extends AppCompatActivity {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Hey, download this app using this link\n" + "https://www.google.com/");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Hey, login this portal using this link\n" + ReferLink);
             startActivity(Intent.createChooser(shareIntent, "Share via"));
         });
 

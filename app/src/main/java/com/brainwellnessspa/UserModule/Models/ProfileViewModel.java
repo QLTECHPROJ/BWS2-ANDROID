@@ -92,6 +92,12 @@ public class ProfileViewModel {
         @SerializedName("IsVerify")
         @Expose
         private String isVerify;
+        @SerializedName("UserReferCode")
+        @Expose
+        private String userReferCode;
+        @SerializedName("ReferLink")
+        @Expose
+        private String referLink;
 
         public String getName() {
             return name;
@@ -203,6 +209,22 @@ public class ProfileViewModel {
 
         public void setIsVerify(String isVerify) {
             this.isVerify = isVerify;
+        }
+
+        public String getUserReferCode() {
+            return userReferCode;
+        }
+
+        public void setUserReferCode(String userReferCode) {
+            this.userReferCode = userReferCode;
+        }
+
+        public String getReferLink() {
+            return referLink;
+        }
+
+        public void setReferLink(String referLink) {
+            this.referLink = referLink;
         }
     }
 }

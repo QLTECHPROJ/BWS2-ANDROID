@@ -36,7 +36,7 @@ import static com.brainwellnessspa.MembershipModule.Activities.CheckoutOtpActivi
 
 public class CheckoutGetCodeActivity extends AppCompatActivity {
     ActivityCheckoutGetCodeBinding binding;
-    String Name = "", Code = "", MobileNo = "", TrialPeriod;
+    String Name = "", Code = "", MobileNo = "", TrialPeriod, Promocode = "";
     Context ctx;
     Activity activity;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
@@ -55,6 +55,10 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
+        }
+
+        if (getIntent().getExtras() != null) {
+            Promocode = getIntent().getStringExtra(CONSTANTS.Promocode);
         }
 
         if (getIntent().getExtras() != null) {
@@ -88,6 +92,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", TrialPeriod);
             i.putExtra("position", position);
+            i.putExtra("Promocode", Promocode);
             startActivity(i);
             finish();
         });
@@ -105,6 +110,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             i.putExtra("Code", binding.tvCountryCode.getText().toString());
             i.putExtra("MobileNo", binding.edtNumber.getText().toString());
             i.putExtra("Check", "0");
+            i.putExtra("Promocode", Promocode);
             startActivity(i);
             finish();
         });
@@ -127,6 +133,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         i.putParcelableArrayListExtra("PlanData", listModelList);
         i.putExtra("TrialPeriod", TrialPeriod);
         i.putExtra("position", position);
+        i.putExtra("Promocode", Promocode);
         startActivity(i);
         finish();
     }
@@ -154,16 +161,16 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                     public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         try {
-                            if (response.isSuccessful()) {
                                 SignUpModel loginModel = response.body();
                                 if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     Intent i = new Intent(ctx, CheckoutOtpActivity.class);
-                            i.putParcelableArrayListExtra("PlanData", listModelList);
+                                    i.putParcelableArrayListExtra("PlanData", listModelList);
                                     i.putExtra("TrialPeriod", TrialPeriod);
                                     i.putExtra("position", position);
                                     i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                                     i.putExtra("Name", binding.tvCountry.getText().toString());
                                     i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                                    i.putExtra("Promocode", Promocode);
                                     BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
                                     startActivity(i);
                                     finish();
@@ -171,7 +178,6 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                                     binding.txtError.setVisibility(View.VISIBLE);
                                     binding.txtError.setText(loginModel.getResponseMessage());
                                 }
-                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
