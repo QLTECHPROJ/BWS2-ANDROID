@@ -699,52 +699,6 @@ public class MiniPlayerFragment extends Fragment {
                     GetAllMedia();
                 }
             });
-
-/*
-        exoBinding.llPlay.setOnClickListener(view -> {
-            if (player != null) {
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.VISIBLE);
-                exoBinding.progressBar.setVisibility(View.GONE);
-                if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
-                        && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-//                    playerNotificationManager.setPlayer(player);
-                    player.seekTo(position, 0);
-                }
-                player.setPlayWhenReady(true);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("audioId", mainPlayModelList.get(position).getID());
-                p.putValue("audioName", mainPlayModelList.get(position).getName());
-                p.putValue("audioDescription", "");
-                p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                p.putValue("position", GetCurrentAudioPosition());
-                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
-                    p.putValue("audioType", "Downloaded");
-                }else {
-                    p.putValue("audioType", "Streaming");
-                }
-                p.putValue("source", GetSourceName(ctx));
-                p.putValue("playerType", "Mini");
-                p.putValue("audioService", APP_SERVICE_STATUS);
-                p.putValue("bitRate", "");
-                p.putValue("sound", */
-            /*GetDeviceVolume(ctx)*//*
-"0");
-                BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
-            } else {
-                audioClick = true;
-                miniPlayer = 1;
-                GetAllMedia();
-            }
-
-            localIntent.putExtra("MyData", "play");
-            localBroadcastManager.sendBroadcast(localIntent);
-        });
-*/
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("ep all click State: ", e.getMessage());
@@ -905,33 +859,6 @@ public class MiniPlayerFragment extends Fragment {
                 BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
             });
 
-       /* exoBinding.llPlay.setOnClickListener(view -> {
-            if (player != null) {
-                exoBinding.llPlay.setVisibility(View.GONE);
-                exoBinding.llPause.setVisibility(View.VISIBLE);
-                exoBinding.progressBar.setVisibility(View.GONE);
-                player.setPlayWhenReady(true);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("position", GetCurrentAudioPosition());
-                p.putValue("source", GetSourceName(ctx));
-                p.putValue("playerType", "Mini");
-                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())){
-                    p.putValue("audioType", "Downloaded");
-                }else {
-                    p.putValue("audioType", "Streaming");
-                }
-                p.putValue("bitRate", "");
-                p.putValue("sound", *//*GetDeviceVolume(ctx)*//*"0");
-                BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
-            } else {
-                audioClick = true;
-                miniPlayer = 1;
-                GetAllMedia();
-            }
-            localIntent.putExtra("MyData", "play");
-            localBroadcastManager.sendBroadcast(localIntent);
-        });*/
             if (miniPlayer == 0) {
                 if (audioClick) {
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -1104,25 +1031,34 @@ public class MiniPlayerFragment extends Fragment {
 
     private void callButtonText(int ps) {
 //        simpleSeekbar.setMax(100);
-        if (!BWSApplication.isNetworkConnected(ctx)) {
-            Gson gson = new Gson();
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            String json2 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-            if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
-                Type type1 = new TypeToken<ArrayList<MainPlayModel>>() {
-                }.getType();
-                mainPlayModelList = gson.fromJson(json2, type1);
+        try {
+            if (!BWSApplication.isNetworkConnected(ctx)) {
+                Gson gson = new Gson();
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                String json2 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type1 = new TypeToken<ArrayList<MainPlayModel>>() {
+                    }.getType();
+                    mainPlayModelList = gson.fromJson(json2, type1);
+                }
             }
-        }
-        url = mainPlayModelList.get(ps).getAudioFile();
-        id = mainPlayModelList.get(ps).getID();
-        myAudioId = id;
-        if (url.equalsIgnoreCase("") || url.isEmpty()) {
-            isDisclaimer = 1;
-        } else {
-            isDisclaimer = 0;
-        }
+            url = mainPlayModelList.get(ps).getAudioFile();
+            id = mainPlayModelList.get(ps).getID();
+            myAudioId = id;
+            if (url.equalsIgnoreCase("") || url.isEmpty()) {
+                isDisclaimer = 1;
+            } else {
+                isDisclaimer = 0;
+            }
 
+            if (mainPlayModelList.get(ps).getPlaylistID() == null) {
+                mainPlayModelList.get(ps).setPlaylistID("");
+            }
+            exoBinding.tvTitle.setText(mainPlayModelList.get(ps).getName());
+            exoBinding.tvSubTitle.setText(mainPlayModelList.get(ps).getAudioDirection());
+        }catch (Exception e){
+            Log.e("mini",e.getMessage());
+        }
         exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
                 exoBinding.llPlay.setVisibility(View.GONE);
@@ -1189,9 +1125,6 @@ public class MiniPlayerFragment extends Fragment {
             localBroadcastManager.sendBroadcast(localIntent);
         });
 
-        if (mainPlayModelList.get(ps).getPlaylistID() == null) {
-            mainPlayModelList.get(ps).setPlaylistID("");
-        }
         try {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
@@ -1206,8 +1139,6 @@ public class MiniPlayerFragment extends Fragment {
             e.printStackTrace();
         }
 
-        exoBinding.tvTitle.setText(mainPlayModelList.get(ps).getName());
-        exoBinding.tvSubTitle.setText(mainPlayModelList.get(ps).getAudioDirection());
         if (!url.equalsIgnoreCase("")) {
             if (!id.equalsIgnoreCase(addToRecentPlayId)) {
                 addToRecentPlay();

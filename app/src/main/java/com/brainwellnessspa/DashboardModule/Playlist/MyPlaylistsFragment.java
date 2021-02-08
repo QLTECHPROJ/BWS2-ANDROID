@@ -2464,26 +2464,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             } else {
                 enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
             }
-           /* for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())
-                        && downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase("")) {
-                    disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
-                    break;
-                } else {
-                    enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
-                }
-            }*/
 
-           /* MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
-            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);*/
-//            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 

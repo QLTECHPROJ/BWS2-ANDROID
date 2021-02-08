@@ -32,8 +32,11 @@ import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
+import com.brainwellnessspa.Utility.AppUtils;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivitySplashScreenBinding;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.segment.analytics.Analytics;
 
@@ -50,8 +53,9 @@ SplashScreenActivity extends AppCompatActivity {
     public static String key = "", UserID;
     String flag, id, title, message, IsLock;
     public static Analytics analytics;
-
+    FirebaseOptions options;
     AudioDatabase DB;
+    String FirebaseAppName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +79,27 @@ SplashScreenActivity extends AppCompatActivity {
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
+        /*if(AppUtils.BASE_URL.equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/api/staging/v1/")) {
+            options = new FirebaseOptions.Builder()
+                    .setProjectId("brain-wellness-spa-d4ac0")
+                    .setApplicationId("1:139951188296:android:e98df657440cfaa3722b7d")
+                    .setApiKey("AIzaSyBOpWjRnWxRqQhOXcLW1hwFt9sGna5jy_Q")
+                     .setStorageBucket("brain-wellness-spa-d4ac0.appspot.com")
+                    .build();
+            FirebaseAppName = "Staging";
+        }else if(AppUtils.BASE_URL.equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/api/live/v1/")) {
+            options = new FirebaseOptions.Builder()
+                    .setProjectId("brain-wellness-app-live")
+                    .setApplicationId("1:753168671199:android:036d8f6ad0f156399aa46a")
+                    .setApiKey("AIzaSyArmVHOmwZlXApRM4mNsUqcRbSkd6due-0")
+                     .setStorageBucket("brain-wellness-app-live.appspot.com")
+                    .build();
+            FirebaseAppName = "Live";
+        }
+        FirebaseApp.initializeApp(this, options, FirebaseAppName);
+
+// Retrieve secondary FirebaseApp
+        FirebaseApp firebaseApp = FirebaseApp.getInstance(FirebaseAppName);*/
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         FirebaseCrashlytics.getInstance().setUserId(UserID);
 //        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);

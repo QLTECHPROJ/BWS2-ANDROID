@@ -93,7 +93,10 @@ public class DownloadMedia implements OnDownloadListener {
                 .setOnProgressListener(progress -> {
                     long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
                     downloadProgress = (int) progressPercent;
-                    if (downloadProgress == downloadProgress2 + 10) {
+                    if(downloadProgress == 0 || downloadProgress == 1){
+                        updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
+                        downloadProgress2 = downloadProgress;
+                    } else if (downloadProgress == downloadProgress2 + 10) {
                        /* localIntent.putExtra("Progress", downloadProgress);
                         localIntent.putExtra("name", FILE_NAME.get(0));
                         lBM.sendBroadcast(localIntent);*/
@@ -324,6 +327,10 @@ public class DownloadMedia implements OnDownloadListener {
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
             if (fileNameList.size() != 0) {
+                filename = fileNameList.get(0);
+                downloadProgress = 0;
+                downloadProgress2 = 0;
+                updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
                 encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
                 BWSApplication.showToast("Download Complete...", ctx);
