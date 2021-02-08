@@ -92,6 +92,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvFavorites"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -100,6 +101,7 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
                     android:text="@string/Favourites"
+                    android:visibility="gone"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
 
@@ -107,10 +109,10 @@
                     android:id="@+id/rvFavContactList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:visibility="gone"
                     android:nestedScrollingEnabled="true"
-                    android:overScrollMode="never"
-                    android:visibility="visible" />
+                    android:overScrollMode="never" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvContactList"

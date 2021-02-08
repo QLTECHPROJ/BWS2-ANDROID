@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -43,7 +44,8 @@ import retrofit2.Response;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.getKey;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class
+SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
     public static String key = "", UserID;
     String flag, id, title, message, IsLock;
@@ -106,7 +108,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void callDashboard() {
         if (UserID.equalsIgnoreCase("")) {
-            new Handler().postDelayed(() -> {
+            new Handler (Looper.getMainLooper()).postDelayed(() -> {
                 Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -139,7 +141,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             }
         } else {
-            new Handler().postDelayed(() -> {
+            new Handler (Looper.getMainLooper()).postDelayed(() -> {
                 Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 startActivity(i);
                 finish();

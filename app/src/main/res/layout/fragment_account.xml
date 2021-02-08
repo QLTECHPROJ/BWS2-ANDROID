@@ -302,8 +302,7 @@
                                 <ImageView
                                     android:layout_width="@dimen/_60sdp"
                                     android:layout_height="@dimen/_56sdp"
-                                    android:padding="@dimen/_1sdp"
-                                    android:src="@drawable/ic_resource_icon" />
+                                    android:src="@drawable/ic_refer_a_friend_icon" />
 
                                 <TextView
                                     android:id="@+id/tvRefer"

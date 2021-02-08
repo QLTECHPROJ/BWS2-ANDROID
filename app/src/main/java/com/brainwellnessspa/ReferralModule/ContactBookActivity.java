@@ -37,7 +37,6 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityContactBookBinding;
 import com.brainwellnessspa.databinding.ContactListLayoutBinding;
 import com.brainwellnessspa.databinding.FavouriteContactListLayoutBinding;
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,18 @@ public class ContactBookActivity extends AppCompatActivity {
         SharedPreferences shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE);
         UserPromocode = (shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, ""));
         ReferLink = (shareded.getString(CONSTANTS.PREF_KEY_ReferLink, ""));
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+        binding.rvFavContactList.setLayoutManager(mLayoutManager);
+        binding.rvFavContactList.setItemAnimator(new DefaultItemAnimator());
+
+        binding.rvContactList.setHasFixedSize(true);
+        RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(this);
+        binding.rvContactList.setLayoutManager(mListLayoutManager);
         contactlistModel = new ArrayList();
+        withoutSearch();
+
+        binding.llBack.setOnClickListener(v -> finish());
+
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
@@ -99,18 +109,6 @@ public class ContactBookActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        binding.llBack.setOnClickListener(v -> finish());
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
-        binding.rvFavContactList.setLayoutManager(mLayoutManager);
-        binding.rvFavContactList.setItemAnimator(new DefaultItemAnimator());
-
-        binding.rvContactList.setHasFixedSize(true);
-        RecyclerView.LayoutManager mlistLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-        binding.rvContactList.setLayoutManager(mlistLayoutManager);
-        binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
-        withoutSearch();
     }
 
     @Override
@@ -131,7 +129,6 @@ public class ContactBookActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_CONTACTS,
                             Manifest.permission.WRITE_CONTACTS},
                     MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
             Intent intent = new Intent();
             String manufacturer = Build.MANUFACTURER;
             if ("xiaomi".equalsIgnoreCase(manufacturer)) {
@@ -170,6 +167,9 @@ public class ContactBookActivity extends AppCompatActivity {
                 }
             }
             phones.close();
+            contactListAdapter = new ContactListAdapter(userList, sendNameList);
+            binding.rvContactList.setLayoutManager(new LinearLayoutManager(ctx));
+            binding.rvContactList.setAdapter(contactListAdapter);
 
             if (cur.getCount() > 0) {
                 while (cur.moveToNext()) {
@@ -184,12 +184,16 @@ public class ContactBookActivity extends AppCompatActivity {
                 }
             }
             cur.close();
-            contactListAdapter = new ContactListAdapter(userList, sendNameList);
-            binding.rvContactList.setAdapter(contactListAdapter);
         }
-
-        favContactListAdapter = new FavContactListAdapter(favUserList);
-        binding.rvFavContactList.setAdapter(favContactListAdapter);
+        if (favUserList.size() == 0){
+            binding.tvFavorites.setVisibility(View.GONE);
+            binding.rvFavContactList.setVisibility(View.GONE);
+        }else {
+            binding.tvFavorites.setVisibility(View.VISIBLE);
+            binding.rvFavContactList.setVisibility(View.VISIBLE);
+            favContactListAdapter = new FavContactListAdapter(favUserList);
+            binding.rvFavContactList.setAdapter(favContactListAdapter);
+        }
     }
 
     @Override

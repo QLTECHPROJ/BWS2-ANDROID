@@ -11,6 +11,7 @@ import android.media.session.MediaSessionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -255,7 +256,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         p.putValue("userId", UserID);
         p.putValue("source", GetSourceName(ctx));
         BWSApplication.addToSegment("Queue Screen Viewed", p, CONSTANTS.track);
-        handler = new Handler();
+        handler = new Handler(Looper.getMainLooper());
         addToQueueModelList = new ArrayList<>();
         addToQueueModelList2 = new ArrayList<>();
 
