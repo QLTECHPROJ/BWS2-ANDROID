@@ -382,7 +382,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
-            prepareData(UserID, PlaylistID);
+            prepareData(UserID, PlaylistID,"onCreateView");
         }
         super.onViewCreated(view, savedInstanceState);
     }
@@ -704,31 +704,31 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             deleteFrg = 0;
         } else if (addToPlayList) {
             PlaylistID = MyPlaylistId;
-            prepareData(UserID, MyPlaylistId);
+            prepareData(UserID, MyPlaylistId,"onResume");
             addToPlayList = false;
         } else if (addToSearch) {
             PlaylistIDs = PlaylistIDMS;
-            prepareData(UserID, MyPlaylistIds);
+            prepareData(UserID, MyPlaylistIds,"onResume");
             addToSearch = false;
         } else if (RefreshPlaylist) {
-            prepareData(UserID, PlaylistID);
+            prepareData(UserID, PlaylistID,"onResume");
         } else {
 //            prepareData(UserID, PlaylistID);
         }
         if (comefrom_search == 4) {
-            prepareData(UserID, PlaylistID);
+            prepareData(UserID, PlaylistID,"onResume");
         }
         if (comeRename == 1) {
-            prepareData(UserID, PlaylistID);
+            prepareData(UserID, PlaylistID,"onResume");
         }
         if (ComeScreenReminder == 1) {
-            prepareData(UserID, PlaylistID);
+            prepareData(UserID, PlaylistID,"onResume");
         }
         if (ComeScreenMyPlaylist == 1) {
-            prepareData(UserID, PlaylistID);
+            prepareData(UserID, PlaylistID,"onResume");
         }
         if (ComeScreenRemiderPlaylist == 1) {
-            prepareData(UserID, PlaylistID);
+            prepareData(UserID, PlaylistID,"onResume");
         }
         super.onResume();
     }
@@ -784,7 +784,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             RefreshPlaylist = false;
         } else {
-            prepareData(UserID, PlaylistIDs);
+            prepareData(UserID, PlaylistIDs,"onResume");
             MyPlaylistIds = "";
         }
         /*if(getActivity().getCurrentFocus() == searchEditText || getActivity().getCurrentFocus() == binding.searchView) {
@@ -796,7 +796,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }*/
     }
 
-    private void prepareData(String UserId, String PlaylistId) {
+    private void prepareData(String UserId, String PlaylistId,String comeFrom) {
         if (comefrom_search == 3) {
             binding.llExtra.setVisibility(View.VISIBLE);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -852,26 +852,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             Totalhour = listModel.getResponseData().getTotalhour();
                             Totalminute = listModel.getResponseData().getTotalminute();
                             PlaylistType = listModel.getResponseData().getCreated();
-                            p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("playlistId", listModel.getResponseData().getPlaylistID());
-                            p.putValue("playlistName", listModel.getResponseData().getPlaylistName());
-                            p.putValue("playlistDescription", listModel.getResponseData().getPlaylistDesc());
-                            if (PlaylistType.equalsIgnoreCase("1")) {
-                                p.putValue("playlistType", "Created");
-                            } else if (PlaylistType.equalsIgnoreCase("0")) {
-                                p.putValue("playlistType", "Default");
+
+                            if(comeFrom.equalsIgnoreCase("onResume")) {
+                                p = new Properties();
+                                p.putValue("userId", UserID);
+                                p.putValue("playlistId", listModel.getResponseData().getPlaylistID());
+                                p.putValue("playlistName", listModel.getResponseData().getPlaylistName());
+                                p.putValue("playlistDescription", listModel.getResponseData().getPlaylistDesc());
+                                if (PlaylistType.equalsIgnoreCase("1")) {
+                                    p.putValue("playlistType", "Created");
+                                } else if (PlaylistType.equalsIgnoreCase("0")) {
+                                    p.putValue("playlistType", "Default");
+                                }
+                                if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", "0h " + listModel.getResponseData().getTotalminute() + "m");
+                                } else if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h 0m");
+                                } else {
+                                    p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
+                                }
+                                p.putValue("audioCount", listModel.getResponseData().getTotalAudio());
+                                p.putValue("source", ScreenView);
+                                BWSApplication.addToSegment("Playlist Viewed", p, CONSTANTS.screen);
                             }
-                            if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", "0h " + listModel.getResponseData().getTotalminute() + "m");
-                            } else if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h 0m");
-                            } else {
-                                p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
-                            }
-                            p.putValue("audioCount", listModel.getResponseData().getTotalAudio());
-                            p.putValue("source", ScreenView);
-                            BWSApplication.addToSegment("Playlist Viewed", p, CONSTANTS.screen);
                             getDownloadData();
                             callObserveMethodGetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
@@ -932,7 +935,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                                 if (listModel1.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                     listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
                                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
-                                                    prepareData(UserID, PlaylistID);
+                                                    prepareData(UserID, PlaylistID,"onResume");
                                                 } else {
                                                 }
 
@@ -1324,7 +1327,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 }
                             }
                             adpater1.notifyItemRemoved(position);
-                            prepareData(UserID, PlaylistID);
+                            prepareData(UserID, PlaylistID,"onResume");
                             BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                         }
                     } catch (Exception e) {

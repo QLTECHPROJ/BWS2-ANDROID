@@ -93,7 +93,7 @@ public class PlaylistFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
-//        prepareData();
+        prepareData("onCreateView");
         return view;
     }
 
@@ -121,14 +121,14 @@ public class PlaylistFragment extends Fragment {
 
     @Override
     public void onResume() {
-        prepareData();
+        prepareData("onResume");
         openMiniPlayer();
         ComeScreenAccount = 0;
         comefromDownload = "0";
         super.onResume();
     }
 
-    private void prepareData() {
+    private void prepareData(String comeFrom) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
@@ -171,13 +171,16 @@ public class PlaylistFragment extends Fragment {
                             for (int i = 0; i < listModel.getResponseData().size(); i++) {
                                 section.add(listModel.getResponseData().get(i).getView());
                             }
-                            Properties p = new Properties();
-                            p.putValue("userId", UserID);
-                            Gson gson;
-                            GsonBuilder gsonBuilder = new GsonBuilder();
-                            gson = gsonBuilder.create();
-                            p.putValue("sections", gson.toJson(section));
-                            BWSApplication.addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen);
+
+                            if(comeFrom.equalsIgnoreCase("onResume")) {
+                                Properties p = new Properties();
+                                p.putValue("userId", UserID);
+                                Gson gson;
+                                GsonBuilder gsonBuilder = new GsonBuilder();
+                                gson = gsonBuilder.create();
+                                p.putValue("sections", gson.toJson(section));
+                                BWSApplication.addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -87,7 +87,7 @@ public class AudioFragment extends Fragment {
     public static String IsLock = "0";
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate, AudioFirstLogin = "0";
-    boolean Identify;
+    boolean Identify = false;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
     FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2, fancyShowCaseView3;
@@ -100,7 +100,6 @@ public class AudioFragment extends Fragment {
         viewallAudio = false;
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Identify = (shared1.getBoolean(CONSTANTS.PREF_KEY_Identify, false));
         FirebaseCrashlytics.getInstance().setUserId(UserID);
         ComeScreenAccount = 0;
         comefromDownload = "0";
@@ -109,7 +108,7 @@ public class AudioFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainAudioList.setLayoutManager(manager);
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
-        prepareDisplayData();
+        prepareDisplayData("onCreateView");
 
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -180,14 +179,14 @@ public class AudioFragment extends Fragment {
                 startActivityForResult(intent, 15695);
             }
         }
-        prepareDisplayData();
+        prepareDisplayData("onResume");
         prepareData();
         ComeScreenAccount = 0;
         comefromDownload = "0";
         super.onResume();
     }
 
-    private void prepareDisplayData() {
+    private void prepareDisplayData(String comeFrom) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<MainAudioModel> listCall = APIClient.getClient().getMainAudioLists(UserID);
@@ -211,13 +210,15 @@ public class AudioFragment extends Fragment {
                             for (int i = 0; i < listModel.getResponseData().size(); i++) {
                                 section.add(listModel.getResponseData().get(i).getView());
                             }
-                            Properties p = new Properties();
-                            p.putValue("userId", UserID);
-                            Gson gson;
-                            GsonBuilder gsonBuilder = new GsonBuilder();
-                            gson = gsonBuilder.create();
-                            p.putValue("sections", gson.toJson(section));
-                            BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
+                            if(comeFrom.equalsIgnoreCase("onResume")) {
+                                Properties p = new Properties();
+                                p.putValue("userId", UserID);
+                                Gson gson;
+                                GsonBuilder gsonBuilder = new GsonBuilder();
+                                gson = gsonBuilder.create();
+                                p.putValue("sections", gson.toJson(section));
+                                BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
+                            }
                             callObserverMethod(listModel.getResponseData());
                         }
                     } catch (Exception e) {
@@ -307,6 +308,9 @@ public class AudioFragment extends Fragment {
                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.getResponseData().getShouldPlayDisclaimer());
                             Gson gson = new Gson();
                             editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
+
+                            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                            Identify = (shared1.getBoolean(CONSTANTS.PREF_KEY_Identify, false));
                             if (!Identify) {
                                 analytics.identify(new Traits()
                                         .putValue("userId", UserID)
