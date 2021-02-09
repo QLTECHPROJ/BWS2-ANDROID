@@ -17,6 +17,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.WebView.TncActivity;
 import com.brainwellnessspa.databinding.ActivityReferFriendBinding;
 import com.segment.analytics.Properties;
 
@@ -74,6 +75,9 @@ public class ReferFriendActivity extends AppCompatActivity {
         });
 
         binding.tvInviteRules.setOnClickListener(v -> {
+            Intent i = new Intent(ctx, TncActivity.class);
+            i.putExtra(CONSTANTS.Web, "HowReferWorks");
+            startActivity(i);
             p = new Properties();
             p.putValue("userId", UserID);
             p.putValue("invitationRuleUrl", "");
@@ -104,6 +108,7 @@ public class ReferFriendActivity extends AppCompatActivity {
             }
         });
 
+/*
         binding.llCopyLink.setOnClickListener(v -> {
             if (UserPromocode.equalsIgnoreCase("")) {
                 BWSApplication.showToast(getString(R.string.not_available), ctx);
@@ -120,6 +125,7 @@ public class ReferFriendActivity extends AppCompatActivity {
                 BWSApplication.addToSegment("Promo Code Copied", p, CONSTANTS.track);
             }
         });
+*/
 
         binding.btnReferred.setOnClickListener(v -> {
             Intent i = new Intent(ctx, ContactBookActivity.class);

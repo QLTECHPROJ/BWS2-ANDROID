@@ -365,7 +365,8 @@
                                 android:id="@+id/llLogout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="@dimen/_130sdp">
 
                                 <ImageView
                                     android:layout_width="@dimen/_60sdp"

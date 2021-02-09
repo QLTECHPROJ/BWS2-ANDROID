@@ -394,7 +394,10 @@ public class ContactBookActivity extends AppCompatActivity {
                             Uri uri = Uri.parse("smsto:" + ContactNumber);
                             Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
                             // smsIntent.setData(uri);
-                            smsIntent.putExtra("sms_body", "Hey, login this portal using this link\n" + ReferLink);
+                            smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself " +
+                                    "in the comfort of your home while you sleep and gain access to over 75 audio programs helping you " +
+                                    "to live inspired and improve your mental wellbeing. I would like to invite you to try it. " +
+                                    "Sign up using the link and get 30 days free trial\n" + ReferLink);
                             startActivity(smsIntent);
                             finish();
                             p = new Properties();

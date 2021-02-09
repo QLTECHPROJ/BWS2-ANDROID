@@ -154,7 +154,7 @@ public class AudioFragment extends Fragment {
             if (requestCode == 15695) {
                 PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
                 boolean isIgnoringBatteryOptimizations = false;
-                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations( getActivity().getPackageName());
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getActivity().getPackageName());
                 if (isIgnoringBatteryOptimizations) {
                     // Ignoring battery optimization
 
@@ -169,7 +169,6 @@ public class AudioFragment extends Fragment {
 
     @Override
     public void onResume() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getActivity().getPackageName();
             PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);

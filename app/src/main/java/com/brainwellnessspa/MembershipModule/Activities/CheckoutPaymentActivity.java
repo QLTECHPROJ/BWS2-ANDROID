@@ -253,6 +253,9 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                         try {
                                             RegisterModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                Properties p = new Properties();
+                                                p.putValue("userId", UserID);
+                                                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                                 analytics.identify(new Traits()
@@ -281,9 +284,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
                                                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                                                 editor.commit();
-                                                Properties p = new Properties();
-                                                p.putValue("userId", UserID);
-                                                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
                                                 GetAllMedia();
                                                 Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
                                                 startActivity(i);

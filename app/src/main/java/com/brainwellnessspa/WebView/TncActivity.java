@@ -20,6 +20,7 @@ public class TncActivity extends AppCompatActivity {
     Activity activity;
     String Tnc = AppUtils.tncs_url;
     String PrivacyPolicy = AppUtils.privacy_policy_url;
+    String HowReferWorks = AppUtils.how_refer_works_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,9 @@ public class TncActivity extends AppCompatActivity {
         } else if (Web.equalsIgnoreCase("PrivacyPolicy")) {
             binding.tvTitle.setText(R.string.privacy_policy);
             binding.webView.loadUrl(PrivacyPolicy);
+        } else if (Web.equalsIgnoreCase("HowReferWorks")) {
+            binding.tvTitle.setText(R.string.how_refer_works);
+            binding.webView.loadUrl(HowReferWorks);
         }
     }
 

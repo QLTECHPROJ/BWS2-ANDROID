@@ -13,4 +13,5 @@ public class AppUtils extends Application {
 
     public static String tncs_url = MAIN_URL + "/terms-conditions/";
     public static String privacy_policy_url = MAIN_URL + "/privacy-policy/";
+    public static String how_refer_works_url = MAIN_URL + "/how-refer-works/";
 }

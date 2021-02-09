@@ -108,7 +108,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         editor1.putString(CONSTANTS.Token, token); //Friend
         editor1.apply();
         editor1.commit();
-        Log.e(TAGs, "sendRegistrationToServer: " + token.toString());
+        Log.e(TAGs, "sendRegistrationToServer: " + token);
     }
 
     private void sendNotification(String title, String message, String flag, String id, String m, String IsLock) {
@@ -196,7 +196,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationBuilder.setContentText(message);
             notificationBuilder.setColor(getResources().getColor(R.color.blue));
             notificationBuilder.setShowWhen(true);
-            notificationBuilder.setCategory(NotificationCompat.CATEGORY_REMINDER);
             notificationBuilder.setAutoCancel(true);
             notificationBuilder.setSound(defaultSoundUri);
             notificationBuilder.setChannelId(channelId);
