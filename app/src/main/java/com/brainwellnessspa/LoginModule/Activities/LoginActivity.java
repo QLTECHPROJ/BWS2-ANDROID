@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     Handler handler;
     private long mLastClickTime = 0;
     public static int SegmentTag = 0;
+    String key="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,7 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 String countryCode = binding.tvCountryCode.getText().toString().replace("+", "");
                 SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
-                String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+                key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
 
                 if (key.equalsIgnoreCase("")) {
                     key = getKey(ctx);

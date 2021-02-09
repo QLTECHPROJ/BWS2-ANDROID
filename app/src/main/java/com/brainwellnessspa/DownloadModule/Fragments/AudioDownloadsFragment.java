@@ -861,7 +861,7 @@ public class AudioDownloadsFragment extends Fragment {
 //                                player.seekTo(pos);
                                     callTransparentFrag(pos, listModelList);
                                 } else {
-                                    callTransFrag(pos, listModelList, true);
+                                    callTransFrag(pos, listModelList, false);
                                 }
                             }
                         } else if (pos == position && position == listModelList.size() - 1) {
@@ -873,7 +873,7 @@ public class AudioDownloadsFragment extends Fragment {
 //                                player.seekTo(pos);
                                     callTransparentFrag(pos, listModelList);
                                 } else {
-                                    callTransFrag(pos, listModelList, true);
+                                    callTransFrag(pos, listModelList, false);
                                 }
                             }
                         } else if (pos < position && pos < listModelList.size() - 1) {
@@ -881,7 +881,7 @@ public class AudioDownloadsFragment extends Fragment {
 //                                player.seekTo(pos);
                                 callTransparentFrag(pos, listModelList);
                             } else {
-                                callTransFrag(pos, listModelList, true);
+                                callTransFrag(pos, listModelList, false);
                             }
                         } else if (pos > position && pos == listModelList.size()) {
                             pos = pos - 1;
@@ -889,7 +889,7 @@ public class AudioDownloadsFragment extends Fragment {
 //                                player.seekTo(pos);
                                 callTransparentFrag(pos, listModelList);
                             } else {
-                                callTransFrag(pos, listModelList, true);
+                                callTransFrag(pos, listModelList, false);
                             }
                         }
                     }

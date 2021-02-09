@@ -70,7 +70,7 @@ public class OtpActivity extends AppCompatActivity implements
         SmsReceiver.OTPReceiveListener {
     ActivityOtpBinding binding;
     private SmsReceiver smsReceiver;
-    String Name, Code, MobileNo;
+    String Name, Code, MobileNo,fcm_id="";
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
     Activity activity;
@@ -204,7 +204,7 @@ public class OtpActivity extends AppCompatActivity implements
 
         binding.btnSendCode.setOnClickListener(view -> {
             SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
-            String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+              fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
             if (TextUtils.isEmpty(fcm_id)) {
                 FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(activity, task -> {
                     String newToken = task.getResult().getToken();

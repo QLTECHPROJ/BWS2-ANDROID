@@ -382,7 +382,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
-            prepareData(UserID, PlaylistID,"onCreateView");
+            prepareData(UserID, PlaylistID,"onResume");
         }
         super.onViewCreated(view, savedInstanceState);
     }
