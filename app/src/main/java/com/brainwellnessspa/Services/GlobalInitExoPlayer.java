@@ -82,6 +82,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloadi
 public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnector.PlaybackPreparer */ {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
+    public static NotificationManager notificationManager;
     public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false, serviceRemoved = false;
     public static Bitmap myBitmap = null;
     public static Intent intent;
@@ -163,13 +164,15 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
         return myBitmap;
     }
 
-    public static void relesePlayer() {
+    public static void relesePlayer(Context ctx) {
         if (player != null) {
             playerNotificationManager.setPlayer(null);
             player.stop();
             player.release();
             player = null;
             PlayerINIT = false;
+            notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
         }
     }
 
@@ -433,7 +436,7 @@ Appointment Audios dddd*/
     }*/
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
-        relesePlayer();
+        relesePlayer(ctx);
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
         player.setMediaItem(mediaItem1);

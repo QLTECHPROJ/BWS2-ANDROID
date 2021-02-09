@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.ReferralModule.ReferFriendActivity;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.bumptech.glide.Glide;
@@ -257,7 +258,7 @@ public class AccountFragment extends Fragment {
                 });
 
                 Btn.setOnClickListener(v -> {
-                    relesePlayer();
+                    relesePlayer(getActivity());
                     /*NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(notificationId);
                     notificationManager.cancelAll();*/
@@ -300,6 +301,8 @@ public class AccountFragment extends Fragment {
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+
+                                    relesePlayer(getActivity());
                                     Intent i = new Intent(getActivity(), LoginActivity.class);
                                     startActivity(i);
                                     getActivity().finish();

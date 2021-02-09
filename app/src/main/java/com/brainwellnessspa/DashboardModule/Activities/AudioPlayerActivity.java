@@ -3053,7 +3053,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer();
+        relesePlayer(ctx);
 //        }
 
         isDisclaimer = 0;

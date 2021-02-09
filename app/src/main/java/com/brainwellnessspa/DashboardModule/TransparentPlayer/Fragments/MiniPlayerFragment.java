@@ -1897,7 +1897,7 @@ public class MiniPlayerFragment extends Fragment {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer();
+        relesePlayer(ctx);
 //        }
 
         isDisclaimer = 0;
