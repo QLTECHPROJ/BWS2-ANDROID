@@ -47,8 +47,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.getKey;
 
-public class
-SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
     public static String key = "", UserID;
     String flag, id, title, message, IsLock;

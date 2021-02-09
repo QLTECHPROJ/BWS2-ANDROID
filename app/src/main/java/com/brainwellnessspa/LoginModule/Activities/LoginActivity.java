@@ -225,6 +225,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<LoginModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        /*Properties p = new Properties();
+                        p.putValue("param",binding.edtNumber.getText().toString()+":"+countryCode+":"+ CONSTANTS.FLAG_ONE
+                                +":"+ CONSTANTS.FLAG_ZERO +":"+ key);
+                        p.putValue(" login err",t.getMessage());
+                        BWSApplication.addToSegment("Error", p, CONSTANTS.screen);*/
                     }
                 });
             } else {
