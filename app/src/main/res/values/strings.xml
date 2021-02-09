@@ -281,8 +281,8 @@
     <string name="Promo_Code">Promo Code</string>
     <string name="Apply">Apply</string>
     <string name="Enter_promo_code_here">Enter promo code here</string>
-    <string name="refer_title">Refer to your friend and Get a cash reward of $1</string>
-    <string name="refer_desc">Share this link with your friend and after they install, both of you will get $1 cash rewards.</string>
+    <string name="refer_title">Invite and earn $29.99 for each friend you refer</string>
+    <string name="refer_desc">Invite a friend and when they make one successful subscription payment, you\'ll earn $29.99 (equivalent to 1 month subscription) for each friend. \n\n The credit will be applied to your account on your subsequent invoices. </string>
     <string name="Share">Share</string>
     <string name="Invite_Friends">Invite Friends</string>
     <string name="refer_invite_title">To understand how referral works.</string>
@@ -295,4 +295,8 @@
     <string name="Refer_Friend">Refer a Friend</string>
     <string name="Invite">Invite</string>
     <string name="ok">ok</string>
+    <string name="Support">Support</string>
+    <string name="not_available">Not available at the moment. Please contact support</string>
+    <string name="support_quotes">Please contact support at</string>
+    <string name="support_link">support@brainwellnessapp.com</string>
 </resources>

@@ -45,6 +45,8 @@ import com.brainwellnessspa.LoginModule.Models.OtpModel;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
 import com.brainwellnessspa.MembershipModule.Models.SignUpModel;
+import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
+import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel;
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.RemiderDetailsModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderStatusModel;
@@ -329,6 +331,19 @@ public interface APIInterface {
                                        @Field("ReminderTime") String ReminderTime,
                                        @Field("ReminderDay") String ReminderDay
     );
+
+    /* TODO ContactBookActivity */
+    @POST("addnewreferuser")
+    @FormUrlEncoded
+    Call<AllContactListModel> SetContactList(@Field("UserID") String userID,
+                                             @Field("ToUser") String toUser,
+                                             @Field("ReferCode") String referCode
+    );
+
+    /* TODO OrderSummaryActivity */
+    @POST("checkrefercode")
+    @FormUrlEncoded
+    Call<CheckReferCodeModel> CheckReferCode(@Field("ReferCode") String referCode);
 
     /* TODO PlayWellnessActivity */
     @POST("recentlyplayed")

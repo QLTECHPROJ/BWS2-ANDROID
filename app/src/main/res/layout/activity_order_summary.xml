@@ -225,21 +225,23 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvPromoCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_56sdp"
                     android:fontFamily="@font/montserrat_bold"
-                    android:gravity="left"
-                    android:visibility="visible"
+                    android:gravity="start"
+                    android:visibility="gone"
                     android:text="@string/Promo_Code"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
 
                 <LinearLayout
+                    android:id="@+id/llPromoCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:background="@drawable/round_gray_cornor"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/_16sdp"

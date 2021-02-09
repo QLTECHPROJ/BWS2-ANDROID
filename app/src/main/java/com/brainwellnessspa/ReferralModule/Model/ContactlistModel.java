@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ReferralModule;
+package com.brainwellnessspa.ReferralModule.Model;
 
 public class ContactlistModel implements Comparable<ContactlistModel> {
     private String ContactImage;

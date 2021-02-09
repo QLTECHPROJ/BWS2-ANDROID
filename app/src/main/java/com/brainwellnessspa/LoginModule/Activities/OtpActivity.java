@@ -33,6 +33,7 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.SmsReceiver;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -52,6 +53,8 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloadi
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 import com.brainwellnessspa.databinding.ActivityOtpBinding;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.installations.InstallationTokenResult;
 import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
@@ -71,6 +74,7 @@ public class OtpActivity extends AppCompatActivity implements
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
     Activity activity;
+    Context ctx;
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
     public static int comeLogin = 0;
@@ -90,6 +94,7 @@ public class OtpActivity extends AppCompatActivity implements
             Code = getIntent().getStringExtra(CONSTANTS.Code);
         }
         activity = OtpActivity.this;
+        ctx = OtpActivity.this;
 //        logger = AppEventsLogger.newLogger(this);
         binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + MobileNo);
 
@@ -201,14 +206,23 @@ public class OtpActivity extends AppCompatActivity implements
             SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
             String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
             if (TextUtils.isEmpty(fcm_id)) {
-                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
-                    String newToken = instanceIdResult.getToken();
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(activity, task -> {
+                    String newToken = task.getResult().getToken();
                     Log.e("newToken", newToken);
                     SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                     editor.putString(CONSTANTS.Token, newToken); //Friend
                     editor.apply();
                     editor.commit();
                 });
+
+              /*  FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
+                    String newToken = instanceIdResult.getToken();
+                    Log.e("newToken", newToken);
+                    SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                    editor.putString(CONSTANTS.Token, newToken); //Friend
+                    editor.apply();
+                    editor.commit();
+                });*/
                 SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                 fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
             }

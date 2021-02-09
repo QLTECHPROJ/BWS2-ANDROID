@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -19,11 +20,18 @@ import com.brainwellnessspa.BillingOrderModule.Activities.PaymentActivity;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
+import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
@@ -77,6 +85,13 @@ public class OrderSummaryActivity extends AppCompatActivity {
         if (!OldPromocode.equalsIgnoreCase("")) {
             binding.edtCode.setText(OldPromocode);
         }
+        if (!comeFrom.equalsIgnoreCase("")) {
+            binding.tvPromoCode.setVisibility(View.GONE);
+            binding.llPromoCode.setVisibility(View.GONE);
+        } else {
+            binding.tvPromoCode.setVisibility(View.VISIBLE);
+            binding.llPromoCode.setVisibility(View.VISIBLE);
+        }
 
         try {
             if (!comeFrom.equalsIgnoreCase("")) {
@@ -112,56 +127,125 @@ public class OrderSummaryActivity extends AppCompatActivity {
             }
         });
 
-        binding.btnApply.setOnClickListener(v -> BWSApplication.showToast("Promo code applied", ctx));
+        binding.btnApply.setOnClickListener(v -> {
+            prepareCheckReferCode(binding.edtCode.getText().toString());
+        });
 
         binding.btnCheckout.setOnClickListener(view -> {
             try {
                 if (binding.edtCode.getText().toString().equalsIgnoreCase("")) {
                     Promocode = "";
+                    Properties p1 = new Properties();
+                    if (!comeFrom.equalsIgnoreCase("")) {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                            return;
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime();
+                        p1.putValue("plan", listModelList2);
+                        p1.putValue("planStartDt ", "");
+                        p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
+                        p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
+                        p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
+                        Intent i = new Intent(ctx, PaymentActivity.class);
+                        i.putExtra("ComesTrue", ComesTrue);
+                        i.putExtra("comeFrom", "membership");
+                        i.putParcelableArrayListExtra("PlanData", listModelList2);
+                        i.putExtra("TrialPeriod", "");
+                        i.putExtra("position", position);
+                        startActivity(i);
+                        finish();
+                    } else {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                            return;
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime();
+                        p1.putValue("plan", listModelList);
+                        p1.putValue("planStartDt ", "");
+                        p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
+                        p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
+                        p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
+                        Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                        i.putExtra("Name", "");
+                        i.putExtra("Code", "");
+                        i.putExtra("MobileNo", "");
+                        i.putParcelableArrayListExtra("PlanData", listModelList);
+                        i.putExtra("TrialPeriod", TrialPeriod);
+                        i.putExtra("position", position);
+                        i.putExtra("Promocode", Promocode);
+                        startActivity(i);
+                        finish();
+                    }
+                    BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
                 } else {
                     Promocode = binding.edtCode.getText().toString();
-                }
-                Properties p1 = new Properties();
-                if (!comeFrom.equalsIgnoreCase("")) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        Call<CheckReferCodeModel> listCall = APIClient.getClient().CheckReferCode(Promocode);
+                        listCall.enqueue(new Callback<CheckReferCodeModel>() {
+                            @Override
+                            public void onResponse(Call<CheckReferCodeModel> call, Response<CheckReferCodeModel> response) {
+                                    CheckReferCodeModel listModel = response.body();
+                                    if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        if (!listModel.getResponseData().getCodeExist().equalsIgnoreCase("0")){
+                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                            Properties p1 = new Properties();
+                                            if (!comeFrom.equalsIgnoreCase("")) {
+                                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                                    return;
+                                                }
+                                                mLastClickTime = SystemClock.elapsedRealtime();
+                                                p1.putValue("plan", listModelList2);
+                                                p1.putValue("planStartDt ", "");
+                                                p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
+                                                p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
+                                                p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
+                                                Intent i = new Intent(ctx, PaymentActivity.class);
+                                                i.putExtra("ComesTrue", ComesTrue);
+                                                i.putExtra("comeFrom", "membership");
+                                                i.putParcelableArrayListExtra("PlanData", listModelList2);
+                                                i.putExtra("TrialPeriod", "");
+                                                i.putExtra("position", position);
+                                                startActivity(i);
+                                                finish();
+                                            } else {
+                                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                                    return;
+                                                }
+                                                mLastClickTime = SystemClock.elapsedRealtime();
+                                                p1.putValue("plan", listModelList);
+                                                p1.putValue("planStartDt ", "");
+                                                p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
+                                                p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
+                                                p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
+                                                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                                                i.putExtra("Name", "");
+                                                i.putExtra("Code", "");
+                                                i.putExtra("MobileNo", "");
+                                                i.putParcelableArrayListExtra("PlanData", listModelList);
+                                                i.putExtra("TrialPeriod", TrialPeriod);
+                                                i.putExtra("position", position);
+                                                i.putExtra("Promocode", Promocode);
+                                                startActivity(i);
+                                                finish();
+                                            }
+                                            BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
+                                        }else {
+                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                        }
+                                    }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CheckReferCodeModel> call, Throwable t) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                     }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    p1.putValue("plan", listModelList2);
-                    p1.putValue("planStartDt ", "");
-                    p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
-                    p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
-                    p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                    Intent i = new Intent(ctx, PaymentActivity.class);
-                    i.putExtra("ComesTrue", ComesTrue);
-                    i.putExtra("comeFrom", "membership");
-                    i.putParcelableArrayListExtra("PlanData", listModelList2);
-                    i.putExtra("TrialPeriod", "");
-                    i.putExtra("position", position);
-                    startActivity(i);
-                    finish();
-                } else {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    p1.putValue("plan", listModelList);
-                    p1.putValue("planStartDt ", "");
-                    p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
-                    p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
-                    p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
-                    Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-                    i.putExtra("Name", "");
-                    i.putExtra("Code", "");
-                    i.putExtra("MobileNo", "");
-                    i.putParcelableArrayListExtra("PlanData", listModelList);
-                    i.putExtra("TrialPeriod", TrialPeriod);
-                    i.putExtra("position", position);
-                    i.putExtra("Promocode", Promocode);
-                    startActivity(i);
-                    finish();
                 }
-                BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -204,4 +288,35 @@ public class OrderSummaryActivity extends AppCompatActivity {
         }
     };
 
+    public void prepareCheckReferCode(String promoCode) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<CheckReferCodeModel> listCall = APIClient.getClient().CheckReferCode(promoCode);
+            listCall.enqueue(new Callback<CheckReferCodeModel>() {
+                @Override
+                public void onResponse(Call<CheckReferCodeModel> call, Response<CheckReferCodeModel> response) {
+                    try {
+                        CheckReferCodeModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            if (listModel.getResponseData().getCodeExist().equalsIgnoreCase("0")){
+                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                            }else {
+                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CheckReferCodeModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
 }

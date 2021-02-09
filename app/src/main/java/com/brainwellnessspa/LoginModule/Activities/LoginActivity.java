@@ -27,7 +27,6 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.MembershipModule.Activities.MembershipActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReferralModule.ReferFriendActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.WebView.TncActivity;

@@ -44,6 +44,7 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityCheckoutPaymentBinding;
 import com.brainwellnessspa.databinding.YeardialogBinding;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
@@ -219,14 +220,23 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                         String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                         if (TextUtils.isEmpty(fcm_id)) {
-                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
-                                String newToken = instanceIdResult.getToken();
+                            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(activity, task -> {
+                                String newToken = task.getResult().getToken();
                                 Log.e("newToken", newToken);
                                 SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                                 editor.putString(CONSTANTS.Token, newToken); //Friend
                                 editor.apply();
                                 editor.commit();
                             });
+
+                            /*FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
+                                String newToken = instanceIdResult.getToken();
+                                Log.e("newToken", newToken);
+                                SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                                editor.putString(CONSTANTS.Token, newToken); //Friend
+                                editor.apply();
+                                editor.commit();
+                            });*/
                             SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                             fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
                         }
@@ -243,46 +253,41 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                         try {
                                             RegisterModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                if (cardModel.getResponseData().getIsPromocode().equalsIgnoreCase("1")) {
-                                                    InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                                    keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                    analytics.identify(new Traits()
-                                                            .putValue("userId", UserID)
-                                                            .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
-                                                            .putValue("deviceType", CONSTANTS.FLAG_ONE)
-                                                            .putValue("countryCode", Code)
-                                                            .putValue("countryName", Name)
-                                                            .putValue("userName", cardModel.getResponseData().getName())
-                                                            .putValue("mobileNo", cardModel.getResponseData().getPhoneNumber())
-                                                            .putValue("plan", cardModel.getResponseData().getPlan())
-                                                            .putValue("planStatus", cardModel.getResponseData().getPlanStatus())
-                                                            .putValue("planStartDt", cardModel.getResponseData().getPlanStartDt())
-                                                            .putValue("planExpiryDt", cardModel.getResponseData().getPlanExpiryDate())
-                                                            .putValue("clinikoId", cardModel.getResponseData().getClinikoId()));
-                                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                                                    SharedPreferences.Editor editor = shared.edit();
-                                                    editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
-                                                    editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
-                                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
-                                                    editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
-                                                    editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");
-                                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "1");
-                                                    editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
-                                                    editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
-                                                    editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
-                                                    editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
-                                                    editor.commit();
-                                                    Properties p = new Properties();
-                                                    p.putValue("userId", UserID);
-                                                    BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
-                                                    GetAllMedia();
-                                                    Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
-                                                    startActivity(i);
-                                                    finish();
-                                                } else if (cardModel.getResponseData().getIsPromocode().equalsIgnoreCase("0") ||
-                                                        cardModel.getResponseData().getIsPromocode().equalsIgnoreCase("")) {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                }
+                                                InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                                analytics.identify(new Traits()
+                                                        .putValue("userId", UserID)
+                                                        .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
+                                                        .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                                        .putValue("countryCode", Code)
+                                                        .putValue("countryName", Name)
+                                                        .putValue("userName", cardModel.getResponseData().getName())
+                                                        .putValue("mobileNo", cardModel.getResponseData().getPhoneNumber())
+                                                        .putValue("plan", cardModel.getResponseData().getPlan())
+                                                        .putValue("planStatus", cardModel.getResponseData().getPlanStatus())
+                                                        .putValue("planStartDt", cardModel.getResponseData().getPlanStartDt())
+                                                        .putValue("planExpiryDt", cardModel.getResponseData().getPlanExpiryDate())
+                                                        .putValue("clinikoId", cardModel.getResponseData().getClinikoId()));
+                                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = shared.edit();
+                                                editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
+                                                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
+                                                editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                                editor.commit();
+                                                Properties p = new Properties();
+                                                p.putValue("userId", UserID);
+                                                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
+                                                GetAllMedia();
+                                                Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
+                                                startActivity(i);
+                                                finish();
                                             } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                                 BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             } else {

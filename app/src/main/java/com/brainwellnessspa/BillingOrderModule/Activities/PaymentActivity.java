@@ -400,7 +400,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(PaymentActivity.this, OrderSummaryActivity.class);
+        Intent i = new Intent(context, OrderSummaryActivity.class);
         i.putExtra("comeFrom", "membership");
         i.putExtra("ComesTrue", ComesTrue);
         i.putParcelableArrayListExtra("PlanData", listModelList2);

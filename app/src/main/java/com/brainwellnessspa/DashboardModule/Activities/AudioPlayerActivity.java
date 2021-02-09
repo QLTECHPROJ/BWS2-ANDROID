@@ -86,6 +86,7 @@ import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
 import me.toptas.fancyshowcase.FocusShape;
 import me.toptas.fancyshowcase.listener.OnViewInflateListener;
+import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -662,12 +663,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
             fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
                     .customView(R.layout.layout_player_options, view -> {
-                        ImageView ivOptions = view.findViewById(R.id.ivOptions);
-                        ImageView ivGif = view.findViewById(R.id.ivGif);
+                        GifImageView ivGif = view.findViewById(R.id.ivGif);
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        Glide.with(activity).load(R.raw.highlight_main_player).placeholder(R.drawable.highlight_main_player).into(ivGif);
-//                        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivGif);
-//                        Glide.with(activity).load(R.raw.highlight_main_player).into(imageViewTarget);
+                        ivGif.setImageResource(R.drawable.highlight_main_player);
                         final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
                         anim.setDuration(1500);
                         anim.addUpdateListener(animation -> {
@@ -2617,7 +2615,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         handler2.postDelayed(UpdateSongTime2, 10000);
                         break;
                     }
-                }else if(i == fileNameList.size()-1){
+                } else if (i == fileNameList.size() - 1) {
                     binding.pbProgress.setVisibility(View.GONE);
                     handler2.removeCallbacks(UpdateSongTime2);
                 }

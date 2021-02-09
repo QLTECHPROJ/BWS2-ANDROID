@@ -51,6 +51,7 @@ import com.brainwellnessspa.databinding.FragmentAudioBinding;
 import com.brainwellnessspa.databinding.MainAudioLayoutBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -279,14 +280,15 @@ public class AudioFragment extends Fragment {
             SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
             String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
             if (TextUtils.isEmpty(fcm_id)) {
-                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
-                    String newToken = instanceIdResult.getToken();
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(getActivity(), task -> {
+                    String newToken = task.getResult().getToken();
                     Log.e("newToken", newToken);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                     editor.putString(CONSTANTS.Token, newToken); //Friend
                     editor.apply();
                     editor.commit();
                 });
+
                 SharedPreferences sharedPreferences3 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                 fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
             }

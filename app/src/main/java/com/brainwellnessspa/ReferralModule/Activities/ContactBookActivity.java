@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ReferralModule;
+package com.brainwellnessspa.ReferralModule.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +25,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,14 +37,24 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 
+import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
+import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
+import com.brainwellnessspa.ReferralModule.Model.FavContactlistModel;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityContactBookBinding;
 import com.brainwellnessspa.databinding.ContactListLayoutBinding;
 import com.brainwellnessspa.databinding.FavouriteContactListLayoutBinding;
+import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ContactBookActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 90;
@@ -54,6 +69,7 @@ public class ContactBookActivity extends AppCompatActivity {
     List<ContactlistModel> userList = new ArrayList<>();
     List<FavContactlistModel> favUserList = new ArrayList<>();
     ArrayList<String> sendNameList = new ArrayList<>();
+    Properties p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +86,12 @@ public class ContactBookActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         binding.rvFavContactList.setLayoutManager(mLayoutManager);
         binding.rvFavContactList.setItemAnimator(new DefaultItemAnimator());
+
+        p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("referLink", ReferLink);
+        p.putValue("userReferCode", UserPromocode);
+        BWSApplication.addToSegment("Invite Friends Screen Viewed", p, CONSTANTS.screen);
 
         binding.rvContactList.setHasFixedSize(true);
         RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(this);
@@ -103,6 +125,10 @@ public class ContactBookActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String search) {
                 try {
                     contactListAdapter.getFilter().filter(search);
+                    p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("searchKeyword", search);
+                    BWSApplication.addToSegment("Contact Searched", p, CONSTANTS.track);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -145,11 +171,18 @@ public class ContactBookActivity extends AppCompatActivity {
             }
         } else {
             String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.PHOTO_URI};
-            Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    projection, null, null,
-                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-            Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "starred=?",
-                    new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+            Cursor phones = null;
+            Cursor cur = null;
+            try {
+                phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        projection, null, null,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+                cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "starred=?",
+                        new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             String lastPhoneName = " ";
             if (phones.getCount() > 0) {
                 while (phones.moveToNext()) {
@@ -184,25 +217,23 @@ public class ContactBookActivity extends AppCompatActivity {
                 }
             }
             cur.close();
-        }
-        if (favUserList.size() == 0){
-            binding.tvFavorites.setVisibility(View.GONE);
-            binding.rvFavContactList.setVisibility(View.GONE);
-        }else {
-            binding.tvFavorites.setVisibility(View.VISIBLE);
-            binding.rvFavContactList.setVisibility(View.VISIBLE);
-            favContactListAdapter = new FavContactListAdapter(favUserList);
-            binding.rvFavContactList.setAdapter(favContactListAdapter);
+            if (favUserList.size() == 0) {
+                binding.tvFavorites.setVisibility(View.GONE);
+                binding.rvFavContactList.setVisibility(View.GONE);
+            } else {
+                binding.tvFavorites.setVisibility(View.VISIBLE);
+                binding.rvFavContactList.setVisibility(View.VISIBLE);
+                favContactListAdapter = new FavContactListAdapter(favUserList);
+                binding.rvFavContactList.setAdapter(favContactListAdapter);
+            }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     withoutSearch();
                 } else {
                     AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
@@ -250,15 +281,10 @@ public class ContactBookActivity extends AppCompatActivity {
             holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_gray_cornor_normal);
             holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.gray));
             holder.binding.BtnInvite.setOnClickListener(v -> {
+                notifyDataSetChanged();
                 holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal);
                 holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.white));
-                notifyDataSetChanged();
-                Uri uri = Uri.parse("smsto:" + model.getContactNumber());
-                Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
-                // smsIntent.setData(uri);
-                smsIntent.putExtra("sms_body", "Hey, login this portal using this link\n" + ReferLink);
-                startActivity(smsIntent);
-                finish();
+                prepareContactData(model.getContactName(), model.getContactNumber());
             });
         }
 
@@ -294,7 +320,6 @@ public class ContactBookActivity extends AppCompatActivity {
                     if (listFilterContact.size() == 0) {
                         binding.llError.setVisibility(View.VISIBLE);
                         binding.rvContactList.setVisibility(View.GONE);
-                        binding.rvContactList.setAdapter(null);
                     } else {
                         binding.llError.setVisibility(View.GONE);
                         binding.rvContactList.setVisibility(View.VISIBLE);
@@ -334,17 +359,9 @@ public class ContactBookActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvName.setText(favcontactlistModel.get(position).getContactName());
             holder.binding.tvNumber.setText(favcontactlistModel.get(position).getContactNumber());
-            holder.binding.cvMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notifyDataSetChanged();
-                    Uri uri = Uri.parse("smsto:" + favcontactlistModel.get(position).getContactNumber());
-                    Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
-                    // smsIntent.setData(uri);
-                    smsIntent.putExtra("sms_body", "Hey, login this portal using this link\n" + ReferLink);
-                    startActivity(smsIntent);
-                    finish();
-                }
+            holder.binding.cvMainLayout.setOnClickListener(v -> {
+                notifyDataSetChanged();
+                prepareContactData(favcontactlistModel.get(position).getContactName(), favcontactlistModel.get(position).getContactNumber());
             });
         }
 
@@ -360,6 +377,46 @@ public class ContactBookActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
             }
+        }
+    }
+
+    public void prepareContactData(String ContactName, String ContactNumber) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<AllContactListModel> listCall = APIClient.getClient().SetContactList(UserID, ContactNumber, UserPromocode);
+            listCall.enqueue(new Callback<AllContactListModel>() {
+                @Override
+                public void onResponse(Call<AllContactListModel> call, Response<AllContactListModel> response) {
+                    try {
+                        AllContactListModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            Uri uri = Uri.parse("smsto:" + ContactNumber);
+                            Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                            // smsIntent.setData(uri);
+                            smsIntent.putExtra("sms_body", "Hey, login this portal using this link\n" + ReferLink);
+                            startActivity(smsIntent);
+                            finish();
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("referLink", ReferLink);
+                            p.putValue("userReferCode", UserPromocode);
+                            p.putValue("contactName", ContactName);
+                            p.putValue("contactNumber", ContactNumber);
+                            BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AllContactListModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 }

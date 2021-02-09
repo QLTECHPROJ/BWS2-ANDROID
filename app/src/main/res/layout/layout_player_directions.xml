@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
         android:layout_weight="0.75"
         android:gravity="bottom"
         android:orientation="horizontal"
@@ -22,8 +22,8 @@
             android:layout_gravity="bottom"
             android:gravity="bottom"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/_50sdp"
-            android:paddingRight="@dimen/_5sdp">
+            android:paddingStart="@dimen/_50sdp"
+            android:paddingEnd="@dimen/_5sdp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
                     android:layout_width="@dimen/_90sdp"
                     android:layout_height="@dimen/_90sdp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_28sdp"
+                    android:layout_marginStart="@dimen/_28sdp"
                     android:src="@drawable/right_down_arrow_highlights" />
             </LinearLayout>
         </LinearLayout>

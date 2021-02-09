@@ -42,6 +42,7 @@ import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCheckoutOtpBinding;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
@@ -222,14 +223,23 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
             String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
             if (TextUtils.isEmpty(fcm_id)) {
-                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
-                    String newToken = instanceIdResult.getToken();
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(activity, task -> {
+                    String newToken = task.getResult().getToken();
                     Log.e("newToken", newToken);
                     SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                     editor.putString(CONSTANTS.Token, newToken); //Friend
                     editor.apply();
                     editor.commit();
                 });
+
+               /* FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
+                    String newToken = instanceIdResult.getToken();
+                    Log.e("newToken", newToken);
+                    SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                    editor.putString(CONSTANTS.Token, newToken); //Friend
+                    editor.apply();
+                    editor.commit();
+                });*/
                 SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                 fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
             }

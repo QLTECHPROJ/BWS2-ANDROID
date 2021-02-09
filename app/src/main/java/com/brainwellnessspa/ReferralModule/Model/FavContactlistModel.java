@@ -1,4 +1,6 @@
-package com.brainwellnessspa.ReferralModule;
+package com.brainwellnessspa.ReferralModule.Model;
+
+import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
 
 public class FavContactlistModel implements Comparable<ContactlistModel> {
     private String ContactImage;

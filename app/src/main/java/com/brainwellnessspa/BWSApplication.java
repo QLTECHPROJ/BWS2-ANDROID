@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -329,7 +331,6 @@ public class BWSApplication extends Application {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 @Override
@@ -344,7 +345,6 @@ public class BWSApplication extends Application {
     public static String getKey(Context context) {
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(context);
         String key = appSignatureHashHelper.getAppSignatures().get(0);
-
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0));
@@ -361,8 +361,11 @@ public class BWSApplication extends Application {
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
             toast.setView(view);
             toast.show();
-        }else {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
+            toast.setMargin(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            toast.show();
         }
     }
 
@@ -377,13 +380,11 @@ public class BWSApplication extends Application {
     public static synchronized BWSApplication getInstance() {
         return BWSApplication;
     }
+
 /*    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {
-
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -395,7 +396,6 @@ public class BWSApplication extends Application {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
             }
         }
 
@@ -444,14 +444,10 @@ public class BWSApplication extends Application {
             NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
             boolean flag = false;
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
 //For 3G check
-            boolean is3g = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-                    .isConnectedOrConnecting();
+            boolean is3g = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
 //For WiFi Check
-            boolean isWifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                    .isConnectedOrConnecting();
-
+            boolean isWifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
             flag = !(!is3g && !isWifi);
             return flag;
         } catch (NullPointerException e) {

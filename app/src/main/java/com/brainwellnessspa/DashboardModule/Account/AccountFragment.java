@@ -2,13 +2,12 @@ package com.brainwellnessspa.DashboardModule.Account;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -21,6 +20,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,19 +29,11 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
-import com.brainwellnessspa.ReferralModule.ReferFriendActivity;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.MyNetworkReceiver;
+import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
 import com.brainwellnessspa.BuildConfig;
@@ -59,13 +51,11 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.google.firebase.installations.FirebaseInstallations;
-import com.google.firebase.installations.InstallationTokenResult;
 import com.segment.analytics.Properties;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
 import me.toptas.fancyshowcase.FocusShape;
-import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,7 +63,6 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -221,8 +210,13 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), ReferFriendActivity.class);
-            startActivity(i);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), ReferFriendActivity.class);
+                startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
 
         binding.llFaq.setOnClickListener(view18 -> {
@@ -237,6 +231,43 @@ public class AccountFragment extends Fragment {
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
+        });
+
+        binding.llSupport.setOnClickListener(view18 -> {
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.support_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final TextView tvEmail = dialog.findViewById(R.id.tvEmail);
+            final LinearLayout llClose = dialog.findViewById(R.id.llClose);
+            tvEmail.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                String[] recipients = {"support@brainwellnessapp.com"};
+                intent.putExtra(Intent.EXTRA_EMAIL, recipients);
+                intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                intent.putExtra(Intent.EXTRA_TEXT, "");
+                intent.putExtra(Intent.EXTRA_CC, "");
+                intent.setType("text/html");
+                intent.setPackage("com.google.android.gm");
+                try {
+                    startActivity(Intent.createChooser(intent, "Send mail"));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    BWSApplication.showToast("There are no email clients installed.", getActivity());
+                }
+            });
+
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+
+            llClose.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
         });
 
         binding.llLogout.setOnClickListener(view19 -> {
@@ -268,24 +299,23 @@ public class AccountFragment extends Fragment {
                     SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                     String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                     if (TextUtils.isEmpty(fcm_id)) {
-                       /* FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(getActivity(), task -> {
-                            String newToken = task.getResult();
-                            Log.e("newToken", newToken);
-                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                            editor.putString(CONSTANTS.Token, newToken); //Friend
-                            editor.apply();
-                            editor.commit();
-                        })*/
-
-
-                        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
-                            String newToken = instanceIdResult.getToken();
+                        FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(getActivity(), task -> {
+                            String newToken = task.getResult().getToken();
                             Log.e("newToken", newToken);
                             SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                             editor.putString(CONSTANTS.Token, newToken); //Friend
                             editor.apply();
                             editor.commit();
                         });
+
+                       /* FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
+                            String newToken = instanceIdResult.getToken();
+                            Log.e("newToken", newToken);
+                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                            editor.putString(CONSTANTS.Token, newToken); //Friend
+                            editor.apply();
+                            editor.commit();
+                        });*/
                         fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                     }
                     Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
@@ -370,7 +400,7 @@ public class AccountFragment extends Fragment {
                     .focusOn(binding.llDownloads).closeOnTouch(false).build();
 
             fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
-                    .customView(R.layout.layout_account_billingorder, (OnViewInflateListener) view -> {
+                    .customView(R.layout.layout_account_billingorder, view -> {
                         RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                         rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
                     }).focusShape(FocusShape.ROUNDED_RECTANGLE)

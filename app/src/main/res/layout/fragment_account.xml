@@ -15,113 +15,110 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/_14sdp"
-                android:weightSum="2">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/llUserProfile"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:layout_weight="0.23"
-                    android:weightSum="1">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/_14sdp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.20"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:id="@+id/llUserProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_90sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:weightSum="1">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/civProfile"
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:padding="@dimen/_2sdp"
-                            android:src="@drawable/default_profile"
-                            android:visibility="gone" />
-
-                        <RelativeLayout
-                            android:id="@+id/rlLetter"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="@dimen/_2sdp"
-                            android:visibility="gone">
+                            android:layout_weight="0.20"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/civLetter"
+                                android:id="@+id/civProfile"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_centerInParent="true"
                                 android:padding="@dimen/_2sdp"
-                                android:src="@color/blue" />
+                                android:src="@drawable/default_profile"
+                                android:visibility="gone" />
+
+                            <RelativeLayout
+                                android:id="@+id/rlLetter"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/_2sdp"
+                                android:visibility="gone">
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/civLetter"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerInParent="true"
+                                    android:padding="@dimen/_2sdp"
+                                    android:src="@color/blue" />
+
+                                <TextView
+                                    android:id="@+id/tvLetter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:fontFamily="@font/montserrat_semi_bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_26sdp" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_12sdp"
+                            android:layout_weight="0.65"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvLetter"
+                                android:id="@+id/tvName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:gravity="start"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_20sdp" />
+
+                            <TextView
+                                android:id="@+id/tvViewProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="start"
+                                android:text="@string/view_profile"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_13sdp"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.15"
+                            android:gravity="center_vertical|right">
+
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:fontFamily="@font/montserrat_semi_bold"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_26sdp" />
-                        </RelativeLayout>
+                                android:src="@drawable/ic_back_black_icon" />
+                        </LinearLayout>
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_12sdp"
-                        android:layout_weight="0.65"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tvName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_semi_bold"
-                            android:gravity="start"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_20sdp" />
-
-                        <TextView
-                            android:id="@+id/tvViewProfile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_medium"
-                            android:gravity="start"
-                            android:text="@string/view_profile"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            android:visibility="gone" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/_0sdp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.15"
-                        android:gravity="center_vertical|right">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_back_black_icon" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1.77"
-                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -341,6 +338,30 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/llSupport"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_60sdp"
+                                    android:layout_height="@dimen/_56sdp"
+                                    android:padding="@dimen/_8sdp"
+                                    android:src="@drawable/ic_support_icon" />
+
+                                <TextView
+                                    android:id="@+id/tvSupport"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/_18sdp"
+                                    android:fontFamily="@font/montserrat_semi_bold"
+                                    android:gravity="start"
+                                    android:text="@string/Support"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_16sdp" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/llLogout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -365,20 +386,22 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tvVersion"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_gravity="bottom"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="center_horizontal|top"
-                            android:paddingBottom="@dimen/_100sdp"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_14sdp" />
                     </RelativeLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <TextView
+                android:id="@+id/tvVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:background="@color/white"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_horizontal|top"
+                android:paddingBottom="@dimen/_100sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
