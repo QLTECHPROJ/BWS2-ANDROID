@@ -36,7 +36,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="@string/Refer_A_Friend"
+                android:text="@string/Refer_Friend"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 

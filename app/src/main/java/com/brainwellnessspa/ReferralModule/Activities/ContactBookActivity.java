@@ -281,10 +281,10 @@ public class ContactBookActivity extends AppCompatActivity {
             holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_gray_cornor_normal);
             holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.gray));
             holder.binding.BtnInvite.setOnClickListener(v -> {
+                prepareContactData(model.getContactName(), model.getContactNumber());
                 notifyDataSetChanged();
                 holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal);
                 holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.white));
-                prepareContactData(model.getContactName(), model.getContactNumber());
             });
         }
 

@@ -97,14 +97,13 @@
                 android:id="@+id/llViewTwo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="@dimen/_42sdp"
                 android:visibility="visible">
 
                 <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@+id/btnComplete"
-                    android:layout_marginBottom="@dimen/_110sdp"
+                    android:layout_marginBottom="@dimen/_100sdp"
                     android:overScrollMode="never">
 
                     <LinearLayout
@@ -265,7 +264,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginHorizontal="@dimen/_55sdp"
-                    android:layout_marginBottom="@dimen/_31sdp"
+                    android:layout_marginBottom="@dimen/_26sdp"
                     android:background="@drawable/extra_round_cornor"
                     android:fontFamily="@font/montserrat_medium"
                     android:paddingVertical="@dimen/_2sdp"

@@ -299,6 +299,7 @@
                                 <ImageView
                                     android:layout_width="@dimen/_60sdp"
                                     android:layout_height="@dimen/_56sdp"
+                                    android:padding="@dimen/_14sdp"
                                     android:src="@drawable/ic_refer_a_friend_icon" />
 
                                 <TextView
