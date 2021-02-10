@@ -33,7 +33,6 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.InvoiceModule.Fragments.MembershipInvoiceFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
@@ -56,15 +55,13 @@ public class ContactBookActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 90;
     ActivityContactBookBinding binding;
     Context ctx;
-    String UserPromocode, ReferLink, UserID;
+    String UserPromoCode, ReferLink, UserID;
     Activity activity;
     EditText searchEditText;
-    List<ContactlistModel> contactlistModel;
     ContactListAdapter contactListAdapter;
     FavContactListAdapter favContactListAdapter;
     List<ContactlistModel> userList = new ArrayList<>();
     List<FavContactlistModel> favUserList = new ArrayList<>();
-    ArrayList<String> sendNameList = new ArrayList<>();
     Properties p;
 
     @Override
@@ -77,9 +74,8 @@ public class ContactBookActivity extends AppCompatActivity {
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE);
-        UserPromocode = (shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, ""));
+        UserPromoCode = (shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, ""));
         ReferLink = (shareded.getString(CONSTANTS.PREF_KEY_ReferLink, ""));
-        contactlistModel = new ArrayList();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         binding.rvFavContactList.setLayoutManager(mLayoutManager);
         binding.rvFavContactList.setItemAnimator(new DefaultItemAnimator());
@@ -89,11 +85,10 @@ public class ContactBookActivity extends AppCompatActivity {
         binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
         withoutSearch();
         binding.llBack.setOnClickListener(v -> finish());
-
         p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("referLink", ReferLink);
-        p.putValue("userReferCode", UserPromocode);
+        p.putValue("userReferCode", UserPromoCode);
         BWSApplication.addToSegment("Invite Friends Screen Viewed", p, CONSTANTS.screen);
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
@@ -169,16 +164,11 @@ public class ContactBookActivity extends AppCompatActivity {
                 Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         projection, null, null,
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-                Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "starred=?",
-                        new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
 
                 String lastPhoneName = " ";
                 if (phones.getCount() > 0) {
                     while (phones.moveToNext()) {
                         String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-//                        String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//                        String contactId = phones.getString(phones.getColumnIndex(ContactsContract.Contacts._ID));
-//                        String photoUri = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
                         if (!name.equalsIgnoreCase(lastPhoneName)) {
                             lastPhoneName = name;
                             ContactlistModel user = new ContactlistModel();
@@ -189,32 +179,40 @@ public class ContactBookActivity extends AppCompatActivity {
                     }
                 }
                 phones.close();
-                contactListAdapter = new ContactListAdapter(userList, sendNameList);
+                contactListAdapter = new ContactListAdapter(userList);
                 binding.rvContactList.setAdapter(contactListAdapter);
+                getFav();
+            }
+        }
+    }
 
-                if (cur.getCount() > 0) {
-                    while (cur.moveToNext()) {
-                        String name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        if (!name.equalsIgnoreCase(lastPhoneName)) {
-                            lastPhoneName = name;
-                            FavContactlistModel user = new FavContactlistModel();
-                            user.setContactName(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
-                            user.setContactNumber(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                            favUserList.add(user);
-                        }
-                    }
-                }
-                cur.close();
-                if (favUserList.size() == 0) {
-                    binding.tvFavorites.setVisibility(View.GONE);
-                    binding.rvFavContactList.setVisibility(View.GONE);
-                } else {
-                    binding.tvFavorites.setVisibility(View.VISIBLE);
-                    binding.rvFavContactList.setVisibility(View.VISIBLE);
-                    favContactListAdapter = new FavContactListAdapter(favUserList);
-                    binding.rvFavContactList.setAdapter(favContactListAdapter);
+    private void getFav() {
+        String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER/*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*/};
+        Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, "starred=?",
+                new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+
+        String lastPhoneNameFav = " ";
+        if (cur.getCount() > 0) {
+            while (cur.moveToNext()) {
+                String name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                if (!name.equalsIgnoreCase(lastPhoneNameFav)) {
+                    lastPhoneNameFav = name;
+                    FavContactlistModel user = new FavContactlistModel();
+                    user.setContactName(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                    user.setContactNumber(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                    favUserList.add(user);
                 }
             }
+        }
+        cur.close();
+        if (favUserList.size() == 0) {
+            binding.tvFavorites.setVisibility(View.GONE);
+            binding.rvFavContactList.setVisibility(View.GONE);
+        } else {
+            binding.tvFavorites.setVisibility(View.VISIBLE);
+            binding.rvFavContactList.setVisibility(View.VISIBLE);
+            favContactListAdapter = new FavContactListAdapter(favUserList);
+            binding.rvFavContactList.setAdapter(favContactListAdapter);
         }
     }
 
@@ -246,12 +244,10 @@ public class ContactBookActivity extends AppCompatActivity {
     public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.MyViewHolder> implements Filterable {
         List<ContactlistModel> contactlistModel;
         private List<ContactlistModel> listFilterContact;
-        private ArrayList<String> sendNameList2;
 
-        public ContactListAdapter(List<ContactlistModel> contactlistModel, ArrayList<String> sendNameList2) {
+        public ContactListAdapter(List<ContactlistModel> contactlistModel) {
             this.contactlistModel = contactlistModel;
             this.listFilterContact = contactlistModel;
-            this.sendNameList2 = sendNameList2;
         }
 
         @NonNull
@@ -372,7 +368,7 @@ public class ContactBookActivity extends AppCompatActivity {
     public void prepareContactData(String ContactName, String ContactNumber) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AllContactListModel> listCall = APIClient.getClient().SetContactList(UserID, ContactNumber, UserPromocode);
+            Call<AllContactListModel> listCall = APIClient.getClient().SetContactList(UserID, ContactNumber, UserPromoCode);
             listCall.enqueue(new Callback<AllContactListModel>() {
                 @Override
                 public void onResponse(Call<AllContactListModel> call, Response<AllContactListModel> response) {
@@ -392,7 +388,7 @@ public class ContactBookActivity extends AppCompatActivity {
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("referLink", ReferLink);
-                            p.putValue("userReferCode", UserPromocode);
+                            p.putValue("userReferCode", UserPromoCode);
                             p.putValue("contactName", ContactName);
                             p.putValue("contactNumber", ContactNumber);
                             BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track);

@@ -851,6 +851,11 @@ public class AudioDownloadsFragment extends Fragment {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (player != null) {
                             player.removeMediaItem(position);
+                            if(player.getPlayWhenReady()){
+                                player.setPlayWhenReady(true);
+                            }else{
+                                player.setPlayWhenReady(false);
+                            }
                         }
                         if (pos == position && position < listModelList.size() - 1) {
 //                                            pos = pos + 1;
@@ -905,6 +910,7 @@ public class AudioDownloadsFragment extends Fragment {
         }
 
         private void callTransparentFrag(int position, List<DownloadAudioDetails> listModelList) {
+
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
