@@ -1,8 +1,5 @@
 package com.brainwellnessspa.LikeModule.Models;
 
-import android.os.Parcelable;
-
-import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

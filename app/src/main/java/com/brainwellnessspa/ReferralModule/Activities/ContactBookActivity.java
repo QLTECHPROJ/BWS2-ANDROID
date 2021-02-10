@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,10 +23,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +33,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.InvoiceModule.Fragments.MembershipInvoiceFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
@@ -83,36 +79,28 @@ public class ContactBookActivity extends AppCompatActivity {
         SharedPreferences shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE);
         UserPromocode = (shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, ""));
         ReferLink = (shareded.getString(CONSTANTS.PREF_KEY_ReferLink, ""));
+        contactlistModel = new ArrayList();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         binding.rvFavContactList.setLayoutManager(mLayoutManager);
         binding.rvFavContactList.setItemAnimator(new DefaultItemAnimator());
+        binding.rvContactList.setHasFixedSize(true);
+        RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+        binding.rvContactList.setLayoutManager(mListLayoutManager);
+        binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
+        withoutSearch();
+        binding.llBack.setOnClickListener(v -> finish());
 
         p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("referLink", ReferLink);
         p.putValue("userReferCode", UserPromocode);
         BWSApplication.addToSegment("Invite Friends Screen Viewed", p, CONSTANTS.screen);
-
-        binding.rvContactList.setHasFixedSize(true);
-        RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(this);
-        binding.rvContactList.setLayoutManager(mListLayoutManager);
-        contactlistModel = new ArrayList();
-        withoutSearch();
-
-        binding.llBack.setOnClickListener(v -> finish());
-
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();
-        closeButton.setOnClickListener(v -> {
-            binding.searchView.clearFocus();
-            searchEditText.setText("");
-            binding.searchView.setQuery("", false);
-
-        });
 
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -135,6 +123,12 @@ public class ContactBookActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        closeButton.setOnClickListener(v -> {
+            binding.searchView.clearFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+        });
     }
 
     @Override
@@ -146,85 +140,80 @@ public class ContactBookActivity extends AppCompatActivity {
     }
 
     private void withoutSearch() {
-        if (ContextCompat.checkSelfPermission(ctx,
-                Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(ctx,
-                Manifest.permission.WRITE_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS},
-                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-            Intent intent = new Intent();
-            String manufacturer = Build.MANUFACTURER;
-            if ("xiaomi".equalsIgnoreCase(manufacturer)) {
-                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
-            } else if ("oppo".equalsIgnoreCase(manufacturer)) {
-                intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
-            } else if ("vivo".equalsIgnoreCase(manufacturer)) {
-                intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(ctx,
+                    Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(ctx,
+                    Manifest.permission.WRITE_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.WRITE_CONTACTS},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                Intent intent = new Intent();
+                String manufacturer = Build.MANUFACTURER;
+                if ("xiaomi".equalsIgnoreCase(manufacturer)) {
+                    intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                } else if ("oppo".equalsIgnoreCase(manufacturer)) {
+                    intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
+                } else if ("vivo".equalsIgnoreCase(manufacturer)) {
+                    intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
+                }
 
-            List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-            if (list.size() > 0) {
-                startActivity(intent);
-            }
-        } else {
-            String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.PHOTO_URI};
-            Cursor phones = null;
-            Cursor cur = null;
-            try {
-                phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (list.size() > 0) {
+                    startActivity(intent);
+                }
+            } else {
+                String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER/*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*/};
+                Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         projection, null, null,
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-                cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "starred=?",
+                Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "starred=?",
                         new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            String lastPhoneName = " ";
-            if (phones.getCount() > 0) {
-                while (phones.moveToNext()) {
-                    String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    String contactId = phones.getString(phones.getColumnIndex(ContactsContract.Contacts._ID));
-                    String photoUri = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
-                    if (!name.equalsIgnoreCase(lastPhoneName)) {
-                        lastPhoneName = name;
-                        ContactlistModel user = new ContactlistModel();
-                        user.setContactName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
-                        user.setContactNumber(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                        userList.add(user);
+                String lastPhoneName = " ";
+                if (phones.getCount() > 0) {
+                    while (phones.moveToNext()) {
+                        String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+//                        String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                        String contactId = phones.getString(phones.getColumnIndex(ContactsContract.Contacts._ID));
+//                        String photoUri = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                        if (!name.equalsIgnoreCase(lastPhoneName)) {
+                            lastPhoneName = name;
+                            ContactlistModel user = new ContactlistModel();
+                            user.setContactName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                            user.setContactNumber(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                            userList.add(user);
+                        }
                     }
                 }
-            }
-            phones.close();
-            contactListAdapter = new ContactListAdapter(userList, sendNameList);
-            binding.rvContactList.setLayoutManager(new LinearLayoutManager(ctx));
-            binding.rvContactList.setAdapter(contactListAdapter);
+                phones.close();
+                contactListAdapter = new ContactListAdapter(userList, sendNameList);
+                binding.rvContactList.setAdapter(contactListAdapter);
 
-            if (cur.getCount() > 0) {
-                while (cur.moveToNext()) {
-                    String name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    if (!name.equalsIgnoreCase(lastPhoneName)) {
-                        lastPhoneName = name;
-                        FavContactlistModel user = new FavContactlistModel();
-                        user.setContactName(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
-                        user.setContactNumber(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                        favUserList.add(user);
+                if (cur.getCount() > 0) {
+                    while (cur.moveToNext()) {
+                        String name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        if (!name.equalsIgnoreCase(lastPhoneName)) {
+                            lastPhoneName = name;
+                            FavContactlistModel user = new FavContactlistModel();
+                            user.setContactName(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                            user.setContactNumber(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                            favUserList.add(user);
+                        }
                     }
                 }
-            }
-            cur.close();
-            if (favUserList.size() == 0) {
-                binding.tvFavorites.setVisibility(View.GONE);
-                binding.rvFavContactList.setVisibility(View.GONE);
-            } else {
-                binding.tvFavorites.setVisibility(View.VISIBLE);
-                binding.rvFavContactList.setVisibility(View.VISIBLE);
-                favContactListAdapter = new FavContactListAdapter(favUserList);
-                binding.rvFavContactList.setAdapter(favContactListAdapter);
+                cur.close();
+                if (favUserList.size() == 0) {
+                    binding.tvFavorites.setVisibility(View.GONE);
+                    binding.rvFavContactList.setVisibility(View.GONE);
+                } else {
+                    binding.tvFavorites.setVisibility(View.VISIBLE);
+                    binding.rvFavContactList.setVisibility(View.VISIBLE);
+                    favContactListAdapter = new FavContactListAdapter(favUserList);
+                    binding.rvFavContactList.setAdapter(favContactListAdapter);
+                }
             }
         }
     }
