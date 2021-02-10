@@ -1,24 +1,11 @@
 package com.brainwellnessspa.ReferralModule.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -31,6 +18,17 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
@@ -145,7 +143,7 @@ public class ContactBookActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.READ_CONTACTS,
                                 Manifest.permission.WRITE_CONTACTS},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                Intent intent = new Intent();
+                /*Intent intent = new Intent();
                 String manufacturer = Build.MANUFACTURER;
                 if ("xiaomi".equalsIgnoreCase(manufacturer)) {
                     intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
@@ -158,13 +156,12 @@ public class ContactBookActivity extends AppCompatActivity {
                 List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
                 if (list.size() > 0) {
                     startActivity(intent);
-                }
+                }*/
             } else {
                 String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER/*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*/};
                 Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         projection, null, null,
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-
                 String lastPhoneName = " ";
                 if (phones.getCount() > 0) {
                     while (phones.moveToNext()) {
@@ -238,6 +235,49 @@ public class ContactBookActivity extends AppCompatActivity {
                 }
                 return;
             }
+        }
+    }
+
+    public void prepareContactData(String ContactName, String ContactNumber) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<AllContactListModel> listCall = APIClient.getClient().SetContactList(UserID, ContactNumber, UserPromoCode);
+            listCall.enqueue(new Callback<AllContactListModel>() {
+                @Override
+                public void onResponse(Call<AllContactListModel> call, Response<AllContactListModel> response) {
+                    try {
+                        AllContactListModel listModel = response.body();
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            Uri uri = Uri.parse("smsto:" + ContactNumber);
+                            Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                            // smsIntent.setData(uri);
+                            smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself " +
+                                    "in the comfort of your home while you sleep and gain access to over 75 audio programs helping you " +
+                                    "to live inspired and improve your mental wellbeing. I would like to invite you to try it. " +
+                                    "Sign up using the link and get 30 days free trial\n" + ReferLink);
+                            startActivity(smsIntent);
+                            finish();
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("referLink", ReferLink);
+                            p.putValue("userReferCode", UserPromoCode);
+                            p.putValue("contactName", ContactName);
+                            p.putValue("contactNumber", ContactNumber);
+                            BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AllContactListModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 
@@ -362,49 +402,6 @@ public class ContactBookActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    public void prepareContactData(String ContactName, String ContactNumber) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AllContactListModel> listCall = APIClient.getClient().SetContactList(UserID, ContactNumber, UserPromoCode);
-            listCall.enqueue(new Callback<AllContactListModel>() {
-                @Override
-                public void onResponse(Call<AllContactListModel> call, Response<AllContactListModel> response) {
-                    try {
-                        AllContactListModel listModel = response.body();
-                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            Uri uri = Uri.parse("smsto:" + ContactNumber);
-                            Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
-                            // smsIntent.setData(uri);
-                            smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself " +
-                                    "in the comfort of your home while you sleep and gain access to over 75 audio programs helping you " +
-                                    "to live inspired and improve your mental wellbeing. I would like to invite you to try it. " +
-                                    "Sign up using the link and get 30 days free trial\n" + ReferLink);
-                            startActivity(smsIntent);
-                            finish();
-                            p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("referLink", ReferLink);
-                            p.putValue("userReferCode", UserPromoCode);
-                            p.putValue("contactName", ContactName);
-                            p.putValue("contactNumber", ContactNumber);
-                            BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<AllContactListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 }

@@ -71,6 +71,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.oldSongPos;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -296,7 +297,7 @@ public class MiniPlayerFragment extends Fragment {
                     @Override
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                         Log.v("TAG", "Listener-onTracksChanged... ");
-
+                        oldSongPos = 0;
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
                         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -379,6 +380,12 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                         exoBinding.exoProgress.setDuration(player.getDuration());
+                        if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 30500)){
+                                oldSongPos = player.getCurrentPosition();
+                            Log.e("Player Heart bit",String.valueOf(oldSongPos));
+                        }
+                        Log.e("Player Heart player",String.valueOf(player.getCurrentPosition()));
+                        Log.e("Player Heart bit bar",String.valueOf(oldSongPos));
                     }
 
                     @Override
@@ -567,42 +574,10 @@ public class MiniPlayerFragment extends Fragment {
                                 Log.e("End State: ", e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
-                      /*GetAllMedia();
-                        audioClick = true;
-
-                        playerControlView.setPlayer(player);
-                        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-                            exoBinding.exoProgress.setPosition(position);
-                            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-                        });
-                        playerControlView.setFocusable(true);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            playerControlView.setFocusedByDefault(true);
-                        }
-                        playerControlView.show();
-                        Log.e("Exoplayer Idle", "my Exop in Idle");*/
                         }
 
                     }
                 });
-
-           /* exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
-                @Override
-                public void onScrubStart(TimeBar timeBar, long position) {
-                    exoBinding.exoProgress.setPosition(position);
-                }
-
-                @Override
-                public void onScrubMove(TimeBar timeBar, long position) {
-
-                }
-
-                @Override
-                public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
-                    player.seekTo(position);
-                    exoBinding.exoProgress.setPosition(position);
-                }
-            });*/
                 setpleyerctrView();
                 callRepeatShuffle();
             }
@@ -919,7 +894,15 @@ public class MiniPlayerFragment extends Fragment {
         playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(position);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+                        if((position >= oldSongPos + 29500)&& (position <= oldSongPos + 30500)){
+                oldSongPos = position;
+                Log.e("Player Heart bit",String.valueOf(oldSongPos));
+            }
         });
+        if(player!=null) {
+            Log.e("Player Heart player", String.valueOf(player.getCurrentPosition()));
+        }
+        Log.e("Player Heart bit bar",String.valueOf(oldSongPos));
         playerControlView.setFocusable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             playerControlView.setFocusedByDefault(true);
@@ -2218,11 +2201,6 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void getPrepareShowData() {
-        /*try {
-            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         callButtonText(position);
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
@@ -2231,17 +2209,7 @@ public class MiniPlayerFragment extends Fragment {
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
             initializePlayer();
         }
-
-        playerControlView.setPlayer(player);
-        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-            exoBinding.exoProgress.setPosition(position);
-            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-        });
-        playerControlView.setFocusable(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            playerControlView.setFocusedByDefault(true);
-        }
-        playerControlView.show();
+        setpleyerctrView();
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {

@@ -135,6 +135,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     long oldSeekPosition = 0;
     Handler handler2, handler1;
     int counterinit = 0;
+    public static long oldSongPos = 0;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -947,7 +948,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                         Log.e("TAG", "Listener-onTracksChanged... ");
-
+                        oldSongPos = 0;
                         SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
                         String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -1020,6 +1021,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+                        if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 30500)){
+                            oldSongPos = player.getCurrentPosition();
+                            Log.e("Player Heart bit",String.valueOf(oldSongPos));
+                        }
+
+                        Log.e("Player Heart player",String.valueOf(player.getCurrentPosition()));
+                        Log.e("Player Heart bit bar",String.valueOf(oldSongPos));
                         exoBinding.exoProgress.setDuration(player.getDuration());
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
                                 TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
@@ -1222,17 +1230,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 Log.e("End State: ", e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
-                       /* GetAllMedia();
-                        audioClick = true;
-
-                        playerControlView.setPlayer(player);
-                        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-                            exoBinding.exoProgress.setPosition(position);
-                            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-                        });
-                        playerControlView.show();
-
-                        Log.e("Exoplayer Idle", "my Exop in Idle");*/
                         }
                     }
 
@@ -1565,9 +1562,16 @@ public class AudioPlayerActivity extends AppCompatActivity {
         playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(position);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-
+            if((position >= oldSongPos + 29500)&& (position <= oldSongPos + 30500)){
+                oldSongPos = position;
+                Log.e("Player Heart bit",String.valueOf(oldSongPos));
+            }
             exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
                     TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
+            if(player!=null) {
+                Log.e("Player Heart player", String.valueOf(player.getCurrentPosition()));
+            }
+            Log.e("Player Heart bit bar",String.valueOf(oldSongPos));
         });
         playerControlView.setFocusable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1688,6 +1692,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llNext.setOnClickListener(view -> {
                 try {
                     if (player != null) {
+                        oldSongPos = 0;
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
@@ -1732,6 +1737,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llPrev.setOnClickListener(view -> {
                 try {
                     if (player != null) {
+                        oldSongPos = 0;
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
@@ -3378,21 +3384,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
             initializePlayer();
         }
-
-        playerControlView.setPlayer(player);
-
-        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-            exoBinding.exoProgress.setPosition(position);
-            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-
-            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
-                    TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
-        });
-        playerControlView.setFocusable(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            playerControlView.setFocusedByDefault(true);
-        }
-        playerControlView.show();
+        setpleyerctrView();
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {

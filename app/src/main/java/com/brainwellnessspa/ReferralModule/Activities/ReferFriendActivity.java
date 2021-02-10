@@ -1,5 +1,6 @@
 package com.brainwellnessspa.ReferralModule.Activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -147,7 +148,7 @@ public class ReferFriendActivity extends AppCompatActivity {
                         && ContextCompat.checkSelfPermission(ReferFriendActivity.this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(ReferFriendActivity.this,
                             new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                    Intent intent = new Intent();
+                  /*  Intent intent = new Intent();
                     String manufacturer = Build.MANUFACTURER;
                     if ("xiaomi".equalsIgnoreCase(manufacturer)) {
                         intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
@@ -160,7 +161,7 @@ public class ReferFriendActivity extends AppCompatActivity {
                     List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
                     if (list.size() > 0) {
                         startActivity(intent);
-                    }
+                    }*/
                 } else {
                     // Permission has already been granted
                /* AlertDialog.Builder buildermain = new AlertDialog.Builder(ReferFriendActivity.this);
@@ -176,12 +177,36 @@ public class ReferFriendActivity extends AppCompatActivity {
                 alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
                 alert11.show();
                 alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.darkorange));*/
-
-                    Intent i = new Intent(ctx, ContactBookActivity.class);
+                    Intent i = new Intent(ReferFriendActivity.this, ContactBookActivity.class);
                     startActivity(i);
                 }
             }
         });
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent i = new Intent(ReferFriendActivity.this, ContactBookActivity.class);
+                    startActivity(i);
+                } else {
+                    AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
+                    buildermain.setMessage("Please Allow Contact Permission");
+                    buildermain.setCancelable(true);
+                    buildermain.setPositiveButton(
+                            getString(R.string.ok),
+                            (dialogmain, id1) -> {
+                                dialogmain.dismiss();
+                            });
+                    AlertDialog alert11 = buildermain.create();
+                    alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+                    alert11.show();
+                    alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
+                }
+                return;
+            }
+        }
     }
 
     private void prepareData() {
