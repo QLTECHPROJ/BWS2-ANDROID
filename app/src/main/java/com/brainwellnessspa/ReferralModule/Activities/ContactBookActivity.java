@@ -59,6 +59,7 @@ public class ContactBookActivity extends AppCompatActivity {
     ContactListAdapter contactListAdapter;
     FavContactListAdapter favContactListAdapter;
     List<ContactlistModel> userList = new ArrayList<>();
+    List<ContactlistModel> olduserList = new ArrayList<>();
     List<FavContactlistModel> favUserList = new ArrayList<>();
     Properties p;
 
@@ -171,13 +172,21 @@ public class ContactBookActivity extends AppCompatActivity {
                             ContactlistModel user = new ContactlistModel();
                             user.setContactName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
                             user.setContactNumber(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+
                             userList.add(user);
+                            if(userList.size() == olduserList.size()+10){
+                                contactListAdapter = new ContactListAdapter(userList);
+                                binding.rvContactList.setAdapter(contactListAdapter);
+                                olduserList = new ArrayList<>(0);
+                                olduserList = userList;
+                            }
+
                         }
                     }
                 }
-                phones.close();
                 contactListAdapter = new ContactListAdapter(userList);
                 binding.rvContactList.setAdapter(contactListAdapter);
+                phones.close();
                 getFav();
             }
         }
@@ -201,7 +210,6 @@ public class ContactBookActivity extends AppCompatActivity {
                 }
             }
         }
-        cur.close();
         if (favUserList.size() == 0) {
             binding.tvFavorites.setVisibility(View.GONE);
             binding.rvFavContactList.setVisibility(View.GONE);
@@ -211,6 +219,7 @@ public class ContactBookActivity extends AppCompatActivity {
             favContactListAdapter = new FavContactListAdapter(favUserList);
             binding.rvFavContactList.setAdapter(favContactListAdapter);
         }
+        cur.close();
     }
 
     @Override

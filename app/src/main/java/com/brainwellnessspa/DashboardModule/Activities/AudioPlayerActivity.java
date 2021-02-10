@@ -1021,13 +1021,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                        if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 30500)){
+                        if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 31000)){
                             oldSongPos = player.getCurrentPosition();
-                            Log.e("Player Heart bit",String.valueOf(oldSongPos));
+                            Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
+                            callHeartbeat();
                         }
-
-                        Log.e("Player Heart player",String.valueOf(player.getCurrentPosition()));
-                        Log.e("Player Heart bit bar",String.valueOf(oldSongPos));
                         exoBinding.exoProgress.setDuration(player.getDuration());
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
                                 TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
@@ -1078,27 +1076,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                 exoBinding.llPlay.setVisibility(View.GONE);
                                 exoBinding.llPause.setVisibility(View.VISIBLE);
                                 exoBinding.progressBar.setVisibility(View.GONE);
-                                p = new Properties();
-                                p.putValue("userId", UserID);
-                                p.putValue("audioId", mainPlayModelList.get(position).getID());
-                                p.putValue("audioName", mainPlayModelList.get(position).getName());
-                                p.putValue("audioDescription", "");
-                                p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                                p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                                p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                                p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                                p.putValue("position", GetCurrentAudioPosition());
-                                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-                                    p.putValue("audioType", "Downloaded");
-                                } else {
-                                    p.putValue("audioType", "Streaming");
-                                }
-                                p.putValue("source", GetSourceName(ctx));
-                                p.putValue("playerType", "Main");
-                                p.putValue("audioService", APP_SERVICE_STATUS);
-                                p.putValue("bitRate", "");
-                                p.putValue("sound", String.valueOf(hundredVolume));
-                                BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);
+                                callHeartbeat();
                             } else if (!player.getPlayWhenReady()) {
                                 exoBinding.llPlay.setVisibility(View.VISIBLE);
                                 exoBinding.llPause.setVisibility(View.GONE);
@@ -1562,22 +1540,43 @@ public class AudioPlayerActivity extends AppCompatActivity {
         playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(position);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-            if((position >= oldSongPos + 29500)&& (position <= oldSongPos + 30500)){
+            if((position >= oldSongPos + 29500)&& (position <= oldSongPos + 31000)){
                 oldSongPos = position;
-                Log.e("Player Heart bit",String.valueOf(oldSongPos));
+                Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
+                callHeartbeat();
             }
             exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
                     TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
-            if(player!=null) {
-                Log.e("Player Heart player", String.valueOf(player.getCurrentPosition()));
-            }
-            Log.e("Player Heart bit bar",String.valueOf(oldSongPos));
         });
         playerControlView.setFocusable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             playerControlView.setFocusedByDefault(true);
         }
         playerControlView.show();
+    }
+
+    private void callHeartbeat() {
+        p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("audioId", mainPlayModelList.get(position).getID());
+        p.putValue("audioName", mainPlayModelList.get(position).getName());
+        p.putValue("audioDescription", "");
+        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("position", GetCurrentAudioPosition());
+        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+            p.putValue("audioType", "Downloaded");
+        } else {
+            p.putValue("audioType", "Streaming");
+        }
+        p.putValue("source", GetSourceName(ctx));
+        p.putValue("playerType", "Main");
+        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("bitRate", "");
+        p.putValue("sound", String.valueOf(hundredVolume));
+        BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);
     }
 
     private void epAllClicks() {
