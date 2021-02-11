@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.DownloadAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.LibraryAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.PopularPlayedAdapter;
@@ -294,7 +295,7 @@ public class AudioFragment extends Fragment {
             }
             String deviceid = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-            Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID, fcm_id, CONSTANTS.FLAG_ONE, deviceid);
+            Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID, fcm_id, CONSTANTS.FLAG_ONE, deviceid,String.valueOf(BuildConfig.VERSION_CODE));
             listCall1.enqueue(new Callback<UnlockAudioList>() {
                 @Override
                 public void onResponse(Call<UnlockAudioList> call, Response<UnlockAudioList> response) {

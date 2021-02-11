@@ -33,7 +33,6 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"
         android:maxSdkVersion="29" />
-    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <uses-permission
@@ -322,10 +321,7 @@
             android:process=":externalProcess"
             android:exported="true"/>
         -->
-        <service
-            android:name=".Services.GlobalInitExoPlayer"
-            android:exported="true"
-            android:process=":externalProcess" />
+        <receiver android:name=".Services.NotificationActionService" />
         <!--
   <service            android:foregroundServiceType="mediaPlayback"
               android:name=".Utility.MusicService"

@@ -203,7 +203,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                         }
                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
-                            GetAllMedia();
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Brain Wellness Spa");
                             builder.setCancelable(false);

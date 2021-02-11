@@ -50,7 +50,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ContactBookActivity extends AppCompatActivity {
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 90;
+    public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 90;
     ActivityContactBookBinding binding;
     Context ctx;
     String UserPromoCode, ReferLink, UserID;
@@ -59,7 +59,6 @@ public class ContactBookActivity extends AppCompatActivity {
     ContactListAdapter contactListAdapter;
     FavContactListAdapter favContactListAdapter;
     List<ContactlistModel> userList = new ArrayList<>();
-    List<ContactlistModel> olduserList = new ArrayList<>();
     List<FavContactlistModel> favUserList = new ArrayList<>();
     Properties p;
 
@@ -164,23 +163,17 @@ public class ContactBookActivity extends AppCompatActivity {
                         projection, null, null,
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
                 String lastPhoneName = " ";
-                if (phones.getCount() > 0) {
-                    while (phones.moveToNext()) {
-                        String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        if (!name.equalsIgnoreCase(lastPhoneName)) {
-                            lastPhoneName = name;
-                            ContactlistModel user = new ContactlistModel();
-                            user.setContactName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
-                            user.setContactNumber(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-
-                            userList.add(user);
-                            if(userList.size() == olduserList.size()+10){
-                                contactListAdapter = new ContactListAdapter(userList);
-                                binding.rvContactList.setAdapter(contactListAdapter);
-                                olduserList = new ArrayList<>(0);
-                                olduserList = userList;
+                if (phones != null) {
+                    if (phones.getCount() > 0) {
+                        while (phones.moveToNext()) {
+                            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                            if (!name.equalsIgnoreCase(lastPhoneName)) {
+                                lastPhoneName = name;
+                                ContactlistModel user = new ContactlistModel();
+                                user.setContactName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                                user.setContactNumber(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                                userList.add(user);
                             }
-
                         }
                     }
                 }
@@ -198,15 +191,17 @@ public class ContactBookActivity extends AppCompatActivity {
                 new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
 
         String lastPhoneNameFav = " ";
-        if (cur.getCount() > 0) {
-            while (cur.moveToNext()) {
-                String name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                if (!name.equalsIgnoreCase(lastPhoneNameFav)) {
-                    lastPhoneNameFav = name;
-                    FavContactlistModel user = new FavContactlistModel();
-                    user.setContactName(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
-                    user.setContactNumber(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                    favUserList.add(user);
+        if (cur != null ){
+            if( cur.getCount() > 0) {
+                while (cur.moveToNext()) {
+                    String name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    if (!name.equalsIgnoreCase(lastPhoneNameFav)) {
+                        lastPhoneNameFav = name;
+                        FavContactlistModel user = new FavContactlistModel();
+                        user.setContactName(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                        user.setContactNumber(cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                        favUserList.add(user);
+                    }
                 }
             }
         }
