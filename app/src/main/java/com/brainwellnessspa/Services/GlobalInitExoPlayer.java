@@ -167,12 +167,10 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     public static void relesePlayer(Context ctx) {
         if (player != null) {
             playerNotificationManager.setPlayer(null);
-            player.stop();
+//            player.stop();
             player.release();
-            player = null;
+//            player = null;
             PlayerINIT = false;
-            notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(notificationId);
         }
     }
 
@@ -604,6 +602,7 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
                         if (dismissedByUser) {
+                            stopSelf();
                             // Do what the app wants to do when dismissed by the user,
                             // like calling stopForeground(true); or stopSelf();
                         }
@@ -804,15 +803,15 @@ Appointment Audios dddd*/
         return START_STICKY;
     }
 
-    @Override
+   /* @Override
     public void onTaskRemoved(Intent rootIntent) {
         BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
-        stopForeground(true);
+//        stopForeground(true);
 //        playerNotificationManager.cancel(notificationId);
         super.onTaskRemoved(rootIntent);
-    }
+    }*/
 
     @Nullable
     @Override

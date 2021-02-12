@@ -1,9 +1,11 @@
 package com.brainwellnessspa.DashboardModule.Audio;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,8 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -43,6 +47,8 @@ import com.brainwellnessspa.DashboardModule.Models.UnlockAudioList;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.ReferralModule.Activities.ContactBookActivity;
+import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
@@ -144,6 +150,11 @@ public class AudioFragment extends Fragment {
                 }
             }
         }
+
+       /* binding.tvExplore.setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), ContactBookActivity.class);
+            startActivity(i);
+        });*/
         showTooltips();
         return view;
     }

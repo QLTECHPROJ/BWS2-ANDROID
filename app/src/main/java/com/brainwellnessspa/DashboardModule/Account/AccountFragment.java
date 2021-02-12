@@ -2,14 +2,17 @@ package com.brainwellnessspa.DashboardModule.Account;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,6 +23,8 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,9 +33,15 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
+import com.brainwellnessspa.ReferralModule.Activities.ContactBookActivity;
 import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
+import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
+import com.brainwellnessspa.databinding.ContactListLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
@@ -50,8 +61,13 @@ import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.google.android.exoplayer2.device.DeviceInfo;
+import com.google.android.exoplayer2.device.DeviceListener;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.segment.analytics.Properties;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
@@ -63,6 +79,10 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationManager;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -84,6 +104,7 @@ public class AccountFragment extends Fragment {
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
     private long mLastClickTime = 0;
+    List<ContactlistModel> userList = new ArrayList<>();
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,7 +123,30 @@ public class AccountFragment extends Fragment {
                 1, 1, 0.2f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
+        /*binding.rvContactList.setHasFixedSize(true);
+        RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        binding.rvContactList.setLayoutManager(mListLayoutManager);
+        binding.rvContactList.setItemAnimator(new DefaultItemAnimator());*/
+      /*  String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER*//*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*//*};
+        Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                projection, null, null,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+        String lastPhoneName = " ";
+        if (phones.getCount() > 0) {
+            while (phones.moveToNext()) {
+                String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                if (!name.equalsIgnoreCase(lastPhoneName)) {
+                    lastPhoneName = name;
+                    ContactlistModel user = new ContactlistModel();
+                    user.setContactName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                    user.setContactNumber(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                    userList.add(user);
+                }
+            }
+        }
+        phones.close();
+        ContactListAdapter contactListAdapter = new ContactListAdapter(userList);
+        binding.rvContactList.setAdapter(contactListAdapter);*/
         MeasureRatio measureRatios = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
@@ -290,7 +334,7 @@ public class AccountFragment extends Fragment {
 
                 Btn.setOnClickListener(v -> {
                     relesePlayer(getActivity());
-                    /*NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                   /* NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(notificationId);
                     notificationManager.cancelAll();*/
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
@@ -331,8 +375,6 @@ public class AccountFragment extends Fragment {
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-
-                                    relesePlayer(getActivity());
                                     Intent i = new Intent(getActivity(), LoginActivity.class);
                                     startActivity(i);
                                     getActivity().finish();
@@ -359,12 +401,7 @@ public class AccountFragment extends Fragment {
                     });
                 });
 
-                tvGoBack.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.hide();
-                    }
-                });
+                tvGoBack.setOnClickListener(v -> dialog.hide());
                 dialog.show();
                 dialog.setCancelable(false);
             } else {
@@ -383,6 +420,55 @@ public class AccountFragment extends Fragment {
         profileViewData(getActivity());
         super.onResume();
     }
+
+/*
+    public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.MyViewHolder>{
+        List<ContactlistModel> contactlistModel;
+        private List<ContactlistModel> listFilterContact;
+
+        public ContactListAdapter(List<ContactlistModel> contactlistModel) {
+            this.contactlistModel = contactlistModel;
+            this.listFilterContact = contactlistModel;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.contact_list_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+//            ContactlistModel model = listFilterContact.get(position);
+            holder.binding.tvName.setText(contactlistModel.get(position).getContactName());
+            holder.binding.tvNumber.setText(contactlistModel.get(position).getContactNumber());
+            holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_gray_cornor_normal);
+            holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.gray));
+            holder.binding.BtnInvite.setOnClickListener(v -> {
+//                prepareContactData(model.getContactName(), model.getContactNumber());
+                notifyDataSetChanged();
+                holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal);
+                holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.white));
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return contactlistModel.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ContactListLayoutBinding binding;
+
+            public MyViewHolder(ContactListLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+*/
 
     private void showTooltips() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);

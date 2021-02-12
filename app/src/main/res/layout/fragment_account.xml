@@ -15,9 +15,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+<!--
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvContactList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="never"
+                android:visibility="visible"
+                tools:listitem="@layout/contact_list_layout" />
+-->
+
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -89,7 +89,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:18.0.2'
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
 // TODO  TODO Room Database Dependency
-
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
     // optional - Kotlin Extensions and Coroutines support for Room
@@ -102,7 +101,6 @@ dependencies {
     testImplementation "androidx.room:room-testing:$room_version"
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     debugImplementation 'com.amitshekhar.android:debug-db-encrypt:1.0.6'
-
 // TODO  Material Design Dependency
     implementation 'com.google.android.material:material:1.3.0'
 // TODO  Bottom Menu and Fragment
@@ -138,7 +136,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
     implementation 'com.github.claucookie.miniequalizer:library:1.0.0'
-
     implementation 'me.toptas.fancyshowcase:fancyshowcaseview:1.3.3'
     implementation 'com.google.android.exoplayer:exoplayer:2.12.3'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.12.3'
@@ -146,18 +143,15 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.12.3'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.11.5'
     implementation "com.google.android.exoplayer:extension-ima:2.12.3"
-
     implementation 'com.google.android.gms:play-services-basement:17.6.0'
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
-    // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:26.2.0')
-    // Declare the dependencies for the Crashlytics and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-crashlytics:17.3.1'
     implementation 'com.google.firebase:firebase-analytics:18.0.2'
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.1'
     implementation "io.gresse.hugo.vumeterlibrary:vumeterlibrary:1.0.17"
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.20'
+    implementation 'com.tomash:androidcontacts:1.14.0'
 }
 repositories {
     mavenCentral()

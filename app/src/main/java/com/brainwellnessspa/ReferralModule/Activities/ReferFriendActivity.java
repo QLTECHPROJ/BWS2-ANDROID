@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Appointment.SessionsFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -60,7 +63,16 @@ public class ReferFriendActivity extends AppCompatActivity {
         p.putValue("referLink", ReferLink);
         p.putValue("userReferCode", UserPromocode);
         BWSApplication.addToSegment("Refer A Friend Screen Viewed", p, CONSTANTS.screen);
-        prepareData();
+        binding.tvTitle.setText(getString(R.string.refer_title));
+        binding.tvDesc.setText(getString(R.string.refer_desc));
+        binding.tvInviteTitle.setText(getString(R.string.refer_invite_title));
+        binding.tvInviteRules.setText(getString(R.string.refer_invite_rules_click));
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                5, 3, 1f, 40);
+        binding.ivReferImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.ivReferImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.ivReferImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        binding.ivReferImage.setImageResource(R.drawable.refer_friend_banner);
         binding.tvCodeCopy.setText(UserPromocode);
         binding.llBack.setOnClickListener(v -> {
             finish();
@@ -71,6 +83,51 @@ public class ReferFriendActivity extends AppCompatActivity {
         } else {
             binding.tvCodeCopy.setVisibility(View.VISIBLE);
         }
+
+        binding.btnReferred.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(ReferFriendActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(ReferFriendActivity.this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ReferFriendActivity.this,
+                            new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                  /*  Intent intent = new Intent();
+                    String manufacturer = Build.MANUFACTURER;
+                    if ("xiaomi".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                    } else if ("oppo".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
+                    } else if ("vivo".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
+                    }
+
+                    List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                    if (list.size() > 0) {
+                        startActivity(intent);
+                    }*/
+                } else {
+                    // Permission has already been granted
+               /* AlertDialog.Builder buildermain = new AlertDialog.Builder(ReferFriendActivity.this);
+                buildermain.setMessage(getString(R.string.opps_msg)+" Please Try After Some Time");
+                buildermain.setCancelable(true);
+                buildermain.setPositiveButton(
+                        getString(R.string.okay),
+                        (dialogmain, id1) -> {
+                            dialogmain.dismiss();
+                        });
+
+                AlertDialog alert11 = buildermain.create();
+                alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+                alert11.show();
+                alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.darkorange));*/
+                 /*   Fragment sessionsFragment = new ContactBookFragment();
+                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flfriend, sessionsFragment).commit();*/
+                    Intent i = new Intent(ReferFriendActivity.this, ContactBookActivity.class);
+                    startActivity(i);
+                }
+            }
+        });
 
         binding.llCodeCopy.setOnClickListener(v -> {
             if (UserPromocode.equalsIgnoreCase("")) {
@@ -122,72 +179,18 @@ public class ReferFriendActivity extends AppCompatActivity {
                 BWSApplication.addToSegment("Share Clicked", p, CONSTANTS.track);
             }
         });
-
-/*
-        binding.llCopyLink.setOnClickListener(v -> {
-            if (UserPromocode.equalsIgnoreCase("")) {
-                BWSApplication.showToast(getString(R.string.not_available), ctx);
-            } else {
-                ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("text", binding.tvCodeCopy.getText());
-                if (manager != null) {
-                    manager.setPrimaryClip(clipData);
-                }
-                BWSApplication.showToast("Promo Code Copied", ctx);
-                p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("userReferCode", UserPromocode);
-                BWSApplication.addToSegment("Promo Code Copied", p, CONSTANTS.track);
-            }
-        });
-*/
-
-        binding.btnReferred.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(ReferFriendActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                        && ContextCompat.checkSelfPermission(ReferFriendActivity.this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ReferFriendActivity.this,
-                            new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                  /*  Intent intent = new Intent();
-                    String manufacturer = Build.MANUFACTURER;
-                    if ("xiaomi".equalsIgnoreCase(manufacturer)) {
-                        intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
-                    } else if ("oppo".equalsIgnoreCase(manufacturer)) {
-                        intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
-                    } else if ("vivo".equalsIgnoreCase(manufacturer)) {
-                        intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
-                    }
-
-                    List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-                    if (list.size() > 0) {
-                        startActivity(intent);
-                    }*/
-                } else {
-                    // Permission has already been granted
-               /* AlertDialog.Builder buildermain = new AlertDialog.Builder(ReferFriendActivity.this);
-                buildermain.setMessage(getString(R.string.opps_msg)+" Please Try After Some Time");
-                buildermain.setCancelable(true);
-                buildermain.setPositiveButton(
-                        getString(R.string.okay),
-                        (dialogmain, id1) -> {
-                            dialogmain.dismiss();
-                        });
-
-                AlertDialog alert11 = buildermain.create();
-                alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                alert11.show();
-                alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.darkorange));*/
-                    Intent i = new Intent(ReferFriendActivity.this, ContactBookActivity.class);
-                    startActivity(i);
-                }
-            }
-        });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    /*Fragment sessionsFragment = new ContactBookFragment();
+                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flfriend, sessionsFragment).commit();*/
+
                     Intent i = new Intent(ReferFriendActivity.this, ContactBookActivity.class);
                     startActivity(i);
                 } else {
@@ -207,18 +210,5 @@ public class ReferFriendActivity extends AppCompatActivity {
                 return;
             }
         }
-    }
-
-    private void prepareData() {
-        binding.tvTitle.setText(getString(R.string.refer_title));
-        binding.tvDesc.setText(getString(R.string.refer_desc));
-        binding.tvInviteTitle.setText(getString(R.string.refer_invite_title));
-        binding.tvInviteRules.setText(getString(R.string.refer_invite_rules_click));
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                5, 3, 1f, 40);
-        binding.ivReferImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivReferImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivReferImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        binding.ivReferImage.setImageResource(R.drawable.refer_friend_banner);
     }
 }

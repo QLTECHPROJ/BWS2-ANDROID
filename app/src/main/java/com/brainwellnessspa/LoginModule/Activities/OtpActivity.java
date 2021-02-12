@@ -315,7 +315,7 @@ public class OtpActivity extends AppCompatActivity implements
                     @Override
                     public void onFailure(Call<OtpModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                       /* Properties p = new Properties();
+                        Properties p = new Properties();
                         p.putValue("param",binding.edtOTP1.getText().toString() + "" +
                                 binding.edtOTP2.getText().toString() + "" +
                                 binding.edtOTP3.getText().toString() + "" +
@@ -323,7 +323,7 @@ public class OtpActivity extends AppCompatActivity implements
                                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)
                                 +":"+ MobileNo+":"+ CONSTANTS.FLAG_ZERO);
                         p.putValue(" otp err",t.getMessage());
-                        BWSApplication.addToSegment("Error", p, CONSTANTS.screen);*/
+                        BWSApplication.addToSegment("Error", p, CONSTANTS.screen);
                     }
                 });
             } else {
