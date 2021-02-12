@@ -260,39 +260,6 @@ public class AudioDownloadsFragment extends Fragment {
             binding.llSpace.setLayoutParams(params);
         }
     }
-
-   /* public List<DownloadAudioDetails> GetAllMedia(Context ctx) {
-        class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                audioList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllData("");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (audioList != null) {
-                    if (audioList.size() != 0) {
-                        getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList);
-                        binding.llError.setVisibility(View.GONE);
-                        binding.rvDownloadsList.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    binding.llError.setVisibility(View.VISIBLE);
-                    binding.rvDownloadsList.setVisibility(View.GONE);
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetTask st = new GetTask();
-        st.execute();
-        return audioList;
-    }*/
-
     private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, String IsLock) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
@@ -944,45 +911,6 @@ public class AudioDownloadsFragment extends Fragment {
                 DB.taskDao().getLastIdByuId1(audioFile).removeObserver(audioListx -> {
                 });
             });
-          /*  class DeleteMedia extends AsyncTask<Void, Void, Void> {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    DatabaseClient.getInstance(applicationContext)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .deleteByAudioFile(audioFile, "");
-
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    CallObserverMethod2();
-                    DatabaseClient
-                            .getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .getLastIdByuId1(audioFile).observe((LifecycleOwner) ctx, audioList -> {
-                        DatabaseClient
-                                .getInstance(ctx)
-                                .getaudioDatabase()
-                                .taskDao()
-                                .getLastIdByuId1(audioFile).removeObserver(audioListx -> {
-                        });
-                        if (audioList.size() == 0) {
-                            try {
-                                FileUtils.deleteDownloadedFile(applicationContext, audioName);
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    });
-//                    listModelList = GetAllMedia(ctx);
-                    super.onPostExecute(aVoid);
-                }
-            }
-            DeleteMedia st = new DeleteMedia();
-            st.execute();*/
         }
 
         @Override

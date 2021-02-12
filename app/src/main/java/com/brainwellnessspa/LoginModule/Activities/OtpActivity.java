@@ -441,52 +441,6 @@ public class OtpActivity extends AppCompatActivity implements
         });
     }
 
-  /*      class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(OtpActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAll();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                DeletallLocalCart1();
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();
-    }
-
-    public void DeletallLocalCart1() {
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(OtpActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAllPlalist();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
-                startActivity(i);
-                finish();
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();
-    }*/
-
     @Override
     public void onOTPReceived(String otp) {
         String[] splited = new String[0];

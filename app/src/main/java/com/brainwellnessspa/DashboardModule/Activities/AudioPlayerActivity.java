@@ -2224,58 +2224,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void SaveMedia(int progressx) {
         downloadClick = true;
-    /*    class SaveMedia extends AsyncTask<Void, Void, Void> {
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-//                if (audioPlay) {
-                    downloadAudioDetails.setID(mainPlayModelList.get(position).getID());
-                    downloadAudioDetails.setName(mainPlayModelList.get(position).getName());
-                    downloadAudioDetails.setAudioFile(mainPlayModelList.get(position).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(mainPlayModelList.get(position).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(mainPlayModelList.get(position).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(mainPlayModelList.get(position).getImageFile());
-                    downloadAudioDetails.setLike(mainPlayModelList.get(position).getLike());
-                    downloadAudioDetails.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
-               *//* } else if (queuePlay) {
-                    downloadAudioDetails.setID(addToQueueModelList.get(position).getID());
-                    downloadAudioDetails.setName(addToQueueModelList.get(position).getName());
-                    downloadAudioDetails.setAudioFile(addToQueueModelList.get(position).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(addToQueueModelList.get(position).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(addToQueueModelList.get(position).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(addToQueueModelList.get(position).getImageFile());
-                    downloadAudioDetails.setLike(addToQueueModelList.get(position).getLike());
-                    downloadAudioDetails.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
-                }*//*
-                downloadAudioDetails.setDownload("1");
-                downloadAudioDetails.setIsSingle("1");
-                downloadAudioDetails.setPlaylistId("");
-                if (progressx == 0) {
-                    downloadAudioDetails.setIsDownload("pending");
-                } else {
-                    downloadAudioDetails.setIsDownload("Complete");
-                }
-                downloadAudioDetails.setDownloadProgress(progressx);
-                DatabaseClient.getInstance(activity)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .insertMedia(downloadAudioDetails);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                GetMediaPer();
-                disableDownload();
-                super.onPostExecute(aVoid);
-            }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();*/
         DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
 //                if (audioPlay) {
         downloadAudioDetails.setID(mainPlayModelList.get(position).getID());
@@ -2347,45 +2296,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 });
             }
         });
-       /* downloadAudioDetailsList1 = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList1 = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getaudioByPlaylist(url, "");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (!url.equalsIgnoreCase("")) {
-                    if (downloadAudioDetailsList1.size() != 0) {
-                        if (downloadAudioDetailsList1.get(0).getDownload().equalsIgnoreCase("1")) {
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                            binding.llDownload.setClickable(false);
-                            binding.llDownload.setEnabled(false);
-                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                        } else {
-                            binding.llDownload.setClickable(true);
-                            binding.llDownload.setEnabled(true);
-                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                        }
-                    } else {
-                        binding.llDownload.setClickable(true);
-                        binding.llDownload.setEnabled(true);
-                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                    }
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();*/
     }
 
     private void addToRecentPlay() {
@@ -2660,28 +2570,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     public List<String> GetAllMedia() {
-      /*  class GetTask extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded("Complete");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                MakeArray();
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetTask st = new GetTask();
-        st.execute();*/
-        DatabaseClient
+         DatabaseClient
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
@@ -2714,25 +2603,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
             });
         });
-       /* class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded("Complete");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetTask st = new GetTask();
-        st.execute();*/
         return downloadAudioDetailsList;
     }
 

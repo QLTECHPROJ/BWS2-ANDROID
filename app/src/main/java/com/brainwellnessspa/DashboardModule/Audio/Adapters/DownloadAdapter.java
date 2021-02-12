@@ -224,21 +224,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         AudioDatabase.databaseWriteExecutor.execute(() -> {
             downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete");
         });
-      /*  class GetTask extends AsyncTask<Void, Void, Void> {
-            List<String> downloadAudioDetailsList = new ArrayList<>();
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded("Complete");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {*/
         int pos = 0;
         if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             if (isDisclaimer == 1) {

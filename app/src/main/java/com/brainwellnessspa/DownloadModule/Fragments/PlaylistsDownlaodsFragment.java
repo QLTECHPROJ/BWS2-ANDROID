@@ -606,68 +606,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         private void deleteDownloadFile(String PlaylistId) {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId));
             deletePlaylist(PlaylistId);
-          /*  class DeleteMedia extends AsyncTask<Void, Void, Void> {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    DatabaseClient.getInstance(applicationContext)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .deleteByPlaylistId(PlaylistId);
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-//                notifyItemRemoved(position);
-                    super.onPostExecute(aVoid);
-                }
-            }
-            DeleteMedia st = new DeleteMedia();
-            st.execute();*/
         }
 
         private void deletePlaylist(String playlistId) {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId));
             GetAllMedia(ctx);
-         /*   class DeleteMedia extends AsyncTask<Void, Void, Void> {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    DatabaseClient.getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .deletePlaylist(playlistId);
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    playlistList = new ArrayList<>();
-                    super.onPostExecute(aVoid);
-                }
-            }
-            DeleteMedia st = new DeleteMedia();
-            st.execute();*/
         }
-
-   /*     private void GetAllMedia(FragmentActivity activity) {
-            DatabaseClient
-                    .getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
-                    .getAllPlaylist1().observe(this.ctx, audioList -> {
-
-                if (audioList.size() != 0) {
-                    llError.setVisibility(View.GONE);
-                    tvFound.setVisibility(View.GONE);
-                    adapter = new PlaylistsDownloadsAdapter(audioList, ctx, UserID, progressBarHolder, ImgV, llError, tvFound, rvDownloadsList);
-                    rvDownloadsList.setAdapter(adapter);
-                } else {
-                    llError.setVisibility(View.VISIBLE);
-                    tvFound.setVisibility(View.VISIBLE);
-                    rvDownloadsList.setVisibility(View.GONE);
-                }
-            });
-        }*/
 
         public void GetPlaylistMedia(String playlistID) {
             DB.taskDao().getAllAudioByPlaylist1(playlistID).observe(this.ctx, audioList -> {
@@ -676,32 +620,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,0);
                 }
             });
-     /*   playlistWiseAudioDetails = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                playlistWiseAudioDetails = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist(playlistID);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                deleteDownloadFile(ctx.getApplicationContext(), playlistID);
-                try {
-                    for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                        GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
-                    }
-                }catch (Exception e){}
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
-        return playlistWiseAudioDetails;*/
         }
 
         @Override

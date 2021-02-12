@@ -166,34 +166,7 @@ public class AptAudioFragment extends Fragment {
     }
 
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
-      /*  oneAudioDetailsList = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                oneAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(AudioFile);
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (oneAudioDetailsList.size() != 0) {
-                    if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
-                        disableDownload(llDownload, ivDownload);
-                    }
-                } else if (download.equalsIgnoreCase("1")) {
-                    disableDownload(llDownload, ivDownload);
-                } else {
-                    enableDownload(llDownload, ivDownload);
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();*/
         DatabaseClient
                 .getInstance(getActivity())
                 .getaudioDatabase()
@@ -688,24 +661,7 @@ public class AptAudioFragment extends Fragment {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
             llDownload.setClickable(false);
             llDownload.setEnabled(false);
-          /*  class SaveMedia extends AsyncTask<Void, Void, Void> {
-                @Override
-                protected Void doInBackground(Void... voids) {
 
-                    DatabaseClient.getInstance(getActivity().getApplicationContext())
-                            .getaudioDatabase()
-                            .taskDao()
-                            .insertMedia(downloadAudioDetails);
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                }
-            }
-            SaveMedia st = new SaveMedia();
-            st.execute();*/
         }
 
         @Override

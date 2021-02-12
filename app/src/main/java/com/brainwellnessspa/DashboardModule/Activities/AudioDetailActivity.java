@@ -1065,27 +1065,6 @@ public class AudioDetailActivity extends AppCompatActivity {
 //                callAddTransFrag();
         }
         callDisableDownload();
-   /*     class SaveMedia extends AsyncTask<Void, Void, Void> {
-
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                DatabaseClient.getInstance(activity)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .insertMedia(downloadAudioDetails);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                super.onPostExecute(aVoid);
-            }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();*/
     }
 
     private void callLike() {

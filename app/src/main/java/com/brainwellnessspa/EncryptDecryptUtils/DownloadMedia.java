@@ -357,24 +357,6 @@ public class DownloadMedia implements OnDownloadListener {
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename));
            localIntent.putExtra("Progress", downloadProgress);
            lBM.sendBroadcast(localIntent);
-        /*class SaveMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .updateMediaByDownloadProgress(Status, progress, PlaylistId, filename);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                lBM.sendBroadcast(localIntent);
-                super.onPostExecute(aVoid);
-            }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();*/
     }
     private void getPending(Context ctx) {
         DB.taskDao()

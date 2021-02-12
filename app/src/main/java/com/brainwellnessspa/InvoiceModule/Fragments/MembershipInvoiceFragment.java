@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
@@ -38,15 +39,24 @@ import com.brainwellnessspa.UserModule.Activities.RequestPermissionHandler;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentInvoiceBinding;
 import com.brainwellnessspa.databinding.InvoiceListLayoutBinding;
+import com.downloader.Error;
+import com.downloader.OnDownloadListener;
+import com.downloader.PRDownloader;
+import com.downloader.Status;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 
 public class MembershipInvoiceFragment extends Fragment {
     FragmentInvoiceBinding binding;
@@ -58,6 +68,7 @@ public class MembershipInvoiceFragment extends Fragment {
     String UserID;
     File apkStorage = null;
     File outputFile = null;
+    int downloadIdInvoice = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,10 +81,6 @@ public class MembershipInvoiceFragment extends Fragment {
         if (getArguments() != null) {
             memberShipList = getArguments().getParcelableArrayList("membershipInvoiceFragment");
         }
-
-     /*   Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Membership Invoice Screen Viewed", p, CONSTANTS.screen);*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
@@ -199,9 +206,9 @@ public class MembershipInvoiceFragment extends Fragment {
         switch (requestCode) {
             case 2:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    DownloadFile();
+                    DownloadFile();
                     Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
-                    new DownloadingTask().execute();
+//                    new DownloadingTask().execute();
 
                 } else {
                 }
@@ -221,8 +228,8 @@ public class MembershipInvoiceFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-//                DownloadFile();
-                new DownloadingTask().execute();
+                DownloadFile();
+//                new DownloadingTask().execute();
                 return true;
             } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
@@ -247,234 +254,56 @@ public class MembershipInvoiceFragment extends Fragment {
     }
 
     private void DownloadFile() {
-        AudioDatabase.databaseWriteExecutor.execute(() -> {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Downloading...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-            try {
-                URL url = new URL(downloadUrl);//Create Download URl
-                HttpURLConnection c = (HttpURLConnection) url.openConnection();//Open Url Connection
-                c.setRequestMethod("GET");//Set Request Method to "GET" since we are grtting data
-                c.connect();//connect the URL Connection
+        if (new CheckForSDCard().isSDCardPresent()) {
+            apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "BWS");
+        } else
+            BWSApplication.showToast("Oops!! There is no SD Card.", getActivity());
 
-                //If Connection response is not OK then show Logs
-                if (c.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
-                            + " " + c.getResponseMessage());
-                }
+        //If File is not present create directory
+        if (!apkStorage.exists()) {
+            apkStorage.mkdir();
+            Log.e(TAG, "Directory Created.");
+        }
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Downloading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        downloadIdInvoice = PRDownloader.download(downloadUrl, apkStorage.getAbsolutePath(),downloadFileName + ".pdf")
+                .build()
+                .setOnProgressListener(progress -> {
+                }).start(new OnDownloadListener() {
+                    @Override
+                    public void onDownloadComplete() {
+                        progressDialog.dismiss();
+                        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
+                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                        alertDialogBuilder.setTitle("Invoice Data Downloaded Successfully");
+                        alertDialogBuilder.setMessage("Your invoice is in Storage/BWS");
+                        alertDialogBuilder.setCancelable(false);
+                        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog alert11 = alertDialogBuilder.create();
+                        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+                        alert11.show();
 
-                //Get File if SD card is present
-                if (new CheckForSDCard().isSDCardPresent()) {
-                    apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "BWS");
-                } else
-                    BWSApplication.showToast("Oops!! There is no SD Card.", getActivity());
+                        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
+//                        BWSApplication.showToast( "Document Downloaded Successfully", context);
+                    }
 
-                //If File is not present create directory
-                if (!apkStorage.exists()) {
-                    apkStorage.mkdir();
-                    Log.e(TAG, "Directory Created.");
-                }
+                    @Override
+                    public void onError(Error error) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        }, 1000);
 
-                outputFile = new File(apkStorage, downloadFileName + ".pdf");//Create Output file in Main File
-
-                //Create New File if not present
-                if (!outputFile.exists()) {
-                    outputFile.createNewFile();
-                    Log.e(TAG, "File Created");
-                }
-                FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
-                InputStream is = c.getInputStream();//Get InputStream for connection
-
-                byte[] buffer = new byte[1024];//Set buffer type
-                int len1 = 0;//init length
-                while ((len1 = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, len1);//Write new file
-                }
-                fos.close();
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                outputFile = null;
-                Log.e(TAG, "Download Error Exception " + e.getMessage());
-            }
-        });
-
-        try {
-            if (outputFile != null) {
-                progressDialog.dismiss();
-                ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-                alertDialogBuilder.setTitle("Invoice Data Downloaded Successfully");
-                alertDialogBuilder.setMessage("Your invoice is in Storage/BWS");
-                alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                        Log.e(TAG, "Download Failed");
                     }
                 });
-
-             /*   alertDialogBuilder.setNegativeButton("Open", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        isreadStoragePermissionGranted();
-                        openfile();
-                    }
-                });*/
-                AlertDialog alert11 = alertDialogBuilder.create();
-                alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                alert11.show();
-
-                alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
-//                    BWSApplication.showToast( "Document Downloaded Successfully", context);
-            } else {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
-
-                Log.e(TAG, "Download Failed");
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            //Change button text if exception occurs
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    progressDialog.dismiss();
-                }
-            }, 1000);
-            Log.e(TAG, "Download Failed with Exception - " + e.getLocalizedMessage());
-
-        }
-    }
-
-    private class DownloadingTask extends AsyncTask<Void, Void, Void> {
-        File apkStorage = null;
-        File outputFile = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Downloading...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Downloading...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-
-            try {
-                if (outputFile != null) {
-                    progressDialog.dismiss();
-                    ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
-                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-                    alertDialogBuilder.setTitle("Invoice Data Downloaded Successfully");
-                    alertDialogBuilder.setMessage("Your invoice is in Storage/BWS");
-                    alertDialogBuilder.setCancelable(false);
-                    alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                   /* alertDialogBuilder.setNegativeButton("Open", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            isreadStoragePermissionGranted();
-                            openfile();
-                        }
-                    });*/
-                    AlertDialog alert11 = alertDialogBuilder.create();
-                    alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                    alert11.show();
-
-                    alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
-//                    BWSApplication.showToast( "Document Downloaded Successfully", context);
-                } else {
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    }, 1000);
-
-                    Log.e(TAG, "Download Failed");
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                //Change button text if exception occurs
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
-                Log.e(TAG, "Download Failed with Exception - " + e.getLocalizedMessage());
-
-            }
-            super.onPostExecute(result);
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            try {
-                URL url = new URL(downloadUrl);//Create Download URl
-                HttpURLConnection c = (HttpURLConnection) url.openConnection();//Open Url Connection
-                c.setRequestMethod("GET");//Set Request Method to "GET" since we are grtting data
-                c.connect();//connect the URL Connection
-
-                //If Connection response is not OK then show Logs
-                if (c.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
-                            + " " + c.getResponseMessage());
-                }
-
-                //Get File if SD card is present
-                if (new CheckForSDCard().isSDCardPresent()) {
-                    apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "BWS");
-                } else
-                    BWSApplication.showToast("Oops!! There is no SD Card.", getActivity());
-
-                //If File is not present create directory
-                if (!apkStorage.exists()) {
-                    apkStorage.mkdir();
-                    Log.e(TAG, "Directory Created.");
-                }
-
-                outputFile = new File(apkStorage, downloadFileName + ".pdf");//Create Output file in Main File
-
-                //Create New File if not present
-                if (!outputFile.exists()) {
-                    outputFile.createNewFile();
-                    Log.e(TAG, "File Created");
-                }
-                FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
-                InputStream is = c.getInputStream();//Get InputStream for connection
-
-                byte[] buffer = new byte[1024];//Set buffer type
-                int len1 = 0;//init length
-                while ((len1 = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, len1);//Write new file
-                }
-                fos.close();
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                outputFile = null;
-                Log.e(TAG, "Download Error Exception " + e.getMessage());
-            }
-            return null;
-        }
     }
 }

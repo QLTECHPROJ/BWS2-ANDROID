@@ -314,47 +314,5 @@ public class SplashScreenActivity extends AppCompatActivity {
         }); AudioDatabase.databaseWriteExecutor.execute(() -> {
             DB.taskDao().deleteAllPlalist();
         });
-      /*  class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(SplashScreenActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAll();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                DeletallLocalCart1();
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();*/
     }
-
-/*
-    public void DeletallLocalCart1() {
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(SplashScreenActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAllPlalist();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();
-    }
-*/
 }

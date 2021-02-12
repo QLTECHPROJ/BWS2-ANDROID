@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -936,81 +935,6 @@ public class MiniPlayerFragment extends Fragment {
         }
     }
 
-    private void getDownloadMedia(DownloadMedia downloadMedia, String name, int i) {
-        class getDownloadMedia extends AsyncTask<Void, Void, Void> {
-            File fileDescriptor = null;
-            int x;
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-//                try {
-
-                downloadAudioDetailsListGloble.add(name);
-                fileDescriptor = new File(FileUtils.getFilePath(ctx, name));
-             /*   descriptor = downloadMedia.decrypt(name);
-                try {
-                    if (descriptor != null) {
-                        fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
-                    }
-                } catch (IOException e) {
-                    descriptor = downloadMedia.decrypt(name);
-                    try {
-                        if (descriptor != null) {
-                            fileDescriptor = FileUtils.getTempFileDescriptor1(ctx.getApplicationContext(), descriptor);
-                        }
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    e.printStackTrace();
-                }*/
-                Log.e("Download do in bg Call", String.valueOf(x) + ":-" + name);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                filesDownloaded.add(fileDescriptor);
-//                Log.e("filename", fileDescriptor.getName());
-//                Log.e("MakeArry not Call",String.valueOf(i));
-                descriptor = null;
-                fileDescriptor = null;
-//                if(i == downloadAudioDetailsList.size()) {
-//                    Log.e("MakeArry Call",String.valueOf(i));
-                x = i;
-                x = x + 1;
-                for (int j = 0; j < downloadAudioDetailsList.size(); j++) {
-                    if (x < mainPlayModelList2.size()) {
-                        if (downloadAudioDetailsList.get(j).equals(mainPlayModelList2.get(x).getName())) {
-                            getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
-                            break;
-                        }
-                    } else {
-                        MakeArray();
-                        Log.e("MakeArry Call", String.valueOf(x));
-                        break;
-                    }
-                    if (j == downloadAudioDetailsList.size() - 1) {
-                        x = x + 1;
-                        j = 0;
-                        Log.e("again for Call", String.valueOf(x));
-                    }
-                }
-             /*   if (x < mainPlayModelList.size() - 1) {
-//                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(x), x);
-                    Log.e("DownloadMedia Call", String.valueOf(x));
-                } else {
-//                    MakeArray();
-                    Log.e("MakeArry Call", String.valueOf(x));
-                }*/
-//                }
-                super.onPostExecute(aVoid);
-            }
-        }
-
-        getDownloadMedia st = new getDownloadMedia();
-        st.execute();
-    }
-
     private void callButtonText(int ps) {
 //        simpleSeekbar.setMax(100);
         try {
@@ -1146,66 +1070,7 @@ public class MiniPlayerFragment extends Fragment {
                     .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
             });
         });
-  /*      class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded("Complete");
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                audioClick = true;
-                MakeArray();
-//                if(mainPlayModelList.get(position).getAudioFile().equals("")){
-//                   getPrepareShowData();
-//                }
-//                mainPlayModelList2 = new ArrayList<>();
-//                mainPlayModelList2 = mainPlayModelList;
-             *//*   if (downloadAudioDetailsList.size() != 0) {
-                    if (mainPlayModelList.get(position).getAudioFile().equals("")) {
-//                        getPrepareShowData();
-//                          ismyDes = true;
-                        mainPlayModelList2.remove(position);
-                    }
-                    int x = 0;
-                    downloadAudioDetailsListGloble = new ArrayList<>();
-                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                        if (x < mainPlayModelList2.size()) {
-                            if (downloadAudioDetailsList.get(i).equals(mainPlayModelList2.get(x).getName())) {
-                                DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                                getDownloadMedia(downloadMedia, mainPlayModelList2.get(x).getName(), x);
-                                break;
-                            }
-                        } else {
-                            MakeArray();
-                            Log.e("MakeArry Call", String.valueOf(x));
-                            break;
-                        }
-                        if (i == downloadAudioDetailsList.size() - 1) {
-                            x = x + 1;
-                            if (downloadAudioDetailsList.size() > 1) {
-                                i = 0;
-                            } else {
-                                MakeArray();
-                            }
-                            Log.e("again for Call", String.valueOf(x));
-                        }
-                    }
-                } else {
-                    MakeArray();
-                }*//*
-//                MakeArray();
-                super.onPostExecute(aVoid);
-            }
-        }
-//        MakeArray2();
-        GetTask st = new GetTask();
-        st.execute();*/
         return downloadAudioDetailsList;
     }
 
@@ -1223,25 +1088,6 @@ public class MiniPlayerFragment extends Fragment {
                     .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
             });
         });
-      /*  class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded("Complete");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }
-//        MakeArray2();
-        GetTask st = new GetTask();
-        st.execute();*/
         return downloadAudioDetailsList;
     }
 

@@ -448,24 +448,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId));
         deletePlaylist(PlaylistID);
-     /*   class DeleteMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(applicationContext)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteByPlaylistId(PlaylistId);
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                notifyItemRemoved(position);
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeleteMedia st = new DeleteMedia();
-        st.execute();*/
     }
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
@@ -486,50 +469,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             }
 
         });
-       /* class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                oneAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(AudioFile);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (oneAudioDetailsList.size() != 0) {
-                    if (oneAudioDetailsList.size() == 1) {
-                        FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
-                    }
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia sts = new GetMedia();
-        sts.execute();*/
     }
 
     private void deletePlaylist(String playlistId) {
- /*       class DeleteMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deletePlaylist(playlistId);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeleteMedia st = new DeleteMedia();
-        st.execute();
-*/
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId));
     }
 

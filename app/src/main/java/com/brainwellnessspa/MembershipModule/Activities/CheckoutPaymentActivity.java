@@ -68,7 +68,7 @@ import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
-    String MobileNo = "", Code = "", UserID, Name = "", Promocode = "";
+    String MobileNo = "", Code = "", Name = "", Promocode = "";
     Context context;
     Activity activity;
     Dialog d;
@@ -89,8 +89,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_checkout_payment);
         context = CheckoutPaymentActivity.this;
         activity = CheckoutPaymentActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         if (getIntent().getExtras() != null) {
             MobileNo = getIntent().getStringExtra("MobileNo");
             Code = getIntent().getStringExtra("Code");
@@ -254,12 +252,12 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                             RegisterModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 Properties p = new Properties();
-                                                p.putValue("userId", UserID);
+                                                p.putValue("userId", cardModel.getResponseData().getUserID());
                                                 BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                                 analytics.identify(new Traits()
-                                                        .putValue("userId", UserID)
+                                                        .putValue("userId",  cardModel.getResponseData().getUserID())
                                                         .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
                                                         .putValue("deviceType", CONSTANTS.FLAG_ONE)
                                                         .putValue("countryCode", Code)
@@ -345,50 +343,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             DB.taskDao().deleteAllPlalist();
         });
     }
-        /*
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(CheckoutPaymentActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAll();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                DeletallLocalCart1();
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();
-    }
-
-    public void DeletallLocalCart1() {
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(CheckoutPaymentActivity.this)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAllPlalist();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();
-    }*/
 
     @Override
     public void onBackPressed() {

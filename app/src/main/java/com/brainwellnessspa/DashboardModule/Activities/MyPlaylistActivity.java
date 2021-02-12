@@ -447,109 +447,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
         getPrepareData();
         super.onResume();
     }
-
-    /*  private void getMediaByPer(String playlistID, int totalAudio) {
-          class getMediaByPer extends AsyncTask<Void, Void, Void> {
-
-              @Override
-              protected Void doInBackground(Void... voids) {
-                  count= DatabaseClient.getInstance(ctx)
-                          .getaudioDatabase()
-                          .taskDao()
-                          .getCountDownloadProgress("Complete",playlistID);
-
-                  return null;
-              }
-
-              @Override
-              protected void onPostExecute(Void aVoid) {
-                  downloadPlaylistDetailsList = GetPlaylistDetail();
-                  if(downloadPlaylistDetailsList.size()!=0) {
-                      if (count < totalAudio) {
-                          long progressPercent = count * 100 / totalAudio;
-                          int downloadProgress1 = (int) progressPercent;
-                          binding.pbProgress.setVisibility(View.VISIBLE);
-                          binding.ivDownloads.setVisibility(View.GONE);
-                          binding.pbProgress.setProgress(downloadProgress1);
-                          handler1.postDelayed(UpdateSongTime1, 300);
-                      } else {
-                          binding.pbProgress.setVisibility(View.GONE);
-                          binding.ivDownloads.setVisibility(View.VISIBLE);
-                          handler1.removeCallbacks(UpdateSongTime1);
-                      }
-                  }
-                  super.onPostExecute(aVoid);
-              }
-          }
-
-          getMediaByPer st = new getMediaByPer();
-          st.execute();
-      }*/
-
-    /*
-        private void getDownloadData() {
-            try {
-                SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                Gson gson = new Gson();
-                String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                    Type type = new TypeToken<List<String>>() {
-                    }.getType();
-                    fileNameList = gson.fromJson(jsony, type);
-                    playlistDownloadId = gson.fromJson(jsonq, type);
-                    remainAudio = new ArrayList<>();
-                    if (playlistDownloadId.size() != 0) {
-                        playlistDownloadId.contains(PlaylistID);
-                        for (int i = 0; i < fileNameList.size(); i++) {
-                            if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                                remainAudio.add(playlistDownloadId.get(i));
-                            }
-                        }
-                        if (downloadPlaylistDetailsList.size() != 0) {
-                            if (remainAudio.size() < SongListSize) {
-                                handler1.postDelayed(UpdateSongTime1, 500);
-                            }
-                        }
-                        //
-                    }else {
-                        fileNameList = new ArrayList<>();
-                        playlistDownloadId = new ArrayList<>();
-                        remainAudio = new ArrayList<>();
-                    }
-                } else {
-                    fileNameList = new ArrayList<>();
-                    playlistDownloadId = new ArrayList<>();
-                    remainAudio = new ArrayList<>();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    */
-  /*       public List<DownloadAudioDetails> GetAllMedia() {
-   class GetTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllData1();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetTask st = new GetTask();
-        st.execute();
-        return downloadAudioDetailsList;
-    }*/
-
     private void callDownload() {
         List<String> url = new ArrayList<>();
         List<String> name = new ArrayList<>();
@@ -626,26 +523,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
     private void savePlaylist() {
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
-        /*  class SaveMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .insertPlaylist(downloadPlaylistDetails);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                llDownload.setClickable(false);
-//                llDownload.setEnabled(false);
-//                getMediaByPer(PlaylistID,SongListSize);
-                super.onPostExecute(aVoid);
-            }
-        }
-        SaveMedia st = new SaveMedia();
-        st.execute();*/
     }
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
@@ -706,44 +583,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
         }
-        /*class SaveMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-                for (int i = 0; i < playlistSongs.size(); i++) {
-                    downloadAudioDetails.setID(playlistSongs.get(i).getID());
-                    downloadAudioDetails.setName(playlistSongs.get(i).getName());
-                    downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
-                    downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
-                    downloadAudioDetails.setDownload("1");
-                    downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
-                    downloadAudioDetails.setIsSingle("0");
-                    downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
-                    downloadAudioDetails.setIsDownload("pending");
-                    downloadAudioDetails.setDownloadProgress(0);
-                    DatabaseClient.getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .insertMedia(downloadAudioDetails);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                llDownload.setClickable(false);
-//                llDownload.setEnabled(false);
-                enableDisableDownload(false, "orange");
-                super.onPostExecute(aVoid);
-            }
-        }
-
-        SaveMedia st = new SaveMedia();
-        st.execute();*/
     }
 
     @Override

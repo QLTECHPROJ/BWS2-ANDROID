@@ -3,9 +3,14 @@ package com.brainwellnessspa.MembershipModule.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
@@ -23,7 +28,7 @@ import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invo
 public class ThankYouMpActivity extends AppCompatActivity {
     ActivityThankYouMembershipBinding binding;
     private long mLastClickTime = 0;
-
+    String UserID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +39,10 @@ public class ThankYouMpActivity extends AppCompatActivity {
         binding.ivLogo.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivLogo.setScaleType(ImageView.ScaleType.FIT_XY);
         binding.ivLogo.setImageResource(R.drawable.ic_mp_thanku);
+
+
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         binding.btnExplore.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -47,6 +56,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
         });
 
         Properties p = new Properties();
+        p.putValue("userId", UserID);
         BWSApplication.addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen);
         binding.tvViewInvoice.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
