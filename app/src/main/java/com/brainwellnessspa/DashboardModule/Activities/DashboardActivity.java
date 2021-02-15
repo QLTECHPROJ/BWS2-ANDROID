@@ -30,8 +30,10 @@ import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
+import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
@@ -144,6 +146,14 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
             bundle.putString("PlaylistImage", PlaylistImage);
             bundle.putString("PlaylistType", PlaylistType);
             bundle.putString("MyDownloads", "0");
+
+
+            Properties p = new Properties();
+            p.putValue("PlaylistID", PlaylistID);
+            p.putValue("PlaylistName", PlaylistName);
+            p.putValue("PlaylistImage", PlaylistImage);
+            p.putValue("PlaylistType", PlaylistType);
+            BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);
             myPlaylistsFragment.setArguments(bundle);
             FragmentManager fragmentManager1 = getSupportFragmentManager();
             fragmentManager1.beginTransaction()

@@ -158,6 +158,12 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                 super.onPostExecute(result);
             }
         }
+        /*  ParcelFileDescriptor parcelFileDescriptor =
+            getContentResolver().openFileDescriptor(uri, "r");
+    FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+    Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+    parcelFileDescriptor.close();
+    return image;*/
 
         GetMedia st = new GetMedia();
         st.execute();

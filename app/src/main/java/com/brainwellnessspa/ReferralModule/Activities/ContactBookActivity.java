@@ -85,7 +85,6 @@ public class ContactBookActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvContactList.setLayoutManager(mListLayoutManager);
         binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
-        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
         withoutSearch();
        /*  AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
                     buildermain.setMessage("Please Allow Contact Permission");
@@ -176,6 +175,7 @@ public class ContactBookActivity extends AppCompatActivity {
                     startActivity(intent);
                 }*/
             } else {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER/*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*/};
                     Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,

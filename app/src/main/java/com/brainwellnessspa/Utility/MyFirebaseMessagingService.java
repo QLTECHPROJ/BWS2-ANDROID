@@ -18,12 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.brainwellnessspa.BWSApplication;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.R;
+import com.segment.analytics.Properties;
 
 import java.util.Random;
 
@@ -150,6 +152,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     resultIntent.putExtra("PlaylistID", id);
                     resultIntent.putExtra("PlaylistName", title);
                     resultIntent.putExtra("PlaylistImage", "");
+
+                    /*Properties p = new Properties();
+                    p.putValue("PlaylistID", id);
+                    p.putValue("PlaylistName", title);
+                    p.putValue("PlaylistImage", "");
+                    BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);*/
                     taskStackBuilder.addParentStack(DashboardActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

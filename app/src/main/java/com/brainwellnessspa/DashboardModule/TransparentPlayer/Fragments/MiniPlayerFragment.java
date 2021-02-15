@@ -305,7 +305,9 @@ public class MiniPlayerFragment extends Fragment {
                             }.getType();
                             mainPlayModelList = gson.fromJson(json, type);
                         }
-                        player.setPlayWhenReady(true);
+                        if(player!=null){
+                            player.setPlayWhenReady(true);
+                        }
                         position = player.getCurrentWindowIndex();
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);

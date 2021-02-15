@@ -334,71 +334,7 @@ public class AccountFragment extends Fragment {
 
                 Btn.setOnClickListener(v -> {
                     relesePlayer(getActivity());
-                   /* NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(notificationId);
-                    notificationManager.cancelAll();*/
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     DeleteCall(dialog);
-                    deleteCache(getActivity());
-                    SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
-                    String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                    if (TextUtils.isEmpty(fcm_id)) {
-                        FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(getActivity(), task -> {
-                            String newToken = task.getResult().getToken();
-                            Log.e("newToken", newToken);
-                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                            editor.putString(CONSTANTS.Token, newToken); //Friend
-                            editor.apply();
-                            editor.commit();
-                        });
-
-                       /* FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
-                            String newToken = instanceIdResult.getToken();
-                            Log.e("newToken", newToken);
-                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                            editor.putString(CONSTANTS.Token, newToken); //Friend
-                            editor.apply();
-                            editor.commit();
-                        });*/
-                        fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                    }
-                    Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
-                    listCall.enqueue(new Callback<LogoutModel>() {
-                        @Override
-                        public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                            dialog.hide();
-                            LogoutModel loginModel = response.body();
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            try {
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
-                                }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    Intent i = new Intent(getActivity(), LoginActivity.class);
-                                    startActivity(i);
-                                    getActivity().finish();
-                                    getActivity().overridePendingTransition(0, 0);
-                                    Properties p1 = new Properties();
-                                    p1.putValue("userId", UserID);
-                                    p1.putValue("deviceId", DeviceID);
-                                    p1.putValue("deviceType", DeviceType);
-                                    p1.putValue("userName", Name);
-                                    p1.putValue("mobileNo", MobileNo);
-                                    BWSApplication.addToSegment("Signed Out", p1, CONSTANTS.track);
-                                    analytics.flush();
-                                    analytics.reset();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<LogoutModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        }
-                    });
                 });
 
                 tvGoBack.setOnClickListener(v -> dialog.hide());
@@ -411,6 +347,70 @@ public class AccountFragment extends Fragment {
 
         showTooltips();
         return view;
+    }
+
+    private void callLogoutApi(Dialog dialog) {
+        SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+        String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+        if (TextUtils.isEmpty(fcm_id)) {
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(getActivity(), task -> {
+                String newToken = task.getResult().getToken();
+                Log.e("newToken", newToken);
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                editor.putString(CONSTANTS.Token, newToken); //Friend
+                editor.apply();
+                editor.commit();
+            });
+
+                       /* FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
+                            String newToken = instanceIdResult.getToken();
+                            Log.e("newToken", newToken);
+                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                            editor.putString(CONSTANTS.Token, newToken); //Friend
+                            editor.apply();
+                            editor.commit();
+                        });*/
+            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+        }
+
+        Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
+        listCall.enqueue(new Callback<LogoutModel>() {
+            @Override
+            public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                dialog.hide();
+                LogoutModel loginModel = response.body();
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                try {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                        analytics.flush();
+                        analytics.reset();
+                        Properties p1 = new Properties();
+                        p1.putValue("userId", UserID);
+                        p1.putValue("deviceId", DeviceID);
+                        p1.putValue("deviceType", DeviceType);
+                        p1.putValue("userName", Name);
+                        p1.putValue("mobileNo", MobileNo);
+                        BWSApplication.addToSegment("Signed Out", p1, CONSTANTS.track);
+                        Intent i = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(i);
+                        getActivity().finish();
+                        getActivity().overridePendingTransition(0, 0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LogoutModel> call, Throwable t) {
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+            }
+        });
+
     }
 
     @Override
@@ -534,7 +534,7 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall(Dialog dialog) {
-        callNewPlayerRelease();
+//        callNewPlayerRelease();
         myAudioId = "";
         isDisclaimer = 0;
         addToRecentPlayId = "";
@@ -603,6 +603,14 @@ public class AccountFragment extends Fragment {
         editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
         editorr.clear();
         editorr.commit();
+
+                   /* NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(notificationId);
+                    notificationManager.cancelAll();*/
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+
+        deleteCache(getActivity());
+        callLogoutApi(dialog);
     }
 
     void profileViewData(Context ctx) {

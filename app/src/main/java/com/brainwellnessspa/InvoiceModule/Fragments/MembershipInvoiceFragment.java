@@ -154,7 +154,8 @@ public class MembershipInvoiceFragment extends Fragment {
 
             holder.binding.llDownloads.setOnClickListener(v -> {
                 downloadUrl = listModelList.get(position).getInvoicePdf();
-                new FileDownloader();
+                downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf('/'));//Create file name by picking download file name from URL
+                isWriteStoragePermissionGranted();
                 Properties p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
@@ -193,10 +194,6 @@ public class MembershipInvoiceFragment extends Fragment {
 
     public class FileDownloader {
         public FileDownloader() {
-            mRequestPermissionHandler = new RequestPermissionHandler();
-            downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf('/'));//Create file name by picking download file name from URL
-            Log.e(TAG, downloadFileName);
-            isWriteStoragePermissionGranted();
         }
     }
 
@@ -205,6 +202,15 @@ public class MembershipInvoiceFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 2:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    DownloadFile();
+                    Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
+//                    new DownloadingTask().execute();
+
+                } else {
+                }
+                break;
+                case 505:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     DownloadFile();
                     Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
@@ -225,7 +231,7 @@ public class MembershipInvoiceFragment extends Fragment {
     }
 
     public boolean isWriteStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ) {
             if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 DownloadFile();
@@ -235,9 +241,81 @@ public class MembershipInvoiceFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
                 return false;
             }
+        } else if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.Q ) {
+            if (getActivity().checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED && getActivity().checkSelfPermission(Manifest.permission_group.STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                DownloadFile1();
+//                new DownloadingTask().execute();
+                return true;
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                        Manifest.permission_group.STORAGE}, 505);
+                return false;
+            }
         } else {
+            DownloadFile();
             return true;
         }
+    }
+
+    private void DownloadFile1() {
+//       Intent intent = Intent(Intent.Ac)
+//                .setType("text/*")
+//                .addCategory(Intent.CATEGORY_OPENABLE);
+//
+//        startActivityForResult(intent, REQUEST_SAF);
+//        if (new CheckForSDCard().isSDCardPresent()) {
+            apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "BWS");
+//        } else
+//            BWSApplication.showToast("Oops!! There is no SD Card.", getActivity());
+
+        //If File is not present create directory
+        if (!apkStorage.exists()) {
+            apkStorage.mkdir();
+            Log.e(TAG, "Directory Created.");
+        }
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Downloading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        downloadIdInvoice = PRDownloader.download(downloadUrl, apkStorage.getAbsolutePath(),downloadFileName + ".pdf")
+                .build()
+                .setOnProgressListener(progress -> {
+                }).start(new OnDownloadListener() {
+                    @Override
+                    public void onDownloadComplete() {
+                        progressDialog.dismiss();
+                        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
+                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                        alertDialogBuilder.setTitle("Invoice Data Downloaded Successfully");
+                        alertDialogBuilder.setMessage("Your invoice is in Storage/BWS");
+                        alertDialogBuilder.setCancelable(false);
+                        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog alert11 = alertDialogBuilder.create();
+                        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+                        alert11.show();
+
+                        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
+//                        BWSApplication.showToast( "Document Downloaded Successfully", context);
+                    }
+
+                    @Override
+                    public void onError(Error error) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        }, 1000);
+
+                        Log.e(TAG, "Download Failed");
+                    }
+                });
     }
 
     private void openfile() {
