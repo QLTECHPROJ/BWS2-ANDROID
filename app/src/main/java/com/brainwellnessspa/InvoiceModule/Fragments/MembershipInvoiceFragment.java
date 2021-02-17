@@ -180,7 +180,7 @@ public class MembershipInvoiceFragment extends Fragment {
     }
 
     public void requestPermissionDownlaod() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
             for (String permission : PERMISSIONS_BELOW_Q) {
                 if (ActivityCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_BELOW_Q, 1);
@@ -188,7 +188,7 @@ public class MembershipInvoiceFragment extends Fragment {
                     DownloadFile();
                 }
             }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             for (String permission : PERMISSIONS_ABOVE_Q) {
                 if (ActivityCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), permission) == PackageManager.PERMISSION_DENIED) {

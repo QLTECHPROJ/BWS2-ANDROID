@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
@@ -23,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -76,6 +78,14 @@ public class UserProfileActivity extends AppCompatActivity {
     RequestPermissionHandler mRequestPermissionHandler;
     private int mYear, mMonth, mDay;
     int ageYear, ageMonth, ageDate;
+    String[] PERMISSIONS_BELOW_Q = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
+    String[] PERMISSIONS_ABOVE_Q = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission_group.CAMERA,
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,6 +241,132 @@ public class UserProfileActivity extends AppCompatActivity {
         return ageS;
     }
 
+
+
+    private void selectImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            mRequestPermissionHandler.requestPermission(activity, new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA, Manifest.permission_group.CAMERA
+            }, 123, new RequestPermissionHandler.RequestPermissionListener() {
+                @Override
+                public void onSuccess() {
+                    callProfilePathSet();
+                }
+
+                @Override
+                public void onFailed() {
+                }
+            });
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ActivityCompat.checkSelfPermission(ctx, PERMISSIONS_ABOVE_Q[1]) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(ctx,  PERMISSIONS_ABOVE_Q[1]) == PackageManager.PERMISSION_DENIED) {
+                        AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
+                        buildermain.setMessage("To camera allow " + getString(R.string.app_name) + " access to your camera. " +
+                                "\nTap Setting > permission, and turn Camera on.");
+                        buildermain.setCancelable(true);
+                        buildermain.setPositiveButton(
+                                getString(R.string.Settings),
+                                (dialogmain, id1) -> {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                    dialogmain.dismiss();
+                                });
+                        buildermain.setNegativeButton(
+                                getString(R.string.not_now),
+                                (dialogmain, id1) -> {
+                                    dialogmain.dismiss();
+                                });
+                        AlertDialog alert11 = buildermain.create();
+                        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+                        alert11.show();
+                        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
+                        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.blue));
+                    } else {
+                        ActivityCompat.requestPermissions(activity, PERMISSIONS_ABOVE_Q, 2);
+                    }
+                } else {
+                    callProfilePathSet();
+                }
+        } else {
+            callProfilePathSet();
+        }
+    }
+
+    private void callProfilePathSet() {
+        if (profilePicPath.equals("")) {
+            options = new String[]{getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.cancel)};
+        } else {
+            options = new String[]{getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.removeProfilePicture), getString(R.string.cancel)};
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(R.string.addPhoto);
+        builder.setItems(options, (dialog, item) -> {
+            if (options[item].equals(getString(R.string.takePhoto))) {
+                Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+                    }
+
+                    if (photoFile != null) {
+                        Uri photoURI = FileProvider.getUriForFile(ctx,
+                                BuildConfig.APPLICATION_ID + ".provider", photoFile);
+                        pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(pictureIntent,
+                                CONTENT_REQUEST);
+                    }
+                }
+            } else if (options[item].equals(getString(R.string.chooseFromGallary))) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 2);
+            } else if (options[item].equals(getString(R.string.removeProfilePicture))) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    Call<RemoveProfileModel> listCall = APIClient.getClient().getRemoveProfile(UserID);
+                    listCall.enqueue(new Callback<RemoveProfileModel>() {
+                        @Override
+                        public void onResponse(Call<RemoveProfileModel> call, Response<RemoveProfileModel> response) {
+                            try {
+                                RemoveProfileModel viewModel = response.body();
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
+                                    profileViewData(ctx);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RemoveProfileModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        }
+                    });
+                }
+            } else if (options[item].equals(getString(R.string.cancel))) {
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert11 = builder.create();
+        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+        alert11.show();
+    }
+
+    @Override
+    protected void onResume() {
+        profileViewData(ctx);
+        super.onResume();
+    }
+
     void profileViewData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -377,90 +513,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    private void selectImage() {
-        mRequestPermissionHandler.requestPermission(activity, new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA, Manifest.permission_group.CAMERA
-        }, 123, new RequestPermissionHandler.RequestPermissionListener() {
-            @Override
-            public void onSuccess() {
-                if (profilePicPath.equals("")) {
-                    options = new String[]{getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.cancel)};
-                } else {
-                    options = new String[]{getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.removeProfilePicture), getString(R.string.cancel)};
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                builder.setTitle(R.string.addPhoto);
-                builder.setItems(options, (dialog, item) -> {
-                    if (options[item].equals(getString(R.string.takePhoto))) {
-                        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
-                            File photoFile = null;
-                            try {
-                                photoFile = createImageFile();
-                            } catch (IOException ex) {
-                            }
-
-                            if (photoFile != null) {
-                                Uri photoURI = FileProvider.getUriForFile(ctx,
-                                        BuildConfig.APPLICATION_ID + ".provider", photoFile);
-                                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                                startActivityForResult(pictureIntent,
-                                        CONTENT_REQUEST);
-                            }
-                        }
-                    } else if (options[item].equals(getString(R.string.chooseFromGallary))) {
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, 2);
-                    } else if (options[item].equals(getString(R.string.removeProfilePicture))) {
-                        if (BWSApplication.isNetworkConnected(ctx)) {
-                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            Call<RemoveProfileModel> listCall = APIClient.getClient().getRemoveProfile(UserID);
-                            listCall.enqueue(new Callback<RemoveProfileModel>() {
-                                @Override
-                                public void onResponse(Call<RemoveProfileModel> call, Response<RemoveProfileModel> response) {
-                                    try {
-                                        RemoveProfileModel viewModel = response.body();
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                            BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
-                                            profileViewData(ctx);
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<RemoveProfileModel> call, Throwable t) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                }
-                            });
-                        }
-                    } else if (options[item].equals(getString(R.string.cancel))) {
-                        Properties p = new Properties();
-                        p.putValue("userId", UserID);
-                        BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog alert11 = builder.create();
-                alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                alert11.show();
-            }
-
-            @Override
-            public void onFailed() {
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        profileViewData(ctx);
-        super.onResume();
     }
 
     @Override
