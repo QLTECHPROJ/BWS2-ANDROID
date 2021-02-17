@@ -86,9 +86,16 @@ public class FileUtils {
     public static final String getDirPath(Context context) {
         return context.getDir("Audio", Context.MODE_PRIVATE).getAbsolutePath();
     }
+    public static final String getDirPath1(Context context) {
+        return context.getDir("PDF", Context.MODE_PRIVATE).getAbsolutePath();
+    }
 
     public static final String getFilePath(Context context,String FILE_NAME) {
         return getDirPath(context) + File.separator + FILE_NAME +CONSTANTS.FILE_EXT;
+    }
+
+    public static final String getFilePath1(Context context,String FILE_NAME) {
+        return getDirPath1(context) + File.separator + FILE_NAME + ".pdf";
     }
 
     public static final void deleteDownloadedFile(Context context,String FILE_NAME) {

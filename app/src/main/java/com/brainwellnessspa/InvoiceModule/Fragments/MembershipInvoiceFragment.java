@@ -8,6 +8,15 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,16 +27,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
@@ -41,7 +40,6 @@ import com.downloader.PRDownloader;
 import com.segment.analytics.Properties;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,17 +179,17 @@ public class MembershipInvoiceFragment extends Fragment {
 
     public void requestPermissionDownlaod() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            for (String permission : PERMISSIONS_BELOW_Q) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+//            for (String permission : PERMISSIONS_BELOW_Q) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_BELOW_Q[0]) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_BELOW_Q, 1);
                 } else {
                     DownloadFile();
                 }
-            }
+//            }
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            for (String permission : PERMISSIONS_ABOVE_Q) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(getActivity(), permission) == PackageManager.PERMISSION_DENIED) {
+//            for (String permission : PERMISSIONS_ABOVE_Q) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_ABOVE_Q[1]) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_ABOVE_Q[1]) == PackageManager.PERMISSION_DENIED) {
                         AlertDialog.Builder buildermain = new AlertDialog.Builder(getActivity());
                         buildermain.setMessage("To download invoice allow " + getActivity().getString(R.string.app_name) + " access to your device's files. " +
                                 "\nTap Setting > permission, and turn \"Files and media\" on.");
@@ -219,9 +217,9 @@ public class MembershipInvoiceFragment extends Fragment {
                         ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_ABOVE_Q, 2);
                     }
                 } else {
-                    DownloadFile1();
+                    DownloadFile();
                 }
-            }
+//            }
         } else {
             DownloadFile();
         }
@@ -249,7 +247,7 @@ public class MembershipInvoiceFragment extends Fragment {
                 break;
             case 2:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    DownloadFile1();
+                    DownloadFile();
                     Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
                 } else {
                     callpermissionAlert();
@@ -296,7 +294,7 @@ public class MembershipInvoiceFragment extends Fragment {
         }
     }
 
-    private void DownloadFile1() {
+    private void DownloadFile() {
         File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         File pdfFile = new File(docsFolder.getAbsolutePath(), file_name_path);
         progressDialog = new ProgressDialog(getActivity());
@@ -307,50 +305,7 @@ public class MembershipInvoiceFragment extends Fragment {
 
         downloadIdInvoice = PRDownloader.download(downloadUrl, pdfFile.getAbsolutePath(), downloadFileName + System.currentTimeMillis() + ".pdf")
                 .build()
-                .setOnStartOrResumeListener(() -> {
-                    Log.e(TAG, "Download Failed Start");
-                }).start(new OnDownloadListener() {
-                    @Override
-                    public void onDownloadComplete() {
-                        progressDialog.dismiss();
-                        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
-                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-                        alertDialogBuilder.setTitle("Invoice Data Downloaded Successfully");
-                        alertDialogBuilder.setMessage("Your invoice is in Documents/BWS");
-                        alertDialogBuilder.setCancelable(false);
-                        alertDialogBuilder.setPositiveButton("Ok", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alert11 = alertDialogBuilder.create();
-                        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                        alert11.show();
-
-                        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
-                    }
-
-                    @Override
-                    public void onError(Error error) {
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> progressDialog.dismiss(), 1000);
-                        Log.e(TAG, "Download Failed" + error.toString());
-                    }
-                });
-    }
-
-    private void DownloadFile() {
-        if (new CheckForSDCard().isSDCardPresent()) {
-            apkStorage = new File(Environment.getRootDirectory() + "/" + "BWS");
-        } else
-            BWSApplication.showToast("Oops!! There is no SD Card.", getActivity());
-        if (!apkStorage.exists()) {
-            apkStorage.mkdir();
-            Log.e(TAG, "Directory Created.");
-        }
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Downloading...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        downloadIdInvoice = PRDownloader.download(downloadUrl, apkStorage.getPath(), downloadFileName + System.currentTimeMillis() + ".pdf")
-                .build()
-                .setOnProgressListener(progress -> {
-                }).start(new OnDownloadListener() {
+                .start(new OnDownloadListener() {
                     @Override
                     public void onDownloadComplete() {
                         progressDialog.dismiss();
@@ -364,9 +319,7 @@ public class MembershipInvoiceFragment extends Fragment {
                         alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
                         alert11.show();
                         alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
-                        BWSApplication.showToast("Document Downloaded Successfully", getActivity());
                     }
-
                     @Override
                     public void onError(Error error) {
                         new Handler(Looper.getMainLooper()).postDelayed(() -> progressDialog.dismiss(), 1000);
