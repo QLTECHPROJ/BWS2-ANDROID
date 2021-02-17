@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -13,6 +16,8 @@ import android.webkit.WebViewClient;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.AppUtils;
 import com.brainwellnessspa.databinding.ActivityTncBinding;
+
+import java.util.List;
 
 public class TncActivity extends AppCompatActivity {
     ActivityTncBinding binding;
@@ -60,7 +65,10 @@ public class TncActivity extends AppCompatActivity {
         } else if (Web.equalsIgnoreCase("HowReferWorks")) {
             binding.tvTitle.setText(R.string.how_refer_works);
             binding.webView.loadUrl(HowReferWorks);
-        }
+        } /*else {
+            binding.tvTitle.setText(Web);
+            binding.webView.loadUrl(HowReferWorks);
+        }*/
     }
 
     private class CustomWebViewClient extends WebViewClient {

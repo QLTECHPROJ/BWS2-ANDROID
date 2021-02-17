@@ -276,8 +276,6 @@ public class BWSApplication extends Application {
             toast.show();
         } else {
             Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-            toast.setMargin(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             toast.show();
         }
     }

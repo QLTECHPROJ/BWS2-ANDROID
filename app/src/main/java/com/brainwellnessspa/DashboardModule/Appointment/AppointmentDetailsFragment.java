@@ -125,10 +125,10 @@ public class AppointmentDetailsFragment extends Fragment {
                 binding.llViewTwo.setLayoutParams(params);
             } else {
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 130);
+                params.setMargins(0, 0, 0, 190);
                 binding.llViewOne.setLayoutParams(params);
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 130);
+                params.setMargins(0, 0, 0, 190);
                 binding.llViewTwo.setLayoutParams(params);
             }
         } catch (Exception e) {

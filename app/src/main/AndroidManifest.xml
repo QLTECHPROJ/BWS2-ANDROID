@@ -11,16 +11,16 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-
-
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--<permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:permissionGroup="android.permission-group.STORAGE"
+        android:permissionFlags="softRestricted|immutablyRestricted"
+        android:protectionLevel="dangerous" />-->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -30,13 +30,26 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!--<permission-group android:name="android.permission-group.STORAGE"
+        android:icon="@drawable/search_add_icon"
+        android:priority="900" />-->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
         android:maxSdkVersion="29" />
+
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 
     <uses-permission
+        android:name="android.permission.CAMERA"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission_group.CAMERA"
+        android:required="true" />
+
+    <uses-feature
         android:name="android.permission.CAMERA"
         android:required="true" />
 
@@ -46,17 +59,24 @@
         </intent>
     </queries>
 
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
+
     <application
         android:name=".BWSApplication"
         android:fullBackupContent="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/square_app_icon"
+        android:installLocation="preferExternal"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/round_app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
 
         <activity
@@ -91,6 +111,11 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".WebView.TncActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".PdfActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -325,7 +350,6 @@
             android:process=":externalProcess"
             android:exported="true"/>
         -->
-        <receiver android:name=".Services.NotificationActionService" />
         <!--
   <service            android:foregroundServiceType="mediaPlayback"
               android:name=".Utility.MusicService"

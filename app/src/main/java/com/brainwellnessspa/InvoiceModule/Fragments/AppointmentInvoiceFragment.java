@@ -27,6 +27,7 @@ public class AppointmentInvoiceFragment extends Fragment {
     ArrayList<InvoiceListModel.Appointment> appointmentList;
     private static final String TAG = "Download Task";
     String UserID;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false);

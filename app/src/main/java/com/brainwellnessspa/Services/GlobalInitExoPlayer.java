@@ -621,9 +621,11 @@ Appointment Audios dddd*/
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         }
-        if (position == mainPlayModelList1.size() - 1) {
+
+        if (position == (mainPlayModelList1.size() - 1)) {
             playerNotificationManager.setUseNextAction(true);
             playerNotificationManager.setUseNextActionInCompactView(true);
+//            BWSApplication.showToast("Next available", ctx);
         }
 
         try {
@@ -691,7 +693,6 @@ Appointment Audios dddd*/
         playerNotificationManager.setUsePreviousActionInCompactView(true);
         ControlDispatcher controlDispatcher = new DefaultControlDispatcher(30000, 30000);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
-//        playerNotificationManager.setSmallIcon(R.drawable.my_drawable_image);
         playerNotificationManager.setSmallIcon(R.drawable.noti_app_logo_icon);
         playerNotificationManager.setColor(ContextCompat.getColor(ctx, R.color.blue));
         playerNotificationManager.setColorized(true);

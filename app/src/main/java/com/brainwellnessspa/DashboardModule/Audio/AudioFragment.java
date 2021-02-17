@@ -151,10 +151,9 @@ public class AudioFragment extends Fragment {
             }
         }
 
-       /* binding.tvExplore.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), ContactBookActivity.class);
-            startActivity(i);
-        });*/
+        binding.tvExplore.setOnClickListener(v -> {
+
+        });
         showTooltips();
         return view;
     }
@@ -222,7 +221,7 @@ public class AudioFragment extends Fragment {
                             for (int i = 0; i < listModel.getResponseData().size(); i++) {
                                 section.add(listModel.getResponseData().get(i).getView());
                             }
-                            if(comeFrom.equalsIgnoreCase("onResume")) {
+                            if (comeFrom.equalsIgnoreCase("onResume")) {
                                 Properties p = new Properties();
                                 p.putValue("userId", UserID);
                                 Gson gson;
@@ -306,7 +305,7 @@ public class AudioFragment extends Fragment {
             }
             String deviceid = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-            Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID, fcm_id, CONSTANTS.FLAG_ONE, deviceid,String.valueOf(BuildConfig.VERSION_CODE));
+            Call<UnlockAudioList> listCall1 = APIClient.getClient().getUnLockAudioList(UserID, fcm_id, CONSTANTS.FLAG_ONE, deviceid, String.valueOf(BuildConfig.VERSION_CODE));
             listCall1.enqueue(new Callback<UnlockAudioList>() {
                 @Override
                 public void onResponse(Call<UnlockAudioList> call, Response<UnlockAudioList> response) {

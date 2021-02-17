@@ -12,6 +12,8 @@ import androidx.databinding.DataBindingUtil;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +25,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -41,8 +44,11 @@ import com.brainwellnessspa.databinding.ActivityUserProfileBinding;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -376,7 +382,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private void selectImage() {
         mRequestPermissionHandler.requestPermission(activity, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
+                Manifest.permission.CAMERA, Manifest.permission_group.CAMERA
         }, 123, new RequestPermissionHandler.RequestPermissionListener() {
             @Override
             public void onSuccess() {
@@ -499,6 +505,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e("Permission", e.getMessage());
             }
         } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
             if (data != null) {
@@ -578,7 +585,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     TextWatcher userTextWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -616,6 +624,41 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         @Override
-        public void afterTextChanged(Editable s) { }
+        public void afterTextChanged(Editable s) {
+        }
     };
 }
+
+/*
+    private void writeFileToDownloads(File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+            ContentResolver resolver = getActivity().getContentResolver();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, file.getName());
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+            Uri uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+
+            try {
+
+                int size = (int) file.length();
+                byte[] bytes = new byte[size];
+
+                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+                buf.read(bytes, 0, bytes.length);
+                buf.close();
+
+                OutputStream fos = resolver.openOutputStream(uri);
+
+                fos.write(bytes);
+                fos.flush();
+                fos.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }*/

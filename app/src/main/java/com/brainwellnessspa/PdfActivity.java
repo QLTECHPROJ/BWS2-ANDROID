@@ -1,6 +1,6 @@
-/*
 package com.brainwellnessspa;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -35,11 +35,12 @@ public class PdfActivity extends AppCompatActivity {
     TextView tv_location;
     TextView tv_city;
 
-    String file_name_path= "";
+    String file_name_path = "";
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission_group.STORAGE,
     };
 
     @Override
@@ -84,7 +85,7 @@ public class PdfActivity extends AppCompatActivity {
         int pathHeight = 2;
 
         final String fileName = "mypdf";
-        file_name_path = "/pdfsdcard_location/"+fileName+".pdf";
+        file_name_path = "/pdfsdcard_location/" + fileName + ".pdf";
         PdfDocument myPdfDocument = new PdfDocument();
         Paint paint = new Paint();
         Paint paint2 = new Paint();
@@ -145,15 +146,14 @@ public class PdfActivity extends AppCompatActivity {
 
         Resources res = getResources();
         Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.square_app_icon);
-        Bitmap b =  (Bitmap.createScaledBitmap(bitmap, 100, 50, false));
+        Bitmap b = (Bitmap.createScaledBitmap(bitmap, 100, 50, false));
         canvas.drawBitmap(b, x, y, paint);
-        y+= 25;
-        canvas.drawText(getString(R.string.app_name), 120,y, paint);
-
+        y += 25;
+        canvas.drawText(getString(R.string.app_name), 120, y, paint);
 
 
         myPdfDocument.finishPage(documentPage);
-        File file = new File(this.getExternalFilesDir(null).getAbsolutePath()+file_name_path);
+        File file = new File(this.getExternalFilesDir(null).getAbsolutePath() + file_name_path);
         try {
             myPdfDocument.writeTo(new FileOutputStream(file));
         } catch (IOException e) {
@@ -165,7 +165,7 @@ public class PdfActivity extends AppCompatActivity {
     }
 
     public void viewPdfFile() {
-        File file = new File(this.getExternalFilesDir(null).getAbsolutePath()+file_name_path);
+        File file = new File(this.getExternalFilesDir(null).getAbsolutePath() + file_name_path);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file), "application/pdf");
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -183,4 +183,4 @@ public class PdfActivity extends AppCompatActivity {
         }
         return true;
     }
-}*/
+}

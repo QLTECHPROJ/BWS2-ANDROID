@@ -1,5 +1,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Brain Wellness App</string>
+    <string name="app_name_setting"><b>Brain Wellness App</b></string>
 
     <string name="segment_key_foram">X3sYYbQtro7xHI31AJppjMQ20AZlPdlS</string>
     <string name="segment_key_SunnySir">2ClHzzCF1JFEDocqe0Az8KSV4ybDcUdm</string>//sunny sir id
@@ -296,8 +297,11 @@
     <string name="Refer_Friend">Refer a Friend</string>
     <string name="Invite">Invite</string>
     <string name="ok">ok</string>
+    <string name="Settings">Settings</string>
+    <string name="not_now">Not Now</string>
     <string name="Support">Support</string>
     <string name="not_available">Not available at the moment. Please contact support</string>
     <string name="support_quotes">Please contact support at</string>
     <string name="support_link">support@brainwellnessapp.com</string>
+    <string name="toast_an_error_occurred">error</string>
 </resources>

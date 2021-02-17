@@ -333,6 +333,7 @@ public class AccountFragment extends Fragment {
                 });
 
                 Btn.setOnClickListener(v -> {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     relesePlayer(getActivity());
                     DeleteCall(dialog);
                 });
@@ -534,7 +535,6 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall(Dialog dialog) {
-//        callNewPlayerRelease();
         myAudioId = "";
         isDisclaimer = 0;
         addToRecentPlayId = "";
@@ -604,18 +604,14 @@ public class AccountFragment extends Fragment {
         editorr.clear();
         editorr.commit();
 
-                   /* NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(notificationId);
-                    notificationManager.cancelAll();*/
-        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
 
         deleteCache(getActivity());
         callLogoutApi(dialog);
     }
 
     void profileViewData(Context ctx) {
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @SuppressLint("SetTextI18n")
