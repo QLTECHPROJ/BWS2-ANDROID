@@ -126,33 +126,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         try {
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
-                if (IsLock.equalsIgnoreCase("1")) {
+                if (!IsLock.equalsIgnoreCase("0")) {
                     resultIntent = new Intent(this, DashboardActivity.class);
-                    taskStackBuilder.addParentStack(DashboardActivity.class);
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);
-                    taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                    resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                } else if (IsLock.equalsIgnoreCase("2")) {
-                    resultIntent = new Intent(this, DashboardActivity.class);
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);
                     taskStackBuilder.addParentStack(DashboardActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
                     resultIntent = new Intent(this, DashboardActivity.class);
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);
                     resultIntent.putExtra("New", "0");
                     resultIntent.putExtra("Goplaylist", "1");
                     resultIntent.putExtra("PlaylistID", id);
                     resultIntent.putExtra("PlaylistName", title);
                     resultIntent.putExtra("PlaylistImage", "");
-
                     /*Properties p = new Properties();
                     p.putValue("PlaylistID", id);
                     p.putValue("PlaylistName", title);
@@ -164,9 +149,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             } else {
                 resultIntent = new Intent(this, DashboardActivity.class);
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -210,8 +192,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationBuilder.setContentIntent(resultPendingIntent);
 
             Notification notification = notificationBuilder.build();
-            notification.flags = Notification.DEFAULT_ALL;
-            notification.flags = Notification.FLAG_AUTO_CANCEL;
 
             if (notificationManager != null) {
                 notificationManager.notify(Integer.parseInt(m), notification);

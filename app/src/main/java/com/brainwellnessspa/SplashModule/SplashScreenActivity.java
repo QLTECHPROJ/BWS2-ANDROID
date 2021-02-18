@@ -145,11 +145,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             message = getIntent().getStringExtra("message");
             IsLock = getIntent().getStringExtra("IsLock");
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    resultIntent = new Intent(this, DashboardActivity.class);
-                    startActivity(resultIntent);
-                    finish();
-                } else if (IsLock.equalsIgnoreCase("2")) {
+                if (!IsLock.equalsIgnoreCase("0")) {
                     resultIntent = new Intent(this, DashboardActivity.class);
                     startActivity(resultIntent);
                     finish();
