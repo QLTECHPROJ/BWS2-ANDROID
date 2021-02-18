@@ -46,14 +46,10 @@ import java.util.List;
 public class MembershipInvoiceFragment extends Fragment {
     FragmentInvoiceBinding binding;
     ArrayList<InvoiceListModel.MemberShip> memberShipList;
-    private String downloadUrl = "", downloadFileName = "Invoice";
+    private String downloadUrl = "", downloadFileName = "Invoice", UserID, file_name_path = "BWS";
     private static final String TAG = "Download Task";
     private ProgressDialog progressDialog;
-    String UserID;
-    File apkStorage = null;
-    File outputFile = null;
     int downloadIdInvoice = 0;
-    String file_name_path = "BWS";
     String[] PERMISSIONS_ABOVE_Q = {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission_group.STORAGE,
@@ -179,56 +175,45 @@ public class MembershipInvoiceFragment extends Fragment {
 
     public void requestPermissionDownlaod() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-//            for (String permission : PERMISSIONS_BELOW_Q) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_BELOW_Q[0]) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_BELOW_Q, 1);
-                } else {
-                    DownloadFile();
-                }
-//            }
+            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_BELOW_Q[0]) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_BELOW_Q, 1);
+            } else {
+                DownloadFile();
+            }
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-//            for (String permission : PERMISSIONS_ABOVE_Q) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_ABOVE_Q[1]) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_ABOVE_Q[1]) == PackageManager.PERMISSION_DENIED) {
-                        AlertDialog.Builder buildermain = new AlertDialog.Builder(getActivity());
-                        buildermain.setMessage("To download invoice allow " + getActivity().getString(R.string.app_name) + " access to your device's files. " +
-                                "\nTap Setting > permission, and turn \"Files and media\" on.");
-                        buildermain.setCancelable(true);
-                        buildermain.setPositiveButton(
-                                getString(R.string.Settings),
-                                (dialogmain, id1) -> {
-                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                    Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-                                    intent.setData(uri);
-                                    startActivity(intent);
-                                    dialogmain.dismiss();
-                                });
-                        buildermain.setNegativeButton(
-                                getString(R.string.not_now),
-                                (dialogmain, id1) -> {
-                                    dialogmain.dismiss();
-                                });
-                        AlertDialog alert11 = buildermain.create();
-                        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                        alert11.show();
-                        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
-                        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.blue));
-                    } else {
-                        ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_ABOVE_Q, 2);
-                    }
+            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_ABOVE_Q[0]) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_ABOVE_Q[0]) == PackageManager.PERMISSION_DENIED) {
+                    AlertDialog.Builder buildermain = new AlertDialog.Builder(getActivity());
+                    buildermain.setMessage("To download invoice allow " + getActivity().getString(R.string.app_name) + " access to your device's files. " +
+                            "\nTap Setting > permission, and turn \"Files and media\" on.");
+                    buildermain.setCancelable(true);
+                    buildermain.setPositiveButton(
+                            getString(R.string.Settings),
+                            (dialogmain, id1) -> {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                                intent.setData(uri);
+                                startActivity(intent);
+                                dialogmain.dismiss();
+                            });
+                    buildermain.setNegativeButton(
+                            getString(R.string.not_now),
+                            (dialogmain, id1) -> {
+                                dialogmain.dismiss();
+                            });
+                    AlertDialog alert11 = buildermain.create();
+                    alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+                    alert11.show();
+                    alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
+                    alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.blue));
                 } else {
-                    DownloadFile();
+                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_ABOVE_Q, 2);
                 }
-//            }
+            } else {
+                DownloadFile();
+            }
         } else {
             DownloadFile();
-        }
-    }
-
-    public class CheckForSDCard {
-        public boolean isSDCardPresent() {
-            return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ||
-                    Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY);
         }
     }
 
@@ -295,7 +280,7 @@ public class MembershipInvoiceFragment extends Fragment {
     }
 
     private void DownloadFile() {
-        File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
+        File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Download");
         File pdfFile = new File(docsFolder.getAbsolutePath(), file_name_path);
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Downloading...");
@@ -312,7 +297,7 @@ public class MembershipInvoiceFragment extends Fragment {
                         ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
                         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
                         alertDialogBuilder.setTitle("Invoice Data Downloaded Successfully");
-                        alertDialogBuilder.setMessage("Your invoice is in Documents/BWS");
+                        alertDialogBuilder.setMessage("Your invoice is in Download/BWS");
                         alertDialogBuilder.setCancelable(false);
                         alertDialogBuilder.setPositiveButton("Ok", (dialog, id) -> dialog.dismiss());
                         AlertDialog alert11 = alertDialogBuilder.create();
@@ -320,6 +305,7 @@ public class MembershipInvoiceFragment extends Fragment {
                         alert11.show();
                         alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
                     }
+
                     @Override
                     public void onError(Error error) {
                         new Handler(Looper.getMainLooper()).postDelayed(() -> progressDialog.dismiss(), 1000);

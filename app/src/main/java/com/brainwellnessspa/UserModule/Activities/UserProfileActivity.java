@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
@@ -13,8 +12,6 @@ import androidx.databinding.DataBindingUtil;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,11 +43,8 @@ import com.brainwellnessspa.databinding.ActivityUserProfileBinding;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -78,14 +72,6 @@ public class UserProfileActivity extends AppCompatActivity {
     RequestPermissionHandler mRequestPermissionHandler;
     private int mYear, mMonth, mDay;
     int ageYear, ageMonth, ageDate;
-    String[] PERMISSIONS_BELOW_Q = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
-    };
-    String[] PERMISSIONS_ABOVE_Q = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission_group.CAMERA,
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,183 +102,110 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
     }
 
-    public void profileUpdate() {
-        binding.flUser.setError("");
-        binding.tlMobileNumber.setError("");
-        binding.tlCalendar.setError("");
-        binding.tlEmail.setError("");
-        if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Name is required");
-            binding.tlEmail.setError("Email address is required");
-        } else if (!binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.tlEmail.setError("Email address is required");
-        } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                !binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Name is required");
-        } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
-                && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
-            binding.tlEmail.setError("Please enter a valid email address");
-        } else {
-            binding.flUser.setError("");
-            binding.tlCalendar.setError("");
-            binding.flUser.clearFocus();
-            binding.tlEmail.clearFocus();
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                String dob = "";
-                if (!binding.etCalendar.getText().toString().isEmpty()) {
-                    dob = binding.etCalendar.getText().toString();
-                    SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-                    Date newDate = new Date();
-                    try {
-                        newDate = spf.parse(dob);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
-                    dob = spf.format(newDate);
-                }
-                Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID, binding.etUser.getText().toString(), dob,
-                        binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(), "");
-                listCall.enqueue(new Callback<ProfileUpdateModel>() {
+    private void selectImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(ctx,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(ctx,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(ctx,
+                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                callProfilePathSet();
+            } else {
+                mRequestPermissionHandler.requestPermission(activity, new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
+                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
                     @Override
-                    public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
-                        try {
-                            ProfileUpdateModel viewModel = response.body();
-                            if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                analytics.identify(new Traits()
-                                        .putValue("userId", UserID)
-                                        .putValue("userName", viewModel.getResponseData().getName())
-                                        .putValue("mobileNo", viewModel.getResponseData().getPhoneNumber())
-                                        .putValue("email", viewModel.getResponseData().getEmail()));
-                                finish();
-                                BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
-                            } else {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    public void onSuccess() {
+                        callProfilePathSet();
                     }
 
                     @Override
-                    public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    public void onFailed() {
                     }
                 });
             }
-        }
-    }
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                callProfilePathSet();
+            } else {
+                if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    mRequestPermissionHandler.requestPermission(activity, new String[]{
+                            Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+                    }, 123, new RequestPermissionHandler.RequestPermissionListener() {
+                        @Override
+                        public void onSuccess() {
+                            callProfilePathSet();
+                        }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setDate() {
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme,
-                (view, year, monthOfYear, dayOfMonth) -> {
-                    view.setMinDate(System.currentTimeMillis() - 1000);
-                    Calendar cal = Calendar.getInstance();
-                    cal.getTimeInMillis();
-                    cal.set(year, monthOfYear, dayOfMonth);
-                    Date date = cal.getTime();
-                    SimpleDateFormat sdf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-                    String strDate = sdf.format(date);
-                    ageYear = year;
-                    ageMonth = monthOfYear;
-                    ageDate = dayOfMonth;
-
-                    BirthYear = getAge(ageYear, ageMonth, ageDate);
-                    if (BirthYear < 18) {
-                        binding.tlCalendar.setError("You must be 18 years of age to register");
-                        binding.btnSave.setEnabled(false);
-                        binding.btnSave.setClickable(false);
-                    } else {
-                        binding.tlCalendar.setError("");
-                        binding.btnSave.setEnabled(true);
-                        binding.btnSave.setClickable(true);
-                    }
-                    binding.etCalendar.setText(strDate);
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
-
-    public int getAge(int year, int month, int day) {
-        Calendar dob = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
-        dob.set(year, month, day);
-        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-        Integer ageInt = new Integer(age);
-        int ageS = ageInt;
-        return ageS;
-    }
-
-
-
-    private void selectImage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            mRequestPermissionHandler.requestPermission(activity, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.CAMERA, Manifest.permission_group.CAMERA
-            }, 123, new RequestPermissionHandler.RequestPermissionListener() {
-                @Override
-                public void onSuccess() {
-                    callProfilePathSet();
+                        @Override
+                        public void onFailed() {
+                        }
+                    });
+                } else if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                    callCamaraPermission();
+                } else if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    callReadPermission();
                 }
-
-                @Override
-                public void onFailed() {
-                }
-            });
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (ActivityCompat.checkSelfPermission(ctx, PERMISSIONS_ABOVE_Q[1]) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(ctx,  PERMISSIONS_ABOVE_Q[1]) == PackageManager.PERMISSION_DENIED) {
-                        AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
-                        buildermain.setMessage("To camera allow " + getString(R.string.app_name) + " access to your camera. " +
-                                "\nTap Setting > permission, and turn Camera on.");
-                        buildermain.setCancelable(true);
-                        buildermain.setPositiveButton(
-                                getString(R.string.Settings),
-                                (dialogmain, id1) -> {
-                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                    Uri uri = Uri.fromParts("package", getPackageName(), null);
-                                    intent.setData(uri);
-                                    startActivity(intent);
-                                    dialogmain.dismiss();
-                                });
-                        buildermain.setNegativeButton(
-                                getString(R.string.not_now),
-                                (dialogmain, id1) -> {
-                                    dialogmain.dismiss();
-                                });
-                        AlertDialog alert11 = buildermain.create();
-                        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                        alert11.show();
-                        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
-                        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.blue));
-                    } else {
-                        ActivityCompat.requestPermissions(activity, PERMISSIONS_ABOVE_Q, 2);
-                    }
-                } else {
-                    callProfilePathSet();
-                }
+            }
         } else {
             callProfilePathSet();
         }
+    }
+
+    private void callCamaraPermission() {
+        AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
+        buildermain.setMessage("To camera allow " + getString(R.string.app_name) + " access to your camera. " +
+                "\nTap Setting > permission, and turn Camera on.");
+        buildermain.setCancelable(true);
+        buildermain.setPositiveButton(
+                getString(R.string.Settings),
+                (dialogmain, id1) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                    dialogmain.dismiss();
+                });
+        buildermain.setNegativeButton(
+                getString(R.string.not_now),
+                (dialogmain, id1) -> {
+                    dialogmain.dismiss();
+                });
+        AlertDialog alert11 = buildermain.create();
+        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+        alert11.show();
+        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
+        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.blue));
+    }
+
+    private void callReadPermission() {
+        AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
+        buildermain.setMessage("To upload image allow " + getString(R.string.app_name) + " access to your device's files. " +
+                "\nTap Setting > permission, and turn \"Files and media\" on.");
+        buildermain.setCancelable(true);
+        buildermain.setPositiveButton(
+                getString(R.string.Settings),
+                (dialogmain, id1) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                    dialogmain.dismiss();
+                });
+        buildermain.setNegativeButton(
+                getString(R.string.not_now),
+                (dialogmain, id1) -> {
+                    dialogmain.dismiss();
+                });
+        AlertDialog alert11 = buildermain.create();
+        alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+        alert11.show();
+        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
+        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.blue));
     }
 
     private void callProfilePathSet() {
@@ -359,6 +272,153 @@ public class UserProfileActivity extends AppCompatActivity {
         AlertDialog alert11 = builder.create();
         alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
         alert11.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
+            try {
+                Glide.with(this).load(imageFilePath)
+                        .thumbnail(0.1f)
+                        .skipMemoryCache(false).into(binding.civProfile);
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(CONSTANTS.PREF_KEY_UserID, UserID);
+                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
+                    APIClientProfile.getApiService().getAddProfiles(UserID, typedFile,
+                            new retrofit.Callback<AddProfileModel>() {
+                                @Override
+                                public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
+                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        Properties p = new Properties();
+                                        p.putValue("userId", UserID);
+                                        BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
+                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
+                                        Glide.with(getApplicationContext()).load(profilePicPath)
+                                                .thumbnail(0.1f)
+                                                .skipMemoryCache(false).into(binding.civProfile);
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
+                                        profileViewData(ctx);
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError e) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    BWSApplication.showToast(e.getMessage(), ctx);
+                                }
+                            });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Permission", e.getMessage());
+            }
+        } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri selectedImageUri = data.getData();
+                Glide.with(this).load(selectedImageUri)
+                        .thumbnail(0.1f)
+                        .skipMemoryCache(false).into(binding.civProfile);
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(CONSTANTS.PREF_KEY_UserID, UserID);
+                    File file = new File(FileUtil.getPath(selectedImageUri, this));
+
+                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
+                    APIClientProfile.getApiService().getAddProfiles(UserID, typedFile,
+                            new retrofit.Callback<AddProfileModel>() {
+                                @Override
+                                public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
+                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        Properties p = new Properties();
+                                        p.putValue("userId", UserID);
+                                        BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
+                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
+                                        Glide.with(getApplicationContext()).load(profilePicPath)
+                                                .thumbnail(0.1f)
+                                                .skipMemoryCache(false).into(binding.civProfile);
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
+                                        profileViewData(ctx);
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError e) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    BWSApplication.showToast(e.getMessage(), ctx);
+                                }
+                            });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            }
+        } else if (requestCode == RESULT_CANCELED) {
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
+            finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setDate() {
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme,
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    view.setMinDate(System.currentTimeMillis() - 1000);
+                    Calendar cal = Calendar.getInstance();
+                    cal.getTimeInMillis();
+                    cal.set(year, monthOfYear, dayOfMonth);
+                    Date date = cal.getTime();
+                    SimpleDateFormat sdf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
+                    String strDate = sdf.format(date);
+                    ageYear = year;
+                    ageMonth = monthOfYear;
+                    ageDate = dayOfMonth;
+
+                    BirthYear = getAge(ageYear, ageMonth, ageDate);
+                    if (BirthYear < 18) {
+                        binding.tlCalendar.setError("You must be 18 years of age to register");
+                        binding.btnSave.setEnabled(false);
+                        binding.btnSave.setClickable(false);
+                    } else {
+                        binding.tlCalendar.setError("");
+                        binding.btnSave.setEnabled(true);
+                        binding.btnSave.setClickable(true);
+                    }
+                    binding.etCalendar.setText(strDate);
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
+
+    public int getAge(int year, int month, int day) {
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+        dob.set(year, month, day);
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+        Integer ageInt = new Integer(age);
+        int ageS = ageInt;
+        return ageS;
     }
 
     @Override
@@ -515,105 +575,73 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
-            try {
-                Glide.with(this).load(imageFilePath)
-                        .thumbnail(0.1f)
-                        .skipMemoryCache(false).into(binding.civProfile);
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(CONSTANTS.PREF_KEY_UserID, UserID);
-                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
-                    APIClientProfile.getApiService().getAddProfiles(UserID, typedFile,
-                            new retrofit.Callback<AddProfileModel>() {
-                                @Override
-                                public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
-                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        Properties p = new Properties();
-                                        p.putValue("userId", UserID);
-                                        BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
-                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.1f)
-                                                .skipMemoryCache(false).into(binding.civProfile);
-                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
-                                        profileViewData(ctx);
-                                    }
-                                }
-
-                                @Override
-                                public void failure(RetrofitError e) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    BWSApplication.showToast(e.getMessage(), ctx);
-                                }
-                            });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+    public void profileUpdate() {
+        binding.flUser.setError("");
+        binding.tlMobileNumber.setError("");
+        binding.tlCalendar.setError("");
+        binding.tlEmail.setError("");
+        if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.flUser.setError("Name is required");
+            binding.tlEmail.setError("Email address is required");
+        } else if (!binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.tlEmail.setError("Email address is required");
+        } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                !binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.flUser.setError("Name is required");
+        } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
+                && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
+            binding.tlEmail.setError("Please enter a valid email address");
+        } else {
+            binding.flUser.setError("");
+            binding.tlCalendar.setError("");
+            binding.flUser.clearFocus();
+            binding.tlEmail.clearFocus();
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                String dob = "";
+                if (!binding.etCalendar.getText().toString().isEmpty()) {
+                    dob = binding.etCalendar.getText().toString();
+                    SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
+                    Date newDate = new Date();
+                    try {
+                        newDate = spf.parse(dob);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
+                    dob = spf.format(newDate);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Permission", e.getMessage());
-            }
-        } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                Uri selectedImageUri = data.getData();
-                Glide.with(this).load(selectedImageUri)
-                        .thumbnail(0.1f)
-                        .skipMemoryCache(false).into(binding.civProfile);
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(CONSTANTS.PREF_KEY_UserID, UserID);
-                    File file = new File(FileUtil.getPath(selectedImageUri, this));
+                Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID, binding.etUser.getText().toString(), dob,
+                        binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(), "");
+                listCall.enqueue(new Callback<ProfileUpdateModel>() {
+                    @Override
+                    public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
+                        try {
+                            ProfileUpdateModel viewModel = response.body();
+                            if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                analytics.identify(new Traits()
+                                        .putValue("userId", UserID)
+                                        .putValue("userName", viewModel.getResponseData().getName())
+                                        .putValue("mobileNo", viewModel.getResponseData().getPhoneNumber())
+                                        .putValue("email", viewModel.getResponseData().getEmail()));
+                                finish();
+                                BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
+                            } else {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
-                    APIClientProfile.getApiService().getAddProfiles(UserID, typedFile,
-                            new retrofit.Callback<AddProfileModel>() {
-                                @Override
-                                public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
-                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        Properties p = new Properties();
-                                        p.putValue("userId", UserID);
-                                        BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
-                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.1f)
-                                                .skipMemoryCache(false).into(binding.civProfile);
-                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
-                                        profileViewData(ctx);
-                                    }
-                                }
-
-                                @Override
-                                public void failure(RetrofitError e) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    BWSApplication.showToast(e.getMessage(), ctx);
-                                }
-                            });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }
-            }
-        } else if (requestCode == RESULT_CANCELED) {
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
-            finish();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 5) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            } else {
+                    @Override
+                    public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    }
+                });
             }
         }
     }
