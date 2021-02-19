@@ -625,6 +625,7 @@ Appointment Audios dddd*/
                         stopSelf();
                     }
                 });
+
         if (player != null) {
             position = player.getCurrentWindowIndex();
         } else {
