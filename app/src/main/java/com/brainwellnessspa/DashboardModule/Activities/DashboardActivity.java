@@ -147,13 +147,13 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
             bundle.putString("PlaylistType", PlaylistType);
             bundle.putString("MyDownloads", "0");
 
-
+/*
             Properties p = new Properties();
             p.putValue("PlaylistID", PlaylistID);
             p.putValue("PlaylistName", PlaylistName);
             p.putValue("PlaylistImage", PlaylistImage);
             p.putValue("PlaylistType", PlaylistType);
-            BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);
+            BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);*/
             myPlaylistsFragment.setArguments(bundle);
             FragmentManager fragmentManager1 = getSupportFragmentManager();
             fragmentManager1.beginTransaction()
