@@ -586,7 +586,7 @@ Appointment Audios dddd*/
                             }.getType();
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
-                        getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+//                        getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
                         Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
 
                         /*Thread thread = new Thread(() -> {
@@ -604,7 +604,7 @@ Appointment Audios dddd*/
                             }
                         });
                         thread.start();*/
-                        return myBitmap;
+                        return getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
                     }
                 },
 

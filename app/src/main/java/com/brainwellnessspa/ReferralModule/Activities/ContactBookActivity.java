@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -246,6 +247,10 @@ public class ContactBookActivity extends AppCompatActivity {
                     buildermain.setPositiveButton(
                             getString(R.string.ok),
                             (dialogmain, id1) -> {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                intent.setData(uri);
+                                startActivity(intent);
                                 dialogmain.dismiss();
                             });
                     AlertDialog alert11 = buildermain.create();
