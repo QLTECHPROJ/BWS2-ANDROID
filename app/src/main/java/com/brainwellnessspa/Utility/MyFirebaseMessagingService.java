@@ -60,7 +60,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage == null)
             return;
         if (remoteMessage.getNotification() != null) {
-            Log.e(TAG, "Notification Body: " + remoteMessage.getNotification());
             Log.e(TAG, "Notification rendom number: " + m);
             title = remoteMessage.getNotification().getTitle();
             message = remoteMessage.getNotification().getBody();
@@ -118,6 +117,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         activity = MyFirebaseMessagingService.this;
         taskStackBuilder = TaskStackBuilder.create(this);
         String channelId = context.getString(R.string.default_notification_channel_id);
+        int requestID = (int) System.currentTimeMillis();
         CharSequence channelName = "Brain Wellness App";
         int importance = 0;
 
@@ -130,7 +130,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     resultIntent = new Intent(this, DashboardActivity.class);
                     taskStackBuilder.addParentStack(DashboardActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                    resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
                     resultIntent = new Intent(this, DashboardActivity.class);
                     resultIntent.putExtra("New", "0");
@@ -145,13 +145,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);*/
                     taskStackBuilder.addParentStack(DashboardActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                    resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 }
             } else {
                 resultIntent = new Intent(this, DashboardActivity.class);
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
             }
 
             Uri defaultSoundUri = Uri.parse("android.resource://"

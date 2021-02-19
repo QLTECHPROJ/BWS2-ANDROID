@@ -99,8 +99,8 @@ public class ReminderActivity extends AppCompatActivity {
             SelectedDay = Arrays.asList(myArray);
         }
 
-        Log.e("DayDayDayDay", Day);
-        Log.e("SelectedDaySelectedDay", TextUtils.join(",", SelectedDay));
+//        Log.e("DayDayDayDay", Day);
+//        Log.e("SelectedDaySelectedDay", TextUtils.join(",", SelectedDay));
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("reminderId", ReminderId);
@@ -139,7 +139,7 @@ public class ReminderActivity extends AppCompatActivity {
             Date currdate = new Date();
             try {
                 currdate = simpleDateFormat1.parse(gmtTime);
-                Log.e("currant currdate !!!!", String.valueOf(currdate));
+//                Log.e("currant currdate !!!!", String.valueOf(currdate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -230,7 +230,7 @@ public class ReminderActivity extends AppCompatActivity {
         if (Day.contains("6")) {
             ShowDaysSelection("6", binding.tvSaturday);
         }
-        Log.e("remiderDays", TextUtils.join(",", remiderDays));
+//        Log.e("remiderDays", TextUtils.join(",", remiderDays));
 
         binding.llSunday.setOnClickListener(view -> {
             DaysSelection("0", binding.tvSunday);
@@ -359,11 +359,11 @@ public class ReminderActivity extends AppCompatActivity {
 
         p.putValue("reminderDay", ReminderDayTemp);
 //        "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
-        Log.e("ReminderDaySelected", ReminderDaySelected);
+//        Log.e("ReminderDaySelected", ReminderDaySelected);
         p.putValue("playlistId", PlaylistID);
         p.putValue("playlistName", PlaylistName);
         BWSApplication.addToSegment("Reminder Day Selected", p, CONSTANTS.track);
-        Log.e("remiderDays", TextUtils.join(",", remiderDays));
+//        Log.e("remiderDays", TextUtils.join(",", remiderDays));
     }
 
     private void ShowPlaylistName() {
@@ -392,12 +392,12 @@ public class ReminderActivity extends AppCompatActivity {
                     Date currdatex = new Date();
                     try {
                         currdatex = simpleDateFormat1x.parse(sendTime);
-                        Log.e("sendTime currdate !!!!", String.valueOf(sendTime));
+//                        Log.e("sendTime currdate !!!!", String.valueOf(sendTime));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     sendTime = simpleDateFormat1x.format(currdatex);
-                    Log.e("sendTime currdate###", sendTime);
+//                    Log.e("sendTime currdate###", sendTime);
 
                     if (BWSApplication.isNetworkConnected(context)) {
                         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -409,7 +409,7 @@ public class ReminderActivity extends AppCompatActivity {
                                 try {
                                     SetReminderModel listModel = response.body();
                                     if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        Log.e("remiderDays", TextUtils.join(",", remiderDays));
+//                                        Log.e("remiderDays", TextUtils.join(",", remiderDays));
                                         remiderDays.clear();
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         BWSApplication.showToast(listModel.getResponseMessage(), activity);

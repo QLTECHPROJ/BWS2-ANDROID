@@ -373,7 +373,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     binding.cbChecked.setChecked(true);
                     binding.tvSelectAll.setText(remiderIds.size() + " selected");
                 }
-                Log.e("remiderIds", TextUtils.join(",", remiderIds));
+//                Log.e("remiderIds", TextUtils.join(",", remiderIds));
             });
 
             binding.llClose.setOnClickListener(view -> {
@@ -407,7 +407,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     binding.llSelectAll.setVisibility(View.GONE);
                     remiderIds.clear();
                 }
-                Log.e("remiderIds", TextUtils.join(",", remiderIds));
+//                Log.e("remiderIds", TextUtils.join(",", remiderIds));
                 notifyDataSetChanged();
             });
 
