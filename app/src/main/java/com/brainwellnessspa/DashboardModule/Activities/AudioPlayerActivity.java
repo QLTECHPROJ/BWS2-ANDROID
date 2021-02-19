@@ -1354,7 +1354,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             epAllClicks();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("init player State: ", e.getMessage());
+//            Log.e("init player State: ", e.getMessage());
         }
     }
 
@@ -2489,7 +2489,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.ivLike.setImageResource(R.drawable.ic_heart_unfill_icon);
         }
         if (!url.equalsIgnoreCase("")) {
-            if (!id.equalsIgnoreCase(addToRecentPlayId)) {
+            if(addToRecentPlayId.equalsIgnoreCase("")){
+                addToRecentPlay();
+            } else if (!id.equalsIgnoreCase(addToRecentPlayId)) {
                 addToRecentPlay();
                 Log.e("Api call recent", id);
             }

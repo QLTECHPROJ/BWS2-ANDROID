@@ -12,11 +12,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.ParcelFileDescriptor;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -62,6 +64,9 @@ import com.segment.analytics.Properties;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -158,12 +163,17 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                 super.onPostExecute(result);
             }
         }
-        /*  ParcelFileDescriptor parcelFileDescriptor =
-            getContentResolver().openFileDescriptor(uri, "r");
-    FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-    Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-    parcelFileDescriptor.close();
-    return image;*/
+   /*     songImg = songImg.replace(" ","%20");
+        if(songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)){
+            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+        }else {
+            try {
+                URL url = new URL(songImg);
+                myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch(IOException e) {
+                Log.e("get BitMap Error: ", e.getMessage());
+            }
+        }*/
 
         GetMedia st = new GetMedia();
         st.execute();

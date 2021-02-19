@@ -612,7 +612,7 @@ public class MiniPlayerFragment extends Fragment {
             epAllClicks();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("init media State: ", e.getMessage());
+//            Log.e("init media State: ", e.getMessage());
         }
     }
 
@@ -1048,7 +1048,9 @@ public class MiniPlayerFragment extends Fragment {
         }
 
         if (!url.equalsIgnoreCase("")) {
-            if (!id.equalsIgnoreCase(addToRecentPlayId)) {
+            if(addToRecentPlayId.equalsIgnoreCase("")){
+                addToRecentPlay();
+            } else if (!id.equalsIgnoreCase(addToRecentPlayId)) {
                 addToRecentPlay();
                 Log.e("Api call recent", id);
             }
