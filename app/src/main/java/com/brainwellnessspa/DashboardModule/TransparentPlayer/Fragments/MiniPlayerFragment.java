@@ -279,7 +279,7 @@ public class MiniPlayerFragment extends Fragment {
             }
             if (player != null) {
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                player.setWakeMode(C.WAKE_MODE_LOCAL);
+                player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
@@ -894,11 +894,12 @@ public class MiniPlayerFragment extends Fragment {
 
     private void setpleyerctrView() {
         playerControlView.setPlayer(player);
-        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-            exoBinding.exoProgress.setPosition(position);
+        playerControlView.setProgressUpdateListener((positionx, bufferedPosition) -> {
+            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+            exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-                        if((position >= oldSongPos + 29500)&& (position <= oldSongPos + 31000)){
-                oldSongPos = position;
+                        if((positionx >= oldSongPos + 29500)&& (positionx <= oldSongPos + 31000)){
+                oldSongPos = positionx;
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }

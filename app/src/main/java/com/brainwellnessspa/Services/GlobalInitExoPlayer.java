@@ -43,6 +43,7 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -125,34 +126,19 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     }
 
     public static Bitmap getMediaBitmap(Context ctx, String songImg) {
+        String finalSongImg = songImg;
         class GetMedia extends AsyncTask<String, Void, Bitmap> {
             @Override
             protected Bitmap doInBackground(String... params) {
                 try {
-                    if (songImg.equalsIgnoreCase("")) {
-                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
-                    } else {
-                        if (BWSApplication.isNetworkConnected(ctx)) {
-                            URL url = new URL(songImg);
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    URL url = new URL(finalSongImg);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 //                            connection.setDoInput(true);
-                            connection.connect();
-                            InputStream is = connection.getInputStream();
-                            myBitmap = BitmapFactory.decodeStream(is);
-                            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                                Log.e("HttpURLConnection", "Server returned HTTP " + connection.getResponseCode()
-                                        + " " + connection.getResponseMessage());
-                            } else {
-                                Log.e("HttpURLConnection", "null" + connection.getResponseCode()
-                                        + " " + connection.getResponseMessage());
-                            }
-                        } else {
-                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("get BitMap Error: ", e.getMessage());
+                    connection.connect();
+                    InputStream is = connection.getInputStream();
+                    myBitmap = BitmapFactory.decodeStream(is);
+                } catch(IOException e) {
+                    System.out.println(e);
                 }
                 return null;
             }
@@ -163,20 +149,25 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                 super.onPostExecute(result);
             }
         }
-   /*     songImg = songImg.replace(" ","%20");
+        songImg = songImg.replace(" ","%20");
         if(songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)){
             myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
         }else {
-            try {
-                URL url = new URL(songImg);
-                myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            /*AudioDatabase.databaseWriteExecutor1.execute(() -> {      try {
+                URL url = new URL(finalSongImg);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                InputStream is = connection.getInputStream();
+                myBitmap = BitmapFactory.decodeStream(is);
             } catch(IOException e) {
-                Log.e("get BitMap Error: ", e.getMessage());
-            }
-        }*/
+                System.out.println(e);
+            }});*/
 
-        GetMedia st = new GetMedia();
-        st.execute();
+            GetMedia st = new GetMedia();
+            st.execute();
+        }
+//        GetMedia st = new GetMedia();
+//        st.execute();
         return myBitmap;
     }
 
@@ -384,9 +375,9 @@ Appointment Audios dddd*/
 //                : new ConcatenatingMediaSource(mediaSources);
 //        player.setMediaSource(mediaSource);
 //        player.prepare(mediaSource);
-        getMediaBitmap(ctx, mainPlayModelList1.get(position).getImageFile());
+//        getMediaBitmap(ctx, mainPlayModelList1.get(position).getImageFile());
         player.prepare();
-        player.setWakeMode(C.WAKE_MODE_LOCAL);
+        player.setWakeMode(C.WAKE_MODE_NONE);
         player.setHandleAudioBecomingNoisy(true);
         player.setHandleWakeLock(true);
         player.seekTo(position, 0);
@@ -456,7 +447,7 @@ Appointment Audios dddd*/
         player.setMediaItem(mediaItem1);
         InitNotificationAudioPLayerD(ctx);
         player.prepare();
-        player.setWakeMode(C.WAKE_MODE_LOCAL);
+        player.setWakeMode(C.WAKE_MODE_NONE);
         player.setHandleWakeLock(true);
         player.setForegroundMode(true);
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -535,6 +526,7 @@ Appointment Audios dddd*/
                 ctx,
                 "10001",
                 R.string.playback_channel_name,
+                0,
                 notificationId,
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
@@ -587,7 +579,7 @@ Appointment Audios dddd*/
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
 //                        getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
-                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+//                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
 
                         /*Thread thread = new Thread(() -> {
                             try {

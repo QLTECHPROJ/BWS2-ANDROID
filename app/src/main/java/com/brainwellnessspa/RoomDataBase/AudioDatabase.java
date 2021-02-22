@@ -17,5 +17,8 @@ public abstract class AudioDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 1;
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    private static final int NUMBER_OF_THREADS1 = 1;
+    public static final ExecutorService databaseWriteExecutor1 =
+            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     public abstract AudioDetailsDao taskDao();
 }

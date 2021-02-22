@@ -758,7 +758,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         if (player != null) {
-            player.setWakeMode(C.WAKE_MODE_LOCAL);
+            player.setWakeMode(C.WAKE_MODE_NONE);
             player.setHandleWakeLock(true);
         }
         super.onPause();
@@ -941,7 +941,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 setpleyerctrView();
             }
             if (player != null) {
-                player.setWakeMode(C.WAKE_MODE_LOCAL);
+                player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
@@ -979,6 +979,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                         }
                         getDownloadData();
+                        setpleyerctrView();
                         GetMediaPer();
                         callButtonText(position);
                         p = new Properties();
@@ -1021,6 +1022,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 31000)){
                             oldSongPos = player.getCurrentPosition();
                             Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
@@ -1050,6 +1052,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onPlaybackStateChanged(int state) {
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         if (state == ExoPlayer.STATE_READY) {
                             p = new Properties();
                             p.putValue("userId", UserID);
@@ -1537,16 +1540,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void setpleyerctrView() {
         playerControlView.setPlayer(player);
-        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
-            exoBinding.exoProgress.setPosition(position);
+        playerControlView.setProgressUpdateListener((positionx, bufferedPosition) -> {
+            exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-            if((position >= oldSongPos + 29500)&& (position <= oldSongPos + 31000)){
-                oldSongPos = position;
+            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+            if((positionx >= oldSongPos + 29500)&& (positionx <= oldSongPos + 31000)){
+                oldSongPos = positionx;
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
-            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
-                    TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
+            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
+                    TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx))));
         });
         playerControlView.setFocusable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1695,7 +1699,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
 
                         if (player.hasNext()) {
                             handler2.removeCallbacks(UpdateSongTime2);
@@ -1705,6 +1708,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     .taskDao()
                                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                             });
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                             enableDownload();
                             binding.ivDownloads.setVisibility(View.VISIBLE);
                             binding.pbProgress.setVisibility(View.GONE);
@@ -1740,7 +1744,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         int pss = player.getCurrentWindowIndex();
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                         if (player.hasPrevious()) {
                             DatabaseClient
                                     .getInstance(ctx)
@@ -1748,6 +1751,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     .taskDao()
                                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                             });
+                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                             handler2.removeCallbacks(UpdateSongTime2);
                             enableDownload();
                             binding.ivDownloads.setVisibility(View.VISIBLE);
