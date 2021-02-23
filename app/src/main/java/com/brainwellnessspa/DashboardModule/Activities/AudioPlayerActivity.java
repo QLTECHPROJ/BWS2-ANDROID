@@ -1243,7 +1243,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.exoProgress.setPosition(pos);
                         oldSeekPosition = pos;
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx,mainPlayModelList);
+                        globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx);
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -1287,7 +1288,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
                                 TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos))));
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx,mainPlayModelList);
+                        globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx);
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());

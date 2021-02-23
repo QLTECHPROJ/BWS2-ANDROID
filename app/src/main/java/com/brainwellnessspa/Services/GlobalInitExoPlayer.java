@@ -564,32 +564,6 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
-                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        Gson gson = new Gson();
-                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
-                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                            }.getType();
-                            mainPlayModelList1 = gson.fromJson(json, type);
-                        }
-//                        getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
-//                        Log.e("IMAGES NOTIFICATION", mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
-
-                        /*Thread thread = new Thread(() -> {
-                            try {
-                                Uri uri = Uri.parse(cover_url);
-                                Bitmap bitmap = Glide.with(context)
-                                        .asBitmap()
-                                        .load(uri)
-                                        .submit().get();
-                                callback.onBitmap(bitmap);
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        });
-                        thread.start();*/
                         return getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
                     }
                 },
@@ -627,13 +601,7 @@ Appointment Audios dddd*/
         mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
         mediaSession.setActive(true);
         playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
-
         if(player!= null) {
-//            mediaSession.setPlaybackState(
-//                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
-//                        player.getCurrentPosition(),1 )
-//                        .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
-//                        .build());
             mediaSessionConnector = new MediaSessionConnector(mediaSession);
            mediaSessionConnector.setPlayer(player);
             mediaSessionConnector.setMediaMetadataProvider(player -> {
@@ -665,120 +633,7 @@ Appointment Audios dddd*/
 
                 return builder.build();
             });
-            mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
-                @Override
-                public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-                    Bundle extras = new Bundle();
-                    extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0);
-
-                    return new MediaDescriptionCompat.Builder()
-                            .setMediaId( mainPlayModelList1.get(player.getCurrentWindowIndex()).getID())
-                            .setIconBitmap(myBitmap)
-                            .setTitle(mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
-                            .setDescription(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
-                            .setExtras(extras)
-                            .build();
-                }
-            });
         }
-      /*  mediaSessionConnector.setMediaMetadataProvider(new MediaSessionConnector.MediaMetadataProvider() {
-            @Override
-            public MediaMetadataCompat getMetadata(Player player) {
-                return null;
-            }
-        });*/
-        try {
-//            mediaSession = new MediaSessionCompat(this, "ExoPlayer");
-//            mediaSession.setActive(true);
-/*
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mediaSession.setMetadata(MediaMetadataCompat.fromMediaMetadata(new MediaMetadataCompat.Builder()
-                        // Title.
-                        .putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
-                        .putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
-                        // Artist.
-                        // Could also be the channel name or TV series.
-                        // Album art.
-                        // Could also be a screenshot or hero image for video content
-                        // The URI scheme needs to be "content", "file", or "android.resource".
-                        .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioFile())
-                        // Duration.
-                        // If duration isn't set, such as for live broadcasts, then the progress
-                        // indicator won't be shown on the seekbar.
-                        .putLong(MediaMetadata.METADATA_KEY_DURATION, Long.valueOf(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDuration())) // 4
-
-                        .build()));
-            }
-*/
-
-//            MediaSessionCompat mediaSessionCompat = MediaSessionCompat.fromMediaSession(ctx,mediaSession);
-//            mediaSession.setMetadata(MediaMetadataCompat.fromMediaMetadata(mediaSessionCompat));
-  /*          mediaSession.setPlaybackState(
-                    new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
-                            player.getCurrentPosition(), 1)
-                            .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
-                            .build());
-            playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());*/
-//            mediaSessionConnector = new MediaSessionConnector(mediaSession);
-//            mediaSessionConnector.setPlayer(player);
-           /* mediaSession = new MediaSessionCompat(ctx, "ExoPlayer");
-            mediaSession.setActive(true);
-            playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
-            mediaSession.setPlaybackState(
-                    new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
-                            // Playback position.
-                            // Used to update the elapsed time and the progress bar.
-                            player.getCurrentWindowIndex(),
-                            // Playback speed.
-                            // Determines the rate at which the elapsed time changes.
-                            1)
-
-                            // isSeekable.
-                            // Adding the SEEK_TO action indicates that seeking is supported
-                            // and makes the seekbar position marker draggable. If this is not
-                            // supplied seek will be disabled but progress will still be shown.
-                            .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
-                            .build());*/
-           /* mediaSession.setMetadata(
-                    MediaMetadataCompat.fromMediaMetadata(new MediaMetadataCompat.Builder()
-                            // Title.
-                            .putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
-                            // Artist.
-                            // Could also be the channel name or TV series.
-                            .putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
-                            // Album art.
-                            // Could also be a screenshot or hero image for video content
-                            // The URI scheme needs to be "content", "file", or "android.resource".
-                            .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioFile())
-                            // Duration.
-                            // If duration isn't set, such as for live broadcasts, then the progress
-                            // indicator won't be shown on the seekbar.
-                            .putLong(MediaMetadata.METADATA_KEY_DURATION, Long.valueOf(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDuration())) // 4
-
-                            .build()));*/
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-            /*playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
-
-            mediaSessionConnector = new MediaSessionConnector(mediaSession);
-            mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
-                @Override
-                public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-                    Bundle extras = new Bundle();
-                    extras.putInt(MediaMetadataCompat.METADATA_KEY_DURATION, -1);
-
-                    return new MediaDescriptionCompat.Builder()
-                            .setMediaId(mainPlayModelList1.get(player.getCurrentWindowIndex()).getID())
-                            .setIconBitmap(myBitmap)
-                            .setTitle(mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
-                            .setDescription(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
-                            .setExtras(extras)
-                            .build();
-                }
-            });*/
-
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
         playerNotificationManager.setUsePreviousAction(true);
@@ -794,27 +649,6 @@ Appointment Audios dddd*/
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
-//        metadata = new MediaM
-//        mediaSession.setMetadata(metadata);
-//        mediaSessionConnector = new MediaSessionConnector(mediaSession);
-/*
-        mediaSessionConnector.setQueueNavigator(new MediaSessionConnector.QueueNavigator(mediaSession) {
-            @Override
-            public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-
-
-                return new MediaDescriptionCompat.Builder()
-                        .setMediaId(mainPlayModelList1.get(player.getCurrentWindowIndex()).getID())
-                        .setIconBitmap(myBitmap)
-                        .setTitle(mainPlayModelList1.get(player.getCurrentWindowIndex()).getName())
-                        .setDescription(mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection())
-                        .setExtras(extras)
-                        .build();
-            }
-        });
-*/
-
-//        mediaSessionConnector.setPlayer(player);
     }
 
     public void InitNotificationAudioPLayerD(Context ctx) {
@@ -869,6 +703,43 @@ Appointment Audios dddd*/
                     }
                 });
 
+        mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
+        mediaSession.setActive(true);
+        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+        //aa comment delete na krvi
+      /*  if(player!= null) {
+            mediaSessionConnector = new MediaSessionConnector(mediaSession);
+           mediaSessionConnector.setPlayer(player);
+            mediaSessionConnector.setMediaMetadataProvider(player -> {
+                long duration;
+                if (player.getDuration() < 0)
+                    duration = player.getCurrentPosition();
+                else
+                    duration = player.getDuration();
+
+                MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder.putString(MediaMetadata.METADATA_KEY_ARTIST, "The audio shall start playing after the disclaimer");
+                    builder.putString(MediaMetadata.METADATA_KEY_TITLE, "Disclaimer");
+                }
+                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer)));
+                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "0");
+
+                if (duration > 0) {
+                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,  player.getDuration() == C.TIME_UNSET ? -1 : player.getDuration());
+                }
+
+                try {
+                    Bitmap icon;
+                    icon = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon);
+                } catch (OutOfMemoryError e) {
+                    e.printStackTrace();
+                }
+
+                return builder.build();
+            });
+        }*/
         playerNotificationManager.setUseNextAction(false);
         playerNotificationManager.setUsePreviousAction(false);
         playerNotificationManager.setUseNextActionInCompactView(false);
@@ -1354,6 +1225,59 @@ Appointment Audios dddd*/
         editorr.clear();
         editorr.commit();
         callNewPlayerRelease();
+    }
+
+    public void UpdateNotificationAudioPLayer(Context ctx) {
+        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+            }.getType();
+            mainPlayModelList1 = gson.fromJson(json, type);
+        }
+        mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
+        mediaSession.setActive(true);
+        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+
+        if(player!= null) {
+//            mediaSession.setPlaybackState(
+//                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
+//                        player.getCurrentPosition(),1 )
+//                        .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
+//                        .build());
+            mediaSessionConnector = new MediaSessionConnector(mediaSession);
+            mediaSessionConnector.setPlayer(player);
+            mediaSessionConnector.setMediaMetadataProvider(player -> {
+                long duration;
+                if (player.getDuration() < 0)
+                    duration = player.getCurrentPosition();
+                else
+                    duration = player.getDuration();
+
+                MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
+                    builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
+                }
+                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
+                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
+
+                if (duration > 0) {
+                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+                }
+
+                try {
+                    Bitmap icon;
+                    icon = getMediaBitmap(ctx, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
+                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon);
+                } catch (OutOfMemoryError e) {
+                    e.printStackTrace();
+                }
+
+                return builder.build();
+            });
+        }
     }
 
   /*  @Override
