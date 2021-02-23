@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -21,9 +20,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.os.RemoteException;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -38,37 +35,26 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.media.session.MediaButtonReceiver;
 
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
-//import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.Services.NotificationActionService;
 import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.R;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
-import static android.media.session.PlaybackState.STATE_PAUSED;
-import static android.media.session.PlaybackState.STATE_PLAYING;
-import static com.brainwellnessspa.BWSApplication.ACTION_PREVIUOS;
-import static com.brainwellnessspa.BWSApplication.CHANNEL_ID;
 
 public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
-    public static boolean isPrepare = false, songComplete = false, isMediaStart = false, isrelese = false, isStop = false, isCompleteStop = false, isPreparing = false;
+    public static boolean isPrepare = false, isMediaStart = false, isrelese = false, isStop = false, isCompleteStop = false;
     public static boolean isPause = false, isprogressbar = false;
     public static boolean isResume = false;
-    public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000,mCurrentState = 0,audioBufferCapacityMs;
+    public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     static public Handler handler;
     static boolean isPlaying = false;
     public static final String ACTION_PLAY = "ACTION_PLAY";
