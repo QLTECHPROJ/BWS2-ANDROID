@@ -373,9 +373,6 @@ public class AccountFragment extends Fragment {
         listCall.enqueue(new Callback<LogoutModel>() {
             @Override
             public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                dialog.hide();
-                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
                 LogoutModel loginModel = response.body();
                 try {
                     if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -383,6 +380,9 @@ public class AccountFragment extends Fragment {
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                     if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
+                        dialog.hide();
                         analytics.flush();
                         analytics.reset();
                         Properties p1 = new Properties();
