@@ -51,6 +51,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     public static boolean audioPause = false, audioClick = false, tutorial = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
+    boolean backpressed = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
     BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
@@ -256,10 +257,10 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
             if (doubleBackToExitPressedOnce) {
-                finishAffinity();
+                finish();
+                backpressed = true;
                 return;
             }
-
             this.doubleBackToExitPressedOnce = true;
             BWSApplication.showToast("Press again to exit", DashboardActivity.this);
 
@@ -279,7 +280,11 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     protected void onDestroy() {
 //        serviceRemoved = true;
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
-        relesePlayer(this);
+        if (!backpressed) {
+            relesePlayer(this);
+        } else {
+//            nothing
+        }
         unregisterReceiver(myNetworkReceiver);
         deleteCache(DashboardActivity.this);
         super.onDestroy();
