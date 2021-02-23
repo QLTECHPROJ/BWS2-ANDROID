@@ -25,7 +25,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -127,7 +129,7 @@ public class AccountFragment extends Fragment {
         RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         binding.rvContactList.setLayoutManager(mListLayoutManager);
         binding.rvContactList.setItemAnimator(new DefaultItemAnimator());*/
-      /*  String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER*//*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*//*};
+        /*  String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER*//*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*//*};
         Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 projection, null, null,
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
@@ -323,6 +325,8 @@ public class AccountFragment extends Fragment {
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                 final Button Btn = dialog.findViewById(R.id.Btn);
+                final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+                final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
 
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -333,9 +337,9 @@ public class AccountFragment extends Fragment {
                 });
 
                 Btn.setOnClickListener(v -> {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    BWSApplication.showProgressBar(progressBar, progressBarHolder, getActivity());
                     relesePlayer(getActivity());
-                    DeleteCall(dialog);
+                    DeleteCall(dialog, progressBar, progressBarHolder);
                 });
 
                 tvGoBack.setOnClickListener(v -> dialog.hide());
@@ -350,7 +354,7 @@ public class AccountFragment extends Fragment {
         return view;
     }
 
-    private void callLogoutApi(Dialog dialog) {
+    private void callLogoutApi(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
         SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
         String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
         if (TextUtils.isEmpty(fcm_id)) {
@@ -362,15 +366,6 @@ public class AccountFragment extends Fragment {
                 editor.apply();
                 editor.commit();
             });
-
-                       /* FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), instanceIdResult -> {
-                            String newToken = instanceIdResult.getToken();
-                            Log.e("newToken", newToken);
-                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                            editor.putString(CONSTANTS.Token, newToken); //Friend
-                            editor.apply();
-                            editor.commit();
-                        });*/
             fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
         }
 
@@ -379,8 +374,9 @@ public class AccountFragment extends Fragment {
             @Override
             public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
                 dialog.hide();
-                LogoutModel loginModel = response.body();
                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
+                LogoutModel loginModel = response.body();
                 try {
                     if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                         return;
@@ -399,7 +395,6 @@ public class AccountFragment extends Fragment {
                         Intent i = new Intent(getActivity(), LoginActivity.class);
                         startActivity(i);
                         getActivity().finish();
-                        getActivity().overridePendingTransition(0, 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -534,7 +529,7 @@ public class AccountFragment extends Fragment {
         tutorial = false;
     }
 
-    void DeleteCall(Dialog dialog) {
+    void DeleteCall(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
         myAudioId = "";
         isDisclaimer = 0;
         addToRecentPlayId = "";
@@ -606,7 +601,7 @@ public class AccountFragment extends Fragment {
 
 
         deleteCache(getActivity());
-        callLogoutApi(dialog);
+        callLogoutApi(dialog, progressBar, progressBarHolder);
     }
 
     void profileViewData(Context ctx) {

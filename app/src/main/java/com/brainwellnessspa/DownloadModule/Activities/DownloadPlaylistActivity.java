@@ -295,7 +295,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 } else {
                     final Dialog dialog = new Dialog(ctx);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.logout_layout);
+                    dialog.setContentView(R.layout.custom_popup_layout);
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
                     dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 

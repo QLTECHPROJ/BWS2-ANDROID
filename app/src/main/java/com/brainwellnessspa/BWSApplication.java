@@ -1,61 +1,40 @@
 package com.brainwellnessspa;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Application;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.media.MediaSessionManager;
-import androidx.media.session.MediaButtonReceiver;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.NotificationActionService;
 import com.brainwellnessspa.Services.PlayerJobService;
-import com.brainwellnessspa.SplashModule.Models.VersionModel;
-import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.CryptLib;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.Utility.Track;
 import com.segment.analytics.Properties;
 
 import java.io.File;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,42 +47,19 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static java.sql.DriverManager.println;
 
 public class BWSApplication extends Application {
-    public static final String CHANNEL_ID = "channel1";
-    public static final String ACTION_PREVIUOS = "actionprevious";
-    public static final String ACTION_PLAY = "actionplay";
-    public static final String ACTION_NEXT = "actionnext";
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
         }
     };
-    private static final int NOTIFICATION_ID = 101;
-    public static MediaSessionCompat mMediaSession = null;
-    public static PendingIntent play_pauseAction = null;
-    public static boolean usesChronometer = false;
-    public static boolean showWhen = false;
-    public static Long notifWhen = 0L;
-    public static MediaSessionManager mediaSessionManager;
-    public static MediaSessionCompat mediaSession;
-    public static MediaControllerCompat.TransportControls transportControls;
-    public static Notification notification;
-    //    public static NotificationManager notificationManager;
+    ;
     private static Context mContext;
     private static BWSApplication BWSApplication;
-    private static List<DownloadAudioDetails> downloadAudioDetailsList;
-    private static Bitmap myBitmap;
-    private static Service service;
-    private static Bitmap mCurrTrackCover;
-    private static Track track;
 
     public static Context getContext() {
         return mContext;
@@ -182,77 +138,6 @@ public class BWSApplication extends Application {
             e.printStackTrace();
         }
 
-    }
-  /*  public static void createChannel(Context ctx) {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                        "Brain Wellness App", NotificationManager.IMPORTANCE_LOW);
-
-                notificationManager = ctx.getSystemService(NotificationManager.class);
-                if (notificationManager != null) {
-                    notificationManager.createNotificationChannel(channel);
-                }
-            } else {
-                notificationManager = ctx.getSystemService(NotificationManager.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void cancelNotification(Context ctx) {
-        notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID); // Notification ID to cancel
-    }*/
-
-    public static void getLatasteUpdate(Context context) {
-        String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
-        if (BWSApplication.isNetworkConnected(context)) {
-            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_CODE), CONSTANTS.FLAG_ONE);
-            listCall.enqueue(new Callback<VersionModel>() {
-                @Override
-                public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            VersionModel versionModel = response.body();
-//                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setTitle("Update Brain Wellness Spa");
-                                builder.setCancelable(false);
-                                builder.setMessage("Brain Wellness Spa recommends that you update to the latest version")
-                                        .setPositiveButton("UPDATE", (dialog, id) -> {
-                                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
-                                            dialog.cancel();
-                                        })
-                                        .setNegativeButton("NOT NOW", (dialog, id) -> dialog.dismiss());
-                                builder.create().show();
-                            } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setTitle("Update Required");
-                                builder.setCancelable(false);
-                                builder.setMessage("To keep using Brain Wellness Spa, download the latest version")
-                                        .setCancelable(false)
-                                        .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
-                                builder.create().show();
-                            } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
-                            }
-                        }
-                    /*} else {
-                    }*/
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<VersionModel> call, Throwable t) {
-                }
-            });
-        } else {
-            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
-        }
     }
 
     public static String getKey(Context context) {
@@ -398,29 +283,6 @@ public class BWSApplication extends Application {
         return cipher;
     }
 
-    /*    public static ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                // We've bound to LocalService, cast the IBinder and get LocalService instance
-                MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
-                player = binder.getService();
-                serviceBound = true;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                serviceBound = false;
-            }
-        };*/
-   /* public boolean isMyServiceRunning(GlobleInItExoPlayer serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }*/
     public static void turnOffDozeMode(Context context) {  //you can use with or without passing context
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent intent = new Intent();
@@ -434,18 +296,6 @@ public class BWSApplication extends Application {
             }
             context.startActivity(intent);
         }
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        String packageName = context.getPackageName();
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
-            if(!isIgnoringBatteryOptimizations){
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, MY_IGNORE_OPTIMIZATION_REQUEST);
-        }
-        }*/
-
     }
 
     @Override
@@ -454,6 +304,4 @@ public class BWSApplication extends Application {
         mContext = this;
         BWSApplication = this;
     }
-
-
 }
