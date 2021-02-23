@@ -62,7 +62,6 @@ import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
 import com.brainwellnessspa.databinding.AudioPlayerCustomLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -1243,6 +1242,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     public void onScrubStart(TimeBar timeBar, long pos) {
                         exoBinding.exoProgress.setPosition(pos);
                         oldSeekPosition = pos;
+                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -1285,6 +1286,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.exoProgress.setPosition(pos);
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
                                 TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos))));
+                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());

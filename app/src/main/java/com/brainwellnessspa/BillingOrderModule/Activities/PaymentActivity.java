@@ -254,7 +254,7 @@ public class PaymentActivity extends AppCompatActivity {
             holder.binding.tvCardNo.setText(getString(R.string.first_card_chars) + " " + listModel.getLast4());
             holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
                     listModel.getExpYear());
-            Glide.with(context).load(listModel.getImage()).thumbnail(0.05f).crossFade()
+            Glide.with(context).load(listModel.getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.binding.ivCardimg);
             if (listModel.getIsDefault().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {
                 holder.binding.ivCheck.setImageResource(R.drawable.ic_checked_icon);

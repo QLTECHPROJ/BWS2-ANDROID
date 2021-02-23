@@ -88,85 +88,90 @@ public class DownloadMedia implements OnDownloadListener {
         audioFile = DOWNLOAD_AUDIO_URL;
         playlistDownloadId = PLAYLIST_ID;
         filename = FILE_NAME.get(0);
-        downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(ctx), FILE_NAME.get(0) + CONSTANTS.FILE_EXT)
-                .build()
-                .setOnProgressListener(progress -> {
-                    long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
-                    downloadProgress = (int) progressPercent;
-                    if(downloadProgress == 0 || downloadProgress == 1){
-                        updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
-                        downloadProgress2 = downloadProgress;
-                    } else if (downloadProgress == downloadProgress2 + 10) {
+        try {
+            downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(ctx), FILE_NAME.get(0) + CONSTANTS.FILE_EXT)
+                    .build()
+                    .setOnProgressListener(progress -> {
+                        long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
+                        downloadProgress = (int) progressPercent;
+                        if (downloadProgress == 0 || downloadProgress == 1) {
+                            updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
+                            downloadProgress2 = downloadProgress;
+                        } else if (downloadProgress == downloadProgress2 + 10) {
                        /* localIntent.putExtra("Progress", downloadProgress);
                         localIntent.putExtra("name", FILE_NAME.get(0));
                         lBM.sendBroadcast(localIntent);*/
-                        updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
-                        downloadProgress2 = downloadProgress;
-                    }
-                })/*.setOnStartOrResumeListener(() -> {
+                            updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
+                            downloadProgress2 = downloadProgress;
+                        }
+                    })/*.setOnStartOrResumeListener(() -> {
 //                    if (Status.PAUSED == status) {
 //                        PRDownloader.resume(downloadIdOne);
 //                        status = Status.RUNNING;
 //                    }
                 })*/
-                .setOnPauseListener(() -> {
-                    if (Status.RUNNING == status) {
-                        PRDownloader.pause(downloadIdOne);
-                        status = Status.PAUSED;
-                    }
-                }).setOnCancelListener(() -> {
-                    downloadIdOne = 0;
-                    LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
-                    filename = "";
-                    if (logout) {
-                        SharedPreferences preferences11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor edit1 = preferences11.edit();
-                        edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
-                        edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
-                        edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
-                        edit1.clear();
-                        edit1.commit();
-                    } else {
-                        fileNameList = new ArrayList<>();
-                        audioFile = new ArrayList<>();
-                        playlistDownloadId = new ArrayList<>();
-                        SharedPreferences sharedy1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        Gson gson = new Gson();
-                        String jsony1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                        String json11 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-                        String jsonq1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                        if (!jsony1.equalsIgnoreCase(String.valueOf(gson))) {
-                            Type type = new TypeToken<List<String>>() {
-                            }.getType();
-                            fileNameList = gson.fromJson(jsony1, type);
-                            audioFile = gson.fromJson(json11, type);
-                            playlistDownloadId = gson.fromJson(jsonq1, type);
+                    .setOnPauseListener(() -> {
+                        if (Status.RUNNING == status) {
+                            PRDownloader.pause(downloadIdOne);
+                            status = Status.PAUSED;
                         }
-                        fileNameList.remove(0);
-                        audioFile.remove(0);
-                        playlistDownloadId.remove(0);
+                    }).setOnCancelListener(() -> {
+                        downloadIdOne = 0;
+                        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
                         filename = "";
-                        downloadProgress = 0;
-                        downloadProgress2= 0;
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        String urlJson = gson.toJson(audioFile);
-                        String nameJson = gson.toJson(fileNameList);
-                        String playlistIdJson = gson.toJson(playlistDownloadId);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                        editor.commit();
-                        if(fileNameList.size() == 0){
-                            isDownloading = false;
+                        if (logout) {
+                            SharedPreferences preferences11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor edit1 = preferences11.edit();
+                            edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
+                            edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
+                            edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
+                            edit1.clear();
+                            edit1.commit();
+                        } else {
+                            fileNameList = new ArrayList<>();
+                            audioFile = new ArrayList<>();
+                            playlistDownloadId = new ArrayList<>();
+                            SharedPreferences sharedy1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                            Gson gson = new Gson();
+                            String jsony1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+                            String json11 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+                            String jsonq1 = sharedy1.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+                            if (!jsony1.equalsIgnoreCase(String.valueOf(gson))) {
+                                Type type = new TypeToken<List<String>>() {
+                                }.getType();
+                                fileNameList = gson.fromJson(jsony1, type);
+                                audioFile = gson.fromJson(json11, type);
+                                playlistDownloadId = gson.fromJson(jsonq1, type);
+                            }
+                            fileNameList.remove(0);
+                            audioFile.remove(0);
+                            playlistDownloadId.remove(0);
                             filename = "";
                             downloadProgress = 0;
-                            downloadProgress2= 0;
-                        } else if (fileNameList.size() != 0) {
-                            encrypt1(audioFile, fileNameList, playlistDownloadId);
+                            downloadProgress2 = 0;
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            String urlJson = gson.toJson(audioFile);
+                            String nameJson = gson.toJson(fileNameList);
+                            String playlistIdJson = gson.toJson(playlistDownloadId);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                            editor.commit();
+                            if (fileNameList.size() == 0) {
+                                isDownloading = false;
+                                filename = "";
+                                downloadProgress = 0;
+                                downloadProgress2 = 0;
+                            } else if (fileNameList.size() != 0) {
+                                encrypt1(audioFile, fileNameList, playlistDownloadId);
+                            }
                         }
-                    }
-                }).start(this);
+                    }).start(this);
+        } catch (OutOfMemoryError e) {
+        e.printStackTrace();
+    }
+
         return encodedBytes;
     }
 
@@ -309,7 +314,7 @@ public class DownloadMedia implements OnDownloadListener {
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception | OutOfMemoryError e) {
                 e.printStackTrace();
             }
 
@@ -340,13 +345,12 @@ public class DownloadMedia implements OnDownloadListener {
                 isDownloading = false;
                 getPending(ctx);
             }
-        } catch (Exception e) {
+        } catch (Exception | OutOfMemoryError e) {
             e.printStackTrace();
             downloadError = 1;
             isDownloading = false;
             Log.e("error in encrypt", e.getMessage());
         }
-
     }
 
     @Override
