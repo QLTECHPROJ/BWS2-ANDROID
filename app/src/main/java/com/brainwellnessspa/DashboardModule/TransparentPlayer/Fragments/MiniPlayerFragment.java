@@ -898,6 +898,7 @@ public class MiniPlayerFragment extends Fragment {
             myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+            exoBinding.exoProgress.setDuration(player.getDuration());
                         if((positionx >= oldSongPos + 29500)&& (positionx <= oldSongPos + 31000)){
                 oldSongPos = positionx;
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));

@@ -1241,6 +1241,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onScrubStart(TimeBar timeBar, long pos) {
                         exoBinding.exoProgress.setPosition(pos);
+                        exoBinding.exoProgress.setDuration(player.getDuration());
                         oldSeekPosition = pos;
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx,mainPlayModelList);
@@ -1285,6 +1286,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     public void onScrubStop(TimeBar timeBar, long pos, boolean canceled) {
                         player.seekTo(position, pos);
                         exoBinding.exoProgress.setPosition(pos);
+                        exoBinding.exoProgress.setDuration(player.getDuration());
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
                                 TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos))));
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
@@ -1554,6 +1556,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
+            exoBinding.exoProgress.setDuration(player.getDuration());
             exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
                     TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx))));
         });
