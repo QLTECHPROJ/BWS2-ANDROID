@@ -1005,8 +1005,11 @@ public class AudioDetailActivity extends AppCompatActivity {
         BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
 
         Log.e("Download Media Audio","1");
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
-
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        }catch(Exception|OutOfMemoryError e) {
+            System.out.println(e.getMessage());
+        }
         Log.e("Download Media Audio","3");
         SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

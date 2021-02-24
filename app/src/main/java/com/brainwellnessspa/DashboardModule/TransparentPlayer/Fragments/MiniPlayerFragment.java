@@ -10,7 +10,9 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.StatFs;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,8 +37,6 @@ import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -61,6 +61,7 @@ import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -275,7 +276,7 @@ public class MiniPlayerFragment extends Fragment {
             if (audioClick) {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, "Mini");
-                setpleyerctrView();
+                setPlayerCtrView();
             }
             if (player != null) {
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -312,7 +313,7 @@ public class MiniPlayerFragment extends Fragment {
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
 
-                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+//                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
                         SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedz.edit();
@@ -359,7 +360,7 @@ public class MiniPlayerFragment extends Fragment {
 
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                             exoBinding.llPlay.setVisibility(View.GONE);
                             exoBinding.llPause.setVisibility(View.GONE);
@@ -557,7 +558,7 @@ public class MiniPlayerFragment extends Fragment {
 
                     }
                 });
-                setpleyerctrView();
+                setPlayerCtrView();
                 callRepeatShuffle();
             }
             if (miniPlayer == 0) {
@@ -689,7 +690,7 @@ public class MiniPlayerFragment extends Fragment {
             if (audioClick) {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
-                setpleyerctrView();
+                setPlayerCtrView();
             }
 
             exoBinding.exoProgress.setClickable(false);
@@ -786,7 +787,7 @@ public class MiniPlayerFragment extends Fragment {
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (player != null) {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+//                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                             if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                                 exoBinding.llPlay.setVisibility(View.GONE);
                                 exoBinding.llPause.setVisibility(View.GONE);
@@ -812,7 +813,7 @@ public class MiniPlayerFragment extends Fragment {
                     }
 
                 });
-                setpleyerctrView();
+                setPlayerCtrView();
             }
             exoBinding.llPause.setOnClickListener(view -> {
                 player.setPlayWhenReady(false);
@@ -892,10 +893,9 @@ public class MiniPlayerFragment extends Fragment {
         }
     }
 
-    private void setpleyerctrView() {
+    private void setPlayerCtrView() {
         playerControlView.setPlayer(player);
         playerControlView.setProgressUpdateListener((positionx, bufferedPosition) -> {
-            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
             exoBinding.exoProgress.setDuration(player.getDuration());
@@ -904,7 +904,13 @@ public class MiniPlayerFragment extends Fragment {
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
+//            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         });
+        try {
+            getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        } catch (OutOfMemoryError e) {
+            System.out.println(e);
+        }
         playerControlView.setFocusable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             playerControlView.setFocusedByDefault(true);
@@ -1061,39 +1067,47 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     public List<String> GetAllMedia() {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .geAllDataBYDownloaded1("Complete").observe(getActivity(), audioList -> {
-            downloadAudioDetailsList = audioList;
-//            audioClick = true;
-            MakeArray();
+        try {
             DatabaseClient
                     .getInstance(ctx)
                     .getaudioDatabase()
                     .taskDao()
-                    .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                    .geAllDataBYDownloaded1("Complete").observe(getActivity(), audioList -> {
+                downloadAudioDetailsList = audioList;
+//            audioClick = true;
+                MakeArray();
+                DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                });
             });
-        });
+        }catch(Exception|OutOfMemoryError e){
+            System.out.println(e.getMessage());
+        }
 
         return downloadAudioDetailsList;
     }
 
     public List<String> GetAllMedia1() {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .geAllDataBYDownloaded1("Complete").observe(getActivity(), audioList -> {
-            downloadAudioDetailsList = audioList;
+        try {
             DatabaseClient
                     .getInstance(ctx)
                     .getaudioDatabase()
                     .taskDao()
-                    .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                    .geAllDataBYDownloaded1("Complete").observe(getActivity(), audioList -> {
+                downloadAudioDetailsList = audioList;
+                DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                });
             });
-        });
+        }catch(Exception|OutOfMemoryError e){
+            System.out.println(e.getMessage());
+        }
         return downloadAudioDetailsList;
     }
 
@@ -2060,7 +2074,7 @@ public class MiniPlayerFragment extends Fragment {
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
             initializePlayer();
         }
-        setpleyerctrView();
+        setPlayerCtrView();
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {

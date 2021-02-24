@@ -1579,13 +1579,21 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 downloadAudioDetails.setIsDownload("pending");
                 downloadAudioDetails.setDownloadProgress(0);
             }
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+            try {
+                AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+            }catch(Exception|OutOfMemoryError e) {
+                System.out.println(e.getMessage());
+            }
         }
-        AudioDatabase.databaseWriteExecutor.execute(() -> {
-            DB.taskDao().insertPlaylist(downloadPlaylistDetails);
-            downloadPlaylistDetailsList = GetPlaylistDetail("1");
-            getMediaByPer(PlaylistID, SongListSize);
-        });
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> {
+                DB.taskDao().insertPlaylist(downloadPlaylistDetails);
+                downloadPlaylistDetailsList = GetPlaylistDetail("1");
+                getMediaByPer(PlaylistID, SongListSize);
+            });
+        }catch(Exception|OutOfMemoryError e) {
+            System.out.println(e.getMessage());
+        }
 //        savePlaylist();
     }
 
@@ -1610,12 +1618,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         downloadAudioDetails.setDownloadProgress(progress);
 
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        }catch(Exception|OutOfMemoryError e) {
+            System.out.println(e.getMessage());
+        }
         callObserveMethodGetAllMedia();
         GetMedia();
         disableDownload(llDownload, ivDownloads);
-
-
     }
 
     public void GetMedia(String url, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownloads) {

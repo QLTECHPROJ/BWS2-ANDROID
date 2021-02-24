@@ -658,7 +658,11 @@ public class AptAudioFragment extends Fragment {
                 }
                 callAddTransFrag();
             }
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+            try {
+                AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+            }catch(Exception|OutOfMemoryError e) {
+                System.out.println(e.getMessage());
+            }
             llDownload.setClickable(false);
             llDownload.setEnabled(false);
 

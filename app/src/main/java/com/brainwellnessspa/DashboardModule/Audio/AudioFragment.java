@@ -87,6 +87,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class AudioFragment extends Fragment {
@@ -95,6 +96,7 @@ public class AudioFragment extends Fragment {
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate, AudioFirstLogin = "0";
     boolean Identify = false;
+    long mySpace = 0;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
     FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2, fancyShowCaseView3;
@@ -115,6 +117,8 @@ public class AudioFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainAudioList.setLayoutManager(manager);
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
+
+          mySpace = getSpace();
         prepareDisplayData("onCreateView");
 
         if (!isDownloading) {
@@ -228,6 +232,7 @@ public class AudioFragment extends Fragment {
                                 GsonBuilder gsonBuilder = new GsonBuilder();
                                 gson = gsonBuilder.create();
                                 p.putValue("sections", gson.toJson(section));
+                                p.putValue("device space",mySpace);
                                 BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
                             }
                             callObserverMethod(listModel.getResponseData());

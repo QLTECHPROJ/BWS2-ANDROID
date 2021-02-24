@@ -522,7 +522,11 @@ public class MyPlaylistActivity extends AppCompatActivity {
     }
 
     private void savePlaylist() {
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
+        }catch(Exception|OutOfMemoryError e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
@@ -581,7 +585,11 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 downloadAudioDetails.setIsDownload("pending");
                 downloadAudioDetails.setDownloadProgress(0);
             }
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+            try {
+                AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+            }catch(Exception|OutOfMemoryError e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

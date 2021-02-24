@@ -16,7 +16,9 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
+import android.os.StatFs;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -40,6 +42,7 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -119,21 +122,36 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
         }
     }
 
+    public static long getSpace() {
+        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
+        long bytesAvailable = (stat.getBlockSizeLong() * stat.getAvailableBlocksLong())/(1024 * 1024);
+        Log.e("My Space","Available MB : "+ bytesAvailable);
+
+        return bytesAvailable;
+    }
+
     public static Bitmap getMediaBitmap(Context ctx, String songImg) {
-        String finalSongImg = songImg;
         class GetMedia extends AsyncTask<String, Void, Bitmap> {
             @Override
             protected Bitmap doInBackground(String... params) {
-                try {
-                    URL url = new URL(finalSongImg);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                  if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {
+                      myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                  }else {
+                      try {
+                          URL url = new URL(songImg);
+                          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 //                            connection.setDoInput(true);
-                    connection.connect();
-                    InputStream is = connection.getInputStream();
-                    myBitmap = BitmapFactory.decodeStream(is);
-                } catch (IOException | OutOfMemoryError e) {
-                    System.out.println(e);
-                }
+                          connection.connect();
+                          InputStream is = connection.getInputStream();
+                          myBitmap = BitmapFactory.decodeStream(is);
+                      } catch (IOException | OutOfMemoryError e) {
+                          if (e.getMessage().equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/")) {
+                              myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                          } else {
+                              System.out.println(e);
+                          }
+                      }
+                  }
                 return null;
             }
 
@@ -143,23 +161,27 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                 super.onPostExecute(result);
             }
         }
-        songImg = songImg.replace(" ", "%20");
-        if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {
-            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
-        } else {
-            /*AudioDatabase.databaseWriteExecutor1.execute(() -> {      try {
-                URL url = new URL(finalSongImg);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                InputStream is = connection.getInputStream();
-                myBitmap = BitmapFactory.decodeStream(is);
-            } catch(IOException e) {
-                System.out.println(e);
-            }});*/
 
-            GetMedia st = new GetMedia();
-            st.execute();
-        }
+
+        AudioDatabase.databaseWriteExecutor1.execute(() -> {
+            if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {
+                myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+            } else {
+                try {
+                    URL url = new URL(songImg);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+                    InputStream is = connection.getInputStream();
+                    myBitmap = BitmapFactory.decodeStream(is);
+                } catch (IOException e) {
+                    if (e.getMessage().equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/")) {
+                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    } else {
+                        System.out.println(e);
+                    }
+                }
+            }
+        });
 //        GetMedia st = new GetMedia();
 //        st.execute();
         return myBitmap;
@@ -369,7 +391,7 @@ Appointment Audios dddd*/
 //                : new ConcatenatingMediaSource(mediaSources);
 //        player.setMediaSource(mediaSource);
 //        player.prepare(mediaSource);
-//        getMediaBitmap(ctx, mainPlayModelList1.get(position).getImageFile());
+        getMediaBitmap(ctx, mainPlayModelList1.get(position).getImageFile());
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_NONE);
         player.setHandleAudioBecomingNoisy(true);
@@ -564,7 +586,8 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
-                        return getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+                        return myBitmap;
                     }
                 },
 
@@ -618,19 +641,14 @@ Appointment Audios dddd*/
                 }
                 builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
                 builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
-
-                if (duration > 0) {
-                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
-                }
-
                 try {
-                    Bitmap icon;
-                    icon = getMediaBitmap(ctx, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon);
+                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
                 } catch (OutOfMemoryError e) {
                     e.printStackTrace();
                 }
-
+                if (duration > 0) {
+                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+                }
                 return builder.build();
             });
         }
@@ -1268,9 +1286,7 @@ Appointment Audios dddd*/
                 }
 
                 try {
-                    Bitmap icon;
-                    icon = getMediaBitmap(ctx, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon);
+                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
                 } catch (OutOfMemoryError e) {
                     e.printStackTrace();
                 }

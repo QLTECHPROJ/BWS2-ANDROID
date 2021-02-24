@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
@@ -937,7 +936,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (audioClick) {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, "Main");
-                setpleyerctrView();
+                setPlayerCtrView();
             }
             if (player != null) {
                 player.setWakeMode(C.WAKE_MODE_NONE);
@@ -959,7 +958,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         position = player.getCurrentWindowIndex();
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -978,7 +976,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                         }
                         getDownloadData();
-                        setpleyerctrView();
+                        setPlayerCtrView();
                         GetMediaPer();
                         callButtonText(position);
                         p = new Properties();
@@ -1021,7 +1019,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         }
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 31000)){
                             oldSongPos = player.getCurrentPosition();
                             Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
@@ -1051,7 +1049,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
                     @Override
                     public void onPlaybackStateChanged(int state) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         if (state == ExoPlayer.STATE_READY) {
                             p = new Properties();
                             p.putValue("userId", UserID);
@@ -1342,7 +1340,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                 exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                 exoBinding.exoProgress.setDuration(player.getDuration());
-                setpleyerctrView();
+                setPlayerCtrView();
 
                 handler1.removeCallbacks(UpdateSongTime1);
             } else {
@@ -1375,7 +1373,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (audioClick) {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                 globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
-                setpleyerctrView();
+                setPlayerCtrView();
             }
 
             if (player != null) {
@@ -1457,7 +1455,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (player != null) {
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                             if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
                                 exoBinding.llPlay.setVisibility(View.GONE);
                                 exoBinding.llPause.setVisibility(View.GONE);
@@ -1502,7 +1500,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                     exoBinding.exoProgress.setDuration(player.getDuration());
                 }
-                setpleyerctrView();
+                setPlayerCtrView();
             } else {
                 if (audioClick) {
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -1545,12 +1543,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
     }
 
-    private void setpleyerctrView() {
+    private void setPlayerCtrView() {
         playerControlView.setPlayer(player);
         playerControlView.setProgressUpdateListener((positionx, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+//            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
             if((positionx >= oldSongPos + 29500)&& (positionx <= oldSongPos + 31000)){
                 oldSongPos = positionx;
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
@@ -1560,6 +1558,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
                     TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx))));
         });
+        try {
+            getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+        } catch (OutOfMemoryError e) {
+            System.out.println(e);
+        }
         playerControlView.setFocusable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             playerControlView.setFocusedByDefault(true);
@@ -1608,7 +1611,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 try {
                     player.setPlayWhenReady(false);
                     int pss = player.getCurrentWindowIndex();
-                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
+//                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -1716,7 +1719,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     .taskDao()
                                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                             });
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
+//                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                             enableDownload();
                             binding.ivDownloads.setVisibility(View.VISIBLE);
                             binding.pbProgress.setVisibility(View.GONE);
@@ -1759,7 +1762,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                                     .taskDao()
                                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
                             });
-                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
+//                            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                             handler2.removeCallbacks(UpdateSongTime2);
                             enableDownload();
                             binding.ivDownloads.setVisibility(View.VISIBLE);
@@ -2268,26 +2271,31 @@ public class AudioPlayerActivity extends AppCompatActivity {
             downloadAudioDetails.setIsDownload("Complete");
         }
         downloadAudioDetails.setDownloadProgress(progressx);
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        }catch(Exception|OutOfMemoryError e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public void GetMedia2() {
-        DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
-            if (audiolist.size() != 0) {
+        try {
+            DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").observe(this, audiolist -> {
+                if (audiolist.size() != 0) {
 //                binding.ivDownloads.setVisibility(View.VISIBLE);
 //                    binding.pbProgress.setVisibility(View.GONE);
-                disableDownload();
-                if (audiolist.get(0).getDownloadProgress() == 100) {
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
-                    binding.pbProgress.setVisibility(View.GONE);
+                    disableDownload();
+                    if (audiolist.get(0).getDownloadProgress() == 100) {
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
+                        binding.pbProgress.setVisibility(View.GONE);
+                    } else {
+                        binding.ivDownloads.setVisibility(View.GONE);
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                        GetMediaPer();
+                    }
+                    DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
+                    });
                 } else {
-                    binding.ivDownloads.setVisibility(View.GONE);
-                    binding.pbProgress.setVisibility(View.VISIBLE);
-                    GetMediaPer();
-                }
-                DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
-                });
-            } else {
                /* boolean entryNot = false;
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
@@ -2297,17 +2305,20 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }
                 }
                 if (!entryNot) {*/
-                enableDownload();
-                binding.ivDownloads.setVisibility(View.VISIBLE);
-                binding.pbProgress.setVisibility(View.GONE);
+                    enableDownload();
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setVisibility(View.GONE);
             /*    } else {
                     GetMediaPer();
                     disableDownload();
                 }*/
-                DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
-                });
-            }
-        });
+                    DB.taskDao().getaudioByPlaylist1(mainPlayModelList.get(position).getAudioFile(), "").removeObserver(audiolistx -> {
+                    });
+                }
+            });
+        }catch(Exception|OutOfMemoryError e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void addToRecentPlay() {
@@ -2405,7 +2416,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     }
                     player.setPlayWhenReady(true);
                     int pss = player.getCurrentWindowIndex();
-                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
+//                    myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(pss).getImageFile());
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -2584,39 +2595,47 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     public List<String> GetAllMedia() {
-         DatabaseClient
-                .getInstance(this)
-                .getaudioDatabase()
-                .taskDao()
-                .geAllDataBYDownloaded1("Complete").observe(this, audioList -> {
-            downloadAudioDetailsList = audioList;
-            if (!downloadClick) {
-                MakeArray();
-            }
+        try {
             DatabaseClient
                     .getInstance(this)
                     .getaudioDatabase()
                     .taskDao()
-                    .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                    .geAllDataBYDownloaded1("Complete").observe(this, audioList -> {
+                downloadAudioDetailsList = audioList;
+                if (!downloadClick) {
+                    MakeArray();
+                }
+                DatabaseClient
+                        .getInstance(this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                });
             });
-        });
+        }catch(Exception|OutOfMemoryError e){
+            System.out.println(e.getMessage());
+        }
         return downloadAudioDetailsList;
     }
 
     public List<String> GetAllMedia1() {
-        DatabaseClient
-                .getInstance(this)
-                .getaudioDatabase()
-                .taskDao()
-                .geAllDataBYDownloaded1("Complete").observe(this, audioList -> {
-            downloadAudioDetailsList = audioList;
+        try {
             DatabaseClient
                     .getInstance(this)
                     .getaudioDatabase()
                     .taskDao()
-                    .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                    .geAllDataBYDownloaded1("Complete").observe(this, audioList -> {
+                downloadAudioDetailsList = audioList;
+                DatabaseClient
+                        .getInstance(this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                });
             });
-        });
+        }catch(Exception|OutOfMemoryError e){
+            System.out.println(e.getMessage());
+        }
         return downloadAudioDetailsList;
     }
 
@@ -3267,7 +3286,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
             initializePlayer();
         }
-        setpleyerctrView();
+        setPlayerCtrView();
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {

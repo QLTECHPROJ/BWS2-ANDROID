@@ -358,9 +358,13 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename));
-           localIntent.putExtra("Progress", downloadProgress);
-           lBM.sendBroadcast(localIntent);
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename));
+            localIntent.putExtra("Progress", downloadProgress);
+            lBM.sendBroadcast(localIntent);
+        }catch(Exception|OutOfMemoryError e) {
+            System.out.println(e.getMessage());
+        }
     }
     private void getPending(Context ctx) {
         DB.taskDao()
