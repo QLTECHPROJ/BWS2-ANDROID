@@ -21,10 +21,9 @@
                 android:paddingRight="@dimen/_8sdp"
                 android:weightSum="1">
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/_10sdp">
+                    android:layout_height="wrap_content">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/title_layout"
@@ -56,7 +55,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/_10sdp" />
 
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

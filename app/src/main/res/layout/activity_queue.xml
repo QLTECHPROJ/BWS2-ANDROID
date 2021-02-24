@@ -141,15 +141,15 @@
                 </LinearLayout>
 
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:id="@+id/cvImage"
                     android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_150sdp"
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_30sdp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="@dimen/_10sdp">
+                    android:elevation="@dimen/_110sdp"
+                    android:visibility="gone">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/title_layout"
@@ -166,7 +166,7 @@
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tvName"

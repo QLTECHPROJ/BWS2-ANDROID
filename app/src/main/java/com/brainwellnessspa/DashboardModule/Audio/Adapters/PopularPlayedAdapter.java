@@ -27,7 +27,10 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.SmallBoxLayoutBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -75,6 +78,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
         holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
         if (IsLock.equalsIgnoreCase("1")) {

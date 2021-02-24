@@ -47,7 +47,10 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentMiniExoCustomBinding;
 import com.brainwellnessspa.databinding.FragmentMiniPlayerBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -1045,10 +1048,12 @@ public class MiniPlayerFragment extends Fragment {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                         .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
             } else {
                 Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
                         .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
             }
         } catch (Exception e) {

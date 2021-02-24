@@ -7,8 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_4sdp"
-        android:orientation="horizontal"
         android:background="@drawable/bottom_shadow"
+        android:orientation="horizontal"
         android:weightSum="1">
 
         <LinearLayout
@@ -18,10 +18,9 @@
             android:layout_weight="0.16"
             android:gravity="center_vertical">
 
-            <androidx.cardview.widget.CardView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="@dimen/_10sdp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/ivRestaurantImage"
@@ -29,7 +28,7 @@
                     android:layout_height="@dimen/_50sdp"
                     android:scaleType="fitXY" />
 
-            </androidx.cardview.widget.CardView>
+            </RelativeLayout>
 
         </LinearLayout>
 

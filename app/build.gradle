@@ -23,7 +23,6 @@ android {
     buildTypes {
         debug {
             debuggable true
-            resValue("string", "PORT_NUMBER", "8081")
             firebaseCrashlytics {
                 mappingFileUploadEnabled false
             }
@@ -114,7 +113,7 @@ dependencies {
 // TODO  Use Youtube Video Player
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 // TODO  Cardview Design Dependency
-    implementation 'androidx.cardview:cardview:1.0.0'
+//    implementation 'androidx.cardview:cardview:1.0.0'
 // TODO  Recyclerview Design & Development Dependency
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 // TODO  Circle Imageview Design Dependency

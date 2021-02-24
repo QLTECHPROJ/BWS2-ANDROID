@@ -10,19 +10,19 @@
         android:layout_marginVertical="@dimen/_4sdp"
         android:gravity="center_vertical">
 
-        <androidx.cardview.widget.CardView
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_15sdp"
-            app:cardCornerRadius="@dimen/_10sdp">
+            android:layout_margin="@dimen/_15sdp">
 
             <ImageView
                 android:id="@+id/ivRestaurantImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_music_icon" />
+                android:src="@drawable/ic_music_icon"
+                android:scaleType="fitXY"/>
 
-        </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvTitle"

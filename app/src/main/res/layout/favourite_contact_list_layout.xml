@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cvMainLayout"
         android:layout_width="@dimen/_260sdp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10sdp"
+        android:background="@drawable/cardshape_background"
         android:layout_marginLeft="@dimen/_14sdp"
         android:layout_marginRight="@dimen/_10sdp">
 
@@ -71,6 +72,6 @@
             </LinearLayout>
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
 </layout>

@@ -7,8 +7,7 @@
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginLeft="@dimen/_8sdp"
         android:layout_marginRight="@dimen/_8sdp"
-        android:background="@drawable/tag_background"
-        app:cardCornerRadius="@dimen/_6sdp">
+        android:background="@drawable/tag_background">
 
         <TextView
             android:id="@+id/tvTitle"

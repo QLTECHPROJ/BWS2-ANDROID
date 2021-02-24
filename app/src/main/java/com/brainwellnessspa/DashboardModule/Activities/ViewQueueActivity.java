@@ -56,7 +56,10 @@ import com.brainwellnessspa.Utility.StartDragListener;
 import com.brainwellnessspa.databinding.ActivityViewQueueBinding;
 import com.brainwellnessspa.databinding.QueueListLayoutBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -1649,6 +1652,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         } else {
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -1657,6 +1661,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(imageFile).thumbnail(0.05f)
+
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         }
         if (url.equalsIgnoreCase("") || url.isEmpty()) {

@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:clickable="true"
-        tools:context="com.brainwellnessspa.DashboardModule.Appointment.AppointmentFragment">
+        android:clickable="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,16 +49,16 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <androidx.cardview.widget.CardView
+                    <RelativeLayout
                         android:id="@+id/cvSetSession"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_16sdp"
                         android:layout_marginRight="@dimen/_16sdp"
-                        android:elevation="3.6dp"
-                        android:visibility="gone"
-                        app:cardCornerRadius="@dimen/_4sdp">
+                        android:background="@drawable/cardshape_background"
+                        android:elevation="@dimen/_110sdp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/tvHeader"
@@ -72,18 +71,18 @@
                             android:text="@string/Appointment_Header"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
-                    </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
 
-                    <androidx.cardview.widget.CardView
+                    <RelativeLayout
                         android:id="@+id/cvShowSession"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_16sdp"
                         android:layout_marginRight="@dimen/_16sdp"
-                        android:elevation="3.6dp"
-                        android:visibility="gone"
-                        app:cardCornerRadius="@dimen/_4sdp">
+                        android:background="@drawable/cardshape_background"
+                        android:elevation="@dimen/_110sdp"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -212,14 +211,14 @@
                                 android:id="@+id/tvSubTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_16sdp"
                                 android:layout_marginTop="@dimen/_20sdp"
                                 android:layout_marginRight="@dimen/_16sdp"
-                                android:layout_marginLeft="@dimen/_16sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
-                                android:visibility="gone"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                android:visibility="gone" />
 
                             <LinearLayout
                                 android:id="@+id/llCheckBox1"
@@ -283,7 +282,7 @@
                                     android:textSize="@dimen/_12sdp" />
                             </LinearLayout>
                         </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tvPreviousAppointments"
@@ -306,9 +305,10 @@
                             android:id="@+id/rvPreviousData"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/_50sdp"
+                            android:layout_marginHorizontal="@dimen/_6sdp"
                             android:nestedScrollingEnabled="true"
-                            android:overScrollMode="never" />
+                            android:overScrollMode="never"
+                            android:paddingBottom="@dimen/_50sdp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

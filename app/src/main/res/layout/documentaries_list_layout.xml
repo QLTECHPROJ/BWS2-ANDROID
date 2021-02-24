@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_4sdp"
         android:layout_marginVertical="@dimen/_8sdp"
-        app:cardCornerRadius="@dimen/_10sdp"
-        app:cardElevation="3.6dp">
+        android:background="@drawable/cardshape_background"
+        android:elevation="@dimen/_110sdp">
 
         <LinearLayout
             android:id="@+id/rlMainLayout"
@@ -23,11 +23,10 @@
                 android:layout_gravity="center"
                 android:gravity="center">
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_2sdp"
-                    app:cardCornerRadius="@dimen/_10sdp">
+                    android:layout_marginBottom="@dimen/_2sdp">
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
@@ -35,7 +34,7 @@
                         android:layout_height="match_parent"
                         android:scaleType="fitXY" />
 
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -74,5 +73,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 </layout>

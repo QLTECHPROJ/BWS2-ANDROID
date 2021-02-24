@@ -1,26 +1,20 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Brain Wellness App</string>
-    <string name="app_name_setting"><b>Brain Wellness App</b></string>
 
     <string name="segment_key_foram">X3sYYbQtro7xHI31AJppjMQ20AZlPdlS</string>
-    <string name="segment_key_SunnySir">2ClHzzCF1JFEDocqe0Az8KSV4ybDcUdm</string>//sunny sir id
-    <string name="segment_key_real">Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy</string>
+    //sunny sir id
     // terri@brainwellnessspa.com.au 0pybC!FH#z20
-    <string name="mansi_segment_key">"Zvo5vSa1Ih8CdMVilkKqzNf9UHMVTFuO"</string>
     <string name="ResponseCodesuccess">200</string>
     <string name="ResponseCodefail">401</string>
     <string name="stripe_test_key">pk_test_Mm4d65j7STTpLo0YrkYGmaWH00tQO1qMnv</string>
-    <string name="stripe_live_key">pk_live_nmRApzuiZfmKRruPcnpYhurb00tFp2EYYP</string>
 
     <string name="sign_in">Sign In</string>
     <string name="reactive_plan">Please re-activate your membership plan</string>
     <string name="Foreground">Foreground</string>
     <string name="Background">Background</string>
-    <string name="enter_phone_number">Enter Phone Number</string>
     <string name="enter_mobile_number">Enter Mobile Number</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="enter_your_code">Enter your code</string>
-    <string name="phone_number">Phone Number</string>
     <string name="send_code_text">We will send you a code by SMS to confirm your mobile number.</string>
     <string name="register_text"><u>Not a Member? Register</u></string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -28,11 +22,9 @@
     <string name="privacy_policy_t_n_c">By clicking on Register or Sign up you agree to our</string>
     <string name="get_the_code">Get SMS code</string>
     <string name="choose_your_country">Choose your country</string>
-    <string name="enter_otp">Enter OTP</string>
     <string name="enter_sms">Enter SMS Code</string>
     <string name="resent_sms">Resend SMS</string>
     <string name="edit_phone_number">Edit mobile number</string>
-    <string name="t_n_c">Terms &amp; Conditions</string>
     <string name="title_activity_dashboard">MainActivity</string>
     <string name="title_audio">AUDIO</string>
     <string name="title_playlist">PLAYLIST</string>
@@ -43,7 +35,6 @@
     <string name="thank_u_quotes">Congratulations on joining the Brain Wellness Spa Audio Membership</string>
     <string name="explore_app">Explore app</string>
     <string name="view_invoice"><u>View Invoice</u></string>
-    <string name="downloads">Downloads</string>
     <string name="invoices">Invoices</string>
     <string name="logout">Log out</string>
     <string name="faq">FAQ</string>
@@ -55,15 +46,12 @@
     <string name="Date_of_Birth">Date of Birth</string>
     <string name="Mobile_Number">Mobile Number</string>
     <string name="Email_Address">Email Address</string>
-    <string name="Downloads">Downloads</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Invoice">Invoice</string>
     <string name="Billing_and_Order">Billing and Order</string>
     <string name="Cancel_Subscription">Cancel Subscription</string>
     <string name="Cancel">Cancel</string>
     <string name="cancel_quotes">Are you sure you want to cancel your subscription?</string>
     <string name="reminder_quotes">Are you sure you want to delete your reminder?</string>
-    <string name="go_back">Go Back</string>
     <string name="Country">Country</string>
     <string name="Postcode">Postcode</string>
     <string name="State">State</string>
@@ -80,7 +68,6 @@
     <string name="Disclaimer">Disclaimer</string>
     <string name="Audio">Audio</string>
     <string name="Playlist">Playlist</string>
-    <string name="Help">Help</string>
     <string name="Reminder">Reminder</string>
     <string name="Set_a_Reminder">Set a Reminder</string>
     <string name="Repeat">Repeat</string>
@@ -92,22 +79,12 @@
     <string name="Next">Next</string>
     <string name="Complete_Payment">Complete Payment</string>
     <string name="Explore">Explore</string>
-    <string name="Recently_Played">Recently Played</string>
-    <string name="My_Downloads">My Downloads</string>
     <string name="View_all">View all</string>
-    <string name="Recommended">Recommended</string>
-    <string name="Get_Inspired">Get Inspired !</string>
-    <string name="Popular">Popular</string>
-    <string name="Top_Categories">Top Categories</string>
     <string name="Appointment">Appointment</string>
     <string name="Next_Session">Next Session</string>
     <string name="Previous_Appointments">Previous Appointments</string>
-    <string name="Create_playlist">Create playlist</string>
     <string name="give_playlist_name">Give your playlist a name.</string>
-    <string name="Your_Created">Your Created</string>
-    <string name="Suggested_Audios">Suggested Audios</string>
     <string name="Recommended_Audios">Recommended  Audios</string>
-    <string name="Suggested_Playlist">Suggested Playlist</string>
     <string name="Recommendeds_Playlist">Recommended Playlist</string>
     <string name="View_order_details">View order details</string>
     <string name="Payment_information">Payment information</string>
@@ -124,10 +101,8 @@
     <string name="Now_Playing">Now playing</string>
     <string name="Next_in_queue">Next in queue</string>
     <string name="close_queue">Close queue</string>
-    <string name="Self_development">Self-development</string>
     <string name="Add_Audio">Add Audio</string>
     <string name="Add_Audios">Add Audios</string>
-    <string name="Suggested">Suggested</string>
     <string name="Session">Session</string>
     <string name="Appointment_Details">Appointment Details</string>
     <string name="Complete_the_Booklet">Complete the Booklet</string>
@@ -141,62 +116,39 @@
     <string name="Download_playlist">Download playlist</string>
     <string name="Add_playlist">Add to playlist</string>
     <string name="Add_playlist1">Add Playlist</string>
-    <string name="delete_quotes">Are you sure you want to delete Self-development playlist?</string>
     <string name="Close">Close</string>
     <string name="Description">Description</string>
-    <string name="Resource">Resource</string>
     <string name="Resources">Resources</string>
     <string name="Select_reason">Select reason</string>
     <string name="logout_quotes">Are you sure you want to log out Brain Wellness Spa?</string>
     <string name="Discover_More">Discover More</string>
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="no_server_found">You are not currently connected to internet. Please try again.!</string>
-    <string name="not_valid_number">Please enter a valid mobile number</string>
-    <string name="not_valid_mobile_number">Please use a valid mobile number</string>
     <string name="not_valids_mobile_number">Please enter a valid mobile number</string>
-    <string name="no_add_digits">Wait a sec! We need to exchange digits to get started</string>
-    <string name="Please_enter_your_mobile_number">Please enter your mobile number</string>
     <string name="Australia">Australia</string>
     <string name="code">+61</string>
-    <string name="my_download">MyDownload</string>
     <string name="my_like">MyLike</string>
     <string name="recently_played">Recently Played</string>
-    <string name="recommended">Recommended</string>
     <string name="Library">Library</string>
     <string name="get_inspired">Get Inspired</string>
     <string name="popular">Popular</string>
     <string name="top_categories">Top Categories</string>
-    <string name="Rename">Rename</string>
-    <string name="notvalid_number">It seems your mobile number not exist in our system.</string>
-    <string name="valid_name">Please enter name</string>
     <string name="takePhoto">Take photo</string>
     <string name="chooseFromGallary">Choose from gallery</string>
     <string name="cancel">Cancel</string>
     <string name="addPhoto">Add photo!</string>
     <string name="removeProfilePicture">Remove profile picture</string>
     <string name="your_created">Your Created</string>
-    <string name="MyDownloads">MyDownloads</string>
     <string name="populars">Popular</string>
-    <string name="Bundle">Bundle</string>
     <string name="Recommended_Playlist">Recommended Playlist</string>
     <string name="first_card_chars">XXXX XXXX XXXX </string>
-    <string name="blank_all_fields">Hey! I\'ll need your inputs</string>
-    <string name="valid_card_no_error">Hey! Seems like the card number is out of whack. Fancy a retry?</string>
-    <string name="valid_expiry_error">Hey! I\'ll need you to add expiry details</string>
-    <string name="valid_cvv_error">Hey! I\'ll need you to add the CVV</string>
-    <string name="invalid_expiry_date">Hey! Seems like the expiry details are out of whack. Fancy a retry?</string>
-    <string name="invalid_cvv_error">Hey! Seems like the CVV is out of whack. Fancy a retry?</string>
-    <string name="blank_card_no_error">Hey! I\'ll need you to add card number</string>
-    <string name="blank_card_holder_name_error">Hey! I\'ll need you to add cardholder name</string>
     <string name="Audio_Book">Audio Books</string>
     <string name="Podcasts">Podcasts</string>
     <string name="Apps">Apps</string>
-    <string name="Website">Website</string>
     <string name="Websites">Websites</string>
     <string name="Documentaries">Documentaries</string>
     <string name="My_Playlist">My Playlist</string>
     <string name="background_image">Background Image</string>
-    <string name="Search_for_audio">Search for audio</string>
     <string name="Feeling_better">Feeling better</string>
     <string name="Condition_worse">Condition worse</string>
     <string name="Pricing">Pricing</string>
@@ -235,50 +187,7 @@
     <string name="and">and</string>
     <string name="Disclaimer_text">The Brain Wellness Spa offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness Spa Method).\n\nThe Brain Wellness Spa Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
     <string name="General">General</string>
-    <string name="Favorites">Favorites</string>
-    <string name="track_selection_title">Select tracks</string>
 
-    <string name="unexpected_intent_action">Unexpected intent action: <xliff:g id="action">%1$s</xliff:g></string>
-
-    <string name="error_cleartext_not_permitted">Cleartext HTTP traffic not permitted. See https://exoplayer.dev/issues/cleartext-not-permitted</string>
-
-    <string name="error_generic">Playback failed</string>
-
-    <string name="error_drm_unsupported_before_api_18">DRM content not supported on API levels below 18</string>
-
-    <string name="error_drm_unsupported_scheme">This device does not support the required DRM scheme</string>
-
-    <string name="error_no_decoder">This device does not provide a decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
-
-    <string name="error_no_secure_decoder">This device does not provide a secure decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
-
-    <string name="error_querying_decoders">Unable to query device decoders</string>
-
-    <string name="error_instantiating_decoder">Unable to instantiate decoder <xliff:g id="decoder_name">%1$s</xliff:g></string>
-
-    <string name="error_unsupported_video">Media includes video tracks, but none are playable by this device</string>
-
-    <string name="error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>
-
-    <string name="storage_permission_denied">Permission to access storage was denied</string>
-
-    <string name="sample_list_load_error">One or more sample lists failed to load</string>
-
-    <string name="unsupported_ads_in_playlist">Playing without ads, as ads are not supported in playlists</string>
-
-    <string name="download_start_error">Failed to start download</string>
-
-    <string name="download_start_error_offline_license">Failed to obtain offline license</string>
-
-    <string name="download_playlist_unsupported">This demo app does not support downloading playlists</string>
-
-    <string name="download_scheme_unsupported">This demo app only supports downloading http streams</string>
-
-    <string name="download_live_unsupported">This demo app does not support downloading live content</string>
-
-    <string name="download_ads_unsupported">IMA does not support offline ads</string>
-
-    <string name="prefer_extension_decoders">Prefer extension decoders</string>
     <string name="Refer_A_Friend">Refer A Friend</string>
     <string name="Promo_Code">Promo Code</string>
     <string name="Apply">Apply</string>
@@ -293,7 +202,6 @@
     <string name="Friends_registered_successfully">Friends registered successfully</string>
     <string name="Earn_cash_rewards">Earn cash rewards</string>
     <string name="Favourites">Favourites</string>
-    <string name="Refer_friend">Refer a friend</string>
     <string name="Refer_Friend">Refer a Friend</string>
     <string name="Invite">Invite</string>
     <string name="ok">ok</string>
@@ -303,5 +211,4 @@
     <string name="not_available">Not available at the moment. Please contact support</string>
     <string name="support_quotes">Please contact support at</string>
     <string name="support_link">support@brainwellnessapp.com</string>
-    <string name="toast_an_error_occurred">error</string>
 </resources>

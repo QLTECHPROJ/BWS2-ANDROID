@@ -79,7 +79,10 @@ import com.brainwellnessspa.databinding.MyPlaylistLayoutBinding;
 import com.brainwellnessspa.databinding.MyPlaylistLayoutSorting1Binding;
 import com.brainwellnessspa.databinding.MyPlaylistLayoutSorting2Binding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -2244,7 +2247,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
                     adpater.notifyDataSetChanged();
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
                 } else {
                     adpater.notifyDataSetChanged();
                     holder.binding.equalizerview.setVisibility(View.GONE);
@@ -2306,7 +2308,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
 
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
 
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -2638,8 +2645,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
+            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
 
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -2658,7 +2671,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
                     } else {
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);

@@ -19,10 +19,9 @@
             android:gravity="center"
             android:padding="@dimen/_8sdp">
 
-            <androidx.cardview.widget.CardView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="@dimen/_10sdp">
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:id="@+id/rlImage"
@@ -55,7 +54,7 @@
 
                 </RelativeLayout>
 
-            </androidx.cardview.widget.CardView>
+            </RelativeLayout>
 
         </LinearLayout>
 

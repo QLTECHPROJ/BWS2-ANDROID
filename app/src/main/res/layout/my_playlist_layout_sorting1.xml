@@ -27,11 +27,10 @@
                 android:gravity="center"
                 android:padding="@dimen/_8sdp">
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:id="@+id/cvCardView"
                     android:layout_width="@dimen/_45sdp"
-                    android:layout_height="@dimen/_43sdp"
-                    app:cardCornerRadius="@dimen/_10sdp">
+                    android:layout_height="@dimen/_43sdp">
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
@@ -57,7 +56,7 @@
                         vumeter:vumeter_blockSpacing="2dp"
                         vumeter:vumeter_speed="2"
                         vumeter:vumeter_stopSize="5dp"/>
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
             </LinearLayout>
 

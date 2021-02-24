@@ -23,7 +23,10 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.BigBoxLayoutBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,11 +42,12 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRel
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHolder> {
     Context ctx;
     int index = -1;
     FragmentActivity activity;
-    String  HomeView, IsPlayDisclimer;
+    String HomeView, IsPlayDisclimer;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public LibraryAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity, String HomeView) {
@@ -69,9 +73,13 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+//        holder.binding.titleLayout.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+//        holder.binding.titleLayout.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         if (IsLock.equalsIgnoreCase("1")) {
             if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -180,7 +188,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
                 if (player != null) {
-                    if(position != positionSaved) {
+                    if (position != positionSaved) {
                         miniPlayer = 1;
                         player.seekTo(position, 0);
                         player.setPlayWhenReady(true);
@@ -208,15 +216,15 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                                 listModelList2.add(listModelList.get(i));
                             }
                         }
-                        if(position<listModelList2.size()){
+                        if (position < listModelList2.size()) {
                             position = position;
-                        }else {
+                        } else {
                             position = 0;
                         }
                     } else {
                         listModelList2.addAll(listModelList);
                     }
-                    callTransFrag(position, listModelList2,true);
+                    callTransFrag(position, listModelList2, true);
                 }
             }
         } else {
@@ -234,9 +242,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
                         listModelList2.add(listModelList.get(i));
                     }
                 }
-                if(position<listModelList2.size()){
+                if (position < listModelList2.size()) {
                     position = position;
-                }else {
+                } else {
                     position = 0;
                 }
             } else {
@@ -253,35 +261,35 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
             mainPlayModel.setAudioDuration("00:48");
-            boolean audioc= true;
-            if(isDisclaimer == 1){
+            boolean audioc = true;
+            if (isDisclaimer == 1) {
                 if (player != null) {
                     player.setPlayWhenReady(true);
                     audioc = false;
                     listModelList2.add(position, mainPlayModel);
-                } else{
+                } else {
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                         audioc = true;
                         listModelList2.add(position, mainPlayModel);
                     }
                 }
-            }else {
+            } else {
                 isDisclaimer = 0;
                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                   audioc = true;
+                    audioc = true;
                     listModelList2.add(position, mainPlayModel);
                 }
             }
-            callTransFrag(position, listModelList2,audioc);
+            callTransFrag(position, listModelList2, audioc);
         }
     }
 
-    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList,boolean audioc) {
+    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList, boolean audioc) {
         try {
             miniPlayer = 1;
             audioClick = audioc;
-            if(audioc) {
+            if (audioc) {
                 callNewPlayerRelease();
             }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

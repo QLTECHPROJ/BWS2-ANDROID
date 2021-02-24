@@ -53,20 +53,19 @@
                 android:orientation="vertical">
 
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_24sdp"
-                    app:cardCornerRadius="@dimen/_10sdp"
-                    app:cardElevation="@dimen/_40sdp">
+                    app:cardElevation="@dimen/_110sdp">
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tvTitle"

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginBottom="@dimen/_4sdp"
-        android:elevation="3.6dp">
+        android:background="@drawable/cardshape_background"
+        android:elevation="@dimen/_110sdp">
 
         <LinearLayout
             android:id="@+id/llAddNewCard"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/_16sdp"
             android:paddingVertical="@dimen/_18sdp"
@@ -89,5 +90,5 @@
                     android:src="@drawable/remove_icon" />
             </RelativeLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 </layout>

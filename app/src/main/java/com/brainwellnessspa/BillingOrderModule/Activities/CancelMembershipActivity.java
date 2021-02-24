@@ -43,8 +43,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     String UserID, CancelId = "";
     Activity activity;
     boolean audioPause = false;
-    public static final String API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ";
-    public static final String VIDEO_ID = "y1rfRW6WX08";
+    public static final String API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ", VIDEO_ID = "y1rfRW6WX08";
     private static final int RECOVERY_DIALOG_REQUEST = 1;
 
     @Override

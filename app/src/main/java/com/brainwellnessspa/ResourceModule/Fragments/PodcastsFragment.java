@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
@@ -27,6 +28,8 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentPodcastsBinding;
 import com.brainwellnessspa.databinding.PodcastsListLayoutBinding;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -120,6 +123,7 @@ public class PodcastsFragment extends Fragment {
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
             holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.binding.rlMainLayout.setElevation(10);

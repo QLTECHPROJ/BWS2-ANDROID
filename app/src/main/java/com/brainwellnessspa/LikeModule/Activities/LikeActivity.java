@@ -123,42 +123,46 @@ public class LikeActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0) {
-                    tabType = "Audio Tab";
-                    p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("tabType", "Audio Tab");
-                    for (int i = 0; i < audioDataModel.size(); i++) {
-                        SegmentAudio e = new SegmentAudio();
-                        e.setAudioId(audioDataModel.get(i).getID());
-                        e.setAudioName(audioDataModel.get(i).getName());
-                        e.setMasterCategory(audioDataModel.get(i).getAudiomastercat());
-                        e.setSubCategory(audioDataModel.get(i).getAudioSubCategory());
-                        e.setAudioDuration(audioDataModel.get(i).getAudioDuration());
-                        audioSection.add(e);
-                    }
-                    p.putValue("likedAudios", gson.toJson(audioSection));
-                    BWSApplication.addToSegment("Liked Screen Viewed", p, CONSTANTS.screen);
-                } else if (tab.getPosition() == 1) {
-                    tabType = "Playlist Tab";
-                    p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("tabType", "Playlist Tab");
-                    for (int i = 0; i < playlistDataModel.size(); i++) {
-                        SegmentPlaylist e = new SegmentPlaylist();
-                        e.setPlaylistId(playlistDataModel.get(i).getPlaylistId());
-                        e.setPlaylistName(playlistDataModel.get(i).getPlaylistName());
-                        if (playlistDataModel.get(i).getCreated().equalsIgnoreCase("1")) {
-                            e.setPlaylistType("Created");
-                        } else {
-                            e.setPlaylistType("Default");
+                try {
+                    if (tab.getPosition() == 0) {
+                        tabType = "Audio Tab";
+                        p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("tabType", "Audio Tab");
+                        for (int i = 0; i < audioDataModel.size(); i++) {
+                            SegmentAudio e = new SegmentAudio();
+                            e.setAudioId(audioDataModel.get(i).getID());
+                            e.setAudioName(audioDataModel.get(i).getName());
+                            e.setMasterCategory(audioDataModel.get(i).getAudiomastercat());
+                            e.setSubCategory(audioDataModel.get(i).getAudioSubCategory());
+                            e.setAudioDuration(audioDataModel.get(i).getAudioDuration());
+                            audioSection.add(e);
                         }
-                        e.setPlaylistDuration(playlistDataModel.get(i).getTotalDuration());
-                        e.setAudioCount(playlistDataModel.get(i).getTotalAudio());
-                        playlistSection.add(e);
+                        p.putValue("likedAudios", gson.toJson(audioSection));
+                        BWSApplication.addToSegment("Liked Screen Viewed", p, CONSTANTS.screen);
+                    } else if (tab.getPosition() == 1) {
+                        tabType = "Playlist Tab";
+                        p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("tabType", "Playlist Tab");
+                        for (int i = 0; i < playlistDataModel.size(); i++) {
+                            SegmentPlaylist e = new SegmentPlaylist();
+                            e.setPlaylistId(playlistDataModel.get(i).getPlaylistId());
+                            e.setPlaylistName(playlistDataModel.get(i).getPlaylistName());
+                            if (playlistDataModel.get(i).getCreated().equalsIgnoreCase("1")) {
+                                e.setPlaylistType("Created");
+                            } else {
+                                e.setPlaylistType("Default");
+                            }
+                            e.setPlaylistDuration(playlistDataModel.get(i).getTotalDuration());
+                            e.setAudioCount(playlistDataModel.get(i).getTotalAudio());
+                            playlistSection.add(e);
+                        }
+                        p.putValue("likedPlaylists", gson.toJson(playlistSection));
+                        BWSApplication.addToSegment("Liked Screen Viewed", p, CONSTANTS.screen);
                     }
-                    p.putValue("likedPlaylists", gson.toJson(playlistSection));
-                    BWSApplication.addToSegment("Liked Screen Viewed", p, CONSTANTS.screen);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

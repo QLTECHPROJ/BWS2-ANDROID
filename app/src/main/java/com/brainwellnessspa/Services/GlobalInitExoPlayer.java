@@ -82,7 +82,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
-public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnector.PlaybackPreparer */ {
+public class GlobalInitExoPlayer extends Service {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static NotificationManager notificationManager;
@@ -105,16 +105,8 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
 
-    public static void callNewPlayerRelease(/*Context ctx*/) {
+    public static void callNewPlayerRelease() {
         if (player != null) {
-            /*JobScheduler scheduler = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                scheduler = (JobScheduler) ctx.getSystemService(JOB_SCHEDULER_SERVICE);
-                scheduler.cancel(123);
-                Log.d("TAG", "Job cancelled");
-            }*/
-//                Intent intent = new Intent(ctx , GlobleInItExoPlayer.class);
-//                ctx.stopService(intent);
             player.stop();
             player.release();
             player = null;
@@ -161,7 +153,6 @@ public class GlobalInitExoPlayer extends Service /*implements MediaSessionConnec
                 super.onPostExecute(result);
             }
         }
-
 
         AudioDatabase.databaseWriteExecutor1.execute(() -> {
             if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {

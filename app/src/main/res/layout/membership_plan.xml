@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/llPlanMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_4sdp"
         android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/membership_cardshape_background"
+        android:orientation="vertical"
         android:layout_marginBottom="@dimen/_6sdp"
-        android:elevation="3.6dp"
-        app:cardCornerRadius="@dimen/_8sdp">
-
-        <LinearLayout
-            android:id="@+id/llPlanMain"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        android:elevation="@dimen/_110sdp">
 
             <LinearLayout
                 android:id="@+id/llPlanSub"
@@ -94,6 +90,7 @@
                 android:id="@+id/llFeatures"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/llPlanSub"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -189,6 +186,6 @@
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 </layout>

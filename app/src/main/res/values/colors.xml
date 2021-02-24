@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="white">#FFFFFF</color>
     <color name="dark_blue_gray">#2A3042</color>
     <color name="extra_light_gray">#838383</color>
     <color name="discalimer_gray">#EEEEEE</color>
     <color name="light_gray">#999999</color>
-    <color name="lights_gray">#B6B6B6</color>
     <color name="gray">#666666</color>
     <color name="blue">#005BAA</color>
     <color name="black">#000000</color>
@@ -29,8 +27,6 @@
     <color name="green">#28A745</color>
     <color name="gray_subtitle">#7E7E7E</color>
 
-    <color name="shadow">#555555</color>
-    <color name="title">#777777</color>
     <color name="dark_yellow">#f89552</color>
     <color name="green_dark">#00ac5c</color>
     <color name="text_title">#2a3042</color>

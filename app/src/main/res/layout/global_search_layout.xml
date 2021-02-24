@@ -25,22 +25,26 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="0.2"
-                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_2sdp"
                 android:gravity="center"
                 android:padding="@dimen/_6sdp">
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:id="@+id/cvImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/_8sdp"
-                    android:layout_marginVertical="@dimen/_4sdp"
-                    app:cardCornerRadius="@dimen/_10sdp">
+                    android:layout_marginVertical="@dimen/_4sdp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                        <RelativeLayout
+                            android:id="@+id/rlBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/layout_bg_image" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/title_layout"
@@ -92,7 +96,7 @@
                         android:src="@drawable/ic_lock_icon"
                         android:visibility="gone" />
 
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -136,7 +140,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="0.2"
-            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_2sdp"
             android:gravity="center"
             android:padding="@dimen/_8sdp">
 

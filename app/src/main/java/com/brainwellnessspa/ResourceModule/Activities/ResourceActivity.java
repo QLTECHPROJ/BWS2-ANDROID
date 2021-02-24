@@ -164,19 +164,16 @@ public class ResourceActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<ResourceListModel> call, Throwable t) {
-                    }
+                    public void onFailure(Call<ResourceListModel> call, Throwable t) {}
                 });
 
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         setAdapter();

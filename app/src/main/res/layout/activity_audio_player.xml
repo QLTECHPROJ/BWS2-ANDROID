@@ -110,10 +110,10 @@
                         android:layout_marginTop="@dimen/_18sdp"
                         android:layout_marginBottom="@dimen/_22sdp">
 
-                        <androidx.cardview.widget.CardView
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:cardCornerRadius="@dimen/_10sdp">
+                            android:background="@drawable/cardshape_background">
 
                             <RelativeLayout
                                 android:id="@+id/title_layout"
@@ -199,7 +199,7 @@
                                         android:textSize="@dimen/_13sdp" />
                                 </LinearLayout>
                             </RelativeLayout>
-                        </androidx.cardview.widget.CardView>
+                        </RelativeLayout>
 
                     </RelativeLayout>
                 </RelativeLayout>

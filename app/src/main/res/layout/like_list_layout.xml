@@ -3,8 +3,8 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:vumeter="http://schemas.android.com/apk/res-auto"
         xmlns:custom="http://schemas.android.com/apk/res-auto"
+        xmlns:vumeter="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,18 +21,16 @@
             android:gravity="center"
             android:padding="@dimen/_6sdp">
 
-            <androidx.cardview.widget.CardView
+            <RelativeLayout
                 android:id="@+id/cvImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/_8sdp"
-                android:layout_marginVertical="@dimen/_4sdp"
-                app:cardCornerRadius="@dimen/_10sdp">
+                android:layout_marginVertical="@dimen/_4sdp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/title_layout"
@@ -44,6 +42,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginHorizontal="-3dp"
+                            android:elevation="@dimen/_80sdp"
                             android:scaleType="fitXY"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintLeft_toLeftOf="parent"
@@ -59,8 +58,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
+                    android:elevation="@dimen/_80sdp"
                     android:scaleType="fitXY"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <io.gresse.hugo.vumeterlibrary.VuMeterView
                     android:id="@+id/equalizerview"
@@ -85,7 +85,7 @@
                     android:src="@drawable/ic_lock_icon"
                     android:visibility="gone" />
 
-            </androidx.cardview.widget.CardView>
+            </RelativeLayout>
 
         </LinearLayout>
 

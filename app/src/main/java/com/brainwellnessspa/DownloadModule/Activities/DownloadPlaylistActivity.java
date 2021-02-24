@@ -50,7 +50,10 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
 import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -585,15 +588,23 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
-//            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
+                    .placeholder(R.drawable.ic_image_bg)
+                    .error(R.drawable.ic_image_bg)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             if (BWSApplication.isNetworkConnected(ctx)) {
                 Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                         .placeholder(R.drawable.ic_music_icon)
                         .error(R.drawable.ic_music_icon)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             } else {
-                holder.binding.ivRestaurantImage.setImageResource(R.drawable.ic_music_icon);
+                Glide.with(ctx).load(R.drawable.ic_music_icon).thumbnail(0.05f)
+                        .placeholder(R.drawable.ic_music_icon)
+                        .error(R.drawable.ic_music_icon)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             }
 
             SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -613,7 +624,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);

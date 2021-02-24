@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,7 +37,10 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentLikesBinding;
 import com.brainwellnessspa.databinding.LikeListLayoutBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -94,11 +98,11 @@ public class LikePlaylistsFragment extends Fragment {
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 190);
+            params.setMargins(0, 9, 0, 190);
             binding.llSpace.setLayoutParams(params);
         } else {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 28);
+            params.setMargins(0, 9, 0, 28);
             binding.llSpace.setLayoutParams(params);
         }
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -162,6 +166,7 @@ public class LikePlaylistsFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     private void callAddTransFrag() {
         try {
             Fragment fragment = new MiniPlayerFragment();
@@ -173,6 +178,7 @@ public class LikePlaylistsFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     private void callRemoveLike(String id) {
         try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -226,7 +232,11 @@ public class LikePlaylistsFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(modelList.get(position).getPlaylistName());
             holder.binding.equalizerview.setVisibility(View.GONE);
-
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.12f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             if (modelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                     modelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                             modelList.get(position).getTotalhour().equalsIgnoreCase("")
@@ -250,11 +260,9 @@ public class LikePlaylistsFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
-            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+
             Glide.with(ctx).load(modelList.get(position).getPlaylistImage()).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llMenu.setOnClickListener(v -> {

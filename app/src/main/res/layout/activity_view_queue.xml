@@ -109,12 +109,11 @@
                         android:layout_weight="0.2"
                         android:gravity="center|start">
 
-                        <androidx.cardview.widget.CardView
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginHorizontal="@dimen/_10sdp"
-                            android:layout_marginVertical="@dimen/_2sdp"
-                            app:cardCornerRadius="@dimen/_10sdp">
+                            android:layout_marginVertical="@dimen/_2sdp">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/title_layout"
@@ -129,7 +128,7 @@
                                     android:layout_marginRight="-16dp"
                                     android:scaleType="fitXY" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
-                        </androidx.cardview.widget.CardView>
+                        </RelativeLayout>
                     </LinearLayout>
 
                     <LinearLayout

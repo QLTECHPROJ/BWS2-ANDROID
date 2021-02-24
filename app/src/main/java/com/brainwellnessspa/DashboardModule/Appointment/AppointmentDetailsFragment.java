@@ -118,14 +118,14 @@ public class AppointmentDetailsFragment extends Fragment {
                         .add(R.id.flContainer, fragment)
                         .commit();
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 320);
+                params.setMargins(0, 0, 0, 290);
                 binding.llViewOne.setLayoutParams(params);
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 320);
+                params.setMargins(0, 0, 0, 350);
                 binding.llViewTwo.setLayoutParams(params);
             } else {
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 220);
+                params.setMargins(0, 0, 0, 110);
                 binding.llViewOne.setLayoutParams(params);
                 params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 220);

@@ -14,7 +14,6 @@ import android.text.TextWatcher;
 import android.text.style.ReplacementSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.NumberPicker;
 import android.widget.TextView;

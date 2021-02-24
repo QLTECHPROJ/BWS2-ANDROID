@@ -9,10 +9,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.SubscribeBoxLayoutBinding;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -38,6 +41,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         MembershipPlanListModel.AudioFile listModel = listModelList.get(position);
         holder.binding.tvTitle.setText(listModel.getName());
         Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
     }
 

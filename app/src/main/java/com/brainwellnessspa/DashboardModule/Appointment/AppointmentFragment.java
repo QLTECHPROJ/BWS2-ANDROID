@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.DashboardModule.Models.NextSessionViewModel;
 import com.brainwellnessspa.DashboardModule.Models.PreviousAppointmentsModel;
@@ -34,6 +35,8 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAppointmentBinding;
 import com.brainwellnessspa.databinding.PreviousAppointmentsLayoutBinding;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
@@ -360,25 +363,23 @@ public class AppointmentFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("appointmentName", listModel.get(position).getCategory());
-                    p.putValue("appointmentCategory", listModel.get(position).getCatMenual());
-                    BWSApplication.addToSegment("Appointment Item Clicked", p, CONSTANTS.track);
-                    Bundle bundle = new Bundle();
-                    Fragment sessionsFragment = new SessionsFragment();
-                    bundle.putString("appointmentMainName", listModel.get(position).getCategory());
-                    bundle.putString("appointmentName", listModel.get(position).getCatMenual());
-                    bundle.putString("appointmentImage", listModel.get(position).getImage());
-                    sessionsFragment.setArguments(bundle);
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, sessionsFragment).commit();
-                }
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("appointmentName", listModel.get(position).getCategory());
+                p.putValue("appointmentCategory", listModel.get(position).getCatMenual());
+                BWSApplication.addToSegment("Appointment Item Clicked", p, CONSTANTS.track);
+                Bundle bundle = new Bundle();
+                Fragment sessionsFragment = new SessionsFragment();
+                bundle.putString("appointmentMainName", listModel.get(position).getCategory());
+                bundle.putString("appointmentName", listModel.get(position).getCatMenual());
+                bundle.putString("appointmentImage", listModel.get(position).getImage());
+                sessionsFragment.setArguments(bundle);
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, sessionsFragment).commit();
             });
         }
 

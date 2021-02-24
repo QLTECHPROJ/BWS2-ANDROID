@@ -67,10 +67,10 @@
                             android:id="@+id/ivRestaurantImage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:layout_constraintDimensionRatio="1:1"
-                            android:padding="@dimen/_8sdp"
                             android:layout_gravity="center_horizontal"
-                            android:src="@drawable/ic_checkout_logo"/>
+                            android:padding="@dimen/_8sdp"
+                            android:src="@drawable/ic_checkout_logo"
+                            app:layout_constraintDimensionRatio="1:1" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -86,111 +86,105 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <androidx.cardview.widget.CardView
+                        <LinearLayout
                             android:id="@+id/cvBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
                             android:layout_marginTop="@dimen/_30sdp"
-                            app:cardCornerRadius="@dimen/_8sdp">
+                            android:background="@drawable/signup_cardshape_background"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/rlCountrySelect"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="@dimen/_6sdp">
+
+                                <TextView
+                                    android:id="@+id/tvCountry"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:paddingLeft="@dimen/_16sdp"
+                                    android:text="Australia"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/_35sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/right_arrow"
+                                    app:tint="@color/dark_blue_gray" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#E47E7E7E" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/light_white"
-                                android:orientation="vertical">
+                                android:layout_weight="1">
 
-                                <RelativeLayout
-                                    android:id="@+id/rlCountrySelect"
-                                    android:layout_width="match_parent"
+                                <TextView
+                                    android:id="@+id/tvCountryCode"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:paddingVertical="@dimen/_6sdp">
-
-                                    <TextView
-                                        android:id="@+id/tvCountry"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:fontFamily="@font/montserrat_medium"
-                                        android:paddingLeft="@dimen/_16sdp"
-                                        android:text="Australia"
-                                        android:textColor="@color/dark_blue_gray"
-                                        android:textSize="@dimen/_16sdp" />
-
-                                    <ImageView
-                                        android:layout_width="@dimen/_35sdp"
-                                        android:layout_height="@dimen/_40sdp"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_centerVertical="true"
-                                        android:src="@drawable/right_arrow"
-                                        app:tint="@color/dark_blue_gray" />
-
-                                </RelativeLayout>
+                                    android:layout_weight="0.18"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:paddingVertical="@dimen/_12sdp"
+                                    android:paddingLeft="@dimen/_16sdp"
+                                    android:text="+61"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
 
                                 <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
+                                    android:layout_width="1dp"
+                                    android:layout_height="match_parent"
                                     android:background="#E47E7E7E" />
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <EditText
+                                    android:id="@+id/edtNumber"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                                    android:layout_toRightOf="@id/tvCountryCode"
+                                    android:layout_weight="0.82"
+                                    android:background="@null"
+                                    android:backgroundTint="@color/dim_light_gray"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:hint="@string/mobile_number"
+                                    android:inputType="number"
+                                    android:maxLength="10"
+                                    android:paddingHorizontal="@dimen/_16sdp"
+                                    android:paddingVertical="@dimen/_12sdp"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textColorHint="@color/dark_blue_gray"
+                                    android:textCursorDrawable="@null"
+                                    android:textSize="@dimen/_16sdp"
+                                    app:hintTextColor="@color/dark_blue_gray" />
 
-                                    <TextView
-                                        android:id="@+id/tvCountryCode"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="0.18"
-                                        android:fontFamily="@font/montserrat_medium"
-                                        android:paddingVertical="@dimen/_12sdp"
-                                        android:paddingLeft="@dimen/_16sdp"
-                                        android:text="+61"
-                                        android:textColor="@color/dark_blue_gray"
-                                        android:textSize="@dimen/_16sdp" />
-
-                                    <View
-                                        android:layout_width="1dp"
-                                        android:layout_height="match_parent"
-                                        android:background="#E47E7E7E" />
-
-                                    <EditText
-                                        android:id="@+id/edtNumber"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_toRightOf="@id/tvCountryCode"
-                                        android:layout_weight="0.82"
-                                        android:background="@null"
-                                        android:inputType="number"
-                                        android:textColorHint="@color/dark_blue_gray"
-                                        app:hintTextColor="@color/dark_blue_gray"
-                                        android:textCursorDrawable="@null"
-                                        android:maxLength="10"
-                                        android:backgroundTint="@color/dim_light_gray"
-                                        android:fontFamily="@font/montserrat_medium"
-                                        android:hint="@string/mobile_number"
-                                        android:paddingVertical="@dimen/_12sdp"
-                                        android:paddingHorizontal="@dimen/_16sdp"
-                                        android:textColor="@color/dark_blue_gray"
-                                        android:textSize="@dimen/_16sdp" />
-
-                                </LinearLayout>
                             </LinearLayout>
-                        </androidx.cardview.widget.CardView>
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_below="@id/cvBox">
+                            android:layout_below="@id/cvBox"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/txtError"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginTop="@dimen/_10sdp"
                                 android:layout_marginLeft="@dimen/_10sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:fontFamily="@font/montserrat_semi_bold"
                                 android:gravity="center"
@@ -212,17 +206,16 @@
                         </LinearLayout>
 
 
-
                         <Button
                             android:id="@+id/btnSendCode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_alignParentBottom="true"
+                            android:layout_gravity="center"
                             android:layout_marginHorizontal="@dimen/_30sdp"
                             android:layout_marginBottom="@dimen/_24sdp"
-                            android:enabled="false"
                             android:background="@drawable/gray_round_cornor"
+                            android:enabled="false"
                             android:fontFamily="@font/montserrat_bold"
                             android:paddingHorizontal="@dimen/_55sdp"
                             android:paddingVertical="@dimen/_4sdp"

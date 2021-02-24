@@ -61,59 +61,55 @@
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cvSearch"
+        <RelativeLayout
+            android:id="@+id/rlSearch"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_48sdp"
             android:layout_below="@id/toolbar"
+            android:background="@drawable/rounded_white_corner"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginRight="@dimen/_16sdp"
-            app:cardCornerRadius="@dimen/_22sdp">
+            android:layout_weight="2">
 
-            <RelativeLayout
+            <ImageView
+                android:id="@+id/button1"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/_14sdp"
+                android:src="@drawable/ic_search_icon"
+                app:tint="@color/dark_blue_gray" />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2">
-
-                <ImageView
-                    android:id="@+id/button1"
-                    android:layout_width="@dimen/_16sdp"
-                    android:layout_height="@dimen/_16sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/_14sdp"
-                    android:src="@drawable/ic_search_icon"
-                    app:tint="@color/dark_blue_gray" />
-
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/button1"
-                    android:focusable="true"
-                    android:iconifiedByDefault="false"
-                    android:singleLine="true"
-                    android:theme="@style/WallSearchView"
-                    app:queryBackground="@null"
-                    app:queryHint="Search for country"
-                    app:searchHintIcon="@null"
-                    app:searchIcon="@null" />
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/button1"
+                android:focusable="true"
+                android:iconifiedByDefault="false"
+                android:singleLine="true"
+                android:theme="@style/WallSearchView"
+                app:queryBackground="@null"
+                app:queryHint="Search for country"
+                app:searchHintIcon="@null"
+                app:searchIcon="@null" />
 
 
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCountryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/rlSearch"
             android:layout_marginLeft="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_16sdp"
-            android:overScrollMode="never"
-            android:layout_below="@id/cvSearch" />
+            android:overScrollMode="never" />
 
         <TextView
             android:id="@+id/tvFound"

@@ -49,7 +49,10 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityMyPlaylistBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -707,9 +710,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                             if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
                                 Glide.with(ctx).load(model.getResponseData().getPlaylistImage()).thumbnail(0.05f)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                             } else {
-                                binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
+                                Glide.with(ctx).load(R.drawable.ic_playlist_bg).thumbnail(0.05f)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                             }
 
 //                            getDownloadData();

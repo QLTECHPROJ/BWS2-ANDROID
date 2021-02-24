@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_4sdp"
+    android:elevation="@dimen/_110sdp"
     android:background="@drawable/background_shadow">
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/_4sdp"
-        app:cardCornerRadius="@dimen/_5sdp"
-        app:cardElevation="10dp">
+        android:background="@color/white">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/_8sdp"
             android:layout_marginLeft="@dimen/_10sdp"
@@ -54,6 +54,6 @@
         </LinearLayout>
 
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
 </RelativeLayout>

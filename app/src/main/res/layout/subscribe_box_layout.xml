@@ -22,19 +22,17 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.85">
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/_2sdp"
-                    app:cardCornerRadius="@dimen/_10sdp"
-                    app:cardElevation="@dimen/_0sdp">
+                    android:layout_margin="@dimen/_2sdp">
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY" />
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
             </LinearLayout>
 

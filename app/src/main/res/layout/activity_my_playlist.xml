@@ -42,18 +42,17 @@
 
                 </RelativeLayout>
 
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/_26sdp"
-                    app:cardCornerRadius="@dimen/_10sdp">
+                    android:layout_marginTop="@dimen/_26sdp">
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-                </androidx.cardview.widget.CardView>
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tvName"
