@@ -1557,8 +1557,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
-            exoBinding.exoProgress.setDuration(player.getDuration());
-            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
+            if(player!=null) {
+                exoBinding.exoProgress.setDuration(player.getDuration());
+            }            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
                     TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx))));
         });
         try {
@@ -2964,7 +2965,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer(ctx);
+        relesePlayer();
 //        }
 
         isDisclaimer = 0;

@@ -280,11 +280,11 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     protected void onDestroy() {
 //        serviceRemoved = true;
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
-        if (!backpressed) {
-            relesePlayer(this);
-        } else {
+//        if (!backpressed) {
+            relesePlayer();
+//        } else {
 //            nothing
-        }
+//        }
         unregisterReceiver(myNetworkReceiver);
         deleteCache(DashboardActivity.this);
         super.onDestroy();

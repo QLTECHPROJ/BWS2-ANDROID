@@ -10,8 +10,8 @@
         android:angle="90"/>
 
     <corners
-        android:topLeftRadius="@dimen/_10sdp"
-        android:topRightRadius="@dimen/_10sdp"
-        android:bottomLeftRadius="@dimen/_10sdp"
-        android:bottomRightRadius="@dimen/_10sdp"/>
+        android:topLeftRadius="@dimen/_6sdp"
+        android:topRightRadius="@dimen/_6sdp"
+        android:bottomLeftRadius="@dimen/_6sdp"
+        android:bottomRightRadius="@dimen/_6sdp"/>
 </shape>

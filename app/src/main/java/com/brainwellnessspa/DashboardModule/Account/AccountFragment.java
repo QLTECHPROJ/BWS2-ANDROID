@@ -320,8 +320,8 @@ public class AccountFragment extends Fragment {
 
                 Btn.setOnClickListener(v -> {
                     BWSApplication.showProgressBar(progressBar, progressBarHolder, getActivity());
-                    relesePlayer(getActivity());
-                    DeleteCall(dialog, progressBar, progressBarHolder);
+                    relesePlayer();
+                     DeleteCall(dialog, progressBar, progressBarHolder);
                 });
 
                 tvGoBack.setOnClickListener(v -> dialog.hide());
@@ -398,55 +398,6 @@ public class AccountFragment extends Fragment {
         profileViewData(getActivity());
         super.onResume();
     }
-
-/*
-    public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.MyViewHolder>{
-        List<ContactlistModel> contactlistModel;
-        private List<ContactlistModel> listFilterContact;
-
-        public ContactListAdapter(List<ContactlistModel> contactlistModel) {
-            this.contactlistModel = contactlistModel;
-            this.listFilterContact = contactlistModel;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.contact_list_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-//            ContactlistModel model = listFilterContact.get(position);
-            holder.binding.tvName.setText(contactlistModel.get(position).getContactName());
-            holder.binding.tvNumber.setText(contactlistModel.get(position).getContactNumber());
-            holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_gray_cornor_normal);
-            holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.gray));
-            holder.binding.BtnInvite.setOnClickListener(v -> {
-//                prepareContactData(model.getContactName(), model.getContactNumber());
-                notifyDataSetChanged();
-                holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal);
-                holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.white));
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return contactlistModel.size();
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ContactListLayoutBinding binding;
-
-            public MyViewHolder(ContactListLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
-    }
-*/
 
     private void showTooltips() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
@@ -587,8 +538,8 @@ public class AccountFragment extends Fragment {
     }
 
     void profileViewData(Context ctx) {
-        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @SuppressLint("SetTextI18n")

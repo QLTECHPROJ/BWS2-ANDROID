@@ -901,7 +901,9 @@ public class MiniPlayerFragment extends Fragment {
         playerControlView.setProgressUpdateListener((positionx, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-            exoBinding.exoProgress.setDuration(player.getDuration());
+            if(player!=null) {
+                exoBinding.exoProgress.setDuration(player.getDuration());
+            }
                         if((positionx >= oldSongPos + 29500)&& (positionx <= oldSongPos + 31000)){
                 oldSongPos = positionx;
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
@@ -1750,7 +1752,7 @@ public class MiniPlayerFragment extends Fragment {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer(ctx);
+        relesePlayer();
 //        }
 
         isDisclaimer = 0;
@@ -2075,8 +2077,14 @@ public class MiniPlayerFragment extends Fragment {
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
         } else {
-            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+            try {
+                if (player != null) {
+                    GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             initializePlayer();
         }
         setPlayerCtrView();
