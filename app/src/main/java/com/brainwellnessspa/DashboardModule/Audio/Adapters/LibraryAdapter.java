@@ -79,7 +79,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         if (IsLock.equalsIgnoreCase("1")) {
             if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {

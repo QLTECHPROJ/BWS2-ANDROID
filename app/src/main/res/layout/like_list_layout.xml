@@ -25,8 +25,8 @@
                 android:id="@+id/cvImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:layout_marginVertical="@dimen/_4sdp">
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:layout_marginVertical="@dimen/_2sdp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -41,7 +41,6 @@
                             android:id="@+id/ivRestaurantImage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginHorizontal="-3dp"
                             android:elevation="@dimen/_80sdp"
                             android:scaleType="fitXY"
                             app:layout_constraintDimensionRatio="1:1"

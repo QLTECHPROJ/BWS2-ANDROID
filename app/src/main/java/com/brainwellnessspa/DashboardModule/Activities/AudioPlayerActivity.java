@@ -1229,12 +1229,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         if (error.type == ExoPlaybackException.TYPE_REMOTE) {
                             Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
                         }
-                        if (error.type == ExoPlaybackException.TYPE_OUT_OF_MEMORY) {
-                            Log.e("onPlaybackError", "onPlaybackError: " + error.getOutOfMemoryError().getMessage());
-                        }
-                        if (error.type == ExoPlaybackException.TYPE_TIMEOUT) {
-                            Log.e("onPlaybackError", "onPlaybackError: " + error.getTimeoutException().getMessage());
-                        }
                     }
                 });
 
@@ -2495,15 +2489,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.tvStartTime.setText("00:00");
         }
         exoBinding.tvSongTime.setText(mainPlayModelList.get(ps).getAudioDuration());
+        Glide.with(ctx).load(R.drawable.gradient_player).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBg);
         try {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             } else {
                 Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
-                        .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             }
         } catch (Exception e) {
@@ -2965,7 +2961,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer();
+        relesePlayer(ctx);
 //        }
 
         isDisclaimer = 0;

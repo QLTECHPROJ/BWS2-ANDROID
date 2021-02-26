@@ -17,7 +17,6 @@
             android:layout_height="@dimen/_70sdp"
             android:layout_gravity="center"
             android:layout_weight="0.20"
-            android:background="@drawable/cardshape_background"
             android:gravity="center">
 
             <ImageView

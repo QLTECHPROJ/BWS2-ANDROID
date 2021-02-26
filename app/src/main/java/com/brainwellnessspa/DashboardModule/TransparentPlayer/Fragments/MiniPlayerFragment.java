@@ -1050,12 +1050,12 @@ public class MiniPlayerFragment extends Fragment {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                         .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
             } else {
                 Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
                         .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(exoBinding.ivRestaurantImage);
             }
         } catch (Exception e) {
@@ -1752,7 +1752,7 @@ public class MiniPlayerFragment extends Fragment {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer();
+        relesePlayer(getActivity());
 //        }
 
         isDisclaimer = 0;

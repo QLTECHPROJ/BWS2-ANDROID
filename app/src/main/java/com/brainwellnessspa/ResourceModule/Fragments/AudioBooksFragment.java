@@ -122,14 +122,14 @@ public class AudioBooksFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.44f, 0);
+                    1, 1, 0.42f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
             holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(40))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {

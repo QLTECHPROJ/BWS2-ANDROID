@@ -43,6 +43,7 @@ import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MusicService;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
@@ -174,21 +175,13 @@ public class GlobalInitExoPlayer extends Service {
         return myBitmap;
     }
 
-    public static void relesePlayer() {
+    public static void relesePlayer(Context context) {
         if (player != null) {
-            if(!player.getPlayWhenReady()){
-                playerNotificationManager.setPlayer(null);
+            playerNotificationManager.setPlayer(null);
 //            player.stop();
-                player.release();
+            player.release();
 //            player = null;
-                PlayerINIT = false;
-            }else {
-                playerNotificationManager.setPlayer(null);
-                player.release();
-                PlayerINIT = false;
-            }
-            mediaSession = null;
-            mediaSessionConnector = null;
+            PlayerINIT = false;
         }
     }
 
@@ -452,7 +445,7 @@ Appointment Audios dddd*/
     }*/
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
-        relesePlayer();
+        relesePlayer(ctx);
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
         player.setMediaItem(mediaItem1);
@@ -600,7 +593,6 @@ Appointment Audios dddd*/
                             // Do what the app wants to do when dismissed by the user,
                             // like calling stopForeground(true); or stopSelf();
                         }
-                        stopSelf();
                     }
                 });
 
@@ -650,7 +642,7 @@ Appointment Audios dddd*/
                         }
                         return builder.build();
                     });
-                }else{
+                } else {
                     UpdateNotificationAudioPLayer(ctx);
                 }
             }
@@ -658,6 +650,7 @@ Appointment Audios dddd*/
             UpdateNotificationAudioPLayer(ctx);
             e.printStackTrace();
         }
+
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
         playerNotificationManager.setUsePreviousAction(true);
@@ -720,10 +713,10 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
                         if (dismissedByUser) {
+                            stopSelf();
                             // Do what the app wants to do when dismissed by the user,
                             // like calling stopForeground(true); or stopSelf();
                         }
-                        stopSelf();
                     }
                 });
 
@@ -785,9 +778,9 @@ Appointment Audios dddd*/
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(notificationId, notification1, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+                startForeground(startId, notification1, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForeground(notificationId, notification1);
+                startForeground(startId, notification1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1301,7 +1294,7 @@ Appointment Audios dddd*/
                     return builder.build();
                 });
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             UpdateNotificationAudioPLayer(ctx);
         }

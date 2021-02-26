@@ -274,7 +274,7 @@ public class BWSApplication extends Application {
 
         try {
             finalKey = ProgramForAES(key);
-            System.out.println(finalKey);
+//            System.out.println(finalKey);
         } catch (Exception e) {
         }
         return finalKey;
@@ -286,9 +286,9 @@ public class BWSApplication extends Application {
             String key = "5785abf057d4eea9e59151f75a6fadb724768053df2acdfabb68f2b946b972c6";
             CryptLib cryptLib = new CryptLib();
             cipher = cryptLib.encryptPlainTextWithRandomIV(baseString, key);
-            println("cipherText" + cipher);
+//            println("cipherText" + cipher);
             String decryptedString = cryptLib.decryptCipherTextWithRandomIV(cipher, key);
-            println("decryptedString" + decryptedString);
+//            println("decryptedString" + decryptedString);
         } catch (Exception e) {
             e.printStackTrace();
         }

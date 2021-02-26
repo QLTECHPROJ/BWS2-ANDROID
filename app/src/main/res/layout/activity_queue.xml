@@ -177,7 +177,7 @@
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_20sdp" />
 

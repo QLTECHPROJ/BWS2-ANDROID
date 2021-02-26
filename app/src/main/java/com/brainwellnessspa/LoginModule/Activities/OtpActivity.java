@@ -30,6 +30,8 @@ import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
+import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.SmsReceiver;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
@@ -238,7 +240,6 @@ public class OtpActivity extends AppCompatActivity implements
                     @Override
                     public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
                         try {
-                            if (response.isSuccessful()) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 OtpModel otpModel = response.body();
                                 if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
@@ -247,6 +248,8 @@ public class OtpActivity extends AppCompatActivity implements
                                             otpModel.getResponseData().getError().equalsIgnoreCase("")) {
                                         String UserID = otpModel.getResponseData().getUserID();
                                         String MobileNO = otpModel.getResponseData().getPhoneNumber();
+                                        SplashScreenActivity activity = new SplashScreenActivity();
+                                        activity.setAnalytics();
                                         analytics.identify(new Traits()
                                                 .putValue("userId", UserID)
                                                 .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
@@ -306,7 +309,6 @@ public class OtpActivity extends AppCompatActivity implements
                                     binding.txtError.setText(otpModel.getResponseMessage());
                                     binding.txtError.setVisibility(View.VISIBLE);
                                 }
-                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -387,7 +389,6 @@ public class OtpActivity extends AppCompatActivity implements
             edit1.clear();
             edit1.commit();
             DeletallLocalCart();
-
         });
     }
 

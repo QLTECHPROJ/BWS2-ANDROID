@@ -251,11 +251,11 @@ public class ViewAllAudioFragment extends Fragment {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 openOnlyFragment();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 6, 0, 260);
+                params.setMargins(4, 6, 4, 260);
                 binding.llSpace.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 6, 0, 50);
+                params.setMargins(4, 6, 4, 50);
                 binding.llSpace.setLayoutParams(params);
             }
         } catch (Exception e) {
@@ -284,15 +284,17 @@ public class ViewAllAudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                    1, 1, 0.46f, 0);
+                    1, 1, 0.44f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getName());
             Glide.with(getActivity()).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             if (IsLock.equalsIgnoreCase("1")) {
@@ -358,7 +360,7 @@ public class ViewAllAudioFragment extends Fragment {
                         if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                             callnewTrans(position, listModelList);
                         } else {
-                            callTransFrag(position, listModelList,true);
+                            callTransFrag(position, listModelList, true);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -374,7 +376,7 @@ public class ViewAllAudioFragment extends Fragment {
                         if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                             callnewTrans(position, listModelList);
                         } else {
-                            callTransFrag(position, listModelList,true);
+                            callTransFrag(position, listModelList, true);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -387,7 +389,7 @@ public class ViewAllAudioFragment extends Fragment {
                     if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                         callnewTrans(position, listModelList);
                     } else {
-                        callTransFrag(position, listModelList,true);
+                        callTransFrag(position, listModelList, true);
                     }
                 }
             });
@@ -435,7 +437,7 @@ public class ViewAllAudioFragment extends Fragment {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
                     if (player != null) {
-                        if(position != positionSaved) {
+                        if (position != positionSaved) {
                             player.seekTo(position, 0);
                             player.setPlayWhenReady(true);
                             miniPlayer = 1;
@@ -449,7 +451,7 @@ public class ViewAllAudioFragment extends Fragment {
                         getActivity().startActivity(i);
                         getActivity().overridePendingTransition(0, 0);
                     } else {
-                        callTransFrag(position, listModelList,true);
+                        callTransFrag(position, listModelList, true);
                     }
                 }
             } else {
@@ -466,27 +468,27 @@ public class ViewAllAudioFragment extends Fragment {
                 mainPlayModel.setLike("");
                 mainPlayModel.setDownload("");
                 mainPlayModel.setAudioDuration("00:48");
-                boolean audioc= true;
-                if(isDisclaimer == 1){
+                boolean audioc = true;
+                if (isDisclaimer == 1) {
                     if (player != null) {
                         player.setPlayWhenReady(true);
                         audioc = false;
                         listModelList2.add(position, mainPlayModel);
-                    }else{
+                    } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
                             listModelList2.add(position, mainPlayModel);
                         }
                     }
-                }else {
+                } else {
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                         audioc = true;
                         listModelList2.add(position, mainPlayModel);
                     }
                 }
-                callTransFrag(position, listModelList2,audioc);
+                callTransFrag(position, listModelList2, audioc);
             }
         } else {
             if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)) {
@@ -505,7 +507,7 @@ public class ViewAllAudioFragment extends Fragment {
                     getActivity().overridePendingTransition(0, 0);
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                 } else {
-                    if( MyPlaylist.equalsIgnoreCase(getString(R.string.recently_played))){
+                    if (MyPlaylist.equalsIgnoreCase(getString(R.string.recently_played))) {
                         ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                         if (!IsLock.equalsIgnoreCase("0")) {
                             SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -520,16 +522,16 @@ public class ViewAllAudioFragment extends Fragment {
                                     listModelList2.add(listModelList.get(i));
                                 }
                             }
-                            if(position<listModelList2.size()){
+                            if (position < listModelList2.size()) {
                                 position = position;
-                            }else {
+                            } else {
                                 position = 0;
                             }
                         } else {
                             listModelList2.addAll(listModelList);
                         }
                         callTransFrag(position, listModelList2, true);
-                    }else {
+                    } else {
                         if (player != null) {
                             if (position != positionSaved) {
                                 player.seekTo(position, 0);
@@ -559,9 +561,9 @@ public class ViewAllAudioFragment extends Fragment {
                                         listModelList2.add(listModelList.get(i));
                                     }
                                 }
-                                if(position<listModelList2.size()){
+                                if (position < listModelList2.size()) {
                                     position = position;
-                                }else {
+                                } else {
                                     position = 0;
                                 }
                             } else {
@@ -586,9 +588,9 @@ public class ViewAllAudioFragment extends Fragment {
                             listModelList2.add(listModelList.get(i));
                         }
                     }
-                    if(position<listModelList2.size()){
+                    if (position < listModelList2.size()) {
                         position = position;
-                    }else {
+                    } else {
                         position = 0;
                     }
                 } else {
@@ -606,32 +608,32 @@ public class ViewAllAudioFragment extends Fragment {
                 mainPlayModel.setLike("");
                 mainPlayModel.setDownload("");
                 mainPlayModel.setAudioDuration("00:48");
-                boolean audioc= true;
-                if(isDisclaimer == 1){
+                boolean audioc = true;
+                if (isDisclaimer == 1) {
                     if (player != null) {
                         player.setPlayWhenReady(true);
                         audioc = false;
                         listModelList2.add(position, mainPlayModel);
-                    }else{
+                    } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
                             listModelList2.add(position, mainPlayModel);
                         }
                     }
-                }else {
+                } else {
                     isDisclaimer = 0;
                     if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                     audioc = true;
+                        audioc = true;
                         listModelList2.add(position, mainPlayModel);
                     }
                 }
-                callTransFrag(position, listModelList2,audioc);
+                callTransFrag(position, listModelList2, audioc);
             }
         }
     }
 
-    private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList,boolean audioc) {
+    private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList, boolean audioc) {
         try {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -671,14 +673,15 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                         editor.commit();
                         if (player != null) {
-                            if(position != positionSaved) {
-                            player.seekTo(position, 0);
-                            player.setPlayWhenReady(true);
-                            miniPlayer = 1;
-                            SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editord = sharedxx.edit();
-                            editord.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editord.commit();}
+                            if (position != positionSaved) {
+                                player.seekTo(position, 0);
+                                player.setPlayWhenReady(true);
+                                miniPlayer = 1;
+                                SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editord = sharedxx.edit();
+                                editord.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editord.commit();
+                            }
                             openOnlyFragment();
                         } else {
                             openMyFragment(true);
@@ -696,19 +699,19 @@ public class ViewAllAudioFragment extends Fragment {
                     mainPlayModel.setImageFile("");
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
-                    if(isDisclaimer == 1){
+                    if (isDisclaimer == 1) {
                         if (player != null) {
                             player.setPlayWhenReady(true);
                             audioc = false;
                             listModelList2.add(position, mainPlayModel);
-                        }else{
+                        } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                                 audioc = true;
                                 listModelList2.add(position, mainPlayModel);
                             }
                         }
-                    }else {
+                    } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
                             audioc = true;
@@ -769,7 +772,7 @@ public class ViewAllAudioFragment extends Fragment {
     private void openMyFragment(boolean audioc) {
         miniPlayer = 1;
         audioClick = audioc;
-        if(audioc) {
+        if (audioc) {
             callNewPlayerRelease();
         }
         openOnlyFragment();

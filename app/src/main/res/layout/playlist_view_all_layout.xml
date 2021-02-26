@@ -6,8 +6,9 @@
         android:id="@+id/rlMainLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_11sdp"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginLeft="@dimen/_11sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:gravity="center_horizontal">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +31,7 @@
                 android:id="@+id/tvPlaylistName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gradient"
+                android:background="@drawable/playlist_gradient"
                 android:fontFamily="@font/montserrat_semi_bold"
                 android:gravity="start"
                 android:maxLines="2"
@@ -49,7 +50,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="center|center_vertical"
-                android:background="@drawable/bottom_add_sheet"
+                android:background="@drawable/playlist_bottom_add_sheet"
                 android:fontFamily="@font/montserrat_semi_bold"
                 android:gravity="center|bottom"
                 android:paddingBottom="@dimen/_13sdp"

@@ -609,7 +609,7 @@ public class SearchFragment extends Fragment {
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
@@ -916,7 +916,7 @@ public class SearchFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
@@ -1161,7 +1161,7 @@ public class SearchFragment extends Fragment {
 
             holder.binding.tvPlaylistName.setText(modelList.get(position).getName());
             Glide.with(getActivity()).load(modelList.get(position).getImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {

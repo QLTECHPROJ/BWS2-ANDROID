@@ -6,7 +6,8 @@
         android:id="@+id/rlMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginLeft="@dimen/_11sdp"
+        android:layout_marginRight="@dimen/_13sdp"
         android:layout_marginTop="@dimen/_16sdp"
         android:gravity="center_horizontal">
 
@@ -68,6 +69,7 @@
             android:fontFamily="@font/montserrat_semi_bold"
             android:gravity="start"
             android:maxLines="2"
+            android:ellipsize="end"
             android:paddingLeft="@dimen/_2sdp"
             android:paddingTop="@dimen/_8sdp"
             android:paddingRight="@dimen/_2sdp"

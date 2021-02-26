@@ -55,6 +55,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     FirebaseOptions options;
     AudioDatabase DB;
     String FirebaseAppName = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +133,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void callDashboard() {
         if (UserID.equalsIgnoreCase("")) {
-            new Handler (Looper.getMainLooper()).postDelayed(() -> {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -161,7 +162,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             }
         } else {
-            new Handler (Looper.getMainLooper()).postDelayed(() -> {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 startActivity(i);
                 finish();
@@ -169,8 +170,33 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
+    public void setAnalytics() {
+        try {
+//     TODO :                         Live segment key
+//                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
+            analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key_foram))//foram
+                    .trackApplicationLifecycleEvents()
+                    .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
+                    .trackAttributionInformation()
+                    .trackDeepLinks()
+                    .collectDeviceId(true)
+                    .build();
+            /*.use(FirebaseIntegration.FACTORY) */
+            Analytics.setSingletonInstance(analytics);
+        } catch (Exception e) {
+//            incatch = true;
+            Log.e("in Catch", "True");
+//            Properties p = new Properties();
+//            p.putValue("Application Crashed", e.toString());
+//            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);
+
+        }
+    }
+
+
     public void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
+
         if (BWSApplication.isNetworkConnected(context)) {
             Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_CODE), CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {
@@ -178,26 +204,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
                     VersionModel versionModel = response.body();
                     try {
-                        try {
-//     TODO :                         Live segment key
-//                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
-                            analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key_foram))//foram
-                                    .trackApplicationLifecycleEvents()
-                                    .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
-                                    .trackAttributionInformation()
-                                    .trackDeepLinks()
-                                    .collectDeviceId(true)
-                                    .build();
-                            /*.use(FirebaseIntegration.FACTORY) */
-                            Analytics.setSingletonInstance(analytics);
-                        } catch (Exception e) {
-//            incatch = true;
-                            Log.e("in Catch", "True");
-//            Properties p = new Properties();
-//            p.putValue("Application Crashed", e.toString());
-//            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);
-
-                        }
+                        setAnalytics();
                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Brain Wellness Spa");
@@ -307,7 +314,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void DeletallLocalCart() {
         AudioDatabase.databaseWriteExecutor.execute(() -> {
             DB.taskDao().deleteAll();
-        }); AudioDatabase.databaseWriteExecutor.execute(() -> {
+        });
+        AudioDatabase.databaseWriteExecutor.execute(() -> {
             DB.taskDao().deleteAllPlalist();
         });
     }

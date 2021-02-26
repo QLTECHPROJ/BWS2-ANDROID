@@ -2308,11 +2308,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
 
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
 
             binding.ivPlaylistStatus.setOnClickListener(view -> {
@@ -2647,11 +2647,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
 
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

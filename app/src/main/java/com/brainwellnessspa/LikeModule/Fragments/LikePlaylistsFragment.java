@@ -262,7 +262,7 @@ public class LikePlaylistsFragment extends Fragment {
 
 
             Glide.with(ctx).load(modelList.get(position).getPlaylistImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llMenu.setOnClickListener(v -> {

@@ -42,6 +42,7 @@ import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -280,11 +281,11 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     protected void onDestroy() {
 //        serviceRemoved = true;
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
-//        if (!backpressed) {
-            relesePlayer();
-//        } else {
+        if (!backpressed) {
+            relesePlayer(DashboardActivity.this);
+        } else {
 //            nothing
-//        }
+        }
         unregisterReceiver(myNetworkReceiver);
         deleteCache(DashboardActivity.this);
         super.onDestroy();

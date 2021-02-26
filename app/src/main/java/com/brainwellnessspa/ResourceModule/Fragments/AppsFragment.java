@@ -122,13 +122,13 @@ public class AppsFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.44f, 0);
+                    1, 1, 0.42f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(40))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

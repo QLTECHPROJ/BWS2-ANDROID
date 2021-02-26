@@ -112,8 +112,7 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/cardshape_background">
+                            android:layout_height="match_parent">
 
                             <RelativeLayout
                                 android:id="@+id/title_layout"
@@ -124,14 +123,13 @@
                                     android:id="@+id/ivRestaurantImage"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:scaleType="fitXY"
-                                    android:src="@drawable/disclaimer" />
+                                    android:scaleType="fitXY" />
 
                                 <ImageView
                                     android:id="@+id/ivBg"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/gradient"
+                                    android:background="@drawable/gradient_player"
                                     android:scaleType="fitXY" />
 
                                 <LinearLayout

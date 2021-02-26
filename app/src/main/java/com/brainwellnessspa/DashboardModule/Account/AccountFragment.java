@@ -320,7 +320,7 @@ public class AccountFragment extends Fragment {
 
                 Btn.setOnClickListener(v -> {
                     BWSApplication.showProgressBar(progressBar, progressBarHolder, getActivity());
-                    relesePlayer();
+                    relesePlayer(getActivity());
                      DeleteCall(dialog, progressBar, progressBarHolder);
                 });
 

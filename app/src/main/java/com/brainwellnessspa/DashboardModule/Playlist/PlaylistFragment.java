@@ -520,7 +520,7 @@ public class PlaylistFragment extends Fragment {
 
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             if (IsLock.equalsIgnoreCase("1")) {

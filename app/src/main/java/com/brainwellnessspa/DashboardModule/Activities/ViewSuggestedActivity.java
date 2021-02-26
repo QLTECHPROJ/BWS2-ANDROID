@@ -376,10 +376,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binds.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binds.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(AudiolistsModel.get(position).getImageFile()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivRestaurantImage);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivBackgroundImage);
             SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -639,10 +639,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(PlaylistModel.get(position).getImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);

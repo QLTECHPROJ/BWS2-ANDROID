@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -60,7 +61,7 @@
                         android:id="@+id/rlImageUpload"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_20sdp">
+                        android:layout_marginTop="@dimen/_16sdp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/civProfile"
@@ -108,12 +109,11 @@
 
                 </RelativeLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_24sdp"
                     android:layout_marginRight="@dimen/_16sdp"
                     android:background="@drawable/light_gray_round_cornors"
                     android:weightSum="1">
@@ -145,15 +145,15 @@
                             android:layout_marginLeft="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:focusableInTouchMode="true"
-                            app:errorEnabled="true"
                             android:textColorHint="@color/black"
-                            app:hintTextColor="@color/black"
-                            app:errorTextAppearance="@style/ErrorText">
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/ErrorText"
+                            app:hintTextColor="@color/black">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etUser"
                                 android:layout_width="match_parent"
-                                android:layout_height="46dp"
+                                android:layout_height="@dimen/_46sdp"
                                 android:background="@null"
                                 android:backgroundTint="@color/black"
                                 android:cursorVisible="true"
@@ -164,7 +164,7 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_16sdp" />
+                                android:textSize="@dimen/_15sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -174,7 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
                     android:layout_marginRight="@dimen/_16sdp"
                     android:background="@drawable/light_gray_round_cornors"
                     android:weightSum="1">
@@ -206,15 +206,15 @@
                             android:layout_marginLeft="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:focusableInTouchMode="true"
-                            app:errorEnabled="true"
                             android:textColorHint="@color/black"
-                            app:hintTextColor="@color/black"
-                            app:errorTextAppearance="@style/ErrorText">
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/ErrorText"
+                            app:hintTextColor="@color/black">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etCalendar"
                                 android:layout_width="match_parent"
-                                android:layout_height="46dp"
+                                android:layout_height="@dimen/_46sdp"
                                 android:background="@null"
                                 android:backgroundTint="@color/black"
                                 android:cursorVisible="true"
@@ -226,7 +226,7 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_16sdp" />
+                                android:textSize="@dimen/_15sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -236,7 +236,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
                     android:layout_marginRight="@dimen/_16sdp"
                     android:background="@drawable/light_gray_round_cornors"
                     android:weightSum="1">
@@ -268,15 +268,15 @@
                             android:layout_marginLeft="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:focusableInTouchMode="true"
-                            app:errorEnabled="true"
                             android:textColorHint="@color/black"
-                            app:hintTextColor="@color/black"
-                            app:errorTextAppearance="@style/ErrorText">
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/ErrorText"
+                            app:hintTextColor="@color/black">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etMobileNumber"
                                 android:layout_width="match_parent"
-                                android:layout_height="46dp"
+                                android:layout_height="@dimen/_46sdp"
                                 android:background="@null"
                                 android:backgroundTint="@color/black"
                                 android:cursorVisible="true"
@@ -284,10 +284,12 @@
                                 android:hint="@string/Mobile_Number"
                                 android:inputType="number"
                                 android:maxLines="1"
+                                android:imeOptions="actionNext"
+                                android:nextFocusDown="@id/etEmail"
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_16sdp" />
+                                android:textSize="@dimen/_15sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -298,8 +300,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
                     android:layout_marginRight="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_50sdp"
                     android:background="@drawable/light_gray_round_cornors"
                     android:weightSum="1">
 
@@ -330,25 +333,26 @@
                             android:layout_marginLeft="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:focusableInTouchMode="true"
-                            app:errorEnabled="true"
                             android:textColorHint="@color/black"
-                            app:hintTextColor="@color/black"
-                            app:errorTextAppearance="@style/ErrorText">
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/ErrorText"
+                            app:hintTextColor="@color/black">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etEmail"
                                 android:layout_width="match_parent"
-                                android:layout_height="46dp"
+                                android:layout_height="@dimen/_46sdp"
                                 android:background="@null"
                                 android:backgroundTint="@color/black"
                                 android:cursorVisible="true"
+                                android:imeOptions="actionDone"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:hint="@string/Email_Address"
-                                android:inputType="textEmailAddress"
                                 android:maxLines="1"
                                 android:singleLine="true"
+                                android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_16sdp" />
+                                android:textSize="@dimen/_15sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -370,6 +374,7 @@
                             android:src="@drawable/ic_check_icon" />
                     </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

@@ -26,6 +26,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.bumptech.glide.Glide;
 import com.brainwellnessspa.BuildConfig;
@@ -517,12 +519,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                 binding.etMobileNumber.setClickable(true);
                             }
 
-                            binding.etCalendar.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                        setDate();
-                                    }
+                            binding.etCalendar.setOnClickListener(view -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    setDate();
                                 }
                             });
 

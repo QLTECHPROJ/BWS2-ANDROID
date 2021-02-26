@@ -339,7 +339,7 @@ public class ViewAllSearchFragment extends Fragment {
                 e.setPlaylistId(PlaylistModel.get(i).getID());
                 e.setPlaylistName(PlaylistModel.get(i).getName());
                 e.setPlaylistType(PlaylistModel.get(i).getCreated());
-                e.setPlaylistDuration(PlaylistModel.get(i).getTotalhour() + "h " +PlaylistModel.get(i).getTotalminute() + "m");
+                e.setPlaylistDuration(PlaylistModel.get(i).getTotalhour() + "h " + PlaylistModel.get(i).getTotalminute() + "m");
                 e.setAudioCount(PlaylistModel.get(i).getTotalAudio());
                 section.add(e);
             }
@@ -400,12 +400,13 @@ public class ViewAllSearchFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(getActivity()).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
 
             Glide.with(getActivity()).load(AudiolistModel.get(position).getImageFile()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
 
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -659,10 +660,10 @@ public class ViewAllSearchFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(getActivity()).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             Glide.with(getActivity()).load(PlaylistModel.get(position).getImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);

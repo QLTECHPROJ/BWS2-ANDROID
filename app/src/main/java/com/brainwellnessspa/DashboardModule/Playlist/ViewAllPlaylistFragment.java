@@ -312,7 +312,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                    1, 1, 0.46f, 0);
+                    1, 1, 0.44f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -320,11 +320,11 @@ public class ViewAllPlaylistFragment extends Fragment {
             holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
             MeasureRatio measureRatio1 = BWSApplication.measureRatio(getActivity(), 0,
-                    1, 1, 0.46f, 0);
+                    1, 1, 0.44f, 0);
             holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
             holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
             Glide.with(getActivity()).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             if (IsLock.equalsIgnoreCase("1")) {

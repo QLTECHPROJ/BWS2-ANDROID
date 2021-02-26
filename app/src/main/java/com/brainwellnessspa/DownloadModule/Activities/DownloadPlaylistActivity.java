@@ -591,19 +591,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .placeholder(R.drawable.ic_image_bg)
                     .error(R.drawable.ic_image_bg)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             if (BWSApplication.isNetworkConnected(ctx)) {
                 Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                         .placeholder(R.drawable.ic_music_icon)
                         .error(R.drawable.ic_music_icon)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             } else {
                 Glide.with(ctx).load(R.drawable.ic_music_icon).thumbnail(0.05f)
                         .placeholder(R.drawable.ic_music_icon)
                         .error(R.drawable.ic_music_icon)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             }
 
