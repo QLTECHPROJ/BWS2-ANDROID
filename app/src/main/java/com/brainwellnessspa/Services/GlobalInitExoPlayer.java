@@ -94,7 +94,7 @@ public class GlobalInitExoPlayer extends Service {
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0;
     public static int percent;
     public static String PlayerCurrantAudioPostion = "0";
-    public MediaSessionConnector mediaSessionConnector;
+    public static MediaSessionConnector mediaSessionConnector;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
     Notification notification1;
@@ -187,6 +187,8 @@ public class GlobalInitExoPlayer extends Service {
                 player.release();
                 PlayerINIT = false;
             }
+            mediaSession = null;
+            mediaSessionConnector = null;
         }
     }
 
@@ -621,34 +623,39 @@ Appointment Audios dddd*/
             playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
 
             if (player != null) {
-                mediaSessionConnector = new MediaSessionConnector(mediaSession);
-                mediaSessionConnector.setPlayer(player);
-                mediaSessionConnector.setMediaMetadataProvider(player -> {
-                    long duration;
-                    if (player.getDuration() < 0)
-                        duration = player.getCurrentPosition();
-                    else
-                        duration = player.getDuration();
+                if (mediaSession != null) {
+                    mediaSessionConnector = new MediaSessionConnector(mediaSession);
+                    mediaSessionConnector.setPlayer(player);
+                    mediaSessionConnector.setMediaMetadataProvider(player -> {
+                        long duration;
+                        if (player.getDuration() < 0)
+                            duration = player.getCurrentPosition();
+                        else
+                            duration = player.getDuration();
 
-                    MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
-                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
-                    }
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
-                    try {
-                        builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
-                    } catch (OutOfMemoryError e) {
-                        e.printStackTrace();
-                    }
-                    if (duration > 0) {
-                        builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
-                    }
-                    return builder.build();
-                });
+                        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
+                            builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
+                        }
+                        builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
+                        builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
+                        try {
+                            builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
+                        } catch (OutOfMemoryError e) {
+                            e.printStackTrace();
+                        }
+                        if (duration > 0) {
+                            builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+                        }
+                        return builder.build();
+                    });
+                }else{
+                    UpdateNotificationAudioPLayer(ctx);
+                }
             }
         } catch (Exception e) {
+            UpdateNotificationAudioPLayer(ctx);
             e.printStackTrace();
         }
         playerNotificationManager.setUseNextAction(true);
@@ -1253,45 +1260,50 @@ Appointment Audios dddd*/
             }.getType();
             mainPlayModelList1 = gson.fromJson(json, type);
         }
-        mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
-        mediaSession.setActive(true);
-        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+        try {
+            mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
+            mediaSession.setActive(true);
+            playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
 
-        if (player != null) {
+            if (player != null) {
 //            mediaSession.setPlaybackState(
 //                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
 //                        player.getCurrentPosition(),1 )
 //                        .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
 //                        .build());
-            mediaSessionConnector = new MediaSessionConnector(mediaSession);
-            mediaSessionConnector.setPlayer(player);
-            mediaSessionConnector.setMediaMetadataProvider(player -> {
-                long duration;
-                if (player.getDuration() < 0)
-                    duration = player.getCurrentPosition();
-                else
-                    duration = player.getDuration();
+                mediaSessionConnector = new MediaSessionConnector(mediaSession);
+                mediaSessionConnector.setPlayer(player);
+                mediaSessionConnector.setMediaMetadataProvider(player -> {
+                    long duration;
+                    if (player.getDuration() < 0)
+                        duration = player.getCurrentPosition();
+                    else
+                        duration = player.getDuration();
 
-                MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
-                    builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
-                }
-                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
+                    MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
+                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
+                    }
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
 
-                if (duration > 0) {
-                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
-                }
+                    if (duration > 0) {
+                        builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+                    }
 
-                try {
-                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
-                } catch (OutOfMemoryError e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
+                    } catch (OutOfMemoryError e) {
+                        e.printStackTrace();
+                    }
 
-                return builder.build();
-            });
+                    return builder.build();
+                });
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            UpdateNotificationAudioPLayer(ctx);
         }
     }
 
