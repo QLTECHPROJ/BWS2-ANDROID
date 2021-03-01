@@ -1023,9 +1023,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
 //                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 31000)){
+                        if ((player.getCurrentPosition() >= oldSongPos + 29500) && (player.getCurrentPosition() <= oldSongPos + 31000)) {
                             oldSongPos = player.getCurrentPosition();
-                            Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
+                            Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                             callHeartbeat();
                         }
                         exoBinding.exoProgress.setDuration(player.getDuration());
@@ -1239,7 +1239,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.exoProgress.setDuration(player.getDuration());
                         oldSeekPosition = pos;
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx,mainPlayModelList);
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx);
                         p = new Properties();
                         p.putValue("userId", UserID);
@@ -1285,7 +1285,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
                                 TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos))));
                         GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx,mainPlayModelList);
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                         globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx);
                         p = new Properties();
                         p.putValue("userId", UserID);
@@ -1546,14 +1546,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
 //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-            if((positionx >= oldSongPos + 29500)&& (positionx <= oldSongPos + 31000)){
+            if ((positionx >= oldSongPos + 29500) && (positionx <= oldSongPos + 31000)) {
                 oldSongPos = positionx;
-                Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
+                Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
-            if(player!=null) {
+            if (player != null) {
                 exoBinding.exoProgress.setDuration(player.getDuration());
-            }            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
+            }
+            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
                     TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx))));
         });
         try {
@@ -2271,7 +2272,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         downloadAudioDetails.setDownloadProgress(progressx);
         try {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
-        }catch(Exception|OutOfMemoryError e){
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
     }
@@ -2314,7 +2315,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     });
                 }
             });
-        }catch(Exception|OutOfMemoryError e){
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
     }
@@ -2489,16 +2490,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.tvStartTime.setText("00:00");
         }
         exoBinding.tvSongTime.setText(mainPlayModelList.get(ps).getAudioDuration());
-        Glide.with(ctx).load(R.drawable.gradient_player).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBg);
+
         try {
+            Glide.with(getApplicationContext()).load(R.drawable.gradient_player).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBg);
             if (url.equalsIgnoreCase("")) {
-                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                Glide.with(getApplicationContext()).load(R.drawable.disclaimer).thumbnail(0.05f)
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             } else {
-                Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
+                Glide.with(getApplicationContext()).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             }
@@ -2514,7 +2516,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.ivLike.setImageResource(R.drawable.ic_heart_unfill_icon);
         }
         if (!url.equalsIgnoreCase("")) {
-            if(addToRecentPlayId.equalsIgnoreCase("")){
+            if (addToRecentPlayId.equalsIgnoreCase("")) {
                 addToRecentPlay();
             } else if (!id.equalsIgnoreCase(addToRecentPlayId)) {
                 addToRecentPlay();
@@ -2614,7 +2616,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
                 });
             });
-        }catch(Exception|OutOfMemoryError e){
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
         return downloadAudioDetailsList;
@@ -2635,7 +2637,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
                 });
             });
-        }catch(Exception|OutOfMemoryError e){
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
         return downloadAudioDetailsList;

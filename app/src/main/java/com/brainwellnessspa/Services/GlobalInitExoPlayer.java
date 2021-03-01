@@ -183,11 +183,14 @@ public class GlobalInitExoPlayer extends Service {
         if (player != null) {
             mediaSession.setActive(false);
             playerNotificationManager.setPlayer(null);
-//            player.stop();
             player.release();
             notificationManager.cancel(notificationId);
 //            player = null;
             PlayerINIT = false;
+        }
+        if (mediaSession != null) {
+            mediaSession.setActive(false);
+            mediaSession.release();
         }
     }
 
@@ -439,6 +442,7 @@ Appointment Audios dddd*/
     public void onDestroy() {
         super.onDestroy();
         if (player != null) {
+            player.stop();
             playerNotificationManager.setPlayer(null);
             player.stop();
             player.release();

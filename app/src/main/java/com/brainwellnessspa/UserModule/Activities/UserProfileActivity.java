@@ -26,8 +26,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.brainwellnessspa.BuildConfig;
@@ -82,6 +84,7 @@ public class UserProfileActivity extends AppCompatActivity {
         ctx = UserProfileActivity.this;
         activity = UserProfileActivity.this;
         mRequestPermissionHandler = new RequestPermissionHandler();
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -102,6 +105,17 @@ public class UserProfileActivity extends AppCompatActivity {
                 1, 1, 0.32f, 0);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
+
+/*
+        binding.etEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    BWSApplication.showToast("DOneee", ctx);
+                }
+            }
+        });
+*/
     }
 
     private void selectImage() {

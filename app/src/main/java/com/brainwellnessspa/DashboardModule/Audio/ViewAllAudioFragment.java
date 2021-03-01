@@ -284,14 +284,14 @@ public class ViewAllAudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                    1, 1, 0.44f, 0);
+                    1, 1, 0.46f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+//            holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+//            holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getName());
             Glide.with(getActivity()).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
