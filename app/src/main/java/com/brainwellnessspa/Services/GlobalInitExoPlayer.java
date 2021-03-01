@@ -182,7 +182,6 @@ public class GlobalInitExoPlayer extends Service {
     public static void relesePlayer(Context context) {
         if (player != null) {
             mediaSession.setActive(false);
-            mediaSessionConnector.setPlayer(null);
             playerNotificationManager.setPlayer(null);
 //            player.stop();
             player.release();
