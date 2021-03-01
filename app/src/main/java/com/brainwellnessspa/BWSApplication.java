@@ -38,6 +38,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -59,6 +60,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static java.sql.DriverManager.println;
 
@@ -69,7 +71,6 @@ public class BWSApplication extends Application {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
         }
     };
-    ;
     private static Context mContext;
     private static BWSApplication BWSApplication;
 
@@ -315,5 +316,11 @@ public class BWSApplication extends Application {
         super.onCreate();
         mContext = this;
         BWSApplication = this;
+    }
+
+    @Override
+    public void onTerminate() {
+        relesePlayer(mContext);
+        super.onTerminate();
     }
 }

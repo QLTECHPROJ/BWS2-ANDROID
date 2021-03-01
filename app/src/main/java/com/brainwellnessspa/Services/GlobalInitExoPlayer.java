@@ -1,6 +1,7 @@
 package com.brainwellnessspa.Services;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -43,6 +44,8 @@ import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.brainwellnessspa.Utility.MusicService;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
@@ -72,6 +75,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -177,9 +181,12 @@ public class GlobalInitExoPlayer extends Service {
 
     public static void relesePlayer(Context context) {
         if (player != null) {
+            mediaSession.setActive(false);
+            mediaSessionConnector.setPlayer(null);
             playerNotificationManager.setPlayer(null);
 //            player.stop();
             player.release();
+            notificationManager.cancel(notificationId);
 //            player = null;
             PlayerINIT = false;
         }
@@ -429,7 +436,7 @@ Appointment Audios dddd*/
         }*/
     }
 
-   /* @Override
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (player != null) {
@@ -442,7 +449,7 @@ Appointment Audios dddd*/
             notificationManager.cancel(notificationId);
             stopForeground(true);
         }
-    }*/
+    }
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         relesePlayer(ctx);
@@ -578,7 +585,6 @@ Appointment Audios dddd*/
                         return myBitmap;
                     }
                 },
-
                 new PlayerNotificationManager.NotificationListener() {
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
@@ -595,7 +601,28 @@ Appointment Audios dddd*/
                         }
                     }
                 });
+/*   override fun getCurrentLargeIcon(
+        player: Player?,
+        callback: PlayerNotificationManager.BitmapCallback?
+    ): Bitmap? {
+        val mediaDescription = player?.currentTag as MediaDescriptionCompat?
+        val uri = mediaDescription?.iconUri ?: return null
+        Glide
+            .with(context)
+            .asBitmap()
+            .load(uri)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // Nothing to do here
+                }
 
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    callback?.onBitmap(resource)
+                    currentBitmap = resource
+                }
+            })
+        return currentBitmap
+    }*/
         if (player != null) {
             position = player.getCurrentWindowIndex();
         } else {
