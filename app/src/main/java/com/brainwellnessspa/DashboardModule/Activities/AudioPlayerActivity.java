@@ -106,9 +106,9 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STAT
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class AudioPlayerActivity extends AppCompatActivity {
     public AudioManager audioManager;
@@ -2961,7 +2961,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer(ctx);
+        callNewPlayerRelease();
 //        }
 
         isDisclaimer = 0;

@@ -82,10 +82,10 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STAT
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -1752,7 +1752,7 @@ public class MiniPlayerFragment extends Fragment {
 
     private void removeArray() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
-        relesePlayer(getActivity());
+        callNewPlayerRelease();
 //        }
 
         isDisclaimer = 0;
