@@ -2490,11 +2490,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.tvStartTime.setText("00:00");
         }
         exoBinding.tvSongTime.setText(mainPlayModelList.get(ps).getAudioDuration());
-
         try {
             Glide.with(getApplicationContext()).load(R.drawable.gradient_player).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBg);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }         try {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(getApplicationContext()).load(R.drawable.disclaimer).thumbnail(0.05f)
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
@@ -2504,9 +2506,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             }
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
+
 
         if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);

@@ -2074,6 +2074,15 @@ public class MiniPlayerFragment extends Fragment {
 
     private void getPrepareShowData() {
         callButtonText(position);
+        SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String jsonz = sharedz.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+//                                    mainPlayModelList=new ArrayList<>();
+        if (!jsonz.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+            }.getType();
+            mainPlayModelList = gson.fromJson(jsonz, type);
+        }
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
         } else {

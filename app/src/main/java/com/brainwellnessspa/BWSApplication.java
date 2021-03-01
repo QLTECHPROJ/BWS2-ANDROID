@@ -317,10 +317,4 @@ public class BWSApplication extends Application {
         mContext = this;
         BWSApplication = this;
     }
-
-    @Override
-    public void onTerminate() {
-        relesePlayer(mContext);
-        super.onTerminate();
-    }
 }

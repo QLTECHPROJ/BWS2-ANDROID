@@ -509,6 +509,7 @@ Appointment Audios dddd*/
                 }
             }
             InitNotificationAudioPLayer(ctx, mainPlayModelList);
+            UpdateNotificationAudioPLayer(ctx);
         }
 //        playerNotificationManager.setPlayer(player);
     }
@@ -648,13 +649,19 @@ Appointment Audios dddd*/
                 if (mediaSession != null) {
                     mediaSessionConnector = new MediaSessionConnector(mediaSession);
                     mediaSessionConnector.setPlayer(player);
-                    mediaSessionConnector.setMediaMetadataProvider(player -> {
+                    mediaSessionConnector.setMediaMetadataProvider(player1 -> {
                         long duration;
                         if (player.getDuration() < 0)
                             duration = player.getCurrentPosition();
                         else
                             duration = player.getDuration();
-
+                        SharedPreferences sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        String jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        if (!jsonxx.equalsIgnoreCase(String.valueOf(gson))) {
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            mainPlayModelList1 = gson.fromJson(jsonxx, type);
+                        }
                         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
@@ -1296,7 +1303,7 @@ Appointment Audios dddd*/
 //                        .build());
                 mediaSessionConnector = new MediaSessionConnector(mediaSession);
                 mediaSessionConnector.setPlayer(player);
-                mediaSessionConnector.setMediaMetadataProvider(player -> {
+                mediaSessionConnector.setMediaMetadataProvider(player1 -> {
                     long duration;
                     if (player.getDuration() < 0)
                         duration = player.getCurrentPosition();
@@ -1304,6 +1311,13 @@ Appointment Audios dddd*/
                         duration = player.getDuration();
 
                     MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                    SharedPreferences sharedsa1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    String json1 = sharedsa1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                    if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                        }.getType();
+                        mainPlayModelList1 = gson.fromJson(json1, type);
+                    }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
                         builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());

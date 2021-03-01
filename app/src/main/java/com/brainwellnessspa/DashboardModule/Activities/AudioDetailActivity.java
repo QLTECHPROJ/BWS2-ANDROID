@@ -94,7 +94,7 @@ public class AudioDetailActivity extends AppCompatActivity {
     List<String> downloadAudioDetailsList;
     Properties p;
     AudioDatabase DB;
-    int position, listSize, playerpos, hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
+    int position = 0, listSize, playerpos, hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     //    Handler handler1;
 //    List<String> fileNameList;
     private long mLastClickTime = 0;
@@ -893,20 +893,20 @@ public class AudioDetailActivity extends AppCompatActivity {
                 }
                 if (!entryNot) {
                     url1.add(audioFile);
-                name1.add(Name);
-                downloadPlaylistId.add("");
-                if (url1.size() != 0) {
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String urlJson = gson.toJson(url1);
-                    String nameJson = gson.toJson(name1);
-                    String playlistIdJson = gson.toJson(downloadPlaylistId);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
-                }
+                    name1.add(Name);
+                    downloadPlaylistId.add("");
+                    if (url1.size() != 0) {
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        String urlJson = gson.toJson(url1);
+                        String nameJson = gson.toJson(name1);
+                        String playlistIdJson = gson.toJson(downloadPlaylistId);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                        editor.commit();
+                    }
 //        fileNast = url1;
                     if (!isDownloading) {
                         isDownloading = true;
@@ -922,7 +922,8 @@ public class AudioDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void SaveMedia(int i, int progress) { DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+    private void SaveMedia(int i, int progress) {
+        DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
         p = new Properties();
         if (!comeFrom.equalsIgnoreCase("")) {
             if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
@@ -1007,13 +1008,13 @@ public class AudioDetailActivity extends AppCompatActivity {
         p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
 
-        Log.e("Download Media Audio","1");
+        Log.e("Download Media Audio", "1");
         try {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
-        }catch(Exception|OutOfMemoryError e) {
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
-        Log.e("Download Media Audio","3");
+        Log.e("Download Media Audio", "3");
         SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -1081,105 +1082,26 @@ public class AudioDetailActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
                     if (response.isSuccessful()) {
-                        try {
+                        binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        AudioLikeModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                            Like = "0";
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            AudioLikeModel model = response.body();
-                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
-                                Like = "0";
-                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                                Like = "1";
-                            }
-                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            Like = "1";
+                        }
+                        SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
                             AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            if (audioPlay) {
-                                SharedPreferences sharedq = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
-                                Gson gsonq = new Gson();
-                                if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-                                    Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
-                                    }.getType();
-                                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
-                                    Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
-                                    }.getType();
-                                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
-                                    Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
-                                    }.getType();
-                                    ArrayList<SearchBothModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
-                                    Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
-                                    }.getType();
-                                    ArrayList<SuggestedModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                                    Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
-                                    }.getType();
-                                    ArrayList<AppointmentDetailModel.Audio> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                                    Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-                                    }.getType();
-                                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-                                    }.getType();
-                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
-                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-                                    }.getType();
-                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
-                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-                                    }.getType();
-                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-                                    }.getType();
-                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                    String json2 = gson.toJson(arrayList);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                }
-                            }
-                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                                AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
-
+                            try {
                                 if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
 
                                 } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
@@ -1192,6 +1114,8 @@ public class AudioDetailActivity extends AppCompatActivity {
                                     ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gsonx.fromJson(json, type1);
                                     LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
                                     MainPlayModel mainPlayModel1 = new MainPlayModel();
+
+                                    int size = mainPlayModelList.size();
                                     if (!comeFrom.equalsIgnoreCase("")) {
                                         if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
                                             mainPlayModel.setID(mDataDownload.get(position).getID());
@@ -1284,14 +1208,14 @@ public class AudioDetailActivity extends AppCompatActivity {
                                         mainPlayModel1.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
                                     }
 
-                                    String jsonz = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                                    SharedPreferences sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    String jsonz = sharedz.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
 //                                    mainPlayModelList=new ArrayList<>();
                                     if (!jsonz.equalsIgnoreCase(String.valueOf(gson))) {
                                         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                                         }.getType();
                                         mainPlayModelList = gson.fromJson(jsonz, type);
                                     }
-                                    int size = mainPlayModelList.size();
                                     arrayList.add(arrayList.size(), mainPlayModel);
                                     mainPlayModelList.add(mainPlayModelList.size(), mainPlayModel1);
                                     SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -1315,26 +1239,108 @@ public class AudioDetailActivity extends AppCompatActivity {
                                         ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                     }
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
-                            if (queuePlay) {
-                                addToQueueModelList.get(position).setLike(Like);
-                            } else
-                                mainPlayModelList.get(position).setLike(Like);
-
-                            String json = gson.toJson(mainPlayModelList);
-                            editor.putString(CONSTANTS.PREF_KEY_audioList, json);
-                            if (queuePlay) {
-                                String json1 = gson.toJson(addToQueueModelList);
-                                editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
-                            }
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editor.commit();
-
-                            BWSApplication.showToast(model.getResponseMessage(), ctx);
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                        if (audioPlay) {
+                            try {
+                                SharedPreferences sharedq = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+                                Gson gsonq = new Gson();
+                                if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+                                    Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+                                    }.getType();
+                                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+                                    Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+                                    }.getType();
+                                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                                    Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
+                                    }.getType();
+                                    ArrayList<SearchBothModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                                    Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
+                                    }.getType();
+                                    ArrayList<SuggestedModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                                    Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+                                    }.getType();
+                                    ArrayList<AppointmentDetailModel.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                                    Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                                    }.getType();
+                                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                    }.getType();
+                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                    }.getType();
+                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                    }.getType();
+                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                    }.getType();
+                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (queuePlay) {
+                            addToQueueModelList.get(position).setLike(Like);
+                        } else
+                            mainPlayModelList.get(position).setLike(Like);
+
+                        String json = gson.toJson(mainPlayModelList);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                        if (queuePlay) {
+                            String json1 = gson.toJson(addToQueueModelList);
+                            editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                        }
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.commit();
+
+                        BWSApplication.showToast(model.getResponseMessage(), ctx);
+
                     }
                 }
 
@@ -1413,7 +1419,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                         } else {
                             PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                         }
-                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId,audioFileName);
+                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId, audioFileName);
                         binding.cvImage.setVisibility(View.VISIBLE);
                         binding.llLike.setVisibility(View.VISIBLE);
                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
@@ -1643,7 +1649,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                 callDisableDownload();
             } else {
                 boolean entryNot = false;
-                if(fileNameList.size()!=0) {
+                if (fileNameList.size() != 0) {
                     for (int i = 0; i < fileNameList.size(); i++) {
                         if (fileNameList.get(i).equalsIgnoreCase(audioFileName)
                                 && playlistDownloadId.get(i).equalsIgnoreCase("")) {
