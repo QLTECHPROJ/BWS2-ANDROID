@@ -106,16 +106,20 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
 
-/*
         binding.etEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    BWSApplication.showToast("DOneee", ctx);
+                        final View lastView = binding.nestedScroll.getChildAt(binding.nestedScroll.getChildCount() - 1);
+                        final int lastViewBottom = lastView.getBottom() + binding.nestedScroll.getPaddingBottom();
+                        final int deltaScrollY = lastViewBottom - binding.nestedScroll.getHeight() - binding.nestedScroll.getScrollY();
+                        /* If you want to see the scroll animation, call this. */
+                    binding.nestedScroll.smoothScrollBy(0, deltaScrollY);
+                        /* If you don't want, call this. */
+                    binding.nestedScroll.scrollBy(0, deltaScrollY);
                 }
             }
         });
-*/
     }
 
     private void selectImage() {
