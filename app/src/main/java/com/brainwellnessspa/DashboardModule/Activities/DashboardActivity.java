@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,9 +31,11 @@ import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
+import com.google.android.exoplayer2.util.Util;
 import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
@@ -41,6 +44,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.mediaSession;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -68,10 +72,18 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+       /* Intent playbackServiceIntent = new Intent(getApplicationContext(), GlobalInitExoPlayer.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Util.startForegroundService(this, playbackServiceIntent);
+        } else {
+            startService(playbackServiceIntent);
+        }*/
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
         }
+
         uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
         if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
                 || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
@@ -281,10 +293,30 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     protected void onDestroy() {
 //        serviceRemoved = true;
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
+//        BWSApplication.showToast("Clicked", DashboardActivity.this);
+/*
+        if (player != null) {
+//            notificationManager.cancel(notificationId);
+//            player = null;
+            if (mediaSession != null) {
+                mediaSession.removeOnActiveChangeListener(new MediaSessionCompat.OnActiveChangeListener() {
+                    @Override
+                    public void onActiveChanged() {
+                        mediaSession.setActive(false);
+                        mediaSession.release();
+                        playerNotificationManager.setPlayer(null);
+                        player.release();
+                    }
+                });
+            }
+//            PlayerINIT = false;
+        }
+*/
+
         if (!backpressed) {
             relesePlayer(DashboardActivity.this);
         } else {
-//            nothing
+//            null
         }
         unregisterReceiver(myNetworkReceiver);
         deleteCache(DashboardActivity.this);

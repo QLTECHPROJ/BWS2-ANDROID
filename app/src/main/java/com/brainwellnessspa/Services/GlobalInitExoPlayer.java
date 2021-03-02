@@ -102,7 +102,7 @@ public class GlobalInitExoPlayer extends Service {
     public static MediaSessionConnector mediaSessionConnector;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
-    Notification notification1;
+//    Notification notification1;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
 
@@ -181,17 +181,23 @@ public class GlobalInitExoPlayer extends Service {
 
     public static void relesePlayer(Context context) {
         if (player != null) {
-            mediaSession.setActive(false);
+            mediaSession.release();
+            mediaSessionConnector.setPlayer(null);
+            playerNotificationManager.setPlayer(null);
+            player.release();
+            player = null;
+           /* mediaSession.setActive(false);
             playerNotificationManager.setPlayer(null);
             player.release();
             notificationManager.cancel(notificationId);
 //            player = null;
+            if (mediaSession != null) {
+                mediaSession.setActive(false);
+                mediaSession.release();
+            }*/
             PlayerINIT = false;
         }
-        if (mediaSession != null) {
-            mediaSession.setActive(false);
-            mediaSession.release();
-        }
+
     }
 
     public static String GetSourceName(Context ctx) {
@@ -440,7 +446,13 @@ Appointment Audios dddd*/
 
     @Override
     public void onDestroy() {
+        mediaSession.release();
+        mediaSessionConnector.setPlayer(null);
+        playerNotificationManager.setPlayer(null);
+        player.release();
+        player = null;
         super.onDestroy();
+/*
         if (player != null) {
             player.stop();
             playerNotificationManager.setPlayer(null);
@@ -452,6 +464,7 @@ Appointment Audios dddd*/
             notificationManager.cancel(notificationId);
             stopForeground(true);
         }
+*/
     }
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
@@ -592,8 +605,9 @@ Appointment Audios dddd*/
                 new PlayerNotificationManager.NotificationListener() {
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
-//                        getMediaBitmap(ctx, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                        notification1 = notification;
+                       /* if (ongoing) {
+                            startForeground(notificationId, notification);
+                        }*/
                     }
 
                     @Override
@@ -744,7 +758,9 @@ Appointment Audios dddd*/
                 new PlayerNotificationManager.NotificationListener() {
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
-                        notification1 = notification;
+                        if (ongoing) {
+                            startForeground(notificationId, notification);
+                        }
                     }
 
                     @Override
@@ -758,6 +774,7 @@ Appointment Audios dddd*/
                 });
 
         mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
+//        mediaSession.setCaptioningEnabled(true);
         mediaSession.setActive(true);
         playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
         //aa comment delete na krvi
@@ -813,7 +830,7 @@ Appointment Audios dddd*/
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        try {
+        /*try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 startForeground(startId, notification1, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -823,7 +840,7 @@ Appointment Audios dddd*/
             e.printStackTrace();
             Log.e("Start Command: ", e.getMessage());
         }
-        serviceConected = true;
+        serviceConected = true;*/
         return START_STICKY;
     }
 

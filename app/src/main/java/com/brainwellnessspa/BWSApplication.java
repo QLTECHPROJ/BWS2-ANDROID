@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.room.migration.Migration;
@@ -60,6 +61,9 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.mediaSession;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static java.sql.DriverManager.println;
@@ -76,6 +80,25 @@ public class BWSApplication extends Application {
 
     public static Context getContext() {
         return mContext;
+    }
+
+    @Override
+    public void onTerminate() {
+      /*  showToast("Clicked", getContext());
+        if (player != null) {
+            mediaSession.setActive(false);
+            playerNotificationManager.setPlayer(null);
+            player.release();
+//            notificationManager.cancel(notificationId);
+//            player = null;
+            if (mediaSession != null) {
+                mediaSession.setActive(false);
+                mediaSession.release();
+            }
+//            PlayerINIT = false;
+        }
+*/
+        super.onTerminate();
     }
 
     public static void scheduleJob(Context context) {

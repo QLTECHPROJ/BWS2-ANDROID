@@ -10,6 +10,8 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -85,6 +87,8 @@ public class UserProfileActivity extends AppCompatActivity {
         activity = UserProfileActivity.this;
         mRequestPermissionHandler = new RequestPermissionHandler();
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        Account[] list = manager.getAccounts();
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -110,16 +114,19 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                        final View lastView = binding.nestedScroll.getChildAt(binding.nestedScroll.getChildCount() - 1);
+                    binding.etEmail.setFocusable(true);
+                    binding.etEmail.setFocusableInTouchMode(true);
+                    final View lastView = binding.nestedScroll.getChildAt(binding.nestedScroll.getChildCount() - 1);
                         final int lastViewBottom = lastView.getBottom() + binding.nestedScroll.getPaddingBottom();
                         final int deltaScrollY = lastViewBottom - binding.nestedScroll.getHeight() - binding.nestedScroll.getScrollY();
-                        /* If you want to see the scroll animation, call this. */
+//                         If you want to see the scroll animation, call this.
                     binding.nestedScroll.smoothScrollBy(0, deltaScrollY);
-                        /* If you don't want, call this. */
+//                         If you don't want, call this.
                     binding.nestedScroll.scrollBy(0, deltaScrollY);
                 }
             }
         });
+        profileViewData(ctx);
     }
 
     private void selectImage() {
@@ -443,7 +450,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        profileViewData(ctx);
+
         super.onResume();
     }
 

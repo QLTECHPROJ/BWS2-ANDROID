@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/rlMainLayout"
             android:overScrollMode="never"
-            android:paddingBottom="@dimen/_98sdp">
+            android:paddingBottom="@dimen/_110sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +56,8 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal">
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white">
 
                     <RelativeLayout
                         android:id="@+id/rlImageUpload"
@@ -349,7 +350,11 @@
                                 android:fontFamily="@font/montserrat_regular"
                                 android:hint="@string/Email_Address"
                                 android:imeOptions="actionDone"
+                                android:importantForAutofill="auto"
+                                android:inputType="textEmailAddress"
                                 android:maxLines="1"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"

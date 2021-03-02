@@ -89,6 +89,7 @@ public class AccountFragment extends Fragment {
     FancyShowCaseQueue queue;
     private long mLastClickTime = 0;
     List<ContactlistModel> userList = new ArrayList<>();
+    Dialog logoutDialog, supportDialog;
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -262,13 +263,13 @@ public class AccountFragment extends Fragment {
         });
 
         binding.llSupport.setOnClickListener(view18 -> {
-            final Dialog dialog = new Dialog(getActivity());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.support_layout);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final TextView tvEmail = dialog.findViewById(R.id.tvEmail);
-            final LinearLayout llClose = dialog.findViewById(R.id.llClose);
+            supportDialog = new Dialog(getActivity());
+            supportDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            supportDialog.setContentView(R.layout.support_layout);
+            supportDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            supportDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final TextView tvEmail = supportDialog.findViewById(R.id.tvEmail);
+            final LinearLayout llClose = supportDialog.findViewById(R.id.llClose);
             tvEmail.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 String[] recipients = {"support@brainwellnessapp.com"};
@@ -285,34 +286,34 @@ public class AccountFragment extends Fragment {
                 }
             });
 
-            dialog.setOnKeyListener((v, keyCode, event) -> {
+            supportDialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss();
+                    supportDialog.dismiss();
                     return true;
                 }
                 return false;
             });
 
-            llClose.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
-            dialog.setCancelable(false);
+            llClose.setOnClickListener(v -> supportDialog.dismiss());
+            supportDialog.show();
+            supportDialog.setCancelable(false);
         });
 
         binding.llLogout.setOnClickListener(view19 -> {
             if (BWSApplication.isNetworkConnected(getActivity())) {
-                final Dialog dialog = new Dialog(getActivity());
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.logout_layout);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final Button Btn = dialog.findViewById(R.id.Btn);
-                final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
-                final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+                logoutDialog = new Dialog(getActivity());
+                logoutDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                logoutDialog.setContentView(R.layout.logout_layout);
+                logoutDialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                logoutDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                final TextView tvGoBack = logoutDialog.findViewById(R.id.tvGoBack);
+                final Button Btn = logoutDialog.findViewById(R.id.Btn);
+                final ProgressBar progressBar = logoutDialog.findViewById(R.id.progressBar);
+                final FrameLayout progressBarHolder = logoutDialog.findViewById(R.id.progressBarHolder);
 
-                dialog.setOnKeyListener((v, keyCode, event) -> {
+                logoutDialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.hide();
+                        logoutDialog.hide();
                         return true;
                     }
                     return false;
@@ -321,12 +322,12 @@ public class AccountFragment extends Fragment {
                 Btn.setOnClickListener(v -> {
                     BWSApplication.showProgressBar(progressBar, progressBarHolder, getActivity());
                     relesePlayer(getActivity());
-                     DeleteCall(dialog, progressBar, progressBarHolder);
+                    DeleteCall(logoutDialog, progressBar, progressBarHolder);
                 });
 
-                tvGoBack.setOnClickListener(v -> dialog.hide());
-                dialog.show();
-                dialog.setCancelable(false);
+                tvGoBack.setOnClickListener(v -> logoutDialog.hide());
+                logoutDialog.show();
+                logoutDialog.setCancelable(false);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
