@@ -85,8 +85,9 @@ public class AptAudioFragment extends Fragment {
     AudioListAdapter appointmentsAdapter;
     long myProgress = 0;
     Properties p;
-    private Handler handler1;
+//    private Handler handler1;
     AudioDatabase DB;
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
     private long currentDuration = 0;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
@@ -113,7 +114,15 @@ public class AptAudioFragment extends Fragment {
             }
         }
     };
-
+    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getDownloadData();
+            if (intent.hasExtra("Progress")) {
+                appointmentsAdapter.notifyDataSetChanged();
+            }
+        }
+    };
     @Override
     public void onResume() {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));
@@ -124,7 +133,7 @@ public class AptAudioFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
-        handler1 = new Handler();
+//        handler1 = new Handler();
 //        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -151,6 +160,8 @@ public class AptAudioFragment extends Fragment {
             binding.rvAudioList.setLayoutManager(recentlyPlayed);
             binding.rvAudioList.setItemAnimator(new DefaultItemAnimator());
             binding.rvAudioList.setAdapter(appointmentsAdapter);
+            LocalBroadcastManager.getInstance(getActivity())
+                    .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
         }
         return view;
     }
@@ -165,8 +176,39 @@ public class AptAudioFragment extends Fragment {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener1);
         super.onDestroy();
     }
+    private void getDownloadData() {
+        try {
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+                audiofilelist = gson.fromJson(jsonx, type);
+                if (fileNameList.size() != 0) {
+//                        handler1.postDelayed(UpdateSongTime1, 30000);
+                } else {
+                    audiofilelist = new ArrayList<>();
+                    fileNameList = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+                }
+            } else {
+                fileNameList = new ArrayList<>();
+                audiofilelist = new ArrayList<>();
+                playlistDownloadId = new ArrayList<>();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
 
@@ -223,7 +265,6 @@ public class AptAudioFragment extends Fragment {
         public FragmentManager f_manager;
         Context ctx;
         String Name, songId;
-        List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
         int ps = 0, nps = 0;
         Runnable UpdateSongTime1;
         private ArrayList<AppointmentDetailModel.Audio> listModelList;
@@ -253,7 +294,7 @@ public class AptAudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
-            UpdateSongTime1 = new Runnable() {
+         /*   UpdateSongTime1 = new Runnable() {
                 @Override
                 public void run() {
                     for (int f = 0; f < listModelList.size(); f++) {
@@ -286,7 +327,7 @@ public class AptAudioFragment extends Fragment {
                     }
                     handler1.postDelayed(this, 300);
                 }
-            };
+            };*/
 //            holder.binding.equalizerview.setcolo
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -330,7 +371,7 @@ public class AptAudioFragment extends Fragment {
             }
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
-                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName())) {
+                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
                             if (downloadProgress <= 100) {
                                 if (downloadProgress == 100) {
@@ -345,11 +386,16 @@ public class AptAudioFragment extends Fragment {
                                 holder.binding.pbProgress.setVisibility(View.GONE);
                                 holder.binding.ivDownload.setVisibility(View.VISIBLE);
                             }
+                            break;
                         } else {
+                            holder.binding.pbProgress.setProgress(0);
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownload.setVisibility(View.GONE);
-                            handler1.postDelayed(UpdateSongTime1, 200);
+                            break;
                         }
+                    } else if (i == fileNameList.size() - 1) {
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                        holder.binding.ivDownload.setVisibility(View.VISIBLE);
                     }
                 }
             } else {
@@ -482,7 +528,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 holder.binding.ivDownload.setVisibility(View.GONE);
                 fileNameList = url1;
-                handler1.postDelayed(UpdateSongTime1, 500);
+//                handler1.postDelayed(UpdateSongTime1, 500);
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
                 SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
             });
@@ -533,32 +579,6 @@ public class AptAudioFragment extends Fragment {
                 editor.commit();
                 boolean commit = editor.commit();
                 callAddTransFrag();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void getDownloadData() {
-            try {
-                SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                Gson gson = new Gson();
-                String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-                String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-                if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                    Type type = new TypeToken<List<String>>() {
-                    }.getType();
-                    fileNameList = gson.fromJson(jsony, type);
-                    playlistDownloadId = gson.fromJson(jsonq, type);
-                    if (fileNameList.size() != 0) {
-                        handler1.postDelayed(UpdateSongTime1, 500);
-                    } else {
-                        fileNameList = new ArrayList<>();
-                        playlistDownloadId = new ArrayList<>();
-                    }
-                } else {
-                    fileNameList = new ArrayList<>();
-                    playlistDownloadId = new ArrayList<>();
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
