@@ -782,6 +782,7 @@ Appointment Audios dddd*/
                                 Log.e("Start Command: ", e.getMessage());
                             }   */
                         }
+                        notification1 = notification;
                     }
 
                     @Override
@@ -857,11 +858,11 @@ Appointment Audios dddd*/
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForeground(startId, notification1);
             }
+            serviceConected = true;
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("Start Command: ", e.getMessage());
         }
-        serviceConected = true;
         return START_STICKY;
     }
 
