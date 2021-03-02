@@ -1,7 +1,6 @@
 package com.brainwellnessspa.Services;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -44,9 +43,6 @@ import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.brainwellnessspa.Utility.MusicService;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
@@ -75,7 +71,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -102,7 +97,7 @@ public class GlobalInitExoPlayer extends Service {
     public static MediaSessionConnector mediaSessionConnector;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
-//    Notification notification1;
+    Notification notification1;
     Intent playbackServiceIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
 
@@ -605,15 +600,32 @@ Appointment Audios dddd*/
                 new PlayerNotificationManager.NotificationListener() {
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
-                       /* if (ongoing) {
-                            startForeground(notificationId, notification);
-                        }*/
+                        if (ongoing) {
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    startForeground(notificationId,notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+                                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    startForeground(notificationId, notification);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.e("Start Command: ", e.getMessage());
+                            }
+                        }
+                        notification1 = notification;
                     }
 
                     @Override
                     public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
                         if (dismissedByUser) {
                             stopSelf();
+                            try {
+                                stopForeground(true);
+                                serviceConected = false;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.e("Notification errrr: ", e.getMessage());
+                            }
                             // Do what the app wants to do when dismissed by the user,
                             // like calling stopForeground(true); or stopSelf();
                         }
@@ -759,7 +771,16 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
                         if (ongoing) {
-                            startForeground(notificationId, notification);
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    startForeground(notificationId,notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+                                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    startForeground(notificationId, notification);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.e("Start Command: ", e.getMessage());
+                            }
                         }
                     }
 
@@ -830,7 +851,7 @@ Appointment Audios dddd*/
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /*try {
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 startForeground(startId, notification1, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -840,7 +861,7 @@ Appointment Audios dddd*/
             e.printStackTrace();
             Log.e("Start Command: ", e.getMessage());
         }
-        serviceConected = true;*/
+        serviceConected = true;
         return START_STICKY;
     }
 
