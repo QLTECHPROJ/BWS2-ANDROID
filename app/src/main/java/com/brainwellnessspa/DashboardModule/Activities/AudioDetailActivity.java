@@ -1325,18 +1325,18 @@ public class AudioDetailActivity extends AppCompatActivity {
                             }
                         }
 
-                        if (queuePlay) {
+                       /* crash aave 6 etle temp comment kryu
+                       if (queuePlay) {
                             addToQueueModelList.get(position).setLike(Like);
                         } else
                             mainPlayModelList.get(position).setLike(Like);
 
                         String json = gson.toJson(mainPlayModelList);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);*/
                         if (queuePlay) {
                             String json1 = gson.toJson(addToQueueModelList);
                             editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
                         }
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
                         editor.commit();
 
                         BWSApplication.showToast(model.getResponseMessage(), ctx);
