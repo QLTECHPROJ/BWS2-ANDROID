@@ -178,20 +178,31 @@ public class GlobalInitExoPlayer extends Service {
         if (player != null) {
             mediaSession.release();
             mediaSessionConnector.setPlayer(null);
-            playerNotificationManager.setPlayer(null);
-            player.release();
             player = null;
-           /* mediaSession.setActive(false);
             playerNotificationManager.setPlayer(null);
+//            player.stop();
             player.release();
-            notificationManager.cancel(notificationId);
 //            player = null;
-            if (mediaSession != null) {
-                mediaSession.setActive(false);
-                mediaSession.release();
-            }*/
             PlayerINIT = false;
         }
+
+//        if (player != null) {
+//            mediaSession.release();
+//            mediaSessionConnector.setPlayer(null);
+//            playerNotificationManager.setPlayer(null);
+//            player.release();
+//            player = null;
+//           /* mediaSession.setActive(false);
+//            playerNotificationManager.setPlayer(null);
+//            player.release();
+//            notificationManager.cancel(notificationId);
+////            player = null;
+//            if (mediaSession != null) {
+//                mediaSession.setActive(false);
+//                mediaSession.release();
+//            }*/
+//            PlayerINIT = false;
+//        }
 
     }
 
@@ -439,28 +450,28 @@ Appointment Audios dddd*/
         }*/
     }
 
-    @Override
-    public void onDestroy() {
-        mediaSession.release();
-        mediaSessionConnector.setPlayer(null);
-        playerNotificationManager.setPlayer(null);
-        player.release();
-        player = null;
-        super.onDestroy();
-/*
-        if (player != null) {
-            player.stop();
-            playerNotificationManager.setPlayer(null);
-            player.stop();
-            player.release();
-            player = null;
-            PlayerINIT = false;
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(notificationId);
-            stopForeground(true);
-        }
-*/
-    }
+//    @Override
+//    public void onDestroy() {
+////        mediaSession.release();
+////        mediaSessionConnector.setPlayer(null);
+////        playerNotificationManager.setPlayer(null);
+////        player.release();
+////        player = null;
+//        super.onDestroy();
+///*
+//        if (player != null) {
+//            player.stop();
+//            playerNotificationManager.setPlayer(null);
+//            player.stop();
+//            player.release();
+//            player = null;
+//            PlayerINIT = false;
+//            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//            notificationManager.cancel(notificationId);
+//            stopForeground(true);
+//        }
+//*/
+//    }
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         relesePlayer(ctx);
@@ -665,55 +676,49 @@ Appointment Audios dddd*/
             playerNotificationManager.setUseNextActionInCompactView(true);
 //            BWSApplication.showToast("Next available", ctx);
         }
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            try {
+                mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
+                mediaSession.setActive(true);
+                playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
 
-        try {
-            mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
-            mediaSession.setActive(true);
-            playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
-
-            if (player != null) {
-                if (mediaSession != null) {
-                    mediaSessionConnector = new MediaSessionConnector(mediaSession);
-                    mediaSessionConnector.setPlayer(player);
-                    mediaSessionConnector.setMediaMetadataProvider(player1 -> {
-                        long duration;
-                        if (player.getDuration() < 0)
-                            duration = player.getCurrentPosition();
-                        else
-                            duration = player.getDuration();
-                        SharedPreferences sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        String jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                        if (!jsonxx.equalsIgnoreCase(String.valueOf(gson))) {
-                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                            }.getType();
-                            mainPlayModelList1 = gson.fromJson(jsonxx, type);
-                        }
-                        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
-                            builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
-                        }
-                        builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                        builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
-                        try {
-                            builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
-                        } catch (OutOfMemoryError e) {
-                            e.printStackTrace();
-                        }
-                        if (duration > 0) {
-                            builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
-                        }
-                        return builder.build();
-                    });
-                } else {
-                    UpdateNotificationAudioPLayer(ctx);
-                }
+                mediaSessionConnector = new MediaSessionConnector(mediaSession);
+                mediaSessionConnector.setPlayer(player);
+                mediaSessionConnector.setMediaMetadataProvider(player1 -> {
+                    long duration;
+                    if (player.getDuration() < 0)
+                        duration = player.getCurrentPosition();
+                    else
+                        duration = player.getDuration();
+                    SharedPreferences sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    String jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                    if (!jsonxx.equalsIgnoreCase(String.valueOf(gson))) {
+                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                        }.getType();
+                        mainPlayModelList1 = gson.fromJson(jsonxx, type);
+                    }
+                    MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
+                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
+                    }
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
+                    try {
+                        builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
+                    } catch (OutOfMemoryError e) {
+                        e.printStackTrace();
+                    }
+                    if (duration > 0) {
+                        builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+                    }
+                    return builder.build();
+                });
+            } catch (Exception e) {
+                UpdateNotificationAudioPLayer(ctx);
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            UpdateNotificationAudioPLayer(ctx);
-            e.printStackTrace();
-        }
-
+//        }
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
         playerNotificationManager.setUsePreviousAction(true);
@@ -1379,7 +1384,7 @@ Appointment Audios dddd*/
             }
         } catch (Exception e) {
             e.printStackTrace();
-            UpdateNotificationAudioPLayer(ctx);
+//            UpdateNotificationAudioPLayer(ctx);
         }
     }
 

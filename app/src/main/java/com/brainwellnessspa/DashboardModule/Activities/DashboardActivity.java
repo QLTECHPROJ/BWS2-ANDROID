@@ -1,6 +1,5 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
-import android.app.NotificationManager;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,12 +29,8 @@ import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
-import com.google.android.exoplayer2.util.Util;
-import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
@@ -44,11 +38,6 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.mediaSession;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationManager;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {

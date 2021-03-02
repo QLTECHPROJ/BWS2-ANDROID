@@ -63,6 +63,7 @@
                         android:id="@+id/rlImageUpload"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@color/white"
                         android:layout_marginTop="@dimen/_16sdp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
@@ -76,6 +77,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/_4sdp"
+                            android:background="@color/white"
                             android:visibility="visible">
 
                             <de.hdodenhof.circleimageview.CircleImageView
