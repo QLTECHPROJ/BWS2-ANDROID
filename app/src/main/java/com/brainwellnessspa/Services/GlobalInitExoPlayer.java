@@ -601,7 +601,7 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
                         if (ongoing) {
-                            try {
+                      /*      try {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                                     startForeground(notificationId,notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
                                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -610,7 +610,7 @@ Appointment Audios dddd*/
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.e("Start Command: ", e.getMessage());
-                            }
+                            }*/
                         }
                         notification1 = notification;
                     }
@@ -771,7 +771,7 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
                         if (ongoing) {
-                            try {
+                    /*        try {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                                     startForeground(notificationId,notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
                                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -780,7 +780,7 @@ Appointment Audios dddd*/
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.e("Start Command: ", e.getMessage());
-                            }
+                            }   */
                         }
                     }
 
