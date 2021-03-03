@@ -45,12 +45,8 @@
         android:name="android.permission.CAMERA"
         android:required="true" />
 
-   <!-- <uses-permission
-        android:name="android.permission_group.CAMERA"
-        android:required="true" />-->
-
     <uses-feature
-        android:name="android.permission.CAMERA"
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <queries>
