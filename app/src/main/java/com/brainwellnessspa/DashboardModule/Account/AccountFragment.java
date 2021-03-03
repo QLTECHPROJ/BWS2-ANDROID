@@ -35,6 +35,8 @@ import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.downloader.PRDownloader;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
@@ -104,10 +106,10 @@ public class AccountFragment extends Fragment {
         DeviceID = (shared1.getString(CONSTANTS.PREF_KEY_DeviceID, ""));
         ComeScreenAccount = 1;
         comefromDownload = "0";
-        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
+       /* MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());*/
         /*binding.rvContactList.setHasFixedSize(true);
         RecyclerView.LayoutManager mListLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         binding.rvContactList.setLayoutManager(mListLayoutManager);
@@ -569,7 +571,8 @@ public class AccountFragment extends Fragment {
                             } else {
                                 binding.civProfile.setVisibility(View.VISIBLE);
                                 binding.rlLetter.setVisibility(View.GONE);
-                                Glide.with(ctx).load(profilePicPath).thumbnail(0.05f).dontAnimate().into(binding.civProfile);
+                                Glide.with(ctx).load(profilePicPath).thumbnail(0.10f)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126))).dontAnimate().into(binding.civProfile);
                             }
                         } else {
                             binding.tvName.setText(viewModel.getResponseData().getName());
@@ -584,7 +587,8 @@ public class AccountFragment extends Fragment {
                             } else {
                                 binding.civProfile.setVisibility(View.VISIBLE);
                                 binding.rlLetter.setVisibility(View.GONE);
-                                Glide.with(ctx).load(profilePicPath).thumbnail(0.05f).dontAnimate().into(binding.civProfile);
+                                Glide.with(ctx).load(profilePicPath).thumbnail(0.10f)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126))).dontAnimate().into(binding.civProfile);
                             }
                         }
                         IsLock = viewModel.getResponseData().getIsLock();

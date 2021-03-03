@@ -6,6 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:filterTouchesWhenObscured="false"
         android:background="@color/white">
 
         <RelativeLayout
@@ -56,43 +57,34 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@color/white">
+                    android:layout_gravity="center_horizontal">
 
                     <RelativeLayout
                         android:id="@+id/rlImageUpload"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:layout_marginTop="@dimen/_16sdp">
+                        android:layout_width="@dimen/_130sdp"
+                        android:layout_height="@dimen/_130sdp"
+                        android:layout_marginTop="@dimen/_20sdp">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
+                        <ImageView
                             android:id="@+id/civProfile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
 
                         <RelativeLayout
                             android:id="@+id/rlLetter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:padding="@dimen/_4sdp"
-                            android:background="@color/white"
+                            android:background="@drawable/profile_number_drawable"
                             android:visibility="visible">
-
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/civLetter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:padding="@dimen/_4sdp"
-                                android:src="@color/blue" />
 
                             <TextView
                                 android:id="@+id/tvLetter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
+                                android:gravity="center"
                                 android:fontFamily="@font/montserrat_semi_bold"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_46sdp" />
@@ -117,7 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_24sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
                     android:layout_marginRight="@dimen/_16sdp"
                     android:background="@drawable/light_gray_round_cornors"
                     android:weightSum="1">

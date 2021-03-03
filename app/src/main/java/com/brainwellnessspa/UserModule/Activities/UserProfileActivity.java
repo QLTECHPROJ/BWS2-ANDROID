@@ -39,6 +39,8 @@ import com.brainwellnessspa.Utility.APIClientProfile;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityUserProfileBinding;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
@@ -92,29 +94,25 @@ public class UserProfileActivity extends AppCompatActivity {
 
         binding.rlImageUpload.setOnClickListener(view -> selectImage());
         binding.btnSave.setOnClickListener(view -> profileUpdate());
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+       /* MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.32f, 0);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        MeasureRatio measureRatios = BWSApplication.measureRatio(ctx, 0,
-                1, 1, 0.32f, 0);
-        binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
-        binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
 
-        binding.etEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    binding.etEmail.setFocusable(true);
-                    binding.etEmail.setFocusableInTouchMode(true);
-                    final View lastView = binding.nestedScroll.getChildAt(binding.nestedScroll.getChildCount() - 1);
-                    final int lastViewBottom = lastView.getBottom() + binding.nestedScroll.getPaddingBottom();
-                    final int deltaScrollY = lastViewBottom - binding.nestedScroll.getHeight() - binding.nestedScroll.getScrollY();
+        binding.rlImageUpload.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.rlImageUpload.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());*/
+
+        binding.etEmail.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                binding.etEmail.setFocusable(true);
+                binding.etEmail.setFocusableInTouchMode(true);
+                final View lastView = binding.nestedScroll.getChildAt(binding.nestedScroll.getChildCount() - 1);
+                final int lastViewBottom = lastView.getBottom() + binding.nestedScroll.getPaddingBottom();
+                final int deltaScrollY = lastViewBottom - binding.nestedScroll.getHeight() - binding.nestedScroll.getScrollY();
 //                         If you want to see the scroll animation, call this.
-                    binding.nestedScroll.smoothScrollBy(0, deltaScrollY);
+                binding.nestedScroll.smoothScrollBy(0, deltaScrollY);
 //                         If you don't want, call this.
-                    binding.nestedScroll.scrollBy(0, deltaScrollY);
-                }
+                binding.nestedScroll.scrollBy(0, deltaScrollY);
             }
         });
         profileViewData(ctx);
@@ -298,8 +296,9 @@ public class UserProfileActivity extends AppCompatActivity {
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 Glide.with(this).load(imageFilePath)
-                        .thumbnail(0.1f)
-                        .skipMemoryCache(false).into(binding.civProfile);
+                        .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                        .into(binding.civProfile);
+
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
@@ -316,8 +315,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.1f)
-                                                .skipMemoryCache(false).into(binding.civProfile);
+                                                .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                                                .into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                         profileViewData(ctx);
                                     }
@@ -340,8 +339,8 @@ public class UserProfileActivity extends AppCompatActivity {
             if (data != null) {
                 Uri selectedImageUri = data.getData();
                 Glide.with(this).load(selectedImageUri)
-                        .thumbnail(0.1f)
-                        .skipMemoryCache(false).into(binding.civProfile);
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                        .into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
@@ -360,8 +359,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.1f)
-                                                .skipMemoryCache(false).into(binding.civProfile);
+                                                .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                                                .into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                         profileViewData(ctx);
                                     }
@@ -487,8 +486,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                 binding.civProfile.setVisibility(View.VISIBLE);
                                 binding.rlLetter.setVisibility(View.GONE);
                                 Glide.with(getApplicationContext()).load(profilePicPath)
-                                        .thumbnail(0.1f)
-                                        .skipMemoryCache(false).into(binding.civProfile);
+                                        .thumbnail(0.1f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                                        .into(binding.civProfile);
                             }
 
                             if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {

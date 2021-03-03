@@ -52,10 +52,10 @@
                             android:gravity="center"
                             android:orientation="vertical">
 
-                            <de.hdodenhof.circleimageview.CircleImageView
+                            <ImageView
                                 android:id="@+id/civProfile"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="@dimen/_70sdp"
+                                android:layout_height="@dimen/_70sdp"
                                 android:padding="@dimen/_2sdp"
                                 android:src="@drawable/default_profile"
                                 android:visibility="gone" />
@@ -65,9 +65,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:padding="@dimen/_2sdp"
+                                android:background="@drawable/profile_number_drawable"
                                 android:visibility="gone">
 
-                                <de.hdodenhof.circleimageview.CircleImageView
+                                <ImageView
                                     android:id="@+id/civLetter"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -77,9 +78,10 @@
 
                                 <TextView
                                     android:id="@+id/tvLetter"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:layout_centerInParent="true"
+                                    android:gravity="center"
                                     android:fontFamily="@font/montserrat_semi_bold"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_26sdp" />
