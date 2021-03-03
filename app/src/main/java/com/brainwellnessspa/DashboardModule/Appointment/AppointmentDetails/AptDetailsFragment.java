@@ -21,6 +21,8 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAptDetailsBinding;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.segment.analytics.Properties;
 
 public class AptDetailsFragment extends Fragment {
@@ -38,10 +40,10 @@ public class AptDetailsFragment extends Fragment {
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelable("AppointmentDetail");
         }
-        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+       /* MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                 1, 1, 0.24f, 0);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());*/
         binding.tvTilte.setText(appointmentDetail.getName());
         binding.tvFacilitator.setText(appointmentDetail.getFacilitator());
         binding.tvUserName.setText(appointmentDetail.getUserName());
@@ -58,7 +60,9 @@ public class AptDetailsFragment extends Fragment {
         }
 
 
-        Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
+        Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.10f)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
 
         if (appointmentDetail.getBookUrl().equalsIgnoreCase("")) {
             binding.btnComplete.setVisibility(View.GONE);

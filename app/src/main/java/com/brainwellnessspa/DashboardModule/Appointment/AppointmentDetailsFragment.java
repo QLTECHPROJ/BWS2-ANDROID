@@ -21,6 +21,8 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlay
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetails.AptAnswersFragment;
@@ -328,8 +330,8 @@ public class AppointmentDetailsFragment extends Fragment {
                                 binding.tvSubTitle.setText(globalAppointmentDetailModel.getResponseData().getDesc());
                                 binding.tvDate.setText(globalAppointmentDetailModel.getResponseData().getDate());
                                 binding.tvTime.setText(globalAppointmentDetailModel.getResponseData().getTime());
-                                Glide.with(getActivity()).load(globalAppointmentDetailModel.getResponseData().getImage()).thumbnail(0.05f)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
+                                Glide.with(getActivity()).load(globalAppointmentDetailModel.getResponseData().getImage()).thumbnail(0.10f)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126))).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
 
                                 if (globalAppointmentDetailModel.getResponseData().getDate().equalsIgnoreCase("")
                                         && globalAppointmentDetailModel.getResponseData().getUserName().equalsIgnoreCase("")

@@ -134,10 +134,10 @@ public class AccountFragment extends Fragment {
         phones.close();
         ContactListAdapter contactListAdapter = new ContactListAdapter(userList);
         binding.rvContactList.setAdapter(contactListAdapter);*/
-        MeasureRatio measureRatios = BWSApplication.measureRatio(getActivity(), 10,
+      /*  MeasureRatio measureRatios = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
-        binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
+        binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());*/
         Properties p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);

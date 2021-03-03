@@ -112,12 +112,8 @@ dependencies {
     implementation 'com.stripe:stripe-android:2.0.2'
 // TODO  Use Youtube Video Player
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-// TODO  Cardview Design Dependency
-//    implementation 'androidx.cardview:cardview:1.0.0'
 // TODO  Recyclerview Design & Development Dependency
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-// TODO  Circle Imageview Design Dependency
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
 // TODO Retrofit Development Dependency
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'//2.6.4
@@ -150,7 +146,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.1'
     implementation "io.gresse.hugo.vumeterlibrary:vumeterlibrary:1.0.17"
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.20'
-//    implementation 'com.tomash:androidcontacts:1.14.0'
 }
 repositories {
     mavenCentral()
