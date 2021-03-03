@@ -17,6 +17,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.os.StatFs;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -176,8 +177,12 @@ public class GlobalInitExoPlayer extends Service {
 
     public static void relesePlayer(Context context) {
         if (player != null) {
-            mediaSession.release();
-            mediaSessionConnector.setPlayer(null);
+            try {
+                mediaSession.release();
+                mediaSessionConnector.setPlayer(null);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             player = null;
             playerNotificationManager.setPlayer(null);
 //            player.stop();
