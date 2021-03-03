@@ -34,12 +34,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
 import com.brainwellnessspa.ReferralModule.Model.FavContactlistModel;
-import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityContactBookBinding;
@@ -87,18 +85,6 @@ public class ContactBookActivity extends AppCompatActivity {
         binding.rvContactList.setLayoutManager(mListLayoutManager);
         binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
         withoutSearch();
-       /*  AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
-                    buildermain.setMessage("Please Allow Contact Permission");
-                    buildermain.setCancelable(true);
-                    buildermain.setPositiveButton(
-                            getString(R.string.ok),
-                            (dialogmain, id1) -> {
-                                dialogmain.dismiss();
-                            });
-                    AlertDialog alert11 = buildermain.create();
-                    alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                    alert11.show();
-                    alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));*/
 
         binding.llBack.setOnClickListener(v -> finish());
         p = new Properties();
@@ -161,20 +147,6 @@ public class ContactBookActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.READ_CONTACTS,
                                 Manifest.permission.WRITE_CONTACTS},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                /*Intent intent = new Intent();
-                String manufacturer = Build.MANUFACTURER;
-                if ("xiaomi".equalsIgnoreCase(manufacturer)) {
-                    intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
-                } else if ("oppo".equalsIgnoreCase(manufacturer)) {
-                    intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
-                } else if ("vivo".equalsIgnoreCase(manufacturer)) {
-                    intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
-                }
-
-                List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-                if (list.size() > 0) {
-                    startActivity(intent);
-                }*/
             } else {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {

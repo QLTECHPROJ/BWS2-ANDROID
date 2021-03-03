@@ -1,6 +1,5 @@
 package com.brainwellnessspa.UserModule.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -10,8 +9,6 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -28,10 +25,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.brainwellnessspa.BuildConfig;
@@ -87,8 +80,6 @@ public class UserProfileActivity extends AppCompatActivity {
         activity = UserProfileActivity.this;
         mRequestPermissionHandler = new RequestPermissionHandler();
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
-        Account[] list = manager.getAccounts();
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -117,8 +108,8 @@ public class UserProfileActivity extends AppCompatActivity {
                     binding.etEmail.setFocusable(true);
                     binding.etEmail.setFocusableInTouchMode(true);
                     final View lastView = binding.nestedScroll.getChildAt(binding.nestedScroll.getChildCount() - 1);
-                        final int lastViewBottom = lastView.getBottom() + binding.nestedScroll.getPaddingBottom();
-                        final int deltaScrollY = lastViewBottom - binding.nestedScroll.getHeight() - binding.nestedScroll.getScrollY();
+                    final int lastViewBottom = lastView.getBottom() + binding.nestedScroll.getPaddingBottom();
+                    final int deltaScrollY = lastViewBottom - binding.nestedScroll.getHeight() - binding.nestedScroll.getScrollY();
 //                         If you want to see the scroll animation, call this.
                     binding.nestedScroll.smoothScrollBy(0, deltaScrollY);
 //                         If you don't want, call this.
