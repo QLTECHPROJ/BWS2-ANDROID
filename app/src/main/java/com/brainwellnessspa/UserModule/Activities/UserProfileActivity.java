@@ -66,7 +66,6 @@ public class UserProfileActivity extends AppCompatActivity {
     String UserID, profilePicPath = "", tryafter = "Try after 5 minutes", UserName, UserCalendar, UserMobileNumber, UserEmail;
     File image;
     Activity activity;
-    Uri selectedImageUri;
     CharSequence[] options;
     public int BirthYear;
     private static final int CONTENT_REQUEST = 100;
@@ -295,7 +294,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
-                setProfilePic(profilePicPath, "s", selectedImageUri);
+                setProfilePic(profilePicPath);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
@@ -311,7 +310,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         p.putValue("userId", UserID);
                                         BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        setProfilePic(profilePicPath, "s", selectedImageUri);
+                                        setProfilePic(profilePicPath);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                         profileViewData(ctx);
                                     }
@@ -332,11 +331,11 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                  selectedImageUri = data.getData();
+                Uri selectedImageUri = data.getData();
 //                Glide.with(this).load(selectedImageUri).dontAnimate()
 //                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
 //                        .into(binding.civProfile);
-                setProfilePic(selectedImageUri.toString(),"uri",selectedImageUri);
+                setProfilePic(selectedImageUri.toString());
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
@@ -354,7 +353,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         p.putValue("userId", UserID);
                                         BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        setProfilePic(profilePicPath, "s", selectedImageUri);
+                                        setProfilePic(profilePicPath);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                         profileViewData(ctx);
                                     }
@@ -378,17 +377,10 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void setProfilePic(String profilePicPath, String uri, Uri selectedImageUri) {
-        if(uri.equalsIgnoreCase("s")) {
-            Glide.with(getApplicationContext()).load(profilePicPath)
-                    .dontTransform()
-                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                    .into(binding.civProfile);
-        }else{
-            Glide.with(getApplicationContext()).load(selectedImageUri).dontTransform()
-                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                    .into(binding.civProfile);
-        }
+    private void setProfilePic(String profilePicPath) {
+        Glide.with(getApplicationContext()).load(profilePicPath).dontAnimate().dontAnimate()
+                .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                .into(binding.civProfile);
     }
 
     @Override
@@ -492,7 +484,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             } else {
                                 binding.civProfile.setVisibility(View.VISIBLE);
                                 binding.rlLetter.setVisibility(View.GONE);
-                                setProfilePic(profilePicPath, "s", selectedImageUri);
+                                setProfilePic(profilePicPath);
                             }
 
                             if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
