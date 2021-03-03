@@ -6,7 +6,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:filterTouchesWhenObscured="false"
         android:background="@color/white">
 
         <RelativeLayout
@@ -67,8 +66,8 @@
 
                         <ImageView
                             android:id="@+id/civProfile"
-                            android:layout_width="@dimen/_130sdp"
-                            android:layout_height="@dimen/_130sdp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:scaleType="fitXY"/>
 
                         <RelativeLayout

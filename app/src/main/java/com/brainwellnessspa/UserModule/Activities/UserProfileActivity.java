@@ -23,9 +23,11 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
+import com.brainwellnessspa.Utility.MeasureRatio;
 import com.bumptech.glide.Glide;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.R;
@@ -86,6 +88,10 @@ public class UserProfileActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         binding.llBack.setOnClickListener(view -> finish());
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                1, 1, 0.32f, 0);
+        binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 
         Properties p = new Properties();
         p.putValue("userId", UserID);
@@ -93,13 +99,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         binding.rlImageUpload.setOnClickListener(view -> selectImage());
         binding.btnSave.setOnClickListener(view -> profileUpdate());
-       /* MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                1, 1, 0.32f, 0);
-        binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
-        binding.rlImageUpload.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.rlImageUpload.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());*/
 
         binding.etEmail.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -378,7 +377,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void setProfilePic(String profilePicPath) {
-        Glide.with(getApplicationContext()).load(profilePicPath).dontAnimate().dontAnimate()
+        Glide.with(getApplicationContext()).load(profilePicPath)
                 .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
                 .into(binding.civProfile);
     }
