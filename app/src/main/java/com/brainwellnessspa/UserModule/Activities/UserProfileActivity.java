@@ -37,7 +37,6 @@ import com.brainwellnessspa.UserModule.Models.RemoveProfileModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.APIClientProfile;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityUserProfileBinding;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -67,6 +66,7 @@ public class UserProfileActivity extends AppCompatActivity {
     String UserID, profilePicPath = "", tryafter = "Try after 5 minutes", UserName, UserCalendar, UserMobileNumber, UserEmail;
     File image;
     Activity activity;
+    Uri selectedImageUri;
     CharSequence[] options;
     public int BirthYear;
     private static final int CONTENT_REQUEST = 100;
@@ -295,10 +295,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
-                Glide.with(this).load(imageFilePath)
-                        .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                        .into(binding.civProfile);
-
+                setProfilePic(profilePicPath, "s", selectedImageUri);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
@@ -314,9 +311,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         p.putValue("userId", UserID);
                                         BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                                                .into(binding.civProfile);
+                                        setProfilePic(profilePicPath, "s", selectedImageUri);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                         profileViewData(ctx);
                                     }
@@ -337,10 +332,11 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                Uri selectedImageUri = data.getData();
-                Glide.with(this).load(selectedImageUri)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                        .into(binding.civProfile);
+                  selectedImageUri = data.getData();
+//                Glide.with(this).load(selectedImageUri).dontAnimate()
+//                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+//                        .into(binding.civProfile);
+                setProfilePic(selectedImageUri.toString(),"uri",selectedImageUri);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
@@ -358,9 +354,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         p.putValue("userId", UserID);
                                         BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                                                .into(binding.civProfile);
+                                        setProfilePic(profilePicPath, "s", selectedImageUri);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                         profileViewData(ctx);
                                     }
@@ -381,6 +375,19 @@ public class UserProfileActivity extends AppCompatActivity {
             p.putValue("userId", UserID);
             BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
             finish();
+        }
+    }
+
+    private void setProfilePic(String profilePicPath, String uri, Uri selectedImageUri) {
+        if(uri.equalsIgnoreCase("s")) {
+            Glide.with(getApplicationContext()).load(profilePicPath)
+                    .dontTransform()
+                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                    .into(binding.civProfile);
+        }else{
+            Glide.with(getApplicationContext()).load(selectedImageUri).dontTransform()
+                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                    .into(binding.civProfile);
         }
     }
 
@@ -485,9 +492,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             } else {
                                 binding.civProfile.setVisibility(View.VISIBLE);
                                 binding.rlLetter.setVisibility(View.GONE);
-                                Glide.with(getApplicationContext()).load(profilePicPath)
-                                        .thumbnail(0.1f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                                        .into(binding.civProfile);
+                                setProfilePic(profilePicPath, "s", selectedImageUri);
                             }
 
                             if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
@@ -660,8 +665,6 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    String imageFilePath;
-
     private File createImageFile() throws IOException {
         String timeStamp =
                 new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -673,7 +676,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 ".jpg",
                 storageDir
         );
-        imageFilePath = image.getAbsolutePath();
+        profilePicPath = image.getAbsolutePath();
         return image;
     }
 
