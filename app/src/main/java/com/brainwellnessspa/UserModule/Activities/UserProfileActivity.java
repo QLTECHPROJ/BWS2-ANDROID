@@ -26,6 +26,7 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.bumptech.glide.Glide;
@@ -92,7 +93,17 @@ public class UserProfileActivity extends AppCompatActivity {
                 1, 1, 0.32f, 0);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
+        binding.rlLetter.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.rlLetter.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.rlImageUpload.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.rlImageUpload.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.civLetter.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.civLetter.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.civLetter.setScaleType(ImageView.ScaleType.FIT_XY);
+        binding.civProfile.setScaleType(ImageView.ScaleType.FIT_XY);
+        Glide.with(getApplicationContext()).load(R.drawable.profile_number_drawable)
+                .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                .into(binding.civLetter);
         Properties p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("User Profile Viewed", p, CONSTANTS.screen);
@@ -334,7 +345,7 @@ public class UserProfileActivity extends AppCompatActivity {
 //                Glide.with(this).load(selectedImageUri).dontAnimate()
 //                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
 //                        .into(binding.civProfile);
-                setProfilePic(selectedImageUri.toString());
+//                setProfilePic(selectedImageUri.toString());
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
