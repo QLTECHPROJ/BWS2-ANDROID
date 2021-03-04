@@ -1030,7 +1030,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
 //                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        if ((player.getCurrentPosition() >= oldSongPos + 29500) && (player.getCurrentPosition() <= oldSongPos + 31000)) {
+                        if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                             oldSongPos = player.getCurrentPosition();
                             Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                             callHeartbeat();
@@ -1553,8 +1553,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
 //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-            if ((positionx >= oldSongPos + 29500) && (positionx <= oldSongPos + 31000)) {
-                oldSongPos = positionx;
+            if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {                oldSongPos = positionx;
                 Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
