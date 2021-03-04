@@ -2,6 +2,7 @@ package com.brainwellnessspa;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.NotificationManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -19,9 +20,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +42,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
@@ -61,7 +65,9 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.mediaSession;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -80,25 +86,6 @@ public class BWSApplication extends Application {
 
     public static Context getContext() {
         return mContext;
-    }
-
-    @Override
-    public void onTerminate() {
-      /*  showToast("Clicked", getContext());
-        if (player != null) {
-            mediaSession.setActive(false);
-            playerNotificationManager.setPlayer(null);
-            player.release();
-//            notificationManager.cancel(notificationId);
-//            player = null;
-            if (mediaSession != null) {
-                mediaSession.setActive(false);
-                mediaSession.release();
-            }
-//            PlayerINIT = false;
-        }
-*/
-        super.onTerminate();
     }
 
     public static void scheduleJob(Context context) {
@@ -339,5 +326,67 @@ public class BWSApplication extends Application {
         super.onCreate();
         mContext = this;
         BWSApplication = this;
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }*/
     }
+
+/*
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+        private int numStarted = 0;
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            */
+/*if (numStarted == 0) {
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;*//*
+
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+           */
+/* numStarted--;
+            if (numStarted == 0) {
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }*//*
+
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            Log.e("APPLICATION", "App is in onActivityDestroyed");
+            showToast("BWS  onActivityDestroyed Called", getApplicationContext());
+            relesePlayer(getContext());
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+        }
+    }
+*/
 }

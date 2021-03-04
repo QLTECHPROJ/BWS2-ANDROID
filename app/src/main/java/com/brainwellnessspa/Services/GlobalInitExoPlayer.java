@@ -456,28 +456,7 @@ Appointment Audios dddd*/
         }*/
     }
 
-//    @Override
-//    public void onDestroy() {
-////        mediaSession.release();
-////        mediaSessionConnector.setPlayer(null);
-////        playerNotificationManager.setPlayer(null);
-////        player.release();
-////        player = null;
-//        super.onDestroy();
-///*
-//        if (player != null) {
-//            player.stop();
-//            playerNotificationManager.setPlayer(null);
-//            player.stop();
-//            player.release();
-//            player = null;
-//            PlayerINIT = false;
-//            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//            notificationManager.cancel(notificationId);
-//            stopForeground(true);
-//        }
-//*/
-//    }
+
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         relesePlayer(ctx);
@@ -877,15 +856,26 @@ Appointment Audios dddd*/
         return START_STICKY;
     }
 
-   /* @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
+  /*  @Override
+    public void onDestroy() {
+        Log.e("APPLICATION", "App is in onActivityDestroyed");
+        BWSApplication.showToast("onDestroy Called", getApplicationContext());
+        relesePlayer(getApplication());
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
+        super.onDestroy();
+    }*/
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        notificationManager.cancel(notificationId);
+        stopSelf();
 //        stopForeground(true);
 //        playerNotificationManager.cancel(notificationId);
         super.onTaskRemoved(rootIntent);
-    }*/
+    }
 
     @Nullable
     @Override

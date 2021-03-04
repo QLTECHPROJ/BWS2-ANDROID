@@ -52,7 +52,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <com.brainwellnessspa.RoundedImageView
                                 android:id="@+id/civProfile"
                                 android:layout_width="@dimen/_60sdp"
                                 android:layout_height="@dimen/_60sdp"
