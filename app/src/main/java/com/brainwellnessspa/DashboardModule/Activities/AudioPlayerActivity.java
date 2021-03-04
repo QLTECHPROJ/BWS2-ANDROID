@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
@@ -108,7 +109,9 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class AudioPlayerActivity extends AppCompatActivity {
     public AudioManager audioManager;
@@ -137,6 +140,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Handler handler2, handler1;
     int counterinit = 0;
     public static long oldSongPos = 0;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false ;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -777,6 +783,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
           /*  if (exoBinding.progressBar.getVisibility() == View.VISIBLE) {
                 isprogressbar = true;
             }*/
+            myBackPress = true;
             DatabaseClient
                     .getInstance(ctx)
                     .getaudioDatabase()
@@ -1567,6 +1574,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
             playerControlView.setFocusedByDefault(true);
         }
         playerControlView.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
     }
 
     private void callHeartbeat() {
@@ -2494,9 +2507,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
             Glide.with(getApplicationContext()).load(R.drawable.gradient_player).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBg);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }         try {
+        }
+        try {
             if (url.equalsIgnoreCase("")) {
                 Glide.with(getApplicationContext()).load(R.drawable.disclaimer).thumbnail(0.05f)
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
@@ -2506,7 +2520,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -3297,7 +3311,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-        private int numStarted = 0;
+
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -3307,6 +3321,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         @Override
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
+                stackStatus = 1;
                 APP_SERVICE_STATUS = getString(R.string.Foreground);
                 Log.e("APPLICATION", "APP IN FOREGROUND");
                 //app went to foreground
@@ -3328,6 +3343,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
+                if(!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                }else{
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
                 APP_SERVICE_STATUS = getString(R.string.Background);
                 Log.e("APPLICATION", "App is in BACKGROUND");
                 // app went to background
@@ -3341,7 +3364,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
         @Override
         public void onActivityDestroyed(Activity activity) {
-
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            }else{
+                Log.e("Destroy", "Activity go in main activity");
+            }
         }
     }
 }

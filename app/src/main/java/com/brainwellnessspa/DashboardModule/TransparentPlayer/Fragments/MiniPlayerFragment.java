@@ -2,6 +2,7 @@ package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.NotificationManager;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -85,7 +87,9 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.myBitmap;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -115,6 +119,9 @@ public class MiniPlayerFragment extends Fragment {
     Properties p;
     private long mLastClickTime = 0;
     Handler handler1;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false ;
     Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
@@ -172,6 +179,13 @@ public class MiniPlayerFragment extends Fragment {
             MakeArray2();
         }
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                myBackPress = true;
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -2100,7 +2114,6 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-        private int numStarted = 0;
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -2110,6 +2123,7 @@ public class MiniPlayerFragment extends Fragment {
         @Override
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
+                stackStatus = 1;
                 APP_SERVICE_STATUS = getString(R.string.Foreground);
                 Log.e("APPLICATION", "APP IN FOREGROUND");
                 //app went to foreground
@@ -2131,6 +2145,14 @@ public class MiniPlayerFragment extends Fragment {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
+                if(!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                }else{
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
                 APP_SERVICE_STATUS = getString(R.string.Background);
                 Log.e("APPLICATION", "App is in BACKGROUND");
                 // app went to background
@@ -2144,7 +2166,15 @@ public class MiniPlayerFragment extends Fragment {
 
         @Override
         public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getActivity());
+            }else{
 
+                Log.e("Destroy", "Activity go in main activity");
+            }
         }
     }
 }

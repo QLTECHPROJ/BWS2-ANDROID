@@ -181,7 +181,7 @@ public class GlobalInitExoPlayer extends Service {
             try {
                 mediaSession.release();
                 mediaSessionConnector.setPlayer(null);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             player = null;
@@ -457,7 +457,6 @@ Appointment Audios dddd*/
     }
 
 
-
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         relesePlayer(ctx);
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
@@ -597,16 +596,16 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
                         if (ongoing) {
-                      /*      try {
+                            try {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    startForeground(notificationId,notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+                                    startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
                                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     startForeground(notificationId, notification);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.e("Start Command: ", e.getMessage());
-                            }*/
+                            }
                         }
                         notification1 = notification;
                     }
@@ -615,13 +614,13 @@ Appointment Audios dddd*/
                     public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
                         if (dismissedByUser) {
                             stopSelf();
-                            try {
+                          /*  try {
                                 stopForeground(true);
                                 serviceConected = false;
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.e("Notification errrr: ", e.getMessage());
-                            }
+                            }*/
                             // Do what the app wants to do when dismissed by the user,
                             // like calling stopForeground(true); or stopSelf();
                         }
@@ -662,47 +661,47 @@ Appointment Audios dddd*/
 //            BWSApplication.showToast("Next available", ctx);
         }
 //        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            try {
-                mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
-                mediaSession.setActive(true);
-                playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+        try {
+            mediaSession = new MediaSessionCompat(ctx, ctx.getPackageName());
+            mediaSession.setActive(true);
+            playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
 
-                mediaSessionConnector = new MediaSessionConnector(mediaSession);
-                mediaSessionConnector.setPlayer(player);
-                mediaSessionConnector.setMediaMetadataProvider(player1 -> {
-                    long duration;
-                    if (player.getDuration() < 0)
-                        duration = player.getCurrentPosition();
-                    else
-                        duration = player.getDuration();
-                    SharedPreferences sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    String jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                    if (!jsonxx.equalsIgnoreCase(String.valueOf(gson))) {
-                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                        }.getType();
-                        mainPlayModelList1 = gson.fromJson(jsonxx, type);
-                    }
-                    MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
-                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
-                    }
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
-                    try {
-                        builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
-                    } catch (OutOfMemoryError e) {
-                        e.printStackTrace();
-                    }
-                    if (duration > 0) {
-                        builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
-                    }
-                    return builder.build();
-                });
-            } catch (Exception e) {
-                UpdateNotificationAudioPLayer(ctx);
-                e.printStackTrace();
-            }
+            mediaSessionConnector = new MediaSessionConnector(mediaSession);
+            mediaSessionConnector.setPlayer(player);
+            mediaSessionConnector.setMediaMetadataProvider(player1 -> {
+                long duration;
+                if (player.getDuration() < 0)
+                    duration = player.getCurrentPosition();
+                else
+                    duration = player.getDuration();
+                SharedPreferences sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                String jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                if (!jsonxx.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                    }.getType();
+                    mainPlayModelList1 = gson.fromJson(jsonxx, type);
+                }
+                MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
+                    builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
+                }
+                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
+                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
+                try {
+                    builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
+                } catch (OutOfMemoryError e) {
+                    e.printStackTrace();
+                }
+                if (duration > 0) {
+                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+                }
+                return builder.build();
+            });
+        } catch (Exception e) {
+            UpdateNotificationAudioPLayer(ctx);
+            e.printStackTrace();
+        }
 //        }
         playerNotificationManager.setUseNextAction(true);
         playerNotificationManager.setUseNextActionInCompactView(true);
@@ -761,16 +760,16 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
                         if (ongoing) {
-                    /*        try {
+                            try {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    startForeground(notificationId,notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+                                    startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
                                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     startForeground(notificationId, notification);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.e("Start Command: ", e.getMessage());
-                            }   */
+                            }
                         }
                         notification1 = notification;
                     }
@@ -856,22 +855,26 @@ Appointment Audios dddd*/
         return START_STICKY;
     }
 
-  /*  @Override
+    @Override
     public void onDestroy() {
         Log.e("APPLICATION", "App is in onActivityDestroyed");
         BWSApplication.showToast("onDestroy Called", getApplicationContext());
         relesePlayer(getApplication());
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
+        stopForeground(true);
         super.onDestroy();
-    }*/
+    }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        Log.e("Appplication log", "onTaskRemoved Called");
         BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        notificationManager.cancel(notificationId);
-        stopSelf();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        relesePlayer(getApplicationContext());
+        stopForeground(true);
+//        stopSelf();
 //        stopForeground(true);
 //        playerNotificationManager.cancel(notificationId);
         super.onTaskRemoved(rootIntent);

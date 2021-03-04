@@ -291,25 +291,6 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 //        }
 //        serviceRemoved = true;
 //        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
-//        BWSApplication.showToast("Clicked", DashboardActivity.this);
-/*
-        if (player != null) {
-//            notificationManager.cancel(notificationId);
-//            player = null;
-            if (mediaSession != null) {
-                mediaSession.removeOnActiveChangeListener(new MediaSessionCompat.OnActiveChangeListener() {
-                    @Override
-                    public void onActiveChanged() {
-                        mediaSession.setActive(false);
-                        mediaSession.release();
-                        playerNotificationManager.setPlayer(null);
-                        player.release();
-                    }
-                });
-            }
-//            PlayerINIT = false;
-        }
-*/
 
         unregisterReceiver(myNetworkReceiver);
         deleteCache(DashboardActivity.this);
