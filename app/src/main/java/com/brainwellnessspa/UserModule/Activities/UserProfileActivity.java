@@ -645,8 +645,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 analytics.identify(new Traits()
                                         .putValue("userId", UserID)
-                                        .putValue("userName", viewModel.getResponseData().getName())
-                                        .putValue("mobileNo", viewModel.getResponseData().getPhoneNumber())
+                                        .putValue("id", UserID)
+                                        .putValue("name", viewModel.getResponseData().getName())
+                                        .putValue("phone", viewModel.getResponseData().getPhoneNumber())
                                         .putValue("email", viewModel.getResponseData().getEmail()));
                                 finish();
                                 BWSApplication.showToast(viewModel.getResponseMessage(), ctx);

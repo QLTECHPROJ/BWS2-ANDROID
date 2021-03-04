@@ -95,7 +95,7 @@ public class AudioFragment extends Fragment {
     public static String IsLock = "0";
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate, AudioFirstLogin = "0";
-    boolean Identify = false;
+    boolean Identify = false,AgainIdentify = false;
     long mySpace = 0;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
@@ -327,22 +327,30 @@ public class AudioFragment extends Fragment {
 
                             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                             Identify = (shared1.getBoolean(CONSTANTS.PREF_KEY_Identify, false));
-                            if (!Identify) {
+                            AgainIdentify = (shared1.getBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, false));
+                            if (!Identify || !AgainIdentify) {
                                 analytics.identify(new Traits()
+                                        .putEmail(listModel.getResponseData().getUserData().getEmail())
+                                        .putName(listModel.getResponseData().getUserData().getName())
+                                        .putPhone(listModel.getResponseData().getUserData().getPhoneNumber())
                                         .putValue("userId", UserID)
+                                        .putValue("id", UserID)
                                         .putValue("deviceId", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID))
-                                        .putValue("deviceType", CONSTANTS.FLAG_ONE)
-                                        .putValue("countryCode", listModel.getResponseData().getUserData().getCountryCode())
+                                        .putValue("deviceType","Android")
+                                        .putValue("countryCode",  listModel.getResponseData().getUserData().getCountryCode())
                                         .putValue("countryName", "")
-                                        .putValue("userName", listModel.getResponseData().getUserData().getName())
-                                        .putValue("mobileNo", listModel.getResponseData().getUserData().getPhoneNumber())
+                                        .putValue("name", listModel.getResponseData().getUserData().getName())
+                                        .putValue("phone", listModel.getResponseData().getUserData().getPhoneNumber())
+                                        .putValue("email", listModel.getResponseData().getUserData().getEmail())
                                         .putValue("plan", listModel.getResponseData().getUserData().getPlan())
                                         .putValue("planStatus", listModel.getResponseData().getUserData().getPlanStatus())
                                         .putValue("planStartDt", listModel.getResponseData().getUserData().getPlanStartDt())
                                         .putValue("planExpiryDt", listModel.getResponseData().getUserData().getPlanExpiryDate())
                                         .putValue("clinikoId", listModel.getResponseData().getUserData().getClinikoId()));
                                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
                                 Identify = true;
+                                AgainIdentify = true;
                             }
                             editor.commit();
                         }

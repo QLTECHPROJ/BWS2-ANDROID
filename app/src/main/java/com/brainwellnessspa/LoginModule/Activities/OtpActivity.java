@@ -265,21 +265,28 @@ public class OtpActivity extends AppCompatActivity implements
                                     SplashScreenActivity activity = new SplashScreenActivity();
                                     activity.setAnalytics();
                                     analytics.identify(new Traits()
+                                            .putEmail(otpModel.getResponseData().getEmail())
+                                            .putName(otpModel.getResponseData().getName())
+                                            .putPhone(otpModel.getResponseData().getPhoneNumber())
                                             .putValue("userId", UserID)
+                                            .putValue("id", UserID)
                                             .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
-                                            .putValue("deviceType", CONSTANTS.FLAG_ONE)
+                                            .putValue("deviceType","Android")
                                             .putValue("countryCode", Code)
                                             .putValue("countryName", Name)
-                                            .putValue("userName", otpModel.getResponseData().getName())
-                                            .putValue("mobileNo", otpModel.getResponseData().getPhoneNumber())
+                                            .putValue("name", otpModel.getResponseData().getName())
+                                            .putValue("phone", otpModel.getResponseData().getPhoneNumber())
+                                            .putValue("email", otpModel.getResponseData().getEmail())
                                             .putValue("plan", otpModel.getResponseData().getPlan())
                                             .putValue("planStatus", otpModel.getResponseData().getPlanStatus())
                                             .putValue("planStartDt", otpModel.getResponseData().getPlanStartDt())
                                             .putValue("planExpiryDt", otpModel.getResponseData().getPlanExpiryDate())
                                             .putValue("clinikoId", otpModel.getResponseData().getClinikoId()));
                                     editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                    editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
                                 } catch (Exception e) {
                                     editor.putBoolean(CONSTANTS.PREF_KEY_Identify, false);
+                                    editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, false);
                                     e.printStackTrace();
                                 }
                                 editor.putString(CONSTANTS.PREF_KEY_DeviceID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
