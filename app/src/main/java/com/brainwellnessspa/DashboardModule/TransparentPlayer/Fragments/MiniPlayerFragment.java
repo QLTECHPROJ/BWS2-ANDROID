@@ -385,7 +385,7 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                         exoBinding.exoProgress.setDuration(player.getDuration());
-                        if((player.getCurrentPosition()>= oldSongPos + 29500)&& (player.getCurrentPosition() <= oldSongPos + 31000)){
+                        if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                                 oldSongPos = player.getCurrentPosition();
                             Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
                             callHeartbeat();
@@ -904,7 +904,7 @@ public class MiniPlayerFragment extends Fragment {
             if(player!=null) {
                 exoBinding.exoProgress.setDuration(player.getDuration());
             }
-                        if((positionx >= oldSongPos + 29500)&& (positionx <= oldSongPos + 31000)){
+            if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                 oldSongPos = positionx;
                 Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();

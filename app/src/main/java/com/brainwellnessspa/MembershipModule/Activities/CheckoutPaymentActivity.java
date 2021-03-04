@@ -281,6 +281,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
                                                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                                editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
                                                 editor.commit();
                                                 GetAllMedia();
                                                 Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
