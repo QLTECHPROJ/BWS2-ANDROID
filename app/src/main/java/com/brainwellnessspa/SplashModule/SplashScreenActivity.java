@@ -215,21 +215,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                         dialog.cancel();
                                     })
                                     .setNegativeButton("NOT NOW", (dialog, id) -> {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            String packageName = getPackageName();
-                                            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                                            boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
-                                            if (!isIgnoringBatteryOptimizations) {
-                                                Intent intent = new Intent();
-                                                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                                                intent.setData(Uri.parse("package:" + packageName));
-                                                startActivityForResult(intent, 15695);
-                                            } else {
-                                                callDashboard();
-                                            }
-                                        } else {
-                                            callDashboard();
-                                        }
+                                        askBattryParmition();
                                         dialog.dismiss();
                                     });
                             builder.create().show();
@@ -243,21 +229,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                     .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
                             builder.create().show();
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                String packageName = getPackageName();
-                                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                                boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
-                                if (!isIgnoringBatteryOptimizations) {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                                    intent.setData(Uri.parse("package:" + packageName));
-                                    startActivityForResult(intent, 15695);
-                                } else {
-                                    callDashboard();
-                                }
-                            } else {
-                                callDashboard();
-                            }
+                            askBattryParmition();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -269,22 +241,27 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             });
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                String packageName = getPackageName();
-                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
-                if (!isIgnoringBatteryOptimizations) {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                    intent.setData(Uri.parse("package:" + packageName));
-                    startActivityForResult(intent, 15695);
-                } else {
-                    callDashboard();
-                }
+            askBattryParmition();
+            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
+        }
+    }
+
+    private void askBattryParmition() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
+            if (!isIgnoringBatteryOptimizations) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivityForResult(intent, 15695);
             } else {
                 callDashboard();
             }
-            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
+        } else {
+            callDashboard();
         }
     }
 
