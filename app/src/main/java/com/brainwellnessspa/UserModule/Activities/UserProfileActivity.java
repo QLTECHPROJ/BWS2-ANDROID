@@ -304,7 +304,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
-                setProfilePic(profilePicPath);
+//                setProfilePic(profilePicPath);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
