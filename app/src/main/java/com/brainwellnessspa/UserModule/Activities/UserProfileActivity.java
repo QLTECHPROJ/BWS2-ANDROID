@@ -304,7 +304,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
-//                setProfilePic(profilePicPath);
+                setProfilePic(profilePicPath);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
@@ -345,7 +345,7 @@ public class UserProfileActivity extends AppCompatActivity {
 //                Glide.with(this).load(selectedImageUri).dontAnimate()
 //                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
 //                        .into(binding.civProfile);
-//                setProfilePic(selectedImageUri.toString());
+                setProfilePic(selectedImageUri.toString());
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
