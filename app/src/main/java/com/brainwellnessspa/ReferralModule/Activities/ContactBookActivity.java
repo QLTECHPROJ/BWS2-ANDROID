@@ -2,6 +2,8 @@ package com.brainwellnessspa.ReferralModule.Activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
@@ -52,6 +56,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+
 public class ContactBookActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 90;
     ActivityContactBookBinding binding;
@@ -64,6 +72,9 @@ public class ContactBookActivity extends AppCompatActivity {
     List<ContactlistModel> userList = new ArrayList<>();
     List<FavContactlistModel> favUserList = new ArrayList<>();
     Properties p;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +97,10 @@ public class ContactBookActivity extends AppCompatActivity {
         binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
         withoutSearch();
 
-        binding.llBack.setOnClickListener(v -> finish());
+        binding.llBack.setOnClickListener(v ->{
+            myBackPress = true;
+            finish();
+        } );
         p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("referLink", ReferLink);
@@ -121,6 +135,9 @@ public class ContactBookActivity extends AppCompatActivity {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         closeButton.setOnClickListener(v -> {
             binding.searchView.clearFocus();
             searchEditText.setText("");
@@ -134,6 +151,12 @@ public class ContactBookActivity extends AppCompatActivity {
         searchEditText.setText("");
         binding.searchView.setQuery("", false);
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        myBackPress = true;
+        super.onBackPressed();
     }
 
     private void withoutSearch() {
@@ -398,6 +421,71 @@ public class ContactBookActivity extends AppCompatActivity {
             public MyViewHolder(FavouriteContactListLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
+            }
+        }
+    }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if(!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                }else{
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            }else{
+                Log.e("Destroy", "Activity go in main activity");
             }
         }
     }

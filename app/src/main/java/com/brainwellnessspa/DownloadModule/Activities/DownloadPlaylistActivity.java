@@ -1,6 +1,9 @@
 package com.brainwellnessspa.DownloadModule.Activities;
 
+import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,6 +45,7 @@ import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
@@ -75,7 +80,9 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdO
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class DownloadPlaylistActivity extends AppCompatActivity {
     //    Handler handler3;
@@ -93,6 +100,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     AudioDatabase DB;
     long myProgress = 0, diff = 0, currentDuration = 0;
     private List<DownloadPlaylistDetails> listModelList;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false ;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -159,6 +169,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             Created = getIntent().getStringExtra("Created");
             PlaylistDescription = getIntent().getStringExtra("PlaylistDescription");
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -187,6 +200,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
+            myBackPress = true;
             finish();
         });
         PrepareData();
@@ -427,6 +441,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
+        myBackPress = true;
         finish();
     }
 
@@ -1012,6 +1027,71 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             public MyViewHolders(DownloadPlaylistLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
+            }
+        }
+    }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if(!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                }else{
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            }else{
+                Log.e("Destroy", "Activity go in main activity");
             }
         }
     }

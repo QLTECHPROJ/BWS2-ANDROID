@@ -9,13 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BillingOrderModule.Models.SegmentPayment;
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -58,6 +63,9 @@ import static com.brainwellnessspa.BillingOrderModule.Activities.MembershipChang
 import static com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanId;
 import static com.brainwellnessspa.BillingOrderModule.Fragments.CurrentPlanFragment.PlanStatus;
 import static com.brainwellnessspa.BillingOrderModule.Fragments.CurrentPlanFragment.invoicePayId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class PaymentActivity extends AppCompatActivity {
     ActivityPaymentBinding binding;
@@ -68,7 +76,9 @@ public class PaymentActivity extends AppCompatActivity {
     int position;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
-
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +107,7 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
             Intent i = new Intent(context, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
             i.putExtra("ComesTrue", ComesTrue);
@@ -107,7 +118,9 @@ public class PaymentActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         });
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         binding.llAddNewCard.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(context)) {
                 Intent i = new Intent(context, AddPaymentActivity.class);
@@ -400,6 +413,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        myBackPress = true;
         Intent i = new Intent(context, OrderSummaryActivity.class);
         i.putExtra("comeFrom", "membership");
         i.putExtra("ComesTrue", ComesTrue);
@@ -409,5 +423,70 @@ public class PaymentActivity extends AppCompatActivity {
         i.putExtra("Promocode", "");
         startActivity(i);
         finish();
+    }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if(!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                }else{
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            }else{
+                Log.e("Destroy", "Activity go in main activity");
+            }
+        }
     }
 }
