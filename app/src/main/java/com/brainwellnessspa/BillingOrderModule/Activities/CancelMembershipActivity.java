@@ -75,6 +75,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 //            resumeMedia();
 //            isPause = false;
         });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }

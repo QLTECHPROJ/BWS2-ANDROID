@@ -104,13 +104,12 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
     }
 
     private void ChangeFunction(MyViewHolder holder, MembershipPlanListModel.Plan listModel, int position) {
-        holder.binding.llPlanMain.setBackgroundResource(R.drawable.membership_cardshape_background);
         holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_blue_cornor);
         holder.binding.llFeatures.setVisibility(View.VISIBLE);
         holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
         holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
         holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
-//        holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
+        holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
         planFlag = listModel.getPlanFlag();
         price = listModel.getPlanAmount();
         planId = listModel.getPlanID();

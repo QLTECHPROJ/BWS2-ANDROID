@@ -60,6 +60,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
@@ -75,72 +76,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     Properties p;
     private int numStarted = 0;
     int stackStatus = 0;
-    boolean myBackPress = false ;
-
-    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
-            if (numStarted == 0) {
-                stackStatus = 1;
-                APP_SERVICE_STATUS = getString(R.string.Foreground);
-                Log.e("APPLICATION", "APP IN FOREGROUND");
-                //app went to foreground
-            }
-            numStarted++;
-        }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            numStarted--;
-            if (numStarted == 0) {
-                if(!myBackPress) {
-                    Log.e("APPLICATION", "Back press false");
-                    stackStatus = 2;
-                }else{
-                    myBackPress = true;
-                    stackStatus = 1;
-                    Log.e("APPLICATION", "back press true ");
-                }
-                APP_SERVICE_STATUS = getString(R.string.Background);
-                Log.e("APPLICATION", "App is in BACKGROUND");
-                // app went to background
-            }
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-            if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
-            }else{
-                Log.e("Destroy", "Activity go in main activity");
-            }
-        }
-    }
+    boolean myBackPress = false;
+    boolean notificationStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,11 +87,10 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         activity = ReminderDetailsActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
         binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());
-
+        notificationStatus = false;
         /*ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(binding.rvReminderDetails);*/
 
@@ -168,6 +104,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         }
         binding.btnAddReminder.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
+                notificationStatus = true;
+                myBackPress = false;
                 Intent i = new Intent(ctx, ReminderActivity.class);
                 i.putExtra("ComeFrom", "");
                 i.putExtra("ReminderId", "");
@@ -193,7 +131,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         myBackPress = true;
         finish();
     }
@@ -596,6 +533,76 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             });
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if (!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                } else {
+                    notificationStatus = false;
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                if (!notificationStatus) {
+                    if (player != null) {
+                        Log.e("Destroy", "Activity Destoryed");
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(notificationId);
+                        relesePlayer(ctx);
+                    }
+                }
+            } else {
+                Log.e("Destroy", "Activity go in main activity");
+            }
         }
     }
 

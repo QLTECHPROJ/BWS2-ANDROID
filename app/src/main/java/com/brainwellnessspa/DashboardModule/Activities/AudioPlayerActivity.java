@@ -142,7 +142,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
     public static long oldSongPos = 0;
     private int numStarted = 0;
     int stackStatus = 0;
-    boolean myBackPress = false ;
+    boolean myBackPress = false;
+    boolean notificationStatus = false;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -237,6 +238,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        handler1 = new Handler();
         handler2 = new Handler();
         miniPlayer = 1;
+        notificationStatus = false;
         showTooltips();
         if (audioClick) {
 //            audioClick = false;
@@ -268,6 +270,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             } else if (IsLock.equalsIgnoreCase("2")) {
                 BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
             } else {
+                notificationStatus = true;
                 Intent i = new Intent(ctx, AudioDetailActivity.class);
                 if (AudioFlag.equalsIgnoreCase("TopCategories")) {
                     i.putExtra("play", "TopCategories");
@@ -281,31 +284,28 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         });
 
-        binding.llDisclaimer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.full_desc_layout);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
-                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                tvTitle.setText(R.string.Disclaimer);
-                tvDesc.setText(R.string.Disclaimer_text);
-                dialog.setOnKeyListener((view, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
-                        return true;
-                    }
-                    return false;
-                });
+        binding.llDisclaimer.setOnClickListener(v -> {
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.full_desc_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+            final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+            final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+            tvTitle.setText(R.string.Disclaimer);
+            tvDesc.setText(R.string.Disclaimer_text);
+            dialog.setOnKeyListener((view, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
 
-                tvClose.setOnClickListener(view1 -> dialog.dismiss());
-                dialog.show();
-                dialog.setCancelable(false);
-            }
+            tvClose.setOnClickListener(view1 -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -1553,7 +1553,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
 //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-            if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {                oldSongPos = positionx;
+            if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
+                oldSongPos = positionx;
                 Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
@@ -1573,12 +1574,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             playerControlView.setFocusedByDefault(true);
         }
         playerControlView.show();
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        super.onDestroy();
     }
 
     private void callHeartbeat() {
@@ -3342,10 +3337,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                if(!myBackPress) {
+                if (!myBackPress) {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
-                }else{
+                } else {
+                    notificationStatus = false;
                     myBackPress = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
@@ -3365,10 +3361,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
         public void onActivityDestroyed(Activity activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
-            }else{
+                if (!notificationStatus) {
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(notificationId);
+                    relesePlayer(ctx);
+                }
+            } else {
                 Log.e("Destroy", "Activity go in main activity");
             }
         }

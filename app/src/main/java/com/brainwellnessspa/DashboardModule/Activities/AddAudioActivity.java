@@ -93,6 +93,7 @@ public class AddAudioActivity extends AppCompatActivity {
     private int numStarted = 0;
     int stackStatus = 0;
     boolean myBackPress = false;
+    boolean notificationStatus = false;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -128,6 +129,7 @@ public class AddAudioActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        notificationStatus = false;
         ArrayList<String> section = new ArrayList<>();
         section.add("Recommended Audios");
         section.add("Recommended Playlists");
@@ -369,6 +371,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             LocalBroadcastManager.getInstance(ctx)
                                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
                             binding.tvSAViewAll.setOnClickListener(view -> {
+                                notificationStatus = true;
                                 Intent i = new Intent(ctx, ViewSuggestedActivity.class);
                                 i.putExtra("Name", "Recommended  Audios");
                                 i.putExtra("PlaylistID", PlaylistID);
@@ -413,6 +416,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             binding.rvPlayList.setAdapter(suggestedAdpater);
 
                             binding.tvSPViewAll.setOnClickListener(view -> {
+                                notificationStatus = true;
                                 Intent i = new Intent(ctx, ViewSuggestedActivity.class);
                                 i.putExtra("Name", "Recommended Playlist");
                                 i.putExtra("PlaylistID", PlaylistID);
@@ -1315,6 +1319,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
                 } else {
+                    notificationStatus = false;
                     myBackPress = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
@@ -1334,9 +1339,11 @@ public class AddAudioActivity extends AppCompatActivity {
         public void onActivityDestroyed(Activity activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
+                if (!notificationStatus){
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(notificationId);
+                    relesePlayer(getApplicationContext());
+                }
             } else {
                 Log.e("Destroy", "Activity go in main activity");
             }

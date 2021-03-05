@@ -41,6 +41,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class MembershipChangeActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
     private int numStarted = 0;
     int stackStatus = 0;
     boolean myBackPress = false;
+    boolean notificationStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,8 @@ public class MembershipChangeActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(view -> {
             callback();
         });
+
+        notificationStatus = false;
 
         if (getIntent() != null) {
             ComeFrom = getIntent().getStringExtra("ComeFrom");
@@ -222,7 +226,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
         }
 
         private void ChangeFunction(MyViewHolder holder, PlanListBillingModel.ResponseData.Plan listModel, int position) {
-            holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
+            holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_blue_cornor);
             holder.binding.llFeatures.setVisibility(View.VISIBLE);
             holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
             holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
@@ -230,6 +234,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
             renewPlanFlag = listModel.getPlanFlag();
             renewPlanId = listModel.getPlanID();
+            notificationStatus = true;
             i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
             i.putExtra("ComesTrue", ComeFrom);
@@ -290,6 +295,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
                 } else {
+                    notificationStatus = false;
                     myBackPress = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
@@ -308,10 +314,14 @@ public class MembershipChangeActivity extends AppCompatActivity {
         @Override
         public void onActivityDestroyed(Activity activity) {
             if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
+                if (!notificationStatus) {
+                    if (player != null) {
+                        Log.e("Destroy", "Activity Destoryed");
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(notificationId);
+                        relesePlayer(getApplicationContext());
+                    }
+                }
             } else {
                 Log.e("Destroy", "Activity go in main activity");
             }

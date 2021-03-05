@@ -151,7 +151,6 @@ public class CurrentPlanFragment extends Fragment {
                                 Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
                                 i.putExtra("ComeFrom", "");
                                 startActivity(i);
-                                getActivity().finish();
                             });
                         } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);

@@ -129,22 +129,21 @@ public class ReminderActivity extends AppCompatActivity {
         ShowPlaylistName();
 
         binding.llBack.setOnClickListener(view -> {
-            myBackPress = true;
             if (ComeScreenReminder == 1) {
+                myBackPress = true;
                 Intent i = new Intent(context, ReminderDetailsActivity.class);
                 startActivity(i);
                 finish();
                 overridePendingTransition(0, 0);
             } else {
+                myBackPress = true;
                 ComeScreenAccount = 1;
                 comefromDownload = "0";
                 finish();
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
-        }
+
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
             simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
@@ -316,6 +315,9 @@ public class ReminderActivity extends AppCompatActivity {
             binding.ivArrow.setVisibility(View.GONE);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
     }
 
     private void ShowDaysSelection(String value, TextView textView) {
@@ -594,13 +596,14 @@ public class ReminderActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        myBackPress = true;
         if (ComeScreenReminder == 1) {
+            myBackPress = true;
             Intent i = new Intent(context, ReminderDetailsActivity.class);
             startActivity(i);
             finish();
             overridePendingTransition(0, 0);
         } else {
+            myBackPress = true;
             ComeScreenAccount = 1;
             comefromDownload = "0";
             finish();

@@ -216,5 +216,4 @@ public class BillingOrderActivity extends AppCompatActivity {
             }
         }
     }
-
 }
