@@ -563,8 +563,9 @@ Appointment Audios dddd*/
 
                     @Nullable
                     @Override
-                    public PendingIntent createCurrentContentIntent(Player player) {
+                    public PendingIntent createCurrentContentIntent(Player player1) {
                         intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent.putExtra("notification","yes");
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                 Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -740,6 +741,7 @@ Appointment Audios dddd*/
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                 Intent.FLAG_ACTIVITY_NEW_TASK);
+
                         return PendingIntent.getActivity(ctx, 0, intent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
                     }

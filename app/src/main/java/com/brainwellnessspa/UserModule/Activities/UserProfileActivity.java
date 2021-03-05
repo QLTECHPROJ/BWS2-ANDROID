@@ -660,10 +660,19 @@ public class UserProfileActivity extends AppCompatActivity {
                             ProfileUpdateModel viewModel = response.body();
                             if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                String Uname ="";
+                                if(viewModel.getResponseData().getName().equalsIgnoreCase("")){
+                                    Uname = "Guest";
+                                }else{
+                                    Uname = viewModel.getResponseData().getName();
+                                }
                                 analytics.identify(new Traits()
+                                        .putEmail(viewModel.getResponseData().getEmail())
+                                        .putName(Uname)
+                                        .putPhone(viewModel.getResponseData().getPhoneNumber())
                                         .putValue("userId", UserID)
                                         .putValue("id", UserID)
-                                        .putValue("name", viewModel.getResponseData().getName())
+                                        .putValue("name",Uname)
                                         .putValue("phone", viewModel.getResponseData().getPhoneNumber())
                                         .putValue("email", viewModel.getResponseData().getEmail()));
                                 finish();

@@ -329,9 +329,15 @@ public class AudioFragment extends Fragment {
                             Identify = (shared1.getBoolean(CONSTANTS.PREF_KEY_Identify, false));
                             AgainIdentify = (shared1.getBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, false));
                             if (!Identify || !AgainIdentify) {
+                                String Uname = "";
+                                if (listModel.getResponseData().getUserData().getName().equalsIgnoreCase("")) {
+                                    Uname = "Guest";
+                                } else {
+                                    Uname = listModel.getResponseData().getUserData().getName();
+                                }
                                 analytics.identify(new Traits()
                                         .putEmail(listModel.getResponseData().getUserData().getEmail())
-                                        .putName(listModel.getResponseData().getUserData().getName())
+                                        .putName(Uname)
                                         .putPhone(listModel.getResponseData().getUserData().getPhoneNumber())
                                         .putValue("userId", UserID)
                                         .putValue("id", UserID)
@@ -339,7 +345,7 @@ public class AudioFragment extends Fragment {
                                         .putValue("deviceType","Android")
                                         .putValue("countryCode",  listModel.getResponseData().getUserData().getCountryCode())
                                         .putValue("countryName", "")
-                                        .putValue("name", listModel.getResponseData().getUserData().getName())
+                                        .putValue("name",Uname)
                                         .putValue("phone", listModel.getResponseData().getUserData().getPhoneNumber())
                                         .putValue("email", listModel.getResponseData().getUserData().getEmail())
                                         .putValue("plan", listModel.getResponseData().getUserData().getPlan())

@@ -123,7 +123,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Bitmap myBitmap = null;
     List<File> filesDownloaded;
     ActivityAudioPlayerBinding binding;
-    ArrayList<MainPlayModel> mainPlayModelList, mainPlayModelList2;
+    ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, AudioFlag, id, name, url, playFrom = "", PlayerFirstLogin = "0";
     int position, listSize;
@@ -223,9 +223,40 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
+
+        if(getIntent().hasExtra("notification")) {
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            int xposition = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            Gson gson = new Gson();
+            ArrayList<MainPlayModel> mainPlayModelList2 = new ArrayList<>();
+            String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+            if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                mainPlayModelList2 = gson.fromJson(json, type);
+            }
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("audioId", mainPlayModelList2.get(xposition).getID());
+            p.putValue("audioName", mainPlayModelList2.get(xposition).getName());
+            p.putValue("audioDescription", "");
+            p.putValue("directions", mainPlayModelList2.get(xposition).getAudioDirection());
+            p.putValue("masterCategory", mainPlayModelList2.get(xposition).getAudiomastercat());
+            p.putValue("subCategory", mainPlayModelList2.get(xposition).getAudioSubCategory());
+            p.putValue("audioDuration", mainPlayModelList2.get(xposition).getAudioDuration());
+            p.putValue("position", GetCurrentAudioPosition());
+            p.putValue("audioType", "");
+            p.putValue("source", GetSourceName(ctx));
+            p.putValue("playerType", "Notification Player");
+            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("bitRate", "");
+            p.putValue("sound", String.valueOf(hundredVolume));
+            BWSApplication.addToSegment("Notification Player Clicked", p, CONSTANTS.track);
+        }
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
-        mainPlayModelList2 = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         downloadAudioDetailsList1 = new ArrayList<>();
         downloadAudioDetailsListGloble = new ArrayList<>();
@@ -2470,7 +2501,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             } else {
                 audioClick = true;
                 miniPlayer = 1;
-                initializePlayerDisclaimer();
+                GetAllMedia();
             }
         });
 
@@ -3362,8 +3393,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed");
                 if (!notificationStatus) {
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(notificationId);
+//                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(notificationId);
+//                    }
                     relesePlayer(ctx);
                 }
             } else {

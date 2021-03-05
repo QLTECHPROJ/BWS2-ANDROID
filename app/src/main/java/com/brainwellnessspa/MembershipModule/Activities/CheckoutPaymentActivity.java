@@ -1,10 +1,5 @@
 package com.brainwellnessspa.MembershipModule.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.room.Room;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -21,31 +16,30 @@ import android.text.TextWatcher;
 import android.text.style.ReplacementSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.room.Room;
+
 import com.brainwellnessspa.AddPayment.AddPaymentActivity;
-import com.brainwellnessspa.AddPayment.Model.AddCardModel;
-import com.brainwellnessspa.BillingOrderModule.Models.SegmentPayment;
+import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
-import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityCheckoutPaymentBinding;
 import com.brainwellnessspa.databinding.YeardialogBinding;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.installations.FirebaseInstallations;
-import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 import com.stripe.android.Stripe;
@@ -74,14 +68,39 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     Dialog d;
     int a = 0;
     String TrialPeriod;
-    private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
     int year, month;
     YeardialogBinding binding1;
     String strToken;
-    private long mLastClickTime = 0;
-
     AudioDatabase DB;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    private long mLastClickTime = 0;
+    private TextWatcher addCardTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String CardNo = binding.etNumber.getText().toString().trim();
+            String CardName = binding.etName.getText().toString().trim();
+            String Month = binding.textMonth.getText().toString().trim();
+            String CVV = binding.etCvv.getText().toString().trim();
+            if (!CardNo.isEmpty() || !CardName.isEmpty() || !Month.isEmpty() || !CVV.isEmpty()) {
+                binding.btnPayment.setEnabled(true);
+                binding.btnPayment.setTextColor(getResources().getColor(R.color.white));
+                binding.btnPayment.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnPayment.setEnabled(false);
+                binding.btnPayment.setTextColor(getResources().getColor(R.color.light_gray));
+                binding.btnPayment.setBackgroundResource(R.drawable.gray_round_cornor);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,21 +275,40 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                analytics.identify(new Traits()
-                                                        .putValue("userId",  cardModel.getResponseData().getUserID())
-                                                        .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
-                                                        .putValue("deviceType", CONSTANTS.FLAG_ONE)
-                                                        .putValue("countryCode", Code)
-                                                        .putValue("countryName", Name)
-                                                        .putValue("userName", cardModel.getResponseData().getName())
-                                                        .putValue("mobileNo", cardModel.getResponseData().getPhoneNumber())
-                                                        .putValue("plan", cardModel.getResponseData().getPlan())
-                                                        .putValue("planStatus", cardModel.getResponseData().getPlanStatus())
-                                                        .putValue("planStartDt", cardModel.getResponseData().getPlanStartDt())
-                                                        .putValue("planExpiryDt", cardModel.getResponseData().getPlanExpiryDate())
-                                                        .putValue("clinikoId", cardModel.getResponseData().getClinikoId()));
+                                                String Uname = "";
+                                                if (cardModel.getResponseData().getName().equalsIgnoreCase("")) {
+                                                    Uname = "Guest";
+                                                } else {
+                                                    Uname = cardModel.getResponseData().getName();
+                                                }
                                                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = shared.edit();
+                                                try {
+                                                    analytics.identify(new Traits()
+                                                            .putEmail(cardModel.getResponseData().getEmail())
+                                                            .putName(Uname)
+                                                            .putPhone(cardModel.getResponseData().getPhoneNumber())
+                                                            .putValue("userId", cardModel.getResponseData().getUserID())
+                                                            .putValue("id", cardModel.getResponseData().getUserID())
+                                                            .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
+                                                            .putValue("deviceType", "Android")
+                                                            .putValue("countryCode", Code)
+                                                            .putValue("countryName", Name)
+                                                            .putValue("name", Uname)
+                                                            .putValue("phone", cardModel.getResponseData().getPhoneNumber())
+                                                            .putValue("email", cardModel.getResponseData().getEmail())
+                                                            .putValue("plan", cardModel.getResponseData().getPlan())
+                                                            .putValue("planStatus", cardModel.getResponseData().getPlanStatus())
+                                                            .putValue("planStartDt", cardModel.getResponseData().getPlanStartDt())
+                                                            .putValue("planExpiryDt", cardModel.getResponseData().getPlanExpiryDate())
+                                                            .putValue("clinikoId", cardModel.getResponseData().getClinikoId()));
+                                                    editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                                                    editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
+                                                } catch (Exception e) {
+                                                    editor.putBoolean(CONSTANTS.PREF_KEY_Identify, false);
+                                                    editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, false);
+                                                    e.printStackTrace();
+                                                }
                                                 editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
                                                 editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
@@ -280,8 +318,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
-                                                editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
-                                                editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
                                                 editor.commit();
                                                 GetAllMedia();
                                                 Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
@@ -355,33 +391,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-
-    private TextWatcher addCardTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String CardNo = binding.etNumber.getText().toString().trim();
-            String CardName = binding.etName.getText().toString().trim();
-            String Month = binding.textMonth.getText().toString().trim();
-            String CVV = binding.etCvv.getText().toString().trim();
-            if (!CardNo.isEmpty() || !CardName.isEmpty() || !Month.isEmpty() || !CVV.isEmpty()) {
-                binding.btnPayment.setEnabled(true);
-                binding.btnPayment.setTextColor(getResources().getColor(R.color.white));
-                binding.btnPayment.setBackgroundResource(R.drawable.extra_round_cornor);
-            } else {
-                binding.btnPayment.setEnabled(false);
-                binding.btnPayment.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.btnPayment.setBackgroundResource(R.drawable.gray_round_cornor);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
 
     public void showYearDialog() {
         binding1.MonthPicker.setMaxValue(12);

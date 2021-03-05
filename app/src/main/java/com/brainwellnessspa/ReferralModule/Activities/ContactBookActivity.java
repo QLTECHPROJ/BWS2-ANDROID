@@ -37,7 +37,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
@@ -72,9 +71,9 @@ public class ContactBookActivity extends AppCompatActivity {
     List<ContactlistModel> userList = new ArrayList<>();
     List<FavContactlistModel> favUserList = new ArrayList<>();
     Properties p;
-    private int numStarted = 0;
     int stackStatus = 0;
-    boolean myBackPress = false ;
+    boolean myBackPress = false;
+    private int numStarted = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +96,10 @@ public class ContactBookActivity extends AppCompatActivity {
         binding.rvContactList.setItemAnimator(new DefaultItemAnimator());
         withoutSearch();
 
-        binding.llBack.setOnClickListener(v ->{
+        binding.llBack.setOnClickListener(v -> {
             myBackPress = true;
             finish();
-        } );
+        });
         p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("referLink", ReferLink);
@@ -458,10 +457,10 @@ public class ContactBookActivity extends AppCompatActivity {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                if(!myBackPress) {
+                if (!myBackPress) {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
-                }else{
+                } else {
                     myBackPress = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
@@ -484,7 +483,7 @@ public class ContactBookActivity extends AppCompatActivity {
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(notificationId);
                 relesePlayer(getApplicationContext());
-            }else{
+            } else {
                 Log.e("Destroy", "Activity go in main activity");
             }
         }

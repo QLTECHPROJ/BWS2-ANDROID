@@ -390,8 +390,7 @@
         </receiver>
         <service
             android:name="com.brainwellnessspa.Services.GlobalInitExoPlayer"
-            android:process=":process2"
-            android:stopWithTask="false">
+            android:process=":process2">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

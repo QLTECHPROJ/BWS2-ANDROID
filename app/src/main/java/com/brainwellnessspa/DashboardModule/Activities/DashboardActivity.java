@@ -283,8 +283,12 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
 
     @Override
     protected void onDestroy() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(notificationId);
+
+
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+//        }
 //        if (!backpressed) {
             relesePlayer(DashboardActivity.this);
 //        } else {

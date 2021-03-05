@@ -264,9 +264,15 @@ public class OtpActivity extends AppCompatActivity implements
                                 try {
                                     SplashScreenActivity activity = new SplashScreenActivity();
                                     activity.setAnalytics();
+                                    String Uname ="";
+                                    if(otpModel.getResponseData().getName().equalsIgnoreCase("")){
+                                        Uname = "Guest";
+                                    }else{
+                                        Uname = otpModel.getResponseData().getName();
+                                    }
                                     analytics.identify(new Traits()
                                             .putEmail(otpModel.getResponseData().getEmail())
-                                            .putName(otpModel.getResponseData().getName())
+                                            .putName(Uname)
                                             .putPhone(otpModel.getResponseData().getPhoneNumber())
                                             .putValue("userId", UserID)
                                             .putValue("id", UserID)
@@ -274,7 +280,7 @@ public class OtpActivity extends AppCompatActivity implements
                                             .putValue("deviceType","Android")
                                             .putValue("countryCode", Code)
                                             .putValue("countryName", Name)
-                                            .putValue("name", otpModel.getResponseData().getName())
+                                            .putValue("name", Uname)
                                             .putValue("phone", otpModel.getResponseData().getPhoneNumber())
                                             .putValue("email", otpModel.getResponseData().getEmail())
                                             .putValue("plan", otpModel.getResponseData().getPlan())
