@@ -1,6 +1,8 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
+import android.app.Application;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +45,7 @@ import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -79,7 +82,10 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
@@ -121,6 +127,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     boolean addSong = false;
     private long mLastClickTime = 0;
     private Handler handler;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false;
     //    boolean isPlaying = false;
 //    BroadcastReceiver broadcastReceiver;
     //    private AudioManager mAudioManager;
@@ -319,6 +328,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             callBack();
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         callAdapterMethod();
@@ -1706,6 +1718,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callBack() {
+        myBackPress = true;
         handler.removeCallbacks(UpdateSongTime);
         if (ComeFromQueue.equalsIgnoreCase("1")) {
             Intent i = new Intent(ctx, AudioDetailActivity.class);
@@ -2022,77 +2035,68 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
         }
     }
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
 
-/*    @Override
-    public void onTrackPrevious() {
-        if (!url.equalsIgnoreCase("")) {
-            isPlaying = false;
-            callPrevious();
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
         }
 
-        BWSApplication.createChannel(ctx);
-        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
-    }
-
-    @Override
-    public void onTrackPlay() {
-        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-        if (!isMediaStart) {
-            isCompleteStop = false;
-            isprogressbar = true;
-            handler.postDelayed(UpdateSongTime, 500);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            callMedia();
-        } else if (isCompleteStop) {
-            isCompleteStop = false;
-            isprogressbar = true;
-            handler.postDelayed(UpdateSongTime, 500);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            callMedia();
-        } else {
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.VISIBLE);
-            binding.llProgressBar.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            resumeMedia();
-            isPause = false;
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
         }
-        handler.postDelayed(UpdateSongTime, 100);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-        isPlaying = true;
-    }
 
-    @Override
-    public void onTrackPause() {
-        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
-                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-        isPlaying = false;
-        handler.removeCallbacks(UpdateSongTime);
-        binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-        pauseMedia();
-        binding.llProgressBar.setVisibility(View.GONE);
-        binding.progressBar.setVisibility(View.GONE);
-        binding.llPlay.setVisibility(View.VISIBLE);
-        binding.llPause.setVisibility(View.GONE);
-        oTime = binding.simpleSeekbar.getProgress();
-    }
+        @Override
+        public void onActivityResumed(Activity activity) {
 
-    @Override
-    public void onTrackNext() {
-        if (!url.equalsIgnoreCase("")) {
-            isPlaying = false;
-            callNext();
         }
-        BWSApplication.createChannel(ctx);
-        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
-    }*/
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if (!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                } else {
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            } else {
+                Log.e("Destroy", "Activity go in main activity");
+            }
+        }
+    }
+
 }

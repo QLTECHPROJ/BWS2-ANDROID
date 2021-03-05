@@ -597,7 +597,7 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
                         if (ongoing) {
-                            try {
+                            /*try {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                                     startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
                                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -606,7 +606,7 @@ Appointment Audios dddd*/
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.e("Start Command: ", e.getMessage());
-                            }
+                            }*/
                         }
                         notification1 = notification;
                     }
@@ -761,6 +761,7 @@ Appointment Audios dddd*/
                     @Override
                     public void onNotificationPosted(int notificationId, @NotNull Notification notification, boolean ongoing) {
                         if (ongoing) {
+/*
                             try {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                                     startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
@@ -771,6 +772,7 @@ Appointment Audios dddd*/
                                 e.printStackTrace();
                                 Log.e("Start Command: ", e.getMessage());
                             }
+*/
                         }
                         notification1 = notification;
                     }
@@ -856,7 +858,7 @@ Appointment Audios dddd*/
         return START_STICKY;
     }
 
-    @Override
+   /* @Override
     public void onDestroy() {
         Log.e("APPLICATION", "App is in onActivityDestroyed");
         BWSApplication.showToast("onDestroy Called", getApplicationContext());
@@ -865,12 +867,12 @@ Appointment Audios dddd*/
         notificationManager.cancel(notificationId);
         stopForeground(true);
         super.onDestroy();
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.e("Appplication log", "onTaskRemoved Called");
-        BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
+//        BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
         relesePlayer(getApplicationContext());
@@ -879,7 +881,7 @@ Appointment Audios dddd*/
 //        stopForeground(true);
 //        playerNotificationManager.cancel(notificationId);
         super.onTaskRemoved(rootIntent);
-    }
+    }*/
 
     @Nullable
     @Override

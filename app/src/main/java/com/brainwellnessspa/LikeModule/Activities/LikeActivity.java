@@ -1,9 +1,13 @@
 package com.brainwellnessspa.LikeModule.Activities;
 
 import android.app.Activity;
+import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -15,6 +19,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
 import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.LikeModule.Fragments.LikeAudiosFragment;
 import com.brainwellnessspa.LikeModule.Fragments.LikePlaylistsFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
@@ -37,6 +42,9 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class LikeActivity extends AppCompatActivity {
     public static boolean ComeFrom_LikePlaylist = false;
@@ -52,6 +60,9 @@ public class LikeActivity extends AppCompatActivity {
     ArrayList<SegmentPlaylist> playlistSection;
     List<LikesHistoryModel.ResponseData.Playlist> playlistDataModel;
     List<LikesHistoryModel.ResponseData.Audio> audioDataModel;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +82,14 @@ public class LikeActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(view -> {
             comefromDownload = "0";
             ComeScreenAccount = 1;
+            myBackPress = true;
             finish();
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
+
         prepareAllData();
         prepareData();
     }
@@ -182,6 +199,7 @@ public class LikeActivity extends AppCompatActivity {
     public void onBackPressed() {
         comefromDownload = "0";
         ComeScreenAccount = 1;
+        myBackPress = true;
         finish();
     }
 
@@ -261,4 +279,69 @@ public class LikeActivity extends AppCompatActivity {
         } else {
         }
     }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if (!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                } else {
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            } else {
+                Log.e("Destroy", "Activity go in main activity");
+            }
+        }
+    }
+
 }

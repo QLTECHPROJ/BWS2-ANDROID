@@ -1,11 +1,15 @@
 package com.brainwellnessspa.ResourceModule.Activities;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
+import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
 import com.brainwellnessspa.ResourceModule.Models.SegmentResource;
 import com.google.android.material.tabs.TabLayout;
@@ -55,6 +60,9 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
@@ -74,6 +82,9 @@ public class ResourceActivity extends AppCompatActivity {
     Gson gson;
     Context ctx;
     ResourceListModel resourceListModel;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +93,14 @@ public class ResourceActivity extends AppCompatActivity {
         activity = ResourceActivity.this;
         ctx = ResourceActivity.this;
         binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
             ComeScreenAccount = 1;
             comefromDownload = "0";
             finish();
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         p4 = new Properties();
@@ -229,6 +244,7 @@ public class ResourceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        myBackPress = true;
         ComeScreenAccount = 1;
         comefromDownload = "0";
         finish();
@@ -396,4 +412,69 @@ public class ResourceActivity extends AppCompatActivity {
             return totalTabs;
         }
     }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if (!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                } else {
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            } else {
+                Log.e("Destroy", "Activity go in main activity");
+            }
+        }
+    }
+
 }

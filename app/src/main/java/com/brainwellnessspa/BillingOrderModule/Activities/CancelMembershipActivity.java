@@ -3,13 +3,17 @@ package com.brainwellnessspa.BillingOrderModule.Activities;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -26,7 +31,10 @@ import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding;
@@ -45,6 +53,9 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     boolean audioPause = false;
     public static final String API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ", VIDEO_ID = "y1rfRW6WX08";
     private static final int RECOVERY_DIALOG_REQUEST = 1;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +66,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
             if (audioPause) {
                 player.setPlayWhenReady(true);
             } else {
@@ -63,7 +75,9 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 //            resumeMedia();
 //            isPause = false;
         });
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         binding.youtubeView.initialize(API_KEY, this);
         Properties p = new Properties();
         p.putValue("userId", UserID);
@@ -222,6 +236,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
     @Override
     public void onBackPressed() {
+        myBackPress = true;
         if (audioPause) {
             player.setPlayWhenReady(true);
         } else {
@@ -261,4 +276,69 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     private YouTubePlayer.Provider getYouTubePlayerProvider() {
         return binding.youtubeView;
     }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if (!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                } else {
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            } else {
+                Log.e("Destroy", "Activity go in main activity");
+            }
+        }
+    }
+
 }

@@ -278,6 +278,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     protected void onPause() {
 //        BWSApplication.showToast("Pauseeeeeee", DashboardActivity.this);
         super.onPause();
+
     }
 
     @Override

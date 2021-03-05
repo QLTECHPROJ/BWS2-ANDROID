@@ -1,12 +1,15 @@
 package com.brainwellnessspa.AddPayment;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
@@ -25,6 +28,7 @@ import androidx.databinding.DataBindingUtil;
 import com.brainwellnessspa.AddPayment.Model.AddCardModel;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.PaymentActivity;
+import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -46,6 +50,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+
 public class AddPaymentActivity extends AppCompatActivity {
     ActivityAddPaymentBinding binding;
     Context context;
@@ -58,6 +66,9 @@ public class AddPaymentActivity extends AppCompatActivity {
     YeardialogBinding binding1;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +98,7 @@ public class AddPaymentActivity extends AppCompatActivity {
             ComesTrue = getIntent().getStringExtra("ComesTrue");
         }
         binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
             if (ComePayment.equalsIgnoreCase("1")) {
                 finish();
             } else if (ComePayment.equalsIgnoreCase("2")) {
@@ -103,6 +115,9 @@ public class AddPaymentActivity extends AppCompatActivity {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         year = Calendar.getInstance().get(Calendar.YEAR);
         month = Calendar.getInstance().get(Calendar.MONTH);
         month = month + 1;
@@ -293,6 +308,7 @@ public class AddPaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        myBackPress = true;
         if (ComePayment.equalsIgnoreCase("1")) {
             finish();
         } else if (ComePayment.equalsIgnoreCase("2")) {
@@ -395,4 +411,69 @@ public class AddPaymentActivity extends AppCompatActivity {
             }
         }
     }
+
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if (!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                } else {
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            } else {
+                Log.e("Destroy", "Activity go in main activity");
+            }
+        }
+    }
+
 }

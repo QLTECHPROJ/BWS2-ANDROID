@@ -1,11 +1,14 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
+import android.app.Application;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,8 +70,11 @@ import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class AddAudioActivity extends AppCompatActivity {
     public static boolean addToSearch = false;
@@ -84,6 +90,9 @@ public class AddAudioActivity extends AppCompatActivity {
     SuggestedAdpater suggestedAdpater;
     //    Handler handler3;
     Properties p;
+    private int numStarted = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -171,7 +180,9 @@ public class AddAudioActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(view -> {
             callback();
         });
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvSuggestedList.setLayoutManager(manager);
         binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
@@ -196,6 +207,7 @@ public class AddAudioActivity extends AppCompatActivity {
     }
 
     private void callback() {
+        myBackPress = true;
         comefromDownload = "0";
         comeRename = 1;
         finish();
@@ -1264,6 +1276,69 @@ public class AddAudioActivity extends AppCompatActivity {
             public MyViewHolder(DownloadsLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
+            }
+        }
+    }
+    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                stackStatus = 1;
+                APP_SERVICE_STATUS = getString(R.string.Foreground);
+                Log.e("APPLICATION", "APP IN FOREGROUND");
+                //app went to foreground
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                if (!myBackPress) {
+                    Log.e("APPLICATION", "Back press false");
+                    stackStatus = 2;
+                } else {
+                    myBackPress = true;
+                    stackStatus = 1;
+                    Log.e("APPLICATION", "back press true ");
+                }
+                APP_SERVICE_STATUS = getString(R.string.Background);
+                Log.e("APPLICATION", "App is in BACKGROUND");
+                // app went to background
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            if (numStarted == 0 && stackStatus == 2) {
+                Log.e("Destroy", "Activity Destoryed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notificationId);
+                relesePlayer(getApplicationContext());
+            } else {
+                Log.e("Destroy", "Activity go in main activity");
             }
         }
     }
