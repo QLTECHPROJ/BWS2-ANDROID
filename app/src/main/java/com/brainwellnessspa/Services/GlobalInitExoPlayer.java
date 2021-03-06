@@ -185,10 +185,10 @@ public class GlobalInitExoPlayer extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            player = null;
             playerNotificationManager.setPlayer(null);
 //            player.stop();
             player.release();
+            player = null;
 //            player = null;
             PlayerINIT = false;
         }

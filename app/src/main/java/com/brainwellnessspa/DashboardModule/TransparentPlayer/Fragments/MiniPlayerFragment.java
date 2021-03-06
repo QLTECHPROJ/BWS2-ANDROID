@@ -82,6 +82,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;
@@ -304,24 +305,25 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                            p.putValue("method", error.getSourceException().getMessage());
-                            Log.e("onPlaybackError", "onPlaybackError: " + error.getSourceException().getMessage());
+                            p.putValue("method", error.getMessage() + error.getSourceException().getMessage());
+                            Log.e("onPlaybackError",  error.getMessage() + " "  + error.getSourceException().getMessage());
                         }
-                        if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-                            p.putValue("method", error.getRendererException().getMessage());
-                            Log.e("onPlaybackError", "onPlaybackError: " + error.getRendererException().getMessage());
+                        else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                            p.putValue("method", error.getMessage() + error.getRendererException().getMessage());
+                            Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
                         }
-                        if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-                            p.putValue("method", error.getUnexpectedException().getMessage());
-                            Log.e("onPlaybackError", "onPlaybackError: " + error.getUnexpectedException().getMessage());
+                        else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                            p.putValue("method", error.getMessage() + error.getUnexpectedException().getMessage());
+                            Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                         }
-                        if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                        else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
                             p.putValue("method", error.getMessage());
-                            Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                            Log.e("onPlaybackError",error.getMessage());
                         } else {
                             p.putValue("method", error.getMessage());
-                            Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                            Log.e("onPlaybackError",  error.getMessage());
                         }
+                        AudioInterrupted = true;
                         BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
                     }
 
@@ -585,6 +587,9 @@ public class MiniPlayerFragment extends Fragment {
                                 Log.e("End State: ", e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
+                            if(AudioInterrupted){
+                                Log.e("Exo Player state", "ExoPlayer.STATE_IDLE");
+                            }
                         }
 
                     }
