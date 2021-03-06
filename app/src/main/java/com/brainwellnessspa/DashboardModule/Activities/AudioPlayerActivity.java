@@ -1276,22 +1276,22 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                            p.putValue("method", error.type +error.getSourceException().getMessage());
+                            p.putValue("method", error.getSourceException().getMessage());
                             Log.e("onPlaybackError", "onPlaybackError: " + error.getSourceException().getMessage());
                         }
-                        else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-                            p.putValue("method", error.type +error.getRendererException().getMessage());
+                        if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                            p.putValue("method", error.getRendererException().getMessage());
                             Log.e("onPlaybackError", "onPlaybackError: " + error.getRendererException().getMessage());
                         }
-                        else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-                            p.putValue("method", error.type + error.getUnexpectedException().getMessage());
+                        if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                            p.putValue("method", error.getUnexpectedException().getMessage());
                             Log.e("onPlaybackError", "onPlaybackError: " + error.getUnexpectedException().getMessage());
                         }
-                        else  if (error.type == ExoPlaybackException.TYPE_REMOTE) {
-                            p.putValue("method", error.type +error.getMessage());
+                        if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                            p.putValue("method", error.getMessage());
                             Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
-                        }else {
-                            p.putValue("method", error.type + error.getMessage());
+                        } else {
+                            p.putValue("method", error.getMessage());
                             Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
                         }
                         BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
