@@ -282,13 +282,48 @@ public class MiniPlayerFragment extends Fragment {
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override
-                    public void onPositionDiscontinuity(int reason) {
-
-                    }
-
-                    @Override
                     public void onPlayerError(ExoPlaybackException error) {
 
+                        p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("audioId", mainPlayModelList.get(position).getID());
+                        p.putValue("audioName", mainPlayModelList.get(position).getName());
+                        p.putValue("audioDescription", "");
+                        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+                        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+                        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+                        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+                        p.putValue("position", GetCurrentAudioPosition());
+                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                            p.putValue("audioType", "Downloaded");
+                        } else {
+                            p.putValue("audioType", "Streaming");
+                        }
+                        p.putValue("source", GetSourceName(ctx));
+                        p.putValue("playerType", "Main");
+                        p.putValue("audioService", APP_SERVICE_STATUS);
+                        p.putValue("bitRate", "");
+                        p.putValue("sound", String.valueOf(hundredVolume));
+                        if (error.type == ExoPlaybackException.TYPE_SOURCE) {
+                            p.putValue("method", error.type +error.getSourceException().getMessage());
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getSourceException().getMessage());
+                        }
+                        else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                            p.putValue("method", error.type +error.getRendererException().getMessage());
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getRendererException().getMessage());
+                        }
+                        else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                            p.putValue("method", error.type + error.getUnexpectedException().getMessage());
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getUnexpectedException().getMessage());
+                        }
+                        else  if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                            p.putValue("method", error.type +error.getMessage());
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                        }else {
+                            p.putValue("method", error.type + error.getMessage());
+                            Log.e("onPlaybackError", "onPlaybackError: " + error.getMessage());
+                        }
+                        BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
                     }
 
                     @Override
