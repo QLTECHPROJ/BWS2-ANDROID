@@ -282,6 +282,9 @@ public class MiniPlayerFragment extends Fragment {
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
+                if(player.getDeviceVolume() > 4) {
+                    player.setDeviceVolume(2);
+                }
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override

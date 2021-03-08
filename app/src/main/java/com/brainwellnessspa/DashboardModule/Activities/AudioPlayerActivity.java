@@ -84,6 +84,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import ir.drax.netwatch.NetWatch;
+import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
 import me.toptas.fancyshowcase.FocusShape;
@@ -114,7 +116,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
-public class AudioPlayerActivity extends AppCompatActivity {
+public class AudioPlayerActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     public AudioManager audioManager;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public boolean downloadClick = false;
@@ -735,6 +737,32 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        NetWatch.builder(AudioPlayerActivity.this)
+                .setCallBack(new NetworkChangeReceiver_navigator() {
+                    @Override
+                    public void onConnected(int source) {
+                        // do some thing
+                        if(player!=null){
+                            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                                AudioInterrupted = false;
+                                player.setPlayWhenReady(true);
+                                player.prepare();
+                                player.seekTo(player.getCurrentPosition());
+                                Log.e("Exo PLayer Net:", "Player Resume after Net");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public View onDisconnected() {
+                        // do some other stuff
+
+
+                        return null;//To display a dialog simply return a custom view or just null to ignore it
+                    }
+                })
+                .setNotificationCancelable(false)
+                .build();
         SegmentTagPlayer = 1;
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -986,6 +1014,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (player != null) {
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
+                if(player.getDeviceVolume() > 4) {
+                    player.setDeviceVolume(2);
+                }
+
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override
@@ -3367,6 +3399,25 @@ public class AudioPlayerActivity extends AppCompatActivity {
         setPlayerCtrView();
     }
 
+    @Override
+    public void onConnected(int source) {
+        if(player!=null){
+            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                AudioInterrupted = false;
+                player.setPlayWhenReady(true);
+                player.prepare();
+                player.seekTo(player.getCurrentPosition());
+                Log.e("Exo PLayer Net:", "Player Resume after Net");
+            }
+        }
+    }
+
+    @Override
+    public View onDisconnected() {
+        NetWatch.unregister(this);
+        return null;
+    }
+
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
 
 
@@ -3425,10 +3476,12 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed");
                 if (!notificationStatus) {
-//                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(notificationId);
-//                    }
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("Screen", "Main PLayer");
+                    BWSApplication.addToSegment("Application Killed", p, CONSTANTS.track);
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(notificationId);
                     relesePlayer(ctx);
                 }
             } else {

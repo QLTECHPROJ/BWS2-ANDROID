@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -33,19 +35,25 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.segment.analytics.AnalyticsContext;
 import com.segment.analytics.Properties;
 
+import ir.drax.netwatch.NetWatch;
+import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
+
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.ComeBackPlaylist;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
-public class DashboardActivity extends AppCompatActivity /*implements AudioManager.OnAudioFocusChangeListener */ {
+public class DashboardActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;
     public static boolean audioPause = false, audioClick = false, tutorial = false;
     ActivityDashboardBinding binding;
@@ -145,7 +153,7 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
             PlaylistType = getIntent().getStringExtra("PlaylistType");
             if(getIntent().hasExtra("notification")){
                 Properties p = new Properties();
-                AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
+              /*  AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
                 campaign.putName(getIntent().getStringExtra(CONSTANTS.title));
                 campaign.putValue("playlistID", PlaylistID);
                 campaign.putValue("playlistName", PlaylistName);
@@ -153,7 +161,13 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
                 campaign.putMedium("Push");
                 campaign.putSource("Admin");
                 p.putValue("action", "Accept");
-                p.putValue("campaign", campaign);
+                p.putValue("campaign", campaign);*/
+                SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                String   UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+                p.putValue("userId", UserID);
+                p.putValue("playlistId",PlaylistID);
+                p.putName(PlaylistName);
+                p.putValue("message",getIntent().getStringExtra("message"));
                 BWSApplication.addToSegment("Push Notification Tapped",p, CONSTANTS.track);
             }
         }
@@ -298,24 +312,65 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
     }
 
     @Override
+    protected void onResume() {
+        NetWatch.builder(DashboardActivity.this)
+                .setCallBack(new NetworkChangeReceiver_navigator() {
+                    @Override
+                    public void onConnected(int source) {
+                        // do some thing
+                        if(player!=null){
+                            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                                AudioInterrupted = false;
+                                player.setPlayWhenReady(true);
+                                player.prepare();
+                                player.seekTo(player.getCurrentPosition());
+                                Log.e("Exo PLayer Net:", "Player Resume after Net");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public View onDisconnected() {
+                        // do some other stuff
+
+
+                        return null;//To display a dialog simply return a custom view or just null to ignore it
+                    }
+                })
+                .setNotificationCancelable(false)
+                .build();
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy() {
 
+        NetWatch.unregister(this);
 
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(notificationId);
-//        }
-//        if (!backpressed) {
-            relesePlayer(DashboardActivity.this);
-//        } else {
-////            null
-//        }
-//        serviceRemoved = true;
-//        BWSApplication.showToast("Destroyyyyyyyyyyyyyyy", DashboardActivity.this);
-
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        relesePlayer(DashboardActivity.this);
         unregisterReceiver(myNetworkReceiver);
         deleteCache(DashboardActivity.this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onConnected(int source) {
+        if(player!=null){
+            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                AudioInterrupted = false;
+                player.setPlayWhenReady(true);
+                player.prepare();
+                player.seekTo(player.getCurrentPosition());
+                Log.e("Exo PLayer Net:", "Player Resume after Net");
+            }
+        }
+    }
+
+    @Override
+    public View onDisconnected() {
+        return null;
     }
 
   /*  @Override

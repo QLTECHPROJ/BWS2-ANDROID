@@ -175,6 +175,12 @@ public class GlobalInitExoPlayer extends Service {
     }
 
     public static void relesePlayer(Context context) {
+        SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        String UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("Screen", "Dashboard");
+        BWSApplication.addToSegment("Application Killed", p, CONSTANTS.track);
         if (player != null) {
             try {
                 mediaSession.release();
@@ -189,6 +195,7 @@ public class GlobalInitExoPlayer extends Service {
 //            player = null;
             PlayerINIT = false;
         }
+
 
 //        if (player != null) {
 //            mediaSession.release();
@@ -386,12 +393,15 @@ Appointment Audios dddd*/
         } else {
             p.putValue("audioType", "Streaming");
         }
-        p.putValue("source", GetSourceName(ctx));
+        String source = GetSourceName(ctx);
+        p.putValue("source", source);
         p.putValue("playerType", playerType);
         p.putValue("audioService", APP_SERVICE_STATUS);
         p.putValue("bitRate", "");
         p.putValue("sound", String.valueOf(hundredVolume));
-        BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
+        if(!source.equalsIgnoreCase( "Playlist") && !source.equalsIgnoreCase("Downloaded Playlists")) {
+            BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
+        }
 
         Log.e("Audio Volume", String.valueOf(hundredVolume));
 //            String source = "file:////storage/3639-3632/my sounds/Gujarati songs/Chok Puravo d.mp3";

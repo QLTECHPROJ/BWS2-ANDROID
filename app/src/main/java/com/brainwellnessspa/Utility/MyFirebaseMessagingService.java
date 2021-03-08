@@ -85,13 +85,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         Properties p = new Properties();
-        AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
+    /*    AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
         campaign.putValue("id", id);
         campaign.putName(title);
         campaign.putContent(message);
         campaign.putMedium("Push");
         campaign.putSource("Admin");
-        p.putValue("campaign", campaign);
+        p.putValue("campaign", campaign);*/
+
+        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        String   UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        p.putValue("userId", UserID);
+        p.putValue("playlistId", id);
+        p.putName(title);
+        p.putValue("message",message);
         BWSApplication.addToSegment("Push Notification Received", p, CONSTANTS.track);
     }
 
