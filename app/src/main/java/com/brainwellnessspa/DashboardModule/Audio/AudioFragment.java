@@ -46,6 +46,7 @@ import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.UnlockAudioList;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.MembershipModule.Activities.CheckoutPaymentActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Activities.ContactBookActivity;
 import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
@@ -95,7 +96,7 @@ public class AudioFragment extends Fragment {
     public static String IsLock = "0";
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate, AudioFirstLogin = "0";
-    boolean Identify = false,AgainIdentify = false;
+    boolean Identify = false, AgainIdentify = false;
     long mySpace = 0;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     List<DownloadAudioDetails> notDownloadedData;
@@ -118,7 +119,7 @@ public class AudioFragment extends Fragment {
         binding.rvMainAudioList.setLayoutManager(manager);
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
 
-          mySpace = getSpace();
+        mySpace = getSpace();
         prepareDisplayData("onCreateView");
 
         if (!isDownloading) {
@@ -232,7 +233,7 @@ public class AudioFragment extends Fragment {
                                 GsonBuilder gsonBuilder = new GsonBuilder();
                                 gson = gsonBuilder.create();
                                 p.putValue("sections", gson.toJson(section));
-                                p.putValue("device space",mySpace);
+                                p.putValue("device space", mySpace);
                                 BWSApplication.addToSegment("Explore Screen Viewed", p, CONSTANTS.screen);
                             }
                             callObserverMethod(listModel.getResponseData());
@@ -342,10 +343,10 @@ public class AudioFragment extends Fragment {
                                         .putValue("userId", UserID)
                                         .putValue("id", UserID)
                                         .putValue("deviceId", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID))
-                                        .putValue("deviceType","Android")
-                                        .putValue("countryCode",  listModel.getResponseData().getUserData().getCountryCode())
+                                        .putValue("deviceType", "Android")
+                                        .putValue("countryCode", listModel.getResponseData().getUserData().getCountryCode())
                                         .putValue("countryName", "")
-                                        .putValue("name",Uname)
+                                        .putValue("name", Uname)
                                         .putValue("phone", listModel.getResponseData().getUserData().getPhoneNumber())
                                         .putValue("email", listModel.getResponseData().getUserData().getEmail())
                                         .putValue("plan", listModel.getResponseData().getUserData().getPlan())

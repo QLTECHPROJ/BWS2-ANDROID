@@ -45,8 +45,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/rlMainLayout"
+            android:descendantFocusability="blocksDescendants"
             android:overScrollMode="never"
-            android:paddingBottom="@dimen/_110sdp">
+            android:paddingBottom="@dimen/_220sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -304,6 +305,7 @@
                     android:layout_marginLeft="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_16sdp"
                     android:layout_marginRight="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_60sdp"
                     android:background="@drawable/light_gray_round_cornors"
                     android:weightSum="1">
 
@@ -380,20 +382,22 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/llEmails"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_150sdp"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                <!--
+                                <LinearLayout
+                                    android:id="@+id/llEmails"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/_150sdp"
+                                    android:background="@color/white"
+                                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tlEmail1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        android:id="@+id/tlEmail1"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+                -->
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

@@ -190,6 +190,7 @@
             android:name=".MembershipModule.Activities.CheckoutPaymentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitle"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".MembershipModule.Activities.CheckoutOtpActivity"

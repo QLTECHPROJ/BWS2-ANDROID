@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.text.style.ReplacementSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -78,10 +79,12 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            binding.nestedScroll.smoothScrollTo(0, binding.nestedScroll.getChildAt(0).getHeight());
             String CardNo = binding.etNumber.getText().toString().trim();
             String CardName = binding.etName.getText().toString().trim();
             String Month = binding.textMonth.getText().toString().trim();
@@ -143,7 +146,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding1 = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.yeardialog, null, false);
         d.setContentView(binding1.getRoot());
-
 
        /* binding.etNumber.addTextChangedListener(addCardTextWatcher);
         binding.etName.addTextChangedListener(addCardTextWatcher);

@@ -41,11 +41,13 @@
         </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScroll"
+            android:layout_below="@id/rlLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/rlLayout"
             android:overScrollMode="never"
-            android:paddingBottom="@dimen/_85sdp">
+            android:descendantFocusability="blocksDescendants"
+            android:paddingBottom="@dimen/_180sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +58,7 @@
                     android:id="@+id/ivRestaurantImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:layout_gravity="center_horizontal" />
 
                 <TextView
@@ -79,7 +81,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_16sdp"
                         android:layout_marginRight="@dimen/_16sdp"
                         android:background="@drawable/light_gray_round_cornors"
                         android:weightSum="1">
@@ -142,7 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_30sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
                         android:layout_marginRight="@dimen/_16sdp"
                         android:background="@drawable/light_gray_round_cornors"
                         android:weightSum="1">
@@ -204,7 +205,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_4sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
                         android:orientation="horizontal"
                         android:weightSum="1">
 
@@ -212,7 +213,7 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_16sdp"
-                            android:layout_marginTop="@dimen/_30sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
                             android:layout_marginRight="@dimen/_16sdp"
                             android:layout_weight="0.60"
                             android:background="@drawable/light_gray_round_cornors"
@@ -269,7 +270,7 @@
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/_8sdp"
-                            android:layout_marginTop="@dimen/_30sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
                             android:layout_marginRight="@dimen/_16sdp"
                             android:layout_weight="0.40"
                             android:background="@drawable/light_gray_round_cornors"
@@ -334,6 +335,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_35sdp"
+                        android:layout_marginBottom="@dimen/_60sdp"
                         android:fontFamily="@font/montserrat_medium"
                         android:textColor="@color/red"
                         android:textSize="@dimen/_12sdp" />

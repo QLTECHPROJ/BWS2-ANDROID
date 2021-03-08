@@ -594,7 +594,6 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
-
 //                        myBitmap = getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
                         return myBitmapImage;
                     }

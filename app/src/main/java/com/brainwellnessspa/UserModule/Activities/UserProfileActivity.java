@@ -86,6 +86,52 @@ public class UserProfileActivity extends AppCompatActivity {
     int stackStatus = 0;
     boolean notificationStatus = false;
 
+    TextWatcher userTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            binding.nestedScroll.smoothScrollTo(0, binding.nestedScroll.getChildAt(0).getHeight());
+            String User = binding.etUser.getText().toString().trim();
+            String Calendar = binding.etCalendar.getText().toString().trim();
+            String MobileNumber = binding.etMobileNumber.getText().toString().trim();
+            String Email = binding.etEmail.getText().toString().trim();
+
+            if (User.equalsIgnoreCase(UserName) && Calendar.equalsIgnoreCase(UserCalendar)
+                    && MobileNumber.equalsIgnoreCase(UserMobileNumber) && Email.equalsIgnoreCase(UserEmail)) {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
+            } else if (!User.equalsIgnoreCase(UserName)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!Calendar.equalsIgnoreCase(UserCalendar)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!MobileNumber.equalsIgnoreCase(UserMobileNumber)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!Email.equalsIgnoreCase(UserEmail)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +143,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        binding.etUser.addTextChangedListener(userTextWatcher);
+        binding.etCalendar.addTextChangedListener(userTextWatcher);
+        binding.etMobileNumber.addTextChangedListener(userTextWatcher);
+        binding.etEmail.addTextChangedListener(userTextWatcher);
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
             finish();
@@ -128,6 +177,7 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.rlImageUpload.setOnClickListener(view -> selectImage());
         binding.btnSave.setOnClickListener(view -> profileUpdate());
 
+/*
         binding.etEmail.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 binding.etEmail.setFocusable(true);
@@ -141,6 +191,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 binding.nestedScroll.scrollBy(0, deltaScrollY);
             }
         });
+*/
         profileViewData(ctx);
     }
 
@@ -482,10 +533,6 @@ public class UserProfileActivity extends AppCompatActivity {
                         ProfileViewModel viewModel = response.body();
                         if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            binding.etUser.addTextChangedListener(userTextWatcher);
-                            binding.etCalendar.addTextChangedListener(userTextWatcher);
-                            binding.etMobileNumber.addTextChangedListener(userTextWatcher);
-                            binding.etEmail.addTextChangedListener(userTextWatcher);
                             if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
                                     viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
                                     viewModel.getResponseData().getName() == null) {
@@ -710,51 +757,6 @@ public class UserProfileActivity extends AppCompatActivity {
         profilePicPath = image.getAbsolutePath();
         return image;
     }
-
-    TextWatcher userTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String User = binding.etUser.getText().toString().trim();
-            String Calendar = binding.etCalendar.getText().toString().trim();
-            String MobileNumber = binding.etMobileNumber.getText().toString().trim();
-            String Email = binding.etEmail.getText().toString().trim();
-
-            if (User.equalsIgnoreCase(UserName) && Calendar.equalsIgnoreCase(UserCalendar)
-                    && MobileNumber.equalsIgnoreCase(UserMobileNumber) && Email.equalsIgnoreCase(UserEmail)) {
-                binding.btnSave.setEnabled(false);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
-            } else if (!User.equalsIgnoreCase(UserName)) {
-                binding.btnSave.setEnabled(true);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            } else if (!Calendar.equalsIgnoreCase(UserCalendar)) {
-                binding.btnSave.setEnabled(true);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            } else if (!MobileNumber.equalsIgnoreCase(UserMobileNumber)) {
-                binding.btnSave.setEnabled(true);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            } else if (!Email.equalsIgnoreCase(UserEmail)) {
-                binding.btnSave.setEnabled(true);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            } else {
-                binding.btnSave.setEnabled(true);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
 

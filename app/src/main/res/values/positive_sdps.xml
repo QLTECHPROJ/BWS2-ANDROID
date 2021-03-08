@@ -74,6 +74,8 @@
     <dimen name="_200sdp">200.00dp</dimen>
     <dimen name="_210sdp">210.00dp</dimen>
     <dimen name="_220sdp">220.00dp</dimen>
+    <dimen name="_225sdp">225.00dp</dimen>
+    <dimen name="_230sdp">230.00dp</dimen>
     <dimen name="_240sdp">240.00dp</dimen>
     <dimen name="_260sdp">260.00dp</dimen>
     <dimen name="_280sdp">280.00dp</dimen>
