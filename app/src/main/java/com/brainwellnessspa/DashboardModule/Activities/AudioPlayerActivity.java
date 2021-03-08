@@ -103,13 +103,13 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.SegmentTagPlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getNetworkSpeed;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -735,6 +735,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        SegmentTagPlayer = 1;
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -806,6 +807,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void callBack() {
+        SegmentTagPlayer = 0;
         try {
 //        handler1.removeCallbacks(UpdateSongTime1);
 //            player = 1;
@@ -1113,8 +1115,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            String s = getNetworkSpeed(ctx);
-                            p.putValue("network speed",s);
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Completed", p, CONSTANTS.track);
                             if (player.getPlayWhenReady()) {
@@ -1152,8 +1152,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
-                            String s = getNetworkSpeed(ctx);
-                            p.putValue("network speed",s);
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);
                         } else if (state == ExoPlayer.STATE_ENDED) {
@@ -1643,8 +1641,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void callHeartbeat() {
         p = new Properties();
-        String s = getNetworkSpeed(ctx);
-        p.putValue("network speed",s);
         p.putValue("userId", UserID);
         p.putValue("audioId", mainPlayModelList.get(position).getID());
         p.putValue("audioName", mainPlayModelList.get(position).getName());

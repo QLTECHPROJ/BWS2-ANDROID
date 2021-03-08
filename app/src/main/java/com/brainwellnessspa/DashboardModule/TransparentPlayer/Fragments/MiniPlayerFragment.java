@@ -100,7 +100,7 @@ public class MiniPlayerFragment extends Fragment {
     List<File> filesDownloaded;
     ArrayList<MainPlayModel> mainPlayModelList, mainPlayModelList2;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag= "", id= "", url = "", playFrom = "";
+    String IsRepeat = "", IsShuffle = "", UserID, AudioFlag = "", id = "", url = "", playFrom = "";
     int position, listSize;
     Boolean queuePlay, audioPlay;
     LocalBroadcastManager localBroadcastManager;
@@ -110,6 +110,7 @@ public class MiniPlayerFragment extends Fragment {
     Properties p;
     private long mLastClickTime = 0;
     Handler handler1;
+    public static int SegmentTagPlayer = 0;
     Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
@@ -191,6 +192,7 @@ public class MiniPlayerFragment extends Fragment {
             binding.llLayout.setLayoutParams(paramm);
         }
         exoBinding.llPlayearMain.setOnClickListener(view -> {
+            SegmentTagPlayer = 1;
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
@@ -306,22 +308,19 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
                             p.putValue("method", error.getMessage() + " " + error.getSourceException().getMessage());
-                            Log.e("onPlaybackError",  error.getMessage() + " "  + error.getSourceException().getMessage());
-                        }
-                        else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                            Log.e("onPlaybackError", error.getMessage() + " " + error.getSourceException().getMessage());
+                        } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
                             p.putValue("method", error.getMessage() + " " + error.getRendererException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
-                        }
-                        else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                        } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
                             p.putValue("method", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
-                        }
-                        else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                        } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
                             p.putValue("method", error.getMessage());
-                            Log.e("onPlaybackError",error.getMessage());
+                            Log.e("onPlaybackError", error.getMessage());
                         } else {
                             p.putValue("method", error.getMessage());
-                            Log.e("onPlaybackError",  error.getMessage());
+                            Log.e("onPlaybackError", error.getMessage());
                         }
                         AudioInterrupted = true;
                         BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
@@ -339,7 +338,7 @@ public class MiniPlayerFragment extends Fragment {
                             }.getType();
                             mainPlayModelList = gson.fromJson(json, type);
                         }
-                        if(player!=null){
+                        if (player != null) {
                             player.setPlayWhenReady(true);
                         }
                         position = player.getCurrentWindowIndex();
@@ -368,27 +367,29 @@ public class MiniPlayerFragment extends Fragment {
                         localBroadcastManager.sendBroadcast(localIntent);
                         callButtonText(player.getCurrentWindowIndex());
 
-                        p = new Properties();
-                        p.putValue("userId", UserID);
-                        p.putValue("audioId", mainPlayModelList.get(position).getID());
-                        p.putValue("audioName", mainPlayModelList.get(position).getName());
-                        p.putValue("audioDescription", "");
-                        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-                        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-                        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-                        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-                        p.putValue("position", GetCurrentAudioPosition());
-                        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-                            p.putValue("audioType", "Downloaded");
-                        } else {
-                            p.putValue("audioType", "Streaming");
+                        if (SegmentTagPlayer == 0) {
+                            p = new Properties();
+                            p.putValue("userId", UserID);
+                            p.putValue("audioId", mainPlayModelList.get(position).getID());
+                            p.putValue("audioName", mainPlayModelList.get(position).getName());
+                            p.putValue("audioDescription", "");
+                            p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+                            p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+                            p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+                            p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+                            p.putValue("position", GetCurrentAudioPosition());
+                            if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                                p.putValue("audioType", "Downloaded");
+                            } else {
+                                p.putValue("audioType", "Streaming");
+                            }
+                            p.putValue("source", GetSourceName(ctx));
+                            p.putValue("playerType", "Mini");
+                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("bitRate", "");
+                            p.putValue("sound", String.valueOf(hundredVolume));
+                            BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
                         }
-                        p.putValue("source", GetSourceName(ctx));
-                        p.putValue("playerType", "Mini");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
-                        p.putValue("bitRate", "");
-                        p.putValue("sound", String.valueOf(hundredVolume));
-                        BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
                     }
 
                     @Override
@@ -416,8 +417,8 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.exoProgress.setPosition(player.getCurrentPosition());
                         exoBinding.exoProgress.setDuration(player.getDuration());
                         if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
-                                oldSongPos = player.getCurrentPosition();
-                            Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
+                            oldSongPos = player.getCurrentPosition();
+                            Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                             callHeartbeat();
                         }
                     }
@@ -587,7 +588,7 @@ public class MiniPlayerFragment extends Fragment {
                                 Log.e("End State: ", e.getMessage());
                             }
                         } else if (state == ExoPlayer.STATE_IDLE) {
-                            if(AudioInterrupted){
+                            if (AudioInterrupted) {
                                 Log.e("Exo Player state", "ExoPlayer.STATE_IDLE");
                             }
                         }
@@ -934,12 +935,12 @@ public class MiniPlayerFragment extends Fragment {
         playerControlView.setProgressUpdateListener((positionx, bufferedPosition) -> {
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
-            if(player!=null) {
+            if (player != null) {
                 exoBinding.exoProgress.setDuration(player.getDuration());
             }
             if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                 oldSongPos = positionx;
-                Log.e("Player Heart bit",String.valueOf(player.getCurrentPosition()));
+                Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                 callHeartbeat();
             }
 //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
@@ -1010,8 +1011,8 @@ public class MiniPlayerFragment extends Fragment {
             }
             exoBinding.tvTitle.setText(mainPlayModelList.get(ps).getName());
             exoBinding.tvSubTitle.setText(mainPlayModelList.get(ps).getAudioDirection());
-        }catch (Exception e){
-            Log.e("mini",e.getMessage());
+        } catch (Exception e) {
+            Log.e("mini", e.getMessage());
         }
         exoBinding.llPlay.setOnClickListener(view -> {
             if (player != null) {
@@ -1022,7 +1023,7 @@ public class MiniPlayerFragment extends Fragment {
                 int pss = 0;
                 if (mainPlayModelList.size() == 1 && position == 1) {
                     pss = 0;
-                }else{
+                } else {
                     pss = position;
                 }
                 if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
@@ -1096,7 +1097,7 @@ public class MiniPlayerFragment extends Fragment {
         }
 
         if (!url.equalsIgnoreCase("")) {
-            if(addToRecentPlayId.equalsIgnoreCase("")){
+            if (addToRecentPlayId.equalsIgnoreCase("")) {
                 addToRecentPlay();
             } else if (!id.equalsIgnoreCase(addToRecentPlayId)) {
                 addToRecentPlay();
@@ -1123,7 +1124,7 @@ public class MiniPlayerFragment extends Fragment {
                         .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
                 });
             });
-        }catch(Exception|OutOfMemoryError e){
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
 
@@ -1145,7 +1146,7 @@ public class MiniPlayerFragment extends Fragment {
                         .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
                 });
             });
-        }catch(Exception|OutOfMemoryError e){
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
         return downloadAudioDetailsList;
@@ -2124,7 +2125,7 @@ public class MiniPlayerFragment extends Fragment {
                     GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             initializePlayer();
