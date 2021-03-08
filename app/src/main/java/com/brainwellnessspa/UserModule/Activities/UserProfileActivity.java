@@ -84,6 +84,7 @@ public class UserProfileActivity extends AppCompatActivity {
     boolean myBackPress = false;
     private int numStarted = 0;
     int stackStatus = 0;
+    boolean notificationStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class UserProfileActivity extends AppCompatActivity {
             myBackPress = true;
             finish();
         });
-
+        notificationStatus = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
@@ -660,10 +661,11 @@ public class UserProfileActivity extends AppCompatActivity {
                             ProfileUpdateModel viewModel = response.body();
                             if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                String Uname ="";
-                                if(viewModel.getResponseData().getName().equalsIgnoreCase("")){
+                                notificationStatus = true;
+                                String Uname = "";
+                                if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
                                     Uname = "Guest";
-                                }else{
+                                } else {
                                     Uname = viewModel.getResponseData().getName();
                                 }
                                 analytics.identify(new Traits()
@@ -672,7 +674,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         .putPhone(viewModel.getResponseData().getPhoneNumber())
                                         .putValue("userId", UserID)
                                         .putValue("id", UserID)
-                                        .putValue("name",Uname)
+                                        .putValue("name", Uname)
                                         .putValue("phone", viewModel.getResponseData().getPhoneNumber())
                                         .putValue("email", viewModel.getResponseData().getEmail()));
                                 finish();
@@ -791,6 +793,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
                 } else {
+                    notificationStatus = false;
                     myBackPress = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
@@ -810,9 +813,11 @@ public class UserProfileActivity extends AppCompatActivity {
         public void onActivityDestroyed(Activity activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
+                if (!notificationStatus) {
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(notificationId);
+                    relesePlayer(getApplicationContext());
+                }
             } else {
                 Log.e("Destroy", "Activity go in main activity");
             }

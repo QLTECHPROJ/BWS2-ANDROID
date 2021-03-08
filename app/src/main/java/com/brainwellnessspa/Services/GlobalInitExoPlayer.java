@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -46,6 +47,7 @@ import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
@@ -75,6 +77,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
@@ -87,6 +90,7 @@ public class GlobalInitExoPlayer extends Service {
     public static NotificationManager notificationManager;
     public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false, serviceRemoved = false;
     public static Bitmap myBitmap = null;
+    public static Bitmap myBitmapImage = null;
     public static Intent intent;
     public static PlayerNotificationManager playerNotificationManager;
     public static MediaSessionCompat mediaSession;
@@ -148,7 +152,7 @@ public class GlobalInitExoPlayer extends Service {
 
             @Override
             protected void onPostExecute(Bitmap result) {
-//                myBitmap = result;
+                myBitmapImage = result;
                 super.onPostExecute(result);
             }
         }
@@ -590,8 +594,9 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
-                        myBitmap = getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
-                        return myBitmap;
+
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
+                        return myBitmapImage;
                     }
                 },
                 new PlayerNotificationManager.NotificationListener() {
