@@ -30,8 +30,11 @@ import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
+import com.segment.analytics.AnalyticsContext;
+import com.segment.analytics.Properties;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
@@ -140,6 +143,19 @@ public class DashboardActivity extends AppCompatActivity /*implements AudioManag
             PlaylistName = getIntent().getStringExtra("PlaylistName");
             PlaylistImage = getIntent().getStringExtra("PlaylistImage");
             PlaylistType = getIntent().getStringExtra("PlaylistType");
+            if(getIntent().hasExtra("notification")){
+                Properties p = new Properties();
+                AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
+                campaign.putName(getIntent().getStringExtra(CONSTANTS.title));
+                campaign.putValue("playlistID", PlaylistID);
+                campaign.putValue("playlistName", PlaylistName);
+                campaign.putContent(getIntent().getStringExtra("message"));
+                campaign.putMedium("Push");
+                campaign.putSource("Admin");
+                p.putValue("action", "Accept");
+                p.putValue("campaign", campaign);
+                BWSApplication.addToSegment("Push Notification Tapped",p, CONSTANTS.track);
+            }
         }
         if (Goplaylist.equalsIgnoreCase("1")) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);

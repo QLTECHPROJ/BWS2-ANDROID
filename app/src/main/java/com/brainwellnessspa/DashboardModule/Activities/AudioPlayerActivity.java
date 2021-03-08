@@ -109,6 +109,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getNetworkSpeed;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -1112,6 +1113,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
+                            String s = getNetworkSpeed(ctx);
+                            p.putValue("network speed",s);
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Completed", p, CONSTANTS.track);
                             if (player.getPlayWhenReady()) {
@@ -1149,6 +1152,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             p.putValue("playerType", "Main");
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("bitRate", "");
+                            String s = getNetworkSpeed(ctx);
+                            p.putValue("network speed",s);
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);
                         } else if (state == ExoPlayer.STATE_ENDED) {
@@ -1280,15 +1285,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                            p.putValue("method", error.getMessage() + error.getSourceException().getMessage());
+                            p.putValue("method", error.getMessage() + " " + error.getSourceException().getMessage());
                             Log.e("onPlaybackError",  error.getMessage() + " "  + error.getSourceException().getMessage());
                         }
                         else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-                            p.putValue("method", error.getMessage() + error.getRendererException().getMessage());
+                            p.putValue("method", error.getMessage() + " " + error.getRendererException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
                         }
                         else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-                            p.putValue("method", error.getMessage() + error.getUnexpectedException().getMessage());
+                            p.putValue("method", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                         }
                         else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
@@ -1638,6 +1643,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void callHeartbeat() {
         p = new Properties();
+        String s = getNetworkSpeed(ctx);
+        p.putValue("network speed",s);
         p.putValue("userId", UserID);
         p.putValue("audioId", mainPlayModelList.get(position).getID());
         p.putValue("audioName", mainPlayModelList.get(position).getName());

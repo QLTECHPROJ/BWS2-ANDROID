@@ -25,6 +25,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.R;
+import com.segment.analytics.AnalyticsContext;
 import com.segment.analytics.Properties;
 
 import java.util.Random;
@@ -82,6 +83,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
         }
+
+        Properties p = new Properties();
+        AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
+        campaign.putValue("id", id);
+        campaign.putName(title);
+        campaign.putContent(message);
+        campaign.putMedium("Push");
+        campaign.putSource("Admin");
+        p.putValue("campaign", campaign);
+        BWSApplication.addToSegment("Push Notification Received", p, CONSTANTS.track);
     }
 
     @Override
@@ -137,12 +148,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     resultIntent.putExtra("Goplaylist", "1");
                     resultIntent.putExtra("PlaylistID", id);
                     resultIntent.putExtra("PlaylistName", title);
+                    resultIntent.putExtra("notification", "0");
+                    resultIntent.putExtra("message", message);
                     resultIntent.putExtra("PlaylistImage", "");
-                    /*Properties p = new Properties();
-                    p.putValue("PlaylistID", id);
-                    p.putValue("PlaylistName", title);
-                    p.putValue("PlaylistImage", "");
-                    BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);*/
                     taskStackBuilder.addParentStack(DashboardActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);

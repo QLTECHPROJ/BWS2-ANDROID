@@ -1,6 +1,5 @@
 package com.brainwellnessspa.Services;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,13 +12,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.os.StatFs;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -29,7 +25,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
@@ -47,7 +42,6 @@ import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
@@ -77,7 +71,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
@@ -126,7 +119,7 @@ public class GlobalInitExoPlayer extends Service {
     }
 
     public static Bitmap getMediaBitmap(Context ctx, String songImg) {
-        class GetMedia extends AsyncTask<String, Void, Bitmap> {
+      /*  class GetMedia extends AsyncTask<String, Void, Bitmap> {
             @Override
             protected Bitmap doInBackground(String... params) {
                 if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {
@@ -155,7 +148,7 @@ public class GlobalInitExoPlayer extends Service {
                 myBitmapImage = result;
                 super.onPostExecute(result);
             }
-        }
+        }*/
 
         AudioDatabase.databaseWriteExecutor1.execute(() -> {
             if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {
@@ -562,7 +555,14 @@ Appointment Audios dddd*/
                             }.getType();
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
-                        return mainPlayModelList1.get(players.getCurrentWindowIndex()).getName();
+                        int ps = 0;
+                        if (player != null) {
+                            ps = player.getCurrentWindowIndex();
+                        } else {
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        }
+                        return mainPlayModelList1.get(ps).getName();
                     }
 
                     @Nullable
@@ -588,14 +588,28 @@ Appointment Audios dddd*/
                             }.getType();
                             mainPlayModelList1 = gson.fromJson(json, type);
                         }
-                        return mainPlayModelList1.get(players.getCurrentWindowIndex()).getAudioDirection();
+                        int ps = 0;
+                        if (player != null) {
+                            ps = player.getCurrentWindowIndex();
+                        } else {
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        }
+                        return mainPlayModelList1.get(ps).getAudioDirection();
                     }
 
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player players, PlayerNotificationManager.BitmapCallback callback) {
-//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList1.get(players.getCurrentWindowIndex()).getImageFile());
-                        return myBitmapImage;
+ /*                       int ps = 0;
+                        if (player != null) {
+                            ps = player.getCurrentWindowIndex();
+                        } else {
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        }
+                        myBitmap = getMediaBitmap(ctx, mainPlayModelList1.get(ps).getImageFile());*/
+                        return myBitmap;
                     }
                 },
                 new PlayerNotificationManager.NotificationListener() {
@@ -688,12 +702,19 @@ Appointment Audios dddd*/
                     mainPlayModelList1 = gson.fromJson(jsonxx, type);
                 }
                 MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
-                    builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
+                int ps = 0;
+                if (player != null) {
+                    ps = player.getCurrentWindowIndex();
+                } else {
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                 }
-                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(ps).getAudioDirection());
+                    builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(ps).getName());
+                }
+                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(ps).getImageFile());
+                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(ps).getID());
                 try {
                     builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
                 } catch (OutOfMemoryError e) {
@@ -1370,12 +1391,19 @@ Appointment Audios dddd*/
                         }.getType();
                         mainPlayModelList1 = gson.fromJson(json1, type);
                     }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(player.getCurrentWindowIndex()).getAudioDirection());
-                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(player.getCurrentWindowIndex()).getName());
+                    int ps = 0;
+                    if (player != null) {
+                        ps = player.getCurrentWindowIndex();
+                    } else {
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     }
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(player.getCurrentWindowIndex()).getImageFile());
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(player.getCurrentWindowIndex()).getID());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(ps).getAudioDirection());
+                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(ps).getName());
+                    }
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(ps).getImageFile());
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(ps).getID());
 
                     if (duration > 0) {
                         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);

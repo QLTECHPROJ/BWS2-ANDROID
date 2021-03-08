@@ -305,15 +305,15 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                            p.putValue("method", error.getMessage() + error.getSourceException().getMessage());
+                            p.putValue("method", error.getMessage() + " " + error.getSourceException().getMessage());
                             Log.e("onPlaybackError",  error.getMessage() + " "  + error.getSourceException().getMessage());
                         }
                         else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-                            p.putValue("method", error.getMessage() + error.getRendererException().getMessage());
+                            p.putValue("method", error.getMessage() + " " + error.getRendererException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
                         }
                         else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-                            p.putValue("method", error.getMessage() + error.getUnexpectedException().getMessage());
+                            p.putValue("method", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                         }
                         else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
