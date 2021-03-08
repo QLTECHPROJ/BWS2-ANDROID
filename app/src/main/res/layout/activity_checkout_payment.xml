@@ -47,7 +47,7 @@
             android:layout_height="match_parent"
             android:overScrollMode="never"
             android:descendantFocusability="blocksDescendants"
-            android:paddingBottom="@dimen/_180sdp">
+            android:paddingBottom="@dimen/_190sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
