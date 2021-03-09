@@ -77,10 +77,10 @@ public class InvoiceActivity extends AppCompatActivity {
         BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
             if (invoiceToRecepit == 0) {
                 if (ComeFrom.equalsIgnoreCase("1")) {
                     invoiceToDashboard = 1;
-                    myBackPress = true;
                     Intent i = new Intent(context, DashboardActivity.class);
                     startActivity(i);
                     finish();
@@ -190,10 +190,10 @@ public class InvoiceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        myBackPress = true;
         if (invoiceToRecepit == 0) {
             if (ComeFrom.equalsIgnoreCase("1")) {
                 invoiceToDashboard = 1;
-                myBackPress = true;
                 Intent i = new Intent(context, DashboardActivity.class);
                 startActivity(i);
                 finish();
