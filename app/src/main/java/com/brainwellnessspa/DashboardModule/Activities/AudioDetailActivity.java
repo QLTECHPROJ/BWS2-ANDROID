@@ -383,6 +383,7 @@ public class AudioDetailActivity extends AppCompatActivity {
         binding.llShuffle.setOnClickListener(view -> callShuffle());
 
         binding.llRemovePlaylist.setOnClickListener(view -> {
+            myBackPress = true;
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -684,6 +685,7 @@ public class AudioDetailActivity extends AppCompatActivity {
     }
 
     private void callRemoveFromPlayList() {
+        myBackPress = true;
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId);
@@ -691,6 +693,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     try {
+                        myBackPress = true;
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SucessModel listModel = response.body();
@@ -1479,6 +1482,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                             binding.ivViewQueue.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
                         }
                         binding.tvReadMore.setOnClickListener(view -> {
+                            myBackPress = true;
                             final Dialog dialog = new Dialog(ctx);
                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             dialog.setContentView(R.layout.full_desc_layout);
@@ -1602,6 +1606,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Add to Playlist Clicked", p, CONSTANTS.track);
+                            myBackPress = true;
                             Intent i = new Intent(ctx, AddPlaylistActivity.class);
                             i.putExtra("AudioId", AudioId);
                             i.putExtra("ScreenView", "Audio Details Screen");

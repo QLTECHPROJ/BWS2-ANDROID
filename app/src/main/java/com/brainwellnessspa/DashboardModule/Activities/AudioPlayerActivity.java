@@ -1643,12 +1643,12 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             exoBinding.exoProgress.setPosition(positionx);
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
 //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-            if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
-                oldSongPos = positionx;
-                Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
-                callHeartbeat();
-            }
             if (player != null) {
+                if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
+                    oldSongPos = positionx;
+                    Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
+                    callHeartbeat();
+                }
                 exoBinding.exoProgress.setDuration(player.getDuration());
             }
             exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),

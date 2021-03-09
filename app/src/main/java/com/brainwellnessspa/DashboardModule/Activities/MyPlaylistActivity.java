@@ -209,6 +209,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
         binding.llAddPlaylist.setOnClickListener(view -> {
+            myBackPress = true;
             comeAddPlaylist = 1;
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -229,6 +230,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.llLikes.setOnClickListener(v -> CallPlaylistLike(PlaylistID));
 
         binding.llFind.setOnClickListener(view -> {
+            myBackPress = true;
             ComeFindAudio = 2;
             finish();
         });
@@ -236,6 +238,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.tvReadMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                myBackPress = true;
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.full_desc_layout);
@@ -289,6 +292,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             edtCreate.addTextChangedListener(popupTextWatcher);
 
             btnSendCode.setOnClickListener(view1 -> {
+                myBackPress = true;
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     Call<RenamePlaylistModel> listCall1 = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
@@ -379,6 +383,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 });
 
                 tvconfirm.setOnClickListener(v -> {
+                    myBackPress = true;
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Call<SucessModel> listCall12 = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
