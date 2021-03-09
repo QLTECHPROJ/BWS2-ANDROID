@@ -37,6 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity.myBackPressbill;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 /*Active => Cancel button
@@ -74,6 +75,7 @@ public class CurrentPlanFragment extends Fragment {
         });
 
         binding.tvChangeCard.setOnClickListener(view12 -> {
+            myBackPressbill = true;
             Intent i = new Intent(getActivity(), BillingOrderActivity.class);
             i.putExtra("payment", 1);
             startActivity(i);
@@ -174,6 +176,7 @@ public class CurrentPlanFragment extends Fragment {
                                     public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
                                         try {
                                             if (response.isSuccessful()) {
+                                                myBackPressbill = true;
                                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                                 PayNowDetailsModel listModel1 = response.body();
                                                 BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());

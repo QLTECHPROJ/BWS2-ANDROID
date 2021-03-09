@@ -136,6 +136,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.tvFound.setText("No result found");
 
         binding.btnAddPlatLists.setOnClickListener(view -> {
+            myBackPress = true;
             Properties p = new Properties();
             p.putValue("userId", UserID);
             p.putValue("source", "Add To Playlist Screen");
@@ -320,6 +321,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
     }
 
     private void callAddPlaylistFromPlaylist(String PlaylistID, String name, Dialog dialog, String d, String Created, String New) {
+
+        myBackPress = true;
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
@@ -479,9 +482,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 dialog.setCancelable(false);
                             }
                         } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                         }
                     } catch (Exception e) {
+
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         e.printStackTrace();
                     }
                 }

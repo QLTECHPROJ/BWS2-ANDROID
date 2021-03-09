@@ -336,7 +336,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                 finish();
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (Exception e) {   BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+
                         e.printStackTrace();
                     }
                 }

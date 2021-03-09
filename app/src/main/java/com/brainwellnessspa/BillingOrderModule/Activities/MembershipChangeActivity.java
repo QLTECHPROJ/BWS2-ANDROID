@@ -220,6 +220,8 @@ public class MembershipChangeActivity extends AppCompatActivity {
                 }
             }
             btnFreeJoin.setOnClickListener(view -> {
+
+                myBackPress = true;
                 ctx.startActivity(i);
                 finish();
             });

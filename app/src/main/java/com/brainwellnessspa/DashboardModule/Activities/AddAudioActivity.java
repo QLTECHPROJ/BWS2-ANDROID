@@ -544,6 +544,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                         }
                     } catch (Exception e) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         e.printStackTrace();
                     }
 

@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
@@ -38,7 +37,7 @@ public class BillingOrderActivity extends AppCompatActivity {
     String UserID;
     private int numStarted = 0;
     int stackStatus = 0;
-    boolean myBackPress = false;
+    public static boolean myBackPressbill = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,7 @@ public class BillingOrderActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
-            myBackPress = true;
+            myBackPressbill = true;
             ComeScreenAccount = 1;
             comefromDownload = "0";
             finish();
@@ -107,7 +106,7 @@ public class BillingOrderActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        myBackPress = true;
+        myBackPressbill = true;
         ComeScreenAccount = 1;
         comefromDownload = "0";
         finish();
@@ -185,11 +184,11 @@ public class BillingOrderActivity extends AppCompatActivity {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                if (!myBackPress) {
+                if (!myBackPressbill) {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
                 } else {
-                    myBackPress = true;
+                    myBackPressbill = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
                 }

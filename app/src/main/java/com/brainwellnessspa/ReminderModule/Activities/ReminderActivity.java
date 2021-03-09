@@ -283,6 +283,7 @@ public class ReminderActivity extends AppCompatActivity {
         if (ComeFrom.equalsIgnoreCase("")) {
             binding.ivArrow.setVisibility(View.VISIBLE);
             binding.llSelectPlaylist.setOnClickListener(view -> {
+                myBackPress = true;
                 dialog = new Dialog(context);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.select_playlist);
@@ -390,6 +391,7 @@ public class ReminderActivity extends AppCompatActivity {
         }
 
         binding.btnSave.setOnClickListener(view -> {
+            myBackPress = true;
             if (IsLock.equalsIgnoreCase("1")) {
                 Intent i = new Intent(context, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
@@ -576,6 +578,7 @@ public class ReminderActivity extends AppCompatActivity {
                 this.binding = binding;
 
                 binding.cbChecked.setOnClickListener(view -> {
+                    myBackPress = true;
                     mSelectedItem = getAdapterPosition();
                     notifyDataSetChanged();
                     pos = mSelectedItem;

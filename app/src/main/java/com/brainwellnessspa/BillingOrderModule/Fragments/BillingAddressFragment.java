@@ -26,6 +26,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity.myBackPressbill;
+
 public class BillingAddressFragment extends Fragment {
     FragmentBillingAddressBinding binding;
     String UserID, UserName, UserEmail, UserMobileNumber, UserCountry, UserAddressLine1, UserAddressLine2, UserCity, UserState, UserPostCode;
@@ -89,6 +91,7 @@ public class BillingAddressFragment extends Fragment {
                                     /*Properties p = new Properties();
                                     p.putValue("userId", UserID);
                                     BWSApplication.addToSegment("Billing Address Updated", p, CONSTANTS.track);*/
+                                    myBackPressbill = true;
                                     getActivity().finish();
                                 } catch (Exception e) {
                                     e.printStackTrace();

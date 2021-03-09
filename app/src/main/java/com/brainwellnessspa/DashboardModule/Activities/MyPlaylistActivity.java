@@ -260,6 +260,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
         });
 
         binding.llRename.setOnClickListener(view -> {
+
+            myBackPress = true;
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.create_palylist);
@@ -343,6 +345,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         });
 
         binding.llDelete.setOnClickListener(view -> {
+            myBackPress = true;
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

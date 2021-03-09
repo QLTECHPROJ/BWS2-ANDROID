@@ -481,6 +481,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             }
 
             holder.bind.llMainLayout.setOnClickListener(view -> {
+                notificationStatus = true;
+                myBackPress = false;
                 Intent i = new Intent(ctx, ReminderActivity.class);
                 i.putExtra("ComeFrom", "1");
                 i.putExtra("ReminderId", model.get(position).getReminderId());
