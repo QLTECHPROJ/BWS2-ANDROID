@@ -135,6 +135,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         });
 
         binding.btnCancelSubscrible.setOnClickListener(view -> {
+            myBackPress = true;
             if (player != null) {
                 if (player.getPlayWhenReady()) {
                     player.setPlayWhenReady(false);
@@ -152,7 +153,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                 final Button Btn = dialog.findViewById(R.id.Btn);
-
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();

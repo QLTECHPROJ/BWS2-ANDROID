@@ -1529,6 +1529,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                         }
 
                         binding.llAddPlaylist.setOnClickListener(view -> {
+                            myBackPress = true;
                             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                 return;
                             }
@@ -1613,6 +1614,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                         });
 
                         binding.llViewQueue.setOnClickListener(view -> {
+                            myBackPress = true;
                             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                 return;
                             }

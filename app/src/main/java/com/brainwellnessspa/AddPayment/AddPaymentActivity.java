@@ -145,6 +145,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         });
 
         binding.opendilog.setOnClickListener(v -> {
+            myBackPress = true;
             a = 1;
             showYearDialog();
         });
@@ -290,6 +291,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         binding1.YearPicker.setValue(year);
         binding1.YearPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
+        myBackPress = true;
         binding1.set.setOnClickListener(v -> {
             if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
                 binding.txtError.setText("Please enter a valid expiry date");

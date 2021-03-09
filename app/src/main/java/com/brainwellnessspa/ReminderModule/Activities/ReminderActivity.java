@@ -129,14 +129,13 @@ public class ReminderActivity extends AppCompatActivity {
         ShowPlaylistName();
 
         binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
             if (ComeScreenReminder == 1) {
-                myBackPress = true;
                 Intent i = new Intent(context, ReminderDetailsActivity.class);
                 startActivity(i);
                 finish();
                 overridePendingTransition(0, 0);
             } else {
-                myBackPress = true;
                 ComeScreenAccount = 1;
                 comefromDownload = "0";
                 finish();
@@ -164,6 +163,7 @@ public class ReminderActivity extends AppCompatActivity {
         }
 
         binding.llSelectTime.setOnClickListener(view -> {
+            myBackPress = true;
             String[] time = currantTime.split(":");
             String min[] = time[1].split(" ");
             mHour = Integer.parseInt(time[0]);

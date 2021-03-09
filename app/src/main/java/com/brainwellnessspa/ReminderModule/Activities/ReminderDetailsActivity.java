@@ -103,9 +103,9 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
         binding.btnAddReminder.setOnClickListener(view -> {
+            notificationStatus = true;
+            myBackPress = false;
             if (BWSApplication.isNetworkConnected(ctx)) {
-                notificationStatus = true;
-                myBackPress = false;
                 Intent i = new Intent(ctx, ReminderActivity.class);
                 i.putExtra("ComeFrom", "");
                 i.putExtra("ReminderId", "");
@@ -205,6 +205,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         }
 
         binding.btnDeleteReminder.setOnClickListener(view -> {
+            notificationStatus = true;
+            myBackPress = false;
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.delete_reminder);

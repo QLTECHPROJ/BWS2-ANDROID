@@ -122,6 +122,7 @@ public class PaymentActivity extends AppCompatActivity {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
         binding.llAddNewCard.setOnClickListener(view -> {
+            myBackPress = true;
             if (BWSApplication.isNetworkConnected(context)) {
                 Intent i = new Intent(context, AddPaymentActivity.class);
                 i.putExtra("ComePayment", "2");

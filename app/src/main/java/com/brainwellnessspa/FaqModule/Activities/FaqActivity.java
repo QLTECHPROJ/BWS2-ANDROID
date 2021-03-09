@@ -75,6 +75,7 @@ public class FaqActivity extends AppCompatActivity {
         p.putValue("faqCategories", gson.toJson(section));
         BWSApplication.addToSegment("FAQ Viewed", p, CONSTANTS.screen);
         binding.llAudio.setOnClickListener(view -> {
+            myBackPress = true;
             try {
                 modelList.clear();
                 modelList = new ArrayList<>();
@@ -94,6 +95,7 @@ public class FaqActivity extends AppCompatActivity {
         });
 
         binding.llHelp.setOnClickListener(view -> {
+            myBackPress = true;
             try {
                 modelList.clear();
                 modelList = new ArrayList<>();
@@ -113,6 +115,7 @@ public class FaqActivity extends AppCompatActivity {
         });
 
         binding.llPlaylists.setOnClickListener(view -> {
+            myBackPress = true;
             try {
                 modelList.clear();
                 modelList = new ArrayList<>();

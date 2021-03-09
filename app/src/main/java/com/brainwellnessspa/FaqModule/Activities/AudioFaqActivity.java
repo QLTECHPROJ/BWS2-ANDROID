@@ -144,6 +144,7 @@ public class AudioFaqActivity extends AppCompatActivity {
             holder.binding.tvTitle.setText(modelList.get(position).getTitle());
             holder.binding.tvDesc.setText(modelList.get(position).getDesc());
             holder.binding.ivClickRight.setOnClickListener(view -> {
+                myBackPress = true;
                 holder.binding.llMainLayout.setBackgroundResource(R.color.discalimer_gray);
                 holder.binding.tvDesc.setFocusable(true);
                 holder.binding.tvDesc.requestFocus();
@@ -154,6 +155,7 @@ public class AudioFaqActivity extends AppCompatActivity {
             });
 
             holder.binding.ivClickDown.setOnClickListener(view -> {
+                myBackPress = true;
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.tvDesc.setVisibility(View.GONE);
                 holder.binding.ivClickRight.setVisibility(View.VISIBLE);

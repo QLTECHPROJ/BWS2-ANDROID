@@ -235,6 +235,7 @@ public class ContactBookActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     withoutSearch();
                 } else {
+                    myBackPress = true;
                     AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
                     buildermain.setMessage("Please Allow Contact Permission");
                     buildermain.setCancelable(true);
@@ -267,6 +268,7 @@ public class ContactBookActivity extends AppCompatActivity {
                     try {
                         AllContactListModel listModel = response.body();
                         if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            myBackPress = true;
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             Uri uri = Uri.parse("smsto:" + ContactNumber);
                             Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
@@ -325,6 +327,7 @@ public class ContactBookActivity extends AppCompatActivity {
             holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_gray_cornor_normal);
             holder.binding.BtnInvite.setTextColor(getResources().getColor(R.color.gray));
             holder.binding.BtnInvite.setOnClickListener(v -> {
+                myBackPress = true;
                 prepareContactData(model.getContactName(), model.getContactNumber());
                 notifyDataSetChanged();
                 holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal);
@@ -404,6 +407,7 @@ public class ContactBookActivity extends AppCompatActivity {
             holder.binding.tvName.setText(favcontactlistModel.get(position).getContactName());
             holder.binding.tvNumber.setText(favcontactlistModel.get(position).getContactNumber());
             holder.binding.cvMainLayout.setOnClickListener(v -> {
+                myBackPress = true;
                 notifyDataSetChanged();
                 prepareContactData(favcontactlistModel.get(position).getContactName(), favcontactlistModel.get(position).getContactNumber());
             });

@@ -101,6 +101,8 @@ public class ReferFriendActivity extends AppCompatActivity {
         }
 
         binding.btnReferred.setOnClickListener(v -> {
+
+            myBackPress = true;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(ReferFriendActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
                         && ContextCompat.checkSelfPermission(ReferFriendActivity.this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -121,6 +123,8 @@ public class ReferFriendActivity extends AppCompatActivity {
                         startActivity(intent);
                     }*/
                 } else {
+
+                    myBackPress = true;
                     // Permission has already been granted
                /* AlertDialog.Builder buildermain = new AlertDialog.Builder(ReferFriendActivity.this);
                 buildermain.setMessage(getString(R.string.opps_msg)+" Please Try After Some Time");
@@ -214,9 +218,11 @@ public class ReferFriendActivity extends AppCompatActivity {
                     fragmentManager1.beginTransaction()
                             .add(R.id.flfriend, sessionsFragment).commit();*/
 
+                    myBackPress = true;
                     Intent i = new Intent(ReferFriendActivity.this, ContactBookActivity.class);
                     startActivity(i);
                 } else {
+                    myBackPress = true;
                     AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
                     buildermain.setMessage("Please Allow Contact Permission");
                     buildermain.setCancelable(true);
