@@ -39,7 +39,15 @@ public class BillingAddressFragment extends Fragment {
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        binding.etName.addTextChangedListener(billingTextWatcher);
+        binding.etEmail.addTextChangedListener(billingTextWatcher);
+        binding.etMobileNumber.addTextChangedListener(billingTextWatcher);
+        binding.etCountry.addTextChangedListener(billingTextWatcher);
+        binding.etAddressLine1.addTextChangedListener(billingTextWatcher);
+        binding.etAddressLine2.addTextChangedListener(billingTextWatcher);
+        binding.etCity.addTextChangedListener(billingTextWatcher);
+        binding.etState.addTextChangedListener(billingTextWatcher);
+        binding.etPostCode.addTextChangedListener(billingTextWatcher);
         binding.btnSave.setEnabled(false);
         binding.btnSave.setTextColor(getResources().getColor(R.color.white));
         binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
@@ -155,15 +163,7 @@ public class BillingAddressFragment extends Fragment {
                         binding.etCity.setText(listModel.getResponseData().getSuburb());
                         binding.etState.setText(listModel.getResponseData().getState());
                         binding.etPostCode.setText(listModel.getResponseData().getPostcode());
-                        binding.etName.addTextChangedListener(billingTextWatcher);
-                        binding.etEmail.addTextChangedListener(billingTextWatcher);
-                        binding.etMobileNumber.addTextChangedListener(billingTextWatcher);
-                        binding.etCountry.addTextChangedListener(billingTextWatcher);
-                        binding.etAddressLine1.addTextChangedListener(billingTextWatcher);
-                        binding.etAddressLine2.addTextChangedListener(billingTextWatcher);
-                        binding.etCity.addTextChangedListener(billingTextWatcher);
-                        binding.etState.addTextChangedListener(billingTextWatcher);
-                        binding.etPostCode.addTextChangedListener(billingTextWatcher);
+
                         Properties p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("fullName", listModel.getResponseData().getName());
@@ -196,6 +196,7 @@ public class BillingAddressFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            binding.nestedScroll.smoothScrollTo(0, binding.nestedScroll.getChildAt(0).getHeight());
             String Name = binding.etName.getText().toString();
             String Email = binding.etEmail.getText().toString();
             String MobileNumber = binding.etMobileNumber.getText().toString();
