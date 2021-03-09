@@ -273,6 +273,7 @@ public class BillingAddressFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
         }
+
     };
 
 }
