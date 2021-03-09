@@ -256,6 +256,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 .build();
         addDisclaimer();
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                callBack();
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -631,14 +639,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.searchView.clearFocus();
         searchEditText.setText("");
         binding.searchView.setQuery("", false);
-
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                callBack();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         if (ComeFindAudio == 2) {
             binding.searchView.requestFocus();
             searchEditText.setText("");
@@ -711,7 +711,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 ComeFrom_LikePlaylist = true;
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
-                getActivity().finish();
+//                getActivity().finish();
                 getActivity().overridePendingTransition(0, 0);
                 //            comefrom_search = 0;
             } else if (comefrom_search == 3) {
