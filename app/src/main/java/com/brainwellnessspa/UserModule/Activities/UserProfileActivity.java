@@ -93,7 +93,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            binding.nestedScroll.smoothScrollTo(0, binding.nestedScroll.getChildAt(0).getHeight());
             String User = binding.etUser.getText().toString().trim();
             String Calendar = binding.etCalendar.getText().toString().trim();
             String MobileNumber = binding.etMobileNumber.getText().toString().trim();
