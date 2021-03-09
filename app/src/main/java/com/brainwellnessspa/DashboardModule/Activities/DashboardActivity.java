@@ -313,7 +313,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
     @Override
     protected void onResume() {
-        NetWatch.builder(DashboardActivity.this)
+        NetWatch.builder(this)
                 .setCallBack(new NetworkChangeReceiver_navigator() {
                     @Override
                     public void onConnected(int source) {

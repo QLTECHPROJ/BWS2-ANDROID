@@ -185,11 +185,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             Analytics.setSingletonInstance(analytics);
         } catch (Exception e) {
 //            incatch = true;
-            Log.e("in Catch", "True");
+//            Log.e("in Catch", "True");
 //            Properties p = new Properties();
 //            p.putValue("Application Crashed", e.toString());
 //            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);
-
         }
     }
 

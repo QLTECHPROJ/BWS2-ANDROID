@@ -282,9 +282,11 @@ public class MiniPlayerFragment extends Fragment {
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
-                if(player.getDeviceVolume() > 4) {
+//                if(player.getDeviceVolume() > 4) {
                     player.setDeviceVolume(2);
-                }
+//                }
+
+//                player.setVolume(1f);
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override
@@ -542,7 +544,10 @@ public class MiniPlayerFragment extends Fragment {
                                     p.putValue("audioService", APP_SERVICE_STATUS);
                                     p.putValue("bitRate", "");
                                     p.putValue("sound", String.valueOf(hundredVolume));
-                                    BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
+                                    String source = GetSourceName(ctx);
+                                    if(!source.equalsIgnoreCase( "Playlist") && !source.equalsIgnoreCase("Downloaded Playlists")) {
+                                        BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
+                                    }
                                     if (audioPlay && (AudioFlag.equalsIgnoreCase("SubPlayList") || AudioFlag.equalsIgnoreCase("Downloadlist"))) {
                                         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
                                         String PlaylistID = (shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, ""));

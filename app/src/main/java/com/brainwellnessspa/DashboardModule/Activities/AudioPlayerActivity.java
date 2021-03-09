@@ -737,7 +737,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
 
     @Override
     public void onResume() {
-        NetWatch.builder(AudioPlayerActivity.this)
+        NetWatch.builder(this)
                 .setCallBack(new NetworkChangeReceiver_navigator() {
                     @Override
                     public void onConnected(int source) {
@@ -1014,9 +1014,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             if (player != null) {
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
-                if(player.getDeviceVolume() > 4) {
+//                if(player.getDeviceVolume() > 4) {
                     player.setDeviceVolume(2);
-                }
+//                }
 
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {
@@ -1236,7 +1236,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                     p.putValue("audioService", APP_SERVICE_STATUS);
                                     p.putValue("bitRate", "");
                                     p.putValue("sound", String.valueOf(hundredVolume));
-                                    BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
+                                    String source = GetSourceName(ctx);
+                                    if(!source.equalsIgnoreCase( "Playlist") && !source.equalsIgnoreCase("Downloaded Playlists")) {
+                                        BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
+                                    }
                                     Log.e("Last audio End", mainPlayModelList.get(position).getName());
                                     if (audioPlay && (AudioFlag.equalsIgnoreCase("SubPlayList") || AudioFlag.equalsIgnoreCase("Downloadlist"))) {
                                         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);

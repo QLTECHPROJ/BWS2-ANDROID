@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
 import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
@@ -28,6 +30,7 @@ import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityLikeBinding;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,17 +39,21 @@ import com.segment.analytics.Properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import ir.drax.netwatch.NetWatch;
+import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
-public class LikeActivity extends AppCompatActivity {
+public class LikeActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     public static boolean ComeFrom_LikePlaylist = false;
     public static int RefreshLikePlaylist = 0;
     ActivityLikeBinding binding;
@@ -98,6 +105,33 @@ public class LikeActivity extends AppCompatActivity {
     protected void onResume() {
         ComeScreenAccount = 0;
         comefromDownload = "1";
+
+        NetWatch.builder(LikeActivity.this)
+                .setCallBack(new NetworkChangeReceiver_navigator() {
+                    @Override
+                    public void onConnected(int source) {
+                        // do some thing
+                        if(player!=null){
+                            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                                AudioInterrupted = false;
+                                player.setPlayWhenReady(true);
+                                player.prepare();
+                                player.seekTo(player.getCurrentPosition());
+                                Log.e("Exo PLayer Net:", "Player Resume after Net");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public View onDisconnected() {
+                        // do some other stuff
+
+
+                        return null;//To display a dialog simply return a custom view or just null to ignore it
+                    }
+                })
+                .setNotificationCancelable(false)
+                .build();
         callMembershipMediaPlayer();
         super.onResume();
     }
@@ -201,6 +235,31 @@ public class LikeActivity extends AppCompatActivity {
         ComeScreenAccount = 1;
         myBackPress = true;
         finish();
+    }
+
+    @Override
+    public void onConnected(int source) {
+        if(player!=null){
+            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                AudioInterrupted = false;
+                player.setPlayWhenReady(true);
+                player.prepare();
+                player.seekTo(player.getCurrentPosition());
+                Log.e("Exo PLayer Net:", "Player Resume after Net");
+            }
+        }
+    }
+
+    @Override
+    public View onDisconnected() {
+        return null;
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        NetWatch.unregister(this);
+        super.onDestroy();
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {

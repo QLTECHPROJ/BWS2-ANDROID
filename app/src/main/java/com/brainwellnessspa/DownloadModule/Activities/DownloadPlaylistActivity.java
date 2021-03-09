@@ -44,6 +44,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
@@ -60,6 +61,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.downloader.PRDownloader;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -68,8 +70,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import ir.drax.netwatch.NetWatch;
+import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
+
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
@@ -84,7 +90,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
-public class DownloadPlaylistActivity extends AppCompatActivity {
+public class DownloadPlaylistActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator  {
     //    Handler handler3;
     public static int comeDeletePlaylist = 0;
     public AudioManager audioManager;
@@ -215,8 +221,35 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+
+        NetWatch.builder(this)
+                .setCallBack(new NetworkChangeReceiver_navigator() {
+                    @Override
+                    public void onConnected(int source) {
+                        // do some thing
+                        if(player!=null){
+                            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                                AudioInterrupted = false;
+                                player.setPlayWhenReady(true);
+                                player.prepare();
+                                player.seekTo(player.getCurrentPosition());
+                                Log.e("Exo PLayer Net:", "Player Resume after Net");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public View onDisconnected() {
+                        // do some other stuff
+
+
+                        return null;//To display a dialog simply return a custom view or just null to ignore it
+                    }
+                })
+                .setNotificationCancelable(false)
+                .build();
         PrepareData();
+        super.onResume();
     }
 
     public void PrepareData() {
@@ -1029,6 +1062,30 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 this.binding = binding;
             }
         }
+    }
+    @Override
+    public void onConnected(int source) {
+        if(player!=null){
+            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                AudioInterrupted = false;
+                player.setPlayWhenReady(true);
+                player.prepare();
+                player.seekTo(player.getCurrentPosition());
+                Log.e("Exo PLayer Net:", "Player Resume after Net");
+            }
+        }
+    }
+
+    @Override
+    public View onDisconnected() {
+        return null;
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        NetWatch.unregister(this);
+        super.onDestroy();
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
