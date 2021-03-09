@@ -92,9 +92,9 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                 .build();
         p = new Properties();
         binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
             ComeScreenAccount = 1;
             comefromDownload = "0";
-            myBackPress = true;
             finish();
         });
         prepareData();
@@ -102,9 +102,9 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
 
     @Override
     public void onBackPressed() {
+        myBackPress = true;
         ComeScreenAccount = 1;
         comefromDownload = "0";
-        myBackPress = true;
         finish();
     }
 
@@ -396,6 +396,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         NetWatch.unregister(this);
         super.onDestroy();
     }
+
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
         String UserID;

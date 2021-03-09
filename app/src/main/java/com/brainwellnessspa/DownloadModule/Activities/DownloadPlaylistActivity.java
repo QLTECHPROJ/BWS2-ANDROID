@@ -222,7 +222,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
     @Override
     protected void onResume() {
-
         NetWatch.builder(this)
                 .setCallBack(new NetworkChangeReceiver_navigator() {
                     @Override
