@@ -6,6 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:background="@color/white">
 
         <RelativeLayout
@@ -46,8 +47,8 @@
             android:layout_height="match_parent"
             android:layout_below="@id/rlMainLayout"
             android:descendantFocusability="blocksDescendants"
-            android:overScrollMode="never"
-            android:paddingBottom="@dimen/_220sdp">
+            android:paddingBottom="@dimen/_85sdp"
+            android:overScrollMode="never">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -167,7 +168,7 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_13sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -230,7 +231,7 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_13sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -292,7 +293,7 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_13sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -359,7 +360,7 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_13sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>

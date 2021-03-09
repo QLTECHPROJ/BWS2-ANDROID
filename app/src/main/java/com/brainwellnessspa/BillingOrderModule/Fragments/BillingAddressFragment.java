@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.BillingAddressSaveModel;
@@ -37,6 +38,8 @@ public class BillingAddressFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_billing_address, container, false);
         View view = binding.getRoot();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.etName.addTextChangedListener(billingTextWatcher);
@@ -196,7 +199,6 @@ public class BillingAddressFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            binding.nestedScroll.smoothScrollTo(0, binding.nestedScroll.getChildAt(0).getHeight());
             String Name = binding.etName.getText().toString();
             String Email = binding.etEmail.getText().toString();
             String MobileNumber = binding.etMobileNumber.getText().toString();
@@ -273,7 +275,5 @@ public class BillingAddressFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
         }
-
     };
-
 }

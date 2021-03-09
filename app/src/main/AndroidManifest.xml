@@ -190,6 +190,7 @@
             android:name=".MembershipModule.Activities.CheckoutPaymentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoTitle"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -231,6 +232,7 @@
             android:name=".AddPayment.AddPaymentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".BillingOrderModule.Activities.CancelMembershipActivity"
@@ -241,6 +243,7 @@
             android:name=".BillingOrderModule.Activities.BillingOrderActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".InvoiceModule.Activities.InvoiceActivity"
@@ -269,6 +272,7 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".MembershipModule.Activities.ThankYouMpActivity"

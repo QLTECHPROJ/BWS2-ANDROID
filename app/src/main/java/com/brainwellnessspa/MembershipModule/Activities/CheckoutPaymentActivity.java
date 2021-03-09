@@ -84,7 +84,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            binding.nestedScroll.smoothScrollTo(0, binding.nestedScroll.getChildAt(0).getHeight());
+//            binding.nestedScroll.smoothScrollTo(0, binding.nestedScroll.getChildAt(0).getHeight());
             String CardNo = binding.etNumber.getText().toString().trim();
             String CardName = binding.etName.getText().toString().trim();
             String Month = binding.textMonth.getText().toString().trim();
