@@ -945,11 +945,11 @@ public class MiniPlayerFragment extends Fragment {
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
             if (player != null) {
                 exoBinding.exoProgress.setDuration(player.getDuration());
-            }
-            if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
-                oldSongPos = positionx;
-                Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
-                callHeartbeat();
+                if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
+                    oldSongPos = positionx;
+                    Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
+                    callHeartbeat();
+                }
             }
 //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         });
