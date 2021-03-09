@@ -86,6 +86,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdO
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -227,15 +228,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     @Override
                     public void onConnected(int source) {
                         // do some thing
-                        if(player!=null){
-                            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                                AudioInterrupted = false;
-                                player.setPlayWhenReady(true);
-                                player.prepare();
-                                player.seekTo(player.getCurrentPosition());
-                                Log.e("Exo PLayer Net:", "Player Resume after Net");
-                            }
-                        }
+                        callResumePlayer(ctx);
                     }
 
                     @Override
@@ -1065,15 +1058,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
     @Override
     public void onConnected(int source) {
-        if(player!=null){
-            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                AudioInterrupted = false;
-                player.setPlayWhenReady(true);
-                player.prepare();
-                player.seekTo(player.getCurrentPosition());
-                Log.e("Exo PLayer Net:", "Player Resume after Net");
-            }
-        }
+        callResumePlayer(ctx);
     }
 
     @Override

@@ -45,6 +45,7 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -73,6 +74,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
@@ -107,6 +109,29 @@ public class GlobalInitExoPlayer extends Service {
             player.release();
             player = null;
             PlayerINIT = false;
+        }
+    }
+
+    public static void callResumePlayer(Context ctx) {
+        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+        if(player!=null){
+            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                AudioInterrupted = false;
+                player.setPlayWhenReady(true);
+                player.seekTo(player.getCurrentWindowIndex(),player.getCurrentPosition());
+                player.prepare();
+                SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                    }.getType();
+                    mainPlayModelList = gson.fromJson(json, type);
+                }
+                GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+                Log.e("Exo PLayer Net:", "Player Resume after Net");
+            }
         }
     }
 
@@ -421,6 +446,10 @@ Appointment Audios dddd*/
         player.setHandleWakeLock(true);
         player.seekTo(position, 0);
         player.setForegroundMode(true);
+        if(player.getDeviceVolume() != 2){
+            player.setDeviceVolume(2);
+        }
+
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.CONTENT_TYPE_MUSIC)

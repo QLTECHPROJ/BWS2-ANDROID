@@ -283,9 +283,9 @@ public class MiniPlayerFragment extends Fragment {
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
 //                if(player.getDeviceVolume() > 4) {
-                    player.setDeviceVolume(2);
+//                if(player.getDeviceVolume() != 2){
+//                    player.setDeviceVolume(2);
 //                }
-
 //                player.setVolume(1f);
                 player.setHandleAudioBecomingNoisy(true);
                 player.addListener(new ExoPlayer.EventListener() {

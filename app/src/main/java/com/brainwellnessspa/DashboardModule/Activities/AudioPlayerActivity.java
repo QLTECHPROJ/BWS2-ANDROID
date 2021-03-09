@@ -111,6 +111,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioP
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -737,27 +738,17 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
 
     @Override
     public void onResume() {
-        NetWatch.builder(this)
+        NetWatch.builder( this)
                 .setCallBack(new NetworkChangeReceiver_navigator() {
                     @Override
                     public void onConnected(int source) {
                         // do some thing
-                        if(player!=null){
-                            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                                AudioInterrupted = false;
-                                player.setPlayWhenReady(true);
-                                player.prepare();
-                                player.seekTo(player.getCurrentPosition());
-                                Log.e("Exo PLayer Net:", "Player Resume after Net");
-                            }
-                        }
+                        callResumePlayer(ctx);
                     }
 
                     @Override
                     public View onDisconnected() {
                         // do some other stuff
-
-
                         return null;//To display a dialog simply return a custom view or just null to ignore it
                     }
                 })
@@ -1015,7 +1006,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
 //                if(player.getDeviceVolume() > 4) {
-                    player.setDeviceVolume(2);
+//                if(player.getDeviceVolume() != 2){
+//                    player.setDeviceVolume(2);
 //                }
 
                 player.setHandleAudioBecomingNoisy(true);
@@ -3404,15 +3396,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
 
     @Override
     public void onConnected(int source) {
-        if(player!=null){
-            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                AudioInterrupted = false;
-                player.setPlayWhenReady(true);
-                player.prepare();
-                player.seekTo(player.getCurrentPosition());
-                Log.e("Exo PLayer Net:", "Player Resume after Net");
-            }
-        }
+        callResumePlayer(ctx);
     }
 
     @Override

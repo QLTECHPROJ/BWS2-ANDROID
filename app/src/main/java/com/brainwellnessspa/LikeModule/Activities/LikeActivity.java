@@ -49,6 +49,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -111,15 +112,7 @@ public class LikeActivity extends AppCompatActivity implements NetworkChangeRece
                     @Override
                     public void onConnected(int source) {
                         // do some thing
-                        if(player!=null){
-                            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                                AudioInterrupted = false;
-                                player.setPlayWhenReady(true);
-                                player.prepare();
-                                player.seekTo(player.getCurrentPosition());
-                                Log.e("Exo PLayer Net:", "Player Resume after Net");
-                            }
-                        }
+                        callResumePlayer(ctx);
                     }
 
                     @Override
@@ -239,15 +232,7 @@ public class LikeActivity extends AppCompatActivity implements NetworkChangeRece
 
     @Override
     public void onConnected(int source) {
-        if(player!=null){
-            if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                AudioInterrupted = false;
-                player.setPlayWhenReady(true);
-                player.prepare();
-                player.seekTo(player.getCurrentPosition());
-                Log.e("Exo PLayer Net:", "Player Resume after Net");
-            }
-        }
+        callResumePlayer(ctx);
     }
 
     @Override

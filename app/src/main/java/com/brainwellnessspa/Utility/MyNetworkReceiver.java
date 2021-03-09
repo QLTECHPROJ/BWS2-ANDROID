@@ -22,6 +22,7 @@ import java.util.List;
 import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 public class MyNetworkReceiver extends BroadcastReceiver {
@@ -38,17 +39,7 @@ public class MyNetworkReceiver extends BroadcastReceiver {
 //                BWSApplication.showToast(String.valueOf(status)+Status.valueOf(PRDownloader.getStatus(downloadIdOne).name()),context);
             }
         }else {
-            if(player!=null){
-//                for(int i = 0;i<5;i++) {
-                    if (player.getPlaybackState() == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                        AudioInterrupted = false;
-                        player.setPlayWhenReady(true);
-                        player.prepare();
-                        player.seekTo(player.getCurrentPosition());
-                        Log.e("Exo PLayer Net:", "Player Resume after Net");
-                    }
-//                }
-            }
+            callResumePlayer(context);
             if (!isDownloading) {
                 List<String> fileNameList, audioFile, playlistDownloadId;
                 if (BWSApplication.isNetworkConnected(context)) {
