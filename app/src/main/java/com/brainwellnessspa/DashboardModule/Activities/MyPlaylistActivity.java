@@ -77,7 +77,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STAT
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.hundredVolume;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
@@ -392,6 +392,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
                                 try {
                                     if (response12.isSuccessful()) {
+                                        MyPlaylistIds = "";
                                         deleteFrg = 1;
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         SucessModel listModel = response12.body();

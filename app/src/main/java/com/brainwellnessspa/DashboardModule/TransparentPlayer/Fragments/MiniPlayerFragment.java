@@ -428,7 +428,6 @@ public class MiniPlayerFragment extends Fragment {
                         exoBinding.exoProgress.setDuration(player.getDuration());
                         if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                             oldSongPos = player.getCurrentPosition();
-                            Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                             callHeartbeat();
                         }
                     }
@@ -952,7 +951,6 @@ public class MiniPlayerFragment extends Fragment {
                 exoBinding.exoProgress.setDuration(player.getDuration());
                 if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                     oldSongPos = positionx;
-                    Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                     callHeartbeat();
                 }
             }
@@ -2121,17 +2119,10 @@ public class MiniPlayerFragment extends Fragment {
 
     private void getPrepareShowData() {
         callButtonText(position);
-        SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String jsonz = sharedz.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-//                                    mainPlayModelList=new ArrayList<>();
-        if (!jsonz.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-            }.getType();
-            mainPlayModelList = gson.fromJson(jsonz, type);
-        }
-        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+        if (mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
+            setPlayerCtrView();
+            return;
         } else {
             try {
                 if (player != null) {
@@ -2142,8 +2133,8 @@ public class MiniPlayerFragment extends Fragment {
                 e.printStackTrace();
             }
             initializePlayer();
+            setPlayerCtrView();
         }
-        setPlayerCtrView();
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {

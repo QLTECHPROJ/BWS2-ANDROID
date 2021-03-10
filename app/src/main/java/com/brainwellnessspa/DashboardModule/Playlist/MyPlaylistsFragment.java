@@ -653,8 +653,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         addDisclaimer();
         if (deleteFrg == 1) {
-            callBack();
             deleteFrg = 0;
+            callBack();
         } else if (addToPlayList) {
             PlaylistID = MyPlaylistId;
             prepareData(UserID, MyPlaylistId,"onResume");

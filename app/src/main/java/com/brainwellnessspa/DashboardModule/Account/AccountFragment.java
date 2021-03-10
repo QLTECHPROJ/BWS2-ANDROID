@@ -373,7 +373,7 @@ public class AccountFragment extends Fragment {
                         Properties p1 = new Properties();
                         p1.putValue("userId", UserID);
                         p1.putValue("deviceId", DeviceID);
-                        p1.putValue("deviceType", DeviceType);
+                        p1.putValue("deviceType", "Android");
                         p1.putValue("userName", Name);
                         p1.putValue("mobileNo", MobileNo);
                         BWSApplication.addToSegment("Signed Out", p1, CONSTANTS.track);

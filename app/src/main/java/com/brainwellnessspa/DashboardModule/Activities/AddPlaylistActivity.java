@@ -259,6 +259,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         } else {
             finish();
         }
+        super.onBackPressed();
     }
 
     @Override

@@ -1096,7 +1096,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
 //                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                         if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                             oldSongPos = player.getCurrentPosition();
-                            Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                             callHeartbeat();
                         }
                         exoBinding.exoProgress.setDuration(player.getDuration());
@@ -1651,7 +1650,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             if (player != null) {
                 if ((player.getCurrentPosition() >= oldSongPos + 299500) && (player.getCurrentPosition() <= oldSongPos + 310000)) {
                     oldSongPos = positionx;
-                    Log.e("Player Heart bit", String.valueOf(player.getCurrentPosition()));
                     callHeartbeat();
                 }
                 exoBinding.exoProgress.setDuration(player.getDuration());
@@ -3389,8 +3387,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
     private void getPrepareShowData() {
         binding.tvDireName.setText(R.string.Directions);
         callButtonText(position);
-        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
+        if (mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
+            setPlayerCtrView();
+            return;
         } else {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
