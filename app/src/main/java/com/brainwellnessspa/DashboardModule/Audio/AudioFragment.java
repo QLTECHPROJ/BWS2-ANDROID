@@ -184,6 +184,8 @@ public class AudioFragment extends Fragment {
 
     @Override
     public void onResume() {
+        ComeScreenAccount = 0;
+        comefromDownload = "0";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getActivity().getPackageName();
             PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
@@ -197,8 +199,6 @@ public class AudioFragment extends Fragment {
         }
         prepareDisplayData("onResume");
         prepareData();
-        ComeScreenAccount = 0;
-        comefromDownload = "0";
         super.onResume();
     }
 
@@ -424,26 +424,26 @@ public class AudioFragment extends Fragment {
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.UpdateMiniPlayer(getActivity());
-            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-            if (!AudioFlag.equalsIgnoreCase("0")) {
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new MiniPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
 
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 6, 0, 260);
-                binding.llSpace.setLayoutParams(params);
-            } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 6, 0, 50);
-                binding.llSpace.setLayoutParams(params);
-            }
-        } catch (Exception e) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 6, 0, 260);
+            binding.llSpace.setLayoutParams(params);
+        }else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 6, 0, 50);
+            binding.llSpace.setLayoutParams(params);
         }
     }
 

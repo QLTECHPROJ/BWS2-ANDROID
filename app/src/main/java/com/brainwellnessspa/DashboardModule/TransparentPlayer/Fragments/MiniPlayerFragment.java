@@ -741,7 +741,10 @@ public class MiniPlayerFragment extends Fragment {
                 globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
                 setPlayerCtrView();
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
             exoBinding.exoProgress.setClickable(false);
             exoBinding.exoProgress.setEnabled(false);
             if (player != null) {
@@ -771,8 +774,7 @@ public class MiniPlayerFragment extends Fragment {
                             p.putValue("audioService", APP_SERVICE_STATUS);
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Disclaimer Completed", p, CONSTANTS.track);
-                        }
-                        if (state == ExoPlayer.STATE_READY) {
+                        } else if (state == ExoPlayer.STATE_READY) {
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());
@@ -886,7 +888,10 @@ public class MiniPlayerFragment extends Fragment {
                 p.putValue("audioService", APP_SERVICE_STATUS);
                 BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
             });
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+            try{
             if (miniPlayer == 0) {
                 if (audioClick) {
                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -2114,25 +2119,25 @@ public class MiniPlayerFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
         }
-        MakeArray();
+        callButtonText(position);
+        GetAllMedia();
     }
 
     private void getPrepareShowData() {
         callButtonText(position);
-        if (mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("")) {
-            initializePlayerDisclaimer();
-            setPlayerCtrView();
-            return;
-        } else {
+        if (!mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("")) {
             try {
                 if (player != null) {
                     GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+        }
             initializePlayer();
+            setPlayerCtrView();
+        } else {
+            initializePlayerDisclaimer();
             setPlayerCtrView();
         }
     }

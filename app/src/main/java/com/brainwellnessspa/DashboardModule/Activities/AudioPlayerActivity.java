@@ -3387,7 +3387,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
     private void getPrepareShowData() {
         binding.tvDireName.setText(R.string.Directions);
         callButtonText(position);
-        if (mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("")) {
+        if (mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("") ||
+                mainPlayModelList.get(position).getImageFile().isEmpty()) {
             initializePlayerDisclaimer();
             setPlayerCtrView();
             return;
