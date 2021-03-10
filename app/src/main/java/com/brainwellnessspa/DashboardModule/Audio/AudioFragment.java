@@ -1,11 +1,9 @@
 package com.brainwellnessspa.DashboardModule.Audio;
 
-import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,8 +22,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -46,10 +42,7 @@ import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.UnlockAudioList;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.MembershipModule.Activities.CheckoutPaymentActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReferralModule.Activities.ContactBookActivity;
-import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
@@ -58,7 +51,6 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;
 import com.brainwellnessspa.databinding.MainAudioLayoutBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -92,14 +84,12 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class AudioFragment extends Fragment {
-    public static boolean exit = false;
     public static String IsLock = "0";
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate, AudioFirstLogin = "0";
     boolean Identify = false, AgainIdentify = false;
     long mySpace = 0;
     List<String> fileNameList = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
-    List<DownloadAudioDetails> notDownloadedData;
     FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2, fancyShowCaseView3;
     FancyShowCaseQueue queue;
     MainAudioListAdapter adapter;

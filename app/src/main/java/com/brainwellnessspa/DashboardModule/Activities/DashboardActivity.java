@@ -2,7 +2,6 @@ package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.NotificationManager;
 import android.app.UiModeManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -35,8 +34,6 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.segment.analytics.AnalyticsContext;
 import com.segment.analytics.Properties;
 
 import ir.drax.netwatch.NetWatch;
@@ -44,24 +41,21 @@ import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.ComeBackPlaylist;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class DashboardActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;
-    public static boolean audioPause = false, audioClick = false, tutorial = false;
+    public static boolean audioClick = false, tutorial = false;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     boolean backpressed = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
-    BroadcastReceiver broadcastReceiver;
     UiModeManager uiModeManager;
     MyNetworkReceiver myNetworkReceiver;
 
@@ -73,15 +67,8 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
                 R.id.navigation_audio, R.id.navigation_playlist, R.id.navigation_search,
                 R.id.navigation_appointment, R.id.navigation_account).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-       /* Intent playbackServiceIntent = new Intent(getApplicationContext(), GlobalInitExoPlayer.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Util.startForegroundService(this, playbackServiceIntent);
-        } else {
-            startService(playbackServiceIntent);
-        }*/
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
@@ -108,35 +95,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
                 startActivityForResult(intent, 15695);
             }
         }
-//        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
-//                AudioManager.AUDIOFOCUS_GAIN);
-        /*try {
-            Intent playbackServiceIntent = new Intent(this, MusicService.class);
-            startService(playbackServiceIntent);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(playbackServiceIntent);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
-       /* ComponentName componentName = new ComponentName(this, PlayerJobService.class);
-        JobInfo info = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            info = new JobInfo.Builder(123, componentName)
-                    .setPeriodic(15 * 60 * 1000)
-                    .build();
-        }
-        JobScheduler scheduler = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-            int resultCode = scheduler.schedule(info);
-            if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                Log.e("TAG", "Job scheduled");
-            } else {
-                Log.e("TAG", "Job scheduling failed");
-            }
-        }*/
+
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
@@ -183,8 +142,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
             bundle.putString("PlaylistType", PlaylistType);
             bundle.putString("MyDownloads", "0");
 
-/*
-            Properties p = new Properties();
+/*            Properties p = new Properties();
             p.putValue("PlaylistID", PlaylistID);
             p.putValue("PlaylistName", PlaylistName);
             p.putValue("PlaylistImage", PlaylistImage);
@@ -337,9 +295,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
     @Override
     protected void onDestroy() {
-
         NetWatch.unregister(this);
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
         relesePlayer(DashboardActivity.this);
