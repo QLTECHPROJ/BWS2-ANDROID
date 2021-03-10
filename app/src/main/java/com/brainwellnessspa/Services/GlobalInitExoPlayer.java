@@ -89,9 +89,8 @@ public class GlobalInitExoPlayer extends Service {
     public static Intent intent;
     public static PlayerNotificationManager playerNotificationManager;
     public static MediaSessionCompat mediaSession;
-    public static String Name, Desc;
-    public static boolean isprogressbar = false;
-    public static String APP_SERVICE_STATUS = "Foreground";
+    public static String Name;
+    public static String APP_SERVICE_STATUS = "Background";
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0;
     public static int percent;

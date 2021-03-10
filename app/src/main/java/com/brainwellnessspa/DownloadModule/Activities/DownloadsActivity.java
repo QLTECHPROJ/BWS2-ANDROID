@@ -53,10 +53,7 @@ import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistAct
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 
 public class DownloadsActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     public static boolean ComeFrom_Playlist = false;
@@ -455,7 +452,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
                 stackStatus = 1;
-                APP_SERVICE_STATUS = getString(R.string.Foreground);
                 Log.e("APPLICATION", "APP IN FOREGROUND");
                 //app went to foreground
             }
@@ -484,7 +480,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
                 }
-                APP_SERVICE_STATUS = getString(R.string.Background);
                 Log.e("APPLICATION", "App is in BACKGROUND");
                 // app went to background
             }

@@ -230,11 +230,16 @@ public class MiniPlayerFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getActivity().registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
+
         return view;
     }
 
     @Override
     public void onResume() {
+        APP_SERVICE_STATUS = getString(R.string.Foreground);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getActivity().registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         if (ComeScreenAccount == 1) {
             binding.llLayout.setVisibility(View.GONE);
         } else if (ComeScreenAccount == 0) {

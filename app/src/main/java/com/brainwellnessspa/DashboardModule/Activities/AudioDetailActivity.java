@@ -73,8 +73,8 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
+import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
@@ -87,6 +87,7 @@ public class AudioDetailActivity extends AppCompatActivity {
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "", audioFileName,
             AudioFile = "", PlaylistAudioId = "", AudioFlag;
     Context ctx;
+    public static int comeAudioDetail = 0;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     Activity activity;
     ArrayList<AddToQueueModel> addToQueueModelList;
@@ -1607,6 +1608,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Add to Playlist Clicked", p, CONSTANTS.track);
                             myBackPress = true;
+                            comeAddPlaylist = 2;
                             Intent i = new Intent(ctx, AddPlaylistActivity.class);
                             i.putExtra("AudioId", AudioId);
                             i.putExtra("ScreenView", "Audio Details Screen");
@@ -1701,6 +1703,7 @@ public class AudioDetailActivity extends AppCompatActivity {
         binding.llDownload.setClickable(false);
         binding.llDownload.setEnabled(false);
     }
+
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
 
         @Override
@@ -1712,7 +1715,6 @@ public class AudioDetailActivity extends AppCompatActivity {
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
                 stackStatus = 1;
-                APP_SERVICE_STATUS = getString(R.string.Foreground);
                 Log.e("APPLICATION", "APP IN FOREGROUND");
                 //app went to foreground
             }
@@ -1741,7 +1743,6 @@ public class AudioDetailActivity extends AppCompatActivity {
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
                 }
-                APP_SERVICE_STATUS = getString(R.string.Background);
                 Log.e("APPLICATION", "App is in BACKGROUND");
                 // app went to background
             }

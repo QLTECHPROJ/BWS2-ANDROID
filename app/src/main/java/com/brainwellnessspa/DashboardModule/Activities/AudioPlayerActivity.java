@@ -47,6 +47,7 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
@@ -738,6 +739,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
 
     @Override
     public void onResume() {
+        APP_SERVICE_STATUS = getString(R.string.Foreground);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        }
         NetWatch.builder( this)
                 .setCallBack(new NetworkChangeReceiver_navigator() {
                     @Override
@@ -3406,7 +3411,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
