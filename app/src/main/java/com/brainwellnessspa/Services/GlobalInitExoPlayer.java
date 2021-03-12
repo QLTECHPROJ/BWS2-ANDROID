@@ -336,37 +336,15 @@ Appointment Audios dddd*/
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         percent = 100;
         hundredVolume = (int) (currentVolume * percent) / maxVolume;
-//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-//        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-//        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
-//        DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(ctx, Util.getUserAgent(ctx, getPackageName()));
-//        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         if (downloadAudioDetailsList.size() != 0) {
-//            for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
             if (downloadAudioDetailsList.contains(mainPlayModelList.get(0).getName())) {
-//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-                  /*  if (filesDownloaded.get(f) != null) {
-                        Log.e("Globle Player", mainPlayModelList.get(0).getName());
-
-                        MediaItem mediaItem = MediaItem.fromUri(Uri.parse("file:///" + filesDownloaded.get(f).getPath()));
-                        player.setMediaItem(mediaItem);
-                    } else {*/
-
-//                    fileDescriptor = new File(FileUtils.getFilePath(ctx,name));
                 MediaItem mediaItem = MediaItem.fromUri(FileUtils.getFilePath(ctx, mainPlayModelList.get(0).getName()));
                 player.setMediaItem(mediaItem);
-//                        Log.e("Globle Player else part", mainPlayModelList.get(0).getName());
-//                    }
-//                    break;
-            } else/* if (f == downloadAudioDetailsList.size() - 1) */ {
+            } else{
                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
                 player.setMediaItem(mediaItem);
-//                    mediaSources[0] = new ExtractorMediaSource(Uri.parse(mainPlayModelList.get(0).getAudioFile()), dataSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
-//                    break;
             }
-//            }
         } else {
             MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
             player.setMediaItem(mediaItem1);
@@ -400,7 +378,6 @@ Appointment Audios dddd*/
                 player.addMediaItem(mediaItem);
             }
         }
-
         InitNotificationAudioPLayer(ctx, mainPlayModelList);
         Properties p = new Properties();
         p.putValue("userId", UserID);
@@ -428,16 +405,6 @@ Appointment Audios dddd*/
         }
 
         Log.e("Audio Volume", String.valueOf(hundredVolume));
-//            String source = "file:////storage/3639-3632/my sounds/Gujarati songs/Chok Puravo d.mp3";
-//            // The MediaSource represents the media to be played.
-//            MediaSource mediaSource =
-//                    new ExtractorMediaSource(
-//                            Uri.parse(source), dataSourceFactory, extractorsFactory, null, null);
-//            player.prepare(mediaSource);
-//        MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
-//                : new ConcatenatingMediaSource(mediaSources);
-//        player.setMediaSource(mediaSource);
-//        player.prepare(mediaSource);
         getMediaBitmap(ctx, mainPlayModelList1.get(position).getImageFile());
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_NONE);
@@ -473,23 +440,6 @@ Appointment Audios dddd*/
                 Log.e("Notification errrr: ", e.getMessage());
             }
         }
-        /*ComponentName componentName = new ComponentName(ctx, PlayerJobService.class);
-        JobInfo info = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            info = new JobInfo.Builder(123, componentName)
-                    .setPeriodic(15 * 60 * 1000)
-                    .build();
-        }
-        JobScheduler scheduler = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            scheduler = (JobScheduler) ctx.getSystemService(JOB_SCHEDULER_SERVICE);
-            int resultCode = scheduler.schedule(info);
-            if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                Log.e("TAG", "Job scheduled");
-            } else {
-                Log.e("TAG", "Job scheduling failed");
-            }
-        }*/
     }
 
 
@@ -511,8 +461,9 @@ Appointment Audios dddd*/
         player.setAudioAttributes(audioAttributes, true);
 //        if (miniPlayer == 1) {
         player.setPlayWhenReady(true);
-//        }
-//       player.addAnalyticsListener(new EventLogger(trackSelector));
+        if(player.getDeviceVolume() != 2){
+            player.setDeviceVolume(2);
+        }
         audioClick = false;
         PlayerINIT = true;
     }
