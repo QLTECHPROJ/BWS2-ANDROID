@@ -470,6 +470,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             anim.setRepeatMode(ValueAnimator.REVERSE);
                             anim.start();
                             rlDone.setOnClickListener(v -> {
+                                SharedPreferences.Editor editor = shareddedd.edit();
+                                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
+                                editor.commit();
                                 fancyShowCaseView51.hide();
                                 playtutorial = true;
                             });
@@ -513,9 +516,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 };
                 requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);*/
             }
-            SharedPreferences.Editor editor = shareddedd.edit();
-            editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
-            editor.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

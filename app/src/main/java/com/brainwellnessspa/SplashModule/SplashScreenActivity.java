@@ -26,6 +26,7 @@ import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
 import com.brainwellnessspa.LoginModule.Activities.OtpActivity;
+import com.brainwellnessspa.MembershipModule.Activities.ThankYouMpActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -166,6 +167,23 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 startActivity(i);
                 finish();
+              /*  SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
+                editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
+                editor.putString(CONSTANTS.PREF_KEY_UserID, "453");
+                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "1");
+                editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
+                editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
+                editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
+                editor.commit();
+
+                Intent i = new Intent(SplashScreenActivity.this, ThankYouMpActivity.class);
+                startActivity(i);
+                finish();*/
             }, 2 * 800);
         }
     }

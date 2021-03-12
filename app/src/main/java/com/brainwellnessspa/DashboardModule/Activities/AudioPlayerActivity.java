@@ -727,7 +727,14 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         anim.setRepeatCount(ValueAnimator.INFINITE);
                         anim.setRepeatMode(ValueAnimator.REVERSE);
                         anim.start();
-                        rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                        rlDone.setOnClickListener(v -> {
+
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0");
+                            editor.commit();
+                            fancyShowCaseView31.hide();
+                        });
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
@@ -738,10 +745,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     .add(fancyShowCaseView31);
             queue.show();
         }
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0");
-        editor.commit();
     }
 
     @Override

@@ -298,6 +298,10 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         anim.setRepeatMode(ValueAnimator.REVERSE);
                         anim.start();
                         rlDone.setOnClickListener(v -> {
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0");
+                            editor.commit();
                             fancyShowCaseView2.hide();
                         });
                     })
@@ -307,10 +311,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             queue = new FancyShowCaseQueue().add(fancyShowCaseView1).add(fancyShowCaseView2);
             queue.show();
         }
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0");
-        editor.commit();
     }
 
     public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {

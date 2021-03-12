@@ -227,6 +227,10 @@ public class SearchFragment extends Fragment {
                         anim.setRepeatMode(ValueAnimator.REVERSE);
                         anim.start();
                         rlDone.setOnClickListener(v -> {
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "0");
+                            editor.commit();
                             fancyShowCaseView21.hide();
                             tutorial = true;
                         });
@@ -253,10 +257,6 @@ public class SearchFragment extends Fragment {
             };
             requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "0");
-        editor.commit();
     }
 
     @Override
