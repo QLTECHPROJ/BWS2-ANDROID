@@ -69,6 +69,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
+import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
@@ -435,6 +436,7 @@ public class AccountFragment extends Fragment {
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0");
                             editor.commit();
+                            invoiceToDashboard = 0;
                             invoiceToRecepit = 0;
                             fancyShowCaseView31.hide();
                             tutorial = true;
@@ -464,7 +466,6 @@ public class AccountFragment extends Fragment {
             };
             requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         }
-        tutorial = false;
     }
 
     void DeleteCall(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
