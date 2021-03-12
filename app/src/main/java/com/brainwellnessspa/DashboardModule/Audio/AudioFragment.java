@@ -111,6 +111,8 @@ public class AudioFragment extends Fragment {
         mySpace = getSpace();
         prepareDisplayData("onCreateView");
 
+
+
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
