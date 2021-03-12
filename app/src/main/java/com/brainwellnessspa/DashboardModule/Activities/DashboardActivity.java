@@ -28,6 +28,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
+import com.brainwellnessspa.DashboardModule.Audio.AudioFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.R;
@@ -226,10 +227,8 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
                 isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
                 if (isIgnoringBatteryOptimizations) {
                     // Ignoring battery optimization
-
                 } else {
                     // Not ignoring battery optimization
-
                 }
             }
         }
@@ -240,6 +239,11 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
     public void onBackPressed() {
         if (tutorial) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
+            Fragment fragment = new AudioFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.flContainer, fragment)
+                    .commit();
         }
 
         if (invoiceToDashboard == 1) {
@@ -249,6 +253,11 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
+            Fragment fragment = new AudioFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.flContainer, fragment)
+                    .commit();
             if (doubleBackToExitPressedOnce) {
                 finish();
                 backpressed = true;
@@ -267,7 +276,6 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
     protected void onPause() {
 //        BWSApplication.showToast("Pauseeeeeee", DashboardActivity.this);
         super.onPause();
-
     }
 
     @Override
@@ -283,8 +291,6 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
                     @Override
                     public View onDisconnected() {
                         // do some other stuff
-
-
                         return null;//To display a dialog simply return a custom view or just null to ignore it
                     }
                 })

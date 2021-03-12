@@ -40,7 +40,6 @@ public class ThankYouMpActivity extends AppCompatActivity {
         binding.ivLogo.setScaleType(ImageView.ScaleType.FIT_XY);
         binding.ivLogo.setImageResource(R.drawable.ic_mp_thanku);
 
-
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 

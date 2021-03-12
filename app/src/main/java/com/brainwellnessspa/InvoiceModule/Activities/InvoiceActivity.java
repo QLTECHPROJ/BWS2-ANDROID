@@ -17,8 +17,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
-import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
@@ -40,6 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -56,7 +55,7 @@ public class InvoiceActivity extends AppCompatActivity {
     Properties p;
     private int numStarted = 0;
     int stackStatus = 0;
-    boolean myBackPress = false ;
+    boolean myBackPress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,32 +75,44 @@ public class InvoiceActivity extends AppCompatActivity {
         BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen);
 
         binding.llBack.setOnClickListener(view -> {
-            myBackPress = true;
-            if (invoiceToRecepit == 0) {
-                if (ComeFrom.equalsIgnoreCase("1")) {
-                    invoiceToDashboard = 1;
-                    Intent i = new Intent(context, DashboardActivity.class);
-                    startActivity(i);
-                    finish();
-                } else {
-                    ComeScreenAccount = 1;
-                    comefromDownload = "0";
-                    finish();
-                }
-            } else if (invoiceToRecepit == 1) {
-                ComeScreenAccount = 1;
-                comefromDownload = "0";
-                Intent i = new Intent(context, DashboardActivity.class);
-                startActivity(i);
-                finish();
-            } else {
-            }
+            callBack();
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
         prepareData();
+    }
+
+    private void callBack() {
+        myBackPress = true;
+        if (invoiceToRecepit == 0) {
+            invoiceToRecepit = 1;
+            tutorial = false;
+            if (ComeFrom.equalsIgnoreCase("1")) {
+                invoiceToDashboard = 1;
+                Intent i = new Intent(context, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            } else if (ComeFrom.equalsIgnoreCase("")) {
+                invoiceToDashboard = 1;
+                Intent i = new Intent(context, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            } else {
+                ComeScreenAccount = 1;
+                comefromDownload = "0";
+                finish();
+            }
+        } else if (invoiceToRecepit == 1) {
+            ComeScreenAccount = 1;
+            comefromDownload = "0";
+            invoiceToRecepit = 1;
+            Intent i = new Intent(context, DashboardActivity.class);
+            startActivity(i);
+            finish();
+        } else {
+        }
     }
 
     @Override
@@ -189,27 +200,7 @@ public class InvoiceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        myBackPress = true;
-        if (invoiceToRecepit == 0) {
-            if (ComeFrom.equalsIgnoreCase("1")) {
-                invoiceToDashboard = 1;
-                Intent i = new Intent(context, DashboardActivity.class);
-                startActivity(i);
-                finish();
-            } else {
-                ComeScreenAccount = 1;
-                comefromDownload = "0";
-                finish();
-            }
-        } else if (invoiceToRecepit == 1) {
-            ComeScreenAccount = 1;
-            comefromDownload = "0";
-            Intent i = new Intent(context, DashboardActivity.class);
-            startActivity(i);
-            finish();
-        } else {
-
-        }
+        callBack();
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {
@@ -277,10 +268,10 @@ public class InvoiceActivity extends AppCompatActivity {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                if(!myBackPress) {
+                if (!myBackPress) {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
-                }else{
+                } else {
                     myBackPress = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
@@ -302,7 +293,7 @@ public class InvoiceActivity extends AppCompatActivity {
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(notificationId);
                 relesePlayer(getApplicationContext());
-            }else{
+            } else {
                 Log.e("Destroy", "Activity go in main activity");
             }
         }
