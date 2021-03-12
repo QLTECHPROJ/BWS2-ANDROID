@@ -108,7 +108,6 @@ public class AudioFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainAudioList.setLayoutManager(manager);
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
-
         mySpace = getSpace();
         prepareDisplayData("onCreateView");
 
