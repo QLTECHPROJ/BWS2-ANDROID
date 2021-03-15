@@ -728,7 +728,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         anim.setRepeatMode(ValueAnimator.REVERSE);
                         anim.start();
                         rlDone.setOnClickListener(v -> {
-
                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0");

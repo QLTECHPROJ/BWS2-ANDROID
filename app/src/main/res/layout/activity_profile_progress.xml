@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".UserModuleTwo.ProfileProgressActivity">
+
+        <LinearLayout
+            android:id="@+id/llMainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_31sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:text="Profile"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_18sdp" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/llIndicate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_13sdp"
+                android:max="21"
+                android:progress="2"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/llFirst"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/llMainLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvFirst"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="Who is it for?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <Button
+                android:id="@+id/btnMySelf"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@id/tvFirst"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_blue_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Myself"
+                android:textAllCaps="false"
+                android:textColor="@color/light_blue_theme" />
+
+            <Button
+                android:id="@+id/btnOthers"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@id/btnMySelf"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Others"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+
+            <Button
+                android:id="@+id/btnFirstDone"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/light_blue_rounded_filled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/llSecond"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMainLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvSecond"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="Which Gender do you identify as?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <Button
+                android:id="@+id/btnMale"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@id/tvSecond"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_blue_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Male"
+                android:textAllCaps="false"
+                android:textColor="@color/light_blue_theme" />
+
+
+            <Button
+                android:id="@+id/btnFemale"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@id/btnMale"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Female"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnGenX"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/btnFemale"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Gender X"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnSecondDone"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/light_blue_rounded_filled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/llThird"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMainLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnGenXReverse"
+                android:layout_width="@dimen/_220sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/_33sdp"
+                android:background="@drawable/light_blue_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Gender X"
+                android:textAllCaps="false"
+                android:textColor="@color/light_blue_theme" />
+
+            <TextView
+                android:id="@+id/tvThird"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnGenXReverse"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="What gender do you currently \nidentify with?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <Button
+                android:id="@+id/btnMaleGX"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@id/tvThird"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Male"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnFemaleGX"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@id/btnMaleGX"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Female"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnThirdDone"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/light_blue_rounded_filled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/llForth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMainLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvForth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="How old are you?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <Button
+                android:id="@+id/btnOpn1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/tvForth"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_blue_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="0 - 4"
+                android:textAllCaps="false"
+                android:textColor="@color/light_blue_theme" />
+
+
+            <Button
+                android:id="@+id/btnOpn2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/btnOpn1"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="5 -12"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnOpn3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/btnOpn2"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="13 - 17"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnOpn4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/btnOpn3"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="> 18"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnForthDone"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/light_blue_rounded_filled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/llFifth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMainLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvFifthTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="Prev drug use"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <TextView
+                android:id="@+id/tvFifthSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvFifthTitle"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore."
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <Button
+                android:id="@+id/btnYes"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/tvFifthSubTitle"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_blue_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Yes"
+                android:textAllCaps="false"
+                android:textColor="@color/light_blue_theme" />
+
+
+            <Button
+                android:id="@+id/btnNo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/btnYes"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="No"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+            <Button
+                android:id="@+id/btnFifthDone"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/light_blue_rounded_filled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

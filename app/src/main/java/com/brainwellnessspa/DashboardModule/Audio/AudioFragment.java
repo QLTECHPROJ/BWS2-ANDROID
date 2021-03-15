@@ -46,6 +46,9 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
+import com.brainwellnessspa.UserModuleTwo.GetStartedActivity;
+import com.brainwellnessspa.UserModuleTwo.SplashActivity;
+import com.brainwellnessspa.UserModuleTwo.WalkScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;
@@ -112,8 +115,6 @@ public class AudioFragment extends Fragment {
         mySpace = getSpace();
         prepareDisplayData("onCreateView");
 
-
-
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -149,7 +150,9 @@ public class AudioFragment extends Fragment {
         }
 
         binding.tvExplore.setOnClickListener(v -> {
-
+            Intent i = new Intent(getActivity(), SplashActivity.class);
+            i.putExtra(CONSTANTS.ScreenVisible, "1");
+            startActivity(i);
         });
         showTooltips();
         return view;
@@ -416,7 +419,7 @@ public class AudioFragment extends Fragment {
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.UpdateMiniPlayer(getActivity());
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -432,7 +435,7 @@ public class AudioFragment extends Fragment {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 6, 0, 260);
             binding.llSpace.setLayoutParams(params);
-        }else {
+        } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 6, 0, 50);
             binding.llSpace.setLayoutParams(params);

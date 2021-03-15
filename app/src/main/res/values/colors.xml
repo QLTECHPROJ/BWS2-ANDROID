@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="app_theme_color">#008892</color>
     <color name="white">#FFFFFF</color>
     <color name="dark_blue_gray">#2A3042</color>
     <color name="extra_light_gray">#838383</color>
@@ -30,4 +31,7 @@
     <color name="dark_yellow">#f89552</color>
     <color name="green_dark">#00ac5c</color>
     <color name="text_title">#2a3042</color>
+    <color name="step_one_bg">#72C2DD</color>
+    <color name="text_transparent">#A372C2DD</color>
+    <color name="light_blue_theme">#6C63FF</color>
 </resources>

@@ -26,6 +26,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="how_refer_works">How Refer Works</string>
     <string name="privacy_policy_t_n_c">By clicking on Register or Sign up you agree to our</string>
+    <string name="info_bwa_two">Your information is 100% confidential and never shared with anyone</string>
     <string name="get_the_code">Get SMS code</string>
     <string name="choose_your_country">Choose your country</string>
     <string name="enter_otp">Enter OTP</string>
@@ -261,4 +262,27 @@
     <string name="support_quotes">Please contact support at</string>
     <string name="support_link">support@brainwellnessapp.com</string>
     <string name="toast_an_error_occurred">error</string>
+    <string name="Create_Account">Create Account</string>
+    <string name="welcome_quotes"><![CDATA[Welcome to \nBrain wellness spa]]></string>
+    <string name="Name">Name</string>
+    <string name="Mobile_number">Mobile number</string>
+    <string name="Email_address">Email address</string>
+    <string name="Create_a_strong_password">Create a strong password</string>
+    <string name="Choose_your_country">Choose your country</string>
+    <string name="welcome_back_quotes">Welcome back...</string>
+    <string name="Forgot_paswd">I forgot my password</string>
+    <string name="Log_in">Log in</string>
+    <string name="Forgot_paswd_quotes">Forgot your password</string>
+    <string name="Done">Done</string>
+    <string name="Email_address_hint">Enter your email address</string>
+    <string name="Password">Password</string>
+    <string name="add_profile">Add Profile</string>
+    <string name="User_Name">User Name</string>
+    <string name="step_one">Step 1</string>
+    <string name="step_two">Step 2</string>
+    <string name="step_three">Step 3</string>
+    <string name="Unlock_the_app">Unlock the app</string>
+    <string name="Your_Assessment_Result">Your Assessment Result</string>
+    <string name="ass_quotes">We\'re done with the first part.\nLorem ipsum dolor sit amet, consetetur\nsadipscing elitr, sed diam nonumy eirmod\ntempor invidunt ut labore. \n\nAt vero eos et accusam et justo duo dolores \net ea</string>
+
 </resources>
