@@ -749,6 +749,11 @@ public class ViewAllAudioFragment extends Fragment {
                 audioClick = true;
                 callNewPlayerRelease();
 
+                SharedPreferences shared1 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+                if(IsPlayDisclimer.equalsIgnoreCase("1")){
+                    openOnlyFragment();
+                }
                 Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 getActivity().startActivity(i);
