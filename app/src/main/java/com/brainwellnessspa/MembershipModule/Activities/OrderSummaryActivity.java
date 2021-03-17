@@ -25,6 +25,8 @@ import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
@@ -76,9 +78,15 @@ public class OrderSummaryActivity extends AppCompatActivity {
         Properties p = new Properties();
 
         if (!comeFrom.equalsIgnoreCase("")) {
-            p.putValue("plan", listModelList2);
+            Gson gson;
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gson = gsonBuilder.create();
+            p.putValue("plan", gson.toJson(listModelList2));
         } else {
-            p.putValue("plan", listModelList);
+            Gson gson;
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gson = gsonBuilder.create();
+            p.putValue("plan", gson.toJson(listModelList));
         }
         BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen);
 
@@ -141,7 +149,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
                             return;
                         }
                         mLastClickTime = SystemClock.elapsedRealtime();
-                        p1.putValue("plan", listModelList2);
+                        Gson gson;
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        gson = gsonBuilder.create();
+                        p1.putValue("plan", gson.toJson(listModelList2));
                         p1.putValue("planStartDt ", "");
                         p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                         p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
@@ -159,7 +170,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
                             return;
                         }
                         mLastClickTime = SystemClock.elapsedRealtime();
-                        p1.putValue("plan", listModelList);
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        Gson gson;
+                        gson = gsonBuilder.create();
+                        p1.putValue("plan", gson.toJson(listModelList));
                         p1.putValue("planStartDt ", "");
                         p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
                         p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
@@ -195,7 +209,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                                     return;
                                                 }
                                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                                p1.putValue("plan", listModelList2);
+                                                Gson gson;
+                                                GsonBuilder gsonBuilder = new GsonBuilder();
+                                                gson = gsonBuilder.create();
+                                                p1.putValue("plan", gson.toJson(listModelList2));
                                                 p1.putValue("planStartDt ", "");
                                                 p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                                                 p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
@@ -213,7 +230,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                                     return;
                                                 }
                                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                                p1.putValue("plan", listModelList);
+                                                Gson gson;
+                                                GsonBuilder gsonBuilder = new GsonBuilder();
+                                                gson = gsonBuilder.create();
+                                                p1.putValue("plan", gson.toJson(listModelList));
                                                 p1.putValue("planStartDt ", "");
                                                 p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
                                                 p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
