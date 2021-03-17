@@ -95,9 +95,8 @@ public class InvoiceActivity extends AppCompatActivity {
                 finish();
             } else if (ComeFrom.equalsIgnoreCase("")) {
                 invoiceToDashboard = 1;
-//                Intent i = new Intent(context, DashboardActivity.class);
-//                startActivity(i);
-                finish();
+                Intent i = new Intent(context, DashboardActivity.class);
+                startActivity(i);
             } else {
                 ComeScreenAccount = 1;
                 comefromDownload = "0";
@@ -115,6 +114,7 @@ public class InvoiceActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
+        } else {
         }
     }
 

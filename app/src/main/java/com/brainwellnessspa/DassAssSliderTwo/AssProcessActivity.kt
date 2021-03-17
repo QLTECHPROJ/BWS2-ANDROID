@@ -29,6 +29,7 @@ class AssProcessActivity : AppCompatActivity() {
             binding.rlDoAss.visibility = View.GONE
             binding.rlDoneAss.visibility = View.VISIBLE
         }
+
         binding.btnDoAss.setOnClickListener {
             val i = Intent(this@AssProcessActivity, DassAssSliderActivity::class.java)
             startActivity(i)
