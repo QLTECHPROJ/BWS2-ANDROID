@@ -372,13 +372,13 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
             editor.commit();
-            if(IsPlayDisclimer.equalsIgnoreCase("1")){
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-            }
+//            if(IsPlayDisclimer.equalsIgnoreCase("1")){
+//                Fragment fragment = new MiniPlayerFragment();
+//                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+//                fragmentManager1.beginTransaction()
+//                        .add(R.id.flContainer, fragment)
+//                        .commit();
+//            }
             Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             ctx.startActivity(i);

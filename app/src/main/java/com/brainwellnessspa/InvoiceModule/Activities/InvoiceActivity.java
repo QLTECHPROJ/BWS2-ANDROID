@@ -42,7 +42,6 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-
 public class InvoiceActivity extends AppCompatActivity {
     ActivityInvoiceBinding binding;
     ArrayList<InvoiceListModel.Appointment> appointmentList;
@@ -96,8 +95,9 @@ public class InvoiceActivity extends AppCompatActivity {
                 finish();
             } else if (ComeFrom.equalsIgnoreCase("")) {
                 invoiceToDashboard = 1;
-                Intent i = new Intent(context, DashboardActivity.class);
-                startActivity(i);
+//                Intent i = new Intent(context, DashboardActivity.class);
+//                startActivity(i);
+                finish();
             } else {
                 ComeScreenAccount = 1;
                 comefromDownload = "0";
@@ -115,7 +115,6 @@ public class InvoiceActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        } else {
         }
     }
 

@@ -155,7 +155,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     //    Runnable UpdateSongTime2;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
-    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41, fancyShowCaseView51;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41 ,fancyShowCaseView441, fancyShowCaseView51;
     FancyShowCaseQueue queue;
     //    private Handler handler2;
     Properties p;
@@ -421,7 +421,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         })
                         .focusShape(FocusShape.ROUNDED_RECTANGLE)
                         .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                        .focusOn(binding.llMore).closeOnTouch(false).build();
+                        .focusOn(binding.llMore).closeOnTouch(true).build();
 
                 fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
                         .customView(R.layout.layout_playlist_reminder, view -> {
@@ -429,7 +429,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
                         }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                         .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                        .focusOn(binding.llReminder).closeOnTouch(false)
+                        .focusOn(binding.llReminder).closeOnTouch(true)
                         .build();
 
                 fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
@@ -439,18 +439,31 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                         .enterAnimation(enterAnimation)
                         .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
-                        .closeOnTouch(false).build();
+                        .closeOnTouch(true).build();
 
                 fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
                         .customView(R.layout.layout_playlist_searches, view -> {
                             RelativeLayout rlDone = view.findViewById(R.id.rlDone);
                             TextView tvclick = view.findViewById(R.id.tvclick);
-                            if (MyCreated.equalsIgnoreCase("1")) {
-                                tvclick.setText("Next");
-                            } else {
-                                tvclick.setText("Done");
-                            }
+                            tvclick.setText("Next");
                             rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
+                        })
+                        .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                        .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                        .focusOn(binding.rlSearch).closeOnTouch(true).build();
+
+                fancyShowCaseView441 = new FancyShowCaseView.Builder(getActivity())
+                        .customView(R.layout.layout_playlist_searches, view -> {
+                            RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                            TextView tvclick = view.findViewById(R.id.tvclick);
+                            tvclick.setText("Done");
+                            rlDone.setOnClickListener(v ->{
+                                SharedPreferences.Editor editor = shareddedd.edit();
+                                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
+                                editor.commit();
+                                fancyShowCaseView441.hide();
+                                playtutorial = true; fancyShowCaseView441.hide();
+                        });
                         })
                         .focusShape(FocusShape.ROUNDED_RECTANGLE)
                         .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
@@ -489,6 +502,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             .add(fancyShowCaseView41)
                             .add(fancyShowCaseView51);
                     queue.show();
+                    SharedPreferences.Editor editor = shareddedd.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
+                    editor.commit();
                 } else {
                     queue = new FancyShowCaseQueue()
                             .add(fancyShowCaseView11)
@@ -496,6 +512,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             .add(fancyShowCaseView31)
                             .add(fancyShowCaseView41);
                     queue.show();
+                    SharedPreferences.Editor editor = shareddedd.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
+                    editor.commit();
                 }
                 OnBackPressedCallback callback = new OnBackPressedCallback(true) {
                     @Override
