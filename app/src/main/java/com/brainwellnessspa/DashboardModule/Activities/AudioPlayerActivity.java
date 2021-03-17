@@ -6,8 +6,10 @@ import android.app.Application;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.UiModeManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -34,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
@@ -47,7 +50,6 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
@@ -101,12 +103,12 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.SegmentTagPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.SegmentTagPlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
@@ -119,6 +121,8 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class AudioPlayerActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
+    public static long oldSongPos = 0;
+    public static boolean AudioInterrupted = false;
     public AudioManager audioManager;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public boolean downloadClick = false;
@@ -144,12 +148,11 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
     long oldSeekPosition = 0;
     Handler handler2, handler1;
     int counterinit = 0;
-    public static long oldSongPos = 0;
-    private int numStarted = 0;
     int stackStatus = 0;
+    Intent localIntent1;
+    LocalBroadcastManager localBroadcastManager1;
     boolean myBackPress = false;
     boolean notificationStatus = false;
-    public static boolean AudioInterrupted = false;
     Runnable UpdateSongTime2 = new Runnable() {
         @Override
         public void run() {
@@ -198,19 +201,24 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             }
         }
     };
-
+    AudioDatabase DB;
+    private int numStarted = 0;
+    private long mLastClickTime = 0;
+    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MakeArray2();
+        }
+    };
     Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
             handler1.removeCallbacks(UpdateSongTime1);
             if (counterinit <= 3) {
                 initializePlayer();
-                Log.e("run  saa", "runasca");
             }
         }
     };
-    AudioDatabase DB;
-    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,8 +237,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
-
-        if(getIntent().hasExtra("notification")) {
+        if (getIntent().hasExtra("notification")) {
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -345,9 +352,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             dialog.setCancelable(false);
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+   /*     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
-        }
+        }*/
     }
 
     private void MakeArray2() {
@@ -720,7 +727,14 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         anim.setRepeatCount(ValueAnimator.INFINITE);
                         anim.setRepeatMode(ValueAnimator.REVERSE);
                         anim.start();
-                        rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                        rlDone.setOnClickListener(v -> {
+
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0");
+                            editor.commit();
+                            fancyShowCaseView31.hide();
+                        });
                     })
                     .focusShape(FocusShape.ROUNDED_RECTANGLE)
                     .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
@@ -731,10 +745,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     .add(fancyShowCaseView31);
             queue.show();
         }
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0");
-        editor.commit();
     }
 
     @Override
@@ -743,7 +753,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
-        NetWatch.builder( this)
+        NetWatch.builder(this)
                 .setCallBack(new NetworkChangeReceiver_navigator() {
                     @Override
                     public void onConnected(int source) {
@@ -833,15 +843,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
     private void callBack() {
         SegmentTagPlayer = 0;
         try {
-//        handler1.removeCallbacks(UpdateSongTime1);
-//            player = 1;
-//            if (binding.llPause.getVisibility() == View.VISIBLE) {
-//                isPause = false;
-//            }
-//        pauseMedia();
-          /*  if (exoBinding.progressBar.getVisibility() == View.VISIBLE) {
-                isprogressbar = true;
-            }*/
             myBackPress = true;
             DatabaseClient
                     .getInstance(ctx)
@@ -849,8 +850,16 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     .taskDao()
                     .getaudioByPlaylist1(url, "").removeObserver(audiolist -> {
             });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
             handler2.removeCallbacks(UpdateSongTime2);
             audioClick = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
             Gson gson = new Gson();
@@ -861,7 +870,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
             finish();
-//        overridePendingTransition(R.anim.enter, R.anim.exit);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1007,6 +1015,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, "Main");
                 setPlayerCtrView();
             }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
             if (player != null) {
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
@@ -1019,7 +1031,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override
                     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-                        Log.e("TAG", "Listener-onTracksChanged... ");
+                        Log.e("TAG", "Listener-onTracksChanged... Main Activity");
                         oldSongPos = 0;
                         SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
@@ -1039,15 +1051,12 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
                                 || AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY) {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                            Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
                         }
                         UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
                         if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
                                 || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
                                 || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
                             uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
-
-                            Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
                         }
                         getDownloadData();
                         setPlayerCtrView();
@@ -1098,6 +1107,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                             oldSongPos = player.getCurrentPosition();
                             callHeartbeat();
                         }
+                        GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
+
                         exoBinding.exoProgress.setDuration(player.getDuration());
                         exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
                                 TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
@@ -1233,7 +1245,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                     p.putValue("bitRate", "");
                                     p.putValue("sound", String.valueOf(hundredVolume));
                                     String source = GetSourceName(ctx);
-                                    if(!source.equalsIgnoreCase( "Playlist") && !source.equalsIgnoreCase("Downloaded Playlists")) {
+                                    if (!source.equalsIgnoreCase("Playlist") && !source.equalsIgnoreCase("Downloaded Playlists")) {
                                         BWSApplication.addToSegment("Audio Playback Completed", p, CONSTANTS.track);
                                     }
                                     Log.e("Last audio End", mainPlayModelList.get(position).getName());
@@ -1283,9 +1295,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                 e.printStackTrace();
                                 Log.e("End State: ", e.getMessage());
                             }
-                        }
-                        else if (state == ExoPlayer.STATE_IDLE) {
-                            if(AudioInterrupted){
+                        } else if (state == ExoPlayer.STATE_IDLE) {
+                            if (AudioInterrupted) {
                                 Log.e("Exo Player state", "ExoPlayer.STATE_IDLE");
                             }
                         }
@@ -1315,22 +1326,19 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
                             p.putValue("method", error.getMessage() + " " + error.getSourceException().getMessage());
-                            Log.e("onPlaybackError",  error.getMessage() + " "  + error.getSourceException().getMessage());
-                        }
-                        else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                            Log.e("onPlaybackError", error.getMessage() + " " + error.getSourceException().getMessage());
+                        } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
                             p.putValue("method", error.getMessage() + " " + error.getRendererException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
-                        }
-                        else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                        } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
                             p.putValue("method", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
-                        }
-                        else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                        } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
                             p.putValue("method", error.getMessage());
-                            Log.e("onPlaybackError",error.getMessage());
+                            Log.e("onPlaybackError", error.getMessage());
                         } else {
                             p.putValue("method", error.getMessage());
-                            Log.e("onPlaybackError",  error.getMessage());
+                            Log.e("onPlaybackError", error.getMessage());
                         }
                         AudioInterrupted = true;
                         BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
@@ -1450,12 +1458,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     exoBinding.progressBar.setVisibility(View.GONE);
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
-                    Log.e("newBUff", "exoBinding.progressBar.setVisibility(View.GONE);");
                 } else if (PlayerINIT) {
                     exoBinding.progressBar.setVisibility(View.GONE);
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
-                    Log.e("PlayerINIT", "exoBinding.progressBar.setVisibility(View.GONE);");
                 }
                 handler1.postDelayed(UpdateSongTime1, 2000);
                 callRepeatShuffle();
@@ -1491,6 +1497,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
                             editor.commit();
                             removeArray();
+                            localBroadcastManager1.sendBroadcast(localIntent1);
                             p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());
@@ -1604,12 +1611,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     exoBinding.progressBar.setVisibility(View.GONE);
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
-                    Log.e("newBUff", "exoBinding.progressBar.setVisibility(View.GONE);");
                 } else if (PlayerINIT) {
                     exoBinding.progressBar.setVisibility(View.GONE);
                     exoBinding.llPlay.setVisibility(View.GONE);
                     exoBinding.llPause.setVisibility(View.VISIBLE);
-                    Log.e("PlayerINIT", "exoBinding.progressBar.setVisibility(View.GONE);");
                 }
             }
 
@@ -3387,11 +3392,14 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
     private void getPrepareShowData() {
         binding.tvDireName.setText(R.string.Directions);
         callButtonText(position);
-        if (mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("") ||
-                mainPlayModelList.get(position).getImageFile().isEmpty()) {
+        if (mainPlayModelList.get(position).getImageFile().equalsIgnoreCase("")) {
+            localIntent1 = new Intent("descIssue");
+            localBroadcastManager1 = LocalBroadcastManager.getInstance(ctx);
+
+            LocalBroadcastManager.getInstance(ctx)
+                    .registerReceiver(listener1, new IntentFilter("descIssue"));
+
             initializePlayerDisclaimer();
-            setPlayerCtrView();
-            return;
         } else {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
@@ -3477,8 +3485,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     relesePlayer(ctx);
                 }
             } else {
-                Log.e("Destroy", "Activity go in main activity");
             }
+            LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1);
         }
     }
 }

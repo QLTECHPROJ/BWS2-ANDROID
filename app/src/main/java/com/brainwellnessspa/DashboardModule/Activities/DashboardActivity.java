@@ -239,11 +239,11 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
     public void onBackPressed() {
         if (tutorial) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
-            Fragment fragment = new AudioFragment();
+    /*        Fragment fragment = new AudioFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.flContainer, fragment)
-                    .commit();
+                    .commit();*/
         }
 
         if (invoiceToDashboard == 1) {
@@ -253,11 +253,11 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
-            Fragment fragment = new AudioFragment();
+        /*    Fragment fragment = new AudioFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.flContainer, fragment)
-                    .commit();
+                    .commit();*/
             if (doubleBackToExitPressedOnce) {
                 finish();
                 backpressed = true;

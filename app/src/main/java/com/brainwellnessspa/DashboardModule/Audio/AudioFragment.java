@@ -80,6 +80,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
@@ -110,6 +111,8 @@ public class AudioFragment extends Fragment {
         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
         mySpace = getSpace();
         prepareDisplayData("onCreateView");
+
+
 
         if (!isDownloading) {
             if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -439,7 +442,7 @@ public class AudioFragment extends Fragment {
     private void showTooltips() {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         AudioFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0"));
-        if (AudioFirstLogin.equalsIgnoreCase("1")) {
+        if (AudioFirstLogin.equalsIgnoreCase("1") && invoiceToRecepit != 1) {
             Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
             Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
 
@@ -518,6 +521,10 @@ public class AudioFragment extends Fragment {
                         anim.setRepeatMode(ValueAnimator.REVERSE);
                         anim.start();
                         rlDone.setOnClickListener(v -> {
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0");
+                            editor.commit();
                             fancyShowCaseView3.hide();
                         });
                     })
@@ -531,10 +538,7 @@ public class AudioFragment extends Fragment {
                     .add(fancyShowCaseView3);
             queue.show();
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0");
-        editor.commit();
+
     }
 
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {
