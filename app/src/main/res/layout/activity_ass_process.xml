@@ -76,7 +76,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,6 +84,17 @@
                     android:text="@string/Your_Assessment_Result"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
+
+                <com.github.anastr.speedviewlib.DeluxeSpeedView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_29sdp"
+                    app:sv_markColor="@color/white"
+                    app:sv_startDegree="180"
+                    app:sv_endDegree="360"
+                    app:sv_indicatorColor="@color/light_black"
+                    app:sv_backgroundCircleColor="@color/white"/>
 
                 <TextView
                     android:layout_width="match_parent"

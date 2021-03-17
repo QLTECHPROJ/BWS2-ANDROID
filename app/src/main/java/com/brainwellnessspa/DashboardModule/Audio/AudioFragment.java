@@ -151,7 +151,6 @@ public class AudioFragment extends Fragment {
 
         binding.tvExplore.setOnClickListener(v -> {
             Intent i = new Intent(getActivity(), SplashActivity.class);
-            i.putExtra(CONSTANTS.ScreenVisible, "1");
             startActivity(i);
         });
         showTooltips();

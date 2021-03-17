@@ -156,6 +156,7 @@ dependencies {
 //   TODO Net Watch speed count Dependency
     implementation 'com.github.draxdave:netWatch:0.d.19'
     implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.github.anastr:speedviewlib:1.5.3'
 
 }
 repositories {

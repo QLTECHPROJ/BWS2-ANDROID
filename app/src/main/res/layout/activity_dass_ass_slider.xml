@@ -66,9 +66,42 @@
             android:visibility="visible">
 
             <TextView
+                android:id="@+id/tvText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="The rating scale is as follows: \0 - Not Experiencing \n1 - (Mild) Experience it some of the time \n5 - (Moderate) Experience it most of the time \n10 - (Severe) Experience it all of the time"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11sdp" />
+
+            <TextView
                 android:id="@+id/tvFirst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tvText"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="I found it hard to wind down."
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFirstList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvFirst"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_60sdp"
+                tools:listitem="@layout/form_fill_layout" />
+
+            <TextView
+                android:id="@+id/tvSecond"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rvFirstList"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:text="I found it hard to wind down."
@@ -76,12 +109,13 @@
                 android:textSize="@dimen/_15sdp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAssFormList"
+                android:id="@+id/rvSecondList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/tvFirst"
-                android:layout_marginBottom="@dimen/_60sdp"
+                android:layout_below="@id/tvSecond"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_60sdp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:listitem="@layout/form_fill_layout" />
 
             <Button
