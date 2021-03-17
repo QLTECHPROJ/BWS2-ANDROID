@@ -69,6 +69,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
+import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
@@ -187,7 +188,6 @@ public class AccountFragment extends Fragment {
                 Intent i = new Intent(getActivity(), InvoiceActivity.class);
                 i.putExtra("ComeFrom", "");
                 startActivity(i);
-                getActivity().finish();
                 getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
@@ -431,6 +431,12 @@ public class AccountFragment extends Fragment {
                     .customView(R.layout.layout_account_resources, view -> {
                         RelativeLayout rlDone = view.findViewById(R.id.rlDone);
                         rlDone.setOnClickListener(v -> {
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0");
+                            editor.commit();
+                            invoiceToDashboard = 0;
+                            invoiceToRecepit = 0;
                             fancyShowCaseView31.hide();
                             tutorial = true;
                         });
@@ -459,11 +465,6 @@ public class AccountFragment extends Fragment {
             };
             requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0");
-        editor.commit();
-        tutorial = false;
     }
 
     void DeleteCall(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
