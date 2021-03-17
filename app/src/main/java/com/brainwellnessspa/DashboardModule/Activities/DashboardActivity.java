@@ -253,11 +253,11 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
-        /*    Fragment fragment = new AudioFragment();
+            Fragment fragment = new AudioFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.flContainer, fragment)
-                    .commit();*/
+                    .commit();
             if (doubleBackToExitPressedOnce) {
                 finish();
                 backpressed = true;
@@ -301,12 +301,14 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
     @Override
     protected void onDestroy() {
-        NetWatch.unregister(this);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(notificationId);
-        relesePlayer(DashboardActivity.this);
-        unregisterReceiver(myNetworkReceiver);
-        deleteCache(DashboardActivity.this);
+        if(invoiceToRecepit == 0) {
+            NetWatch.unregister(this);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+            relesePlayer(DashboardActivity.this);
+            unregisterReceiver(myNetworkReceiver);
+            deleteCache(DashboardActivity.this);
+        }
         super.onDestroy();
     }
 
