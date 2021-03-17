@@ -188,7 +188,6 @@ public class AccountFragment extends Fragment {
                 Intent i = new Intent(getActivity(), InvoiceActivity.class);
                 i.putExtra("ComeFrom", "");
                 startActivity(i);
-                getActivity().finish();
                 getActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());

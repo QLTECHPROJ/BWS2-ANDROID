@@ -98,19 +98,23 @@ public class InvoiceActivity extends AppCompatActivity {
                 invoiceToDashboard = 1;
                 Intent i = new Intent(context, DashboardActivity.class);
                 startActivity(i);
-                finish();
             } else {
                 ComeScreenAccount = 1;
                 comefromDownload = "0";
                 finish();
             }
         } else if (invoiceToRecepit == 1) {
-            ComeScreenAccount = 1;
-            comefromDownload = "0";
-            invoiceToRecepit = 1;
-            Intent i = new Intent(context, DashboardActivity.class);
-            startActivity(i);
-            finish();
+            if (ComeFrom.equalsIgnoreCase("")) {
+                invoiceToDashboard = 0;
+                finish();
+            } else {
+                ComeScreenAccount = 1;
+                comefromDownload = "0";
+                invoiceToRecepit = 1;
+                Intent i = new Intent(context, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            }
         } else {
         }
     }
