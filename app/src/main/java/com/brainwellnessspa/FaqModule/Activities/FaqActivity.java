@@ -30,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
@@ -61,6 +62,7 @@ public class FaqActivity extends AppCompatActivity {
         PrepareData();
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             finish();
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -95,6 +97,7 @@ public class FaqActivity extends AppCompatActivity {
 
         binding.llHelp.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             try {
                 modelList.clear();
                 modelList = new ArrayList<>();
@@ -115,6 +118,7 @@ public class FaqActivity extends AppCompatActivity {
 
         binding.llPlaylists.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             try {
                 modelList.clear();
                 modelList = new ArrayList<>();
@@ -165,6 +169,7 @@ public class FaqActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         myBackPress = true;
+        ComeScreenAccount = 1;
         finish();
     }
 

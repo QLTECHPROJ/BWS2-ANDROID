@@ -301,14 +301,12 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
     @Override
     protected void onDestroy() {
-        if(invoiceToRecepit == 0) {
-            NetWatch.unregister(this);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(notificationId);
-            relesePlayer(DashboardActivity.this);
-            unregisterReceiver(myNetworkReceiver);
-            deleteCache(DashboardActivity.this);
-        }
+        NetWatch.unregister(this);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        relesePlayer(DashboardActivity.this);
+        unregisterReceiver(myNetworkReceiver);
+        deleteCache(DashboardActivity.this);
         super.onDestroy();
     }
 

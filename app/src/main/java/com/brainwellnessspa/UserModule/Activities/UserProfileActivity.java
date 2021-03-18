@@ -64,6 +64,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
@@ -147,6 +148,7 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.etEmail.addTextChangedListener(userTextWatcher);
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             finish();
         });
         notificationStatus = false;
@@ -462,6 +464,7 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         myBackPress = true;
+        ComeScreenAccount = 1;
         finish();
     }
 

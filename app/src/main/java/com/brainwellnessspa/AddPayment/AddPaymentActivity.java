@@ -52,7 +52,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 public class AddPaymentActivity extends AppCompatActivity {
     ActivityAddPaymentBinding binding;
     Context context;
@@ -310,6 +310,7 @@ public class AddPaymentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         myBackPress = true;
+        ComeScreenAccount = 1;
         if (ComePayment.equalsIgnoreCase("1")) {
             finish();
         } else if (ComePayment.equalsIgnoreCase("2")) {

@@ -63,6 +63,7 @@ import static com.brainwellnessspa.BillingOrderModule.Activities.MembershipChang
 import static com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanId;
 import static com.brainwellnessspa.BillingOrderModule.Fragments.CurrentPlanFragment.PlanStatus;
 import static com.brainwellnessspa.BillingOrderModule.Fragments.CurrentPlanFragment.invoicePayId;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
@@ -107,6 +108,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             Intent i = new Intent(context, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
             i.putExtra("ComesTrue", ComesTrue);
@@ -122,6 +124,7 @@ public class PaymentActivity extends AppCompatActivity {
         }
         binding.llAddNewCard.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             if (BWSApplication.isNetworkConnected(context)) {
                 Intent i = new Intent(context, AddPaymentActivity.class);
                 i.putExtra("ComePayment", "2");
@@ -414,6 +417,7 @@ public class PaymentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         myBackPress = true;
+        ComeScreenAccount = 1;
         Intent i = new Intent(context, OrderSummaryActivity.class);
         i.putExtra("comeFrom", "membership");
         i.putExtra("ComesTrue", ComesTrue);

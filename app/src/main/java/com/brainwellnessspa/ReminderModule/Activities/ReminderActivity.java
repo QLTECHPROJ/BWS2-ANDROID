@@ -129,6 +129,7 @@ public class ReminderActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             if (ComeScreenReminder == 1) {
                 Intent i = new Intent(context, ReminderDetailsActivity.class);
                 startActivity(i);
@@ -598,6 +599,7 @@ public class ReminderActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        ComeScreenAccount = 1;
         if (ComeScreenReminder == 1) {
             myBackPress = true;
             Intent i = new Intent(context, ReminderDetailsActivity.class);

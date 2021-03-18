@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -93,6 +94,12 @@ public class AccountFragment extends Fragment {
     private long mLastClickTime = 0;
     List<ContactlistModel> userList = new ArrayList<>();
     Dialog logoutDialog, supportDialog;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ComeScreenAccount = 1; 
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -273,6 +280,7 @@ public class AccountFragment extends Fragment {
             supportDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             final TextView tvEmail = supportDialog.findViewById(R.id.tvEmail);
             final LinearLayout llClose = supportDialog.findViewById(R.id.llClose);
+            ComeScreenAccount = 1;
             tvEmail.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 String[] recipients = {"support@brainwellnessapp.com"};
@@ -397,7 +405,7 @@ public class AccountFragment extends Fragment {
 
     @Override
     public void onResume() {
-        ComeScreenAccount = 1;
+//        ComeScreenAccount = 1;
         comefromDownload = "0";
         profileViewData(getActivity());
         super.onResume();
