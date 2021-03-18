@@ -1364,7 +1364,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("seekPosition", pos);
+                        p.putValue("seekPosition", String.valueOf(pos));
                         if (oldSeekPosition < pos) {
                             p.putValue("seekDirection", "Forwarded");
                         } else if (oldSeekPosition > pos) {
@@ -1410,7 +1410,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                         p.putValue("position", GetCurrentAudioPosition());
-                        p.putValue("seekPosition", pos);
+                        p.putValue("seekPosition", String.valueOf(pos));
                         if (oldSeekPosition < pos) {
                             p.putValue("seekDirection", "Forwarded");
                         } else if (oldSeekPosition > pos) {
