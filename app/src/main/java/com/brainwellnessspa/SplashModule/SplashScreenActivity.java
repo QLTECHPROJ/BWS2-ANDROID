@@ -164,10 +164,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         } else {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
-        /*        Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
+                Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 startActivity(i);
-                finish();*/
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                finish();
+               /* SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                 editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
@@ -196,7 +196,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 Intent i = new Intent(SplashScreenActivity.this, ThankYouMpActivity.class);
                 startActivity(i);
-                finish();
+                finish();*/
             }, 2 * 800);
         }
     }
