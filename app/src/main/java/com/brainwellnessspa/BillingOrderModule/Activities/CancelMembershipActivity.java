@@ -31,6 +31,7 @@ import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -66,6 +67,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
+            ComeScreenAccount = 1;
             if (audioPause) {
                 player.setPlayWhenReady(true);
             } else {
@@ -237,6 +239,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     @Override
     public void onBackPressed() {
         myBackPress = true;
+        ComeScreenAccount = 1;
         if (audioPause) {
             player.setPlayWhenReady(true);
         } else {

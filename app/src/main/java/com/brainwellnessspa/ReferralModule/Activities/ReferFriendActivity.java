@@ -44,6 +44,7 @@ import com.segment.analytics.Properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
@@ -87,6 +88,7 @@ public class ReferFriendActivity extends AppCompatActivity {
         binding.tvCodeCopy.setText(UserPromocode);
         binding.llBack.setOnClickListener(v -> {
 
+            ComeScreenAccount = 1;
             myBackPress = true;
             finish();
         });
@@ -203,6 +205,7 @@ public class ReferFriendActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        ComeScreenAccount = 1;
         myBackPress = true;
         super.onBackPressed();
     }

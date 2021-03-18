@@ -85,6 +85,7 @@ public class InvoiceActivity extends AppCompatActivity {
 
     private void callBack() {
         myBackPress = true;
+        ComeScreenAccount = 1;
         if (invoiceToRecepit == 0) {
             invoiceToRecepit = 1;
             tutorial = false;
