@@ -93,6 +93,8 @@
     <dimen name="_280sdp">280.00dp</dimen>
     <dimen name="_300sdp">300.00dp</dimen>
     <dimen name="_310sdp">310.00dp</dimen>
+    <dimen name="_320sdp">320.00dp</dimen>
+    <dimen name="_330sdp">330.00dp</dimen>
     <dimen name="_340sdp">340.00dp</dimen>
     <dimen name="_380sdp">380.00dp</dimen>
     <dimen name="_400sdp">400.00dp</dimen>
