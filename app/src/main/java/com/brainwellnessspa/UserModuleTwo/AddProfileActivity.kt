@@ -81,6 +81,8 @@ class AddProfileActivity : AppCompatActivity() {
 //        binding.etUser.addTextChangedListener(userTextWatcher)
 //        binding.etMobileNumber.addTextChangedListener(userTextWatcher)
 //        binding.etEmail.addTextChangedListener(userTextWatcher)
+
+//        TODO MANSI Gentle reminder Send New PIN Btn name changes when user send new pin
         binding.btnSendPin.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = "Name is required"

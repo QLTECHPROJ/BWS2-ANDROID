@@ -172,14 +172,27 @@ public class SplashScreenActivity extends AppCompatActivity {
                 editor.putBoolean(CONSTANTS.PREF_KEY_Identify, true);
                 editor.putBoolean(CONSTANTS.PREF_KEY_IdentifyAgain, true);
                 editor.putString(CONSTANTS.PREF_KEY_UserID, "453");
-                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
-                editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "1");
-                editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "1");
-                editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
-                editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
+                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "0");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "0");
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistFirstLogin, "0");
+                editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0");
+                editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0");
+                editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "0");
                 editor.commit();
+
+                SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editorr = sharedm.edit();
+                editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                editorr.remove(CONSTANTS.PREF_KEY_audioList);
+                editorr.remove(CONSTANTS.PREF_KEY_position);
+                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+                editorr.clear();
+                editorr.commit();
 
                 Intent i = new Intent(SplashScreenActivity.this, ThankYouMpActivity.class);
                 startActivity(i);
@@ -188,7 +201,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-    public void setAnalytics() {  
+    public void setAnalytics() {
         try {
 //     TODO : Live segment key
 //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live

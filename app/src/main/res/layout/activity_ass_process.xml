@@ -85,26 +85,130 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
 
-                <LinearLayout
+                <com.brainwellnessspa.SpeedMeter
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@drawable/ic_speed_meter_icon"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_220sdp"
                     android:layout_marginHorizontal="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_29sdp">
+                    android:layout_marginTop="@dimen/_29sdp"
+                    android:background="@drawable/score_meter_bg"
+                    android:visibility="visible">
 
-                    <com.github.anastr.speedviewlib.DeluxeSpeedView
-                        android:id="@+id/speedView"
-                        android:layout_width="@dimen/_210sdp"
-                        android:layout_height="@dimen/_140sdp"
-                        app:sv_markColor="@color/white"
-                        android:layout_marginTop="@dimen/_60sdp"
-                        app:sv_startDegree="180"
-                        app:sv_endDegree="360"
-                        app:sv_indicatorColor="@color/light_black"
-                        app:sv_backgroundCircleColor="@color/white"/>
+                    <ImageView
+                        android:id="@+id/ivFirst"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="@dimen/_48sdp"
+                        android:layout_marginBottom="@dimen/_62sdp"
+                        android:layout_toLeftOf="@id/llSeverse"
+                        android:rotation="300"
+                        android:src="@drawable/ic_score_arrow" />
 
-                </LinearLayout>
+                    <ImageView
+                        android:id="@+id/ivSecond"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="@dimen/_24sdp"
+                        android:layout_marginBottom="@dimen/_96sdp"
+                        android:layout_toLeftOf="@id/llSeverse"
+                        android:rotation="335"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivThird"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="-10dp"
+                        android:layout_marginBottom="@dimen/_115sdp"
+                        android:layout_toRightOf="@id/ivSecond"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow"
+                        android:rotation="360" />
+
+                    <LinearLayout
+                        android:id="@+id/llSeverse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="@dimen/_2sdp"
+                        android:layout_marginBottom="@dimen/_14sdp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/_12sdp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="46"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_40sdp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/_12sdp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:text="Severe"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_12sdp" />
+
+
+                    </LinearLayout>
+
+
+                    <ImageView
+                        android:id="@+id/ivForth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/_40sdp"
+                        android:layout_marginBottom="@dimen/_62sdp"
+                        android:layout_toRightOf="@id/llSeverse"
+                        android:rotation="88"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivFifth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/_17sdp"
+                        android:layout_marginBottom="@dimen/_96sdp"
+                        android:layout_toRightOf="@id/llSeverse"
+                        android:rotation="60"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivSixth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="-5dp"
+                        android:layout_toLeftOf="@id/ivFifth"
+                        android:rotation="38"
+                        android:visibility="invisible"
+                        android:layout_marginBottom="@dimen/_115sdp"
+                        android:src="@drawable/ic_score_arrow" />
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="match_parent"
