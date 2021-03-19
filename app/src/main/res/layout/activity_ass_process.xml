@@ -110,6 +110,7 @@
                         android:layout_marginBottom="@dimen/_62sdp"
                         android:layout_toLeftOf="@id/llSeverse"
                         android:rotation="300"
+                        android:visibility="visible"
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
@@ -166,9 +167,7 @@
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_12sdp" />
 
-
                     </LinearLayout>
-
 
                     <ImageView
                         android:id="@+id/ivForth"
