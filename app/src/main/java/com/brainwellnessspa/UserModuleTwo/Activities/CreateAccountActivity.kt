@@ -1,11 +1,15 @@
 package com.brainwellnessspa.UserModuleTwo.Activities
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.*
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.LoginModule.Models.CountryListModel
+import com.brainwellnessspa.LoginModule.Models.LoginModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APIClient
 import com.brainwellnessspa.Utility.APINewClient
@@ -34,10 +39,14 @@ class CreateAccountActivity : AppCompatActivity() {
     private lateinit var dialog: Dialog
     lateinit var adapter: CountrySelectAdapter
     var searchFilter: String = ""
+    lateinit var ctx: Context
+    lateinit var activity: Activity
     lateinit var searchEditText: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_account)
+        ctx = this@CreateAccountActivity
+        activity = this@CreateAccountActivity
         binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
         binding.llBack.setOnClickListener {
             finish()
@@ -58,15 +67,18 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.flNumber.error = ""
                 binding.flEmail.error = "Email address is required"
                 binding.flPassword.error = ""
+            } else if (!binding.etEmail.text.toString().isEmailValid()) {
+                binding.flUser.error = ""
+                binding.flNumber.error = ""
+                binding.flEmail.error = "Enter Valid Email"
+                binding.flPassword.error = ""
             } else if (binding.etPassword.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = ""
                 binding.flNumber.error = ""
                 binding.flEmail.error = ""
                 binding.flPassword.error = "Password is required"
             } else {
-                val i = Intent(this@CreateAccountActivity, UserListActivity::class.java)
-                i.putExtra(CONSTANTS.PopUp,"0")
-                startActivity(i)
+                SignUpUser()
             }
         }
         binding.ivVisible.visibility = View.VISIBLE
@@ -169,17 +181,19 @@ class CreateAccountActivity : AppCompatActivity() {
             dialog.setCancelable(false)
         }
     }
-
+    fun String.isEmailValid(): Boolean {
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
+    }
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(progressBar, progressBarHolder, this@CreateAccountActivity)
+            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
             val listCall: Call<CountryListModel> = APINewClient.getClient().countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
                 override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
                     try {
-                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, this@CreateAccountActivity)
+                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
-                        rvCountryList.layoutManager = LinearLayoutManager(this@CreateAccountActivity)
+                        rvCountryList.layoutManager = LinearLayoutManager(ctx)
                         adapter = CountrySelectAdapter(dialog, searchFilter, binding, listModel.responseData, rvCountryList, tvFound)
                         rvCountryList.adapter = adapter
                     } catch (e: Exception) {
@@ -188,11 +202,44 @@ class CreateAccountActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<CountryListModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(progressBar, null, this@CreateAccountActivity)
+                    BWSApplication.hideProgressBar(progressBar, null, activity)
                 }
             })
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), this)
+        }
+    }
+    fun SignUpUser() {
+        if (BWSApplication.isNetworkConnected(this)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall: Call<LoginModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString()
+                    ,binding.etEmail.text.toString(),binding.tvCountry.text.toString()
+                    ,binding.etNumber.text.toString(),"1",binding.etPassword.text.toString())
+            listCall.enqueue(object : Callback<LoginModel> {
+                override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {
+                    try {
+                        BWSApplication.hideProgressBar( binding.progressBar, binding.progressBarHolder, activity)
+                        val listModel: LoginModel = response.body()!!
+                        if(listModel.responseCode.equals("200")) {
+                            val i = Intent(ctx, UserListActivity::class.java)
+                            i.putExtra(CONSTANTS.PopUp, "0")
+                            startActivity(i)
+                            finish()
+                        }
+                        BWSApplication.showToast(listModel.responseMessage, ctx)
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<LoginModel>, t: Throwable) {
+                    BWSApplication.hideProgressBar( binding.progressBar, null, activity)
+                }
+
+            })
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx)
         }
     }
 
@@ -221,13 +268,14 @@ class CreateAccountActivity : AppCompatActivity() {
             listFilterData = modelList
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val mData: CountryListModel.ResponseData = listFilterData[position]
             holder.bindingAdapter.tvCountryName.text = mData.name
             holder.bindingAdapter.tvCountryCode.text = "+" + mData.code
             holder.bindingAdapter.llMainLayout.setOnClickListener { _ ->
-                var conutry = "+" + mData.code
-                binding.tvCountry.text = "${mData.shortName} $conutry"
+                binding.tvCountryShortName.text = mData.shortName
+                binding.tvCountry.text = "+" + mData.code
                 dialog.dismiss()
             }
         }
