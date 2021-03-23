@@ -231,6 +231,7 @@
     <string name="t_n_csf">T&amp;Cs</string>
     <string name="privacy_policysm">Privacy Policy </string>
     <string name="privacy_policys">, <u>Privacy Policy</u> </string>
+    <string name="disclaimersm">Disclaimer</string>
     <string name="disclaimers"><u>Disclaimer</u></string>
     <string name="playlist_or_audio_search">Add or search for audio, playlist</string>
     <string name="and">and</string>
@@ -284,5 +285,14 @@
     <string name="Unlock_the_app">Unlock the app</string>
     <string name="Your_Assessment_Result">Your Assessment Result</string>
     <string name="ass_quotes">We\'re done with the first part.\nLorem ipsum dolor sit amet, consetetur\nsadipscing elitr, sed diam nonumy eirmod\ntempor invidunt ut labore. \n\nAt vero eos et accusam et justo duo dolores \net ea</string>
+    <string name="noti_title">Your Notifications</string>
+    <string name="title_activity_bottom_navigation">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_manage">Manage</string>
+    <string name="title_Wellness">Wellness</string>
+    <string name="title_Elevate">Elevate</string>
+    <string name="title_Profile">Profile</string>
 
 </resources>

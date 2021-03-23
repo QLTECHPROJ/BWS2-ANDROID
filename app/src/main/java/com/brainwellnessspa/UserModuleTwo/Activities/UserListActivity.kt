@@ -1,4 +1,4 @@
-package com.brainwellnessspa.UserModuleTwo
+package com.brainwellnessspa.UserModuleTwo.Activities
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -6,11 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -137,18 +133,11 @@ class UserListActivity : AppCompatActivity() {
     }
 
     class UserListAdapter(listModel: List<UserListModel>) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
-        private val listModel: List<UserListModel>
-
-        init {
-            this.listModel = listModel
-        }
+        private val listModel: List<UserListModel> = listModel
 
         inner class MyViewHolder(bindingAdapter: UserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
-            var bindingAdapter: UserListLayoutBinding
+            var bindingAdapter: UserListLayoutBinding = bindingAdapter
 
-            init {
-                this.bindingAdapter = bindingAdapter
-            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

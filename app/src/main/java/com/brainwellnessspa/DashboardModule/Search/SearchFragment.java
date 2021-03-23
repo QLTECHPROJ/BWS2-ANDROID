@@ -611,7 +611,7 @@ public class SearchFragment extends Fragment {
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
 
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
@@ -918,7 +918,7 @@ public class SearchFragment extends Fragment {
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
 
             if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {

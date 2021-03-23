@@ -61,6 +61,9 @@ public class CountryListModel {
         @SerializedName("Code")
         @Expose
         private String code;
+        @SerializedName("ShortName")
+        @Expose
+        private String shortName;
 
         public String getID() {
             return iD;
@@ -84,6 +87,14 @@ public class CountryListModel {
 
         public void setCode(String code) {
             this.code = code;
+        }
+
+        public String getShortName() {
+            return shortName;
+        }
+
+        public void setShortName(String shortName) {
+            this.shortName = shortName;
         }
     }
 }

@@ -380,7 +380,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binds.tvTime.setText(AudiolistsModel.get(position).getAudioDuration());
             holder.binds.pbProgress.setVisibility(View.GONE);
             holder.binds.equalizerview.setVisibility(View.GONE);
-            holder.binds.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binds.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binds.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -660,7 +660,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

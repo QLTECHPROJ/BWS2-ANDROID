@@ -768,7 +768,7 @@ public class AddAudioActivity extends AppCompatActivity {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
         }
 
         public void callMainTransFrag(int position) {
@@ -923,7 +923,7 @@ public class AddAudioActivity extends AppCompatActivity {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -1188,7 +1188,7 @@ public class AddAudioActivity extends AppCompatActivity {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);

@@ -34,4 +34,5 @@
     <color name="step_one_bg">#72C2DD</color>
     <color name="text_transparent">#A372C2DD</color>
     <color name="light_blue_theme">#6C63FF</color>
+    <color name="light_red_theme">#FE8D7D</color>
 </resources>

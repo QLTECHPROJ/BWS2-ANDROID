@@ -44,11 +44,8 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlay
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.UserModuleTwo.GetStartedActivity;
-import com.brainwellnessspa.UserModuleTwo.SplashActivity;
-import com.brainwellnessspa.UserModuleTwo.WalkScreenActivity;
+import com.brainwellnessspa.UserModuleTwo.Activities.SplashActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;

@@ -1,12 +1,10 @@
-package com.brainwellnessspa.UserModuleTwo
+package com.brainwellnessspa.UserModuleTwo.Activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
-import com.brainwellnessspa.DassAssSliderTwo.AssProcessActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityGetStartedBinding

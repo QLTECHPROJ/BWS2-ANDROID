@@ -1,4 +1,4 @@
-package com.brainwellnessspa.UserModuleTwo
+package com.brainwellnessspa.UserModuleTwo.Activities
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -19,6 +19,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.LoginModule.Models.CountryListModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APIClient
+import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.WebView.TncActivity
 import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
@@ -172,7 +173,7 @@ class CreateAccountActivity : AppCompatActivity() {
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, this@CreateAccountActivity)
-            val listCall: Call<CountryListModel> = APIClient.getClient().countryLists
+            val listCall: Call<CountryListModel> = APINewClient.getClient().countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
                 override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
                     try {
@@ -226,8 +227,7 @@ class CreateAccountActivity : AppCompatActivity() {
             holder.bindingAdapter.tvCountryCode.text = "+" + mData.code
             holder.bindingAdapter.llMainLayout.setOnClickListener { _ ->
                 var conutry = "+" + mData.code
-                var cyname = mData.name.substring(0, 2)
-                binding.tvCountry.text = "$cyname $conutry"
+                binding.tvCountry.text = "${mData.shortName} $conutry"
                 dialog.dismiss()
             }
         }
