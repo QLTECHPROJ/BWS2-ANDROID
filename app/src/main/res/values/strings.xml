@@ -278,6 +278,7 @@
     <string name="Email_address_hint">Enter your email address</string>
     <string name="Password">Password</string>
     <string name="add_profile">Add Profile</string>
+    <string name="manage">Manage</string>
     <string name="User_Name">User Name</string>
     <string name="step_one">Step 1</string>
     <string name="step_two">Step 2</string>
