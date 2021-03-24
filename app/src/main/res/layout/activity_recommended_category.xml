@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ManageTwo.RecommendedCategoryActivity">
+        tools:context=".ManageModule.RecommendedCategoryActivity">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never"
                             app:spanCount="3"
-                            android:orientation="horizontal"
+                            tools:itemCount="3"
                             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                             tools:listitem="@layout/selected_category_raw" />
 
@@ -125,6 +125,7 @@
                             android:nestedScrollingEnabled="true"
                             android:orientation="vertical"
                             android:overScrollMode="never"
+                            tools:itemCount="3"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:listitem="@layout/all_category_raw" />
 

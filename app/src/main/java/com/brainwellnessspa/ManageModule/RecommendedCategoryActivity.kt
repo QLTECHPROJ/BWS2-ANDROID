@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ManageTwo
+package com.brainwellnessspa.ManageModule
 
 import android.content.Context
 import android.os.Bundle

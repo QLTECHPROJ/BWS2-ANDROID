@@ -142,8 +142,9 @@
                                     android:paddingHorizontal="@dimen/_13sdp"
                                     android:gravity="center"
                                     android:layout_marginRight="@dimen/_13sdp"
-                                    android:background="@drawable/disclaimer_background"
+                                    android:background="@drawable/rounded_extra_gray_corner"
                                     android:orientation="horizontal"
+                                    android:backgroundTint="#702A3042"
                                     android:elevation="@dimen/_40sdp">
 
                                     <ImageView

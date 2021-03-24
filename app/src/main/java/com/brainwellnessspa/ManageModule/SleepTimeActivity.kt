@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ManageTwo
+package com.brainwellnessspa.ManageModule
 
 import android.content.Context
 import android.content.Intent
@@ -61,7 +61,7 @@ class SleepTimeActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvhours.text = listModel[position].name
             holder.bindingAdapter.llHourSlots.setOnClickListener {
-                val i = Intent(ctx,RecommendedCategoryActivity::class.java)
+                val i = Intent(ctx, RecommendedCategoryActivity::class.java)
                 ctx.startActivity(i)
             }
         }

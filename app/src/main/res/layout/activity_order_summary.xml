@@ -55,12 +55,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
-                    android:background="@drawable/round_blue_cornor"
+                    android:background="@drawable/round_corner"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/_16sdp"
                     android:paddingTop="@dimen/_16sdp"
                     android:paddingRight="@dimen/_8sdp"
                     android:paddingBottom="@dimen/_16sdp"
+                    android:backgroundTint="@color/blue"
                     android:weightSum="1">
 
                     <LinearLayout

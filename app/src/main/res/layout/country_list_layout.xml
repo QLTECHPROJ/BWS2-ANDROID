@@ -30,7 +30,8 @@
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginRight="@dimen/_16sdp"
         android:layout_weight="2"
-        android:background="@drawable/rounded_light_gray_corner_two">
+        android:backgroundTint="@color/grayTheam"
+        android:background="@drawable/rounded_extra_gray_corner">
 
         <ImageView
             android:id="@+id/button1"

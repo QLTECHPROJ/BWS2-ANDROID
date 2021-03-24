@@ -66,11 +66,12 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_48sdp"
             android:layout_below="@id/toolbar"
-            android:background="@drawable/rounded_white_corner"
+            android:background="@drawable/rounded_extra_gray_corner"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginRight="@dimen/_16sdp"
+            android:backgroundTint="@color/white"
             android:layout_weight="2">
 
             <ImageView

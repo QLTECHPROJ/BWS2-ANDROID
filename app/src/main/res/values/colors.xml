@@ -30,9 +30,14 @@
 
     <color name="dark_yellow">#f89552</color>
     <color name="green_dark">#00ac5c</color>
+    <color name="green_dark_s">#27B86A</color>
     <color name="text_title">#2a3042</color>
     <color name="step_one_bg">#72C2DD</color>
+    <color name="lighit_new_blue">#B8E1F7</color>
+    <color name="lighit_new_blue1">#36C2D6</color>
     <color name="text_transparent">#A372C2DD</color>
+    <color name="text_new_light_blue">#1597AA</color>
     <color name="light_blue_theme">#6C63FF</color>
     <color name="light_red_theme">#FE8D7D</color>
+    <color name="grayTheam">#B9EFEFEF</color>
 </resources>
