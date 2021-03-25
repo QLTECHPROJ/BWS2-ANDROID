@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ManageModule.ManageDashboardActivity"></activity>
+        <activity android:name=".ManageModule.ManageAudioPlaylistActivity"></activity>
+        <activity android:name=".ManageModule.MyPlaylistActivity" />
+        <activity android:name=".ManageModule.ManageDashboardActivity" />
         <activity android:name=".ManageModule.RecommendedCategoryActivity" />
         <activity android:name=".ManageModule.SleepTimeActivity" />
         <activity
@@ -440,6 +442,12 @@
     </application>
 
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <!--
+<permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:permissionGroup="android.permission-group.STORAGE"
+        android:permissionFlags="softRestricted|immutablyRestricted"
+        android:protectionLevel="dangerous" />
+    -->
     <queries>
         <intent>
             <action android:name="com.google.android.youtube.api.service.START" />
@@ -451,12 +459,7 @@
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
     </queries>
-    <!--
-<permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:permissionGroup="android.permission-group.STORAGE"
-        android:permissionFlags="softRestricted|immutablyRestricted"
-        android:protectionLevel="dangerous" />
-    -->
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -474,14 +477,14 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!--
   <uses-permission
           android:name="android.permission.READ_PHONE_STATE"
           android:maxSdkVersion="29" />
     -->
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" /> <!-- <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" /> -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" /> -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
