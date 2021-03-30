@@ -7,6 +7,7 @@ import androidx.room.Room;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
@@ -35,6 +36,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.AppUtils;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MyBatteryReceiver;
 import com.brainwellnessspa.databinding.ActivitySplashScreenBinding;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -75,6 +77,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (key.equalsIgnoreCase("")) {
             key = getKey(SplashScreenActivity.this);
         }
+        IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(new MyBatteryReceiver(),intentfilter);
         DB = Room.databaseBuilder(SplashScreenActivity.this,
                 AudioDatabase.class,
                 "Audio_database")

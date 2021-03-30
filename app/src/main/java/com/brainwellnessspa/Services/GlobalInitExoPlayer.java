@@ -136,9 +136,9 @@ public class GlobalInitExoPlayer extends Service {
 
     public static long getSpace() {
         StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        long bytesAvailable = (stat.getBlockSizeLong() * stat.getAvailableBlocksLong()) / (1024 * 1024);
+        long bytesAvailable = 0;
+         bytesAvailable = (stat.getBlockSizeLong() * stat.getAvailableBlocksLong()) / (1024 * 1024);
         Log.e("My Space", "Available MB : " + bytesAvailable);
-
         return bytesAvailable;
     }
 
@@ -279,6 +279,7 @@ public class GlobalInitExoPlayer extends Service {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            myFlagType = "";
         }
 /*
 Top Categories  dddd
