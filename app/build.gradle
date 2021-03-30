@@ -79,6 +79,8 @@ dependencies {
     def room_version = "2.2.6"
 // def work_version = "2.4.0"
 // TODO  Default Dependency
+    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     testImplementation 'junit:junit:4.13.2'

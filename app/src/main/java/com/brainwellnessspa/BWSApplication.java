@@ -17,12 +17,15 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -66,6 +69,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.mediaSession;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
@@ -83,7 +87,7 @@ public class BWSApplication extends Application {
     };
     private static Context mContext;
     private static BWSApplication BWSApplication;
-
+    public static String BatteryStatus = "";
     public static Context getContext() {
         return mContext;
     }
@@ -151,6 +155,30 @@ public class BWSApplication extends Application {
     }
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {
+        long mySpace;
+        mySpace = getSpace();
+        int batLevel = 0;
+        // Get the battery percentage and store it in a INT variable
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            BatteryManager bm =(BatteryManager) getContext().getSystemService(BATTERY_SERVICE);
+            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+        }
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        //should check null because in airplane mode it will be null
+        NetworkCapabilities nc;
+        float downSpeed = 0;
+        float upSpeed = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
+             downSpeed =(float) nc.getLinkDownstreamBandwidthKbps()/1000;
+             upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps()/1000);
+        }
+        properties.putValue("deviceSpace", mySpace + " MB");
+        properties.putValue("batteryLevel", batLevel +" %");
+        properties.putValue("batteryStatus", BatteryStatus);
+        properties.putValue("internetDownSpeed", downSpeed + " Mbps");
+        properties.putValue("internetUpSpeed", upSpeed + " Mbps");
         try {
             if (methodName.equalsIgnoreCase("track")) {
                 analytics.track(TagName, properties);
@@ -160,7 +188,6 @@ public class BWSApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static String getKey(Context context) {
