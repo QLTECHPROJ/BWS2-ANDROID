@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".ManageModule.SessionStatusActivity">
+
+        <LinearLayout
+            android:id="@+id/llContinue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_0sdp"
+                android:layout_gravity="center"
+                android:layout_weight="0.6"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/session_continue_bg" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_0sdp"
+                android:layout_weight="0.4"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_16sdp">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tvCETitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="@dimen/_40sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="center"
+                        android:text="Experience a free Brain Wellness Spa Session"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <TextView
+                        android:id="@+id/tvCESubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvCETitle"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
+                        android:text="This free Brain Wellness Spa session is a one off and its effects may last between 24 and 48 hours. How long they last depend on your environmental stresses and triggers. Download the audio to discover how we may help you with your mental health challenges."
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <Button
+                        android:id="@+id/btnContinue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/btnCreatePlaylist"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginHorizontal="@dimen/_33sdp"
+                        android:layout_marginBottom="@dimen/_30sdp"
+                        android:background="@drawable/light_green_rounded_filled"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:paddingVertical="@dimen/_2sdp"
+                        android:text="Continue"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/btnCreatePlaylist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginHorizontal="@dimen/_33sdp"
+                        android:layout_marginBottom="@dimen/_25sdp"
+                        android:background="@drawable/light_green_rounded_unfilled"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:paddingVertical="@dimen/_2sdp"
+                        android:text="Create Your Playlist"
+                        android:textColor="@color/app_theme_color" />
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

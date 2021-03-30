@@ -6,8 +6,8 @@
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:clickable="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,54 +47,45 @@
                             android:id="@+id/rlCreatePlaylist"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginTop="@dimen/_8sdp"
+                            android:background="@drawable/create_playlist_bg"
+                            android:gravity="center"
                             android:orientation="vertical"
-                            android:gravity="center_horizontal"
                             android:visibility="visible">
 
-                            <RelativeLayout
-                                android:layout_width="match_parent"
+                            <ImageView
+                                android:id="@+id/ivRestaurantImage"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
-                                android:layout_marginRight="@dimen/_9sdp">
+                                android:src="@drawable/ic_create_playlist_icon" />
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:scaleType="fitXY"
-                                    app:layout_constraintDimensionRatio="1:1"
-                                    android:src="@drawable/ic_create_playlist" />
-
-                                <ImageView
-                                    android:id="@+id/ivLock"
-                                    android:layout_width="@dimen/_24sdp"
-                                    android:layout_height="@dimen/_24sdp"
-                                    android:layout_marginStart="@dimen/_8sdp"
-                                    android:layout_marginLeft="@dimen/_8sdp"
-                                    android:layout_marginTop="@dimen/_10sdp"
-                                    android:contentDescription="TODO"
-                                    android:src="@drawable/ic_lock_icon"
-                                    android:visibility="gone"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                            </RelativeLayout>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
                                 android:fontFamily="@font/montserrat_semi_bold"
-                                android:gravity="start"
-                                android:layout_marginLeft="@dimen/_13sdp"
-                                android:layout_marginRight="@dimen/_9sdp"
+                                android:gravity="center"
                                 android:maxLines="2"
                                 android:paddingLeft="@dimen/_13sdp"
                                 android:paddingTop="@dimen/_8sdp"
                                 android:paddingRight="@dimen/_13sdp"
                                 android:paddingBottom="@dimen/_8sdp"
-                                android:text="@string/Add_playlist1"
-                                android:textColor="@color/black"
+                                android:text="Create New Playlist"
+                                android:textColor="@color/white"
                                 android:textSize="@dimen/_15sdp" />
+
+                            <ImageView
+                                android:id="@+id/ivLock"
+                                android:layout_width="@dimen/_24sdp"
+                                android:layout_height="@dimen/_24sdp"
+                                android:layout_marginStart="@dimen/_8sdp"
+                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:contentDescription="TODO"
+                                android:src="@drawable/ic_lock_icon"
+                                android:visibility="gone"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
                         </LinearLayout>
 
                     </LinearLayout>

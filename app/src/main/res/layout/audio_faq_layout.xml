@@ -7,10 +7,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginHorizontal="@dimen/_6sdp"
-        android:layout_marginVertical="@dimen/_6sdp"
-        android:background="@drawable/cardshape_background">
+        android:layout_marginVertical="@dimen/_6sdp">
 
             <LinearLayout
+                android:id="@+id/llBgChange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -21,6 +21,7 @@
                     android:layout_height="match_parent"
                     android:paddingHorizontal="@dimen/_14sdp"
                     android:paddingVertical="@dimen/_8sdp"
+                    android:background="@drawable/faq_not_clicked"
                     android:orientation="horizontal"
                     android:weightSum="1">
 
@@ -54,9 +55,8 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:visibility="visible"
-                            android:padding="@dimen/_2sdp"
-                            android:src="@drawable/ic_back_black_icon"
-                            app:tint="@color/dark_blue_gray" />
+                            android:padding="@dimen/_8sdp"
+                            android:src="@drawable/ic_right_gray_arrow_icon"/>
 
                         <ImageView
                             android:id="@+id/ivClickDown"
@@ -65,8 +65,7 @@
                             android:layout_marginRight="@dimen/_4sdp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:visibility="gone"
-                            app:tint="@color/dark_blue_gray" />
+                            android:visibility="gone" />
                     </RelativeLayout>
                 </LinearLayout>
 

@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_white"
+        android:background="@color/white"
         tools:context="com.brainwellnessspa.FaqModule.Activities.FaqActivity">
 
         <RelativeLayout
@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/cardshape_background"
+                android:background="@drawable/cardview_gray_bg"
                 android:elevation="@dimen/_110sdp"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/_14sdp"
@@ -86,9 +86,8 @@
                         android:layout_width="@dimen/_40sdp"
                         android:layout_height="@dimen/_40sdp"
                         android:layout_alignParentRight="true"
-                        android:paddingVertical="@dimen/_2sdp"
-                        android:src="@drawable/ic_back_black_icon"
-                        app:tint="@color/dark_blue_gray" />
+                        android:paddingVertical="@dimen/_8sdp"
+                        android:src="@drawable/ic_right_gray_arrow_icon"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -98,7 +97,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:background="@drawable/cardshape_background"
+                android:background="@drawable/cardview_gray_bg"
                 android:elevation="@dimen/_110sdp"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/_14sdp"
@@ -131,9 +130,8 @@
                         android:layout_width="@dimen/_40sdp"
                         android:layout_height="@dimen/_40sdp"
                         android:layout_alignParentRight="true"
-                        android:paddingVertical="@dimen/_2sdp"
-                        android:src="@drawable/ic_back_black_icon"
-                        app:tint="@color/dark_blue_gray" />
+                        android:paddingVertical="@dimen/_8sdp"
+                        android:src="@drawable/ic_right_gray_arrow_icon"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -144,7 +142,7 @@
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_20sdp"
-                android:background="@drawable/cardshape_background"
+                android:background="@drawable/cardview_gray_bg"
                 android:elevation="@dimen/_110sdp"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/_14sdp"
@@ -177,9 +175,8 @@
                         android:layout_width="@dimen/_40sdp"
                         android:layout_height="@dimen/_40sdp"
                         android:layout_alignParentRight="true"
-                        android:paddingVertical="@dimen/_2sdp"
-                        android:src="@drawable/ic_back_black_icon"
-                        app:tint="@color/dark_blue_gray" />
+                        android:paddingVertical="@dimen/_8sdp"
+                        android:src="@drawable/ic_right_gray_arrow_icon"/>
                 </RelativeLayout>
             </LinearLayout>
 

@@ -227,7 +227,7 @@
                     android:layout_marginTop="@dimen/_51sdp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="match_parent"

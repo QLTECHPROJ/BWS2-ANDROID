@@ -56,6 +56,14 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />
 
+                    <ImageView
+                        android:id="@+id/ivMore"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:src="@drawable/ic_menu_icon"
+                        app:tint="@color/white"
+                        android:visibility="gone"/>
+
                 </RelativeLayout>
 
                 <LinearLayout

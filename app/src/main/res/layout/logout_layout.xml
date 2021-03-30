@@ -56,9 +56,9 @@
             <Button
                 android:id="@+id/Btn"
                 android:layout_width="120dp"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="@dimen/_46sdp"
                 android:layout_gravity="center"
-                android:background="@drawable/ripple_bg"
+                android:background="@drawable/ripple_bg_theme"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
                 android:text="Ok"

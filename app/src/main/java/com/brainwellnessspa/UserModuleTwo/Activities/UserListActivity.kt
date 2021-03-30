@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.UserListModel
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -69,7 +70,7 @@ class UserListActivity : AppCompatActivity() {
                      edtOTP4, txtError, btnDone, tvSendOTPbool, editTexts))
              edtOTP4.setOnKeyListener(PinOnKeyListener(3, edtOTP1, edtOTP2, edtOTP3,
                      edtOTP4, txtError, btnDone, tvSendOTPbool, editTexts))*/
-            dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss()
                     return@setOnKeyListener true
@@ -104,7 +105,7 @@ class UserListActivity : AppCompatActivity() {
         }
 
         binding.btnLogIn.setOnClickListener {
-            val i = Intent(this@UserListActivity, WalkScreenActivity::class.java)
+            val i = Intent(this@UserListActivity, BottomNavigationActivity::class.java)
             startActivity(i)
         }
         binding.rvUserList.layoutManager = LinearLayoutManager(this@UserListActivity)

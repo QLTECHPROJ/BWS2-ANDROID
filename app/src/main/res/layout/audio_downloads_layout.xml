@@ -151,6 +151,7 @@
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:padding="@dimen/_9sdp"
+                app:tint="@color/app_theme_color"
                 android:src="@drawable/remove_icon" />
 
         </LinearLayout>

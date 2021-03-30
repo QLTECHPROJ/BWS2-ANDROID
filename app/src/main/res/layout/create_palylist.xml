@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_blue_gray"
+    android:background="@color/app_theme_color"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center"
@@ -58,14 +58,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_42sdp"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:background="@drawable/gray_round_cornor"
+                android:background="@drawable/white_round_cornor"
                 android:enabled="false"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingHorizontal="@dimen/_55sdp"
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="Create"
                 android:textAllCaps="true"
-                android:textColor="@color/white" />
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/tvCancel"

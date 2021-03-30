@@ -194,7 +194,6 @@ public class MembershipActivity extends AppCompatActivity {
 
                                 subscriptionAdapter = new SubscriptionAdapter(membershipPlanListModel.getResponseData().getAudioFiles(), ctx);
                                 binding.rvList.setAdapter(subscriptionAdapter);
-
                             }
                         }
                     } catch (Exception e) {

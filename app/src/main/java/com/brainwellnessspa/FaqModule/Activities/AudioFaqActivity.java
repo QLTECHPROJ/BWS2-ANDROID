@@ -12,6 +12,7 @@ import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -147,22 +148,26 @@ public class AudioFaqActivity extends AppCompatActivity {
             holder.binding.tvDesc.setText(modelList.get(position).getDesc());
             holder.binding.ivClickRight.setOnClickListener(view -> {
                 myBackPress = true;
-                holder.binding.llMainLayout.setBackgroundResource(R.color.discalimer_gray);
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.white));
                 holder.binding.tvDesc.setFocusable(true);
                 holder.binding.tvDesc.requestFocus();
                 holder.binding.tvDesc.setVisibility(View.VISIBLE);
                 holder.binding.ivClickRight.setVisibility(View.GONE);
                 holder.binding.ivClickDown.setVisibility(View.VISIBLE);
-                holder.binding.ivClickDown.setImageResource(R.drawable.ic_down_black_icon);
+                holder.binding.llBgChange.setBackgroundResource(R.drawable.faq_not_clicked);
+                holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_clicked);
+                holder.binding.ivClickDown.setImageResource(R.drawable.ic_white_arrow_down_icon);
             });
 
             holder.binding.ivClickDown.setOnClickListener(view -> {
                 myBackPress = true;
-                holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                holder.binding.llBgChange.setBackgroundResource(Color.TRANSPARENT);
+                holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_not_clicked);
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.light_black));
                 holder.binding.tvDesc.setVisibility(View.GONE);
                 holder.binding.ivClickRight.setVisibility(View.VISIBLE);
                 holder.binding.ivClickDown.setVisibility(View.GONE);
-                holder.binding.ivClickDown.setImageResource(R.drawable.ic_back_black_icon);
+                holder.binding.ivClickDown.setImageResource(R.drawable.ic_right_gray_arrow_icon);
             });
 
             if (modelList.size() == 0) {
@@ -188,6 +193,7 @@ public class AudioFaqActivity extends AppCompatActivity {
             }
         }
     }
+
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
 
         @Override

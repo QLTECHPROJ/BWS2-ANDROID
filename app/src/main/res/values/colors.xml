@@ -15,6 +15,7 @@
     <color name="light_black">#313131</color>
     <color name="dark_blue">#0468b0</color>
     <color name="light_white">#F9F9F9</color>
+    <color name="dim_light_white">#A3F9F9F9</color>
     <color name="red">#F44336</color>
     <color name="desc">#080808</color>
     <color name="blue_transparent">#CC2A3042</color>
@@ -39,5 +40,6 @@
     <color name="text_new_light_blue">#1597AA</color>
     <color name="light_blue_theme">#6C63FF</color>
     <color name="light_red_theme">#FE8D7D</color>
+    <color name="arrow_color">#E1B1B1B1</color>
     <color name="grayTheam">#B9EFEFEF</color>
 </resources>

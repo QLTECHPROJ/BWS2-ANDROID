@@ -91,6 +91,8 @@ public class CONSTANTS {
     //multipart tag for file upload
     public static final String MULTIPART_FORMAT = "multipart/form-data";
 
+    public static final String PREFE_ACCESS_SIGNIN = "SignIn";
+    public static final String PREFE_ACCESS_UserID = "UserID";
     public static final String PREF_KEY_LOGIN = "Login";
     public static final String PREF_KEY_Splash = "Splash";
     public static final String PREF_KEY_SplashKey = "SplashKey";

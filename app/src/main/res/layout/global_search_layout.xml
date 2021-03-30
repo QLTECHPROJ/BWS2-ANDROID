@@ -127,7 +127,7 @@
                     android:layout_marginTop="@dimen/_6sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
-                    android:textColor="@color/extra_light_gray"
+                    android:textColor="@color/app_theme_color"
                     android:textSize="@dimen/_14sdp" />
 
 

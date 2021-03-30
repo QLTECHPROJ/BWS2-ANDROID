@@ -316,7 +316,7 @@ public class ResourceActivity extends AppCompatActivity {
             ivFilter.setVisibility(View.INVISIBLE);
             holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.app_theme_color));
                 holder.binding.ivFiltered.setVisibility(View.VISIBLE);
                 Category = listModel.get(position).getCategoryName();
                 setAdapter();
@@ -327,10 +327,10 @@ public class ResourceActivity extends AppCompatActivity {
             if (listModel.get(position).getCategoryName().equalsIgnoreCase(Category)) {
                 ivFilter.setVisibility(View.INVISIBLE);
                 tvAll.setTextColor(getResources().getColor(R.color.black));
-                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.app_theme_color));
                 holder.binding.ivFiltered.setVisibility(View.VISIBLE);
             } else if (Category.equalsIgnoreCase("")) {
-                tvAll.setTextColor(getResources().getColor(R.color.blue));
+                tvAll.setTextColor(getResources().getColor(R.color.app_theme_color));
                 ivFilter.setVisibility(View.VISIBLE);
             }
         }

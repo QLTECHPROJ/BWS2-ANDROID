@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:id="@+id/flContainer"
         android:layout_height="match_parent"
-        android:background="@color/dark_blue_gray">
+        android:background="#3EBDCC">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,10 +54,10 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginHorizontal="@dimen/_55sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
-                android:background="@drawable/extra_round_cornor"
-                android:fontFamily="@font/montserrat_medium"
+                android:background="@drawable/white_round_cornor"
+                android:fontFamily="@font/montserrat_bold"
                 android:text="@string/New_PLaylist"
-                android:textColor="@color/white" />
+                android:textColor="@color/light_black" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -9,9 +9,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.Settings
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +31,10 @@ import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.WebView.TncActivity
 import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
 import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.installations.InstallationTokenResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,6 +47,7 @@ class CreateAccountActivity : AppCompatActivity() {
     var searchFilter: String = ""
     lateinit var ctx: Context
     lateinit var activity: Activity
+    var fcm_id: String = ""
     lateinit var searchEditText: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +77,7 @@ class CreateAccountActivity : AppCompatActivity() {
             } else if (!binding.etEmail.text.toString().isEmailValid()) {
                 binding.flUser.error = ""
                 binding.flNumber.error = ""
-                binding.flEmail.error = "Enter Valid Email"
+                binding.flEmail.error = "Valid Email address is required"
                 binding.flPassword.error = ""
             } else if (binding.etPassword.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = ""
@@ -116,14 +123,14 @@ class CreateAccountActivity : AppCompatActivity() {
             val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
             tvTitle.setText(R.string.Disclaimer)
             tvDesc.setText(R.string.Disclaimer_text)
-            dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss()
                     return@setOnKeyListener true
                 }
                 false
             }
-            tvClose.setOnClickListener { v: View? -> dialog.dismiss() }
+            tvClose.setOnClickListener { _: View? -> dialog.dismiss() }
             dialog.show()
             dialog.setCancelable(false)
         }
@@ -138,7 +145,7 @@ class CreateAccountActivity : AppCompatActivity() {
             val tvFound: TextView = dialog.findViewById(R.id.tvFound)
             val progressBar: ProgressBar = dialog.findViewById(R.id.progressBar)
             val progressBarHolder: FrameLayout = dialog.findViewById(R.id.progressBarHolder)
-            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss()
                 }
@@ -152,7 +159,7 @@ class CreateAccountActivity : AppCompatActivity() {
             val closeButton: ImageView = searchView.findViewById(R.id.search_close_btn)
             searchView.clearFocus()
 
-            closeButton.setOnClickListener { view: View? ->
+            closeButton.setOnClickListener { _: View? ->
                 searchView.clearFocus()
                 searchEditText.setText("")
                 searchView.setQuery("", false)
@@ -181,9 +188,11 @@ class CreateAccountActivity : AppCompatActivity() {
             dialog.setCancelable(false)
         }
     }
+
     fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
+
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
@@ -209,18 +218,32 @@ class CreateAccountActivity : AppCompatActivity() {
             BWSApplication.showToast(getString(R.string.no_server_found), this)
         }
     }
+
     fun SignUpUser() {
         if (BWSApplication.isNetworkConnected(this)) {
+            val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
+            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")!!
+            if (TextUtils.isEmpty(fcm_id)) {
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this, OnCompleteListener { task: Task<InstallationTokenResult> ->
+                    val newToken = task.result!!.token
+                    Log.e("newToken", newToken)
+                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+                    editor.putString(CONSTANTS.Token, newToken) //Friend
+                    editor.apply()
+                    editor.commit()
+                })
+                val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
+                fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
+            }
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<LoginModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString()
-                    ,binding.etEmail.text.toString(),binding.tvCountry.text.toString()
-                    ,binding.etNumber.text.toString(),"1",binding.etPassword.text.toString())
+            val listCall: Call<LoginModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), binding.tvCountry.text.toString(), binding.etNumber.text.toString(), "1", binding.etPassword.text.toString(),
+                    Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), fcm_id)
             listCall.enqueue(object : Callback<LoginModel> {
                 override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {
                     try {
-                        BWSApplication.hideProgressBar( binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: LoginModel = response.body()!!
-                        if(listModel.responseCode.equals("200")) {
+                        if (listModel.responseCode.equals("200")) {
                             val i = Intent(ctx, UserListActivity::class.java)
                             i.putExtra(CONSTANTS.PopUp, "0")
                             startActivity(i)
@@ -234,7 +257,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<LoginModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar( binding.progressBar, null, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, null, activity)
                 }
 
             })

@@ -72,7 +72,7 @@ public class OtpActivity extends AppCompatActivity implements
         SmsReceiver.OTPReceiveListener {
     ActivityOtpBinding binding;
     private SmsReceiver smsReceiver;
-    String Name, Code, MobileNo,fcm_id="";
+    String Name, Code, MobileNo, fcm_id = "";
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
     Activity activity;
@@ -206,7 +206,7 @@ public class OtpActivity extends AppCompatActivity implements
 
         binding.btnSendCode.setOnClickListener(view -> {
             SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
-              fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
             if (TextUtils.isEmpty(fcm_id)) {
                 FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(activity, task -> {
                     String newToken = task.getResult().getToken();
@@ -216,15 +216,6 @@ public class OtpActivity extends AppCompatActivity implements
                     editor.apply();
                     editor.commit();
                 });
-
-              /*  FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
-                    String newToken = instanceIdResult.getToken();
-                    Log.e("newToken", newToken);
-                    SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                    editor.putString(CONSTANTS.Token, newToken); //Friend
-                    editor.apply();
-                    editor.commit();
-                });*/
                 SharedPreferences sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                 fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "");
             }
@@ -264,10 +255,10 @@ public class OtpActivity extends AppCompatActivity implements
                                 try {
                                     SplashScreenActivity activity = new SplashScreenActivity();
                                     activity.setAnalytics();
-                                    String Uname ="";
-                                    if(otpModel.getResponseData().getName().equalsIgnoreCase("")){
+                                    String Uname = "";
+                                    if (otpModel.getResponseData().getName().equalsIgnoreCase("")) {
                                         Uname = "Guest";
-                                    }else{
+                                    } else {
                                         Uname = otpModel.getResponseData().getName();
                                     }
                                     analytics.identify(new Traits()
@@ -277,7 +268,7 @@ public class OtpActivity extends AppCompatActivity implements
                                             .putValue("userId", UserID)
                                             .putValue("id", UserID)
                                             .putValue("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))
-                                            .putValue("deviceType","Android")
+                                            .putValue("deviceType", "Android")
                                             .putValue("countryCode", Code)
                                             .putValue("countryName", Name)
                                             .putValue("name", Uname)
@@ -329,13 +320,13 @@ public class OtpActivity extends AppCompatActivity implements
                     public void onFailure(Call<OtpModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Properties p = new Properties();
-                        p.putValue("param",binding.edtOTP1.getText().toString() + "" +
+                        p.putValue("param", binding.edtOTP1.getText().toString() + "" +
                                 binding.edtOTP2.getText().toString() + "" +
                                 binding.edtOTP3.getText().toString() + "" +
-                                binding.edtOTP4.getText().toString()+":"+ fcm_id +":"+ CONSTANTS.FLAG_ONE+":"+
+                                binding.edtOTP4.getText().toString() + ":" + fcm_id + ":" + CONSTANTS.FLAG_ONE + ":" +
                                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)
-                                +":"+ MobileNo+":"+ CONSTANTS.FLAG_ZERO);
-                        p.putValue(" otp err",t.getMessage());
+                                + ":" + MobileNo + ":" + CONSTANTS.FLAG_ZERO);
+                        p.putValue(" otp err", t.getMessage());
                         BWSApplication.addToSegment("Error", p, CONSTANTS.screen);
                     }
                 });

@@ -3,6 +3,9 @@ package com.brainwellnessspa.Utility;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
+import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel;
+import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel;
+import com.brainwellnessspa.UserModuleTwo.Models.SignInModel;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -17,12 +20,15 @@ public interface APINewInterface {
     @POST("appversion")
     @FormUrlEncoded
     Call<VersionModel> getAppVersions(@Field("Version") String version,
-                                 @Field("AppType") String appType);
+                                      @Field("AppType") String appType);
 
     @POST("login")
     @FormUrlEncoded
-    Call<LoginModel> getLogins(@Field("Email") String email,
-                               @Field("Password") String password);
+    Call<SignInModel> getSignIn(@Field("Email") String email,
+                                @Field("Password") String password,
+                                @Field("DeviceType") String deviceType,
+                                @Field("DeviceID") String deviceID,
+                                @Field("Token") String token);
 
     @POST("signup")
     @FormUrlEncoded
@@ -31,5 +37,18 @@ public interface APINewInterface {
                                @Field("CountryCode") String countryCode,
                                @Field("MobileNo") String mobileNo,
                                @Field("DeviceType") String deviceType,
-                               @Field("Password") String password);
+                               @Field("Password") String password,
+                               @Field("DeviceID") String deviceID,
+                               @Field("Token") String token);
+
+    @POST("forgotpass")
+    @FormUrlEncoded
+    Call<ForgotPasswordModel> getForgotPassword(@Field("Email") String email);
+
+    @POST("addcouser")
+    @FormUrlEncoded
+    Call<AddUserModel> getAddUser(@Field("UserID") String userID,
+                                  @Field("UserName") String userName,
+                                  @Field("Email") String email,
+                                  @Field("MobileNo") String mobileNo);
 }

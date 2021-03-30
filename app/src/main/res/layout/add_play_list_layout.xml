@@ -19,7 +19,7 @@
                 android:id="@+id/ivRestaurantImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_music_icon"
+                android:src="@drawable/ic_playlist_add_icon"
                 android:scaleType="fitXY"/>
 
         </RelativeLayout>
