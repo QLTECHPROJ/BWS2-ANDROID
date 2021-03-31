@@ -283,6 +283,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         if (getArguments() != null) {
             ScreenView = getArguments().getString("ScreenView");
+            if(ScreenView == null){
+                ScreenView = "";
+            }
         }
 
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {

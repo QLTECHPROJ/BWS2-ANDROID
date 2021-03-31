@@ -33,6 +33,7 @@ import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MyBatteryReceiver;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 import com.segment.analytics.Properties;
@@ -59,6 +60,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
     UiModeManager uiModeManager;
     MyNetworkReceiver myNetworkReceiver;
+    MyBatteryReceiver myBatteryReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,6 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
         }
-
         uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
         if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
                 || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
@@ -83,6 +84,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
         }
+        registerReceiver(myBatteryReceiver = new MyBatteryReceiver(),new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         registerReceiver(myNetworkReceiver = new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

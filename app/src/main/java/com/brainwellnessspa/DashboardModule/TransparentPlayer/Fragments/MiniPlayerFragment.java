@@ -596,11 +596,12 @@ public class MiniPlayerFragment extends Fragment {
                                             p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
                                         }
                                         p.putValue("audioCount", TotalAudio);
-                                        p.putValue("source", ScreenView);
+                                        p.putValue("source", GetSourceName(ctx));
                                         p.putValue("playerType", "Mini");
                                         p.putValue("audioService", APP_SERVICE_STATUS);
                                         p.putValue("sound", String.valueOf(hundredVolume));
                                         BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
+
 
                                         Log.e("Last audio End", mainPlayModelList.get(position).getName());
                                     } else {
