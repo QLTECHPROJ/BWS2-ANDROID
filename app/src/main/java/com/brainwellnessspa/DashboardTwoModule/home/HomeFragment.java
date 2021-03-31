@@ -1,7 +1,9 @@
 package com.brainwellnessspa.DashboardTwoModule.home;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,12 +26,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.LoginModule.Activities.CountrySelectActivity;
+import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.ManageModule.ManageActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 import com.brainwellnessspa.ReminderModule.Models.RemiderDetailsModel;
+import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
 import com.brainwellnessspa.UserModuleTwo.Models.UserListModel;
+import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentHomeBinding;
 import com.brainwellnessspa.databinding.MultipleProfileChangeLayoutBinding;
 import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding;
@@ -39,11 +48,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class HomeFragment extends Fragment {
     FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
     UserListAdapter adapter;
+    String USERID;
     ArrayList<UserListModel> userList = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,6 +66,9 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         View view = binding.getRoot();
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, Context.MODE_PRIVATE);
+        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
+
         homeViewModel.getText().observe(getViewLifecycleOwner(), s -> {
 //                textView.setText(s);
         });
@@ -68,9 +85,7 @@ public class HomeFragment extends Fragment {
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             layoutBinding.rvUserList.setLayoutManager(mLayoutManager);
             layoutBinding.rvUserList.setItemAnimator(new DefaultItemAnimator());
-            adapter = new UserListAdapter(userList);
-            layoutBinding.rvUserList.setAdapter(adapter);
-            prepareUserData();
+            prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar);
         });
 
 
@@ -137,19 +152,40 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    public void prepareUserData() {
-        UserListModel userAdd = new UserListModel("Jhon Smith");
-        userList.add(userAdd);
-        userAdd = new UserListModel("Jhon Smith");
-        userList.add(userAdd);
+    public void prepareUserData(RecyclerView rvUserList, ProgressBar progressBar) {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.invalidate();
+            Call<AddedUserListModel> listCall = APINewClient.getClient().getUserList(USERID);
+            listCall.enqueue(new Callback<AddedUserListModel>() {
+                @Override
+                public void onResponse(Call<AddedUserListModel> call, Response<AddedUserListModel> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            progressBar.setVisibility(View.GONE);
+                            AddedUserListModel listModel = response.body();
+                            if (listModel != null) {
+                                adapter = new UserListAdapter(listModel.getResponseData());
+                            }
+                            rvUserList.setAdapter(adapter);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-//        adapter.notifyDataSetChanged();
+                @Override
+                public void onFailure(Call<AddedUserListModel> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> {
-        private List<UserListModel> model;
+        private List<AddedUserListModel.ResponseData> model;
 
-        public UserListAdapter(List<UserListModel> model) {
+        public UserListAdapter(List<AddedUserListModel.ResponseData> model) {
             this.model = model;
         }
 

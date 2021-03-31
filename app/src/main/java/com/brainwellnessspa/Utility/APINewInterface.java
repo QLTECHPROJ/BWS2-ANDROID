@@ -4,8 +4,10 @@ import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel;
+import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel;
 import com.brainwellnessspa.UserModuleTwo.Models.SignInModel;
+import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -51,4 +53,13 @@ public interface APINewInterface {
                                   @Field("UserName") String userName,
                                   @Field("Email") String email,
                                   @Field("MobileNo") String mobileNo);
+
+    @POST("verifypin")
+    @FormUrlEncoded
+    Call<VerifyPinModel> getVerifyPin(@Field("UserID") String userID,
+                                      @Field("Pin") String pin);
+
+    @POST("userlist")
+    @FormUrlEncoded
+    Call<AddedUserListModel> getUserList(@Field("UserID") String userID);
 }

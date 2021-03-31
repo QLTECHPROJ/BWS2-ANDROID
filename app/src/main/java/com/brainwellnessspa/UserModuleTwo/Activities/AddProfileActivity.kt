@@ -141,7 +141,6 @@ class AddProfileActivity : AppCompatActivity() {
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), this)
                 }
-
             }
         }
     }
