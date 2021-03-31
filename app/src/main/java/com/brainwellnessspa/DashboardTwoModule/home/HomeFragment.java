@@ -75,8 +75,6 @@ public class HomeFragment extends Fragment {
 
 
         binding.llClick.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), ManageActivity.class);
-            startActivity(i);
 //            TODO Mansi Dialog Hint This code is Audio Detail
            /* final Dialog dialog = new Dialog(getActivity());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
