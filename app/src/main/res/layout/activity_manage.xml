@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -253,14 +253,14 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tvPaymentPlan"
+                        android:id="@+id/tvManagePaymentPlan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_12sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="Payment plan"
+                        android:text="Manage Payment plan"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp" />
 
@@ -269,17 +269,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_30sdp"
-                        android:paddingLeft="@dimen/_16sdp"
-                        android:paddingVertical="@dimen/_30sdp"
-                        android:weightSum="1"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:background="@drawable/light_gray_round_cornors"
                         android:orientation="horizontal"
-                        android:background="@drawable/light_gray_round_cornors">
+                        android:paddingVertical="@dimen/_30sdp"
+                        android:paddingLeft="@dimen/_16sdp"
+                        android:weightSum="1">
 
                         <LinearLayout
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
+                            android:layout_weight="0.75"
                             android:orientation="vertical">
 
                             <TextView
@@ -307,11 +307,12 @@
                         <TextView
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.2"
-                            android:fontFamily="@font/montserrat_bold"
                             android:layout_gravity="center"
-                            android:text="$9.99"
+                            android:layout_weight="0.25"
+                            android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
+                            android:text="$9.99"
+                            android:layout_marginRight="@dimen/_14sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_18sdp" />
 
@@ -321,17 +322,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_30sdp"
-                        android:paddingLeft="@dimen/_16sdp"
-                        android:paddingVertical="@dimen/_30sdp"
-                        android:weightSum="1"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:background="@drawable/light_gray_round_cornors"
                         android:orientation="horizontal"
-                        android:background="@drawable/light_gray_round_cornors">
+                        android:paddingVertical="@dimen/_30sdp"
+                        android:paddingLeft="@dimen/_16sdp"
+                        android:weightSum="1">
 
                         <LinearLayout
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
+                            android:layout_weight="0.75"
                             android:orientation="vertical">
 
                             <TextView
@@ -359,11 +360,12 @@
                         <TextView
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.2"
-                            android:fontFamily="@font/montserrat_bold"
                             android:layout_gravity="center"
-                            android:text="$29.99"
+                            android:layout_weight="0.25"
+                            android:layout_marginRight="@dimen/_14sdp"
+                            android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
+                            android:text="$29.99"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_18sdp" />
 
@@ -373,23 +375,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_30sdp">
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:layout_marginRight="@dimen/_10sdp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/_16sdp"
                             android:layout_marginRight="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_30sdp"
-                            android:weightSum="1"
+                            android:background="@drawable/light_gray_round_cornors"
                             android:orientation="horizontal"
-                            android:background="@drawable/light_gray_round_cornors">
+                            android:paddingVertical="@dimen/_30sdp"
+                            android:paddingLeft="@dimen/_16sdp"
+                            android:weightSum="1">
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.8"
+                                android:layout_weight="0.75"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -417,11 +419,12 @@
                             <TextView
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.2"
-                                android:fontFamily="@font/montserrat_bold"
                                 android:layout_gravity="center"
-                                android:text="$149.99"
+                                android:layout_weight="0.25"
+                                android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
+                                android:layout_marginRight="@dimen/_14sdp"
+                                android:text="$149.99"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_18sdp" />
 
@@ -438,15 +441,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
                                 android:scaleType="fitXY"
-                                android:src="@drawable/ic_popular_tag_icon"/>
+                                android:src="@drawable/ic_popular_tag_icon" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="@dimen/_6sdp"
                                 android:fontFamily="@font/montserrat_medium"
-                                android:layout_centerInParent="true"
                                 android:text="Most Popular"
-                                android:layout_marginBottom="@dimen/_8sdp"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_8sdp" />
 
@@ -457,17 +460,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_30sdp"
-                        android:paddingLeft="@dimen/_16sdp"
-                        android:paddingVertical="@dimen/_30sdp"
-                        android:weightSum="1"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:background="@drawable/light_gray_round_cornors"
                         android:orientation="horizontal"
-                        android:background="@drawable/light_gray_round_cornors">
+                        android:paddingVertical="@dimen/_30sdp"
+                        android:paddingLeft="@dimen/_16sdp"
+                        android:weightSum="1">
 
                         <LinearLayout
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
+                            android:layout_weight="0.75"
                             android:orientation="vertical">
 
                             <TextView
@@ -495,11 +498,12 @@
                         <TextView
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.2"
-                            android:fontFamily="@font/montserrat_bold"
                             android:layout_gravity="center"
-                            android:text="$249.99"
+                            android:layout_weight="0.25"
+                            android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
+                            android:text="$249.99"
+                            android:layout_marginRight="@dimen/_14sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_18sdp" />
 
@@ -510,38 +514,44 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_30sdp">
 
-                        <Button
-                            android:id="@+id/btnFreeJoin"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_marginTop="@dimen/_20sdp"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/light_green_rounded_filled"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:paddingHorizontal="@dimen/_55sdp"
-                            android:paddingVertical="@dimen/_4sdp"
-                            android:text="START AT $9.99 / Week"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_13sdp"
-                            android:visibility="visible" />
+                            android:layout_centerInParent="true">
+
+                            <Button
+                                android:id="@+id/btnFreeJoin"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/light_green_rounded_filled"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:paddingHorizontal="@dimen/_55sdp"
+                                android:paddingVertical="@dimen/_4sdp"
+                                android:text="START AT $9.99 / Week"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_13sdp"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/ic_red_rounded_icon"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/ic_red_rounded_icon" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/montserrat_medium"
                                 android:layout_centerInParent="true"
+                                android:fontFamily="@font/montserrat_medium"
                                 android:text="TRY 14 DAYS FOR FREE"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_8sdp" />
@@ -549,6 +559,186 @@
                         </RelativeLayout>
                     </RelativeLayout>
 
+                    <TextView
+                        android:id="@+id/tvPaymentPlan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:text="Payment plan"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:background="@drawable/account_gray_bg"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingVertical="@dimen/_30sdp"
+                            android:paddingLeft="@dimen/_16sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.75"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:text="Weekly"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_14sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:lineSpacingExtra="@dimen/_4sdp"
+                                    android:text="Lorem ipsum dolor sit"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_12sdp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.25"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="center"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:text="$99.99"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_18sdp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1.5dp"
+                            android:background="@color/dim_light_gray" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingVertical="@dimen/_30sdp"
+                            android:paddingLeft="@dimen/_16sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.75"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:text="Monthly"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_14sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:lineSpacingExtra="@dimen/_4sdp"
+                                    android:text="Lorem ipsum dolor sit"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_12sdp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.25"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="center"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:text="$299.99"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_18sdp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1.5dp"
+                            android:background="@color/dim_light_gray" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingVertical="@dimen/_30sdp"
+                            android:paddingLeft="@dimen/_16sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.75"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:text="One-Time"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_14sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:lineSpacingExtra="@dimen/_4sdp"
+                                    android:text="Lorem ipsum dolor sit"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_12sdp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.25"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="center"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:text="$999.99"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_18sdp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
                     <TextView
                         android:id="@+id/tvTag"
                         android:layout_width="match_parent"
