@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
 
@@ -249,7 +249,7 @@ public class DownloadMedia implements OnDownloadListener {
                         p.putValue("subCategory", Myaudiolist.get(0).getAudioSubCategory());
                         p.putValue("audioDuration", Myaudiolist.get(0).getAudioDuration());*/
                     p.putValue("playerType", PlayerStatus);
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(ctx));
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("source", "Downloaded Audios");
                     p.putValue("bitRate", "");
@@ -280,7 +280,7 @@ public class DownloadMedia implements OnDownloadListener {
                             p.putValue("audioCount", TotalAudio);*/
                             p.putValue("playerType", PlayerStatus);
                             p.putValue("source", "Downloaded Playlists");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("sound", GetDeviceVolume(ctx));
                             BWSApplication.addToSegment("Playlist Download Completed", p, CONSTANTS.track);
                         }
@@ -308,7 +308,7 @@ public class DownloadMedia implements OnDownloadListener {
                             p.putValue("audioCount", TotalAudio);*/
                             p.putValue("playerType", PlayerStatus);
                             p.putValue("source", "Downloaded Playlists");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("sound", GetDeviceVolume(ctx));
                             BWSApplication.addToSegment("Playlist Download Completed", p, CONSTANTS.track);
                         }

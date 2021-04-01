@@ -15,6 +15,9 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +46,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
+import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
@@ -50,6 +54,7 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
@@ -98,7 +103,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.BatteryStatus;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
@@ -109,7 +116,6 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
@@ -231,6 +237,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 , R.layout.audio_player_custom_layout, binding.playerControlView, false);
         binding.playerControlView.addView(exoBinding.getRoot());
         PlayerStatus = "Main";
+
         handler1 = new Handler();
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
@@ -263,7 +270,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             p.putValue("audioType", "");
             p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Notification Player");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(ctx));
             p.putValue("bitRate", "");
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Notification Player Clicked", p, CONSTANTS.track);
@@ -749,7 +756,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
 
     @Override
     public void onResume() {
-        APP_SERVICE_STATUS = getString(R.string.Foreground);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
@@ -1015,10 +1021,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 globalInitExoPlayer.GlobleInItPlayer(ctx, position, downloadAudioDetailsList, mainPlayModelList, "Main");
                 setPlayerCtrView();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try{
+        try {
             if (player != null) {
                 player.setWakeMode(C.WAKE_MODE_NONE);
                 player.setHandleWakeLock(true);
@@ -1079,7 +1085,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         }
                         p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
+                        p.putValue("audioService", appStatus(ctx));
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
@@ -1153,7 +1159,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                             }
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Main");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Completed", p, CONSTANTS.track);
@@ -1190,7 +1196,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                             }
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Main");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);
@@ -1213,7 +1219,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                 }
                                 p.putValue("source", GetSourceName(ctx));
                                 p.putValue("playerType", "Main");
-                                p.putValue("audioService", APP_SERVICE_STATUS);
+                                p.putValue("audioService", appStatus(ctx));
                                 p.putValue("bitRate", "");
                                 p.putValue("sound", String.valueOf(hundredVolume));
                                 BWSApplication.addToSegment("Audio Completed", p, CONSTANTS.track);
@@ -1241,7 +1247,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                     }
                                     p.putValue("source", GetSourceName(ctx));
                                     p.putValue("playerType", "Main");
-                                    p.putValue("audioService", APP_SERVICE_STATUS);
+                                    p.putValue("audioService", appStatus(ctx));
                                     p.putValue("bitRate", "");
                                     p.putValue("sound", String.valueOf(hundredVolume));
                                     String source = GetSourceName(ctx);
@@ -1280,7 +1286,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                         p.putValue("audioCount", TotalAudio);
                                         p.putValue("source", ScreenView);
                                         p.putValue("playerType", "Mini");
-                                        p.putValue("audioService", APP_SERVICE_STATUS);
+                                        p.putValue("audioService", appStatus(ctx));
                                         p.putValue("sound", String.valueOf(hundredVolume));
                                         BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
 
@@ -1314,14 +1320,17 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                         p.putValue("position", GetCurrentAudioPosition());
+                        String AudioType = "";
                         if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
                             p.putValue("audioType", "Downloaded");
+                            AudioType = "Downloaded";
                         } else {
                             p.putValue("audioType", "Streaming");
+                            AudioType = "Streaming";
                         }
                         p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
+                        p.putValue("audioService", appStatus(ctx));
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
@@ -1342,6 +1351,52 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         }
                         AudioInterrupted = true;
                         BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
+                        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                        //should check null because in airplane mode it will be null
+                        NetworkCapabilities nc;
+                        float downSpeed = 0;
+                        int batLevel = 0;
+                        float upSpeed = 0;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                            downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
+                            upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+                        }
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                            BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
+                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+                        }
+                        try {
+                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                Call<AudioInterruptionModel> listCall = APIClient.getClient().getAudioInterruption(UserID,
+                                        mainPlayModelList.get(position).getID(), mainPlayModelList.get(position).getName(),
+                                        "", mainPlayModelList.get(position).getAudioDirection()
+                                        , mainPlayModelList.get(position).getAudiomastercat(),
+                                        mainPlayModelList.get(position).getAudioSubCategory(),
+                                        mainPlayModelList.get(position).getAudioDuration()
+                                        , "", AudioType, "Mini", String.valueOf(hundredVolume)
+                                        , appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "",
+                                        "", batLevel, BatteryStatus, downSpeed,
+                                        upSpeed);
+                                listCall.enqueue(new Callback<AudioInterruptionModel>() {
+                                    @Override
+                                    public void onResponse(Call<AudioInterruptionModel> call, Response<AudioInterruptionModel> response) {
+                                        AudioInterruptionModel listModel = response.body();
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<AudioInterruptionModel> call, Throwable t) {
+                                    }
+                                });
+
+                            } else {
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 });
 
@@ -1379,7 +1434,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         }
                         p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
+                        p.putValue("audioService", appStatus(ctx));
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Audio Seek Started", p, CONSTANTS.track);
@@ -1425,7 +1480,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         }
                         p.putValue("source", GetSourceName(ctx));
                         p.putValue("playerType", "Main");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
+                        p.putValue("audioService", appStatus(ctx));
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Audio Seek Completed", p, CONSTANTS.track);
@@ -1509,7 +1564,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                 p.putValue("audioType", "Streaming");
                             }
                             p.putValue("bitRate", "");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Disclaimer Completed", p, CONSTANTS.track);
                         }
@@ -1525,7 +1580,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                 p.putValue("audioType", "Streaming");
                             }
                             p.putValue("bitRate", "");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Disclaimer Started", p, CONSTANTS.track);
                             try {
@@ -1544,7 +1599,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                         p.putValue("audioType", "Streaming");
                                     }
                                     p.putValue("bitRate", "");
-                                    p.putValue("audioService", APP_SERVICE_STATUS);
+                                    p.putValue("audioService", appStatus(ctx));
                                     p.putValue("sound", String.valueOf(hundredVolume));
                                     BWSApplication.addToSegment("Disclaimer Playing", p, CONSTANTS.track);
                                 } else if (!player.getPlayWhenReady()) {
@@ -1636,7 +1691,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     }
                     p.putValue("bitRate", "");
                     p.putValue("sound", String.valueOf(hundredVolume));
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(ctx));
                     BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
                 }
             });
@@ -1692,7 +1747,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
         }
         p.putValue("source", GetSourceName(ctx));
         p.putValue("playerType", "Main");
-        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("audioService", appStatus(ctx));
         p.putValue("bitRate", "");
         p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);
@@ -1736,7 +1791,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     }
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Main");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(ctx));
                     p.putValue("bitRate", "");
                     p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Audio Paused", p, CONSTANTS.track);
@@ -1841,7 +1896,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                             }
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Main");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Next Clicked", p, CONSTANTS.track);
@@ -1885,7 +1940,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                             }
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Main");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(ctx));
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Previous Clicked", p, CONSTANTS.track);
@@ -2059,7 +2114,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(ctx));
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Audio Repeated Once", p, CONSTANTS.track);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
@@ -2100,7 +2155,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(ctx));
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("All Audio Repeated", p, CONSTANTS.track);
         } else if (IsRepeat.equalsIgnoreCase("1")) {
@@ -2137,7 +2192,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("bitRate", "");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(ctx));
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Audio Repeated Off", p, CONSTANTS.track);
         }
@@ -2320,7 +2375,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Main");
             p.putValue("bitRate", "");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(ctx));
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track);
             // }
@@ -2541,7 +2596,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     }
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Main");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(ctx));
                     p.putValue("bitRate", "");
                     p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
@@ -2561,7 +2616,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         p.putValue("audioType", "Streaming");
                     }
                     p.putValue("bitRate", "");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(ctx));
                     p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
                 }
@@ -3430,7 +3485,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
                 stackStatus = 1;
-                APP_SERVICE_STATUS = getString(R.string.Foreground);
                 Log.e("APPLICATION", "APP IN FOREGROUND");
                 //app went to foreground
             }
@@ -3460,7 +3514,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
                 }
-                APP_SERVICE_STATUS = getString(R.string.Background);
                 Log.e("APPLICATION", "App is in BACKGROUND");
                 // app went to background
             }

@@ -71,9 +71,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.RefreshIconData;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.hundredVolume;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -576,7 +576,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         p.putValue("audioCount", downloadPlaylistDetails.getTotalAudio());
         p.putValue("source", "Downloaded Playlists");
         p.putValue("playerType", "Mini");
-        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("audioService", appStatus(ctx));
         p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
         for (int i = 0; i < playlistSongs.size(); i++) {

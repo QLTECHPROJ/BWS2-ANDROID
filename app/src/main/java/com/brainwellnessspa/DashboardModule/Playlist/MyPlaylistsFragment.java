@@ -102,6 +102,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
@@ -125,7 +126,6 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
 import static com.brainwellnessspa.ReminderModule.Activities.ReminderActivity.ComeScreenRemiderPlaylist;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -1571,7 +1571,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         p.putValue("audioCount", downloadPlaylistDetails.getTotalAudio());
         p.putValue("source", "Downloaded Playlists");
         p.putValue("playerType", "Mini");
-        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("audioService", appStatus(getActivity()));
         p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track);
         for (int i = 0; i < playlistSongs.size(); i++) {
@@ -1878,7 +1878,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             p.putValue("audioCount", TotalAudio);
             p.putValue("source", ScreenView);
             p.putValue("playerType", "Mini");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(getActivity()));
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
         } catch (Exception e) {
@@ -2004,7 +2004,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             p.putValue("audioCount", TotalAudio);
             p.putValue("source", "Your Created");
             p.putValue("playerType", "Mini");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(getActivity()));
             p.putValue("sound", String.valueOf(hundredVolume));
             p.putValue("audioId", listModelList.get(toPosition).getID());
             p.putValue("audioName", listModelList.get(toPosition).getName());

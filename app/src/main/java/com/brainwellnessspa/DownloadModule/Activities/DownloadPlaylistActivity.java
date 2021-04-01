@@ -74,6 +74,7 @@ import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
@@ -84,7 +85,6 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.M
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
@@ -588,7 +588,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         p.putValue("audioCount", TotalAudio);
         p.putValue("source", "Downloaded Playlists");
         p.putValue("playerType", "Mini");
-        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("audioService", appStatus(ctx));
         p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
     }
