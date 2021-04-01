@@ -2,6 +2,7 @@ package com.brainwellnessspa.ManageModule
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.UserListModel
 import com.brainwellnessspa.databinding.*
+import com.google.android.flexbox.*
 
 
 class RecommendedCategoryActivity : AppCompatActivity() {
@@ -78,15 +80,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         private fun prepareCatData() {
             var userAdd = UserListModel("Parental Stress")
             userList2.add(userAdd)
-            userAdd = UserListModel("Motivation / Empowernment / Mindset")
+            userAdd = UserListModel("Alcohol Addiction")
             userList2.add(userAdd)
-            userAdd = UserListModel("Communication / Self Epression / Public Speaking")
+            userAdd = UserListModel("Money Stress")
             userList2.add(userAdd)
-            userAdd = UserListModel("Relationship Breakdown")
-            userList2.add(userAdd)
-            userAdd = UserListModel("Study and Eam Stress")
-            userList2.add(userAdd)
-            userAdd = UserListModel("Parental Stress")
+            userAdd = UserListModel("Eating Disorder")
             userList2.add(userAdd)
             userAdd = UserListModel("Motivation / Empowernment / Mindset")
             userList2.add(userAdd)
@@ -97,6 +95,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             userAdd = UserListModel("Study and Eam Stress")
             userList2.add(userAdd)
             userAdd = UserListModel("Parental Stress")
+            userList2.add(userAdd)
+            userAdd = UserListModel("Motivation / Empowernment / Mindset")
+            userList2.add(userAdd)
+            userAdd = UserListModel("Communication / Self Epression / Public Speaking")
+            userList2.add(userAdd)
+            userAdd = UserListModel("Relationship Breakdown")
+            userList2.add(userAdd)
+            userAdd = UserListModel("Study and Eam Stress")
             userList2.add(userAdd)
         }
 
@@ -111,7 +117,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             holder.bindingAdapter.tvHeader.text = listModel[position].name
 
             prepareCatData()
-            holder.bindingAdapter.rvChildCategory.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+            val layoutManager = FlexboxLayoutManager(ctx)
+            layoutManager.flexWrap = FlexWrap.WRAP
+            layoutManager.alignItems = AlignItems.STRETCH
+            layoutManager.flexDirection = FlexDirection.ROW
+            layoutManager.justifyContent = JustifyContent.FLEX_START
+            holder.bindingAdapter.rvChildCategory.layoutManager = layoutManager
             adapter2 = ChildCategory(userList2)
             holder.bindingAdapter.rvChildCategory.adapter = adapter2
         }

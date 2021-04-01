@@ -27,8 +27,6 @@
             android:nestedScrollingEnabled="true"
             android:orientation="horizontal"
             android:overScrollMode="never"
-            app:spanCount="3"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             tools:listitem="@layout/all_cat_data_raw" />
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Utility;
 
+import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
@@ -52,7 +53,10 @@ public interface APINewInterface {
     Call<AddUserModel> getAddUser(@Field("UserID") String userID,
                                   @Field("UserName") String userName,
                                   @Field("Email") String email,
-                                  @Field("MobileNo") String mobileNo);
+                                  @Field("MobileNo") String mobileNo);;
+
+    @GET("assesmentquestionlist")
+    Call<AssessmentQusModel> getAssessmentQus();
 
     @POST("verifypin")
     @FormUrlEncoded

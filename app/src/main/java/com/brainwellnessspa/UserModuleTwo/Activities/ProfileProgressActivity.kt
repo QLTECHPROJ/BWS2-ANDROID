@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.DassAssSliderTwo.AssProcessActivity
+import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityProfileProgressBinding

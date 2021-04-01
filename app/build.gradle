@@ -80,6 +80,7 @@ dependencies {
 // def work_version = "2.4.0"
 // TODO  Default Dependency
     implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.google.android:flexbox:2.0.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'

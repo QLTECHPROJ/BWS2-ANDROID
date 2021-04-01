@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tvSecond"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rvFirstList"
+        android:fontFamily="@font/montserrat_bold"
+        android:gravity="start"
+        android:text="I found it hard to wind down."
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSecondList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSecond"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal"
+        app:spanCount="3"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/form_fill_layout" />
+</LinearLayout>
+</layout>

@@ -176,7 +176,7 @@ public class BWSApplication extends Application {
         }
         properties.putValue("deviceSpace", mySpace + " MB");
         properties.putValue("batteryLevel", batLevel +" %");
-        properties.putValue("batteryStatus", BatteryStatus);
+        properties.putValue("batteryState", BatteryStatus);
         properties.putValue("internetDownSpeed", downSpeed + " Mbps");
         properties.putValue("internetUpSpeed", upSpeed + " Mbps");
         try {
