@@ -133,6 +133,7 @@
                             android:text="AU"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp" />
+
                         <TextView
                             android:id="@+id/tvCountry"
                             android:layout_width="wrap_content"

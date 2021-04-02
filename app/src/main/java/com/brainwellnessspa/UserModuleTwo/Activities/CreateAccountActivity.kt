@@ -25,7 +25,6 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.LoginModule.Models.CountryListModel
 import com.brainwellnessspa.LoginModule.Models.LoginModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.APIClient
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.WebView.TncActivity
@@ -58,6 +57,7 @@ class CreateAccountActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             finish()
         }
+
         binding.btnCreateAc.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = "Name is required"
@@ -236,7 +236,11 @@ class CreateAccountActivity : AppCompatActivity() {
                 fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<LoginModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), binding.tvCountry.text.toString(), binding.etNumber.text.toString(), "1", binding.etPassword.text.toString(),
+
+            val countryCode: String = binding.tvCountry.getText().toString().replace("+", "")
+            Log.e("countryCode", countryCode);
+            BWSApplication.showToast(binding.tvCountry.getText().toString(), ctx)
+            val listCall: Call<LoginModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), countryCode, binding.etNumber.text.toString(), "1", binding.etPassword.text.toString(),
                     Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), fcm_id)
             listCall.enqueue(object : Callback<LoginModel> {
                 override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {

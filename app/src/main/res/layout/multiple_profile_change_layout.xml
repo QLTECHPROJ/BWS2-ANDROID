@@ -86,8 +86,7 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_checked_to_icon" />
+                    android:layout_centerVertical="true" />
 
             </RelativeLayout>
         </LinearLayout>

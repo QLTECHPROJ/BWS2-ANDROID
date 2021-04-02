@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.ViewGroup
@@ -71,9 +72,9 @@ class AddProfileActivity : AppCompatActivity() {
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, MODE_PRIVATE)
         UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         binding.llBack.setOnClickListener {
-            val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
+          /*  val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
             i.putExtra(CONSTANTS.PopUp, "0")
-            startActivity(i)
+            startActivity(i)*/
             finish()
         }
         val measureRatio = BWSApplication.measureRatio(this, 0f, 1f, 1f, 0.32f, 0f)
@@ -108,6 +109,10 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.flUser.error = ""
                 binding.flMobileNumber.error = ""
                 binding.flEmail.error = "Email address is required"
+            } else if (!binding.etEmail.text.toString().isEmailValid()) {
+                binding.flUser.error = ""
+                binding.flMobileNumber.error = ""
+                binding.flEmail.error = "Valid Email address is required"
             } else {
                 if (BWSApplication.isNetworkConnected(this)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@AddProfileActivity)
@@ -145,11 +150,14 @@ class AddProfileActivity : AppCompatActivity() {
         }
     }
 
+    fun String.isEmailValid(): Boolean {
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
+    }
+
     override fun onBackPressed() {
-        val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
+       /* val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
         i.putExtra(CONSTANTS.PopUp, "0")
-        startActivity(i)
+        startActivity(i)*/
         finish()
-        super.onBackPressed()
     }
 }

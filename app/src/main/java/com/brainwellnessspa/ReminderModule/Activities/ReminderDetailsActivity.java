@@ -544,7 +544,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
 
-
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 

@@ -13,9 +13,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,79 +51,7 @@ open class UserListActivity : AppCompatActivity() {
         }
 
         if (PopUp.equals("1", ignoreCase = true)) {
-            dialog = Dialog(this)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.comfirm_pin_layout)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-            val btnDone: Button = dialog.findViewById(R.id.btnDone)
-            val txtError: TextView = dialog.findViewById(R.id.txtError)
-            val edtOTP1: EditText = dialog.findViewById(R.id.edtOTP1)
-            val edtOTP2: EditText = dialog.findViewById(R.id.edtOTP2)
-            val edtOTP3: EditText = dialog.findViewById(R.id.edtOTP3)
-            val edtOTP4: EditText = dialog.findViewById(R.id.edtOTP4)
-
-            editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-            edtOTP1.addTextChangedListener(PinTextWatcher(this, 0, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-            edtOTP2.addTextChangedListener(PinTextWatcher(this, 1, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-            edtOTP3.addTextChangedListener(PinTextWatcher(this, 2, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-            edtOTP4.addTextChangedListener(PinTextWatcher(this, 3, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-            edtOTP1.setOnKeyListener(PinOnKeyListener(0, editTexts))
-            edtOTP2.setOnKeyListener(PinOnKeyListener(1, editTexts))
-            edtOTP3.setOnKeyListener(PinOnKeyListener(2, editTexts))
-            edtOTP4.setOnKeyListener(PinOnKeyListener(3, editTexts))
-            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss()
-                    return@setOnKeyListener true
-                }
-                false
-            }
-            btnDone.setOnClickListener {
-                if (edtOTP1.text.toString().equals("", ignoreCase = true)
-                        && edtOTP2.text.toString().equals("", ignoreCase = true)
-                        && edtOTP3.text.toString().equals("", ignoreCase = true)
-                        && edtOTP4.text.toString().equals("", ignoreCase = true)) {
-                    txtError.text = "Please enter OTP"
-                } else {
-                    if (BWSApplication.isNetworkConnected(this)) {
-                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@UserListActivity)
-                        val listCall: Call<VerifyPinModel> = APINewClient.getClient().getVerifyPin(USERID, edtOTP1.getText().toString().toString() + "" +
-                                edtOTP2.getText().toString() + "" +
-                                edtOTP3.getText().toString() + "" +
-                                edtOTP4.getText().toString())
-                        listCall.enqueue(object : Callback<VerifyPinModel> {
-                            override fun onResponse(call: Call<VerifyPinModel>, response: Response<VerifyPinModel>) {
-                                try {
-                                    txtError.error = ""
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@UserListActivity)
-                                    val listModel: VerifyPinModel = response.body()!!
-                                    if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                        val i = Intent(this@UserListActivity, WalkScreenActivity::class.java)
-                                        startActivity(i)
-                                        dialog.dismiss()
-                                        BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
-                                    } else {
-                                        txtError.error = listModel.getResponseMessage()
-                                    }
-
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
-
-                            override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@UserListActivity)
-                            }
-                        })
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), this)
-                    }
-                }
-            }
-            dialog.show()
-            dialog.setCancelable(false)
         } else {
 
         }
@@ -145,7 +71,7 @@ open class UserListActivity : AppCompatActivity() {
         }
         binding.rvUserList.layoutManager = LinearLayoutManager(this@UserListActivity)
 
-        prepareUserData();
+        prepareUserData()
     }
 
     private fun prepareUserData() {
@@ -158,7 +84,7 @@ open class UserListActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@UserListActivity)
                         val listModel: AddedUserListModel = response.body()!!
                         if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            adapter = UserListAdapter(listModel.getResponseData()!!)
+                            adapter = UserListAdapter(listModel.getResponseData()!!, this@UserListActivity, dialog, editTexts, tvSendOTPbool, binding.progressBar, binding.progressBarHolder, binding.tvForgotPin)
                             binding.rvUserList.adapter = adapter
                             BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                         } else {
@@ -184,21 +110,194 @@ open class UserListActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    class UserListAdapter(listModel: List<AddedUserListModel.ResponseData>) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
-        private val listModel: List<AddedUserListModel.ResponseData> = listModel
+    class UserListAdapter(private val listModel: List<AddedUserListModel.ResponseData>, private var activity: Activity, private var dialog: Dialog, var editTexts: Array<EditText>,
+                          var tvSendOTPbool: Boolean = true, var progressBar: ProgressBar, var progressBarHolder: FrameLayout, var tvForgotPin: TextView) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
 
-        inner class MyViewHolder(bindingAdapter: UserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
-            var bindingAdapter: UserListLayoutBinding = bindingAdapter
+        var clickabled: Boolean = false
 
-        }
+        inner class MyViewHolder(var bindingAdapter: UserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: UserListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.user_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
+        //        ic_checked_to_icon
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvName.text = listModel.get(position).name
+
+            holder.bindingAdapter.ivCheck.setImageResource(R.drawable.ic_checked_icon)
+            if (clickabled) {
+                holder.bindingAdapter.ivCheck.visibility = View.VISIBLE
+            } else {
+                holder.bindingAdapter.ivCheck.visibility = View.INVISIBLE
+            }
+            holder.bindingAdapter.rlCheckedUser.setOnClickListener { view ->
+                dialog = Dialog(activity)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.comfirm_pin_layout)
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+                val btnDone: Button = dialog.findViewById(R.id.btnDone)
+                val txtError: TextView = dialog.findViewById(R.id.txtError)
+                val edtOTP1: EditText = dialog.findViewById(R.id.edtOTP1)
+                val edtOTP2: EditText = dialog.findViewById(R.id.edtOTP2)
+                val edtOTP3: EditText = dialog.findViewById(R.id.edtOTP3)
+                val edtOTP4: EditText = dialog.findViewById(R.id.edtOTP4)
+
+                editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP1.setOnKeyListener(PinOnKeyListener(0, editTexts))
+                edtOTP2.setOnKeyListener(PinOnKeyListener(1, editTexts))
+                edtOTP3.setOnKeyListener(PinOnKeyListener(2, editTexts))
+                edtOTP4.setOnKeyListener(PinOnKeyListener(3, editTexts))
+                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss()
+                        return@setOnKeyListener true
+                    }
+                    false
+                }
+                btnDone.setOnClickListener {
+                    clickabled = true;
+                    if (edtOTP1.text.toString().equals("", ignoreCase = true)
+                            && edtOTP2.text.toString().equals("", ignoreCase = true)
+                            && edtOTP3.text.toString().equals("", ignoreCase = true)
+                            && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                        txtError.visibility = View.VISIBLE
+                        txtError.text = "Please enter OTP"
+                    } else {
+                        txtError.visibility = View.GONE
+                        txtError.error = ""
+                        if (BWSApplication.isNetworkConnected(activity)) {
+                            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
+                            val listCall: Call<VerifyPinModel> = APINewClient.getClient().getVerifyPin(listModel.get(position).coUserId,
+                                    edtOTP1.getText().toString() + "" +
+                                            edtOTP2.getText().toString() + "" +
+                                            edtOTP3.getText().toString() + "" +
+                                            edtOTP4.getText().toString())
+                            listCall.enqueue(object : Callback<VerifyPinModel> {
+                                override fun onResponse(call: Call<VerifyPinModel>, response: Response<VerifyPinModel>) {
+                                    try {
+                                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                                        val listModel: VerifyPinModel = response.body()!!
+                                        if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            val i = Intent(activity, WalkScreenActivity::class.java)
+                                            activity.startActivity(i)
+                                            dialog.dismiss()
+                                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                        } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                                            txtError.visibility = View.VISIBLE
+                                            txtError.error = listModel.getResponseMessage()
+                                        } else {
+                                            txtError.visibility = View.VISIBLE
+                                            txtError.error = listModel.getResponseMessage()
+                                        }
+
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
+                                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                                }
+                            })
+                        } else {
+                            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+                        }
+                    }
+                }
+                dialog.show()
+                dialog.setCancelable(false)
+            }
+
+            tvForgotPin.setOnClickListener {
+                dialog = Dialog(activity)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.comfirm_pin_layout)
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+                val btnDone: Button = dialog.findViewById(R.id.btnDone)
+                val txtError: TextView = dialog.findViewById(R.id.txtError)
+                val edtOTP1: EditText = dialog.findViewById(R.id.edtOTP1)
+                val edtOTP2: EditText = dialog.findViewById(R.id.edtOTP2)
+                val edtOTP3: EditText = dialog.findViewById(R.id.edtOTP3)
+                val edtOTP4: EditText = dialog.findViewById(R.id.edtOTP4)
+
+                editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
+                edtOTP1.setOnKeyListener(PinOnKeyListener(0, editTexts))
+                edtOTP2.setOnKeyListener(PinOnKeyListener(1, editTexts))
+                edtOTP3.setOnKeyListener(PinOnKeyListener(2, editTexts))
+                edtOTP4.setOnKeyListener(PinOnKeyListener(3, editTexts))
+                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss()
+                        return@setOnKeyListener true
+                    }
+                    false
+                }
+                btnDone.setOnClickListener {
+                    if (edtOTP1.text.toString().equals("", ignoreCase = true)
+                            && edtOTP2.text.toString().equals("", ignoreCase = true)
+                            && edtOTP3.text.toString().equals("", ignoreCase = true)
+                            && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                        txtError.visibility = View.VISIBLE
+                        txtError.text = "Please enter OTP"
+                    } else {
+                        txtError.visibility = View.GONE
+                        txtError.error = ""
+                        if (BWSApplication.isNetworkConnected(activity)) {
+                            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
+                            val listCall: Call<VerifyPinModel> = APINewClient.getClient().getVerifyPin(listModel.get(position).coUserId,
+                                    edtOTP1.getText().toString() + "" +
+                                            edtOTP2.getText().toString() + "" +
+                                            edtOTP3.getText().toString() + "" +
+                                            edtOTP4.getText().toString())
+                            listCall.enqueue(object : Callback<VerifyPinModel> {
+                                override fun onResponse(call: Call<VerifyPinModel>, response: Response<VerifyPinModel>) {
+                                    try {
+                                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                                        val listModel: VerifyPinModel = response.body()!!
+                                        if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            val i = Intent(activity, WalkScreenActivity::class.java)
+                                            activity.startActivity(i)
+                                            dialog.dismiss()
+                                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                        } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                                            txtError.visibility = View.VISIBLE
+                                            txtError.error = listModel.getResponseMessage()
+                                        } else {
+                                            txtError.visibility = View.VISIBLE
+                                            txtError.error = listModel.getResponseMessage()
+                                        }
+
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
+                                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                                }
+                            })
+                        } else {
+                            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+                        }
+                    }
+                }
+                dialog.show()
+                dialog.setCancelable(false)
+            }
         }
 
         override fun getItemCount(): Int {

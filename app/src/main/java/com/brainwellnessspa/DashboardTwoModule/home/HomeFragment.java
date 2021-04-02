@@ -7,13 +7,18 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,27 +30,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.LoginModule.Activities.CountrySelectActivity;
-import com.brainwellnessspa.LoginModule.Models.CountryListModel;
-import com.brainwellnessspa.ManageModule.ManageActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
-import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
-import com.brainwellnessspa.ReminderModule.Models.RemiderDetailsModel;
+import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
-import com.brainwellnessspa.UserModuleTwo.Models.UserListModel;
-import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentHomeBinding;
 import com.brainwellnessspa.databinding.MultipleProfileChangeLayoutBinding;
-import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding;
 import com.brainwellnessspa.databinding.UserListCustomLayoutBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -58,7 +54,8 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     UserListAdapter adapter;
     String USERID;
-    ArrayList<UserListModel> userList = new ArrayList<>();
+    private EditText[] editTexts;
+    boolean tvSendOTPbool = true;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -85,7 +82,14 @@ public class HomeFragment extends Fragment {
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             layoutBinding.rvUserList.setLayoutManager(mLayoutManager);
             layoutBinding.rvUserList.setItemAnimator(new DefaultItemAnimator());
+
+
             prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar);
+
+            layoutBinding.llAddNewUser.setOnClickListener(v1 -> {
+                Intent i = new Intent(getActivity(), AddProfileActivity.class);
+                startActivity(i);
+            });
         });
 
 
@@ -161,14 +165,12 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onResponse(Call<AddedUserListModel> call, Response<AddedUserListModel> response) {
                     try {
-                        if (response.isSuccessful()) {
-                            progressBar.setVisibility(View.GONE);
-                            AddedUserListModel listModel = response.body();
-                            if (listModel != null) {
-                                adapter = new UserListAdapter(listModel.getResponseData());
-                            }
-                            rvUserList.setAdapter(adapter);
+                        progressBar.setVisibility(View.GONE);
+                        AddedUserListModel listModel = response.body();
+                        if (listModel != null) {
+                            adapter = new UserListAdapter(listModel.getResponseData());
                         }
+                        rvUserList.setAdapter(adapter);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -200,6 +202,89 @@ public class HomeFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.bind.tvName.setText(model.get(position).getName());
+
+            holder.bind.rlRemoveCard.setOnClickListener(v -> {
+                Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.comfirm_pin_layout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                Button btnDone = dialog.findViewById(R.id.btnDone);
+                TextView txtError = dialog.findViewById(R.id.txtError);
+                EditText edtOTP1 = dialog.findViewById(R.id.edtOTP1);
+                EditText edtOTP2 = dialog.findViewById(R.id.edtOTP2);
+                EditText edtOTP3 = dialog.findViewById(R.id.edtOTP3);
+                EditText edtOTP4 = dialog.findViewById(R.id.edtOTP4);
+                ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+
+                editTexts = new EditText[]{edtOTP1, edtOTP2, edtOTP3, edtOTP4};
+                edtOTP1.addTextChangedListener(new PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone));
+                edtOTP2.addTextChangedListener(new PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone));
+                edtOTP3.addTextChangedListener(new PinTextWatcher(2, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone));
+                edtOTP4.addTextChangedListener(new PinTextWatcher(3, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone));
+                edtOTP1.setOnKeyListener(new PinOnKeyListener(0));
+                edtOTP2.setOnKeyListener(new PinOnKeyListener(1));
+                edtOTP3.setOnKeyListener(new PinOnKeyListener(2));
+                edtOTP4.setOnKeyListener(new PinOnKeyListener(3));
+                dialog.setOnKeyListener((v11, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
+                btnDone.setOnClickListener(v1 -> {
+                    if (edtOTP1.getText().toString().equalsIgnoreCase("")
+                            && edtOTP2.getText().toString().equalsIgnoreCase("")
+                            && edtOTP3.getText().toString().equalsIgnoreCase("")
+                            && edtOTP4.getText().toString().equalsIgnoreCase("")) {
+                        txtError.setVisibility(View.VISIBLE);
+                        txtError.setText("Please enter OTP");
+                    } else {
+                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                            txtError.setVisibility(View.GONE);
+                            txtError.setText("");
+                            progressBar.setVisibility(View.VISIBLE);
+                            progressBar.invalidate();
+                            Call<VerifyPinModel> listCall = APINewClient.getClient().getVerifyPin(model.get(position).getCoUserId(),
+                                    edtOTP1.getText().toString() + "" +
+                                            edtOTP2.getText().toString() + "" +
+                                            edtOTP3.getText().toString() + "" +
+                                            edtOTP4.getText().toString());
+                            listCall.enqueue(new Callback<VerifyPinModel>() {
+                                @Override
+                                public void onResponse(Call<VerifyPinModel> call, Response<VerifyPinModel> response) {
+                                    try {
+                                        progressBar.setVisibility(View.GONE);
+                                        VerifyPinModel listModel = response.body();
+                                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                            BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                                            dialog.dismiss();
+                                        } else if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                            txtError.setVisibility(View.VISIBLE);
+                                            txtError.setText(listModel.getResponseMessage());
+                                        } else {
+                                            txtError.setVisibility(View.VISIBLE);
+                                            txtError.setText(listModel.getResponseMessage());
+                                        }
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<VerifyPinModel> call, Throwable t) {
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
+
+                });
+                dialog.show();
+                dialog.setCancelable(false);
+            });
         }
 
         @Override
@@ -214,6 +299,120 @@ public class HomeFragment extends Fragment {
                 super(bind.getRoot());
                 this.bind = bind;
             }
+        }
+    }
+
+    public class PinTextWatcher implements TextWatcher {
+        private int currentIndex;
+        EditText edtOTP1, edtOTP2, edtOTP3, edtOTP4;
+        Button btnDone;
+        private boolean isFirst = false, isLast = false;
+        private String newTypedString = "";
+
+        PinTextWatcher(int currentIndex, EditText edtOTP1, EditText edtOTP2, EditText edtOTP3, EditText edtOTP4, Button btnDone) {
+            this.currentIndex = currentIndex;
+            this.edtOTP1 = edtOTP1;
+            this.edtOTP2 = edtOTP2;
+            this.edtOTP3 = edtOTP3;
+            this.edtOTP4 = edtOTP4;
+            this.btnDone = btnDone;
+
+            if (currentIndex == 0)
+                this.isFirst = true;
+            else if (currentIndex == editTexts.length - 1)
+                this.isLast = true;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            newTypedString = s.subSequence(start, start + count).toString().trim();
+            String OTP1 = edtOTP1.getText().toString().trim();
+            String OTP2 = edtOTP2.getText().toString().trim();
+            String OTP3 = edtOTP3.getText().toString().trim();
+            String OTP4 = edtOTP4.getText().toString().trim();
+            if (!OTP1.isEmpty() && !OTP2.isEmpty() && !OTP3.isEmpty() && !OTP4.isEmpty()) {
+                btnDone.setEnabled(true);
+                btnDone.setTextColor(getResources().getColor(R.color.white));
+                btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled);
+            } else {
+                btnDone.setEnabled(false);
+                btnDone.setTextColor(getResources().getColor(R.color.white));
+                btnDone.setBackgroundResource(R.drawable.gray_round_cornor);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String text = newTypedString;
+            Log.e("OTP VERIFICATION", "" + text);
+
+            /* Detect paste event and set first char */
+            if (text.length() > 1)
+                text = String.valueOf(text.charAt(0)); // TODO: We can fill out other EditTexts
+            editTexts[currentIndex].removeTextChangedListener(this);
+            editTexts[currentIndex].setText(text);
+            editTexts[currentIndex].setSelection(text.length());
+            editTexts[currentIndex].addTextChangedListener(this);
+
+            if (text.length() == 1) {
+                moveToNext();
+            } else if (text.length() == 0) {
+                if (!tvSendOTPbool) {
+                    editTexts[0].requestFocus();
+                } else {
+                    moveToPrevious();
+                }
+            }
+        }
+
+        private void moveToNext() {
+            if (!isLast)
+                editTexts[currentIndex + 1].requestFocus();
+
+            if (isAllEditTextsFilled() && isLast) { // isLast is optional
+                editTexts[currentIndex].clearFocus();
+                hideKeyboard();
+            }
+        }
+
+        private void moveToPrevious() {
+            if (!isFirst)
+                editTexts[currentIndex - 1].requestFocus();
+        }
+
+        private boolean isAllEditTextsFilled() {
+            for (EditText editText : editTexts)
+                if (editText.getText().toString().trim().length() == 0)
+                    return false;
+            return true;
+        }
+
+        private void hideKeyboard() {
+            if (getActivity().getCurrentFocus() != null) {
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            }
+        }
+    }
+
+    public class PinOnKeyListener implements View.OnKeyListener {
+        private int currentIndex;
+
+        PinOnKeyListener(int currentIndex) {
+            this.currentIndex = currentIndex;
+        }
+
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (editTexts[currentIndex].getText().toString().isEmpty() && currentIndex != 0)
+                    editTexts[currentIndex - 1].requestFocus();
+            }
+            return false;
         }
     }
 }
