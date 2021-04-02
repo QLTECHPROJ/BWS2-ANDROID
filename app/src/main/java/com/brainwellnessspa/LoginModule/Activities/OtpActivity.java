@@ -29,16 +29,12 @@ import androidx.room.Room;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.SmsReceiver;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
@@ -56,7 +52,6 @@ import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 import com.brainwellnessspa.databinding.ActivityOtpBinding;
 import com.google.firebase.installations.FirebaseInstallations;
-import com.google.firebase.installations.InstallationTokenResult;
 import com.google.gson.Gson;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
@@ -81,9 +76,7 @@ public class OtpActivity extends AppCompatActivity implements
     private long mLastClickTime = 0;
     public static int comeLogin = 0;
     AudioDatabase DB;
-    List<DownloadAudioDetails> downloadAudioDetails = new ArrayList<>();
     private BroadcastReceiver receiver;
-//    AppEventsLogger logger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

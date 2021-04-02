@@ -72,9 +72,9 @@ class AddProfileActivity : AppCompatActivity() {
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, MODE_PRIVATE)
         UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         binding.llBack.setOnClickListener {
-            val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
+          /*  val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
             i.putExtra(CONSTANTS.PopUp, "0")
-            startActivity(i)
+            startActivity(i)*/
             finish()
         }
         val measureRatio = BWSApplication.measureRatio(this, 0f, 1f, 1f, 0.32f, 0f)
@@ -155,10 +155,9 @@ class AddProfileActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
+       /* val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
         i.putExtra(CONSTANTS.PopUp, "0")
-        startActivity(i)
+        startActivity(i)*/
         finish()
-        super.onBackPressed()
     }
 }

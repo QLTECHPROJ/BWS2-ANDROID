@@ -11,8 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:orientation="vertical"
-            tools:context="com.brainwellnessspa.MembershipModule.Activities.CheckoutGetCodeActivity">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/rlLayout"
@@ -152,7 +151,7 @@
                                 <EditText
                                     android:id="@+id/edtNumber"
                                     android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:layout_toRightOf="@id/tvCountryCode"
                                     android:layout_weight="0.82"
                                     android:background="@null"
@@ -162,7 +161,6 @@
                                     android:inputType="number"
                                     android:maxLength="10"
                                     android:paddingHorizontal="@dimen/_16sdp"
-                                    android:paddingVertical="@dimen/_12sdp"
                                     android:textColor="@color/dark_blue_gray"
                                     android:textColorHint="@color/dark_blue_gray"
                                     android:textCursorDrawable="@null"

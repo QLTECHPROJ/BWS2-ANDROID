@@ -55,6 +55,12 @@ class AddedUserListModel {
         @SerializedName("Name")
         @Expose
         var name: String? = null
+        @SerializedName("UserID")
+        @Expose
+        var userID: String? = null
+        @SerializedName("CoUserId")
+        @Expose
+        var coUserId: String? = null
 
         @SerializedName("Email")
         @Expose
