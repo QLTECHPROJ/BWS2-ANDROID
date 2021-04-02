@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.ViewGroup
@@ -108,6 +109,10 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.flUser.error = ""
                 binding.flMobileNumber.error = ""
                 binding.flEmail.error = "Email address is required"
+            } else if (!binding.etEmail.text.toString().isEmailValid()) {
+                binding.flUser.error = ""
+                binding.flMobileNumber.error = ""
+                binding.flEmail.error = "Valid Email address is required"
             } else {
                 if (BWSApplication.isNetworkConnected(this)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@AddProfileActivity)
@@ -143,6 +148,10 @@ class AddProfileActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun String.isEmailValid(): Boolean {
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
     override fun onBackPressed() {
