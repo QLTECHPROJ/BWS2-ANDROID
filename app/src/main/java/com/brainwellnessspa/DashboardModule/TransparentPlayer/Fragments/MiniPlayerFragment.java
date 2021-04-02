@@ -361,10 +361,12 @@ public class MiniPlayerFragment extends Fragment {
                         float downSpeed = 0;
                         int batLevel = 0;
                         float upSpeed = 0;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
-                            downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
-                            upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                                downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
+                                upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+                            }
                         }
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                             BatteryManager bm = (BatteryManager) getActivity().getSystemService(BATTERY_SERVICE);

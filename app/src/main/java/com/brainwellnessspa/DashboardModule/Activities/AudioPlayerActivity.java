@@ -1357,10 +1357,13 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         float downSpeed = 0;
                         int batLevel = 0;
                         float upSpeed = 0;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
-                            downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
-                            upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                                downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
+                                upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+                            }
                         }
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                             BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);

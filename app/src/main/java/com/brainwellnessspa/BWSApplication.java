@@ -181,10 +181,12 @@ public class BWSApplication extends Application {
         NetworkCapabilities nc;
         float downSpeed = 0;
         float upSpeed = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
-            downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
-            upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+        if (isNetworkConnected(getContext())) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
+                upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+            }
         }
         properties.putValue("deviceSpace", mySpace + " MB");
         properties.putValue("batteryLevel", batLevel + " %");
