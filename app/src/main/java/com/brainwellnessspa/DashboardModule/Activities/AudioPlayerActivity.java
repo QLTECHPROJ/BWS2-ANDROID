@@ -1310,6 +1310,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
 
                     @Override
                     public void onPlayerError(ExoPlaybackException error) {
+                        String intruptMethod = "";
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -1334,19 +1335,24 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                            p.putValue("method", error.getMessage() + " " + error.getSourceException().getMessage());
+                            p.putValue("interruptionMethod", error.getMessage() + " " + error.getSourceException().getMessage());
+                            intruptMethod = error.getMessage() + " " + error.getSourceException().getMessage();
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getSourceException().getMessage());
                         } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-                            p.putValue("method", error.getMessage() + " " + error.getRendererException().getMessage());
+                            p.putValue("interruptionMethod", error.getMessage() + " " + error.getRendererException().getMessage());
+                            intruptMethod = error.getMessage() + " " + error.getRendererException().getMessage();
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
                         } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-                            p.putValue("method", error.getMessage() + " " + error.getUnexpectedException().getMessage());
+                            p.putValue("interruptionMethod", error.getMessage() + " " + error.getUnexpectedException().getMessage());
+                            intruptMethod = error.getMessage() + " " + error.getUnexpectedException().getMessage();
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                         } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
-                            p.putValue("method", error.getMessage());
+                            p.putValue("interruptionMethod", error.getMessage());
+                            intruptMethod = error.getMessage();
                             Log.e("onPlaybackError", error.getMessage());
                         } else {
-                            p.putValue("method", error.getMessage());
+                            p.putValue("interruptionMethod", error.getMessage());
+                            intruptMethod = error.getMessage();
                             Log.e("onPlaybackError", error.getMessage());
                         }
                         AudioInterrupted = true;
@@ -1378,10 +1384,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                         , mainPlayModelList.get(position).getAudiomastercat(),
                                         mainPlayModelList.get(position).getAudioSubCategory(),
                                         mainPlayModelList.get(position).getAudioDuration()
-                                        , "", AudioType, "Mini", String.valueOf(hundredVolume)
+                                        , "", AudioType, "Main", String.valueOf(hundredVolume)
                                         , appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "",
-                                        "", batLevel, BatteryStatus, downSpeed,
-                                        upSpeed);
+                                        intruptMethod, batLevel, BatteryStatus, downSpeed,upSpeed);
                                 listCall.enqueue(new Callback<AudioInterruptionModel>() {
                                     @Override
                                     public void onResponse(Call<AudioInterruptionModel> call, Response<AudioInterruptionModel> response) {
