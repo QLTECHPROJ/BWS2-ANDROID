@@ -1,5 +1,7 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
+import android.app.Activity;
+import android.app.Application;
 import android.app.NotificationManager;
 import android.app.UiModeManager;
 import android.content.Context;

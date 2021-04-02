@@ -74,6 +74,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
@@ -90,7 +91,6 @@ public class GlobalInitExoPlayer extends Service {
     public static PlayerNotificationManager playerNotificationManager;
     public static MediaSessionCompat mediaSession;
     public static String Name;
-    public static String APP_SERVICE_STATUS = "Background";
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0;
     public static int percent;
@@ -398,7 +398,7 @@ Appointment Audios dddd*/
         String source = GetSourceName(ctx);
         p.putValue("source", source);
         p.putValue("playerType", playerType);
-        p.putValue("audioService", APP_SERVICE_STATUS);
+        p.putValue("audioService", appStatus(ctx));
         p.putValue("bitRate", "");
         p.putValue("sound", String.valueOf(hundredVolume));
         if(!source.equalsIgnoreCase( "Playlist") && !source.equalsIgnoreCase("Downloaded Playlists")) {

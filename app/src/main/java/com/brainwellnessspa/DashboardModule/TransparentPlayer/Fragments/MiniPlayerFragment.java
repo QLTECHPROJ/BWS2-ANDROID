@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +32,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
+import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
@@ -73,13 +76,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.BATTERY_SERVICE;
+import static com.brainwellnessspa.BWSApplication.BatteryStatus;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.oldSongPos;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
+import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
@@ -246,7 +251,6 @@ public class MiniPlayerFragment extends Fragment {
 
     @Override
     public void onResume() {
-        APP_SERVICE_STATUS = getString(R.string.Foreground);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getActivity().registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
@@ -310,6 +314,7 @@ public class MiniPlayerFragment extends Fragment {
                 player.addListener(new ExoPlayer.EventListener() {
                     @Override
                     public void onPlayerError(ExoPlaybackException error) {
+                        String intruptMethod = "";
                         p = new Properties();
                         p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getID());
@@ -320,34 +325,84 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
                         p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
                         p.putValue("position", GetCurrentAudioPosition());
+                        String AudioType = "";
                         if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
                             p.putValue("audioType", "Downloaded");
+                            AudioType = "Downloaded";
                         } else {
                             p.putValue("audioType", "Streaming");
+                            AudioType = "Streaming";
                         }
                         p.putValue("source", GetSourceName(ctx));
-                        p.putValue("playerType", "Main");
-                        p.putValue("audioService", APP_SERVICE_STATUS);
+                        p.putValue("playerType", "Mini");
+                        p.putValue("audioService", appStatus(getActivity()));
                         p.putValue("bitRate", "");
                         p.putValue("sound", String.valueOf(hundredVolume));
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                            p.putValue("method", error.getMessage() + " " + error.getSourceException().getMessage());
+                            p.putValue("interruptionMethod", error.getMessage() + " " + error.getSourceException().getMessage());
+                            intruptMethod = error.getMessage() + " " + error.getSourceException().getMessage();
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getSourceException().getMessage());
                         } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-                            p.putValue("method", error.getMessage() + " " + error.getRendererException().getMessage());
+                            p.putValue("interruptionMethod", error.getMessage() + " " + error.getRendererException().getMessage());
+                            intruptMethod = error.getMessage() + " " + error.getRendererException().getMessage();
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
                         } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-                            p.putValue("method", error.getMessage() + " " + error.getUnexpectedException().getMessage());
+                            p.putValue("interruptionMethod", error.getMessage() + " " + error.getUnexpectedException().getMessage());
+                            intruptMethod = error.getMessage() + " " + error.getUnexpectedException().getMessage();
                             Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
                         } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
-                            p.putValue("method", error.getMessage());
+                            p.putValue("interruptionMethod", error.getMessage());
+                            intruptMethod = error.getMessage();
                             Log.e("onPlaybackError", error.getMessage());
                         } else {
-                            p.putValue("method", error.getMessage());
+                            p.putValue("interruptionMethod", error.getMessage());
+                            intruptMethod = error.getMessage();
                             Log.e("onPlaybackError", error.getMessage());
                         }
                         AudioInterrupted = true;
                         BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
+                        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        //should check null because in airplane mode it will be null
+                        NetworkCapabilities nc;
+                        float downSpeed = 0;
+                        int batLevel = 0;
+                        float upSpeed = 0;
+                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                                downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
+                                upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+                            }
+                        }
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                            BatteryManager bm = (BatteryManager) getActivity().getSystemService(BATTERY_SERVICE);
+                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+                        }
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            Call<AudioInterruptionModel> listCall = APIClient.getClient().getAudioInterruption(UserID,
+                                    mainPlayModelList.get(position).getID(), mainPlayModelList.get(position).getName(),
+                                    "", mainPlayModelList.get(position).getAudioDirection()
+                                    , mainPlayModelList.get(position).getAudiomastercat(),
+                                    mainPlayModelList.get(position).getAudioSubCategory(),
+                                    mainPlayModelList.get(position).getAudioDuration()
+                                    , "", AudioType, "Mini", String.valueOf(hundredVolume)
+                                    , appStatus(getActivity()), GetSourceName(ctx), GetCurrentAudioPosition(), "",
+                                    intruptMethod, batLevel, BatteryStatus, downSpeed, upSpeed);
+                            listCall.enqueue(new Callback<AudioInterruptionModel>() {
+                                @Override
+                                public void onResponse(Call<AudioInterruptionModel> call, Response<AudioInterruptionModel> response) {
+                                    AudioInterruptionModel listModel = response.body();
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<AudioInterruptionModel> call, Throwable t) {
+                                }
+                            });
+
+                        } else {
+                        }
                     }
 
                     @Override
@@ -410,7 +465,7 @@ public class MiniPlayerFragment extends Fragment {
                             }
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(getActivity()));
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Started", p, CONSTANTS.track);
@@ -467,7 +522,7 @@ public class MiniPlayerFragment extends Fragment {
                             }
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(getActivity()));
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Completed", p, CONSTANTS.track);
@@ -508,7 +563,7 @@ public class MiniPlayerFragment extends Fragment {
                             }
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(getActivity()));
                             p.putValue("bitRate", "");
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Audio Buffer Started", p, CONSTANTS.track);
@@ -531,7 +586,7 @@ public class MiniPlayerFragment extends Fragment {
                                 }
                                 p.putValue("source", GetSourceName(ctx));
                                 p.putValue("playerType", "Mini");
-                                p.putValue("audioService", APP_SERVICE_STATUS);
+                                p.putValue("audioService", appStatus(getActivity()));
                                 p.putValue("bitRate", "");
                                 p.putValue("sound", String.valueOf(hundredVolume));
                                 BWSApplication.addToSegment("Audio Completed", p, CONSTANTS.track);
@@ -560,7 +615,7 @@ public class MiniPlayerFragment extends Fragment {
                                     }
                                     p.putValue("source", GetSourceName(ctx));
                                     p.putValue("playerType", "Mini");
-                                    p.putValue("audioService", APP_SERVICE_STATUS);
+                                    p.putValue("audioService", appStatus(getActivity()));
                                     p.putValue("bitRate", "");
                                     p.putValue("sound", String.valueOf(hundredVolume));
                                     String source = GetSourceName(ctx);
@@ -596,12 +651,11 @@ public class MiniPlayerFragment extends Fragment {
                                             p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
                                         }
                                         p.putValue("audioCount", TotalAudio);
-                                        p.putValue("source", GetSourceName(ctx));
+                                        p.putValue("source", ScreenView);
                                         p.putValue("playerType", "Mini");
-                                        p.putValue("audioService", APP_SERVICE_STATUS);
+                                        p.putValue("audioService", appStatus(getActivity()));
                                         p.putValue("sound", String.valueOf(hundredVolume));
                                         BWSApplication.addToSegment("Playlist Completed", p, CONSTANTS.track);
-
 
                                         Log.e("Last audio End", mainPlayModelList.get(position).getName());
                                     } else {
@@ -703,7 +757,7 @@ public class MiniPlayerFragment extends Fragment {
             }
             p.putValue("source", GetSourceName(ctx));
             p.putValue("playerType", "Mini");
-            p.putValue("audioService", APP_SERVICE_STATUS);
+            p.putValue("audioService", appStatus(getActivity()));
             p.putValue("bitRate", "");
             p.putValue("sound", String.valueOf(hundredVolume));
             BWSApplication.addToSegment("Audio Playing", p, CONSTANTS.track);
@@ -737,7 +791,7 @@ public class MiniPlayerFragment extends Fragment {
                     }
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(getActivity()));
                     p.putValue("bitRate", "");
                     p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Audio Paused", p, CONSTANTS.track);
@@ -789,7 +843,7 @@ public class MiniPlayerFragment extends Fragment {
                                 p.putValue("audioType", "Streaming");
                             }
                             p.putValue("bitRate", "");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(getActivity()));
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Disclaimer Completed", p, CONSTANTS.track);
                             audioClick = true;
@@ -800,7 +854,7 @@ public class MiniPlayerFragment extends Fragment {
                             editor.commit();
                             removeArray();
                             localBroadcastManager1.sendBroadcast(localIntent1);
-                            Log.e("send brod cast","desc");
+                            Log.e("send brod cast", "desc");
                         } else if (state == ExoPlayer.STATE_READY) {
                             p = new Properties();
                             p.putValue("userId", UserID);
@@ -813,7 +867,7 @@ public class MiniPlayerFragment extends Fragment {
                                 p.putValue("audioType", "Streaming");
                             }
                             p.putValue("bitRate", "");
-                            p.putValue("audioService", APP_SERVICE_STATUS);
+                            p.putValue("audioService", appStatus(getActivity()));
                             p.putValue("sound", String.valueOf(hundredVolume));
                             BWSApplication.addToSegment("Disclaimer Started", p, CONSTANTS.track);
                             if (player.getPlayWhenReady()) {
@@ -833,7 +887,7 @@ public class MiniPlayerFragment extends Fragment {
                                     p.putValue("audioType", "Streaming");
                                 }
                                 p.putValue("bitRate", "");
-                                p.putValue("audioService", APP_SERVICE_STATUS);
+                                p.putValue("audioService", appStatus(getActivity()));
                                 p.putValue("sound", String.valueOf(hundredVolume));
                                 BWSApplication.addToSegment("Disclaimer Playing", p, CONSTANTS.track);
                             } else if (!player.getPlayWhenReady()) {
@@ -903,7 +957,7 @@ public class MiniPlayerFragment extends Fragment {
                 }
                 p.putValue("bitRate", "");
                 p.putValue("sound", String.valueOf(hundredVolume));
-                p.putValue("audioService", APP_SERVICE_STATUS);
+                p.putValue("audioService", appStatus(getActivity()));
                 BWSApplication.addToSegment("Disclaimer Paused", p, CONSTANTS.track);
             });
         } catch (Exception e) {
@@ -1093,7 +1147,7 @@ public class MiniPlayerFragment extends Fragment {
                     }
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(getActivity()));
                     p.putValue("bitRate", "");
                     p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Audio Resumed", p, CONSTANTS.track);
@@ -1110,7 +1164,7 @@ public class MiniPlayerFragment extends Fragment {
                         p.putValue("audioType", "Streaming");
                     }
                     p.putValue("bitRate", "");
-                    p.putValue("audioService", APP_SERVICE_STATUS);
+                    p.putValue("audioService", appStatus(getActivity()));
                     p.putValue("sound", String.valueOf(hundredVolume));
                     BWSApplication.addToSegment("Disclaimer Resumed", p, CONSTANTS.track);
                 }
@@ -2196,7 +2250,6 @@ public class MiniPlayerFragment extends Fragment {
         @Override
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
-                APP_SERVICE_STATUS = getString(R.string.Foreground);
                 Log.e("APPLICATION", "APP IN FOREGROUND");
                 //app went to foreground
             }
@@ -2217,7 +2270,6 @@ public class MiniPlayerFragment extends Fragment {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                APP_SERVICE_STATUS = getString(R.string.Background);
                 Log.e("APPLICATION", "App is in BACKGROUND");
                 // app went to background
             }

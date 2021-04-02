@@ -1,6 +1,7 @@
 package com.brainwellnessspa;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.job.JobInfo;
@@ -42,6 +43,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
@@ -68,15 +70,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.APP_SERVICE_STATUS;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.mediaSession;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.playerNotificationManager;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
-import static java.sql.DriverManager.println;
 
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -88,6 +83,7 @@ public class BWSApplication extends Application {
     private static Context mContext;
     private static BWSApplication BWSApplication;
     public static String BatteryStatus = "";
+
     public static Context getContext() {
         return mContext;
     }
@@ -137,6 +133,22 @@ public class BWSApplication extends Application {
         }
     }
 
+    public static String appStatus(Context ctx) {
+        Boolean isInBackground = false;
+        String myappStatus = "";
+        ActivityManager.RunningAppProcessInfo myProcess = new ActivityManager.RunningAppProcessInfo();
+        ActivityManager.getMyMemoryState(myProcess);
+        isInBackground = myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
+        if (isInBackground) {
+            myappStatus = ctx.getString(R.string.Background);
+            Log.e("myappStatus", ctx.getString(R.string.Background));
+        } else {
+            myappStatus = ctx.getString(R.string.Foreground);
+            Log.e("myappStatus", ctx.getString(R.string.Foreground));
+        }
+        return myappStatus;
+    }
+
     public static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
@@ -160,7 +172,7 @@ public class BWSApplication extends Application {
         int batLevel = 0;
         // Get the battery percentage and store it in a INT variable
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            BatteryManager bm =(BatteryManager) getContext().getSystemService(BATTERY_SERVICE);
+            BatteryManager bm = (BatteryManager) getContext().getSystemService(BATTERY_SERVICE);
             batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
         }
@@ -355,67 +367,6 @@ public class BWSApplication extends Application {
         super.onCreate();
         mContext = this;
         BWSApplication = this;
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
-        }*/
     }
 
-/*
-    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-        private int numStarted = 0;
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
-            */
-/*if (numStarted == 0) {
-                APP_SERVICE_STATUS = getString(R.string.Foreground);
-                Log.e("APPLICATION", "APP IN FOREGROUND");
-                //app went to foreground
-            }
-            numStarted++;*//*
-
-        }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-           */
-/* numStarted--;
-            if (numStarted == 0) {
-                APP_SERVICE_STATUS = getString(R.string.Background);
-                Log.e("APPLICATION", "App is in BACKGROUND");
-                // app went to background
-            }*//*
-
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-            Log.e("APPLICATION", "App is in onActivityDestroyed");
-            showToast("BWS  onActivityDestroyed Called", getApplicationContext());
-            relesePlayer(getContext());
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(notificationId);
-        }
-    }
-*/
 }
