@@ -41,6 +41,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)
         ctx = this@DassAssSliderActivity
         activity = this@DassAssSliderActivity
+        binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
         binding.btnDone.setOnClickListener {
 //            val i = Intent(ctx, AssProcessActivity::class.java)
 //            i.putExtra(CONSTANTS.ASSPROCESS, "1")
@@ -78,7 +79,6 @@ class DassAssSliderActivity : AppCompatActivity() {
                         val listModel: AssessmentQusModel = response.body()!!
                         listModel1 = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
                             if (myPos < listModel.responseData!!.questions!!.size) {
 //                                if(myPos ==)
                                 firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), ctx)
@@ -109,7 +109,6 @@ class DassAssSliderActivity : AppCompatActivity() {
         var dass = DassAssSliderActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
-
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -118,12 +117,12 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bindingAdapter.tvSecond.text = listModel!![position].question
-
-            holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
-            dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], position, ctx)
-            holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
-
+            if (listModel != null) {
+                holder.bindingAdapter.tvSecond.text = listModel.get(position).question
+                holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
+                dass.secondListAdapter = OptionsSecondListAdapter(listModel.get(position), position, ctx)
+                holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
+            }
         }
 
         override fun getItemCount(): Int {
@@ -139,11 +138,10 @@ class DassAssSliderActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var bindingAdapter: FormFillLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
             init {
-                this.bindingAdapter = bindingAdapter
-
                 bindingAdapter.cbChecked.setOnClickListener {
                     mSelectedItem = adapterPosition
-                    notifyDataSetChanged()
+                    notifyItemChanged(posItem)
+                    notifyItemChanged(mSelectedItem)
                     posItem = mSelectedItem
 
                     BWSApplication.showToast("position :-$mSelectedItem", ctx)
@@ -159,6 +157,8 @@ class DassAssSliderActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             if (position == posItem) {
                 holder.bindingAdapter.cbChecked.setChecked(position == posItem)
+            } else {
+                holder.bindingAdapter.cbChecked.setChecked(false)
             }
             holder.bindingAdapter.cbChecked.text = position.toString()
 
@@ -169,13 +169,13 @@ class DassAssSliderActivity : AppCompatActivity() {
                   notifyItemChanged(previousItem)
                   notifyItemChanged(position)
               }*/
-           /* holder.bindingAdapter.cbChecked.setOnClickListener { view ->
-                BWSApplication.showToast("position :-$position", ctx)
-                val previousItem = mSelectedItem
-                mSelectedItem = position
-                notifyItemChanged(previousItem)
-                notifyItemChanged(position)
-            }*/
+            /* holder.bindingAdapter.cbChecked.setOnClickListener { view ->
+                 BWSApplication.showToast("position :-$position", ctx)
+                 val previousItem = mSelectedItem
+                 mSelectedItem = position
+                 notifyItemChanged(previousItem)
+                 notifyItemChanged(position)
+             }*/
             /* if (mSelectedItem == position) {
                  holder.bindingAdapter.cbChecked.isSelected = true
                  dass.passAnsIn = position.toString()
