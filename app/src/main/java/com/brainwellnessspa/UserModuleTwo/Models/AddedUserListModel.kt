@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 class AddedUserListModel {
     @SerializedName("ResponseData")
     @Expose
-    private var responseData: List<ResponseData>? = null
+    private var responseData: ResponseData? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -20,11 +20,11 @@ class AddedUserListModel {
     @Expose
     private var responseStatus: String? = null
 
-    fun getResponseData(): List<ResponseData>? {
+    fun getResponseData(): ResponseData? {
         return responseData
     }
 
-    fun setResponseData(responseData: List<ResponseData>) {
+    fun setResponseData(responseData: ResponseData?) {
         this.responseData = responseData
     }
 
@@ -52,22 +52,54 @@ class AddedUserListModel {
         this.responseStatus = responseStatus
     }
     class ResponseData {
-        @SerializedName("Name")
+        @SerializedName("Maxuseradd")
         @Expose
-        var name: String? = null
-        @SerializedName("UserID")
-        @Expose
-        var userID: String? = null
-        @SerializedName("CoUserId")
-        @Expose
-        var coUserId: String? = null
+        var maxuseradd: String? = null
 
-        @SerializedName("Email")
+        @SerializedName("CoUserList")
         @Expose
-        var email: String? = null
+        var coUserList: List<CoUser>? = null
 
-        @SerializedName("Mobile")
+        @SerializedName("errormsg")
         @Expose
-        var mobile: String? = null
+        var errormsg: String? = null
+
+        class CoUser {
+            @SerializedName("UserID")
+            @Expose
+            var userID: String? = null
+
+            @SerializedName("CoUserId")
+            @Expose
+            var coUserId: String? = null
+
+            @SerializedName("Name")
+            @Expose
+            var name: String? = null
+
+            @SerializedName("Email")
+            @Expose
+            var email: String? = null
+
+            @SerializedName("Mobile")
+            @Expose
+            var mobile: String? = null
+        }
+
+        fun getResponseMessage(): String? {
+            return maxuseradd
+        }
+
+        fun setResponseMessage(maxuseradd: String?) {
+            this.maxuseradd = maxuseradd
+        }
+
+        fun getCoUser(): List<CoUser>? {
+            return coUserList
+        }
+
+        fun setCoUser(coUserList: List<CoUser>?) {
+            this.coUserList = coUserList
+        }
     }
 }

@@ -1,7 +1,9 @@
 package com.brainwellnessspa.DashboardTwoModule.profile;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
@@ -29,6 +31,7 @@ import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ResourceModule.Activities.ResourceActivity;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentProfileBinding;
 
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
@@ -37,13 +40,16 @@ public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;
     private long mLastClickTime = 0;
     Dialog logoutDialog;
+    String USERID, UserName;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         View view = binding.getRoot();
-
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
+        UserName = (shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, ""));
+        binding.tvName.setText(UserName);
         binding.llUserProfile.setOnClickListener(view15 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

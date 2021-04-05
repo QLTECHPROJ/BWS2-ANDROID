@@ -12,7 +12,7 @@
         <RelativeLayout
             android:id="@+id/rlLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_56sdp">
+            android:layout_height="@dimen/_36sdp">
 
             <LinearLayout
                 android:id="@+id/llBack"
@@ -25,7 +25,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_left_icon_two"
-                    app:tint="@color/black" />
+                    app:tint="@color/black"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 

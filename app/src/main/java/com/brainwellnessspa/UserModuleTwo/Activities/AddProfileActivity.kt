@@ -40,27 +40,28 @@ class AddProfileActivity : AppCompatActivity() {
             val User: String = binding.etUser.getText().toString().trim()
             val MobileNumber: String = binding.etMobileNumber.getText().toString().trim()
             val Email: String = binding.etEmail.getText().toString().trim()
-           /* if (User.equals(UserName, ignoreCase = true) && MobileNumber.equals(UserMobileNumber, ignoreCase = true) && Email.equals(UserEmail, ignoreCase = true)) {
+            if (User.equals("", ignoreCase = true) && MobileNumber.equals("", ignoreCase = true)
+                    && Email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (!User.equals(UserName, ignoreCase = true)) {
-                binding.btnSendPin.setEnabled(true)
+            } else if (User.equals("", ignoreCase = true)) {
+                binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)
-            } else if (!MobileNumber.equals(UserMobileNumber, ignoreCase = true)) {
-                binding.btnSendPin.setEnabled(true)
+                binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (MobileNumber.equals("", ignoreCase = true)) {
+                binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)
-            } else if (!Email.equals(UserEmail, ignoreCase = true)) {
-                binding.btnSendPin.setEnabled(true)
+                binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (Email.equals("", ignoreCase = true)) {
+                binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)
+                binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
-                binding.btnSave.setEnabled(true)
-                binding.btnSave.setTextColor(resources.getColor(R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor)
-            }*/
+                binding.btnSendPin.setEnabled(true)
+                binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
+                binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)
+            }
         }
 
         override fun afterTextChanged(s: Editable) {}
@@ -69,7 +70,7 @@ class AddProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_profile)
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         binding.llBack.setOnClickListener {
           /*  val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
@@ -125,11 +126,8 @@ class AddProfileActivity : AppCompatActivity() {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@AddProfileActivity)
                                 val listModel: AddUserModel = response.body()!!
                                 if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
-                                    i.putExtra(CONSTANTS.PopUp, "1")
-                                    startActivity(i)
-                                    finish()
                                     BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                                    finish()
                                 } else {
                                     BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                                 }

@@ -349,9 +349,10 @@
             android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="@dimen/_40sdp"
             android:layout_marginBottom="@dimen/_25sdp"
-            android:background="@drawable/light_green_rounded_filled"
+            android:background="@drawable/gray_round_cornor"
             android:fontFamily="@font/montserrat_bold"
             android:paddingVertical="@dimen/_4sdp"
+            android:enabled="false"
             android:text="Send PIN"
             android:textColor="@color/white" />
 

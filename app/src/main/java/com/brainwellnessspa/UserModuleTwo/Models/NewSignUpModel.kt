@@ -3,7 +3,7 @@ package com.brainwellnessspa.UserModuleTwo.Models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class VerifyPinModel {
+class NewSignUpModel {
     @SerializedName("ResponseData")
     @Expose
     private var responseData: ResponseData? = null
@@ -51,15 +51,10 @@ class VerifyPinModel {
     fun setResponseStatus(responseStatus: String?) {
         this.responseStatus = responseStatus
     }
-
     class ResponseData {
-        @SerializedName("UserID")
+        @SerializedName("ID")
         @Expose
-        var userID: String? = null
-
-        @SerializedName("CoUserId")
-        @Expose
-        var coUserId: String? = null
+        var id: String? = null
 
         @SerializedName("Name")
         @Expose
@@ -69,32 +64,12 @@ class VerifyPinModel {
         @Expose
         var email: String? = null
 
-        @SerializedName("Mobile")
+        @SerializedName("MobileNo")
         @Expose
-        var mobile: String? = null
-
-        @SerializedName("isProfileCompleted")
-        @Expose
-        var isProfileCompleted: String? = null
-
-        @SerializedName("isAssessmentCompleted")
-        @Expose
-        var isAssessmentCompleted: String? = null
-
-        @SerializedName("indexScore")
-        @Expose
-        var indexScore: String? = null
-
-        @SerializedName("planDetails")
-        @Expose
-        var planDetails: List<PlanDetails>? = null
+        var mobileNo: String? = null
 
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = null
-
-        class PlanDetails {
-
-        }
     }
 }

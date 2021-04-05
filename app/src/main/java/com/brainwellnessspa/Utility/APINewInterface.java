@@ -3,10 +3,14 @@ package com.brainwellnessspa.Utility;
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
+import com.brainwellnessspa.MembershipModule.Models.SignUpModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
+import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel;
+import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel;
+import com.brainwellnessspa.UserModuleTwo.Models.NewSignUpModel;
 import com.brainwellnessspa.UserModuleTwo.Models.SignInModel;
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel;
 
@@ -35,14 +39,14 @@ public interface APINewInterface {
 
     @POST("signup")
     @FormUrlEncoded
-    Call<LoginModel> getSignUp(@Field("Name") String name,
-                               @Field("Email") String email,
-                               @Field("CountryCode") String countryCode,
-                               @Field("MobileNo") String mobileNo,
-                               @Field("DeviceType") String deviceType,
-                               @Field("Password") String password,
-                               @Field("DeviceID") String deviceID,
-                               @Field("Token") String token);
+    Call<NewSignUpModel> getSignUp(@Field("Name") String name,
+                                   @Field("Email") String email,
+                                   @Field("CountryCode") String countryCode,
+                                   @Field("MobileNo") String mobileNo,
+                                   @Field("DeviceType") String deviceType,
+                                   @Field("Password") String password,
+                                   @Field("DeviceID") String deviceID,
+                                   @Field("Token") String token);
 
     @POST("forgotpass")
     @FormUrlEncoded
@@ -66,4 +70,15 @@ public interface APINewInterface {
     @POST("userlist")
     @FormUrlEncoded
     Call<AddedUserListModel> getUserList(@Field("UserID") String userID);
+
+   @POST("getcouserdetails")
+    @FormUrlEncoded
+    Call<CoUserDetailsModel> getCoUserDetails(@Field("UserID") String userID,
+                                              @Field("CoUserId") String CoUserId);
+
+    @POST("forgotpin")
+    @FormUrlEncoded
+    Call<ForgotPinModel> getForgotPin(@Field("UserID") String userID,
+                                      @Field("CoUserId") String CoUserId,
+                                      @Field("Email") String email);
 }

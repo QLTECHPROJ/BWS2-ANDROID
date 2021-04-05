@@ -339,7 +339,7 @@
             android:layout_marginTop="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_25sdp"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tvFifthTitle"

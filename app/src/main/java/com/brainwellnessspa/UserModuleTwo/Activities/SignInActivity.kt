@@ -103,12 +103,12 @@ class SignInActivity : AppCompatActivity() {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
                             val listModel: SignInModel = response.body()!!
                             if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, MODE_PRIVATE)
+                                val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                 val editor = shared.edit()
                                 editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.iD)
+                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
                                 editor.commit()
                                 val i = Intent(this@SignInActivity, UserListActivity::class.java)
-                                i.putExtra(CONSTANTS.PopUp, "0")
                                 startActivity(i)
                                 BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                             } else {

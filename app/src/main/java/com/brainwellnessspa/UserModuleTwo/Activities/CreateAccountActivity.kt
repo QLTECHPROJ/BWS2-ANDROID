@@ -25,6 +25,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.LoginModule.Models.CountryListModel
 import com.brainwellnessspa.LoginModule.Models.LoginModel
 import com.brainwellnessspa.R
+import com.brainwellnessspa.UserModuleTwo.Models.NewSignUpModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.WebView.TncActivity
@@ -239,31 +240,33 @@ class CreateAccountActivity : AppCompatActivity() {
 
             val countryCode: String = binding.tvCountry.getText().toString().replace("+", "")
             Log.e("countryCode", countryCode);
-            BWSApplication.showToast(binding.tvCountry.getText().toString(), ctx)
-            val listCall: Call<LoginModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), countryCode, binding.etNumber.text.toString(), "1", binding.etPassword.text.toString(),
+            val listCall: Call<NewSignUpModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), countryCode, binding.etNumber.text.toString(), "1", binding.etPassword.text.toString(),
                     Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), fcm_id)
-            listCall.enqueue(object : Callback<LoginModel> {
-                override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {
+            listCall.enqueue(object : Callback<NewSignUpModel> {
+                override fun onResponse(call: Call<NewSignUpModel>, response: Response<NewSignUpModel>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        val listModel: LoginModel = response.body()!!
-                        if (listModel.responseCode.equals("200")) {
+                        val listModel: NewSignUpModel = response.body()!!
+                        if (listModel.getResponseCode().equals("200")) {
+                            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            val editor = shared.edit()
+                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.id)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
+                            editor.commit()
                             val i = Intent(ctx, UserListActivity::class.java)
-                            i.putExtra(CONSTANTS.PopUp, "0")
                             startActivity(i)
                             finish()
                         }
-                        BWSApplication.showToast(listModel.responseMessage, ctx)
+                        BWSApplication.showToast(listModel.getResponseMessage(), ctx)
 
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }
 
-                override fun onFailure(call: Call<LoginModel>, t: Throwable) {
+                override fun onFailure(call: Call<NewSignUpModel>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, null, activity)
                 }
-
             })
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx)

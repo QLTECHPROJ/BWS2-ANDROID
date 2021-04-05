@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
     FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
     UserListAdapter adapter;
-    String USERID;
+    String USERID, UserName;
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
 
@@ -63,9 +63,10 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         View view = binding.getRoot();
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
-
+        UserName = (shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, ""));
+        binding.tvName.setText(UserName);
         homeViewModel.getText().observe(getViewLifecycleOwner(), s -> {
 //                textView.setText(s);
         });
@@ -185,9 +186,10 @@ public class HomeFragment extends Fragment {
     }
 
     public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> {
-        private List<AddedUserListModel.ResponseData> model;
+        private AddedUserListModel.ResponseData model;
+        int selectedItem = -1;
 
-        public UserListAdapter(List<AddedUserListModel.ResponseData> model) {
+        public UserListAdapter(AddedUserListModel.ResponseData model) {
             this.model = model;
         }
 
@@ -201,9 +203,18 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.bind.tvName.setText(model.get(position).getName());
-
-            holder.bind.rlRemoveCard.setOnClickListener(v -> {
+            List<AddedUserListModel.ResponseData.CoUser> modelList = model.getCoUserList();
+            holder.bind.tvName.setText(modelList.get(position).getName());
+            holder.bind.ivCheck.setImageResource(R.drawable.ic_checked_icon);
+            holder.bind.ivCheck.setVisibility(View.INVISIBLE);
+            if (selectedItem == position) {
+                holder.bind.ivCheck.setVisibility(View.VISIBLE);
+            }
+            holder.bind.rlCheckedUser.setOnClickListener(v -> {
+                int previousItem = selectedItem;
+                selectedItem = position;
+                notifyItemChanged(previousItem);
+                notifyItemChanged(position);
                 Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.comfirm_pin_layout);
@@ -246,7 +257,7 @@ public class HomeFragment extends Fragment {
                             txtError.setText("");
                             progressBar.setVisibility(View.VISIBLE);
                             progressBar.invalidate();
-                            Call<VerifyPinModel> listCall = APINewClient.getClient().getVerifyPin(model.get(position).getCoUserId(),
+                            Call<VerifyPinModel> listCall = APINewClient.getClient().getVerifyPin(modelList.get(position).getCoUserId(),
                                     edtOTP1.getText().toString() + "" +
                                             edtOTP2.getText().toString() + "" +
                                             edtOTP3.getText().toString() + "" +
@@ -289,7 +300,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return model.size();
+            return model.getCoUser().size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

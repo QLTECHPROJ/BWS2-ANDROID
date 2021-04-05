@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
+import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -32,88 +34,52 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
+
 open class UserListActivity : AppCompatActivity() {
     lateinit var binding: ActivityUserListBinding
-    var PopUp: String = "0"
     lateinit var dialog: Dialog
     var USERID: String? = null
+    var CoUserID: String? = null
+    var CoEMAIL: String? = null
     lateinit var adapter: UserListAdapter
     private lateinit var editTexts: Array<EditText>
     var tvSendOTPbool: Boolean = true
+    lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_list)
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, Context.MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        if (intent.extras != null) {
-            PopUp = intent.getStringExtra(CONSTANTS.PopUp).toString()
-        }
-
-        if (PopUp.equals("1", ignoreCase = true)) {
-
-        } else {
-
-        }
-        binding.llBack.setOnClickListener {
-            finish()
-        }
+        activity = this@UserListActivity
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        CoEMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+        /* binding.llBack.setOnClickListener {
+             finish()
+         }*/
 
         binding.llAddNewUser.setOnClickListener {
-            val i = Intent(this@UserListActivity, AddProfileActivity::class.java)
-            startActivity(i)
-            finish()
-        }
-
-        binding.btnLogIn.setOnClickListener {
-            val i = Intent(this@UserListActivity, BottomNavigationActivity::class.java)
+            val i = Intent(applicationContext, AddProfileActivity::class.java)
             startActivity(i)
         }
-        binding.rvUserList.layoutManager = LinearLayoutManager(this@UserListActivity)
 
+    }
+
+    override fun onResume() {
         prepareUserData()
+        super.onResume()
     }
 
-    private fun prepareUserData() {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@UserListActivity)
-            val listCall: Call<AddedUserListModel> = APINewClient.getClient().getUserList(USERID)
-            listCall.enqueue(object : Callback<AddedUserListModel> {
-                override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
-                    try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@UserListActivity)
-                        val listModel: AddedUserListModel = response.body()!!
-                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            adapter = UserListAdapter(listModel.getResponseData()!!, this@UserListActivity, dialog, editTexts, tvSendOTPbool, binding.progressBar, binding.progressBarHolder, binding.tvForgotPin)
-                            binding.rvUserList.adapter = adapter
-                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
-                        } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
-                        }
-
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onFailure(call: Call<AddedUserListModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@UserListActivity)
-                }
-            })
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this)
-        }
-    }
 
     override fun onBackPressed() {
-        finish()
-        super.onBackPressed()
+        finishAffinity()
     }
 
-    class UserListAdapter(private val listModel: List<AddedUserListModel.ResponseData>, private var activity: Activity, private var dialog: Dialog, var editTexts: Array<EditText>,
-                          var tvSendOTPbool: Boolean = true, var progressBar: ProgressBar, var progressBarHolder: FrameLayout, var tvForgotPin: TextView) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
-
-        var clickabled: Boolean = false
+    class UserListAdapter(private val listModel: AddedUserListModel.ResponseData, private var activity: Activity, var binding: ActivityUserListBinding, var USERID: String, var CoUserID: String, var CoEMAIL: String) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
+        var userList = UserListActivity()
+        private var selectedItem = -1
+        private var coUserlistModel: List<AddedUserListModel.ResponseData.CoUser>? = listModel.coUserList
+        lateinit var txtError: TextView
 
         inner class MyViewHolder(var bindingAdapter: UserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -122,126 +88,56 @@ open class UserListActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
-        //        ic_checked_to_icon
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bindingAdapter.tvName.text = listModel.get(position).name
+            holder.bindingAdapter.tvName.text = coUserlistModel?.get(position)!!.name
 
             holder.bindingAdapter.ivCheck.setImageResource(R.drawable.ic_checked_icon)
-            if (clickabled) {
+            holder.bindingAdapter.ivCheck.visibility = View.INVISIBLE
+            if (selectedItem == position) {
                 holder.bindingAdapter.ivCheck.visibility = View.VISIBLE
-            } else {
-                holder.bindingAdapter.ivCheck.visibility = View.INVISIBLE
-            }
-            holder.bindingAdapter.rlCheckedUser.setOnClickListener { view ->
-                dialog = Dialog(activity)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.comfirm_pin_layout)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-
-                val btnDone: Button = dialog.findViewById(R.id.btnDone)
-                val txtError: TextView = dialog.findViewById(R.id.txtError)
-                val edtOTP1: EditText = dialog.findViewById(R.id.edtOTP1)
-                val edtOTP2: EditText = dialog.findViewById(R.id.edtOTP2)
-                val edtOTP3: EditText = dialog.findViewById(R.id.edtOTP3)
-                val edtOTP4: EditText = dialog.findViewById(R.id.edtOTP4)
-
-                editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-                edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP1.setOnKeyListener(PinOnKeyListener(0, editTexts))
-                edtOTP2.setOnKeyListener(PinOnKeyListener(1, editTexts))
-                edtOTP3.setOnKeyListener(PinOnKeyListener(2, editTexts))
-                edtOTP4.setOnKeyListener(PinOnKeyListener(3, editTexts))
-                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
-                        return@setOnKeyListener true
-                    }
-                    false
-                }
-                btnDone.setOnClickListener {
-                    clickabled = true;
-                    if (edtOTP1.text.toString().equals("", ignoreCase = true)
-                            && edtOTP2.text.toString().equals("", ignoreCase = true)
-                            && edtOTP3.text.toString().equals("", ignoreCase = true)
-                            && edtOTP4.text.toString().equals("", ignoreCase = true)) {
-                        txtError.visibility = View.VISIBLE
-                        txtError.text = "Please enter OTP"
-                    } else {
-                        txtError.visibility = View.GONE
-                        txtError.error = ""
-                        if (BWSApplication.isNetworkConnected(activity)) {
-                            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
-                            val listCall: Call<VerifyPinModel> = APINewClient.getClient().getVerifyPin(listModel.get(position).coUserId,
-                                    edtOTP1.getText().toString() + "" +
-                                            edtOTP2.getText().toString() + "" +
-                                            edtOTP3.getText().toString() + "" +
-                                            edtOTP4.getText().toString())
-                            listCall.enqueue(object : Callback<VerifyPinModel> {
-                                override fun onResponse(call: Call<VerifyPinModel>, response: Response<VerifyPinModel>) {
-                                    try {
-                                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
-                                        val listModel: VerifyPinModel = response.body()!!
-                                        if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                            val i = Intent(activity, WalkScreenActivity::class.java)
-                                            activity.startActivity(i)
-                                            dialog.dismiss()
-                                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
-                                        } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
-                                            txtError.visibility = View.VISIBLE
-                                            txtError.error = listModel.getResponseMessage()
-                                        } else {
-                                            txtError.visibility = View.VISIBLE
-                                            txtError.error = listModel.getResponseMessage()
-                                        }
-
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
-                                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
-                                }
-                            })
-                        } else {
-                            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
-                        }
-                    }
-                }
-                dialog.show()
-                dialog.setCancelable(false)
             }
 
-            tvForgotPin.setOnClickListener {
-                dialog = Dialog(activity)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.comfirm_pin_layout)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            holder.bindingAdapter.rlAddNewCard.setOnClickListener { view ->
+                val previousItem = selectedItem
+                selectedItem = position
+                notifyItemChanged(previousItem)
+                notifyItemChanged(position)
+                binding.btnLogIn.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                binding.btnLogIn.isEnabled = true
+                binding.tvForgotPin.isEnabled = true
+                binding.tvForgotPin.setTextColor(activity.getResources().getColor(R.color.app_theme_color))
+                USERID = coUserlistModel!!.get(position).userID.toString()
+                CoUserID = coUserlistModel!!.get(position).coUserId.toString()
+                CoEMAIL = coUserlistModel!!.get(position).email.toString()
 
-                val btnDone: Button = dialog.findViewById(R.id.btnDone)
-                val txtError: TextView = dialog.findViewById(R.id.txtError)
-                val edtOTP1: EditText = dialog.findViewById(R.id.edtOTP1)
-                val edtOTP2: EditText = dialog.findViewById(R.id.edtOTP2)
-                val edtOTP3: EditText = dialog.findViewById(R.id.edtOTP3)
-                val edtOTP4: EditText = dialog.findViewById(R.id.edtOTP4)
+            }
 
-                editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-                edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, tvSendOTPbool))
-                edtOTP1.setOnKeyListener(PinOnKeyListener(0, editTexts))
-                edtOTP2.setOnKeyListener(PinOnKeyListener(1, editTexts))
-                edtOTP3.setOnKeyListener(PinOnKeyListener(2, editTexts))
-                edtOTP4.setOnKeyListener(PinOnKeyListener(3, editTexts))
-                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+            binding.btnLogIn.setOnClickListener {
+                userList.dialog = Dialog(activity)
+                userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                userList.dialog.setContentView(R.layout.comfirm_pin_layout)
+                userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+                val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
+                val txtError: TextView = userList.dialog.findViewById(R.id.txtError)
+                val edtOTP1: EditText = userList.dialog.findViewById(R.id.edtOTP1)
+                val edtOTP2: EditText = userList.dialog.findViewById(R.id.edtOTP2)
+                val edtOTP3: EditText = userList.dialog.findViewById(R.id.edtOTP3)
+                val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
+
+                userList.editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                edtOTP1.setOnKeyListener(PinOnKeyListener(0, userList.editTexts))
+                edtOTP2.setOnKeyListener(PinOnKeyListener(1, userList.editTexts))
+                edtOTP3.setOnKeyListener(PinOnKeyListener(2, userList.editTexts))
+                edtOTP4.setOnKeyListener(PinOnKeyListener(3, userList.editTexts))
+                userList.dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
+                        userList.dialog.dismiss()
                         return@setOnKeyListener true
                     }
                     false
@@ -255,10 +151,10 @@ open class UserListActivity : AppCompatActivity() {
                         txtError.text = "Please enter OTP"
                     } else {
                         txtError.visibility = View.GONE
-                        txtError.error = ""
+                        txtError.text = ""
                         if (BWSApplication.isNetworkConnected(activity)) {
-                            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
-                            val listCall: Call<VerifyPinModel> = APINewClient.getClient().getVerifyPin(listModel.get(position).coUserId,
+                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            val listCall: Call<VerifyPinModel> = APINewClient.getClient().getVerifyPin(CoUserID,
                                     edtOTP1.getText().toString() + "" +
                                             edtOTP2.getText().toString() + "" +
                                             edtOTP3.getText().toString() + "" +
@@ -266,28 +162,34 @@ open class UserListActivity : AppCompatActivity() {
                             listCall.enqueue(object : Callback<VerifyPinModel> {
                                 override fun onResponse(call: Call<VerifyPinModel>, response: Response<VerifyPinModel>) {
                                     try {
-                                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                         val listModel: VerifyPinModel = response.body()!!
                                         if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                            val i = Intent(activity, WalkScreenActivity::class.java)
+                                            val i = Intent(activity, BottomNavigationActivity::class.java)
                                             activity.startActivity(i)
-                                            dialog.dismiss()
+                                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                            val editor = shared.edit()
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.userID)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_CoUserID, listModel.getResponseData()?.coUserId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.getResponseData()?.email)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
+                                            editor.commit()
+                                            userList.dialog.dismiss()
                                             BWSApplication.showToast(listModel.getResponseMessage(), activity)
                                         } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
                                             txtError.visibility = View.VISIBLE
-                                            txtError.error = listModel.getResponseMessage()
+                                            txtError.text = listModel.getResponseMessage()
                                         } else {
                                             txtError.visibility = View.VISIBLE
-                                            txtError.error = listModel.getResponseMessage()
+                                            txtError.text = listModel.getResponseMessage()
                                         }
-
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }
                                 }
 
                                 override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
-                                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 }
                             })
                         } else {
@@ -295,13 +197,126 @@ open class UserListActivity : AppCompatActivity() {
                         }
                     }
                 }
-                dialog.show()
-                dialog.setCancelable(false)
+                userList.dialog.show()
+                userList.dialog.setCancelable(false)
             }
+
+            binding.tvForgotPin.setOnClickListener {
+                if (BWSApplication.isNetworkConnected(activity)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    val listCall: Call<ForgotPinModel> = APINewClient.getClient().getForgotPin(USERID, CoUserID, CoEMAIL)
+                    listCall.enqueue(object : Callback<ForgotPinModel> {
+                        override fun onResponse(call: Call<ForgotPinModel>, response: Response<ForgotPinModel>) {
+                            try {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                val listModel: ForgotPinModel = response.body()!!
+                                if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    userList.dialog = Dialog(activity)
+                                    userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                    userList.dialog.setContentView(R.layout.comfirm_pin_layout)
+                                    userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+                                    val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
+                                    txtError = userList.dialog.findViewById(R.id.txtError)
+                                    val edtOTP1: EditText = userList.dialog.findViewById(R.id.edtOTP1)
+                                    val edtOTP2: EditText = userList.dialog.findViewById(R.id.edtOTP2)
+                                    val edtOTP3: EditText = userList.dialog.findViewById(R.id.edtOTP3)
+                                    val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
+
+                                    userList.editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                                    edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                                    edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                                    edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                                    edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
+                                    edtOTP1.setOnKeyListener(PinOnKeyListener(0, userList.editTexts))
+                                    edtOTP2.setOnKeyListener(PinOnKeyListener(1, userList.editTexts))
+                                    edtOTP3.setOnKeyListener(PinOnKeyListener(2, userList.editTexts))
+                                    edtOTP4.setOnKeyListener(PinOnKeyListener(3, userList.editTexts))
+                                    userList.dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            userList.dialog.dismiss()
+                                            return@setOnKeyListener true
+                                        }
+                                        false
+                                    }
+
+                                    btnDone.setOnClickListener {
+                                        if (edtOTP1.text.toString().equals("", ignoreCase = true)
+                                                && edtOTP2.text.toString().equals("", ignoreCase = true)
+                                                && edtOTP3.text.toString().equals("", ignoreCase = true)
+                                                && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                                            txtError.visibility = View.VISIBLE
+                                            txtError.text = "Please enter OTP"
+                                        } else {
+                                            txtError.visibility = View.GONE
+                                            txtError.text = ""
+
+                                            if (BWSApplication.isNetworkConnected(activity)) {
+                                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                                val listCall: Call<VerifyPinModel> = APINewClient.getClient().getVerifyPin(USERID,
+                                                        edtOTP1.getText().toString() + "" +
+                                                                edtOTP2.getText().toString() + "" +
+                                                                edtOTP3.getText().toString() + "" +
+                                                                edtOTP4.getText().toString())
+                                                listCall.enqueue(object : Callback<VerifyPinModel> {
+                                                    override fun onResponse(call: Call<VerifyPinModel>, response: Response<VerifyPinModel>) {
+                                                        try {
+                                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                                            val listModel: VerifyPinModel = response.body()!!
+                                                            if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                                userList.dialog.dismiss()
+                                                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                                            } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                                                                txtError.visibility = View.VISIBLE
+                                                                txtError.text = listModel.getResponseMessage()
+                                                            } else {
+                                                                txtError.visibility = View.VISIBLE
+                                                                txtError.text = listModel.getResponseMessage()
+                                                            }
+
+                                                        } catch (e: Exception) {
+                                                            e.printStackTrace()
+                                                        }
+                                                    }
+
+                                                    override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
+                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                                    }
+                                                })
+                                            } else {
+                                                BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+                                            }
+                                        }
+                                    }
+                                    userList.dialog.show()
+                                    userList.dialog.setCancelable(false)
+                                    BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                                    txtError.visibility = View.VISIBLE
+                                    txtError.text = listModel.getResponseMessage()
+                                } else {
+                                    txtError.visibility = View.VISIBLE
+                                    txtError.text = listModel.getResponseMessage()
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ForgotPinModel>, t: Throwable) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        }
+                    })
+                } else {
+                    BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+                }
+            }
+
         }
 
         override fun getItemCount(): Int {
-            return listModel.size
+            return coUserlistModel!!.size
         }
     }
 
@@ -329,6 +344,7 @@ open class UserListActivity : AppCompatActivity() {
                 btnDone.setTextColor(activity.getResources().getColor(R.color.white))
                 btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
             }
+
         }
 
         override fun afterTextChanged(s: Editable) {
@@ -387,6 +403,37 @@ open class UserListActivity : AppCompatActivity() {
                 if (editTexts.get(currentIndex).getText().toString().isEmpty() && currentIndex != 0) editTexts.get(currentIndex - 1).requestFocus()
             }
             return false
+        }
+    }
+
+    private fun prepareUserData() {
+        if (BWSApplication.isNetworkConnected(this)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall: Call<AddedUserListModel> = APINewClient.getClient().getUserList(USERID)
+            listCall.enqueue(object : Callback<AddedUserListModel> {
+                override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
+                    try {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val listModel: AddedUserListModel = response.body()!!
+                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            binding.rvUserList.layoutManager = LinearLayoutManager(activity)
+                            adapter = UserListAdapter(listModel.getResponseData()!!, activity, binding, USERID.toString(), CoUserID.toString(), CoEMAIL.toString())
+                            binding.rvUserList.adapter = adapter
+                        } else {
+                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<AddedUserListModel>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                }
+            })
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
 }

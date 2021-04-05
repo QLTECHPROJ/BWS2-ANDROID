@@ -674,5 +674,4 @@ public class ReminderActivity extends AppCompatActivity {
             }
         }
     }
-
 }

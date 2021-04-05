@@ -14,6 +14,7 @@ import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
+import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySplashBinding
@@ -24,13 +25,19 @@ import retrofit2.Response
 class SplashActivity : AppCompatActivity() {
     lateinit var ctx: Context
     lateinit var binding: ActivitySplashBinding
-    var UserID: String? = null
+    var ONLY_USERID: String? = null
+    var USERID: String? = null
+    var CoUserID: String? = null
+    var EMAIL: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN, MODE_PRIVATE)
-        UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         checkAppVersion()
+        checkUserDetails()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -53,7 +60,6 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkAppVersion() {
         val appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa"
-
         if (BWSApplication.isNetworkConnected(this)) {
             val listCall: Call<VersionModel> = APINewClient.getClient().getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE)
             listCall.enqueue(object : Callback<VersionModel> {
@@ -101,6 +107,26 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkUserDetails() {
+        if (BWSApplication.isNetworkConnected(this)) {
+            val listCall: Call<CoUserDetailsModel> = APINewClient.getClient().getCoUserDetails(USERID, CoUserID)
+            listCall.enqueue(object : Callback<CoUserDetailsModel> {
+                override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
+                    try {
+                        val coUserDetailsModel: CoUserDetailsModel = response.body()!!
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<CoUserDetailsModel>, t: Throwable) {
+                }
+            })
+        } else {
+        }
+    }
+
+
     private fun askBattryParmition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val packageName = packageName
@@ -120,13 +146,20 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun callDashboard() {
-        if (UserID.equals("", ignoreCase = true)) {
+        if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
                 intent.putExtra(CONSTANTS.ScreenVisible, "1")
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
+        } else if (!USERID.equals("", ignoreCase = true) && CoUserID.equals("", ignoreCase = true)){
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this@SplashActivity, UserListActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, (2 * 800).toLong())
+
         } else {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
@@ -134,10 +167,6 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
-
         }
-
-
     }
-
 }

@@ -3,11 +3,7 @@ package com.brainwellnessspa.UserModuleTwo.Models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class ForgotPasswordModel {
-    @SerializedName("ResponseData")
-    @Expose
-    private var responseData: ResponseData? = null
-
+class CoUserDetailsModel {
     @SerializedName("ResponseCode")
     @Expose
     private var responseCode: String? = null
@@ -19,14 +15,6 @@ class ForgotPasswordModel {
     @SerializedName("ResponseStatus")
     @Expose
     private var responseStatus: String? = null
-
-    fun getResponseData(): ResponseData? {
-        return responseData
-    }
-
-    fun setResponseData(responseData: ResponseData?) {
-        this.responseData = responseData
-    }
 
     fun getResponseCode(): String? {
         return responseCode
@@ -50,19 +38,5 @@ class ForgotPasswordModel {
 
     fun setResponseStatus(responseStatus: String?) {
         this.responseStatus = responseStatus
-    }
-
-    class ResponseData {
-        @SerializedName("errormsg")
-        @Expose
-        private var errormsg: String? = null
-
-        fun getErrormsg(): String? {
-            return errormsg;
-        }
-
-        fun setErrormsg(errormsg: String?) {
-            this.errormsg = errormsg;
-        }
     }
 }
