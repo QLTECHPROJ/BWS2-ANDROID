@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
-import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
@@ -26,7 +25,6 @@ import retrofit2.Response
 class SplashActivity : AppCompatActivity() {
     lateinit var ctx: Context
     lateinit var binding: ActivitySplashBinding
-    var ONLY_USERID: String? = null
     var USERID: String? = null
     var CoUserID: String? = null
     var EMAIL: String? = null
@@ -149,7 +147,7 @@ class SplashActivity : AppCompatActivity() {
     private fun callDashboard() {
         if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, DassAssSliderActivity::class.java)
+                val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
                 intent.putExtra(CONSTANTS.ScreenVisible, "1")
                 startActivity(intent)
                 finish()

@@ -167,6 +167,7 @@ open class UserListActivity : AppCompatActivity() {
                                         if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                             val i = Intent(activity, BottomNavigationActivity::class.java)
                                             activity.startActivity(i)
+                                            activity.finish()
                                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                             val editor = shared.edit()
                                             editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.userID)
@@ -338,7 +339,7 @@ open class UserListActivity : AppCompatActivity() {
             if (!OTP1.isEmpty() && !OTP2.isEmpty() && !OTP3.isEmpty() && !OTP4.isEmpty()) {
                 btnDone.setEnabled(true)
                 btnDone.setTextColor(activity.getResources().getColor(R.color.white))
-                btnDone.setBackgroundResource(R.drawable.extra_round_cornor)
+                btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
                 btnDone.setEnabled(false)
                 btnDone.setTextColor(activity.getResources().getColor(R.color.white))
