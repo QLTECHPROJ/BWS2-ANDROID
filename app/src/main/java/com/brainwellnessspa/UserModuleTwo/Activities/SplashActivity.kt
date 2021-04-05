@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
@@ -148,7 +149,7 @@ class SplashActivity : AppCompatActivity() {
     private fun callDashboard() {
         if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
+                val intent = Intent(this@SplashActivity, DassAssSliderActivity::class.java)
                 intent.putExtra(CONSTANTS.ScreenVisible, "1")
                 startActivity(intent)
                 finish()
