@@ -233,6 +233,7 @@ class ProfileProgressActivity : AppCompatActivity() {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
+
     private fun callFourthNext() {
         binding.llIndicate.progress = 3
         binding.llFirst.visibility = View.GONE
