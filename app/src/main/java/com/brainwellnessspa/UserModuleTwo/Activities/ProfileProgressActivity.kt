@@ -340,8 +340,8 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnThirdDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
             binding.btnMaleGX.setTextColor(resources.getColor(R.color.black))
             binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnFemaleGX.setTextColor(resources.getColor(R.color.light_blue_theme))
-            binding.btnFemaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnFemaleGX.setTextColor(resources.getColor(R.color.black))
+            binding.btnFemaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
         }
     }
 
