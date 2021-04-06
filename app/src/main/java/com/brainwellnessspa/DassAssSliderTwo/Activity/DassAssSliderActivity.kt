@@ -42,7 +42,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         ctx = this@DassAssSliderActivity
         activity = this@DassAssSliderActivity
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
-        binding.btnDone.setOnClickListener {
+        binding.btnNext.setOnClickListener {
 //            val i = Intent(ctx, AssProcessActivity::class.java)
 //            i.putExtra(CONSTANTS.ASSPROCESS, "1")
 //            startActivity(i)

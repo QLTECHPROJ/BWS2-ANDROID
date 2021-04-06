@@ -161,7 +161,7 @@ class SplashActivity : AppCompatActivity() {
 
         } else {
             Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
+                val intent = Intent(this@SplashActivity, ProfileProgressActivity::class.java)
                 intent.putExtra(CONSTANTS.ScreenVisible, "1")
                 startActivity(intent)
                 finish()

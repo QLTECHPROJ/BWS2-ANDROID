@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:max="4"
-                android:progress="0"/>
+                android:progress="0" />
         </LinearLayout>
 
         <RelativeLayout
@@ -82,17 +82,13 @@
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btnFirstDone"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Next"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 
@@ -154,28 +150,23 @@
                 android:text="Gender X"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
-            <Button
+
+            <ImageView
                 android:id="@+id/btnPrevSecond"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Prev"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
-            <Button
+                android:rotation="180"
+                android:src="@drawable/ic_back_black_icon" />
+
+            <ImageView
                 android:id="@+id/btnSecondDone"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Next"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 
@@ -239,28 +230,23 @@
                 android:text="Female"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
-            <Button
+
+            <ImageView
                 android:id="@+id/btnPrevThird"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Prev"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
-            <Button
+                android:rotation="180"
+                android:src="@drawable/ic_back_black_icon" />
+
+            <ImageView
                 android:id="@+id/btnThirdDone"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Next"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 
@@ -334,28 +320,23 @@
                 android:text="> 18"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
-            <Button
+
+            <ImageView
                 android:id="@+id/btnPrevFour"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Prev"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
-            <Button
+                android:rotation="180"
+                android:src="@drawable/ic_back_black_icon" />
+
+            <ImageView
                 android:id="@+id/btnForthDone"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Next"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 
@@ -418,6 +399,7 @@
                 android:text="No"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
+
             <Button
                 android:id="@+id/btnPrevFive"
                 android:layout_width="@dimen/_100sdp"
@@ -429,6 +411,7 @@
                 android:text="Prev"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
+
             <Button
                 android:id="@+id/btnFifthDone"
                 android:layout_width="@dimen/_100sdp"
