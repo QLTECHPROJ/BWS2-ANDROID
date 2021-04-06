@@ -64,6 +64,7 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
         binding.btnMale.setOnClickListener {
             gender = "Male"
+            genderX =""
             binding.btnSecondDone.isClickable = true
             binding.btnSecondDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnMale.setTextColor(resources.getColor(R.color.light_blue_theme))
@@ -72,10 +73,11 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnGenX.setTextColor(resources.getColor(R.color.black))
             binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            callSecoundNext()
+            callSecondNext("2")
         }
         binding.btnFemale.setOnClickListener {
             gender = "Female"
+            genderX =""
             binding.btnSecondDone.isClickable = true
             binding.btnSecondDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnMale.setTextColor(resources.getColor(R.color.black))
@@ -84,49 +86,45 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnFemale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             binding.btnGenX.setTextColor(resources.getColor(R.color.black))
             binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            callSecoundNext()
+            callSecondNext("2")
         }
 
         binding.btnGenX.setOnClickListener {
             gender = "Gender X"
             binding.btnSecondDone.isClickable = false
             binding.btnSecondDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            binding.btnThirdDone.isClickable = false
-            binding.btnThirdDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
             binding.btnMale.setTextColor(resources.getColor(R.color.black))
             binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnFemale.setTextColor(resources.getColor(R.color.black))
             binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnGenX.setTextColor(resources.getColor(R.color.light_blue_theme))
             binding.btnGenX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-            callSecoundNext()
+            callSecondNext("2")
         }
         binding.btnMaleGX.setOnClickListener {
             genderX = "Male"
-            binding.btnSecondDone.isClickable = true
-            binding.btnSecondDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnThirdDone.isClickable = true
             binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnMaleGX.setTextColor(resources.getColor(R.color.light_blue_theme))
             binding.btnMaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             binding.btnFemaleGX.setTextColor(resources.getColor(R.color.black))
             binding.btnFemaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            callSecoundNext()
+            callSecondNext("3")
         }
         binding.btnFemaleGX.setOnClickListener {
             genderX = "Female"
-            binding.btnSecondDone.isClickable = true
-            binding.btnSecondDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnThirdDone.isClickable = true
             binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnMaleGX.setTextColor(resources.getColor(R.color.black))
             binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnFemaleGX.setTextColor(resources.getColor(R.color.light_blue_theme))
             binding.btnFemaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-            callSecoundNext()
+            callSecondNext("3")
         }
         binding.btnOpn1.setOnClickListener {
             age = "0 - 4"
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnOpn1.setTextColor(resources.getColor(R.color.light_blue_theme))
             binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
@@ -139,6 +137,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
         binding.btnOpn2.setOnClickListener {
             age = "5 - 12"
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
             binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnOpn2.setTextColor(resources.getColor(R.color.light_blue_theme))
@@ -151,6 +151,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
         binding.btnOpn3.setOnClickListener {
             age = "13 - 17"
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
             binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
@@ -163,6 +165,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
         binding.btnOpn4.setOnClickListener {
             age = "> 18"
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
             binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
@@ -175,6 +179,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
         binding.btnYes.setOnClickListener {
             prevDrugUse = "Yes"
+            binding.btnFifthDone.isClickable = true
+            binding.btnFifthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnYes.setTextColor(resources.getColor(R.color.light_blue_theme))
             binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             binding.btnNo.setTextColor(resources.getColor(R.color.black))
@@ -182,6 +188,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
         binding.btnNo.setOnClickListener {
             prevDrugUse = "No"
+            binding.btnFifthDone.isClickable = true
+            binding.btnFifthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnYes.setTextColor(resources.getColor(R.color.black))
             binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnNo.setTextColor(resources.getColor(R.color.light_blue_theme))
@@ -189,62 +197,44 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
 
         binding.btnFirstDone.setOnClickListener {
-            if (!profileType.equals("", true)) {
-                callFirstNext()
-            } else {
-                binding.btnFirstDone.isClickable = false
-                binding.btnFirstDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            }
+            callFirstNext()
         }
         binding.btnSecondDone.setOnClickListener {
-            if (gender.equals("", true)) {
-                binding.btnSecondDone.isClickable = false
-                binding.btnSecondDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            } else if (gender.equals("Gender X", true) && genderX.equals("", true)) {
-                binding.btnSecondDone.isClickable = false
-                binding.btnSecondDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            } else {
-                callSecoundNext()
-            }
+                callSecondNext("2")
         }
         binding.btnPrevSecond.setOnClickListener {
             callSecondPrev()
         }
         binding.btnThirdDone.setOnClickListener {
-
+            callSecondNext("3")
         }
-        binding.btnForthDone.setOnClickListener {
-            if (!age.equals("", true)) {
-                callFourthNext()
-            } else {
-                binding.btnForthDone.isClickable = false
-                binding.btnForthDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            }
-        }
-        binding.btnPrevFour.setOnClickListener {
         binding.btnGenXReverse.setOnClickListener {
             callFirstNext()
         }
         binding.btnPrevThird.setOnClickListener {
             callFirstNext()
         }
+        binding.btnForthDone.setOnClickListener {
+            callFourthNext()
+        }
+        binding.btnPrevFour.setOnClickListener {
+            callFourthPrev()
+        }
         binding.btnFifthDone.setOnClickListener {
-            if (!prevDrugUse.equals("", true)) {
-                binding.llIndicate.progress = 4
-                binding.llFirst.visibility = View.GONE
-                binding.llSecond.visibility = View.GONE
-                binding.llThird.visibility = View.GONE
-                binding.llForth.visibility = View.GONE
-                binding.llFifth.visibility = View.VISIBLE
-                sendProfileData()
-            } else {
-                binding.btnFifthDone.isClickable = false
-                binding.btnFifthDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            }
+            binding.llIndicate.progress = 4
+            sendProfileData()
         }
 
         binding.btnPrevFive.setOnClickListener {
-            callSecoundNext()
+            callSecondNext("1")
+        }
+    }
+
+    private fun callFourthPrev() {
+        if (gender.equals("Gender X")) {
+            callGenderXSetData()
+        } else {
+            callFirstNext()
         }
     }
 
@@ -290,8 +280,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         if (prevDrugUse.equals("Yes", true)) {
             binding.btnFifthDone.isClickable = true
             binding.btnFifthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnPrevFive.isClickable = true
-            binding.btnPrevFive.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnYes.setTextColor(resources.getColor(R.color.light_blue_theme))
             binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             binding.btnNo.setTextColor(resources.getColor(R.color.black))
@@ -299,8 +287,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         } else if (prevDrugUse.equals("No", true)) {
             binding.btnFifthDone.isClickable = true
             binding.btnFifthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnPrevFive.isClickable = true
-            binding.btnPrevFive.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnYes.setTextColor(resources.getColor(R.color.black))
             binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnNo.setTextColor(resources.getColor(R.color.light_blue_theme))
@@ -308,8 +294,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         } else {
             binding.btnFifthDone.isClickable = false
             binding.btnFifthDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            binding.btnPrevFive.isClickable = true
-            binding.btnPrevFive.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnYes.setTextColor(resources.getColor(R.color.black))
             binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnNo.setTextColor(resources.getColor(R.color.black))
@@ -317,86 +301,112 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
     }
 
-    private fun callSecoundNext() {
-        if (gender.equals("Gender X")) {
-            binding.llFirst.visibility = View.GONE
-            binding.llSecond.visibility = View.GONE
-            binding.llThird.visibility = View.VISIBLE
-            binding.llForth.visibility = View.GONE
-            binding.llFifth.visibility = View.GONE
-        } else {
-            binding.llIndicate.progress = 2
-            binding.llFirst.visibility = View.GONE
-            binding.llSecond.visibility = View.GONE
-            binding.llThird.visibility = View.GONE
-            binding.llForth.visibility = View.VISIBLE
-            binding.llFifth.visibility = View.GONE
-            if (age.equals("0 - 4", true)) {
-                binding.btnPrevThird.isClickable = true
-                binding.btnPrevThird.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnThirdDone.isClickable = true
-                binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(resources.getColor(R.color.light_blue_theme))
-                binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            } else if (age.equals("5 - 12", true)) {
-                binding.btnPrevThird.isClickable = true
-                binding.btnPrevThird.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnThirdDone.isClickable = true
-                binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn2.setTextColor(resources.getColor(R.color.light_blue_theme))
-                binding.btnOpn2.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            } else if (age.equals("13 - 17", true)) {
-                binding.btnPrevThird.isClickable = true
-                binding.btnPrevThird.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnThirdDone.isClickable = true
-                binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn3.setTextColor(resources.getColor(R.color.light_blue_theme))
-                binding.btnOpn3.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            } else if (age.equals("> 18", true)) {
-                binding.btnPrevThird.isClickable = true
-                binding.btnPrevThird.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnThirdDone.isClickable = true
-                binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn4.setTextColor(resources.getColor(R.color.light_blue_theme))
-                binding.btnOpn4.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+    private fun callSecondNext(s: String) {
+        if (s.equals("2", true)) {
+            if (gender.equals("Gender X")) {
+                callGenderXSetData()
             } else {
-                binding.btnPrevThird.isClickable = false
-                binding.btnPrevThird.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnThirdDone.isClickable = false
-                binding.btnThirdDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
-                binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+                callSecondNextElseBlock()
             }
+        } else if (s.equals("3", true)) {
+            callSecondNextElseBlock()
+        } else {
+            callSecondNextElseBlock()
+        }
+    }
+
+    private fun callGenderXSetData() {
+        binding.llFirst.visibility = View.GONE
+        binding.llSecond.visibility = View.GONE
+        binding.llThird.visibility = View.VISIBLE
+        binding.llForth.visibility = View.GONE
+        binding.llFifth.visibility = View.GONE
+        if (genderX.equals("Male", true)) {
+            binding.btnThirdDone.isClickable = true
+            binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMaleGX.setTextColor(resources.getColor(R.color.light_blue_theme))
+            binding.btnMaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnFemaleGX.setTextColor(resources.getColor(R.color.black))
+            binding.btnFemaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        } else if (genderX.equals("Female", true)) {
+            binding.btnThirdDone.isClickable = true
+            binding.btnThirdDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMaleGX.setTextColor(resources.getColor(R.color.black))
+            binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnFemaleGX.setTextColor(resources.getColor(R.color.light_blue_theme))
+            binding.btnFemaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+        } else {
+            binding.btnThirdDone.isClickable = false
+            binding.btnThirdDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMaleGX.setTextColor(resources.getColor(R.color.black))
+            binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnFemaleGX.setTextColor(resources.getColor(R.color.light_blue_theme))
+            binding.btnFemaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+        }
+    }
+
+    private fun callSecondNextElseBlock() {
+        binding.llIndicate.progress = 2
+        binding.llFirst.visibility = View.GONE
+        binding.llSecond.visibility = View.GONE
+        binding.llThird.visibility = View.GONE
+        binding.llForth.visibility = View.VISIBLE
+        binding.llFifth.visibility = View.GONE
+        if (age.equals("0 - 4", true)) {
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnOpn1.setTextColor(resources.getColor(R.color.light_blue_theme))
+            binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        } else if (age.equals("5 - 12", true)) {
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn2.setTextColor(resources.getColor(R.color.light_blue_theme))
+            binding.btnOpn2.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        } else if (age.equals("13 - 17", true)) {
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn3.setTextColor(resources.getColor(R.color.light_blue_theme))
+            binding.btnOpn3.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        } else if (age.equals("> 18", true)) {
+            binding.btnForthDone.isClickable = true
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn4.setTextColor(resources.getColor(R.color.light_blue_theme))
+            binding.btnOpn4.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+        } else {
+            binding.btnForthDone.isClickable = false
+            binding.btnForthDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
+            binding.btnOpn1.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn2.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn3.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnOpn4.setTextColor(resources.getColor(R.color.black))
+            binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
         }
     }
 
@@ -441,8 +451,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         if (gender.equals("Male", true)) {
             binding.btnSecondDone.isClickable = true
             binding.btnSecondDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnPrevSecond.isClickable = true
-            binding.btnPrevSecond.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnMale.setTextColor(resources.getColor(R.color.light_blue_theme))
             binding.btnMale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             binding.btnFemale.setTextColor(resources.getColor(R.color.black))
@@ -452,8 +460,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         } else if (gender.equals("Female", true)) {
             binding.btnSecondDone.isClickable = true
             binding.btnSecondDone.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnPrevSecond.isClickable = true
-            binding.btnPrevSecond.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnMale.setTextColor(resources.getColor(R.color.black))
             binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnFemale.setTextColor(resources.getColor(R.color.light_blue_theme))
@@ -463,8 +469,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         } else if (gender.equals("Gender X", true)) {
             binding.btnSecondDone.isClickable = false
             binding.btnSecondDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            binding.btnPrevSecond.isClickable = true
-            binding.btnPrevSecond.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.btnMale.setTextColor(resources.getColor(R.color.black))
             binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnFemale.setTextColor(resources.getColor(R.color.black))
@@ -474,8 +478,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         } else {
             binding.btnSecondDone.isClickable = false
             binding.btnSecondDone.setColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            binding.btnPrevSecond.isClickable = true
-            binding.btnPrevSecond.setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
             binding.llIndicate.progress = 1
             binding.btnMale.setTextColor(resources.getColor(R.color.black))
             binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)

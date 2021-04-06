@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_25sdp"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tvFirst"
@@ -103,7 +103,7 @@
             android:layout_marginTop="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_25sdp"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tvSecond"
@@ -160,7 +160,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:rotation="180"
-                android:clickable="false"
+                android:clickable="true"
                 app:tint="@color/gray"
                 android:src="@drawable/ic_back_black_icon" />
 
@@ -244,7 +244,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:rotation="180"
-                android:clickable="false"
+                android:clickable="true"
                 app:tint="@color/gray"
                 android:src="@drawable/ic_back_black_icon" />
 
@@ -338,7 +338,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:rotation="180"
-                android:clickable="false"
+                android:clickable="true"
                 app:tint="@color/gray"
                 android:src="@drawable/ic_back_black_icon" />
 
@@ -421,7 +421,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:rotation="180"
-                android:clickable="false"
+                android:clickable="true"
                 app:tint="@color/gray"
                 android:src="@drawable/ic_back_black_icon" />
 
