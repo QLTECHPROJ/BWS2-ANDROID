@@ -11,6 +11,7 @@ import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel;
 import com.brainwellnessspa.UserModuleTwo.Models.NewSignUpModel;
+import com.brainwellnessspa.UserModuleTwo.Models.ProfileSaveDataModel;
 import com.brainwellnessspa.UserModuleTwo.Models.SignInModel;
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel;
 
@@ -81,4 +82,14 @@ public interface APINewInterface {
     Call<ForgotPinModel> getForgotPin(@Field("UserID") String userID,
                                       @Field("CoUserId") String CoUserId,
                                       @Field("Email") String email);
+
+    @POST("profilesaveans")
+    @FormUrlEncoded
+    Call<ProfileSaveDataModel> getProfileSaveData(@Field("UserID") String userID,
+                                                  @Field("CoUserId") String CoUserId,
+                                                  @Field("profileType") String profileType,
+                                                  @Field("gender") String gender,
+                                                  @Field("genderX") String genderX,
+                                                  @Field("age") String age,
+                                                  @Field("prevDrugUse") String prevDrugUse);
 }
