@@ -3,7 +3,9 @@ package com.brainwellnessspa.DassAssSliderTwo.Activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +22,8 @@ import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
 import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,25 +36,25 @@ class DassAssSliderActivity : AppCompatActivity() {
     var passAnsIn: String = ""
     var passAns: String = ""
     var passQus: String = ""
+    var assQus = arrayListOf<String>()
+    var assAns= arrayListOf<String>()
     lateinit var listModel1: AssessmentQusModel
     lateinit var activity: Activity
     var myPos: Int = 0;
+    var gson:Gson = Gson()
+    lateinit var editor: SharedPreferences.Editor
+
     private val dataListModel = ArrayList<OptionsDataListModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)
         ctx = this@DassAssSliderActivity
         activity = this@DassAssSliderActivity
+        getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
+
         binding.btnNext.setOnClickListener {
-//            val i = Intent(ctx, AssProcessActivity::class.java)
-//            i.putExtra(CONSTANTS.ASSPROCESS, "1")
-//            startActivity(i)
             if (myPos < listModel1.responseData!!.questions!!.size - 1) {
-//                passQus=passQus+","+pos.toString()
-//                passAns=passAns+","+pos.toString()
-//                Log.e("qus ", passQus)
-//                Log.e("qus ", passAns)
                 myPos += 2
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), ctx)
@@ -65,7 +69,30 @@ class DassAssSliderActivity : AppCompatActivity() {
                 startActivity(i)
             }
         }
+        binding.btnPrev.setOnClickListener {
+            if (myPos>1) {
+                myPos -= 2
+                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), ctx)
+                    binding.rvFirstList.adapter = firstListAdapter
+                } else {
+                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), ctx)
+                    binding.rvFirstList.adapter = firstListAdapter
+                }
+            }
+        }
         PrepareData()
+    }
+
+    fun getAssSaveData() {
+        val shared = ctx.getSharedPreferences(CONSTANTS.DassMain, MODE_PRIVATE)
+        val json2 = shared.getString(CONSTANTS.DassQus, gson.toString())
+        val json3 = shared.getString(CONSTANTS.DassAns,  gson.toString())
+        if (!json2.equals(gson.toString(), ignoreCase = true)) {
+            val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
+            assQus = gson.fromJson(json2, type1)
+            assAns = gson.fromJson(json3, type1)
+        }
     }
 
     fun PrepareData() {
@@ -132,19 +159,44 @@ class DassAssSliderActivity : AppCompatActivity() {
 
     class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, val ctx: Context) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
-        var posItem: Int = 0
+        var posItem: Int = -1
 
         var dass = DassAssSliderActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
             init {
                 bindingAdapter.cbChecked.setOnClickListener {
+                    setData()
                     mSelectedItem = adapterPosition
+                    if(posItem!=-1)
                     notifyItemChanged(posItem)
                     notifyItemChanged(mSelectedItem)
                     posItem = mSelectedItem
+                    if(dass.assQus.size == 0) {
+                        dass.assQus.add(listModel.question.toString())
+                        dass.assAns.add(0, adapterPosition.toString())
 
-                    BWSApplication.showToast("position :-$mSelectedItem", ctx)
+                    }else{
+                        if(dass.assQus.contains(listModel.question)){
+                            for(i in 0 until dass.assQus.size){
+                                if(dass.assQus[i] == listModel.question){
+                                    dass.assAns.removeAt(i)
+                                    dass.assAns.add(i, adapterPosition.toString())
+                                }
+                            }
+                        }else{
+                            dass.assQus.add(pos, listModel.question.toString())
+                            dass.assAns.add(pos, adapterPosition.toString())
+                        }
+                    }
+                    Log.e("Qus", dass.assQus.toString())
+                    Log.e("Ans", dass.assAns.toString())
+
+                    dass.editor = ctx.getSharedPreferences(CONSTANTS.DassMain, MODE_PRIVATE).edit()
+                    dass.editor.putString(CONSTANTS.DassQus, dass.gson.toJson(dass.assQus)) //Friend
+                    dass.editor.putString(CONSTANTS.DassAns, dass.gson.toJson(dass.assAns)) //Friend
+                    dass.editor.apply()
+                    dass.editor.commit()
                 }
             }
         }
@@ -155,34 +207,33 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            setData()
+            if(dass.assQus.contains(listModel.question)){
+                for(i in 0 until dass.assQus.size){
+                    if(dass.assQus[i] == listModel.question){
+                        posItem = Integer.parseInt(dass.assAns.get(i))
+                        mSelectedItem = Integer.parseInt(dass.assAns.get(i))
+                        break
+                    }
+                }
+            }
             if (position == posItem) {
                 holder.bindingAdapter.cbChecked.setChecked(position == posItem)
             } else {
                 holder.bindingAdapter.cbChecked.setChecked(false)
             }
             holder.bindingAdapter.cbChecked.text = position.toString()
+        }
 
-            /*  holder.bindingAdapter.cbChecked.setOnCheckedChangeListener{ compoundButton: CompoundButton, b: Boolean ->
-                  BWSApplication.showToast("position :-$position", ctx)
-                  val previousItem = mSelectedItem
-                  mSelectedItem = position
-                  notifyItemChanged(previousItem)
-                  notifyItemChanged(position)
-              }*/
-            /* holder.bindingAdapter.cbChecked.setOnClickListener { view ->
-                 BWSApplication.showToast("position :-$position", ctx)
-                 val previousItem = mSelectedItem
-                 mSelectedItem = position
-                 notifyItemChanged(previousItem)
-                 notifyItemChanged(position)
-             }*/
-            /* if (mSelectedItem == position) {
-                 holder.bindingAdapter.cbChecked.isSelected = true
-                 dass.passAnsIn = position.toString()
-                 Log.e("ans ", position.toString())
-             }else{
-                 holder.bindingAdapter.cbChecked.isSelected = false
-             }*/
+        private fun setData() {
+            val shared = ctx.getSharedPreferences(CONSTANTS.DassMain, MODE_PRIVATE)
+            val json2 = shared.getString(CONSTANTS.DassQus, dass.gson.toString())
+            val json3 = shared.getString(CONSTANTS.DassAns,  dass.gson.toString())
+            if (!json2.equals(dass.gson.toString(), ignoreCase = true)) {
+                val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
+                dass.assQus = dass.gson.fromJson(json2, type1)
+                dass.assAns = dass.gson.fromJson(json3, type1)
+            }
         }
 
         override fun getItemCount(): Int {

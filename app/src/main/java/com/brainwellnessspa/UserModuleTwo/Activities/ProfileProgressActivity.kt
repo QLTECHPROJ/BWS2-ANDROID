@@ -211,7 +211,7 @@ class ProfileProgressActivity : AppCompatActivity() {
             callSecondPrev()
         }
         binding.btnThirdDone.setOnClickListener {
-            callSecoundNext()
+
         }
         binding.btnForthDone.setOnClickListener {
             if (!age.equals("", true)) {
@@ -222,10 +222,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             }
         }
         binding.btnPrevFour.setOnClickListener {
+        binding.btnGenXReverse.setOnClickListener {
             callFirstNext()
         }
-
-        binding.btnGenXReverse.setOnClickListener {
+        binding.btnPrevThird.setOnClickListener {
             callFirstNext()
         }
         binding.btnFifthDone.setOnClickListener {

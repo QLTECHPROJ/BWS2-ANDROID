@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
@@ -92,8 +93,10 @@ public class HomeFragment extends Fragment {
                 startActivity(i);
             });
         });
-
-
+        binding.llPlayer.setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(),DassAssSliderActivity.class);
+            startActivity(i);
+        });
         binding.llClick.setOnClickListener(v -> {
 //            TODO Mansi Dialog Hint This code is Audio Detail
            /* final Dialog dialog = new Dialog(getActivity());
