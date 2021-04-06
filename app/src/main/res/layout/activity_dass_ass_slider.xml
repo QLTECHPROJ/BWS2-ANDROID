@@ -79,7 +79,17 @@
                 android:text="The rating scale is as follows: \0 - Not Experiencing \n1 - (Mild) Experience it some of the time \n5 - (Moderate) Experience it most of the time \n10 - (Severe) Experience it all of the time"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11sdp" />
-
+            <Button
+                android:id="@+id/btnPrev"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/light_blue_rounded_filled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFirstList"
                 android:layout_width="match_parent"
@@ -90,7 +100,7 @@
                 tools:listitem="@layout/form_fill_sub" />
 
             <Button
-                android:id="@+id/btnDone"
+                android:id="@+id/btnNext"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentRight="true"
