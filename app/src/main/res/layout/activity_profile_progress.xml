@@ -36,6 +36,33 @@
                 android:progress="0" />
         </LinearLayout>
 
+
+        <ImageView
+            android:id="@+id/btnPrev"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:rotation="180"
+            android:clickable="true"
+            app:tint="@color/gray"
+            android:src="@drawable/ic_back_black_icon" />
+
+
+        <ImageView
+            android:id="@+id/btnNext"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:clickable="false"
+            app:tint="@color/gray"
+            android:src="@drawable/ic_back_black_icon" />
+
         <RelativeLayout
             android:id="@+id/llFirst"
             android:layout_width="match_parent"
@@ -81,16 +108,6 @@
                 android:text="Others"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
-
-            <ImageView
-                android:id="@+id/btnFirstDone"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:clickable="false"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 
@@ -151,27 +168,6 @@
                 android:text="Gender X"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
-
-            <ImageView
-                android:id="@+id/btnPrevSecond"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:rotation="180"
-                android:clickable="true"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
-
-            <ImageView
-                android:id="@+id/btnSecondDone"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:clickable="false"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 
@@ -235,27 +231,6 @@
                 android:text="Female"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
-
-            <ImageView
-                android:id="@+id/btnPrevThird"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:rotation="180"
-                android:clickable="true"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
-
-            <ImageView
-                android:id="@+id/btnThirdDone"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:clickable="false"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 
@@ -330,27 +305,6 @@
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
-            <ImageView
-                android:id="@+id/btnPrevFour"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:rotation="180"
-                android:clickable="true"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
-
-            <ImageView
-                android:id="@+id/btnForthDone"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:clickable="false"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -412,27 +366,6 @@
                 android:text="No"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
-
-            <ImageView
-                android:id="@+id/btnPrevFive"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:rotation="180"
-                android:clickable="true"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
-
-            <ImageView
-                android:id="@+id/btnFifthDone"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_alignParentRight="true"
-                android:clickable="false"
-                app:tint="@color/gray"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/ic_back_black_icon" />
 
         </RelativeLayout>
 

@@ -191,8 +191,8 @@ class UserListActivity : AppCompatActivity() {
                                                                 val intent = Intent(activity, DassAssSliderActivity::class.java)
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
-                                                            } else if (responseData.getIsProfileCompleted().equals("0", ignoreCase = true) &&
-                                                                    responseData.getIsAssessmentCompleted().equals("0", ignoreCase = true)) {
+                                                            } else if (responseData.getIsProfileCompleted().equals("1", ignoreCase = true) &&
+                                                                    responseData.getIsAssessmentCompleted().equals("1", ignoreCase = true)) {
                                                                 val intent = Intent(activity, BottomNavigationActivity::class.java)
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
