@@ -98,15 +98,25 @@ class DassAssSliderActivity : AppCompatActivity() {
             }
         }
         binding.btnPrev.setOnClickListener {
-            if (myPos > 1) {
-                myPos -= 2
-                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
-                    binding.rvFirstList.adapter = firstListAdapter
-                } else {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
-                    binding.rvFirstList.adapter = firstListAdapter
-                }
+            callBack()
+        }
+        prepareData()
+    }
+
+    override fun onBackPressed() {
+        callBack()
+        super.onBackPressed()
+    }
+
+    private fun callBack() {
+        if (myPos>1) {
+            myPos -= 2
+            if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
+                binding.rvFirstList.adapter = firstListAdapter
+            } else {
+                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
+                binding.rvFirstList.adapter = firstListAdapter
             }
         }
         prepareData()
