@@ -167,9 +167,10 @@ public class CONSTANTS {
     public static final String PREF_KEY_ScreenView = "ScreenView";
 
     public static final String Token = "Token";
-    public static final String DassMain = "DassMain";
-    public static final String DassQus = "DassQus";
-    public static final String DassAns = "DassAns";
+    public static final String AssMain = "AssMain";
+    public static final String AssQus = "AssQus";
+    public static final String AssAns = "AssAns";
+    public static final String AssSort = "AssSort";
 
     // Files
     public static final String DOWNLOAD_AUDIO_URL = "http://www.noiseaddicts.com/samples_1w72b820/272.mp3";

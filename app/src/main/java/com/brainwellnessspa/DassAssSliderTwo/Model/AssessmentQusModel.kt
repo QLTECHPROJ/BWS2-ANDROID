@@ -40,21 +40,9 @@ class AssessmentQusModel {
 
         class Content {
 
-            @SerializedName("condition0")
+            @SerializedName("condition")
             @Expose
-            var condition0: String? = null
-
-            @SerializedName("condition1")
-            @Expose
-            var condition1: String? = null
-
-            @SerializedName("condition2")
-            @Expose
-            var condition2: String? = null
-
-            @SerializedName("condition3")
-            @Expose
-            var condition3: String? = null
+            var condition: String? = null
         }
         class Questions {
             @SerializedName("Question")

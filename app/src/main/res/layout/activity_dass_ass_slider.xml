@@ -76,20 +76,30 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="The rating scale is as follows: \0 - Not Experiencing \n1 - (Mild) Experience it some of the time \n5 - (Moderate) Experience it most of the time \n10 - (Severe) Experience it all of the time"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11sdp" />
-            <Button
+<!--            <Button-->
+<!--                android:id="@+id/btnPrev"-->
+<!--                android:layout_width="@dimen/_100sdp"-->
+<!--                android:layout_height="@dimen/_50sdp"-->
+<!--                android:layout_alignParentLeft="true"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:background="@drawable/light_blue_rounded_filled"-->
+<!--                android:fontFamily="@font/montserrat_medium"-->
+<!--                android:text="Next"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@color/white" />-->
+            <ImageView
                 android:id="@+id/btnPrev"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Next"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:rotation="180"
+                android:clickable="true"
+                app:tint="@color/gray"
+                android:src="@drawable/ic_back_black_icon" />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFirstList"
                 android:layout_width="match_parent"
@@ -98,18 +108,26 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_60sdp"
                 tools:listitem="@layout/form_fill_sub" />
-
-            <Button
+            <ImageView
                 android:id="@+id/btnNext"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/light_blue_rounded_filled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Next"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:clickable="false"
+                app:tint="@color/gray"
+                android:src="@drawable/ic_back_black_icon" />
+<!--            <Button-->
+<!--                android:id="@+id/"-->
+<!--                android:layout_width="@dimen/_100sdp"-->
+<!--                android:layout_height="@dimen/_50sdp"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:background="@drawable/light_blue_rounded_filled"-->
+<!--                android:fontFamily="@font/montserrat_medium"-->
+<!--                android:text="Next"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@color/white" />-->
 
         </RelativeLayout>
 
