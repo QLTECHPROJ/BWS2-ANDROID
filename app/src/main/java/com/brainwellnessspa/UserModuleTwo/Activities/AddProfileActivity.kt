@@ -1,25 +1,17 @@
 package com.brainwellnessspa.UserModuleTwo.Activities
 
-import android.app.Dialog
-import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.ViewGroup
-import android.view.Window
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel
-import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAddProfileBinding
@@ -33,6 +25,7 @@ import retrofit2.Response
 class AddProfileActivity : AppCompatActivity() {
     var UserID: String? = null
     private lateinit var binding: ActivityAddProfileBinding
+    lateinit var activity: Activity
 
     var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -43,23 +36,23 @@ class AddProfileActivity : AppCompatActivity() {
             if (User.equals("", ignoreCase = true) && MobileNumber.equals("", ignoreCase = true)
                     && Email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
-                binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
+                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
             } else if (User.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
-                binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
+                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
             } else if (MobileNumber.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
-                binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
+                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
             } else if (Email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
-                binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
+                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
                 binding.btnSendPin.setEnabled(true)
-                binding.btnSendPin.setTextColor(resources.getColor(R.color.white))
+                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)
             }
         }
@@ -72,6 +65,7 @@ class AddProfileActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_profile)
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        activity = this@AddProfileActivity
         binding.llBack.setOnClickListener {
           /*  val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
             i.putExtra(CONSTANTS.PopUp, "0")

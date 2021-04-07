@@ -286,10 +286,10 @@ class DassAssSliderActivity : AppCompatActivity() {
         private fun  visibleGoneNext() {
             if(dass.assQus.size >= pos+1){
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ctx.resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(ctx.ContextCompat.getColor(activity,R.color.black), PorterDuff.Mode.SRC_ATOP)
             }else{
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ctx.resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(ctx.ContextCompat.getColor(activity,R.color.gray), PorterDuff.Mode.SRC_ATOP)
             }
         }
 

@@ -18,6 +18,7 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -155,8 +156,8 @@ class CreateAccountActivity : AppCompatActivity() {
 
             searchView.onActionViewExpanded()
             searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
-            searchEditText.setTextColor(resources.getColor(R.color.gray))
-            searchEditText.setHintTextColor(resources.getColor(R.color.gray))
+            searchEditText.setTextColor(ContextCompat.getColor(activity, R.color.gray))
+            searchEditText.setHintTextColor(ContextCompat.getColor(activity, R.color.gray))
             val closeButton: ImageView = searchView.findViewById(R.id.search_close_btn)
             searchView.clearFocus()
 

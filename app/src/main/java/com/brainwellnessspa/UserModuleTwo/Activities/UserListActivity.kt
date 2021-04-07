@@ -9,6 +9,8 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -21,8 +23,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
+import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel
 import com.brainwellnessspa.Utility.APINewClient
@@ -34,8 +38,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-
-open class UserListActivity : AppCompatActivity() {
+class UserListActivity : AppCompatActivity() {
     lateinit var binding: ActivityUserListBinding
     lateinit var dialog: Dialog
     var USERID: String? = null
@@ -73,6 +76,10 @@ open class UserListActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         finishAffinity()
+    }
+
+    fun getUserDetails(userID: String, coUserId: String) {
+
     }
 
     class UserListAdapter(private val listModel: AddedUserListModel.ResponseData, private var activity: Activity, var binding: ActivityUserListBinding, var USERID: String, var CoUserID: String, var CoEMAIL: String) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
@@ -165,9 +172,40 @@ open class UserListActivity : AppCompatActivity() {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                         val listModel: VerifyPinModel = response.body()!!
                                         if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                            val i = Intent(activity, BottomNavigationActivity::class.java)
-                                            activity.startActivity(i)
-                                            activity.finish()
+                                            val UserID: String = listModel.getResponseData()?.userID.toString()
+                                            val CoUserId: String = listModel.getResponseData()?.coUserId.toString()
+                                            UserListActivity().getUserDetails(UserID, CoUserId)
+                                            val listCall: Call<CoUserDetailsModel> = APINewClient.getClient().getCoUserDetails(UserID, CoUserId)
+                                            listCall.enqueue(object : Callback<CoUserDetailsModel> {
+                                                override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
+                                                    try {
+                                                        val coUserDetailsModel: CoUserDetailsModel = response.body()!!
+                                                        val responseData: CoUserDetailsModel.ResponseData? = coUserDetailsModel.getResponseData()
+
+                                                        if (responseData != null) {
+                                                            if (responseData.getIsProfileCompleted().equals("0", ignoreCase = true)) {
+                                                                val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                                                activity.startActivity(intent)
+                                                                activity.finish()
+                                                            } else if (responseData.getIsAssessmentCompleted().equals("0", ignoreCase = true)) {
+                                                                val intent = Intent(activity, DassAssSliderActivity::class.java)
+                                                                activity.startActivity(intent)
+                                                                activity.finish()
+                                                            } else if (responseData.getIsProfileCompleted().equals("0", ignoreCase = true) &&
+                                                                    responseData.getIsAssessmentCompleted().equals("0", ignoreCase = true)) {
+                                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                                activity.startActivity(intent)
+                                                                activity.finish()
+                                                            }
+                                                        }
+                                                    } catch (e: Exception) {
+                                                        e.printStackTrace()
+                                                    }
+                                                }
+
+                                                override fun onFailure(call: Call<CoUserDetailsModel>, t: Throwable) {
+                                                }
+                                            })
                                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                             val editor = shared.edit()
                                             editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.userID)
