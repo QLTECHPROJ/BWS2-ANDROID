@@ -7,6 +7,7 @@ import com.brainwellnessspa.MembershipModule.Models.SignUpModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
+import com.brainwellnessspa.UserModuleTwo.Models.AssessmentSaveDataModel;
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel;
@@ -92,4 +93,10 @@ public interface APINewInterface {
                                                   @Field("genderX") String genderX,
                                                   @Field("age") String age,
                                                   @Field("prevDrugUse") String prevDrugUse);
+    @POST("assesmentsaveans")
+    @FormUrlEncoded
+    Call<AssessmentSaveDataModel> getAssessmentSaveData(@Field("UserID") String userID,
+                                               @Field("CoUserId") String CoUserId,
+                                               @Field("ans") String ans);
+
 }
