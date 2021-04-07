@@ -27,12 +27,13 @@ import retrofit2.Response
 class SplashActivity : AppCompatActivity() {
     lateinit var ctx: Context
     lateinit var binding: ActivitySplashBinding
-    var USERID: String? = null
-    var CoUserID: String? = null
-    var EMAIL: String? = null
-    var isProfileCompleted: String? = null
-    var isAssessmentCompleted: String? = null
-    var indexScore: String? = null
+    var USERID: String? = ""
+    var CoUserID: String? = ""
+    var EMAIL: String? = ""
+    var isProfileCompleted: String? = ""
+    var isAssessmentCompleted: String? = ""
+    var indexScore: String? = ""
+    var coUserDetailsModelGloble=CoUserDetailsModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
@@ -120,6 +121,7 @@ class SplashActivity : AppCompatActivity() {
             val listCall: Call<CoUserDetailsModel> = APINewClient.getClient().getCoUserDetails(USERID, CoUserID)
             listCall.enqueue(object : Callback<CoUserDetailsModel> {
                 override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
+                    coUserDetailsModelGloble = response.body()!!
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
                         isProfileCompleted = coUserDetailsModel.getResponseData()!!.getIsProfileCompleted().toString()
@@ -175,6 +177,11 @@ class SplashActivity : AppCompatActivity() {
             }, (2 * 800).toLong())
 
         } else {
+            if(isProfileCompleted.equals("",true)){
+                isProfileCompleted = coUserDetailsModelGloble.getResponseData()?.getIsProfileCompleted().toString()
+                isAssessmentCompleted = coUserDetailsModelGloble.getResponseData()?.getIsAssessmentCompleted().toString()
+                indexScore = coUserDetailsModelGloble.getResponseData()?.getIndexScore().toString()
+            }
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this@SplashActivity, ProfileProgressActivity::class.java)
@@ -187,8 +194,8 @@ class SplashActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())
-            } else if (isProfileCompleted.equals("0", ignoreCase = true) &&
-                    isAssessmentCompleted.equals("0", ignoreCase = true)) {
+            } else if (isProfileCompleted.equals("1", ignoreCase = true) &&
+                    isAssessmentCompleted.equals("1", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
                     startActivity(intent)
