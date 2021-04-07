@@ -7,11 +7,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
@@ -28,6 +30,9 @@ class SplashActivity : AppCompatActivity() {
     var USERID: String? = null
     var CoUserID: String? = null
     var EMAIL: String? = null
+    var isProfileCompleted: String? = null
+    var isAssessmentCompleted: String? = null
+    var indexScore: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
@@ -39,6 +44,10 @@ class SplashActivity : AppCompatActivity() {
         checkUserDetails()
     }
 
+    override fun onResume() {
+        checkUserDetails()
+        super.onResume()
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
@@ -113,6 +122,9 @@ class SplashActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
+                        isProfileCompleted = coUserDetailsModel.getResponseData()!!.getIsProfileCompleted().toString()
+                        isAssessmentCompleted = coUserDetailsModel.getResponseData()!!.getIsAssessmentCompleted().toString()
+                        indexScore = coUserDetailsModel.getResponseData()!!.getIndexScore().toString()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -145,6 +157,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun callDashboard() {
+        Log.e("isProfileCompleted",isProfileCompleted.toString())
+        Log.e("isAssessmentCompleted",isAssessmentCompleted.toString())
+        Log.e("indexScore",indexScore.toString())
         if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
@@ -152,7 +167,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
-        } else if (!USERID.equals("", ignoreCase = true) && CoUserID.equals("", ignoreCase = true)){
+        } else if (!USERID.equals("", ignoreCase = true) && CoUserID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, UserListActivity::class.java)
                 startActivity(intent)
@@ -160,12 +175,26 @@ class SplashActivity : AppCompatActivity() {
             }, (2 * 800).toLong())
 
         } else {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, ProfileProgressActivity::class.java)
-                intent.putExtra(CONSTANTS.ScreenVisible, "1")
-                startActivity(intent)
-                finish()
-            }, (2 * 800).toLong())
+            if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this@SplashActivity, ProfileProgressActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }, (2 * 800).toLong())
+            } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this@SplashActivity, DassAssSliderActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }, (2 * 800).toLong())
+            } else if (isProfileCompleted.equals("0", ignoreCase = true) &&
+                    isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }, (2 * 800).toLong())
+            }
         }
     }
 }

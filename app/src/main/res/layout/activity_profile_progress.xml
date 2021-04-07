@@ -128,7 +128,6 @@
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue_theme" />
 
-
             <Button
                 android:id="@+id/btnFemale"
                 android:layout_width="match_parent"
