@@ -4,29 +4,60 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class AssessmentSaveDataModel {
+    @SerializedName("ResponseData")
+    @Expose
+    private var responseData: ResponseData? = null
+
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = ""
+    private var responseCode: String? = null
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = ""
+    private var responseMessage: String? = null
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = ""
+    private var responseStatus: String? = null
 
-    @SerializedName("ResponseData")
-    @Expose
-    var responseData: ResponseData = ResponseData()
+    fun getResponseData(): ResponseData? {
+        return responseData
+    }
 
-     class ResponseData {
+    fun setResponseData(responseData: ResponseData?) {
+        this.responseData = responseData
+    }
 
+    fun getResponseCode(): String? {
+        return responseCode
+    }
+
+    fun setResponseCode(responseCode: String?) {
+        this.responseCode = responseCode
+    }
+
+    fun getResponseMessage(): String? {
+        return responseMessage
+    }
+
+    fun setResponseMessage(responseMessage: String?) {
+        this.responseMessage = responseMessage
+    }
+
+    fun getResponseStatus(): String? {
+        return responseStatus
+    }
+
+    fun setResponseStatus(responseStatus: String?) {
+        this.responseStatus = responseStatus
+    }
+    class ResponseData {
         @SerializedName("indexScore")
         @Expose
-        var indexScore: String? = ""
+        var indexScore: String? = null
+
         @SerializedName("errormsg")
         @Expose
-        var errormsg: String? = ""
+        var errormsg: String? = null
     }
 }

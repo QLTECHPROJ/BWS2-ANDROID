@@ -106,7 +106,6 @@ class DassAssSliderActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         callBack()
-        super.onBackPressed()
     }
 
     private fun callBack() {
@@ -337,14 +336,14 @@ class DassAssSliderActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AssessmentSaveDataModel = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             val i = Intent(activity, AssProcessActivity::class.java)
                             i.putExtra(CONSTANTS.ASSPROCESS, "1")
-                            i.putExtra(CONSTANTS.IndexScore, listModel.responseData.indexScore)
+                            i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)
                             startActivity(i)
                             finish()
                         } else {
-                            BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

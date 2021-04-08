@@ -4,6 +4,10 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class ProfileSaveDataModel {
+    @SerializedName("ResponseData")
+    @Expose
+    private var responseData: ResponseData? = null
+
     @SerializedName("ResponseCode")
     @Expose
     private var responseCode: String? = null
@@ -15,6 +19,14 @@ class ProfileSaveDataModel {
     @SerializedName("ResponseStatus")
     @Expose
     private var responseStatus: String? = null
+
+    fun getResponseData(): ResponseData? {
+        return responseData
+    }
+
+    fun setResponseData(responseData: ResponseData?) {
+        this.responseData = responseData
+    }
 
     fun getResponseCode(): String? {
         return responseCode
@@ -38,5 +50,11 @@ class ProfileSaveDataModel {
 
     fun setResponseStatus(responseStatus: String?) {
         this.responseStatus = responseStatus
+    }
+
+    class ResponseData {
+        @SerializedName("errormsg")
+        @Expose
+        var errormsg: String? = null
     }
 }
