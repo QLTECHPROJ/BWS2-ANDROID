@@ -85,7 +85,6 @@
             android:max="33"
             android:layout_below="@id/llMainFirst"
             android:progress="0"
-            android:background="@drawable/circle_light_blue"
             android:progressBackgroundTint="@color/app_theme_color" />
 
         <RelativeLayout
