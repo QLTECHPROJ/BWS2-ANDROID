@@ -22,7 +22,6 @@ import com.brainwellnessspa.DassAssSliderTwo.Model.PostAssAns
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.AssessmentSaveDataModel
 import com.brainwellnessspa.UserModuleTwo.Models.OptionsDataListModel
-import com.brainwellnessspa.UserModuleTwo.Models.ProfileSaveDataModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
@@ -69,14 +68,15 @@ class DassAssSliderActivity : AppCompatActivity() {
             getAssSaveData()
             if (myPos < listModel1.responseData!!.questions!!.size - 1) {
                 myPos += 2
+                binding.tvNumberOfQus.text = myPos.toString()
+                binding.lpIndicator.progress = myPos
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1),myPos, ctx, binding,activity)
+                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
                 } else {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
                 }
-                Log.e("Ass Post Data", gson.toJson(assAns))
             } else {
                 /*    for(i in listModel1.responseData!!.questions!!.indices){
                         val ps = PostAssAns()
@@ -86,10 +86,11 @@ class DassAssSliderActivity : AppCompatActivity() {
                         postAssAns.add(ps)
                     }
                     Log.e("Ass Post Data", gson.toJson(postAssAns))*/
+
+                binding.tvNumberOfQus.text =listModel1.responseData!!.questions!!.size.toString()
+                binding.lpIndicator.progress = listModel1.responseData!!.questions!!.size
+                sendAssessmentData()
                 Log.e("Ass Post Data", gson.toJson(assAns))
-                val i1 = Intent(ctx, AssProcessActivity::class.java)
-                i1.putExtra(CONSTANTS.ASSPROCESS, "1")
-                startActivity(i1)
             }
             if (myPos > 2) {
                 binding.btnPrev.visibility = View.VISIBLE
@@ -109,8 +110,11 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
     private fun callBack() {
-        if (myPos>1) {
+        if (myPos > 1) {
             myPos -= 2
+
+            binding.lpIndicator.progress = myPos
+            binding.tvNumberOfQus.text = myPos.toString()
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                 firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
                 binding.rvFirstList.adapter = firstListAdapter
@@ -119,7 +123,6 @@ class DassAssSliderActivity : AppCompatActivity() {
                 binding.rvFirstList.adapter = firstListAdapter
             }
         }
-        prepareData()
     }
 
     private fun getAssSaveData() {
@@ -151,6 +154,10 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 condition += listModel.responseData!!.content!![i].condition + "\n"
                             }
                             binding.tvText.text = condition
+                            binding.lpIndicator.max =listModel.responseData!!.questions!!.size
+                            binding.lpIndicator.progress =0
+                            binding.tvNumberOfQus.text = myPos.toString()
+                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString()
                             if (myPos < listModel.responseData!!.questions!!.size) {
 //                                if(myPos ==)
                                 firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
@@ -177,7 +184,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
 
-    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, val myPos: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding,val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, val myPos: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var dass = DassAssSliderActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -196,10 +203,10 @@ class DassAssSliderActivity : AppCompatActivity() {
             if (listModel != null) {
                 holder.bindingAdapter.tvSecond.text = listModel[position].question
                 holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
-                if(position == 0) {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position],myPos, ctx, binding,activity)
-                }else{
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos+1, ctx, binding, activity)
+                if (position == 0) {
+                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, ctx, binding, activity)
+                } else {
+                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, ctx, binding, activity)
                 }
                 holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
             }
@@ -210,7 +217,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
     }
 
-    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding,val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
@@ -307,10 +314,10 @@ class DassAssSliderActivity : AppCompatActivity() {
         private fun visibleGoneNext() {
             if (dass.assQus.size >= pos + 1) {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity,R.color.black), PorterDuff.Mode.SRC_ATOP)
-            }else{
+                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            } else {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity,R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
             }
         }
 
@@ -322,23 +329,23 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
     private fun sendAssessmentData() {
-        if (BWSApplication.isNetworkConnected(this)) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient().getAssessmentSaveData(USERID, CoUserID, "")
+            val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient().getAssessmentSaveData(USERID, CoUserID, gson.toJson(assAns).toString())
             listCall.enqueue(object : Callback<AssessmentSaveDataModel> {
                 override fun onResponse(call: Call<AssessmentSaveDataModel>, response: Response<AssessmentSaveDataModel>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AssessmentSaveDataModel = response.body()!!
-                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             val i = Intent(activity, AssProcessActivity::class.java)
-                            i.putExtra(CONSTANTS.ASSPROCESS, "0")
+                            i.putExtra(CONSTANTS.ASSPROCESS, "1")
+                            i.putExtra(CONSTANTS.IndexScore, listModel.responseData.indexScore)
                             startActivity(i)
                             finish()
                         } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                            BWSApplication.showToast(listModel.responseMessage, applicationContext)
                         }
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -352,5 +359,4 @@ class DassAssSliderActivity : AppCompatActivity() {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
-
 }

@@ -149,6 +149,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvIndexScore"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/_12sdp"

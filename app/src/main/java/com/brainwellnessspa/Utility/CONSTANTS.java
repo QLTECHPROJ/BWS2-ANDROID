@@ -56,6 +56,7 @@ public class CONSTANTS {
     public static final String TWENTY_FOUR_HH_MM_FORMAT = "HH:mm";
 
     public static String ASSPROCESS = "ASSPROCESS";
+    public static String IndexScore = "IndexScore";
     public static String PopUp = "PopUp";
     public static String ScreenVisible = "ScreenVisible";
     public static String Tnc = "Tnc";
