@@ -170,17 +170,18 @@
 
                     </LinearLayout>
 
+
                     <ImageView
                         android:id="@+id/ivForth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="@dimen/_40sdp"
-                        android:layout_marginBottom="@dimen/_62sdp"
-                        android:layout_toRightOf="@id/llSeverse"
-                        android:rotation="88"
+                        android:layout_marginRight="-5dp"
+                        android:layout_toLeftOf="@id/ivFifth"
+                        android:rotation="38"
                         android:visibility="invisible"
+                        android:layout_marginBottom="@dimen/_115sdp"
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
@@ -195,18 +196,17 @@
                         android:rotation="60"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
-
                     <ImageView
                         android:id="@+id/ivSixth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginRight="-5dp"
-                        android:layout_toLeftOf="@id/ivFifth"
-                        android:rotation="38"
+                        android:layout_marginLeft="@dimen/_40sdp"
+                        android:layout_marginBottom="@dimen/_62sdp"
+                        android:layout_toRightOf="@id/llSeverse"
+                        android:rotation="88"
                         android:visibility="invisible"
-                        android:layout_marginBottom="@dimen/_115sdp"
                         android:src="@drawable/ic_score_arrow" />
                 </RelativeLayout>
 
