@@ -64,7 +64,7 @@
             <LinearLayout
                 android:id="@+id/llEmail"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_81sdp"
+                android:layout_height="@dimen/_76sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:background="@drawable/textview_background_two"
                 android:orientation="vertical">
@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
                     android:focusableInTouchMode="true"
                     android:textColorHint="@color/black"
                     app:errorEnabled="true"
@@ -85,7 +85,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
+                        android:layout_height="@dimen/_34sdp"
                         android:background="@null"
                         android:backgroundTint="@color/black"
                         android:cursorVisible="true"
