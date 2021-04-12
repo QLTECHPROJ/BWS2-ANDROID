@@ -99,4 +99,8 @@ public interface APINewInterface {
                                                @Field("CoUserId") String CoUserId,
                                                @Field("ans") String ans);
 
+    @POST("playlistdetails")
+    @FormUrlEncoded
+    Call<AssessmentSaveDataModel> getPlaylistDetail(@Field("CoUserId") String CoUserId,
+                                               @Field("PlaylistId") String PlaylistId);
 }

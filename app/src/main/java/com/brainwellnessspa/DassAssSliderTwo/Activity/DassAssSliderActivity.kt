@@ -68,7 +68,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             getAssSaveData()
             if (myPos < listModel1.responseData!!.questions!!.size - 1) {
                 myPos += 2
-                binding.tvNumberOfQus.text = myPos.toString()
+//                binding.tvNumberOfQus.text = myPos.toString()
                 binding.lpIndicator.progress = myPos
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
@@ -87,7 +87,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                     }
                     Log.e("Ass Post Data", gson.toJson(postAssAns))*/
 
-                binding.tvNumberOfQus.text =listModel1.responseData!!.questions!!.size.toString()
+//                binding.tvNumberOfQus.text =listModel1.responseData!!.questions!!.size.toString()
                 binding.lpIndicator.progress = listModel1.responseData!!.questions!!.size
                 sendAssessmentData()
                 Log.e("Ass Post Data", gson.toJson(assAns))
@@ -113,7 +113,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             myPos -= 2
 
             binding.lpIndicator.progress = myPos
-            binding.tvNumberOfQus.text = myPos.toString()
+//            binding.tvNumberOfQus.text = myPos.toString()
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                 firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
                 binding.rvFirstList.adapter = firstListAdapter
@@ -155,8 +155,8 @@ class DassAssSliderActivity : AppCompatActivity() {
                             binding.tvText.text = condition
                             binding.lpIndicator.max =listModel.responseData!!.questions!!.size
                             binding.lpIndicator.progress =0
-                            binding.tvNumberOfQus.text = myPos.toString()
-                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString()
+//                            binding.tvNumberOfQus.text = myPos.toString()
+//                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString()
                             if (myPos < listModel.responseData!!.questions!!.size) {
 //                                if(myPos ==)
                                 firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
