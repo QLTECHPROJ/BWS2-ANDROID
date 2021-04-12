@@ -75,6 +75,14 @@ class PlaylistDetailsModel {
         @Expose
         var totalminute: String? = null
 
+    @SerializedName("Like")
+    @Expose
+    var like: String? = null
+
+    @SerializedName("Download")
+    @Expose
+    var download: String? = null
+
         class PlaylistSong {
             @SerializedName("ID")
             @Expose
@@ -125,5 +133,4 @@ class PlaylistDetailsModel {
             var bitrate: String? = null
         }
     }
-
 }

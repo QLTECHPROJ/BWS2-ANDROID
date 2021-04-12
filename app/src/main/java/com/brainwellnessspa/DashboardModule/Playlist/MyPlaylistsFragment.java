@@ -107,8 +107,8 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
-import static com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity.MyPlaylistId;
-import static com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity.addToPlayList;
+import static com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity.MyPlaylistId;
+import static com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity.addToPlayList;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;

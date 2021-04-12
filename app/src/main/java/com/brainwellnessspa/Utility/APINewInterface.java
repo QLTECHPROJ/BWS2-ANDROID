@@ -1,6 +1,11 @@
 package com.brainwellnessspa.Utility;
 
+import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.CreatePlaylistingModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.RenameNewPlaylistModel;
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
@@ -101,8 +106,29 @@ public interface APINewInterface {
                                                         @Field("CoUserId") String CoUserId,
                                                         @Field("ans") String ans);
 
+    @POST("audiodetail")
+    @FormUrlEncoded
+    Call<AudioDetailModel> getAudioDetail(@Field("CoUserId") String CoUserId,
+                                          @Field("AudioId") String AudioId);
+
+    @POST("createplaylist")
+    @FormUrlEncoded
+    Call<CreateNewPlaylistModel> getCreatePlaylist(@Field("CoUserId") String CoUserId,
+                                                   @Field("PlaylistName") String AudioId);
+
     @POST("playlistdetails")
     @FormUrlEncoded
     Call<PlaylistDetailsModel> getPlaylistDetail(@Field("CoUserId") String CoUserId,
                                                  @Field("PlaylistId") String PlaylistId);
+
+    @POST("getcreatedplaylist")
+    @FormUrlEncoded
+    Call<CreatePlaylistingModel> getPlaylisting(@Field("CoUserId") String CoUserId);
+
+    @POST("renameplaylist")
+    @FormUrlEncoded
+    Call<RenameNewPlaylistModel> getRenameNewPlaylist(@Field("CoUserId") String CoUserId,
+                                                      @Field("PlaylistId") String PlaylistId,
+                                                      @Field("PlaylistNewName") String PlaylistNewName);
+
 }

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.DashboardModule.Activities;
+package com.brainwellnessspa.DashboardTwoModule;
 
 import android.app.Activity;
 import android.app.Application;
@@ -32,16 +32,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
 import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
+import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.CreatePlaylistingModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding;
@@ -55,7 +59,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +77,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
     public static boolean addToPlayList = false;
     public static String MyPlaylistId = "";
     ActivityAddPlaylistBinding binding;
-    String UserID, AudioId = "", FromPlaylistID = "", PlaylistName = "", ScreenView = "", PlaylistImage = "", PlaylistType = "";
+    String UserName, CoUSERID, USERID, AudioId = "", FromPlaylistID = "", PlaylistName = "", ScreenView = "", PlaylistImage = "", PlaylistType = "";
     Context ctx;
     Activity activity;
     Properties p;
@@ -88,8 +91,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist);
         ctx = AddPlaylistActivity.this;
         activity = AddPlaylistActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
 
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra("AudioId");
@@ -136,10 +141,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
         binding.btnAddPlatLists.setOnClickListener(view -> {
             myBackPress = true;
-            Properties p = new Properties();
-            p.putValue("userId", UserID);
-            p.putValue("source", "Add To Playlist Screen");
-            BWSApplication.addToSegment("Create Playlist Clicked", p, CONSTANTS.track);
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.create_palylist);
@@ -167,8 +168,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     String number = edtCreate.getText().toString().trim();
                     if (!number.isEmpty()) {
                         btnSendCode.setEnabled(true);
-                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                        btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+                        btnSendCode.setTextColor(getResources().getColor(R.color.light_black));
+                        btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
                     } else {
                         btnSendCode.setEnabled(false);
                         btnSendCode.setTextColor(getResources().getColor(R.color.white));
@@ -187,18 +188,18 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     BWSApplication.showToast("Please provide the playlist's name", ctx);
                 } else {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                        listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                        Call<CreateNewPlaylistModel> listCall = APINewClient.getClient().getCreatePlaylist(CoUSERID, edtCreate.getText().toString());
+                        listCall.enqueue(new Callback<CreateNewPlaylistModel>() {
                             @Override
-                            public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                            public void onResponse(Call<CreateNewPlaylistModel> call, Response<CreateNewPlaylistModel> response) {
                                 try {
                                     if (response.isSuccessful()) {
-                                        CreatePlaylistModel listsModel = response.body();
-                                        if (listsModel.getResponseData().getIscreated().equalsIgnoreCase("1")) {
+                                        CreateNewPlaylistModel listsModel = response.body();
+                                        if (listsModel.getResponseData().getIscreate().equalsIgnoreCase("1")) {
                                             dialog.dismiss();
                                             prepareData(ctx);
                                             String PlaylistID = listsModel.getResponseData().getId();
-                                            String Created = listsModel.getResponseData().getIscreated();
+                                            String Created = listsModel.getResponseData().getIscreate();
                                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                                             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -212,12 +213,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             } else {
                                                 callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created, "1");
                                             }
-                                           /* Properties p = new Properties();
-                                            p.putValue("userId", UserID);
-                                            p.putValue("playlistId", PlaylistID);
-                                            p.putValue("playlistName", listsModel.getResponseData().getName());
-                                            p.putValue("source", "Add To Playlist Screen");
-                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);*/
+//                                            Properties p = new Properties();
+//                                            p.putValue("userId", UserID);
+//                                            p.putValue("playlistId", PlaylistID);
+//                                            p.putValue("playlistName", listsModel.getResponseData().getName());
+//                                            p.putValue("source", "Add To Playlist Screen");
+//                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);
                                         } else {
                                             BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
                                         }
@@ -228,7 +229,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                            public void onFailure(Call<CreateNewPlaylistModel> call, Throwable t) {
                             }
                         });
                     } else {
@@ -271,39 +272,39 @@ public class AddPlaylistActivity extends AppCompatActivity {
     private void prepareData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<PlaylistingModel> listCall = APIClient.getClient().getPlaylisting(UserID);
-            listCall.enqueue(new Callback<PlaylistingModel>() {
+            Call<CreatePlaylistingModel> listCall = APINewClient.getClient().getPlaylisting(CoUSERID);
+            listCall.enqueue(new Callback<CreatePlaylistingModel>() {
                 @Override
-                public void onResponse(Call<PlaylistingModel> call, Response<PlaylistingModel> response) {
+                public void onResponse(Call<CreatePlaylistingModel> call, Response<CreatePlaylistingModel> response) {
                     try {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            PlaylistingModel model = response.body();
-//                            if (model.getResponseData().size() == 0) {
-//                                binding.llError.setVisibility(View.GONE);
-//                                binding.rvPlayLists.setVisibility(View.GONE);
-//                            } else {
+                            CreatePlaylistingModel model = response.body();
+                            if (model.getResponseData().size() == 0) {
+                                binding.llError.setVisibility(View.GONE);
+                                binding.rvPlayLists.setVisibility(View.GONE);
+                            } else {
                             binding.rvPlayLists.setVisibility(View.VISIBLE);
 
-                            p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("source", ScreenView);
-                            ArrayList<SegmentPlaylist> section = new ArrayList<>();
-                            for (int i = 0; i < model.getResponseData().size(); i++) {
-                                SegmentPlaylist e = new SegmentPlaylist();
-                                e.setPlaylistId(model.getResponseData().get(i).getID());
-                                e.setPlaylistName(model.getResponseData().get(i).getName());
-                                e.setPlaylistType(model.getResponseData().get(i).getCreated());
-                                e.setPlaylistDuration(model.getResponseData().get(i).getTotalhour() + "h " + model.getResponseData().get(i).getTotalminute() + "m");
-                                e.setAudioCount(model.getResponseData().get(i).getTotalAudio());
-                                section.add(e);
-                            }
-                            Gson gson = new Gson();
-                            p.putValue("playlists", gson.toJson(section));
-                            BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
+//                            p = new Properties();
+//                            p.putValue("userId", UserID);
+//                            p.putValue("source", ScreenView);
+//                            ArrayList<SegmentPlaylist> section = new ArrayList<>();
+//                            for (int i = 0; i < model.getResponseData().size(); i++) {
+//                                SegmentPlaylist e = new SegmentPlaylist();
+//                                e.setPlaylistId(model.getResponseData().get(i).getID());
+//                                e.setPlaylistName(model.getResponseData().get(i).getName());
+//                                e.setPlaylistType(model.getResponseData().get(i).getCreated());
+//                                e.setPlaylistDuration(model.getResponseData().get(i).getTotalhour() + "h " + model.getResponseData().get(i).getTotalminute() + "m");
+//                                e.setAudioCount(model.getResponseData().get(i).getTotalAudio());
+//                                section.add(e);
+//                            }
+//                            Gson gson = new Gson();
+//                            p.putValue("playlists", gson.toJson(section));
+//                            BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
                             AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
                             binding.rvPlayLists.setAdapter(addPlaylistAdapter);
-//                            }
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -311,7 +312,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<PlaylistingModel> call, Throwable t) {
+                public void onFailure(Call<CreatePlaylistingModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
@@ -325,7 +326,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         myBackPress = true;
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
+            Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(CoUSERID, AudioId, PlaylistID, FromPlaylistID);
             listCall.enqueue(new Callback<AddToPlaylist>() {
                 @Override
                 public void onResponse(Call<AddToPlaylist> call, Response<AddToPlaylist> response) {
@@ -505,9 +506,9 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
     private class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.MyViewHolder> {
         Context ctx;
-        private List<PlaylistingModel.ResponseData> listModel;
+        private List<CreatePlaylistingModel.ResponseData> listModel;
 
-        public AddPlaylistAdapter(List<PlaylistingModel.ResponseData> listModel, Context ctx) {
+        public AddPlaylistAdapter(List<CreatePlaylistingModel.ResponseData> listModel, Context ctx) {
             this.listModel = listModel;
             this.ctx = ctx;
         }
@@ -532,7 +533,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                String PlaylistID = listModel.get(position).getID();
+                String PlaylistID = listModel.get(position).getId();
                 String Created = listModel.get(position).getCreated();
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);

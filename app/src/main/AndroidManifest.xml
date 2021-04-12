@@ -300,7 +300,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.AddPlaylistActivity"
+            android:name=".DashboardTwoModule.AddPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

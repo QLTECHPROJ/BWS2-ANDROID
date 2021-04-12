@@ -42,6 +42,7 @@ import com.brainwellnessspa.DashboardModule.Models.RenamePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
+import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
@@ -263,7 +264,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
         });
 
         binding.llRename.setOnClickListener(view -> {
-
             myBackPress = true;
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
