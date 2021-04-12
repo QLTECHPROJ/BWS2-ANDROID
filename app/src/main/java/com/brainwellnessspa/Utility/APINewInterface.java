@@ -1,9 +1,8 @@
 package com.brainwellnessspa.Utility;
 
+import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
-import com.brainwellnessspa.LoginModule.Models.LoginModel;
-import com.brainwellnessspa.MembershipModule.Models.SignUpModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
@@ -59,7 +58,9 @@ public interface APINewInterface {
     Call<AddUserModel> getAddUser(@Field("UserID") String userID,
                                   @Field("UserName") String userName,
                                   @Field("Email") String email,
-                                  @Field("MobileNo") String mobileNo);;
+                                  @Field("MobileNo") String mobileNo);
+
+    ;
 
     @GET("assesmentquestionlist")
     Call<AssessmentQusModel> getAssessmentQus();
@@ -73,7 +74,7 @@ public interface APINewInterface {
     @FormUrlEncoded
     Call<AddedUserListModel> getUserList(@Field("UserID") String userID);
 
-   @POST("getcouserdetails")
+    @POST("getcouserdetails")
     @FormUrlEncoded
     Call<CoUserDetailsModel> getCoUserDetails(@Field("UserID") String userID,
                                               @Field("CoUserId") String CoUserId);
@@ -93,14 +94,15 @@ public interface APINewInterface {
                                                   @Field("genderX") String genderX,
                                                   @Field("age") String age,
                                                   @Field("prevDrugUse") String prevDrugUse);
+
     @POST("assesmentsaveans")
     @FormUrlEncoded
     Call<AssessmentSaveDataModel> getAssessmentSaveData(@Field("UserID") String userID,
-                                               @Field("CoUserId") String CoUserId,
-                                               @Field("ans") String ans);
+                                                        @Field("CoUserId") String CoUserId,
+                                                        @Field("ans") String ans);
 
     @POST("playlistdetails")
     @FormUrlEncoded
-    Call<AssessmentSaveDataModel> getPlaylistDetail(@Field("CoUserId") String CoUserId,
-                                               @Field("PlaylistId") String PlaylistId);
+    Call<PlaylistDetailsModel> getPlaylistDetail(@Field("CoUserId") String CoUserId,
+                                                 @Field("PlaylistId") String PlaylistId);
 }

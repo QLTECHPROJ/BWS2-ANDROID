@@ -1,4 +1,4 @@
-package com.brainwellnessspa.DashboardTwoModule
+package com.brainwellnessspa.DashboardTwoModule.Model
 
 import com.google.gson.annotations.Expose
 
