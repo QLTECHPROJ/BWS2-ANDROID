@@ -131,4 +131,16 @@ public interface APINewInterface {
                                                       @Field("PlaylistId") String PlaylistId,
                                                       @Field("PlaylistNewName") String PlaylistNewName);
 
+    @POST("removeaudiofromplaylist")
+    @FormUrlEncoded
+    Call<RenameNewPlaylistModel> RemoveAudio(@Field("CoUserId") String CoUserId,
+                                                      @Field("AudioId") String AudioId,
+                                                      @Field("PlaylistId") String PlaylistId);
+
+    @POST("sortingplaylistaudio")
+    @FormUrlEncoded
+    Call<RenameNewPlaylistModel> SortAudio(@Field("CoUserId") String CoUserId,
+                                                      @Field("PlaylistId") String AudioId,
+                                                      @Field("PlaylistAudioId") String PlaylistAudioId);
+
 }
