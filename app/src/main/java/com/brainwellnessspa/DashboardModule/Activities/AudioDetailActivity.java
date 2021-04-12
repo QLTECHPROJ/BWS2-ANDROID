@@ -38,7 +38,7 @@ import com.brainwellnessspa.DashboardModule.Models.DirectionModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardModule.Models.SucessModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;

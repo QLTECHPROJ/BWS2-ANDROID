@@ -40,7 +40,7 @@ import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.RenamePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardModule.Models.SucessModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;

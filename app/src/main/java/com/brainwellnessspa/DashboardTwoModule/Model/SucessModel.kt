@@ -3,7 +3,7 @@ package com.brainwellnessspa.DashboardTwoModule.Model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class RenameNewPlaylistModel {
+class SucessModel {
     @SerializedName("ResponseData")
     @Expose
     var responseData: List<Any>? = null

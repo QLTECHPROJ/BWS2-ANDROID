@@ -1,11 +1,10 @@
 package com.brainwellnessspa.Utility;
 
-import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.CreatePlaylistingModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
-import com.brainwellnessspa.DashboardTwoModule.Model.RenameNewPlaylistModel;
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
@@ -127,20 +126,26 @@ public interface APINewInterface {
 
     @POST("renameplaylist")
     @FormUrlEncoded
-    Call<RenameNewPlaylistModel> getRenameNewPlaylist(@Field("CoUserId") String CoUserId,
-                                                      @Field("PlaylistId") String PlaylistId,
-                                                      @Field("PlaylistNewName") String PlaylistNewName);
+    Call<SucessModel> getRenameNewPlaylist(@Field("CoUserId") String CoUserId,
+                                           @Field("PlaylistId") String PlaylistId,
+                                           @Field("PlaylistNewName") String PlaylistNewName);
+
+    @POST("deleteplaylist")
+    @FormUrlEncoded
+    Call<SucessModel> getDeletePlaylist(@Field("CoUserId") String userID,
+                                        @Field("PlaylistId") String playlistId);
+
 
     @POST("removeaudiofromplaylist")
     @FormUrlEncoded
-    Call<RenameNewPlaylistModel> RemoveAudio(@Field("CoUserId") String CoUserId,
-                                                      @Field("AudioId") String AudioId,
-                                                      @Field("PlaylistId") String PlaylistId);
+    Call<SucessModel> RemoveAudio(@Field("CoUserId") String CoUserId,
+                                  @Field("AudioId") String AudioId,
+                                  @Field("PlaylistId") String PlaylistId);
 
     @POST("sortingplaylistaudio")
     @FormUrlEncoded
-    Call<RenameNewPlaylistModel> SortAudio(@Field("CoUserId") String CoUserId,
-                                                      @Field("PlaylistId") String AudioId,
-                                                      @Field("PlaylistAudioId") String PlaylistAudioId);
+    Call<SucessModel> SortAudio(@Field("CoUserId") String CoUserId,
+                                @Field("PlaylistId") String AudioId,
+                                @Field("PlaylistAudioId") String PlaylistAudioId);
 
 }
