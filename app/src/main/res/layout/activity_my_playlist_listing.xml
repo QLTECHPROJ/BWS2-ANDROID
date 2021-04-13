@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".ManageModule.MyPlaylistActivity">
+        tools:context=".ManageModule.MyPlaylistListingActivity">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                                             android:orientation="horizontal">
 
                                             <LinearLayout
-                                                android:id="@+id/llRemindeer"
+                                                android:id="@+id/llReminder"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginLeft="@dimen/_20sdp"
@@ -197,6 +197,7 @@
                                         android:orientation="horizontal">
 
                                         <TextView
+                                            android:id="@+id/tvPlayListName"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_centerVertical="true"
@@ -323,7 +324,6 @@
                         app:spanCount="3"
                         tools:itemCount="3"
                         tools:listitem="@layout/selected_category_raw" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_84sdp">
@@ -333,7 +333,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_48sdp"
                             android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/_16sdp"
                             android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_marginRight="@dimen/_16sdp"
                             android:layout_weight="2"
                             android:background="@drawable/rounded_extra_gray_corner"
                             android:visibility="visible">
@@ -347,6 +349,22 @@
                                 android:src="@drawable/ic_search_icon"
                                 app:tint="@color/dark_blue_gray" />
 
+                            <TextView
+                                android:id="@+id/tvSearch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:layout_toRightOf="@id/button1"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="start"
+                                android:text=""
+                                android:textColor="@color/light_gray"
+                                android:textSize="@dimen/_14sdp"
+                                android:visibility="gone" />
+
                             <androidx.appcompat.widget.SearchView
                                 android:id="@+id/searchView"
                                 android:layout_width="match_parent"
@@ -356,8 +374,9 @@
                                 android:iconifiedByDefault="false"
                                 android:singleLine="true"
                                 android:theme="@style/WallSearchView"
+                                android:visibility="gone"
                                 app:queryBackground="@null"
-                                app:queryHint="@string/Search_for_audio"
+                                app:queryHint=""
                                 app:searchHintIcon="@null"
                                 app:searchIcon="@null" />
                         </RelativeLayout>
@@ -380,7 +399,17 @@
                         android:nestedScrollingEnabled="false"
                         android:overScrollMode="never"
                         android:paddingBottom="@dimen/_26sdp"
+                        android:visibility="visible"
                         tools:listitem="@layout/myplaylist_sorting_new" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvPlayLists2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never"
+                        android:paddingBottom="@dimen/_26sdp"
+                        android:visibility="gone"
+                        tools:listitem="@layout/my_playlist_layout" />
 
                 </LinearLayout>
 
@@ -419,6 +448,30 @@
                         android:textColor="@color/white" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="@dimen/_60sdp">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:indeterminateTint="@color/blue"
+                        android:scaleType="centerInside"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/progressBarHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.4"
+                    android:animateLayoutChanges="true"
+                    android:background="#C0000000"
+                    android:visibility="gone" />
             </RelativeLayout>
 
         </androidx.core.widget.NestedScrollView>
