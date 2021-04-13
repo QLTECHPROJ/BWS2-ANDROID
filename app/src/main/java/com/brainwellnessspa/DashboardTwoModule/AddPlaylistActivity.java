@@ -323,7 +323,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         myBackPress = true;
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AddToPlaylistModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(CoUSERID, AudioId, PlaylistID, FromPlaylistID);
+            Call<AddToPlaylistModel> listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(CoUSERID, AudioId, PlaylistID, FromPlaylistID);
             listCall.enqueue(new Callback<AddToPlaylistModel>() {
                 @Override
                 public void onResponse(Call<AddToPlaylistModel> call, Response<AddToPlaylistModel> response) {

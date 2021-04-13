@@ -9,7 +9,7 @@ import java.util.*
 class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
     @SerializedName("ResponseData")
     @Expose
-    var responseData: ArrayList<ResponseData>? = null
+    var responseData: ArrayList<ResponseData?>? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -124,7 +124,7 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
         }
 
         companion object {
-            val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData?> {
+            @JvmField val CREATOR: Parcelable.Creator<ResponseData?> = object : Parcelable.Creator<ResponseData?> {
                 override fun createFromParcel(`in`: Parcel): ResponseData? {
                     return ResponseData(`in`)
                 }
@@ -137,7 +137,7 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
     }
 
     companion object {
-        val CREATOR: Parcelable.Creator<SuggestedModel> = object : Parcelable.Creator<SuggestedModel?> {
+        @JvmField val CREATOR: Parcelable.Creator<SuggestedModel> = object : Parcelable.Creator<SuggestedModel> {
             override fun createFromParcel(`in`: Parcel): SuggestedModel? {
                 return SuggestedModel(`in`)
             }

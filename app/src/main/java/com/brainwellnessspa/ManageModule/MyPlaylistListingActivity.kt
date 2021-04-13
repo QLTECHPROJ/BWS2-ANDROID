@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity
+import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel
 import com.brainwellnessspa.R

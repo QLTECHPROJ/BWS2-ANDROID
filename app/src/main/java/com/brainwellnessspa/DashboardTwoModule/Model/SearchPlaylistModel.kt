@@ -9,7 +9,7 @@ import java.util.*
 class SearchPlaylistModel protected constructor(`in`: Parcel) : Parcelable {
     @SerializedName("ResponseData")
     @Expose
-    var responseData: ArrayList<ResponseData>? = null
+    var responseData: ArrayList<ResponseData?>? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -101,7 +101,7 @@ class SearchPlaylistModel protected constructor(`in`: Parcel) : Parcelable {
         }
 
         companion object {
-            val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData?> {
+            @JvmField val CREATOR: Parcelable.Creator<ResponseData?> = object : Parcelable.Creator<ResponseData?> {
                 override fun createFromParcel(`in`: Parcel): ResponseData? {
                     return ResponseData(`in`)
                 }
@@ -129,7 +129,7 @@ class SearchPlaylistModel protected constructor(`in`: Parcel) : Parcelable {
     }
 
     companion object {
-        val CREATOR: Parcelable.Creator<SearchPlaylistModel> = object : Parcelable.Creator<SearchPlaylistModel?> {
+        @JvmField val CREATOR: Parcelable.Creator<SearchPlaylistModel> = object : Parcelable.Creator<SearchPlaylistModel> {
             override fun createFromParcel(`in`: Parcel): SearchPlaylistModel? {
                 return SearchPlaylistModel(`in`)
             }
