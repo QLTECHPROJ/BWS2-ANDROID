@@ -36,20 +36,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
-import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
-import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity;
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel;
-import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -63,19 +59,13 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
 
 public class HomeFragment extends Fragment {
@@ -127,7 +117,7 @@ public class HomeFragment extends Fragment {
             });
         });
         binding.llPlayer.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), DassAssSliderActivity.class);
+            Intent i = new Intent(getActivity(), MyPlaylistListingActivity.class);
             startActivity(i);
         });
 

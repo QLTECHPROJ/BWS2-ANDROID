@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ManageModule
+package com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist
 
 import android.app.Activity
 import android.content.*
@@ -538,7 +538,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
 
         override fun getItemCount(): Int {
-            return listFilterData.size
+            return listFilterData .size
         }
 
         override fun getFilter(): Filter {
