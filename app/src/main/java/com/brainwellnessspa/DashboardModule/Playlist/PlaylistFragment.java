@@ -33,6 +33,7 @@ import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivi
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.ViewAllPlaylistFragment;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.UserModule.Models.ProfileViewModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;

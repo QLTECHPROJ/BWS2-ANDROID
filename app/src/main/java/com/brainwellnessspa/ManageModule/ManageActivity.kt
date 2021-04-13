@@ -68,7 +68,7 @@ class ManageActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.setText(modelList[position].name)
             holder.binding.tvDesc.setText("Yes. Every plan comes with a 30-day free trial option")
-            holder.binding.ivClickRight.setOnClickListener { view ->
+            holder.binding.ivClickRight.setOnClickListener { _ ->
                 holder.binding.llMainLayout.setBackgroundResource(R.color.discalimer_gray)
                 holder.binding.tvDesc.setFocusable(true)
                 holder.binding.tvDesc.requestFocus()
@@ -77,7 +77,7 @@ class ManageActivity : AppCompatActivity() {
                 holder.binding.ivClickDown.setVisibility(View.VISIBLE)
                 holder.binding.ivClickDown.setImageResource(R.drawable.ic_down_black_icon)
             }
-            holder.binding.ivClickDown.setOnClickListener { view ->
+            holder.binding.ivClickDown.setOnClickListener { _ ->
                 holder.binding.llBgChange.setBackgroundResource(Color.TRANSPARENT)
                 holder.binding.llMainLayout.setBackgroundResource(R.drawable.membership_faq_not_clicked)
                 holder.binding.tvDesc.setVisibility(View.GONE)

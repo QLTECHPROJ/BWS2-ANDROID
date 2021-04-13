@@ -18,6 +18,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -104,7 +105,7 @@ class UserListActivity : AppCompatActivity() {
                 holder.bindingAdapter.ivCheck.visibility = View.VISIBLE
             }
 
-            holder.bindingAdapter.rlAddNewCard.setOnClickListener { view ->
+            holder.bindingAdapter.rlAddNewCard.setOnClickListener { _ ->
                 val previousItem = selectedItem
                 selectedItem = position
                 notifyItemChanged(previousItem)
@@ -376,11 +377,11 @@ class UserListActivity : AppCompatActivity() {
             val OTP4: String = edtOTP4.getText().toString().trim()
             if (!OTP1.isEmpty() && !OTP2.isEmpty() && !OTP3.isEmpty() && !OTP4.isEmpty()) {
                 btnDone.setEnabled(true)
-                btnDone.setTextColor(activity.getResources().getColor(R.color.white))
+                btnDone.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
                 btnDone.setEnabled(false)
-                btnDone.setTextColor(activity.getResources().getColor(R.color.white))
+                btnDone.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
             }
 

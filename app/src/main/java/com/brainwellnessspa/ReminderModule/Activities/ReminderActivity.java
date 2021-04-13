@@ -39,6 +39,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Models.SelectPlaylistModel;
 import com.brainwellnessspa.ReminderModule.Models.SetReminderModel;
 import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityReminderBinding;
 import com.brainwellnessspa.databinding.SelectPlaylistLayoutBinding;
@@ -69,9 +70,9 @@ public class ReminderActivity extends AppCompatActivity {
     Context context;
     int pos;
     Dialog dialog;
-    String IsCheck = "", ReminderDay = "", ReminderId = "", am_pm, hourString, minuteSting, UserID, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime = "";
+    String IsCheck = "", ReminderDay = "", ReminderId = "", am_pm, hourString, minuteSting, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime = "";
     List<String> SelectedDay, remiderDays = new ArrayList<>();
-    String ReminderDaySelected, ReminderDayTemp;
+    String ReminderDaySelected, ReminderDayTemp, CoUSERID, USERID, UserName;
     private int mHour, mMinute;
     SelectPlaylistAdapter adapter;
     TimePickerDialog timePickerDialog;
@@ -87,8 +88,10 @@ public class ReminderActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder);
         context = ReminderActivity.this;
         activity = ReminderActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
 
         if (getIntent().getExtras() != null) {
             ComeFrom = getIntent().getStringExtra("ComeFrom");
@@ -111,7 +114,7 @@ public class ReminderActivity extends AppCompatActivity {
 //        Log.e("DayDayDayDay", Day);
 //        Log.e("SelectedDaySelectedDay", TextUtils.join(",", SelectedDay));
         Properties p = new Properties();
-        p.putValue("userId", UserID);
+        p.putValue("userId", CoUSERID);
         p.putValue("reminderId", ReminderId);
         p.putValue("playlistId", PlaylistID);
         p.putValue("playlistName", PlaylistName);
@@ -206,7 +209,7 @@ public class ReminderActivity extends AppCompatActivity {
                         binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
                         RefreshButton();
                         p2 = new Properties();
-                        p2.putValue("userId", UserID);
+                        p2.putValue("userId", CoUSERID);
                         p2.putValue("reminderId", ReminderId);
                         p2.putValue("reminderTime", hourString + ":" + minuteSting + " " + am_pm);
                         p2.putValue("playlistName", PlaylistName);
@@ -339,7 +342,7 @@ public class ReminderActivity extends AppCompatActivity {
             textView.setBackground(getResources().getDrawable(R.drawable.transparent_bg));
         }
         p = new Properties();
-        p.putValue("userId", UserID);
+        p.putValue("userId", CoUSERID);
         if (ReminderId.equalsIgnoreCase("")) {
             p.putValue("reminderId", "");
         } else {
@@ -419,7 +422,7 @@ public class ReminderActivity extends AppCompatActivity {
 
                     if (BWSApplication.isNetworkConnected(context)) {
                         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserID, CONSTANTS.FLAG_ONE,
+                        Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, CoUSERID, CONSTANTS.FLAG_ONE,
                                 binding.tvTime.getText().toString(), TextUtils.join(",", remiderDays));
                         listCall.enqueue(new Callback<SetReminderModel>() {
                             @Override
@@ -505,7 +508,7 @@ public class ReminderActivity extends AppCompatActivity {
     private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError, ProgressBar progressBar, FrameLayout progressBarHolder) {
         if (BWSApplication.isNetworkConnected(context)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity);
-            Call<SelectPlaylistModel> listCall = APIClient.getClient().getAllPlayListing(UserID);
+            Call<SelectPlaylistModel> listCall = APINewClient.getClient().getAllPlayListing(CoUSERID);
             listCall.enqueue(new Callback<SelectPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SelectPlaylistModel> call, Response<SelectPlaylistModel> response) {
@@ -587,7 +590,7 @@ public class ReminderActivity extends AppCompatActivity {
                     ShowPlaylistName();
                     dialog.dismiss();
                     p1 = new Properties();
-                    p1.putValue("userId", UserID);
+                    p1.putValue("userId", CoUSERID);
                     p1.putValue("playlistId", PlaylistID);
                     p1.putValue("playlistName", PlaylistName);
                     BWSApplication.addToSegment("Reminder Playlist List Clicked", p1, CONSTANTS.track);

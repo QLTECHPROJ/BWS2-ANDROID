@@ -60,7 +60,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-        binding.tvSearch.setOnClickListener { view14 ->
+        binding.tvSearch.setOnClickListener { _ ->
             val i = Intent(ctx, AddAudioActivity::class.java)
             i.putExtra("PlaylistID", listMOdelGloble.responseData!!.playlistID)
             startActivity(i)
@@ -72,7 +72,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         searchEditText.setHintTextColor(resources.getColor(R.color.gray))
         val closeButton: ImageView = binding.searchView.findViewById(R.id.search_close_btn)
         binding.searchView.clearFocus()
-        closeButton.setOnClickListener { v: View? ->
+        closeButton.setOnClickListener { _: View? ->
             binding.searchView.clearFocus()
             searchEditText.setText("")
             binding.searchView.setQuery("", false)
@@ -227,7 +227,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 binding.llReminder.visibility = View.VISIBLE
 //                binding.ivPlaylistStatus.setVisibility(View.INVISIBLE)
 //                binding.llListing.setVisibility(View.GONE)
-                binding.btnAddAudio.setOnClickListener { view ->
+                binding.btnAddAudio.setOnClickListener { _ ->
                     val i = Intent(ctx, AddAudioActivity::class.java)
                     i.putExtra("PlaylistID", listModel.playlistID)
                     startActivity(i)
@@ -310,7 +310,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             try {
-                holder.binding.llRemove.setOnClickListener { view ->
+                holder.binding.llRemove.setOnClickListener { _ ->
 //                    handler2.removeCallbacks(UpdateSongTime2);
 //                    val shared: SharedPreferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
 //                    val audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true)
@@ -337,7 +337,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
-            holder.binding.llSort.setOnTouchListener { v, event ->
+            holder.binding.llSort.setOnTouchListener { _, event ->
 
                 if (event.getAction() === MotionEvent.ACTION_DOWN) {
                     startDragListener.requestDrag(holder)

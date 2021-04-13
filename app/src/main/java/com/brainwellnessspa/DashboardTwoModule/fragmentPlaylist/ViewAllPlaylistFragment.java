@@ -1,4 +1,4 @@
-package com.brainwellnessspa.DashboardModule.Playlist;
+package com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
+import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
@@ -28,7 +30,7 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlay
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
-import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentViewAllPlaylistBinding;
@@ -58,7 +60,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRel
 public class ViewAllPlaylistFragment extends Fragment {
     public static String GetPlaylistLibraryID = "";
     FragmentViewAllPlaylistBinding binding;
-    String GetLibraryID, Name, UserID, AudioFlag, MyDownloads, ScreenView = "";
+    String GetLibraryID, Name, CoUSERID, USERID, UserName, AudioFlag, MyDownloads, ScreenView = "";
     View view;
 
     @Override
@@ -66,8 +68,10 @@ public class ViewAllPlaylistFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_playlist, container, false);
         view = binding.getRoot();
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
@@ -129,11 +133,11 @@ public class ViewAllPlaylistFragment extends Fragment {
                 e.setPlaylistId(audioList.get(i).getPlaylistID());
                 e.setPlaylistName(audioList.get(i).getPlaylistName());
                 e.setPlaylistType(audioList.get(i).getCreated());
-                e.setPlaylistDuration(audioList.get(i).getTotalhour() + "h " +audioList.get(i).getTotalminute() + "m");
+                e.setPlaylistDuration(audioList.get(i).getTotalhour() + "h " + audioList.get(i).getTotalminute() + "m");
                 e.setAudioCount(audioList.get(i).getTotalAudio());
                 section.add(e);
             }
-            p.putValue("userId", UserID);
+            p.putValue("userId", CoUSERID);
             Gson gson = new Gson();
             p.putValue("playlists", gson.toJson(section));
             p.putValue("section", ScreenView);
@@ -242,7 +246,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             try {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                Call<ViewAllPlayListModel> listCall = APIClient.getClient().getViewAllPlayLists(UserID, GetLibraryID);
+                Call<ViewAllPlayListModel> listCall = APINewClient.getClient().getViewAllPlayLists(CoUSERID, GetLibraryID);
                 listCall.enqueue(new Callback<ViewAllPlayListModel>() {
                     @Override
                     public void onResponse(Call<ViewAllPlayListModel> call, Response<ViewAllPlayListModel> response) {
@@ -259,11 +263,11 @@ public class ViewAllPlaylistFragment extends Fragment {
                                     e.setPlaylistId(listModel.getResponseData().getDetails().get(i).getPlaylistID());
                                     e.setPlaylistName(listModel.getResponseData().getDetails().get(i).getPlaylistName());
                                     e.setPlaylistType(listModel.getResponseData().getDetails().get(i).getCreated());
-                                    e.setPlaylistDuration(listModel.getResponseData().getDetails().get(i).getTotalhour() + "h " +listModel.getResponseData().getDetails().get(i).getTotalminute() + "m");
+                                    e.setPlaylistDuration(listModel.getResponseData().getDetails().get(i).getTotalhour() + "h " + listModel.getResponseData().getDetails().get(i).getTotalminute() + "m");
                                     e.setAudioCount(listModel.getResponseData().getDetails().get(i).getTotalAudio());
                                     section.add(e);
                                 }
-                                p.putValue("userId", UserID);
+                                p.putValue("userId", CoUSERID);
                                 Gson gson = new Gson();
                                 p.putValue("playlists", gson.toJson(section));
                                 p.putValue("section", ScreenView);

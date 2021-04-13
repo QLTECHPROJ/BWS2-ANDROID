@@ -1,5 +1,7 @@
 package com.brainwellnessspa.Utility;
 
+import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
+import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
@@ -11,6 +13,7 @@ import com.brainwellnessspa.DashboardTwoModule.Model.CreatePlaylistingModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
+import com.brainwellnessspa.ReminderModule.Models.SelectPlaylistModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
@@ -171,4 +174,17 @@ public interface APINewInterface {
     @FormUrlEncoded
     Call<SearchBothModel> getSearchBoth(@Field("CoUserId") String CoUserId,
                                         @Field("SuggestedName") String suggestedName);
+
+    @POST("getallplaylist")
+    @FormUrlEncoded
+    Call<SelectPlaylistModel> getAllPlayListing(@Field("CoUserId") String CoUserId);
+
+    @POST("playlistonviewall")
+    @FormUrlEncoded
+    Call<ViewAllPlayListModel> getViewAllPlayLists(@Field("CoUserId") String CoUserId,
+                                                   @Field("GetLibraryId") String getLibraryId);
+
+    @POST("playlistlibrary")
+    @FormUrlEncoded
+    Call<MainPlayListModel> getMainPlayLists(@Field("CoUserId") String CoUserId);
 }
