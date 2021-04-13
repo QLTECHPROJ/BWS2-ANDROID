@@ -40,7 +40,7 @@ import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentSearchBinding;
@@ -82,7 +82,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class SearchFragment extends Fragment {
     public static int comefrom_search = 0;
     FragmentSearchBinding binding;
-    String UserID, AudioFlag, IsPlayDisclimer, SearchFirstLogin = "0";
+    String CoUSERID, USERID, UserName, AudioFlag, IsPlayDisclimer, SearchFirstLogin = "0";
     EditText searchEditText;
     SerachListAdpater serachListAdpater;
     int listSize = 0;
@@ -120,8 +120,10 @@ public class SearchFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View view = binding.getRoot();
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
         ComeScreenAccount = 0;
         comefromDownload = "0";
         ArrayList<String> section = new ArrayList<>();
@@ -131,7 +133,7 @@ public class SearchFragment extends Fragment {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         p = new Properties();
-        p.putValue("userId", UserID);
+        p.putValue("userId", CoUSERID);
         p.putValue("source", "Search Screen");
         p.putValue("sections", gson.toJson(section));
         BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
@@ -166,7 +168,7 @@ public class SearchFragment extends Fragment {
                     prepareSearchData(search, searchEditText);
                 }
                 p = new Properties();
-                p.putValue("userId", UserID);
+                p.putValue("userId", CoUSERID);
                 p.putValue("source", "Search Screen");
                 p.putValue("searchKeyword", search);
                 BWSApplication.addToSegment("Audio/Playlist Searched", p, CONSTANTS.track);
@@ -274,7 +276,7 @@ public class SearchFragment extends Fragment {
     private void prepareSearchData(String search, EditText searchEditText) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<SearchBothModel> listCall = APIClient.getClient().getSearchBoth(UserID, search);
+            Call<SearchBothModel> listCall = APINewClient.getClient().getSearchBoth(CoUSERID, search);
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
                 public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {
@@ -290,7 +292,7 @@ public class SearchFragment extends Fragment {
                                 } else {
                                     binding.llError.setVisibility(View.GONE);
                                     binding.rvSerachList.setVisibility(View.VISIBLE);
-                                    serachListAdpater = new SerachListAdpater(listModel.getResponseData(), getActivity(), binding.rvSerachList, UserID);
+                                    serachListAdpater = new SerachListAdpater(listModel.getResponseData(), getActivity(), binding.rvSerachList, CoUSERID);
                                     binding.rvSerachList.setAdapter(serachListAdpater);
                                 }
                             } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
@@ -480,7 +482,7 @@ public class SearchFragment extends Fragment {
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
+            Call<SuggestedModel> listCall = APINewClient.getClient().getSuggestedLists(CoUSERID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
@@ -527,7 +529,7 @@ public class SearchFragment extends Fragment {
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<SearchPlaylistModel> listCall = APIClient.getClient().getSuggestedPlayLists(UserID);
+            Call<SearchPlaylistModel> listCall = APINewClient.getClient().getSuggestedPlayLists(CoUSERID);
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
