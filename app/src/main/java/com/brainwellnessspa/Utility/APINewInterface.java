@@ -156,11 +156,6 @@ public interface APINewInterface {
     @FormUrlEncoded
     Call<SuggestedModel> getSuggestedLists(@Field("CoUserId") String CoUserId);
 
-    @POST("searchonsuggestedlist")
-    @FormUrlEncoded
-    Call<SearchBothModel> getSearchBoth(@Field("CoUserId") String CoUserId,
-                                        @Field("SuggestedName") String suggestedName);
-
     @POST("suggestedplaylist")
     @FormUrlEncoded
     Call<SearchPlaylistModel> getSuggestedPlayLists(@Field("CoUserId") String CoUserId);
@@ -171,4 +166,9 @@ public interface APINewInterface {
                                                            @Field("AudioId") String audioId,
                                                            @Field("PlaylistId") String playlistId,
                                                            @Field("FromPlaylistId") String fromPlaylistId);
+
+    @POST("searchonsuggestedlist")
+    @FormUrlEncoded
+    Call<SearchBothModel> getSearchBoth(@Field("CoUserId") String CoUserId,
+                                        @Field("SuggestedName") String suggestedName);
 }
