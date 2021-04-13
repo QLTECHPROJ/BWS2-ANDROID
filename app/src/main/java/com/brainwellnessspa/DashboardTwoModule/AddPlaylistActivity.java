@@ -34,10 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity;
-import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
-import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
-import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
-import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
+import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
@@ -326,12 +323,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
         myBackPress = true;
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(CoUSERID, AudioId, PlaylistID, FromPlaylistID);
-            listCall.enqueue(new Callback<AddToPlaylist>() {
+            Call<AddToPlaylistModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(CoUSERID, AudioId, PlaylistID, FromPlaylistID);
+            listCall.enqueue(new Callback<AddToPlaylistModel>() {
                 @Override
-                public void onResponse(Call<AddToPlaylist> call, Response<AddToPlaylist> response) {
+                public void onResponse(Call<AddToPlaylistModel> call, Response<AddToPlaylistModel> response) {
                     try {
-                        AddToPlaylist listModels = response.body();
+                        AddToPlaylistModel listModels = response.body();
                         if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
 //                                BWSApplication.showToast(listModels.getResponseMessage(), ctx);
@@ -495,7 +492,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<AddToPlaylist> call, Throwable t) {
+                public void onFailure(Call<AddToPlaylistModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });

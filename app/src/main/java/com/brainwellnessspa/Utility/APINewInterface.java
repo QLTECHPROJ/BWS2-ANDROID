@@ -1,5 +1,9 @@
 package com.brainwellnessspa.Utility;
 
+import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
@@ -148,4 +152,23 @@ public interface APINewInterface {
                                 @Field("PlaylistId") String AudioId,
                                 @Field("PlaylistAudioId") String PlaylistAudioId);
 
+    @POST("suggestedaudio")
+    @FormUrlEncoded
+    Call<SuggestedModel> getSuggestedLists(@Field("CoUserId") String CoUserId);
+
+    @POST("searchonsuggestedlist")
+    @FormUrlEncoded
+    Call<SearchBothModel> getSearchBoth(@Field("CoUserId") String CoUserId,
+                                        @Field("SuggestedName") String suggestedName);
+
+    @POST("suggestedplaylist")
+    @FormUrlEncoded
+    Call<SearchPlaylistModel> getSuggestedPlayLists(@Field("CoUserId") String CoUserId);
+
+    @POST("addaptoplaylist")
+    @FormUrlEncoded
+    Call<AddToPlaylistModel> getAddSearchAudioFromPlaylist(@Field("CoUserId") String CoUserId,
+                                                           @Field("AudioId") String audioId,
+                                                           @Field("PlaylistId") String playlistId,
+                                                           @Field("FromPlaylistId") String fromPlaylistId);
 }

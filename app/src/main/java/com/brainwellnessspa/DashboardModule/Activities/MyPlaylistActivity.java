@@ -78,7 +78,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloadi
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.hundredVolume;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
+import static com.brainwellnessspa.DashboardTwoModule.AddAudioActivity.MyPlaylistIds;
 public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;

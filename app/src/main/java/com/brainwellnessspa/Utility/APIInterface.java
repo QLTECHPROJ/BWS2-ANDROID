@@ -9,7 +9,7 @@ import com.brainwellnessspa.BillingOrderModule.Models.CardModel;
 import com.brainwellnessspa.BillingOrderModule.Models.CurrentPlanVieViewModel;
 import com.brainwellnessspa.BillingOrderModule.Models.PayNowDetailsModel;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
-import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
+import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
@@ -25,12 +25,12 @@ import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
 import com.brainwellnessspa.DashboardModule.Models.PreviousAppointmentsModel;
 import com.brainwellnessspa.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.RenamePlaylistModel;
-import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
-import com.brainwellnessspa.DashboardModule.Models.SearchPlaylistModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SessionListModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
-import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestionAudiosModel;
 import com.brainwellnessspa.DashboardModule.Models.UnlockAudioList;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
@@ -256,10 +256,10 @@ public interface APIInterface {
     /* TODO MyPlaylistsFragment */
     @POST("addaudiotoplaylist")
     @FormUrlEncoded
-    Call<AddToPlaylist> getAddSearchAudioFromPlaylist(@Field("UserID") String userID,
-                                                      @Field("AudioId") String audioId,
-                                                      @Field("PlaylistId") String playlistId,
-                                                      @Field("FromPlaylistId") String fromPlaylistId);
+    Call<AddToPlaylistModel> getAddSearchAudioFromPlaylist(@Field("UserID") String userID,
+                                                           @Field("AudioId") String audioId,
+                                                           @Field("PlaylistId") String playlistId,
+                                                           @Field("FromPlaylistId") String fromPlaylistId);
 
     /* TODO BillingAddressFragment */
     @POST("billingaddress")
