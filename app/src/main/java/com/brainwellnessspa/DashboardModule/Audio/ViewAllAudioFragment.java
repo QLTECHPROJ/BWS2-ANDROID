@@ -31,6 +31,7 @@ import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.AudiolistCustomLayoutBinding;
@@ -66,7 +67,7 @@ public class ViewAllAudioFragment extends Fragment {
     public static boolean viewallAudio = false;
     public static int ComeFromAudioViewAll = 0;
     FragmentViewAllAudioBinding binding;
-    String ID, Name, UserID, AudioFlag, Category;
+    String ID, Name, USERID, AudioFlag, Category, CoUSERID, UserName;
     List<DownloadAudioDetails> audioList;
     Context context;
 
@@ -77,8 +78,10 @@ public class ViewAllAudioFragment extends Fragment {
         View view = binding.getRoot();
 
         context = getActivity();
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
@@ -167,7 +170,7 @@ public class ViewAllAudioFragment extends Fragment {
                 section.add(e);
             }
             Properties p = new Properties();
-            p.putValue("userId", UserID);
+            p.putValue("userId", CoUSERID);
             Gson gson = new Gson();
             p.putValue("audios", gson.toJson(section));
             p.putValue("source", Name);
@@ -181,7 +184,7 @@ public class ViewAllAudioFragment extends Fragment {
         refreshData();
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<ViewAllAudioListModel> listCall = APIClient.getClient().getViewAllAudioLists(UserID, ID, Category);
+            Call<ViewAllAudioListModel> listCall = APINewClient.getClient().getViewAllAudioLists(CoUSERID, ID, Category);
             listCall.enqueue(new Callback<ViewAllAudioListModel>() {
                 @Override
                 public void onResponse(Call<ViewAllAudioListModel> call, Response<ViewAllAudioListModel> response) {
@@ -205,7 +208,7 @@ public class ViewAllAudioFragment extends Fragment {
                                 section.add(e);
                             }
                             Properties p = new Properties();
-                            p.putValue("userId", UserID);
+                            p.putValue("userId", CoUSERID);
                             Gson gson = new Gson();
                             p.putValue("audios", gson.toJson(section));
                             if (Name.equalsIgnoreCase(getString(R.string.recently_played))) {

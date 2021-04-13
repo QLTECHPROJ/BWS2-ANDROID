@@ -22,15 +22,15 @@ class CreatePlaylistingModel {
     var responseStatus: String? = null
 
     class ResponseData {
-        @SerializedName("ID")
+        @SerializedName("PlaylistID")
         @Expose
         var id: String? = null
 
-        @SerializedName("Name")
+        @SerializedName("PlaylistName")
         @Expose
         var name: String? = null
 
-        @SerializedName("Image")
+        @SerializedName("PlaylistImage")
         @Expose
         var image: String? = null
 

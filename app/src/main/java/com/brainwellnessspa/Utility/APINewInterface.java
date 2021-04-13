@@ -1,6 +1,7 @@
 package com.brainwellnessspa.Utility;
 
 import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
+import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
@@ -187,4 +188,11 @@ public interface APINewInterface {
     @POST("playlistlibrary")
     @FormUrlEncoded
     Call<MainPlayListModel> getMainPlayLists(@Field("CoUserId") String CoUserId);
+
+    @POST("homeviewallaudio")
+    @FormUrlEncoded
+    Call<ViewAllAudioListModel> getViewAllAudioLists(@Field("CoUserId") String CoUserId,
+                                                     @Field("GetHomeAudioId") String GetHomeAudioId,
+                                                     @Field("CategoryName") String CategoryName);
+
 }
