@@ -43,10 +43,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     lateinit var ctx: Context
     lateinit var activity: Activity
     var CoUserID: String? = ""
+    var USERID: String? = ""
     var MyCreated: String? = ""
     lateinit var adpater: PlayListsAdpater
     lateinit var adpater2: PlayListsAdpater2
-    var USERID: String? = ""
     lateinit var binding: ActivityMyPlaylistListingBinding
 
     lateinit var searchEditText: EditText

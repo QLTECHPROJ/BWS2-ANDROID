@@ -76,7 +76,7 @@
                     <LinearLayout
                         android:id="@+id/llName"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_76sdp"
+                        android:layout_height="@dimen/_72sdp"
                         android:layout_marginTop="@dimen/_18sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
@@ -116,7 +116,7 @@
                     <LinearLayout
                         android:id="@+id/llNumber"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_76sdp"
+                        android:layout_height="@dimen/_72sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="horizontal">
@@ -190,7 +190,7 @@
                     <LinearLayout
                         android:id="@+id/llEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_76sdp"
+                        android:layout_height="@dimen/_72sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
