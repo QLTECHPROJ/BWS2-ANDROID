@@ -12,6 +12,7 @@ import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.CreatePlaylistingModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel;
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.ReminderModule.Models.SelectPlaylistModel;
@@ -189,7 +190,11 @@ public interface APINewInterface {
     @FormUrlEncoded
     Call<MainPlayListModel> getMainPlayLists(@Field("CoUserId") String CoUserId);
 
-    @POST("homeviewallaudio")
+    @POST("managehomescreen")
+    @FormUrlEncoded
+    Call<HomeDataModel> getHomeData(@Field("CoUserId") String CoUserId);
+
+    @POST("managehomeviewallaudio")
     @FormUrlEncoded
     Call<ViewAllAudioListModel> getViewAllAudioLists(@Field("CoUserId") String CoUserId,
                                                      @Field("GetHomeAudioId") String GetHomeAudioId,

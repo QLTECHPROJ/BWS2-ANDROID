@@ -315,7 +315,8 @@
                     android:id="@+id/llSpace"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/_8sdp" >
 
                     <LinearLayout
                         android:id="@+id/rlCreatePlaylist"
@@ -327,19 +328,26 @@
                         android:visibility="visible">
 
                         <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_13sdp"
-                            android:layout_marginRight="@dimen/_9sdp">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
                             <ImageView
+                                android:id="@+id/ivCreatePlaylist"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:scaleType="fitXY"
-                                app:layout_constraintDimensionRatio="1:1"
                                 android:src="@drawable/ic_create_playlist" />
-
-                            <ImageView
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:gravity="left|bottom"
+                                android:text="Create \n New Playlist"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:textColor="@color/white"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:textSize="@dimen/_12sdp" />
+                           <!-- <ImageView
                                 android:id="@+id/ivLock"
                                 android:layout_width="@dimen/_24sdp"
                                 android:layout_height="@dimen/_24sdp"
@@ -350,7 +358,7 @@
                                 android:src="@drawable/ic_lock_icon"
                                 android:visibility="gone"
                                 app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent" />-->
 
                         </RelativeLayout>
                     </LinearLayout>

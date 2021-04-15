@@ -164,9 +164,11 @@
     <string name="my_like">MyLike</string>
     <string name="recently_played">Recently Played</string>
     <string name="recommended">Recommended</string>
+    <string name="recommended_audio">Recommended Audio</string>
     <string name="Library">Library</string>
     <string name="get_inspired">Get Inspired</string>
     <string name="popular">Popular</string>
+    <string name="popular_audio">Popular Audio</string>
     <string name="top_categories">Top Categories</string>
     <string name="Rename">Rename</string>
     <string name="notvalid_number">It seems your mobile number not exist in our system.</string>

@@ -39,11 +39,14 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity;
+import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
+import com.brainwellnessspa.UserModuleTwo.Activities.CreateAccountActivity;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel;
 import com.brainwellnessspa.Utility.APINewClient;
@@ -117,7 +120,7 @@ public class HomeFragment extends Fragment {
             });
         });
         binding.llPlayer.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), MyPlaylistListingActivity.class);
+            Intent i = new Intent(getActivity(), ManageAudioPlaylistActivity.class);
             startActivity(i);
         });
 
