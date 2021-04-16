@@ -102,7 +102,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         return view;
     }
 
-    private void GetAllMedia() {
+    /*private void GetAllMedia() {
         DatabaseClient
                 .getInstance(getActivity())
                 .getaudioDatabase()
@@ -146,7 +146,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             binding.rvMainAudio.setAdapter(adapter);
         });
     }
-
+*/
     private void callBack() {
         Fragment audioFragment = new PlaylistFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -157,16 +157,16 @@ public class ViewAllPlaylistFragment extends Fragment {
 
     @Override
     public void onResume() {
-        if (MyDownloads.equalsIgnoreCase("1")) {
-            GetAllMedia();
-        } else {
+//        if (MyDownloads.equalsIgnoreCase("1")) {
+//            GetAllMedia();
+//        } else {
             prepareData();
-        }
+//        }
         super.onResume();
     }
 
     private void prepareData() {
-        try {
+   /*     try {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             SharedPreferences shared2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -241,7 +241,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
             try {
@@ -330,7 +330,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            if (IsLock.equalsIgnoreCase("1")) {
+          /*  if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
             } else if (IsLock.equalsIgnoreCase("2")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -385,7 +385,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    /*if (MyDownloads.equalsIgnoreCase("1")) {
+                    *//*if (MyDownloads.equalsIgnoreCase("1")) {
 //                            getMedia(listModelList.get(position).getPlaylistID());
                         Intent i = new Intent(getActivity(), DownloadPlaylistActivity.class);
                         i.putExtra("New", "0");
@@ -398,7 +398,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                         i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
                         i.putExtra("MyDownloads", "1");
                         getActivity().startActivity(i);
-                    } else {*/
+                    } else {*//*
                     Bundle bundle = new Bundle();
                     comefrom_search = 2;
                     GetPlaylistLibraryID = GetLibraryID;
@@ -417,7 +417,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                             .commit();
 //                        }
                 }
-            });
+            });*/
         }
 
         @Override

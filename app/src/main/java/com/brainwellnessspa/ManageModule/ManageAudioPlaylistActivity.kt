@@ -2,7 +2,6 @@ package com.brainwellnessspa.ManageModule
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +18,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.*
 import com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.ViewAllPlaylistFragment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -28,7 +28,6 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -72,20 +71,36 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
                     binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
                     Glide.with(ctx).load(R.drawable.ic_create_playlist).thumbnail(0.05f)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
+                            .apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
                     playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, activity)
                     binding.rvMainPlayList.adapter = playlistAdapter
 
-                    if(listModel.responseData!!.playlist[0].details!!.size>4){
+                    if (listModel.responseData!!.playlist[0].details!!.size > 4) {
                         binding.tvViewAll.visibility = View.VISIBLE
-                    }else {
+                    } else {
                         binding.tvViewAll.visibility = View.GONE
                     }
-                    binding.tvViewAll.setOnClickListener(View.OnClickListener {
+                    binding.tvViewAll.setOnClickListener {
+                        val viewAllPlaylistFragment: Fragment = ViewAllPlaylistFragment()
 
-                    })
-                    audioAdapter = AudioAdapter(listModel.responseData!!.audio, ctx, binding, activity)
+                        val bundle = Bundle()
+//                        if (listModel.responseData!!.playlist[0].view.equals("My Downloads", ignoreCase = true)) {
+//                            bundle.putString("MyDownloads", "1")
+//                        } else {
+                            bundle.putString("MyDownloads", "0")
+//                        }
+                        bundle.putString("GetLibraryID", listModel.responseData!!.playlist[0].getLibraryID)
+                        bundle.putString("Name", listModel.responseData!!.playlist[0].view)
+                        viewAllPlaylistFragment.arguments = bundle
+                        val fragmentManager1: FragmentManager =supportFragmentManager
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.flContainer, viewAllPlaylistFragment)
+                                .commit()
+
+                    }
+                    val fragmentManager1: FragmentManager =supportFragmentManager
+                    audioAdapter = AudioAdapter(listModel.responseData!!.audio, ctx, binding, activity,fragmentManager1)
                     binding.rvMainAudioList.adapter = audioAdapter
 
                 }
@@ -97,7 +112,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class AudioAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity) : RecyclerView.Adapter<AudioAdapter.MyViewHolder>() {
+    class AudioAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity,var fragmentManager1: FragmentManager) : RecyclerView.Adapter<AudioAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: MainAudioLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -108,15 +123,16 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvViewAll.setOnClickListener { view ->
-//                var viewAllAudioFragment: Fragment = ViewAllAudioFragment()
-//                supportFragmentManager.beginTransaction()
-//                        .replace(R.id.flContainer, viewAllAudioFragment)
-//                        .commit()
-//                val bundle = Bundle()
-//                bundle.putString("ID", listModel[position].homeAudioID)
-//                bundle.putString("Name", listModel[position].view)
-//                bundle.putString("Category", "")
-//                viewAllAudioFragment.arguments = bundle
+                val bundle = Bundle()
+                bundle.putString("ID", listModel[position].homeAudioID)
+                bundle.putString("Name", listModel[position].view)
+                bundle.putString("Category", "")
+                val viewAllAudioFragment: Fragment = ViewAllAudioFragment()
+                viewAllAudioFragment.arguments = bundle
+                fragmentManager1.beginTransaction()
+                   .replace(R.id.flContainer, viewAllAudioFragment)
+                   .commit()
+
             }
 
             if (listModel[position].details!!.isEmpty()) {
