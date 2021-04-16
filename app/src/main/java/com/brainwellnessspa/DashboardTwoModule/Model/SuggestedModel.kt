@@ -42,10 +42,6 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
         @Expose
         var name: String? = null
 
-        @SerializedName("IsLock")
-        @Expose
-        var isLock: String? = null
-
         @SerializedName("IsPlay")
         @Expose
         var isPlay: String? = null
@@ -90,7 +86,6 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
         constructor(`in`: Parcel) {
             iD = `in`.readString()
             name = `in`.readString()
-            isLock = `in`.readString()
             isPlay = `in`.readString()
             imageFile = `in`.readString()
             audioFile = `in`.readString()
@@ -106,7 +101,6 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
         override fun writeToParcel(dest: Parcel, flags: Int) {
             dest.writeString(iD)
             dest.writeString(name)
-            dest.writeString(isLock)
             dest.writeString(isPlay)
             dest.writeString(imageFile)
             dest.writeString(audioFile)

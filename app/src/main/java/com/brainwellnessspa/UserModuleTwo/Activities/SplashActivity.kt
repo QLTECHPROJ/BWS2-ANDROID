@@ -178,11 +178,13 @@ class SplashActivity : AppCompatActivity() {
             }, (2 * 800).toLong())
 
         } else {
+
             if(isProfileCompleted.equals("",true)){
                 isProfileCompleted = coUserDetailsModelGloble.getResponseData()?.getIsProfileCompleted().toString()
                 isAssessmentCompleted = coUserDetailsModelGloble.getResponseData()?.getIsAssessmentCompleted().toString()
                 indexScore = coUserDetailsModelGloble.getResponseData()?.getIndexScore().toString()
             }
+
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)

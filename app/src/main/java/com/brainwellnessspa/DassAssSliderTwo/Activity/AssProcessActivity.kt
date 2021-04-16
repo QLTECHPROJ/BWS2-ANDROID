@@ -89,4 +89,8 @@ class AssProcessActivity : AppCompatActivity() {
             finish()
         }
     }
+
+    override fun onBackPressed() {
+        finish()
+    }
 }

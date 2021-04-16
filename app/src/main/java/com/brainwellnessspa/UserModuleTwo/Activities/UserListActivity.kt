@@ -2,15 +2,11 @@ package com.brainwellnessspa.UserModuleTwo.Activities
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -24,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
@@ -129,15 +126,16 @@ class UserListActivity : AppCompatActivity() {
                 userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 userList.dialog.setContentView(R.layout.comfirm_pin_layout)
                 userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                userList.dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
 
                 val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
                 val txtError: TextView = userList.dialog.findViewById(R.id.txtError)
+                val tvTitle: TextView = userList.dialog.findViewById(R.id.tvTitle)
                 val edtOTP1: EditText = userList.dialog.findViewById(R.id.edtOTP1)
                 val edtOTP2: EditText = userList.dialog.findViewById(R.id.edtOTP2)
                 val edtOTP3: EditText = userList.dialog.findViewById(R.id.edtOTP3)
                 val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
-
+                tvTitle.text = "Unlock the app"
                 userList.editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
                 edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
                 edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
@@ -147,6 +145,8 @@ class UserListActivity : AppCompatActivity() {
                 edtOTP2.setOnKeyListener(PinOnKeyListener(1, userList.editTexts))
                 edtOTP3.setOnKeyListener(PinOnKeyListener(2, userList.editTexts))
                 edtOTP4.setOnKeyListener(PinOnKeyListener(3, userList.editTexts))
+                userList.dialog.setCancelable(true)
+                userList.dialog.setCanceledOnTouchOutside(true)
                 userList.dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         userList.dialog.dismiss()
@@ -186,14 +186,15 @@ class UserListActivity : AppCompatActivity() {
                                                     try {
                                                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
                                                         val responseData: CoUserDetailsModel.ResponseData? = coUserDetailsModel.getResponseData()
-
                                                         if (responseData != null) {
                                                             if (responseData.getIsProfileCompleted().equals("0", ignoreCase = true)) {
-                                                                val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                                                val intent = Intent(activity, WalkScreenActivity::class.java)
+                                                                intent.putExtra(CONSTANTS.ScreenView, "ProfileView")
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             } else if (responseData.getIsAssessmentCompleted().equals("0", ignoreCase = true)) {
-                                                                val intent = Intent(activity, DassAssSliderActivity::class.java)
+                                                                val intent = Intent(activity, AssProcessActivity::class.java)
+                                                                intent.putExtra(CONSTANTS.ASSPROCESS,"0")
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             } else if (responseData.getIsProfileCompleted().equals("1", ignoreCase = true) &&
@@ -242,7 +243,6 @@ class UserListActivity : AppCompatActivity() {
                     }
                 }
                 userList.dialog.show()
-                userList.dialog.setCancelable(true)
             }
 
             binding.tvForgotPin.setOnClickListener {
@@ -259,14 +259,15 @@ class UserListActivity : AppCompatActivity() {
                                     userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                     userList.dialog.setContentView(R.layout.comfirm_pin_layout)
                                     userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                    userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-
+                                    userList.dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
                                     val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
                                     txtError = userList.dialog.findViewById(R.id.txtError)
+                                    val tvTitle: TextView = userList.dialog.findViewById(R.id.tvTitle)
                                     val edtOTP1: EditText = userList.dialog.findViewById(R.id.edtOTP1)
                                     val edtOTP2: EditText = userList.dialog.findViewById(R.id.edtOTP2)
                                     val edtOTP3: EditText = userList.dialog.findViewById(R.id.edtOTP3)
                                     val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
+                                    tvTitle.text = "Unlock the app"
 
                                     userList.editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
                                     edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPbool))
@@ -334,7 +335,8 @@ class UserListActivity : AppCompatActivity() {
                                         }
                                     }
                                     userList.dialog.show()
-                                    userList.dialog.setCancelable(false)
+                                    userList.dialog.setCanceledOnTouchOutside(true)
+                                    userList.dialog.setCancelable(true)
                                     BWSApplication.showToast(listModel.getResponseMessage(), activity)
                                 } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
                                     txtError.visibility = View.VISIBLE

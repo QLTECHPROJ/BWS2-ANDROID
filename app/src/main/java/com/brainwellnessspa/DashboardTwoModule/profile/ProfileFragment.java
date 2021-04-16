@@ -23,12 +23,14 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
+import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DashboardTwoModule.ViewPlayerActivity;
 import com.brainwellnessspa.ProfileTwoModule.AccountInfoActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.FaqModule.Activities.FaqActivity;
 import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 import com.brainwellnessspa.ResourceModule.Activities.ResourceActivity;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -40,6 +42,7 @@ public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;
     private long mLastClickTime = 0;
     Dialog logoutDialog;
+    public static int ComeScreenReminder = 0;
     String USERID, UserName;
 
     @Override
@@ -50,6 +53,7 @@ public class ProfileFragment extends Fragment {
         USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
         UserName = (shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, ""));
         binding.tvName.setText(UserName);
+        binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
         binding.llUserProfile.setOnClickListener(view15 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -125,6 +129,21 @@ public class ProfileFragment extends Fragment {
             mLastClickTime = SystemClock.elapsedRealtime();
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+                startActivity(i);
+                getActivity().overridePendingTransition(0, 0);
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+        });
+
+        binding.llReminder.setOnClickListener(view16 -> {
+            ComeScreenReminder = 1;
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
                 startActivity(i);
                 getActivity().overridePendingTransition(0, 0);
             } else {

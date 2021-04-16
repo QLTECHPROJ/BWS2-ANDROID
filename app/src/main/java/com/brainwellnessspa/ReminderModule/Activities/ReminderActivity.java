@@ -219,6 +219,71 @@ public class ReminderActivity extends AppCompatActivity {
             timePickerDialog.show();
         });
 
+        binding.tvSelectedDay.setOnClickListener(view -> {
+            myBackPress = true;
+            dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.select_days_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final LinearLayout llBack = dialog.findViewById(R.id.llBack);
+            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+            final LinearLayout llError = dialog.findViewById(R.id.llError);
+            final RecyclerView rvSelectPlaylist = dialog.findViewById(R.id.rvSelectPlaylist);
+            final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+            final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+            llBack.setOnClickListener(view12 -> dialog.dismiss());
+
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+            llBack.setOnClickListener(v -> dialog.dismiss());
+            tvGoBack.setOnClickListener(v -> dialog.dismiss());
+
+            RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
+            rvSelectPlaylist.setLayoutManager(manager);
+            rvSelectPlaylist.setItemAnimator(new DefaultItemAnimator());
+
+            prepareData(rvSelectPlaylist, llError, progressBar, progressBarHolder);
+            dialog.show();
+            dialog.setCancelable(false);
+        });
+
+        binding.ivSelectTime.setOnClickListener(view -> {
+            myBackPress = true;
+            dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.select_timeslot_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final LinearLayout llBack = dialog.findViewById(R.id.llBack);
+            final LinearLayout llError = dialog.findViewById(R.id.llError);
+            final RecyclerView rvSelectPlaylist = dialog.findViewById(R.id.rvSelectPlaylist);
+            final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+            final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+            llBack.setOnClickListener(view12 -> dialog.dismiss());
+
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+
+            RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
+            rvSelectPlaylist.setLayoutManager(manager);
+            rvSelectPlaylist.setItemAnimator(new DefaultItemAnimator());
+
+            prepareData(rvSelectPlaylist, llError, progressBar, progressBarHolder);
+            dialog.show();
+            dialog.setCancelable(false);
+        });
+
         if (Day.contains("0")) {
             ShowDaysSelection("0", binding.tvSunday);
         }

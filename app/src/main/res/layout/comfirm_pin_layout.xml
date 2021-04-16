@@ -24,7 +24,7 @@
             android:layout_marginTop="@dimen/_33sdp"
             android:fontFamily="@font/montserrat_bold"
             android:gravity="center"
-            android:text="@string/Unlock_the_app"
+
             android:textColor="#707070"
             android:textSize="@dimen/_18sdp" />
 

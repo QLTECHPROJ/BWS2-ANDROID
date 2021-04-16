@@ -265,7 +265,7 @@ public class AddPaymentActivity extends AppCompatActivity {
             if (!CardNo.isEmpty() || !CardName.isEmpty() || !Month.isEmpty() || !CVV.isEmpty()) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled);
             } else {
                 binding.btnSave.setEnabled(false);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));

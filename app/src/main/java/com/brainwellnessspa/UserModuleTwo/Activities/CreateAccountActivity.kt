@@ -159,7 +159,7 @@ class CreateAccountActivity : AppCompatActivity() {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.full_desc_layout)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
             val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
             val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
             val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
@@ -227,6 +227,7 @@ class CreateAccountActivity : AppCompatActivity() {
 
             prepareData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder, searchFilter)
             dialog.show()
+            dialog.setCanceledOnTouchOutside(true)
             dialog.setCancelable(true)
         }
     }

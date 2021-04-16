@@ -14,31 +14,21 @@
             android:paddingVertical="@dimen/_10sdp"
             android:weightSum="1">
 
-            <!--  <LinearLayout
-                  android:id="@+id/llChecked"
-                  android:layout_width="@dimen/_0sdp"
-                  android:layout_height="match_parent"
-                  android:gravity="center"
-                  android:paddingLeft="@dimen/_13sdp"
-                  android:paddingRight="@dimen/_16sdp"
-                  android:visibility="visible">-->
-
             <CheckBox
                 android:id="@+id/cbChecked"
                 style="@android:style/Widget.CompoundButton.CheckBox"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_15sdp"
                 android:layout_weight="0.15"
                 android:background="@android:color/transparent"
                 android:button="@drawable/checkbox_btn_background"
-                android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginLeft="@dimen/_15sdp"
                 android:overScrollMode="never"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
-                android:visibility="visible"/>
-            <!--            </LinearLayout>-->
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
@@ -89,10 +79,10 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:paddingHorizontal="@dimen/_8sdp"
-                    android:track="@drawable/track"
-                    android:thumb="@drawable/thumb"
                     android:textColor="@color/light_black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_13sdp"
+                    android:thumb="@drawable/thumb"
+                    android:track="@drawable/track" />
 
             </LinearLayout>
         </LinearLayout>
