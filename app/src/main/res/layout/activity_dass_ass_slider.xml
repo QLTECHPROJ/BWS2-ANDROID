@@ -33,46 +33,46 @@
 <!--                android:textColor="@color/black"-->
 <!--                android:textSize="@dimen/_18sdp" />-->
 
-      <!--      <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:gravity="right"
-                android:orientation="horizontal">
+            <!--      <LinearLayout
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight=".25"
+                      android:gravity="right"
+                      android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvNumberOfQus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="right"
-                    android:text="0"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                      <TextView
+                          android:id="@+id/tvNumberOfQus"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerVertical="true"
+                          android:fontFamily="@font/montserrat_regular"
+                          android:gravity="right"
+                          android:text="0"
+                          android:textColor="@color/black"
+                          android:textSize="@dimen/_18sdp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="right"
-                    android:text="/"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerVertical="true"
+                          android:fontFamily="@font/montserrat_regular"
+                          android:gravity="right"
+                          android:text="/"
+                          android:textColor="@color/black"
+                          android:textSize="@dimen/_18sdp" />
 
-                <TextView
-                    android:id="@+id/tvTotalQus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="right"
-                    android:text="33"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                      <TextView
+                          android:id="@+id/tvTotalQus"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerVertical="true"
+                          android:fontFamily="@font/montserrat_regular"
+                          android:gravity="right"
+                          android:text="33"
+                          android:textColor="@color/black"
+                          android:textSize="@dimen/_18sdp" />
 
-            </LinearLayout>-->
+                  </LinearLayout>-->
 <!--        </LinearLayout>  -->
         <LinearLayout
             android:id="@+id/llMainFirst"
@@ -101,13 +101,13 @@
             android:id="@+id/lpIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/llMainFirst"
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:max="33"
-            android:layout_below="@id/llMainFirst"
-            android:progress="0"
-            android:progressBackgroundTint="@color/app_theme_color" />
+            app:indicatorColor="#6C63FF"
+            android:progress="0"/>
 
         <RelativeLayout
             android:id="@+id/llFirst"
@@ -129,38 +129,39 @@
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:text="The rating scale is as follows:"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
+                android:textSize="@dimen/_12sdp" />
             <TextView
                 android:id="@+id/tvText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
+                android:layout_below="@id/tvText1"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text=""
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
-<!--            <Button-->
-<!--                android:id="@+id/btnPrev"-->
-<!--                android:layout_width="@dimen/_100sdp"-->
-<!--                android:layout_height="@dimen/_50sdp"-->
-<!--                android:layout_alignParentLeft="true"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:background="@drawable/light_blue_rounded_filled"-->
-<!--                android:fontFamily="@font/montserrat_medium"-->
-<!--                android:text="Next"-->
-<!--                android:textAllCaps="false"-->
-<!--                android:textColor="@color/white" />-->
+                android:textSize="@dimen/_12sdp" />
+            <!--            <Button-->
+            <!--                android:id="@+id/btnPrev"-->
+            <!--                android:layout_width="@dimen/_100sdp"-->
+            <!--                android:layout_height="@dimen/_50sdp"-->
+            <!--                android:layout_alignParentLeft="true"-->
+            <!--                android:layout_alignParentBottom="true"-->
+            <!--                android:background="@drawable/light_blue_rounded_filled"-->
+            <!--                android:fontFamily="@font/montserrat_medium"-->
+            <!--                android:text="Next"-->
+            <!--                android:textAllCaps="false"-->
+            <!--                android:textColor="@color/white" />-->
             <ImageView
                 android:id="@+id/btnPrev"
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:rotation="180"
                 android:clickable="true"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
+                android:rotation="180"
+                android:src="@drawable/ic_back_black_icon"
+                app:tint="@color/gray" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFirstList"
                 android:layout_width="match_parent"
@@ -169,6 +170,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_60sdp"
                 tools:listitem="@layout/form_fill_sub" />
+
             <ImageView
                 android:id="@+id/btnNext"
                 android:layout_width="@dimen/_50sdp"
@@ -176,19 +178,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:clickable="false"
-                app:tint="@color/gray"
-                android:src="@drawable/ic_back_black_icon" />
-<!--            <Button-->
-<!--                android:id="@+id/"-->
-<!--                android:layout_width="@dimen/_100sdp"-->
-<!--                android:layout_height="@dimen/_50sdp"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:background="@drawable/light_blue_rounded_filled"-->
-<!--                android:fontFamily="@font/montserrat_medium"-->
-<!--                android:text="Next"-->
-<!--                android:textAllCaps="false"-->
-<!--                android:textColor="@color/white" />-->
+                android:src="@drawable/ic_back_black_icon"
+                app:tint="@color/gray" />
+            <!--            <Button-->
+            <!--                android:id="@+id/"-->
+            <!--                android:layout_width="@dimen/_100sdp"-->
+            <!--                android:layout_height="@dimen/_50sdp"-->
+            <!--                android:layout_alignParentRight="true"-->
+            <!--                android:layout_alignParentBottom="true"-->
+            <!--                android:background="@drawable/light_blue_rounded_filled"-->
+            <!--                android:fontFamily="@font/montserrat_medium"-->
+            <!--                android:text="Next"-->
+            <!--                android:textAllCaps="false"-->
+            <!--                android:textColor="@color/white" />-->
 
         </RelativeLayout>
 

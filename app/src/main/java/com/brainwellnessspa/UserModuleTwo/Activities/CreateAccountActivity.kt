@@ -10,7 +10,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
@@ -50,6 +52,40 @@ class CreateAccountActivity : AppCompatActivity() {
     lateinit var activity: Activity
     var fcm_id: String = ""
     lateinit var searchEditText: EditText
+
+    var userTextWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            val ckName: String = binding.etUser.getText().toString().trim()
+            val ckNumber: String = binding.etNumber.getText().toString().trim()
+            val ckEmail: String = binding.etEmail.getText().toString().trim()
+            val ckPass: String = binding.etPassword.getText().toString().trim()
+            if (ckName.equals("", ignoreCase = true)) {
+                binding.btnCreateAc.setEnabled(false)
+                binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (ckNumber.equals("", ignoreCase = true)) {
+                binding.btnCreateAc.setEnabled(false)
+                binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (ckEmail.equals("", ignoreCase = true)) {
+                binding.btnCreateAc.setEnabled(false)
+                binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (ckPass.equals("", ignoreCase = true)) {
+                binding.btnCreateAc.setEnabled(false)
+                binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else {
+                binding.btnCreateAc.setEnabled(true)
+                binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnCreateAc.setBackgroundResource(R.drawable.extra_round_cornor)
+            }
+        }
+
+        override fun afterTextChanged(s: Editable) {}
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_account)
@@ -59,6 +95,10 @@ class CreateAccountActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             finish()
         }
+        binding.etUser.addTextChangedListener(userTextWatcher)
+        binding.etNumber.addTextChangedListener(userTextWatcher)
+        binding.etEmail.addTextChangedListener(userTextWatcher)
+        binding.etPassword.addTextChangedListener(userTextWatcher)
 
         binding.btnCreateAc.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
@@ -132,9 +172,9 @@ class CreateAccountActivity : AppCompatActivity() {
                 }
                 false
             }
-            tvClose.setOnClickListener { _: View? -> dialog.dismiss() }
+            tvClose.setOnClickListener { dialog.dismiss() }
             dialog.show()
-            dialog.setCancelable(false)
+            dialog.setCancelable(true)
         }
 
         binding.tvCountry.setOnClickListener {
@@ -185,9 +225,9 @@ class CreateAccountActivity : AppCompatActivity() {
                 }
             })
 
-            prepareData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder)
+            prepareData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder, searchFilter)
             dialog.show()
-            dialog.setCancelable(false)
+            dialog.setCancelable(true)
         }
     }
 
@@ -195,7 +235,8 @@ class CreateAccountActivity : AppCompatActivity() {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
-    fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
+    fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar,
+                    progressBarHolder: FrameLayout, searchFilter: String) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
             val listCall: Call<CountryListModel> = APINewClient.getClient().countryLists
@@ -205,7 +246,8 @@ class CreateAccountActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
                         rvCountryList.layoutManager = LinearLayoutManager(ctx)
-                        adapter = CountrySelectAdapter(dialog, searchFilter, binding, listModel.responseData, rvCountryList, tvFound)
+                        adapter = CountrySelectAdapter(dialog, searchFilter, binding, listModel.responseData, rvCountryList,
+                                tvFound)
                         rvCountryList.adapter = adapter
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -337,12 +379,12 @@ class CreateAccountActivity : AppCompatActivity() {
 
                 override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
                     if (listFilterData.size == 0) {
-//                        tvFound.setVisibility(View.VISIBLE)
-//                        tvFound.setText("Couldn't find $searchFilter. Try searching again")
-//                        rvCountryList.setVisibility(View.GONE)
+                        tvFound.setVisibility(View.VISIBLE)
+                        tvFound.setText("No result found")
+                        rvCountryList.setVisibility(View.GONE)
                     } else {
-//                        tvFound.setVisibility(View.GONE)
-//                        rvCountryList.setVisibility(View.VISIBLE)
+                        tvFound.setVisibility(View.GONE)
+                        rvCountryList.setVisibility(View.VISIBLE)
                         listFilterData = filterResults.values as List<CountryListModel.ResponseData>
                         notifyDataSetChanged()
                     }

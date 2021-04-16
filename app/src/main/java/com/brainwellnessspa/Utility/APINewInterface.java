@@ -4,6 +4,9 @@ import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.AverageSleepTimeModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SaveRecommendedCategoryModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
@@ -200,4 +203,14 @@ public interface APINewInterface {
                                                      @Field("GetHomeAudioId") String GetHomeAudioId,
                                                      @Field("CategoryName") String CategoryName);
 
+    @GET("avgsleeptime")
+    Call<AverageSleepTimeModel> getAverageSleepTimeLists();
+
+    @GET("getrecommendedcategory")
+    Call<RecommendedCategoryModel> getRecommendedCategory();
+
+    @POST("saverecommendedcategory")
+    @FormUrlEncoded
+    Call<SaveRecommendedCategoryModel> getSaveRecommendedCategory(@Field("CoUserId") String CoUserId,
+                                                                  @Field("CatName") String CatName);
 }

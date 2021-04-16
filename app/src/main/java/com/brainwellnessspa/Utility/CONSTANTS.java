@@ -55,6 +55,7 @@ public class CONSTANTS {
     public static final String SERVER_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String TWENTY_FOUR_HH_MM_FORMAT = "HH:mm";
 
+    public static String ScreenView = "ScreenView";
     public static String ASSPROCESS = "ASSPROCESS";
     public static String IndexScore = "IndexScore";
     public static String PopUp = "PopUp";
