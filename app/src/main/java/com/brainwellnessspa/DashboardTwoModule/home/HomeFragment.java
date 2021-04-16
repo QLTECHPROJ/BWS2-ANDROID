@@ -44,6 +44,7 @@ import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity;
 import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity;
+import com.brainwellnessspa.ManageModule.SleepTimeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
 import com.brainwellnessspa.UserModuleTwo.Activities.CreateAccountActivity;
@@ -82,6 +83,7 @@ public class HomeFragment extends Fragment {
     String AudioId;
     int SongListSize = 0;
     private long mLastClickTime = 0;
+    BottomSheetDialog mBottomSheetDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class HomeFragment extends Fragment {
         binding.llBottomView.setOnClickListener(v -> {
             UserListCustomLayoutBinding layoutBinding = DataBindingUtil.inflate(LayoutInflater.from(getActivity())
                     , R.layout.user_list_custom_layout, null, false);
-            final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BaseBottomSheetDialog);
+            mBottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BaseBottomSheetDialog);
             mBottomSheetDialog.setContentView(layoutBinding.getRoot());
             BottomSheetBehavior mBottomSheetBehavior = new BottomSheetBehavior();
             mBottomSheetBehavior.setHideable(true);
@@ -120,7 +122,7 @@ public class HomeFragment extends Fragment {
             });
         });
         binding.llPlayer.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), ManageAudioPlaylistActivity.class);
+            Intent i = new Intent(getActivity(),/*ManageAudioPlaylistActivity*/ SleepTimeActivity.class);
             startActivity(i);
         });
 
@@ -1064,6 +1066,7 @@ public class HomeFragment extends Fragment {
                                         if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                             BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                             dialog.dismiss();
+                                            mBottomSheetDialog.hide();
                                         } else if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                             txtError.setVisibility(View.VISIBLE);
                                             txtError.setText(listModel.getResponseMessage());
@@ -1087,7 +1090,7 @@ public class HomeFragment extends Fragment {
 
                 });
                 dialog.show();
-                dialog.setCancelable(false);
+                dialog.setCancelable(true);
             });
         }
 

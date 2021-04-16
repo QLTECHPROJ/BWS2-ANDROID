@@ -130,8 +130,8 @@
 
                         <ImageView
                             android:id="@+id/ivUser"
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_16sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:src="@drawable/ic_user_icon" />
@@ -164,7 +164,6 @@
                                 android:fontFamily="@font/montserrat_regular"
                                 android:hint="@string/User_Name"
                                 android:imeOptions="actionNext"
-                                android:maxLength="25"
                                 android:maxLines="1"
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
@@ -229,6 +228,7 @@
                                 android:imeOptions="actionNext"
                                 android:inputType="number"
                                 android:maxLines="1"
+                                android:maxLength="13"
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
@@ -250,6 +250,7 @@
                             android:layout_width="@dimen/_22sdp"
                             android:layout_height="@dimen/_18sdp"
                             android:layout_gravity="center"
+                            android:visibility="gone"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:src="@drawable/ic_check_icon" />
                     </LinearLayout>
@@ -335,6 +336,7 @@
                             android:layout_width="@dimen/_22sdp"
                             android:layout_height="@dimen/_18sdp"
                             android:layout_gravity="center"
+                            android:visibility="gone"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:src="@drawable/ic_check_icon" />
                     </LinearLayout>

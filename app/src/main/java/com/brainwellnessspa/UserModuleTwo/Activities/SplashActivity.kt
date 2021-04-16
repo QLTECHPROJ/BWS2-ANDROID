@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
@@ -184,13 +185,15 @@ class SplashActivity : AppCompatActivity() {
             }
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this@SplashActivity, ProfileProgressActivity::class.java)
+                    val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
+                    intent.putExtra(CONSTANTS.ScreenView,"ProfileView")
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())
             } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this@SplashActivity, DassAssSliderActivity::class.java)
+                    val intent = Intent(this@SplashActivity, AssProcessActivity::class.java)
+                    intent.putExtra(CONSTANTS.ASSPROCESS,"0")
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())

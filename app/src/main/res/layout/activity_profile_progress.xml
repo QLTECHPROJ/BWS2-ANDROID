@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:max="4"
+                app:indicatorColor="#6C63FF"
                 android:progress="0" />
         </LinearLayout>
 

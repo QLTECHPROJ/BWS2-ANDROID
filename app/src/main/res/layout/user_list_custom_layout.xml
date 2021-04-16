@@ -33,7 +33,7 @@
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_14sdp"
                     android:layout_marginBottom="@dimen/_30sdp"
-                    android:background="@drawable/cardshape_background"
+                    android:background="@drawable/account_gray_bg"
                     android:elevation="@dimen/_110sdp"
                     android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/_16sdp"

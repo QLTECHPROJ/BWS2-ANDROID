@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -38,19 +39,33 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                binding.ivCheckNumber.visibility = View.GONE
+                binding.ivCheckEmail.visibility = View.GONE
             } else if (User.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                binding.ivCheckNumber.visibility = View.GONE
             } else if (MobileNumber.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                binding.ivCheckNumber.visibility = View.GONE
+                binding.ivCheckEmail.visibility = View.GONE
             } else if (Email.equals("", ignoreCase = true)) {
+                binding.ivCheckNumber.visibility = View.VISIBLE
+                binding.ivCheckEmail.visibility = View.GONE
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+            }  else if (!Email.equals("", ignoreCase = true) && Email.toString().isEmailValid()) {
+                binding.ivCheckEmail.visibility = View.VISIBLE
+                binding.btnSendPin.setEnabled(true)
+                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
+                binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)
             } else {
+                binding.ivCheckNumber.visibility = View.VISIBLE
+                binding.ivCheckEmail.visibility = View.VISIBLE
                 binding.btnSendPin.setEnabled(true)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity,R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)

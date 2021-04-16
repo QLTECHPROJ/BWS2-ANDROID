@@ -32,11 +32,11 @@
                 android:paddingHorizontal="@dimen/_20sdp">
 
                 <TextView
+                    android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_100sdp"
                     android:fontFamily="@font/montserrat_bold"
-                    android:text="Hi, Jhon"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_28sdp" />
 

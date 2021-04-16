@@ -33,7 +33,7 @@ import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityUserListBinding
-import com.brainwellnessspa.databinding.UserListLayoutBinding
+import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -71,6 +71,10 @@ class UserListActivity : AppCompatActivity() {
 
     override fun onResume() {
         prepareUserData()
+        binding.btnLogIn.setBackgroundResource(R.drawable.gray_round_cornor)
+        binding.btnLogIn.isEnabled = false
+        binding.tvForgotPin.isEnabled = false
+        binding.tvForgotPin.setTextColor(ContextCompat.getColor(activity, R.color.gray))
         super.onResume()
     }
 
@@ -89,17 +93,17 @@ class UserListActivity : AppCompatActivity() {
         private var coUserlistModel: List<AddedUserListModel.ResponseData.CoUser>? = listModel.coUserList
         lateinit var txtError: TextView
 
-        inner class MyViewHolder(var bindingAdapter: UserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
+        inner class MyViewHolder(var bindingAdapter: ScreenUserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: UserListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.user_list_layout, parent, false)
+            val v: ScreenUserListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.screen_user_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvName.text = coUserlistModel?.get(position)!!.name
 
-            holder.bindingAdapter.ivCheck.setImageResource(R.drawable.ic_checked_icon)
+            holder.bindingAdapter.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
             holder.bindingAdapter.ivCheck.visibility = View.INVISIBLE
             if (selectedItem == position) {
                 holder.bindingAdapter.ivCheck.visibility = View.VISIBLE
@@ -113,7 +117,7 @@ class UserListActivity : AppCompatActivity() {
                 binding.btnLogIn.setBackgroundResource(R.drawable.light_green_rounded_filled)
                 binding.btnLogIn.isEnabled = true
                 binding.tvForgotPin.isEnabled = true
-                binding.tvForgotPin.setTextColor(activity.getResources().getColor(R.color.app_theme_color))
+                binding.tvForgotPin.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
                 USERID = coUserlistModel!!.get(position).userID.toString()
                 CoUserID = coUserlistModel!!.get(position).coUserId.toString()
                 CoEMAIL = coUserlistModel!!.get(position).email.toString()
@@ -238,7 +242,7 @@ class UserListActivity : AppCompatActivity() {
                     }
                 }
                 userList.dialog.show()
-                userList.dialog.setCancelable(false)
+                userList.dialog.setCancelable(true)
             }
 
             binding.tvForgotPin.setOnClickListener {

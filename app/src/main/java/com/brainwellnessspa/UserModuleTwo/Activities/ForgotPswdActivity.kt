@@ -1,5 +1,6 @@
 package com.brainwellnessspa.UserModuleTwo.Activities
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -8,10 +9,14 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
@@ -27,13 +32,35 @@ import retrofit2.Response
 class ForgotPswdActivity : AppCompatActivity() {
     private lateinit var binding: ActivityForgotPswdBinding
     private lateinit var dialog: Dialog
+    lateinit var activity: Activity
+
+    var userTextWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            val Email: String = binding.etEmail.getText().toString().trim()
+            if (Email.equals("", ignoreCase = true)) {
+                binding.btnResetPswd.setEnabled(false)
+                binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity,R.color.white))
+                binding.btnResetPswd.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else {
+                binding.btnResetPswd.setEnabled(true)
+                binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity,R.color.white))
+                binding.btnResetPswd.setBackgroundResource(R.drawable.extra_round_cornor)
+            }
+        }
+
+        override fun afterTextChanged(s: Editable) {}
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_forgot_pswd)
-
+        activity = this@ForgotPswdActivity
         binding.llBack.setOnClickListener {
             finish()
         }
+        binding.etEmail.addTextChangedListener(userTextWatcher)
+
         binding.btnResetPswd.setOnClickListener {
             prepareData()
         }

@@ -64,7 +64,7 @@
             <LinearLayout
                 android:id="@+id/llEmail"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_76sdp"
+                android:layout_height="@dimen/_72sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:background="@drawable/textview_background_two"
                 android:orientation="vertical">
@@ -92,7 +92,6 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/Email_address"
                         android:imeOptions="actionNext"
-                        android:maxLength="25"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -106,7 +105,7 @@
             <LinearLayout
                 android:id="@+id/llPassword"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_76sdp"
+                android:layout_height="@dimen/_72sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:background="@drawable/textview_background_two"
                 android:orientation="vertical">
@@ -138,7 +137,6 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:hint="@string/Password"
                             android:imeOptions="actionNext"
-                            android:maxLength="25"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColorHint="@color/dim_light_gray"
@@ -154,6 +152,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/_16sdp"
+                        app:tint="@color/black"
                         android:layout_toLeftOf="@id/flPassword"
                         android:src="@drawable/ic_visibility_icon" />
 
@@ -191,11 +190,12 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/_30sdp"
                 android:layout_marginTop="@dimen/_33sdp"
-                android:background="@drawable/light_green_rounded_filled"
-                android:fontFamily="@font/montserrat_bold"
+                android:background="@drawable/gray_round_cornor"
+                android:fontFamily="@font/montserrat_medium"
                 android:paddingHorizontal="@dimen/_55sdp"
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/Log_in"
+                android:enabled="false"
                 android:textColor="@color/white" />
 
         </LinearLayout>
