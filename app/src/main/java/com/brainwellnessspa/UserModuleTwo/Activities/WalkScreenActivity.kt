@@ -42,9 +42,9 @@ class WalkScreenActivity : AppCompatActivity() {
             if (ScreenView.equals("ProfileView")) {
                 val intent = Intent(this@WalkScreenActivity, ProfileProgressActivity::class.java)
                 startActivity(intent)
-            } else if (ScreenView.equals("DassView")) {
-                val intent = Intent(this@WalkScreenActivity, DassAssSliderActivity::class.java)
-                startActivity(intent)
+                finish()
+            } else {
+
             }
         }
 
@@ -61,5 +61,9 @@ class WalkScreenActivity : AppCompatActivity() {
              i.putExtra(CONSTANTS.ScreenVisible, "2")
              startActivity(i)
          }*/
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }

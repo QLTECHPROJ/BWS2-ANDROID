@@ -34,31 +34,27 @@ class SearchPlaylistModel protected constructor(`in`: Parcel) : Parcelable {
     }
 
     class ResponseData(`in`: Parcel) : Parcelable {
-        @SerializedName("ID")
+        @SerializedName("PlaylistID")
         @Expose
         var iD: String?
 
-        @SerializedName("Name")
+        @SerializedName("PlaylistName")
         @Expose
         var name: String?
 
-        @SerializedName("Desc")
+        @SerializedName("PlaylistDesc")
         @Expose
         var desc: String?
 
-        @SerializedName("Image")
+        @SerializedName("PlaylistImage")
         @Expose
         var image: String?
 
-        @SerializedName("IsLock")
-        @Expose
-        var isLock: String?
-
-        @SerializedName("MasterCat")
+        @SerializedName("PlaylistMastercat")
         @Expose
         var masterCat: String?
 
-        @SerializedName("SubCat")
+        @SerializedName("PlaylistSubcat")
         @Expose
         var subCat: String?
 
@@ -90,7 +86,6 @@ class SearchPlaylistModel protected constructor(`in`: Parcel) : Parcelable {
             parcel.writeString(name)
             parcel.writeString(desc)
             parcel.writeString(image)
-            parcel.writeString(isLock)
             parcel.writeString(masterCat)
             parcel.writeString(subCat)
             parcel.writeString(download)
@@ -117,7 +112,6 @@ class SearchPlaylistModel protected constructor(`in`: Parcel) : Parcelable {
             name = `in`.readString()
             desc = `in`.readString()
             image = `in`.readString()
-            isLock = `in`.readString()
             masterCat = `in`.readString()
             subCat = `in`.readString()
             download = `in`.readString()

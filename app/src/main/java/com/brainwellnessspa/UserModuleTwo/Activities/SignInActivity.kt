@@ -41,16 +41,16 @@ class SignInActivity : AppCompatActivity() {
             val Pass: String = binding.etPassword.getText().toString().trim()
             if (Email.equals("", ignoreCase = true)) {
                 binding.btnLoginAc.setEnabled(false)
-                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity,R.color.white))
+                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnLoginAc.setBackgroundResource(R.drawable.gray_round_cornor)
-            }else if (Pass.equals("", ignoreCase = true)) {
+            } else if (Pass.equals("", ignoreCase = true)) {
                 binding.btnLoginAc.setEnabled(false)
-                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity,R.color.white))
+                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnLoginAc.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
                 binding.btnLoginAc.setEnabled(true)
-                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity,R.color.white))
-                binding.btnLoginAc.setBackgroundResource(R.drawable.extra_round_cornor)
+                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnLoginAc.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
         }
 

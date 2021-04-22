@@ -141,8 +141,8 @@
         <activity
             android:name=".UserModuleTwo.Activities.AddProfileActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".UserModuleTwo.Activities.ForgotPswdActivity"

@@ -124,23 +124,23 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="0.1">
+                        android:gravity="center"
+                        android:layout_weight="0.13">
 
                         <ImageView
                             android:id="@+id/ivUser"
-                            android:layout_width="@dimen/_17sdp"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_18sdp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="@dimen/_10sdp"
                             android:src="@drawable/ic_user_icon" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.9">
+                        android:layout_weight="0.86">
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/flUser"
@@ -186,23 +186,23 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="0.1">
+                        android:gravity="center"
+                        android:layout_weight="0.13">
 
                         <ImageView
                             android:id="@+id/ivMobileNumber"
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_16sdp"
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_18sdp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="@dimen/_10sdp"
                             android:src="@drawable/ic_mobile_icon" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.8">
+                        android:layout_weight="0.76">
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/flMobileNumber"
@@ -239,9 +239,8 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginBottom="@dimen/_6sdp"
                         android:layout_weight="0.1"
                         android:visibility="visible">
 
@@ -270,23 +269,23 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="0.1">
+                        android:gravity="center"
+                        android:layout_weight="0.13">
 
                         <ImageView
                             android:id="@+id/ivEmail"
                             android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_16sdp"
+                            android:layout_height="@dimen/_18sdp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="@dimen/_10sdp"
                             android:src="@drawable/ic_email_icon" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.8">
+                        android:layout_weight="0.76">
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/flEmail"
@@ -325,9 +324,8 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginBottom="@dimen/_6sdp"
                         android:layout_weight="0.1"
                         android:visibility="visible">
 

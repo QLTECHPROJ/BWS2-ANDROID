@@ -106,6 +106,7 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:max="33"
+            app:trackColor="#DDDDDD"
             app:indicatorColor="#6C63FF"
             android:progress="0"/>
 

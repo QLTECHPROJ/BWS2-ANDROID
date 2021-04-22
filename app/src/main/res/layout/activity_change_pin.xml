@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".ProfileTwoModule.EditProfileActivity">
+        tools:context=".ProfileTwoModule.ChangePinActivity">
 
         <RelativeLayout
             android:id="@+id/rlLayout"
@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Edit Profile"
+                android:text="Change PIN"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 
@@ -53,31 +53,14 @@
                 android:layout_marginLeft="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_30sdp"
                 android:layout_marginRight="@dimen/_16sdp"
-                android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
+                android:background="@drawable/light_gray_round_cornors">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
-
-                    <ImageView
-                        android:id="@+id/ivUser"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_user_icon" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.86">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/flUser"
+                        android:id="@+id/flCurrentPIN"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_6sdp"
@@ -89,14 +72,15 @@
                         app:hintTextColor="@color/black">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etUser"
+                            android:id="@+id/etCurrentPIN"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_48sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
+                            android:paddingLeft="@dimen/_16sdp"
                             android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/Full_Name"
+                            android:hint="Current login PIN"
                             android:imeOptions="actionNext"
                             android:maxLength="25"
                             android:maxLines="1"
@@ -113,33 +97,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:layout_marginRight="@dimen/_16sdp"
-                android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
+                android:background="@drawable/light_gray_round_cornors">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
-
-                    <ImageView
-                        android:id="@+id/ivCalendar"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_calendar_icon" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.86">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tlCalendar"
+                        android:id="@+id/flNewPIN"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_6sdp"
@@ -151,17 +118,17 @@
                         app:hintTextColor="@color/black">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etCalendar"
+                            android:id="@+id/etNewPIN"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_48sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
-                            android:focusable="false"
                             android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/Date_of_Birth"
+                            android:hint="New login PIN"
                             android:imeOptions="actionNext"
-                            android:inputType="number"
+                            android:maxLength="25"
+                            android:paddingLeft="@dimen/_16sdp"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColorHint="@color/black"
@@ -176,33 +143,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:layout_marginRight="@dimen/_16sdp"
-                android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
+                android:background="@drawable/light_gray_round_cornors">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
-
-                    <ImageView
-                        android:id="@+id/ivMobileNumber"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_mobile_icon" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.86">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tlMobileNumber"
+                        android:id="@+id/flConfirmPIN"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_6sdp"
@@ -214,17 +164,18 @@
                         app:hintTextColor="@color/black">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMobileNumber"
+                            android:id="@+id/etConfirmPIN"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_48sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/Mobile_Number"
+                            android:hint="Confirm new login PIN"
                             android:imeOptions="actionNext"
-                            android:inputType="number"
+                            android:maxLength="25"
                             android:maxLines="1"
+                            android:paddingLeft="@dimen/_16sdp"
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
@@ -234,88 +185,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llEmailApply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:layout_marginRight="@dimen/_16sdp"
-                android:layout_marginBottom="@dimen/_60sdp"
-                android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
-
-                    <ImageView
-                        android:id="@+id/ivEmail"
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_16sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_email_icon" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.76">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tlEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
-                        app:errorEnabled="true"
-                        app:errorTextAppearance="@style/ErrorText"
-                        app:hintTextColor="@color/black">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
-                            android:background="@null"
-                            android:backgroundTint="@color/black"
-                            android:cursorVisible="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/Email_Address"
-                            android:imeOptions="actionDone"
-                            android:importantForAutofill="auto"
-                            android:inputType="textEmailAddress"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColorHint="@color/black"
-                            android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.1"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/ivCheckEmail"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:src="@drawable/ic_check_icon" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
 
         <Button

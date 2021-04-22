@@ -13,13 +13,22 @@ class AccountInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_account_info)
 
+        binding.llBack.setOnClickListener {
+            finish()
+        }
+
         binding.llEtProfile.setOnClickListener {
             val i = Intent(this, EditProfileActivity::class.java)
             startActivity(i)
         }
 
-        binding.llEtProfile.setOnClickListener {
+        binding.llChangePswd.setOnClickListener {
             val i = Intent(this, ChangePasswordActivity::class.java)
+            startActivity(i)
+        }
+
+        binding.llChangePin.setOnClickListener {
+            val i = Intent(this, ChangePinActivity::class.java)
             startActivity(i)
         }
     }

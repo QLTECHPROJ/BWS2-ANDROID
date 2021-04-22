@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
+import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel;
@@ -120,8 +121,9 @@ public class HomeFragment extends Fragment {
                 startActivity(i);
             });
         });
+
         binding.llPlayer.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(),/*ManageAudioPlaylistActivity*/ SleepTimeActivity.class);
+            Intent i = new Intent(getActivity(), ManageAudioPlaylistActivity.class);
             startActivity(i);
         });
 
@@ -437,7 +439,8 @@ public class HomeFragment extends Fragment {
 
                     tvGoBack.setOnClickListener(v22 -> dialoged.dismiss());
                     dialoged.show();
-                    dialoged.setCancelable(false);
+                    dialoged.setCanceledOnTouchOutside(true);
+                    dialoged.setCancelable(true);
                 }
             });
 
@@ -521,10 +524,12 @@ public class HomeFragment extends Fragment {
                 });
                 tvCancel.setOnClickListener(v34 -> dialogs.dismiss());
                 dialogs.show();
-                dialogs.setCancelable(false);
+                dialogs.setCanceledOnTouchOutside(true);
+                dialogs.setCancelable(true);
             });
             dialog.show();
-            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.setCancelable(true);
 
 //       TODO Mansi  Hint This code is Create playlist Dialog
          /* final Dialog dialog = new Dialog(getActivity());
@@ -999,12 +1004,12 @@ public class HomeFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             List<AddedUserListModel.ResponseData.CoUser> modelList = model.getCoUserList();
             holder.bind.tvName.setText(modelList.get(position).getName());
-            holder.bind.ivCheck.setImageResource(R.drawable.ic_checked_icon);
+            holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon);
             holder.bind.ivCheck.setVisibility(View.INVISIBLE);
             if (selectedItem == position) {
                 holder.bind.ivCheck.setVisibility(View.VISIBLE);
             }
-            holder.bind.rlCheckedUser.setOnClickListener(v -> {
+            holder.bind.llAddNewCard.setOnClickListener(v -> {
                 int previousItem = selectedItem;
                 selectedItem = position;
                 notifyItemChanged(previousItem);
@@ -1013,15 +1018,16 @@ public class HomeFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.comfirm_pin_layout);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                dialog.getWindow().setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT);
                 Button btnDone = dialog.findViewById(R.id.btnDone);
+                TextView tvTitle = dialog.findViewById(R.id.tvTitle);
                 TextView txtError = dialog.findViewById(R.id.txtError);
                 EditText edtOTP1 = dialog.findViewById(R.id.edtOTP1);
                 EditText edtOTP2 = dialog.findViewById(R.id.edtOTP2);
                 EditText edtOTP3 = dialog.findViewById(R.id.edtOTP3);
                 EditText edtOTP4 = dialog.findViewById(R.id.edtOTP4);
                 ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
-
+                tvTitle.setText("Unlock");
                 editTexts = new EditText[]{edtOTP1, edtOTP2, edtOTP3, edtOTP4};
                 edtOTP1.addTextChangedListener(new PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone));
                 edtOTP2.addTextChangedListener(new PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone));
@@ -1089,6 +1095,7 @@ public class HomeFragment extends Fragment {
 
                 });
                 dialog.show();
+                dialog.setCanceledOnTouchOutside(true);
                 dialog.setCancelable(true);
             });
         }

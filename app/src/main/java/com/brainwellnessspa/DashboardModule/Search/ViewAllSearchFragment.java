@@ -437,56 +437,56 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             }
 
-            if (AudiolistModel.get(position).isLock().equalsIgnoreCase("1")) {
-                if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
-                        || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                }
-            } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("2")) {
-                if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
-                        || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                }
-            } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("0")
-                    || AudiolistModel.get(position).isLock().equalsIgnoreCase("")) {
+//            if (AudiolistModel.get(position).isLock().equalsIgnoreCase("1")) {
+//                if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
+//                    holder.binding.ivLock.setVisibility(View.GONE);
+//                } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
+//                        || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                }
+//            } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("2")) {
+//                if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
+//                    holder.binding.ivLock.setVisibility(View.GONE);
+//                } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
+//                        || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                }
+//            } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("0")
+//                    || AudiolistModel.get(position).isLock().equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
-            }
+//            }
 
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
-                if (AudiolistModel.get(position).isLock().equalsIgnoreCase("1")) {
-                    if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
-                        callMainTransFrag(position);
-                    } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
-                            || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
-                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        startActivity(i);
-                    }
-                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("2")) {
-                    if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
-                        callMainTransFrag(position);
-                    } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
-                            || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                    }
-                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("0")
-                        || AudiolistModel.get(position).isLock().equalsIgnoreCase("")) {
+//                if (AudiolistModel.get(position).isLock().equalsIgnoreCase("1")) {
+//                    if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
+//                        callMainTransFrag(position);
+//                    } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
+//                            || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
+//                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+//                        i.putExtra("ComeFrom", "Plan");
+//                        startActivity(i);
+//                    }
+//                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("2")) {
+//                    if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {
+//                        callMainTransFrag(position);
+//                    } else if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("0")
+//                            || AudiolistModel.get(position).isPlay().equalsIgnoreCase("")) {
+//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                    }
+//                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("0")
+//                        || AudiolistModel.get(position).isLock().equalsIgnoreCase("")) {
                     callMainTransFrag(position);
-                }
+//                }
             });
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                if (AudiolistModel.get(position).isLock().equalsIgnoreCase("1")) {
-                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    startActivity(i);
-                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("0") || AudiolistModel.get(position).isLock().equalsIgnoreCase("")) {
+//                if (AudiolistModel.get(position).isLock().equalsIgnoreCase("1")) {
+//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    startActivity(i);
+//                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("2")) {
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                } else if (AudiolistModel.get(position).isLock().equalsIgnoreCase("0") || AudiolistModel.get(position).isLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                     i.putExtra("AudioId", AudiolistModel.get(position).getID());
                     i.putExtra("ScreenView", "Recommended Search Audio");
@@ -496,7 +496,7 @@ public class ViewAllSearchFragment extends Fragment {
                     i.putExtra("PlaylistType", "");
                     i.putExtra("Liked", "0");
                     startActivity(i);
-                }
+//                }
             });
         }
 
@@ -667,29 +667,29 @@ public class ViewAllSearchFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-            if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
+//            if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
+//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
+//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
-            }
+//            }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    startActivity(i);
-                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
-                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
+//                if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
+//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    startActivity(i);
+//                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
+//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
+//                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
                     comefrom_search = 1;
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
@@ -704,21 +704,21 @@ public class ViewAllSearchFragment extends Fragment {
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flContainer, myPlaylistsFragment)
                             .commit();
-                }
+//                }
             });
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    startActivity(i);
-                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
-                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
+//                if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
+//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    startActivity(i);
+//                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
+//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
+//                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
                     comeAddPlaylist = 0;
@@ -731,7 +731,7 @@ public class ViewAllSearchFragment extends Fragment {
                     i.putExtra("PlaylistType", "");
                     i.putExtra("Liked", "0");
                     startActivity(i);
-                }
+//                }
             });
         }
 
