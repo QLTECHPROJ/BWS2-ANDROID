@@ -1,32 +1,32 @@
-package com.brainwellnessspa.ManageModule
+package com.brainwellnessspa.DashboardTwoModule.manage;
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.Bundle;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer
-import com.brainwellnessspa.DashboardModule.Audio.Adapters.*
 import com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
-import com.brainwellnessspa.DashboardTwoModule.ViewPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.PlaylistFragment
-import com.brainwellnessspa.R
-import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
+import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity
+
+import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.*
@@ -39,44 +39,46 @@ import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
-class ManageAudioPlaylistActivity : AppCompatActivity() {
-    lateinit var binding: ActivityManageAudioPlaylistBinding
+public class ManageFragment: Fragment() {
+    lateinit var binding:FragmentManageBinding
     lateinit var ctx: Context
-    lateinit var activity: Activity
+    lateinit var act: Activity
     lateinit var audioAdapter: AudioAdapter
     lateinit var playlistAdapter: PlaylistAdapter
     var CoUserID: String? = ""
     var USERID: String? = ""
     var homelistModel: HomeDataModel = HomeDataModel()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_manage_audio_playlist)
-        ctx = this@ManageAudioPlaylistActivity
-        activity = this@ManageAudioPlaylistActivity
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_manage, container, false)
+        val view:View = binding.root
+        ctx = requireActivity()
+        act = requireActivity()
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         binding.rvMainPlayList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMainAudioList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 
         prepareData()
+
+        return view
     }
     fun callMainPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>) {
-        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+   /*     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         var PlayerPosition:Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         if ((AudioPlayerFlag.equals("MainAudioList", ignoreCase = true) ||
-                AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && MyPlaylist.equals(view, ignoreCase = true)) {
+                        AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && MyPlaylist.equals(view, ignoreCase = true)) {
             if(PlayFrom.equals(view, true)){
-                if (player != null) {
+                if (GlobalInitExoPlayer.player != null) {
                     if (position != PlayerPosition) {
-                        player.seekTo(position, 0)
-                        player.playWhenReady = true
-                        val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                        GlobalInitExoPlayer.player.seekTo(position, 0)
+                        GlobalInitExoPlayer.player.playWhenReady = true
+                        val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
                         val editor = sharedxx.edit()
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                         editor.apply()
@@ -84,18 +86,18 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     val i = Intent(ctx, MyPlayerActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                     ctx.startActivity(i)
-                    activity.overridePendingTransition(0, 0)
+                    act.overridePendingTransition(0, 0)
                 }else{
                     callPlayer(position,view,listModel)
                 }
             }else{
                 callPlayer(position,view,listModel)
             }
-        }
+        }*/
     }
 
     private fun callPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>) {
-        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
         val json = gson.toJson(listModel)
@@ -108,16 +110,16 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         val i = Intent(ctx, MyPlayerActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
         ctx.startActivity(i)
-        activity.overridePendingTransition(0, 0)
+        act.overridePendingTransition(0, 0)
     }
 
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
             val listCall = APINewClient.getClient().getHomeData(CoUserID)
             listCall.enqueue(object : Callback<HomeDataModel?> {
                 override fun onResponse(call: Call<HomeDataModel?>, response: Response<HomeDataModel?>) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
 
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
@@ -128,7 +130,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     Glide.with(ctx).load(R.drawable.ic_create_playlist).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
-                    playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, activity)
+                    playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act)
                     binding.rvMainPlayList.adapter = playlistAdapter
 
                     if (listModel.responseData!!.playlist[0].details!!.size > 4) {
@@ -136,38 +138,26 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     } else {
                         binding.tvViewAll.visibility = View.GONE
                     }
+                    val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
                     binding.tvViewAll.setOnClickListener {
                         val playlistFragment: Fragment = PlaylistFragment()
-
-//                        val bundle = Bundle()
-//                        if (listModel.responseData!!.playlist[0].view.equals("My Downloads", ignoreCase = true)) {
-//                            bundle.putString("MyDownloads", "1")
-//                        } else {
-//                            bundle.putString("MyDownloads", "0")
-//                        }
-//                        bundle.putString("GetLibraryID", listModel.responseData!!.playlist[0].getLibraryID)
-//                        bundle.putString("Name", listModel.responseData!!.playlist[0].view)
-//                        viewAllPlaylistFragment.arguments = bundle
-                        val fragmentManager1: FragmentManager = supportFragmentManager
                         fragmentManager1.beginTransaction()
                                 .replace(R.id.flContainer, playlistFragment)
                                 .commit()
-
-                    }
-                    val fragmentManager1: FragmentManager = supportFragmentManager
-                    audioAdapter = AudioAdapter(listModel.responseData!!.audio, ctx, binding, activity, fragmentManager1)
+                    } 
+                    audioAdapter = AudioAdapter(listModel.responseData!!.audio, ctx, binding, act, fragmentManager1)
                     binding.rvMainAudioList.adapter = audioAdapter
 
                 }
 
                 override fun onFailure(call: Call<HomeDataModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         }
     }
 
-    class AudioAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity, var fragmentManager1: FragmentManager) : RecyclerView.Adapter<AudioAdapter.MyViewHolder>() {
+    class AudioAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var fragmentManager1: FragmentManager) : RecyclerView.Adapter<AudioAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: MainAudioLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -185,8 +175,8 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                 val viewAllAudioFragment: Fragment = ViewAllAudioFragment()
                 viewAllAudioFragment.arguments = bundle
                 fragmentManager1.beginTransaction()
-                   .replace(R.id.flContainer, viewAllAudioFragment)
-                   .commit()
+                        .replace(R.id.flContainer, viewAllAudioFragment)
+                        .commit()
 
             }
 
@@ -199,7 +189,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     val myDownloads: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.binding.rvMainAudio.layoutManager = myDownloads
                     holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
-                    val myDownloadsAdapter = DownloadAdapter(listModel[position].details!!, ctx, binding, activity, listModel[position].view)
+                    val myDownloadsAdapter = DownloadAdapter(listModel[position].details!!, ctx, binding, act, listModel[position].view)
                     holder.binding.rvMainAudio.adapter = myDownloadsAdapter
                     if (listModel[position].details != null &&
                             listModel[position].details!!.size > 4) {
@@ -208,7 +198,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(ctx.getString(R.string.Library), ignoreCase = true)) {
-                    val recommendedAdapter = LibraryAdapter(listModel[position].details!!, ctx, binding, activity, listModel[position].view)
+                    val recommendedAdapter = LibraryAdapter(listModel[position].details!!, ctx, binding, act, listModel[position].view)
                     val recommended: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.binding.rvMainAudio.layoutManager = recommended
                     holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
@@ -227,7 +217,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);*/
                 } else if (listModel[position].view.equals(ctx.getString(R.string.recently_played), ignoreCase = true)) {
-                    val recentlyPlayedAdapter = RecentlyPlayedAdapter(listModel[position].details!!, ctx, binding, activity, listModel[position].view)
+                    val recentlyPlayedAdapter = RecentlyPlayedAdapter(listModel[position].details!!, ctx, binding, act, listModel[position].view)
                     val recentlyPlayed: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.binding.rvMainAudio.layoutManager = recentlyPlayed
                     holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
@@ -238,7 +228,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(ctx.getString(R.string.get_inspired), ignoreCase = true)) {
-                    val recommendedAdapter = RecommendedAdapter(listModel[position].details!!, ctx, binding, activity, listModel[position].view)
+                    val recommendedAdapter = RecommendedAdapter(listModel[position].details!!, ctx, binding, act, listModel[position].view)
                     val inspired: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.binding.rvMainAudio.layoutManager = inspired
                     holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
@@ -249,7 +239,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(ctx.getString(R.string.recommended_audio), ignoreCase = true)) {
-                    val recommendedAdapter = RecommendedAdapter(listModel[position].details!!, ctx, binding, activity, listModel[position].view)
+                    val recommendedAdapter = RecommendedAdapter(listModel[position].details!!, ctx, binding, act, listModel[position].view)
                     val inspired: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.binding.rvMainAudio.layoutManager = inspired
                     holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
@@ -260,7 +250,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(ctx.getString(R.string.popular_audio), ignoreCase = true)) {
-                    val popularPlayedAdapter = PopularPlayedAdapter(listModel[position].details!!, ctx, binding, activity, listModel[position].view)
+                    val popularPlayedAdapter = PopularPlayedAdapter(listModel[position].details!!, ctx, binding, act, listModel[position].view)
                     val recentlyPlayed: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.binding.rvMainAudio.layoutManager = recentlyPlayed
                     holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
@@ -273,7 +263,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     }
                 } else if (listModel[position].view.equals(ctx.getString(R.string.top_categories), ignoreCase = true)) {
                     holder.binding.tvViewAll.visibility = View.GONE
-                    val topCategoriesAdapter = TopCategoriesAdapter(listModel[position].details!!, ctx, binding, activity,
+                    val topCategoriesAdapter = TopCategoriesAdapter(listModel[position].details!!, ctx, binding, act,
                             listModel[position].homeAudioID.toString(), listModel[position].view, fragmentManager1)
                     val topCategories: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.binding.rvMainAudio.layoutManager = topCategories
@@ -288,7 +278,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class PlaylistAdapter(private val listModel: HomeDataModel.ResponseData.Play, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
+    class PlaylistAdapter(private val listModel: HomeDataModel.ResponseData.Play, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: PlaylistCustomLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -365,7 +355,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class RecommendedAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity, var view: String?) : RecyclerView.Adapter<RecommendedAdapter.MyViewHolder>() {
+    class RecommendedAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var view: String?) : RecyclerView.Adapter<RecommendedAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -384,7 +374,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageAudioPlaylistActivity().callMainPlayer(position, view, listModel)
+                ManageFragment().callMainPlayer(position, view, listModel)
             }
         }
 
@@ -397,7 +387,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class LibraryAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity, var view: String?) : RecyclerView.Adapter<LibraryAdapter.MyViewHolder>() {
+    class LibraryAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var view: String?) : RecyclerView.Adapter<LibraryAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -416,7 +406,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageAudioPlaylistActivity().callMainPlayer(position, view, listModel)
+                 ManageFragment().callMainPlayer(position, view, listModel)
             }
         }
 
@@ -429,7 +419,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class DownloadAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity, var view: String?) : RecyclerView.Adapter<DownloadAdapter.MyViewHolder>() {
+    class DownloadAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var view: String?) : RecyclerView.Adapter<DownloadAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -458,7 +448,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class RecentlyPlayedAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity, var view: String?) : RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder>() {
+    class RecentlyPlayedAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var view: String?) : RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: SmallBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -477,7 +467,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageAudioPlaylistActivity().callMainPlayer(position, view, listModel)
+                 ManageFragment().callMainPlayer(position, view, listModel)
             }
         }
 
@@ -490,7 +480,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class PopularPlayedAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity, var view: String?) : RecyclerView.Adapter<PopularPlayedAdapter.MyViewHolder>() {
+    class PopularPlayedAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var view: String?) : RecyclerView.Adapter<PopularPlayedAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: SmallBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -509,7 +499,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageAudioPlaylistActivity().callMainPlayer(position, view, listModel)
+                 ManageFragment().callMainPlayer(position, view, listModel)
             }
         }
 
@@ -522,7 +512,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    class TopCategoriesAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: ActivityManageAudioPlaylistBinding, val activity: Activity, var homeView: String, var viewString: String?, var fragmentManager1: FragmentManager) : RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder>() {
+    class TopCategoriesAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var homeView: String, var viewString: String?, var fragmentManager1: FragmentManager) : RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: RoundBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 

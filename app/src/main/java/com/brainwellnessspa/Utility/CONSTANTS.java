@@ -104,6 +104,13 @@ public class CONSTANTS {
     public static final String PREF_KEY_Splash = "Splash";
     public static final String PREF_KEY_SplashKey = "SplashKey";
     public static final String PREF_KEY_AUDIO = "AUDIO";
+    public static final String PREF_KEY_PLAYER = "Player";
+    public static final String PREF_KEY_MainAudioList = "MainAudioList";
+    public static final String PREF_KEY_PlayerAudioList = "PlayerAudioList";
+    public static final String  PREF_KEY_AudioPlayerFlag = "AudioPlayerFlag";
+    public static final String  PREF_KEY_PayerPlaylistId = "PayerPlaylistId";
+    public static final String  PREF_KEY_PlayerPosition = "PlayerPosition";
+    public static final String PREF_KEY_PlayFrom = "PlayFrom";
     public static final String PREF_KEY_UserID = "UserID";
     public static final String PREF_KEY_Referral = "Referral";
     public static final String PREF_KEY_UserPromocode = "UserPromocode";

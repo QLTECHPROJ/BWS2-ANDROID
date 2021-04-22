@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#DC3EBDCC"
-        tools:context=".DashboardTwoModule.ViewPlayerActivity">
+        tools:context=".DashboardTwoModule.MyPlayerActivity">
 
         <ImageView
             android:id="@+id/ivBgChange"
@@ -94,6 +94,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvAudioName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/rlLayout"
@@ -105,164 +106,22 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_25sdp" />
 
-        <LinearLayout
-            android:id="@+id/llAction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_26sdp"
-            android:gravity="center"
-            android:weightSum="3">
-
-            <LinearLayout
-                android:id="@+id/llBackWordSec"
-                android:layout_width="@dimen/_0sdp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:src="@drawable/ic_fast_backword_sec_icon"
-                    app:tint="@color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llHighlights"
-                android:layout_width="@dimen/_0sdp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:weightSum="1">
-
-
-                <LinearLayout
-                    android:id="@+id/llPlay"
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:padding="@dimen/_2sdp"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/ivplay"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_white_play_icon" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llPause"
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:padding="@dimen/_2sdp"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/ivPause"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_pause_white_icon" />
-                </LinearLayout>
-
-                <!--<LinearLayout
-                    android:id="@+id/llProgressBar"
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.24"
-                    android:background="@drawable/progress_bar_background"
-                    android:gravity="center_horizontal"
-                    android:padding="@dimen/_2sdp"
-                    android:layout_marginHorizontal="@dimen/_8sdp"
-                    android:visibility="visible">-->
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.24"
-                    android:indeterminateTint="@color/blue"
-                    android:paddingTop="@dimen/_13sdp"
-                    android:paddingBottom="@dimen/_13sdp"
-                    android:scaleType="fitXY"
-                    android:visibility="gone" />
-                <!--  </LinearLayout>-->
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llForwardSec"
-                android:layout_width="@dimen/_0sdp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:src="@drawable/ic_fast_forward_sec_icon"
-                    app:tint="@color/white" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/rlSeekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_40sdp"
-            android:gravity="bottom">
-
-            <!--<SeekBar
-                android:id="@+id/simpleSeekbar"
-                android:layout_width="match_parent"
-            android:progressDrawable="@drawable/seek_bars"
-            android:thumb="@drawable/ic_dot_icon"
-                android:layout_height="wrap_content" />-->
-            <com.google.android.exoplayer2.ui.DefaultTimeBar
-                android:id="@+id/exoProgress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_4sdp"
-                app:buffered_color="@color/dim_light_white"
-                app:played_color="@color/gray"
-                app:scrubber_color="@color/dim_light_white"
-                app:scrubber_drawable="@drawable/ic_white_dot_icon"
-                app:unplayed_color="@color/dim_light_white" />
-
-            <TextView
-                android:id="@+id/tvStartTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/exoProgress"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/_22sdp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="center"
-                android:text="00:00:48"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp" />
-
-            <TextView
-                android:id="@+id/tvSongTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/exoProgress"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/_22sdp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="center"
-                android:text="07:10:47"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp" />
-
-        </RelativeLayout>
-
+    <com.google.android.exoplayer2.ui.PlayerControlView
+        android:id="@+id/player_control_view"
+        android:layout_below="@+id/tvAudioName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:controller_layout_id="@layout/audio_player_new_layout"
+        app:fastforward_increment="30000"
+        app:rewind_increment="30000"
+        app:show_fastforward_button="true"
+        app:show_rewind_button="true"
+        android:layout_marginBottom="@dimen/_40sdp"
+        app:show_next_button="false"
+        app:show_previous_button="false"
+        app:show_timeout="0"
+        app:bar_gravity="center"
+        app:use_controller="true" />
     </RelativeLayout>
-
 </layout>

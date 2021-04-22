@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
 import com.brainwellnessspa.BuildConfig;
-import com.brainwellnessspa.DashboardTwoModule.ViewPlayerActivity;
+import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.ProfileTwoModule.AccountInfoActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.FaqModule.Activities.FaqActivity;
@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             if (BWSApplication.isNetworkConnected(getActivity())) {
-                Intent i = new Intent(getActivity(), ViewPlayerActivity.class);
+                Intent i = new Intent(getActivity(), MyPlayerActivity.class);
                 startActivity(i);
                 getActivity().overridePendingTransition(0, 0);
             } else {
