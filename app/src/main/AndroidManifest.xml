@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ProfileTwoModule.ChangePinActivity"></activity>
         <activity android:name=".ManageModule.ViewAllManageAudio"></activity>
         <activity
             android:name=".ManageModule.SessionExpActivity"
