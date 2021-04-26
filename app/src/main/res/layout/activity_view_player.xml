@@ -102,7 +102,7 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:fontFamily="@font/montserrat_bold"
             android:gravity="center"
-            android:text="Happiness promise"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_25sdp" />
 

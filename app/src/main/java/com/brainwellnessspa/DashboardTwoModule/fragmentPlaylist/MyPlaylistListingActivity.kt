@@ -45,6 +45,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     var CoUserID: String? = ""
     var USERID: String? = ""
     var MyCreated: String? = ""
+    var New: String? = ""
+    var PlaylistID: String? = ""
+    var PlaylistName: String? = ""
+    var PlaylistImage: String? = ""
+    var MyDownloads: String? = ""
     lateinit var adpater: PlayListsAdpater
     lateinit var adpater2: PlayListsAdpater2
     lateinit var binding: ActivityMyPlaylistListingBinding
@@ -57,6 +62,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist_listing)
         ctx = this@MyPlaylistListingActivity
         activity = this@MyPlaylistListingActivity
+        if (intent != null) {
+            New = intent.getStringExtra("New")
+            PlaylistID = intent.getStringExtra("PlaylistID")
+            PlaylistName = intent.getStringExtra("PlaylistName")
+            PlaylistImage = intent.getStringExtra("PlaylistImage")
+            MyDownloads = intent.getStringExtra("MyDownloads")
+        }
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")

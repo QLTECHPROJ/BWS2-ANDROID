@@ -16,15 +16,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.*
 import com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
-import com.brainwellnessspa.DashboardTwoModule.ViewPlayerActivity
-import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.PlaylistFragment
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
 import com.brainwellnessspa.Utility.APINewClient
@@ -137,7 +133,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                         binding.tvViewAll.visibility = View.GONE
                     }
                     binding.tvViewAll.setOnClickListener {
-                        val playlistFragment: Fragment = PlaylistFragment()
+                        val playlistFragment: Fragment = MainPlaylistFragment()
 
 //                        val bundle = Bundle()
 //                        if (listModel.responseData!!.playlist[0].view.equals("My Downloads", ignoreCase = true)) {

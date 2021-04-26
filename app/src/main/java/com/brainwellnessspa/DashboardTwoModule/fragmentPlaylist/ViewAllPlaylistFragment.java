@@ -148,11 +148,11 @@ public class ViewAllPlaylistFragment extends Fragment {
     }
 */
     private void callBack() {
-        Fragment audioFragment = new PlaylistFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .replace(R.id.flContainer, audioFragment)
-                .commit();
+//        Fragment audioFragment = new PlaylistFragment();
+//        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+//        fragmentManager1.beginTransaction()
+//                .replace(R.id.flContainer, audioFragment)
+//                .commit();
     }
 
     @Override

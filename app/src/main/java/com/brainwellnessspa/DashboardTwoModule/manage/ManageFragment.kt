@@ -19,14 +19,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
-import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.PlaylistFragment
-import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
 
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
+import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.*
@@ -60,13 +61,16 @@ public class ManageFragment: Fragment() {
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         binding.rvMainPlayList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMainAudioList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
-
-        prepareData()
-
         return view
     }
-    fun callMainPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>) {
-   /*     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+
+    override fun onResume() {
+        prepareData()
+        super.onResume()
+    }
+
+    fun callMainPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity) {
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -74,29 +78,35 @@ public class ManageFragment: Fragment() {
         if ((AudioPlayerFlag.equals("MainAudioList", ignoreCase = true) ||
                         AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && MyPlaylist.equals(view, ignoreCase = true)) {
             if(PlayFrom.equals(view, true)){
-                if (GlobalInitExoPlayer.player != null) {
+                if (player != null) {
                     if (position != PlayerPosition) {
-                        GlobalInitExoPlayer.player.seekTo(position, 0)
-                        GlobalInitExoPlayer.player.playWhenReady = true
+                        player.seekTo(position, 0)
+                        player.playWhenReady = true
                         val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
                         val editor = sharedxx.edit()
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                         editor.apply()
                     }
-                    val i = Intent(ctx, MyPlayerActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                    ctx.startActivity(i)
-                    act.overridePendingTransition(0, 0)
+                    callMyPlayer(ctx,act)
                 }else{
-                    callPlayer(position,view,listModel)
+                    callPlayer(position,view,listModel,ctx,act)
                 }
             }else{
-                callPlayer(position,view,listModel)
+                callPlayer(position,view,listModel,ctx,act)
             }
-        }*/
+        }else{
+            callPlayer(position,view,listModel,ctx,act)
+        }
     }
 
-    private fun callPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>) {
+    private fun callMyPlayer(ctx: Context, act: Activity) {
+        val i = Intent(ctx, MyPlayerActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+        ctx.startActivity(i)
+        act.overridePendingTransition(0, 0)
+    }
+
+    private fun callPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context,act: Activity) {
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
@@ -107,15 +117,13 @@ public class ManageFragment: Fragment() {
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "MainAudioList")
         editor.apply()
-        val i = Intent(ctx, MyPlayerActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-        ctx.startActivity(i)
-        act.overridePendingTransition(0, 0)
+        audioClick = true
+        callMyPlayer(ctx,act)
     }
 
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder,act)
             val listCall = APINewClient.getClient().getHomeData(CoUserID)
             listCall.enqueue(object : Callback<HomeDataModel?> {
                 override fun onResponse(call: Call<HomeDataModel?>, response: Response<HomeDataModel?>) {
@@ -140,7 +148,7 @@ public class ManageFragment: Fragment() {
                     }
                     val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
                     binding.tvViewAll.setOnClickListener {
-                        val playlistFragment: Fragment = PlaylistFragment()
+                        val playlistFragment: Fragment = MainPlaylistFragment()
                         fragmentManager1.beginTransaction()
                                 .replace(R.id.flContainer, playlistFragment)
                                 .commit()
@@ -344,7 +352,21 @@ public class ManageFragment: Fragment() {
 //                    }
             }
             holder.binding.rlMainLayout.setOnClickListener { view ->
-
+                try {
+                    val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                    i.putExtra("New", "0")
+                    i.putExtra("PlaylistID", listModel.details!![position].playlistID)
+                    i.putExtra("PlaylistName", listModel.details!![position].playlistName)
+                    i.putExtra("PlaylistImage", listModel.details!![position].playlistImage)
+                    i.putExtra("PlaylistSource", "")
+                    i.putExtra("MyDownloads", "0")
+                    i.putExtra("ScreenView", "")
+                    i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                    ctx.startActivity(i)
+                    act.overridePendingTransition(0, 0)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
 
@@ -374,7 +396,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel)
+                ManageFragment().callMainPlayer(position, view, listModel,ctx,act)
             }
         }
 
@@ -406,7 +428,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                 ManageFragment().callMainPlayer(position, view, listModel)
+                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
         }
 
@@ -467,7 +489,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                 ManageFragment().callMainPlayer(position, view, listModel)
+                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
         }
 
@@ -499,7 +521,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                 ManageFragment().callMainPlayer(position, view, listModel)
+                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
         }
 

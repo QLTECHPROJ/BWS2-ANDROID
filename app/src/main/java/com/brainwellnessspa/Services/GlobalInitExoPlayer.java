@@ -119,9 +119,9 @@ public class GlobalInitExoPlayer extends Service {
                 player.setPlayWhenReady(true);
                 player.seekTo(player.getCurrentWindowIndex(),player.getCurrentPosition());
                 player.prepare();
-                SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
-                String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                String json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                 if (!json.equalsIgnoreCase(String.valueOf(gson))) {
                     Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                     }.getType();
@@ -244,9 +244,9 @@ public class GlobalInitExoPlayer extends Service {
     public static String GetSourceName(Context ctx) {
         String myFlagType = "";
         try {
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
 
             if (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
                 if (MyPlaylist.equalsIgnoreCase("Recently Played")) {
@@ -331,7 +331,7 @@ Appointment Audios dddd*/
 
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -380,33 +380,8 @@ Appointment Audios dddd*/
             }
         }
         InitNotificationAudioPLayer(ctx, mainPlayModelList);
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        p.putValue("audioId", mainPlayModelList.get(position).getID());
-        p.putValue("audioName", mainPlayModelList.get(position).getName());
-        p.putValue("audioDescription", "");
-        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
-        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
-        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
-        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
-        p.putValue("position", GetCurrentAudioPosition());
-        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
-            p.putValue("audioType", "Downloaded");
-        } else {
-            p.putValue("audioType", "Streaming");
-        }
-        String source = GetSourceName(ctx);
-        p.putValue("source", source);
-        p.putValue("playerType", playerType);
-        p.putValue("audioService", appStatus(ctx));
-        p.putValue("bitRate", "");
-        p.putValue("sound", String.valueOf(hundredVolume));
-        if(!source.equalsIgnoreCase( "Playlist") && !source.equalsIgnoreCase("Downloaded Playlists")) {
-            BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
-        }
-
         Log.e("Audio Volume", String.valueOf(hundredVolume));
-        getMediaBitmap(ctx, mainPlayModelList1.get(position).getImageFile());
+        getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         player.prepare();
         player.setWakeMode(C.WAKE_MODE_NONE);
         player.setHandleAudioBecomingNoisy(true);
@@ -520,9 +495,9 @@ Appointment Audios dddd*/
 
     public void InitNotificationAudioPLayer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList2) {
         int position = 0;
-        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+        String json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<ArrayList<MainPlayModel>>() {
             }.getType();
@@ -537,9 +512,9 @@ Appointment Audios dddd*/
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player players) {
-                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
-                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
                             Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                             }.getType();
@@ -549,8 +524,8 @@ Appointment Audios dddd*/
                         if (player != null) {
                             ps = player.getCurrentWindowIndex();
                         } else {
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                            ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                         }
                         return mainPlayModelList1.get(ps).getName();
                     }
@@ -570,9 +545,9 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public String getCurrentContentText(Player players) {
-                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                         Gson gson = new Gson();
-                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        String json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
                             Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                             }.getType();
@@ -582,8 +557,8 @@ Appointment Audios dddd*/
                         if (player != null) {
                             ps = player.getCurrentWindowIndex();
                         } else {
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                            ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                         }
                         return mainPlayModelList1.get(ps).getAudioDirection();
                     }
@@ -595,8 +570,8 @@ Appointment Audios dddd*/
                         if (player != null) {
                             ps = player.getCurrentWindowIndex();
                         } else {
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                            ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                         }
                         myBitmap = getMediaBitmap(ctx, mainPlayModelList1.get(ps).getImageFile());*/
                         return myBitmap;
@@ -661,8 +636,8 @@ Appointment Audios dddd*/
         if (player != null) {
             position = player.getCurrentWindowIndex();
         } else {
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            position = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         }
 
         if (position == (mainPlayModelList1.size() - 1)) {
@@ -684,8 +659,8 @@ Appointment Audios dddd*/
                     duration = player.getCurrentPosition();
                 else
                     duration = player.getDuration();
-                SharedPreferences sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                String jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                SharedPreferences sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                String jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                 if (!jsonxx.equalsIgnoreCase(String.valueOf(gson))) {
                     Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                     }.getType();
@@ -696,8 +671,8 @@ Appointment Audios dddd*/
                 if (player != null) {
                     ps = player.getCurrentWindowIndex();
                 } else {
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                    ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(ps).getAudioDirection());
@@ -945,8 +920,8 @@ Appointment Audios dddd*/
             IsLock = "1";
         }
         try {
-            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
 
             SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
@@ -960,12 +935,12 @@ Appointment Audios dddd*/
                     || AudioFlag.equalsIgnoreCase("SearchAudio")
                     || AudioFlag.equalsIgnoreCase("SearchModelAudio")
                     || AudioFlag.equalsIgnoreCase("AppointmentDetailList"))) {
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 ArrayList<MainPlayModel> arrayList1 = new ArrayList<>();
-                String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+                String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
 
-                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedd.edit();
                 if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                     Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
@@ -1004,14 +979,12 @@ Appointment Audios dddd*/
                         }
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx);
+                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList,json11);
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
                         editor.commit();
                     }
@@ -1052,14 +1025,14 @@ Appointment Audios dddd*/
                         }
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx);
+                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList,json11);
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                        
+                        
+                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
                         editor.commit();
                     }
@@ -1100,14 +1073,14 @@ Appointment Audios dddd*/
                         }
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx);
+                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                        
+                        
+                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
                         editor.commit();
                     }
@@ -1148,14 +1121,14 @@ Appointment Audios dddd*/
                         }
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx);
+                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                        
+                        
+                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
                         editor.commit();
                     }
@@ -1196,14 +1169,14 @@ Appointment Audios dddd*/
                         }
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
+                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                        
+                        
+                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
                         editor.commit();
                     }
@@ -1244,14 +1217,14 @@ Appointment Audios dddd*/
                         }
                         String jsonx = gson.toJson(arrayList1);
                         String json11 = gson.toJson(arrayList2);
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json11);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, shared1.getString(CONSTANTS.PREF_KEY_myPlaylist, ""));
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, AudioFlag);
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx );
+                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                        
+                        
+                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
                         editor.commit();
                     }
@@ -1329,25 +1302,23 @@ Appointment Audios dddd*/
     }
 
     private void removeSharepref(Context ctx) {
-        SharedPreferences sharedm = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences sharedm = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editorr = sharedm.edit();
-        editorr.remove(CONSTANTS.PREF_KEY_modelList);
-        editorr.remove(CONSTANTS.PREF_KEY_audioList);
-        editorr.remove(CONSTANTS.PREF_KEY_position);
-        editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-        editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-        editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-        editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-        editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+        editorr.remove(CONSTANTS.PREF_KEY_PlayerAudioList);
+        editorr.remove(CONSTANTS.PREF_KEY_MainAudioList);
+        editorr.remove(CONSTANTS.PREF_KEY_PlayerPosition);
+        editorr.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag);
+        editorr.remove(CONSTANTS.PREF_KEY_PayerPlaylistId);
+        editorr.remove(CONSTANTS.PREF_KEY_PlayFrom);
         editorr.clear();
-        editorr.commit();
+        editorr.apply();
         callNewPlayerRelease();
     }
 
     public void UpdateNotificationAudioPLayer(Context ctx) {
-        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sharedsa.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+        String json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<ArrayList<MainPlayModel>>() {
             }.getType();
@@ -1374,8 +1345,8 @@ Appointment Audios dddd*/
                         duration = player.getDuration();
 
                     MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-                    SharedPreferences sharedsa1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    String json1 = sharedsa1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                    SharedPreferences sharedsa1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                    String json1 = sharedsa1.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                     if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
                         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                         }.getType();
@@ -1385,8 +1356,8 @@ Appointment Audios dddd*/
                     if (player != null) {
                         ps = player.getCurrentWindowIndex();
                     } else {
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        ps = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                        ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mainPlayModelList1.get(ps).getAudioDirection());

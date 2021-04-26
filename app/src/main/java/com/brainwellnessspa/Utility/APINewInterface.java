@@ -5,6 +5,7 @@ import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AverageSleepTimeModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.MainPlaylistLibraryModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
@@ -191,7 +192,7 @@ public interface APINewInterface {
 
     @POST("playlistlibrary")
     @FormUrlEncoded
-    Call<MainPlayListModel> getMainPlayLists(@Field("CoUserId") String CoUserId);
+    Call<MainPlaylistLibraryModel> getMainPlayLists(@Field("CoUserId") String CoUserId);
 
     @POST("managehomescreen")
     @FormUrlEncoded
@@ -216,4 +217,8 @@ public interface APINewInterface {
                                                  @Field("CatName") String CatName,
                                                  @Field("AvgSleepTime") String AvgSleepTime);
 
+    @POST("recentlyplayed")
+    @FormUrlEncoded
+    Call<SucessModel> getRecentlyPlayed(@Field("CoUserId") String CoUserId,
+                                        @Field("AudioId") String AudioId);
 }

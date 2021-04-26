@@ -45,7 +45,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="@dimen/_2sdp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivplay"
@@ -70,27 +70,13 @@
                     android:src="@drawable/ic_pause_white_icon" />
             </LinearLayout>
 
-            <!--<LinearLayout
-                android:id="@+id/llProgressBar"
-                android:layout_width="@dimen/_0sdp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.24"
-                android:background="@drawable/progress_bar_background"
-                android:gravity="center_horizontal"
-                android:padding="@dimen/_2sdp"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:visibility="visible">-->
-
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.24"
-                android:indeterminateTint="@color/blue"
-                android:paddingTop="@dimen/_13sdp"
-                android:paddingBottom="@dimen/_13sdp"
-                android:scaleType="fitXY"
-                android:visibility="gone" />
+                android:layout_weight="1"
+                android:indeterminateTint="@color/white"
+                android:visibility="visible" />
             <!--  </LinearLayout>-->
         </LinearLayout>
 
@@ -143,7 +129,7 @@
             android:layout_marginLeft="@dimen/_22sdp"
             android:fontFamily="@font/montserrat_semi_bold"
             android:gravity="center"
-            android:text="00:00:48"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_12sdp" />
 
@@ -156,7 +142,7 @@
             android:layout_marginRight="@dimen/_22sdp"
             android:fontFamily="@font/montserrat_semi_bold"
             android:gravity="center"
-            android:text="07:10:47"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_12sdp" />
 

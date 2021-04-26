@@ -315,12 +315,12 @@ public class PlaylistFragment extends Fragment {
             });
 
             if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                binding.ivLock.setVisibility(View.VISIBLE);
+//                binding.ivLock.setVisibility(View.VISIBLE);
             } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                binding.ivLock.setVisibility(View.VISIBLE);
+//                binding.ivLock.setVisibility(View.VISIBLE);
             } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                     || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                binding.ivLock.setVisibility(View.GONE);
+//                binding.ivLock.setVisibility(View.GONE);
             }
 
             binding.rlCreatePlaylist.setOnClickListener(view -> {
@@ -329,16 +329,16 @@ public class PlaylistFragment extends Fragment {
                 p.putValue("source", "Playlist Main Screen");
                 BWSApplication.addToSegment("Create Playlist Clicked", p, CONSTANTS.track);
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    binding.ivLock.setVisibility(View.VISIBLE);
+//                    binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    binding.ivLock.setVisibility(View.VISIBLE);
+//                    binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                    binding.ivLock.setVisibility(View.GONE);
+//                    binding.ivLock.setVisibility(View.GONE);
                     final Dialog dialog = new Dialog(getActivity());
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.create_palylist);
