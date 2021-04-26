@@ -37,10 +37,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
-import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
-import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity;
@@ -48,7 +46,6 @@ import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity;
 import com.brainwellnessspa.ManageModule.SleepTimeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
-import com.brainwellnessspa.UserModuleTwo.Activities.CreateAccountActivity;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel;
 import com.brainwellnessspa.Utility.APINewClient;

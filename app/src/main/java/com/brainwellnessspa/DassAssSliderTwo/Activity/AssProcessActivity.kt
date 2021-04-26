@@ -7,6 +7,7 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.R
+import com.brainwellnessspa.UserModuleTwo.Activities.WalkScreenActivity
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 
@@ -84,7 +85,8 @@ class AssProcessActivity : AppCompatActivity() {
         }
 
         binding.btnDoneAss.setOnClickListener {
-            val i = Intent(this@AssProcessActivity, BottomNavigationActivity::class.java)
+            val i = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
+            i.putExtra(CONSTANTS.ScreenView,"3")
             startActivity(i)
             finish()
         }

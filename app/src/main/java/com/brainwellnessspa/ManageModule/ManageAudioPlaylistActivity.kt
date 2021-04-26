@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.*
-import com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment
+import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment

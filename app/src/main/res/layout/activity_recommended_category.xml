@@ -137,7 +137,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <Button
-            android:id="@+id/btnLogIn"
+            android:id="@+id/btnContinue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_33sdp"

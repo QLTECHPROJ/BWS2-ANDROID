@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -31,36 +33,48 @@ class WalkScreenActivity : AppCompatActivity() {
         }
 
         binding.tvName.text = "Hi, $NAME"
-
         binding.rlWelcome.visibility = View.VISIBLE
         binding.rlStepOne.visibility = View.GONE
         binding.rlStepTwo.visibility = View.GONE
         binding.rlStepThree.visibility = View.GONE
-
-
-        binding.btnContinue.setOnClickListener {
-            if (ScreenView.equals("ProfileView")) {
-                val intent = Intent(this@WalkScreenActivity, ProfileProgressActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-
+        if (ScreenView.equals("1")) {
+            binding.btnContinue.setOnClickListener {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.VISIBLE
+                binding.rlStepTwo.visibility = View.GONE
+                binding.rlStepThree.visibility = View.GONE
             }
+        } else if (ScreenView.equals("2")) {
+            binding.rlWelcome.visibility = View.GONE
+            binding.rlStepOne.visibility = View.GONE
+            binding.rlStepTwo.visibility = View.VISIBLE
+            binding.rlStepThree.visibility = View.GONE
+        }else if (ScreenView.equals("3")) {
+            binding.rlWelcome.visibility = View.GONE
+            binding.rlStepOne.visibility = View.GONE
+            binding.rlStepTwo.visibility = View.GONE
+            binding.rlStepThree.visibility = View.VISIBLE
         }
 
-        binding.rlStepOne.setOnClickListener {
 
+        binding.rlStepOne.setOnClickListener {
+            val intent = Intent(this@WalkScreenActivity, ProfileProgressActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         binding.rlStepTwo.setOnClickListener {
-
+            val intent = Intent(this@WalkScreenActivity, AssProcessActivity::class.java)
+            intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+            startActivity(intent)
+            finish()
         }
 
-        /* binding.rlStepThree.setOnClickListener {
-             val i = Intent(this@WalkScreenActivity, GetStartedActivity::class.java)
-             i.putExtra(CONSTANTS.ScreenVisible, "2")
-             startActivity(i)
-         }*/
+         binding.rlStepThree.setOnClickListener {
+             val intent = Intent(this@WalkScreenActivity, BottomNavigationActivity::class.java)
+             startActivity(intent)
+             finish()
+         }
     }
 
     override fun onBackPressed() {

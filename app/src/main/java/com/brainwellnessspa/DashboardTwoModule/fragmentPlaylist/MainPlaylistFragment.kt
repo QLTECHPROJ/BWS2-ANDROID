@@ -26,6 +26,7 @@ import com.brainwellnessspa.DashboardModule.Account.AccountFragment
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel
 import com.brainwellnessspa.DashboardModule.Search.SearchFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.MainPlaylistLibraryModel
+import com.brainwellnessspa.DashboardTwoModule.manage.ManageFragment
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APIClient
@@ -47,8 +48,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class MainPlaylistFragment :Fragment() {
-    var binding: FragmentPlaylistBinding? = null
+class MainPlaylistFragment : Fragment() {
+    lateinit var binding: FragmentPlaylistBinding
     var CoUserID: String? = ""
     var Check: String? = ""
     var AudioFlag: String? = ""
@@ -62,7 +63,7 @@ class MainPlaylistFragment :Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
-        val view = binding!!.root
+        val view = binding.root
         ctx = requireActivity()
         act = requireActivity()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -74,16 +75,28 @@ class MainPlaylistFragment :Fragment() {
         if (arguments != null) {
             Check = requireArguments().getString("Check")
         }
+
+        view.isFocusableInTouchMode = true
+        view.requestFocus()
+        view.setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                callBack()
+                return@setOnKeyListener true
+            }
+            false
+        }
+
+        binding.llBack.setOnClickListener { view1 -> callBack() }
         val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
-        binding!!.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-        binding!!.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-        binding!!.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
+        binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+        binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+        binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
         Glide.with(ctx).load(R.drawable.ic_create_playlist).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding!!.ivCreatePlaylist)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
         val manager: RecyclerView.LayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        binding!!.rvMainPlayList.setLayoutManager(manager)
-        binding!!.rvMainPlayList.setItemAnimator(DefaultItemAnimator())
+        binding.rvMainPlayList.setLayoutManager(manager)
+        binding.rvMainPlayList.setItemAnimator(DefaultItemAnimator())
         prepareData("onCreateView")
         return view
     }
@@ -153,10 +166,18 @@ class MainPlaylistFragment :Fragment() {
             listModel.getLibraryID = "2"
             listModel.details = details
             listModel.userID = CoUserID
-            listModel.view = "My Downloads" 
+            listModel.view = "My Downloads"
             responseData.add(listModel)
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
+    }
+
+    private fun callBack() {
+        val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
+        val audioFragment: Fragment = ManageFragment()
+        fragmentManager1.beginTransaction()
+                .replace(R.id.flContainer, audioFragment)
+                .commit()
     }
 
     override fun onResume() {
@@ -242,8 +263,8 @@ class MainPlaylistFragment :Fragment() {
                                             BWSApplication.showToast(listModel.responseMessage, ctx)
                                         } else if (listModel.responseData.iscreated.equals("1", ignoreCase = true) ||
                                                 listModel.responseData.iscreated.equals("", ignoreCase = true)) {
-                                                    MainPlaylistFragment().ComeScreenMyPlaylist = 1
-                                            MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData.id, listModel.responseData.name, "", "0", "Your Created",act,ctx)
+                                            MainPlaylistFragment().ComeScreenMyPlaylist = 1
+                                            MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData.id, listModel.responseData.name, "", "0", "Your Created", act, ctx)
                                             /*Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("playlistId", listModel.getResponseData().getId());

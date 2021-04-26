@@ -13,12 +13,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Audio.AudioFragment;
-import com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment;
+import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.RoundBoxLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -27,8 +24,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
-
-import static com.brainwellnessspa.BWSApplication.*;
 
 public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     Context ctx;

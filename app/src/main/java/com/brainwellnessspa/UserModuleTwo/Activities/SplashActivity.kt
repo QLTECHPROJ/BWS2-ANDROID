@@ -188,14 +188,14 @@ class SplashActivity : AppCompatActivity() {
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
-                    intent.putExtra(CONSTANTS.ScreenView,"ProfileView")
+                    intent.putExtra(CONSTANTS.ScreenView,"1")
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())
             } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this@SplashActivity, AssProcessActivity::class.java)
-                    intent.putExtra(CONSTANTS.ASSPROCESS,"0")
+                    val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
+                    intent.putExtra(CONSTANTS.ScreenView,"2")
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())

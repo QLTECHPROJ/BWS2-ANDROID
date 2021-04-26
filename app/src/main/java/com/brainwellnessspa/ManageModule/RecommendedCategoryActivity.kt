@@ -68,6 +68,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         editx.commit()
         prepareRecommnedData()
         getCatSaveData()
+
+        binding.btnContinue.setOnClickListener {
+//            sendCategoryData()
+        }
     }
 
     private fun prepareRecommnedData() {
@@ -97,7 +101,6 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
-
 
     class AllCategory(var binding: ActivityRecommendedCategoryBinding, private val listModel: List<RecommendedCategoryModel.ResponseData>?, var ctx: Context) : RecyclerView.Adapter<AllCategory.MyViewHolder>() {
         private lateinit var adapter2: ChildCategory
@@ -182,6 +185,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             }
                         }
                     }
+
                     catList.editor = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE).edit()
                     catList.editor.putString(CONSTANTS.selectedCategoriesTitle, catList.gson.toJson(catList.selectedCategoriesTitle)) //Friend
                     catList.editor.putString(CONSTANTS.selectedCategories, catList.gson.toJson(catList.selectedCategories)) //Friend
@@ -242,7 +246,6 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 catList.selectedCategoriesSort = catList.gson.fromJson(json4, type1)
             }
         }
-
 
         override fun getItemCount(): Int {
             return listModel!!.get(pos).details!!.size
@@ -306,10 +309,6 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SucessModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            /*val i = Intent(activity, AssProcessActivity::class.java)
-                            i.putExtra(CONSTANTS.ASSPROCESS, "1")
-                            i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)
-                            startActivity(i)*/
                             finish()
                         } else {
                             BWSApplication.showToast(listModel.responseMessage, applicationContext)

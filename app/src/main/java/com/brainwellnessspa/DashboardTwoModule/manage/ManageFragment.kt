@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment
@@ -152,7 +152,20 @@ public class ManageFragment: Fragment() {
                         fragmentManager1.beginTransaction()
                                 .replace(R.id.flContainer, playlistFragment)
                                 .commit()
-                    } 
+                        /*val bundle = Bundle()
+                        if (listModel.responseData!!.playlist[0].view.equals("My Downloads", ignoreCase = true)) {
+                            bundle.putString("MyDownloads", "1")
+                        } else {
+                            bundle.putString("MyDownloads", "0")
+                        }
+                        bundle.putString("GetLibraryID", listModel.responseData!!.playlist[0].getLibraryID)
+                        bundle.putString("Name", listModel.responseData!!.playlist[0].view)
+                        val viewAllAudioFragment: Fragment = ViewAllPlaylistFragment()
+                        viewAllAudioFragment.arguments = bundle
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.flContainer, viewAllAudioFragment)
+                                .commit()*/
+                    }
                     audioAdapter = AudioAdapter(listModel.responseData!!.audio, ctx, binding, act, fragmentManager1)
                     binding.rvMainAudioList.adapter = audioAdapter
 
@@ -185,7 +198,6 @@ public class ManageFragment: Fragment() {
                 fragmentManager1.beginTransaction()
                         .replace(R.id.flContainer, viewAllAudioFragment)
                         .commit()
-
             }
 
             if (listModel[position].details!!.isEmpty()) {

@@ -24,19 +24,38 @@
                     android:layout_marginBottom="@dimen/_18sdp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvExplore"
+                    <RelativeLayout
+                        android:id="@+id/rlLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_13sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_16sdp"
-                        android:layout_marginBottom="@dimen/_6sdp"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:gravity="start"
-                        android:text="@string/Playlist"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_30sdp" />
+                        android:layout_height="@dimen/_56sdp">
+
+                        <LinearLayout
+                            android:id="@+id/llBack"
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_left_arrow_icon"
+                                app:tint="@color/black" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvExplore"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:text="Playlist"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/rlCreatePlaylist"

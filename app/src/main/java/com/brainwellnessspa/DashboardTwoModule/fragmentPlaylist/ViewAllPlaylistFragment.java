@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -20,16 +19,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
-import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
+import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -41,21 +37,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class ViewAllPlaylistFragment extends Fragment {
     public static String GetPlaylistLibraryID = "";
@@ -148,11 +138,11 @@ public class ViewAllPlaylistFragment extends Fragment {
     }
 */
     private void callBack() {
-//        Fragment audioFragment = new PlaylistFragment();
-//        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-//        fragmentManager1.beginTransaction()
-//                .replace(R.id.flContainer, audioFragment)
-//                .commit();
+        Fragment audioFragment = new MainPlaylistFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .replace(R.id.flContainer, audioFragment)
+                .commit();
     }
 
     @Override
@@ -160,7 +150,7 @@ public class ViewAllPlaylistFragment extends Fragment {
 //        if (MyDownloads.equalsIgnoreCase("1")) {
 //            GetAllMedia();
 //        } else {
-            prepareData();
+        prepareData();
 //        }
         super.onResume();
     }
@@ -272,7 +262,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                                 p.putValue("playlists", gson.toJson(section));
                                 p.putValue("section", ScreenView);
                                 BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen);
-                                PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
+                                PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().isLock());
                                 binding.rvMainAudio.setAdapter(adapter);
                             }
                         } catch (Exception e) {
@@ -330,62 +320,64 @@ public class ViewAllPlaylistFragment extends Fragment {
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-          /*  if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
-            }
+//            if (IsLock.equalsIgnoreCase("1")) {
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (IsLock.equalsIgnoreCase("2")) {
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            holder.binding.ivLock.setVisibility(View.GONE);
+//            }
             if (index == position) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
             } else
                 holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
             holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+
             holder.binding.rlMainLayout.setOnLongClickListener(v -> {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
                 index = position;
                 notifyDataSetChanged();
                 return true;
             });
-            holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    startActivity(i);
-                } else if (IsLock.equalsIgnoreCase("2")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    startActivity(i);
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
-                    i.putExtra("AudioId", "");
-                    i.putExtra("ScreenView", "Playlist View All Screen");
-                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                    i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
-                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    i.putExtra("PlaylistType", listModelList.get(position).getCreated());
-                    i.putExtra("Liked", "0");
-                    startActivity(i);
-                }
 
+            holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
+//                if (IsLock.equalsIgnoreCase("1")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    startActivity(i);
+//                } else if (IsLock.equalsIgnoreCase("2")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    startActivity(i);
+//                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+                Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
+                i.putExtra("AudioId", "");
+                i.putExtra("ScreenView", "Playlist View All Screen");
+                i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                i.putExtra("PlaylistType", listModelList.get(position).getCreated());
+                i.putExtra("Liked", "0");
+                startActivity(i);
+//                }
             });
+
             holder.binding.rlMainLayout.setOnClickListener(view -> {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    startActivity(i);
-                } else if (IsLock.equalsIgnoreCase("2")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+//                if (IsLock.equalsIgnoreCase("1")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    startActivity(i);
+//                } else if (IsLock.equalsIgnoreCase("2")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
+//                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    *//*if (MyDownloads.equalsIgnoreCase("1")) {
+                    if (MyDownloads.equalsIgnoreCase("1")) {
 //                            getMedia(listModelList.get(position).getPlaylistID());
                         Intent i = new Intent(getActivity(), DownloadPlaylistActivity.class);
                         i.putExtra("New", "0");
@@ -398,26 +390,26 @@ public class ViewAllPlaylistFragment extends Fragment {
                         i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
                         i.putExtra("MyDownloads", "1");
                         getActivity().startActivity(i);
-                    } else {*//*
-                    Bundle bundle = new Bundle();
-                    comefrom_search = 2;
-                    GetPlaylistLibraryID = GetLibraryID;
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                    bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                    bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    bundle.putString("MyDownloads", MyDownloads);
-                    bundle.putString("ScreenView", ScreenView);
-                    bundle.putString("PlaylistType", listModelList.get(position).getCreated());
-                    myPlaylistsFragment.setArguments(bundle);
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, myPlaylistsFragment)
-                            .commit();
-//                        }
-                }
-            });*/
+                    } else {
+                        Bundle bundle = new Bundle();
+                        comefrom_search = 2;
+                        GetPlaylistLibraryID = GetLibraryID;
+                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        bundle.putString("New", "0");
+                        bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
+                        bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
+                        bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        bundle.putString("MyDownloads", MyDownloads);
+                        bundle.putString("ScreenView", ScreenView);
+                        bundle.putString("PlaylistType", listModelList.get(position).getCreated());
+                        myPlaylistsFragment.setArguments(bundle);
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.flContainer, myPlaylistsFragment)
+                                .commit();
+                        }
+//                    }
+                });
         }
 
         @Override
