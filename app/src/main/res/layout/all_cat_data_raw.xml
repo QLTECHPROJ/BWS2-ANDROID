@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout>
     <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/llCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_chip_gray"
-        android:layout_margin="@dimen/_5sdp"
-        android:padding="@dimen/_10sdp">
+        android:layout_margin="@dimen/_4sdp">
 
         <TextView
             android:id="@+id/tvText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:fontFamily="@font/montserrat_regular"
-            android:gravity="left"
+            android:gravity="start"
+            android:layout_margin="@dimen/_10sdp"
             android:text="Drug Addition Drug Addition"
             android:textColor="@color/black"
-            android:textSize="@dimen/_10sdp" />
+            android:textSize="@dimen/_11sdp" />
     </RelativeLayout>
 </layout>

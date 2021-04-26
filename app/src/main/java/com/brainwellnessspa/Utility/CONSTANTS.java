@@ -176,6 +176,11 @@ public class CONSTANTS {
     public static final String PREF_KEY_ScreenView = "ScreenView";
 
     public static final String Token = "Token";
+    public static final String RecommendedCatMain = "RecommendedCatMain";
+    public static final String selectedCategoriesTitle = "selectedCategoriesTitle";
+    public static final String selectedCategories = "selectedCategories";
+    public static final String selectedCategoriesName = "selectedCategoriesName";
+    public static final String selectedCategoriesSort = "selectedCategoriesSort";
     public static final String AssMain = "AssMain";
     public static final String AssQus = "AssQus";
     public static final String AssAns = "AssAns";

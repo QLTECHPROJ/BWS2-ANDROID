@@ -44,6 +44,7 @@ import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity;
+import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity;
 import com.brainwellnessspa.ManageModule.SleepTimeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity;
@@ -123,7 +124,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.llPlayer.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), ManageAudioPlaylistActivity.class);
+            Intent i = new Intent(getActivity(), /*ManageAudioPlaylistActivity*/SleepTimeActivity.class);
             startActivity(i);
         });
 
@@ -1018,7 +1019,7 @@ public class HomeFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.comfirm_pin_layout);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.getWindow().setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.getWindow().setLayout(700, ViewGroup.LayoutParams.WRAP_CONTENT);
                 Button btnDone = dialog.findViewById(R.id.btnDone);
                 TextView tvTitle = dialog.findViewById(R.id.tvTitle);
                 TextView txtError = dialog.findViewById(R.id.txtError);

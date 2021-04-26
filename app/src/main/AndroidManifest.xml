@@ -7,16 +7,20 @@
         android:name=".BWSApplication"
         android:fullBackupContent="false"
         android:hardwareAccelerated="false"
-        android:icon="@drawable/square_app_icon"
+        android:icon="@drawable/app_new_icon"
         android:installLocation="preferExternal"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/round_app_logo"
+        android:roundIcon="@drawable/round_app_new_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ProfileTwoModule.ChangePinActivity"></activity>
+        <activity
+            android:name=".ProfileTwoModule.ChangePinActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ManageModule.ViewAllManageAudio"></activity>
         <activity
             android:name=".ManageModule.SessionExpActivity"
@@ -60,11 +64,6 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ProfileTwoModule.AccountInfoActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ManageModulpree.RecommendedCategoryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

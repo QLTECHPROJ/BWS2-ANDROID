@@ -407,14 +407,16 @@ public class AddAudioActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SearchPlaylistModel listModel = response.body();
                             binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
+                            binding.tvSuggestedPlaylist.setVisibility(View.GONE);
+                            binding.rvPlayList.setVisibility(View.GONE);
                             /*p = new Properties();
                             p.putValue("userId", UserID);
                             p.putValue("source", "Add Audio Screen");
                             BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);*/
-                            binding.tvSPViewAll.setVisibility(View.VISIBLE);
+                            binding.tvSPViewAll.setVisibility(View.GONE);
 
-                            SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());
-                            binding.rvPlayList.setAdapter(suggestedAdpater);
+//                            SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());
+//                            binding.rvPlayList.setAdapter(suggestedAdpater);
 
                             binding.tvSPViewAll.setOnClickListener(view -> {
                                 notificationStatus = true;
@@ -701,8 +703,10 @@ public class AddAudioActivity extends AppCompatActivity {
                 });
             } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
                 holder.binding.tvPart.setText(R.string.Playlist);
+                holder.binding.tvPart.setVisibility(View.GONE);
                 holder.binding.equalizerview.setVisibility(View.GONE);
-                holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
+                holder.binding.llRemoveAudio.setVisibility(View.GONE);
+                holder.binding.llMainLayout.setVisibility(View.GONE);
 //                if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
 //                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
 //                    holder.binding.ivLock.setVisibility(View.VISIBLE);

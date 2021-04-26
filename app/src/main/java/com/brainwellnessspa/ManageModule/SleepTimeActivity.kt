@@ -33,12 +33,16 @@ class SleepTimeActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySleepTimeBinding
     lateinit var adapter: SleepTimeAdapter
     lateinit var ctx: Context
+    var SleepTime: String? = null
     lateinit var activity: Activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sleep_time)
         ctx = this@SleepTimeActivity
         activity = this@SleepTimeActivity
+        if (intent.extras != null) {
+            SleepTime = intent.getStringExtra("SleepTime")
+        }
         prepareUserData()
     }
 
@@ -52,8 +56,8 @@ class SleepTimeActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AverageSleepTimeModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            binding.rvTimeSlot.layoutManager = GridLayoutManager(ctx,2)
-                            adapter = SleepTimeAdapter(listModel.responseData!!,ctx)
+                            binding.rvTimeSlot.layoutManager = GridLayoutManager(ctx, 2)
+                            adapter = SleepTimeAdapter(listModel.responseData!!, ctx, activity)
                             binding.rvTimeSlot.adapter = adapter
                         }
 
@@ -70,7 +74,8 @@ class SleepTimeActivity : AppCompatActivity() {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
-    class SleepTimeAdapter(private val listModel: List<AverageSleepTimeModel.ResponseData>, var ctx: Context) : RecyclerView.Adapter<SleepTimeAdapter.MyViewHolder>() {
+
+    class SleepTimeAdapter(private val listModel: List<AverageSleepTimeModel.ResponseData>, var ctx: Context, var activity: Activity) : RecyclerView.Adapter<SleepTimeAdapter.MyViewHolder>() {
         inner class MyViewHolder(var bindingAdapter: SleepTimeRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -82,7 +87,9 @@ class SleepTimeActivity : AppCompatActivity() {
             holder.bindingAdapter.tvhours.text = listModel.get(position).name
             holder.bindingAdapter.llHourSlots.setOnClickListener {
                 val i = Intent(ctx, RecommendedCategoryActivity::class.java)
+                i.putExtra("SleepTime", listModel.get(position).name)
                 ctx.startActivity(i)
+                activity.finish()
             }
         }
 

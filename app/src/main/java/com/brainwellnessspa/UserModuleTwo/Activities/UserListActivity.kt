@@ -126,7 +126,7 @@ class UserListActivity : AppCompatActivity() {
                 userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 userList.dialog.setContentView(R.layout.comfirm_pin_layout)
                 userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                userList.dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
+                userList.dialog.window!!.setLayout(700, ViewGroup.LayoutParams.WRAP_CONTENT)
 
                 val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
                 val txtError: TextView = userList.dialog.findViewById(R.id.txtError)
@@ -259,7 +259,7 @@ class UserListActivity : AppCompatActivity() {
                                     userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                     userList.dialog.setContentView(R.layout.comfirm_pin_layout)
                                     userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                    userList.dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
+                                    userList.dialog.window!!.setLayout(700, ViewGroup.LayoutParams.WRAP_CONTENT)
                                     val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
                                     txtError = userList.dialog.findViewById(R.id.txtError)
                                     val tvTitle: TextView = userList.dialog.findViewById(R.id.tvTitle)
