@@ -7,9 +7,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
@@ -57,17 +59,9 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         CoEMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-
-        val preferencesx: SharedPreferences = getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
-        val editx = preferencesx.edit()
-        editx.remove(CONSTANTS.selectedCategoriesTitle)
-        editx.remove(CONSTANTS.selectedCategories)
-        editx.remove(CONSTANTS.selectedCategoriesName)
-        editx.remove(CONSTANTS.selectedCategoriesSort)
-        editx.clear()
-        editx.commit()
-        prepareRecommnedData()
+        binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
         getCatSaveData()
+        prepareRecommnedData()
 
         binding.btnContinue.setOnClickListener {
 //            sendCategoryData()
@@ -85,8 +79,17 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         val listModel: RecommendedCategoryModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             binding.rvPerantCat.layoutManager = LinearLayoutManager(ctx)
-                            adapter1 = AllCategory(binding, listModel.responseData, ctx!!)
-                            binding.rvPerantCat.adapter = adapter1
+                            if(listModel.responseData!!.size > 3) {
+                                val listModelNew = arrayListOf<RecommendedCategoryModel.ResponseData>()
+                                for(i in 0..2){
+                                    listModelNew.add(listModel.responseData!![i])
+                                }
+                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
+                                binding.rvPerantCat.adapter = adapter1
+                            }else{
+                                adapter1 = AllCategory(binding, listModel.responseData, ctx!!)
+                                binding.rvPerantCat.adapter = adapter1
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -101,7 +104,6 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
-
     class AllCategory(var binding: ActivityRecommendedCategoryBinding, private val listModel: List<RecommendedCategoryModel.ResponseData>?, var ctx: Context) : RecyclerView.Adapter<AllCategory.MyViewHolder>() {
         private lateinit var adapter2: ChildCategory
 
@@ -114,7 +116,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             if (listModel != null) {
-                holder.bindingAdapter.tvHeader.text = listModel.get(position).view
+                holder.bindingAdapter.tvHeader.text = listModel[position].view
                 val layoutManager = FlexboxLayoutManager(ctx)
                 layoutManager.flexWrap = FlexWrap.WRAP
                 layoutManager.alignItems = AlignItems.STRETCH
@@ -122,13 +124,35 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 layoutManager.justifyContent = JustifyContent.FLEX_START
                 holder.bindingAdapter.rvChildCategory.layoutManager = layoutManager
 
-                if (position == 0) {
-                    adapter2 = ChildCategory(binding, listModel.get(position).details, listModel, position, ctx)
-                } else {
-                    adapter2 = ChildCategory(binding, listModel.get(position).details, listModel, position, ctx)
-                }
-                holder.bindingAdapter.rvChildCategory.adapter = adapter2
+                callAdapter(position, holder, position)
+//                if (listModel.size == 1) {
+//                    callAdapter(position, holder, position)
+//                }
+//                else if (listModel.size == 2) {
+//                    if (position == 0) {
+//                        callAdapter(position, holder, position)
+//                    }
+//                    else if (position == 1) {
+//                        callAdapter(position, holder, position)
+//                    }
+//                }
+//                else if (listModel.size == 3) {
+//                    if (position == 0) {
+//                        callAdapter(position, holder, position)
+//                    }
+//                    else if (position == 1) {
+//                        callAdapter(position, holder, position + 1)
+//                    }
+//                    else if (position == 2) {
+//                        callAdapter(position, holder, position + 1)
+//                    }
+//                }
             }
+        }
+
+        private fun callAdapter(position: Int, holder: MyViewHolder, pos: Int) {
+            adapter2 = ChildCategory(binding, listModel!![position].details, listModel, pos, ctx)
+            holder.bindingAdapter.rvChildCategory.adapter = adapter2
         }
 
         override fun getItemCount(): Int {
@@ -153,33 +177,33 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     posItem = mSelectedItem
                     if (listModel != null) {
                         if (catList.selectedCategoriesTitle.size == 0) {
-                            catList.selectedCategoriesTitle.add(listModel.get(pos).view.toString())
+                            catList.selectedCategoriesTitle.add(listModel[pos].view.toString())
                             catList.selectedCategories.add(0, adapterPosition.toString())
-                            catList.selectedCategoriesName.add(listModel.get(pos).details!!.get(position).problemName.toString())
+                            catList.selectedCategoriesName.add(listModel[pos].details!![position].problemName.toString())
                             catList.selectedCategoriesSort.add(0, pos.toString())
 
                         } else {
-                            if (catList.selectedCategoriesTitle.contains(listModel.get(pos).view)) {
+                            if (catList.selectedCategoriesTitle.contains(listModel[pos].view)) {
                                 for (i in 0 until catList.selectedCategoriesTitle.size) {
-                                    if (catList.selectedCategoriesTitle[i] == listModel.get(pos).view) {
+                                    if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
                                         catList.selectedCategories.removeAt(i)
                                         catList.selectedCategoriesName.removeAt(i)
                                         catList.selectedCategoriesSort.removeAt(i)
                                         catList.selectedCategories.add(i, adapterPosition.toString())
-                                        catList.selectedCategoriesName.add(i, listModel.get(pos).details!!.get(position).problemName.toString())
+                                        catList.selectedCategoriesName.add(i, listModel[pos].details!![position].problemName.toString())
                                         catList.selectedCategoriesSort.add(i, pos.toString())
                                     }
                                 }
                             } else {
                                 if (pos > catList.selectedCategoriesTitle.size) {
-                                    catList.selectedCategoriesTitle.add(pos - 1, listModel.get(pos).view.toString())
+                                    catList.selectedCategoriesTitle.add(pos - 1, listModel[pos].view.toString())
                                     catList.selectedCategories.add(pos - 1, adapterPosition.toString())
-                                    catList.selectedCategoriesName.add(pos - 1, listModel.get(pos).details!!.get(position).problemName.toString())
+                                    catList.selectedCategoriesName.add(pos - 1, listModel[pos].details!![position].problemName.toString())
                                     catList.selectedCategoriesSort.add(pos - 1, pos.toString())
                                 } else {
-                                    catList.selectedCategoriesTitle.add(pos, listModel.get(pos).view.toString())
+                                    catList.selectedCategoriesTitle.add(pos, listModel[pos].view.toString())
                                     catList.selectedCategories.add(pos, adapterPosition.toString())
-                                    catList.selectedCategoriesName.add(pos, listModel.get(pos).details!!.get(position).problemName.toString())
+                                    catList.selectedCategoriesName.add(pos, listModel[pos].details!![position].problemName.toString())
                                     catList.selectedCategoriesSort.add(pos, pos.toString())
                                 }
                             }
@@ -198,11 +222,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     Log.e("selectedCategoriesName", catList.selectedCategoriesName.toString())
                     Log.e("selectedCategoriesSort", catList.selectedCategoriesSort.toString())
                     Log.e("posItem", posItem.toString())
-                    Log.e("mSelectedItem", mSelectedItem.toString())
 
-//                    binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
-//                    catList.catListadapter = SelectedCategory(binding)
-//                    binding.rvSelectedCategory.adapter = catList.catListadapter
+                    binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
+                    catList.catListadapter = SelectedCategory(binding,ctx)
+                    binding.rvSelectedCategory.adapter = catList.catListadapter
                 }
             }
         }
@@ -214,22 +237,45 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             setData()
-            if (catList.selectedCategoriesTitle.contains(listModel!!.get(position).view)) {
-                for (i in 0 until catList.selectedCategoriesTitle.size) {
-                    if (catList.selectedCategoriesTitle[i] == listModel.get(position).view) {
-                        posItem = Integer.parseInt(catList.selectedCategories.get(i))
-                        mSelectedItem = posItem
-                        break
+            if(catList.selectedCategoriesTitle.size!=0) {
+                if (catList.selectedCategoriesTitle.contains(listModel!![pos].view)) {
+                    for (i in 0 until catList.selectedCategoriesTitle.size) {
+                        if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
+                            posItem = Integer.parseInt(catList.selectedCategories[i])
+                            mSelectedItem = posItem
+                            break
+                        }
                     }
                 }
             }
 
             if (position == posItem) {
-                holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                if (pos == 0) {
+                    holder.bindingAdapter.llCategory.visibility = View.GONE
+                    holder.bindingAdapter.llCategoryPink.visibility = View.VISIBLE
+                    holder.bindingAdapter.llCategoryGreen.visibility = View.GONE
+                    holder.bindingAdapter.llCategoryBlue.visibility = View.GONE
+                } else if (pos == 1) {
+                    holder.bindingAdapter.llCategory.visibility = View.GONE
+                    holder.bindingAdapter.llCategoryPink.visibility = View.GONE
+                    holder.bindingAdapter.llCategoryGreen.visibility = View.VISIBLE
+                    holder.bindingAdapter.llCategoryBlue.visibility = View.GONE
+                } else if (pos == 2) {
+                    holder.bindingAdapter.llCategory.visibility = View.GONE
+                    holder.bindingAdapter.llCategoryPink.visibility = View.GONE
+                    holder.bindingAdapter.llCategoryGreen.visibility = View.GONE
+                    holder.bindingAdapter.llCategoryBlue.visibility = View.VISIBLE
+                }
             } else {
-                holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_gray)
+                holder.bindingAdapter.llCategory.visibility = View.VISIBLE
+                holder.bindingAdapter.llCategoryPink.visibility = View.GONE
+                holder.bindingAdapter.llCategoryGreen.visibility = View.GONE
+                holder.bindingAdapter.llCategoryBlue.visibility = View.GONE
             }
-            holder.bindingAdapter.tvText.text = responseListModel!!.get(position).problemName.toString()
+            holder.bindingAdapter.tvText.text = responseListModel!![position].problemName.toString()
+            holder.bindingAdapter.tvText1.text = responseListModel[position].problemName.toString()
+            holder.bindingAdapter.tvText2.text = responseListModel[position].problemName.toString()
+            holder.bindingAdapter.tvText3.text = responseListModel[position].problemName.toString()
         }
 
         private fun setData() {
@@ -248,7 +294,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            return listModel!!.get(pos).details!!.size
+            return listModel!![pos].details!!.size
         }
     }
 
@@ -265,11 +311,16 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             selectedCategoriesName = gson.fromJson(json5, type1)
             selectedCategoriesSort = gson.fromJson(json4, type1)
         }
+        if(selectedCategoriesTitle.size>0){
+            binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
+            catListadapter = SelectedCategory(binding,ctx!!)
+            binding.rvSelectedCategory.adapter = catListadapter
+        }
     }
 
-    class SelectedCategory(var binding: ActivityRecommendedCategoryBinding) : RecyclerView.Adapter<SelectedCategory.MyViewHolder>() {
+    class SelectedCategory(var binding: ActivityRecommendedCategoryBinding, var ctx: Context) : RecyclerView.Adapter<SelectedCategory.MyViewHolder>() {
         var catList = RecommendedCategoryActivity()
-        val shared = catList.ctx!!.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, catList.gson.toString())
         val json3 = shared.getString(CONSTANTS.selectedCategories, catList.gson.toString())
         val json5 = shared.getString(CONSTANTS.selectedCategoriesName, catList.gson.toString())
@@ -283,6 +334,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            getCatSaveData()
             if (!json2.equals(catList.gson.toString(), ignoreCase = true)) {
                 val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
                 catList.selectedCategoriesTitle = catList.gson.fromJson(json2, type1)
@@ -290,15 +342,57 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 catList.selectedCategoriesName = catList.gson.fromJson(json5, type1)
                 catList.selectedCategoriesSort = catList.gson.fromJson(json4, type1)
             }
+            holder.bindingAdapter.tvCategory.text = catList.selectedCategoriesName[position]
+            holder.bindingAdapter.tvhours.text = position.toString()
+            if(catList.selectedCategoriesTitle.size == 3){
+                if(position==0){
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
+                }else if(position == 1){
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_green)
+                }else if(position == 1){
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_blue)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_blue)
+                }
+            }else  if(catList.selectedCategoriesTitle.size == 2){
+                if(position==0){
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
+                }else if(position == 1){
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_green)
+                }
+            }else  if(catList.selectedCategoriesTitle.size == 1){
+                if(position==0){
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
+                }
+            }
             val elements: Array<String> = json5!!.split(",".toRegex()).toTypedArray()
             val category = Arrays.asList(*elements)
             holder.bindingAdapter.tvCategory.text = category.toString()
         }
-
+        private fun getCatSaveData() {
+            val gson=Gson()
+            val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
+            val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, gson.toString())
+            val json3 = shared.getString(CONSTANTS.selectedCategories, gson.toString())
+            val json5 = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
+            val json4 = shared.getString(CONSTANTS.selectedCategoriesSort, gson.toString())
+            if (!json2.equals(gson.toString(), ignoreCase = true)) {
+                val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
+                catList.selectedCategoriesTitle = gson.fromJson(json2, type1)
+                catList.selectedCategories = gson.fromJson(json3, type1)
+                catList.selectedCategoriesName = gson.fromJson(json5, type1)
+                catList.selectedCategoriesSort = gson.fromJson(json4, type1)
+            }
+        }
         override fun getItemCount(): Int {
-            return catList.selectedCategoriesName.toString().length
+            return catList.selectedCategoriesTitle.size
         }
     }
+
     private fun sendCategoryData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -308,6 +402,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SucessModel = response.body()!!
+
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             finish()
                         } else {
