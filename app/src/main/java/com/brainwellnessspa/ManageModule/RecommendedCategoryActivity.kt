@@ -338,7 +338,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }else if(position == 1){
                     holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_green)
-                }else if(position == 1){
+                }else if(position == 2){
                     holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_blue)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_blue)
                 }
