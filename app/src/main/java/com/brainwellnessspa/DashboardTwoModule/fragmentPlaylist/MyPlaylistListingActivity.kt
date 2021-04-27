@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
 import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel
@@ -115,7 +116,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<PlaylistDetailsModel> = APINewClient.getClient().getPlaylistDetail(CoUserID, "5")
+            val listCall: Call<PlaylistDetailsModel> = APINewClient.getClient().getPlaylistDetail(CoUserID, PlaylistID)
             listCall.enqueue(object : Callback<PlaylistDetailsModel> {
                 override fun onResponse(call: Call<PlaylistDetailsModel>, response: Response<PlaylistDetailsModel>) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -141,8 +142,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 //                            callObserveMethodGetAllMedia()
 //                            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads)
                     }
-                    binding.llMore.setOnClickListener { view1 ->
-                        //callMreIntent
+                    binding.llMore.setOnClickListener { view13 ->
+//            handler2.removeCallbacks(UpdateSongTime2);
+                        val i = Intent(ctx, MyPlaylistActivity::class.java)
+                        i.putExtra("PlaylistID", PlaylistID)
+                        i.putExtra("PlaylistName", PlaylistName)
+                        i.putExtra("PlaylistImage", PlaylistImage)
+                        i.putExtra("ScreenView","")
+                        i.putExtra("PlaylistType",listModel.responseData!!.created )
+                        i.putExtra("Liked", "0")
+                        startActivity(i)
                     }
                     /*binding.llReminder.setOnClickListener { view ->
 
@@ -267,7 +276,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             enableDisableDownload(false, "orange")
                             binding.ivReminder.setColorFilter(activity.resources.getColor(R.color.gray), PorterDuff.Mode.SRC_IN)
                         } else {*/
-                    binding.llDownload.setVisibility(View.VISIBLE)
+                binding.llDownload.visibility = View.VISIBLE
                     binding.llReminder.visibility = View.VISIBLE
                     if (listModel.created.equals("1", ignoreCase = true)) {
                         binding.rvPlayLists1.visibility = View.VISIBLE
@@ -312,8 +321,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-            holder.binding.tvTitle.setText(listModel[position].name)
-            holder.binding.tvTime.setText(listModel[position].audioDuration)
+            holder.binding.tvTitle.text = listModel[position].name
+            holder.binding.tvTime.text = listModel[position].audioDuration
+            val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.13f, 0f)
+            holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+            holder.binding.ivBackgroundImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivBackgroundImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivBackgroundImage.scaleType = ImageView.ScaleType.FIT_XY
+//            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg)
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
@@ -321,6 +338,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
+
+//            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
+//                    .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             try {
                 holder.binding.llRemove.setOnClickListener { _ ->
 //                    handler2.removeCallbacks(UpdateSongTime2);
@@ -533,12 +554,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            holder.binding.rlImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.rlImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivBackgroundImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivBackgroundImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivBackgroundImage.scaleType = ImageView.ScaleType.FIT_XY
-            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg)
+//            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg)
             Glide.with(ctx).load(mData[position].imageFile).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)

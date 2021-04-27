@@ -1,17 +1,23 @@
 package com.brainwellnessspa.DashboardTwoModule.manage;
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle;
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.*
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -21,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
+import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel
+import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment
@@ -28,6 +36,7 @@ import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListin
 
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
+import com.brainwellnessspa.Utility.APIClient
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.*
@@ -61,6 +70,93 @@ public class ManageFragment: Fragment() {
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         binding.rvMainPlayList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMainAudioList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+
+        binding.rlCreatePlaylist.setOnClickListener { view ->
+            val dialog = Dialog(ctx)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.create_palylist)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.blue_transparent)))
+            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
+            val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
+            val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
+            edtCreate.requestFocus()
+            val popupTextWatcher: TextWatcher = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    val number = edtCreate.text.toString().trim { it <= ' ' }
+                    if (!number.isEmpty()) {
+                        btnSendCode.isEnabled = true
+                        btnSendCode.setTextColor(ctx.resources.getColor(R.color.white))
+                        btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor)
+                    } else {
+                        btnSendCode.isEnabled = false
+                        btnSendCode.setTextColor(ctx.resources.getColor(R.color.white))
+                        btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable) {}
+            }
+            edtCreate.addTextChangedListener(popupTextWatcher)
+            dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            btnSendCode.setOnClickListener { view1: View? ->
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                    val listCall = APINewClient.getClient().getCreatePlaylist(CoUserID, edtCreate.text.toString())
+                    listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
+                        override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
+                            try {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                if (response.isSuccessful) {
+                                    val listModel = response.body()
+                                    if (listModel!!.responseData!!.iscreate.equals("0", ignoreCase = true)) {
+                                        BWSApplication.showToast(listModel.responseMessage, ctx)
+                                        dialog.dismiss()
+                                    } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) ||
+                                            listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
+//                                        try {
+                                            val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                                            i.putExtra("New", 1)
+                                            i.putExtra("PlaylistID", listModel.responseData!!.id)
+                                            i.putExtra("PlaylistName", listModel.responseData!!.name)
+                                            i.putExtra("PlaylistImage", "")
+                                            i.putExtra("PlaylistSource", "0")
+                                            i.putExtra("MyDownloads", "Your Created")
+                                            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                            ctx.startActivity(i)
+                                            act.overridePendingTransition(0, 0)
+                                            dialog.dismiss()
+//                                        } catch (e: Exception) {
+//                                            e.printStackTrace()
+//                                            dialog.dismiss()
+//                                        }
+                                    }
+                                }
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                        }
+                    })
+                } else {
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx)
+                }
+            }
+            tvCancel.setOnClickListener { v: View? -> dialog.dismiss() }
+            dialog.show()
+            dialog.setCancelable(false)
+        }
+
         return view
     }
 

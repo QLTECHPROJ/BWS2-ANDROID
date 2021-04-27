@@ -1,27 +1,38 @@
 package com.brainwellnessspa.DashboardTwoModule
 
+import android.app.Dialog
 import android.app.UiModeManager
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
+import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel
 import com.brainwellnessspa.R
@@ -31,6 +42,11 @@ import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
 import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
@@ -76,9 +92,322 @@ class MyPlayerActivity :AppCompatActivity(){
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.audio_player_new_layout, binding.playerControlView, false)
         binding.playerControlView.addView(exoBinding.getRoot())
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        binding.llInfo.setOnClickListener { v ->
+//            TODO Mansi  Hint This code is Audio Detail Dialog
+            val dialog = Dialog(ctx as MyPlayerActivity)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.open_detail_page_layout)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.blue_transparent)))
+            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            val tvTitleDec = dialog.findViewById<TextView>(R.id.tvTitleDec)
+            val tvSubDec = dialog.findViewById<TextView>(R.id.tvSubDec)
+            val tvReadMore = dialog.findViewById<TextView>(R.id.tvReadMore)
+            val tvSubDire = dialog.findViewById<TextView>(R.id.tvSubDire)
+            val tvDire = dialog.findViewById<TextView>(R.id.tvDire)
+            val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
+            val tvDuration = dialog.findViewById<TextView>(R.id.tvDuration)
+            val ivRestaurantImage = dialog.findViewById<ImageView>(R.id.ivRestaurantImage)
+            val ivLike = dialog.findViewById<ImageView>(R.id.ivLike)
+            val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
+            val progressBarHolder = dialog.findViewById<FrameLayout>(R.id.progressBarHolder)
+            val cvImage = dialog.findViewById<RelativeLayout>(R.id.cvImage)
+            val llLike = dialog.findViewById<LinearLayout>(R.id.llLike)
+            val llAddPlaylist = dialog.findViewById<LinearLayout>(R.id.llAddPlaylist)
+            val llAddQueue = dialog.findViewById<LinearLayout>(R.id.llAddQueue)
+            val llDownload = dialog.findViewById<LinearLayout>(R.id.llDownload)
+            val llRemovePlaylist = dialog.findViewById<LinearLayout>(R.id.llRemovePlaylist)
+            val llShuffle = dialog.findViewById<LinearLayout>(R.id.llShuffle)
+            val llRepeat = dialog.findViewById<LinearLayout>(R.id.llRepeat)
+            val llViewQueue = dialog.findViewById<LinearLayout>(R.id.llViewQueue)
+            val rvDirlist: RecyclerView = dialog.findViewById(R.id.rvDirlist)
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                progressBar.visibility = View.VISIBLE
+                progressBar.invalidate()
+                val listCall = APINewClient.getClient().getAudioDetail(CoUserID, mainPlayModelList[position].id)
+                listCall.enqueue(object : Callback<AudioDetailModel?> {
+                    override fun onResponse(call: Call<AudioDetailModel?>, response: Response<AudioDetailModel?>) {
+                        try {
+                            progressBar.visibility = View.GONE
+                            val listModel = response.body()
+                            cvImage.visibility = View.VISIBLE
+                            llLike.visibility = View.GONE
+                            llAddPlaylist.visibility = View.VISIBLE
+                            llAddQueue.visibility = View.GONE
+                            llDownload.visibility = View.VISIBLE
+                            llShuffle.visibility = View.VISIBLE
+                            llRepeat.visibility = View.VISIBLE
+                            llViewQueue.visibility = View.VISIBLE
+//                            AudioId = listModel!!.responseData!![0].id
+                            llRemovePlaylist.visibility = View.VISIBLE
+
+//                        if (comeFrom.equalsIgnoreCase("myPlayList") || comeFrom.equalsIgnoreCase("myLikeAudioList")) {
+//                            binding.llRemovePlaylist.setVisibility(View.GONE);
+//                        } else {
+//                            if (MyPlaylist.equalsIgnoreCase("myPlaylist")) {
+//                                binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+//                            } else {
+//                                binding.llRemovePlaylist.setVisibility(View.GONE);
+//                            }
+//                        }
+                            try {
+                                Glide.with(ctx as MyPlayerActivity).load(listModel!!.responseData!![0].imageFile).thumbnail(0.05f)
+                                        .apply(RequestOptions.bitmapTransform(RoundedCorners(12))).priority(Priority.HIGH)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage)
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                            }
+                            if (listModel!!.responseData!![0].audioDescription.equals("", ignoreCase = true)) {
+                                tvTitleDec.visibility = View.GONE
+                                tvSubDec.visibility = View.GONE
+                            } else {
+                                tvTitleDec.visibility = View.VISIBLE
+                                tvSubDec.visibility = View.VISIBLE
+                            }
+                            tvSubDec.text = listModel.responseData!![0].audioDescription
+                            val linecount = tvSubDec.lineCount
+                            if (linecount >= 4) {
+                                tvReadMore.visibility = View.VISIBLE
+                            } else {
+                                tvReadMore.visibility = View.GONE
+                            }
+                            if (listModel.responseData!![0].audiomastercat.equals("", ignoreCase = true)) {
+                                tvDesc.visibility = View.GONE
+                            } else {
+                                tvDesc.visibility = View.VISIBLE
+                                tvDesc.text = listModel.responseData!![0].audiomastercat
+                            }
+                            tvDuration.text = listModel.responseData!![0].audioDuration
+                            if (listModel.responseData!![0].audioDirection.equals("", ignoreCase = true)) {
+                                tvSubDire.text = ""
+                                tvSubDire.visibility = View.GONE
+                                tvDire.visibility = View.GONE
+                            } else {
+                                tvSubDire.text = listModel.responseData!![0].audioDirection
+                                tvSubDire.visibility = View.VISIBLE
+                                tvDire.visibility = View.VISIBLE
+                            }
+
+//                            if (listModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
+//                                ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+//                            } else if (!listModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
+//                                ivLike.setImageResource(R.drawable.ic_like_white_icon);
+//                            }
+                            tvReadMore.setOnClickListener { v12: View? ->
+                                val dialog1 = Dialog(ctx as MyPlayerActivity)
+                                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                dialog1.setContentView(R.layout.full_desc_layout)
+                                dialog1.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                dialog1.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                val tvDesc = dialog1.findViewById<TextView>(R.id.tvDesc)
+                                val tvClose = dialog1.findViewById<RelativeLayout>(R.id.tvClose)
+                                tvDesc.text = listModel.responseData!![0].audioDescription
+                                dialog1.setOnKeyListener { v3: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog1.dismiss()
+                                        return@setOnKeyListener true
+                                    }
+                                    false
+                                }
+                                tvClose.setOnClickListener { v14: View? -> dialog1.dismiss() }
+                                dialog1.show()
+                                dialog1.setCancelable(false)
+                            }
+                            if (listModel.responseData!![0].audioSubCategory.equals("", ignoreCase = true)) {
+                                rvDirlist.visibility = View.GONE
+                            } else {
+                                rvDirlist.visibility = View.VISIBLE
+                                val elements = listModel.responseData!![0].audioSubCategory!!.split(",").toTypedArray()
+                                val direction = Arrays.asList(*elements)
+                                val directionAdapter = DirectionAdapter(direction, ctx)
+                                val recentlyPlayed: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+                                rvDirlist.layoutManager = recentlyPlayed
+                                rvDirlist.itemAnimator = DefaultItemAnimator()
+                                rvDirlist.adapter = directionAdapter
+                            }
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<AudioDetailModel?>, t: Throwable) {
+                        progressBar.visibility = View.GONE
+                    }
+                })
+            }
+            llAddPlaylist.setOnClickListener { v13: View? ->
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    BWSApplication.showProgressBar(progressBar, progressBarHolder, ctx as MyPlayerActivity)
+                    val listCall = APINewClient.getClient().RemoveAudio(CoUserID,  /*AudioId*/"10",  /*PlaylistId*/"34")
+                    listCall.enqueue(object : Callback<SucessModel?> {
+                        override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
+                            try {
+                                if (response.isSuccessful) {
+                                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, ctx as MyPlayerActivity)
+                                    val listModel = response.body()
+                                    val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
+                                    val audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true)
+                                    //                                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+//                                int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+//
+//                                if (audioPlay) {
+//                                    if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+//                                        Gson gson12 = new Gson();
+//                                        String json12 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson12));
+//                                        Type type1 = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+//                                        }.getType();
+//                                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList1 = gson12.fromJson(json12, type1);
+//
+//                                        if (!comeFrom.equalsIgnoreCase("")) {
+//                                            mData.remove(position);
+//                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+//                                            int oldpos = pos;
+//                                            if (pID.equalsIgnoreCase(PlaylistId)) {
+//                                                if (mData.size() != 0) {
+//                                                    if (pos == position && position < mData.size() - 1) {
+//                                                        pos = pos;
+//                                                    } else if (pos == position && position == mData.size() - 1) {
+//                                                        pos = 0;
+//                                                    } else if (pos < position && pos < mData.size() - 1) {
+//                                                        pos = pos;
+//                                                    } else if (pos < position && pos == mData.size() - 1) {
+//                                                        pos = pos;
+//                                                    } else if (pos > position && pos == mData.size()) {
+//                                                        pos = pos - 1;
+//                                                    }
+//                                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+//                                                    SharedPreferences.Editor editor = sharedd.edit();
+//                                                    Gson gson = new Gson();
+//                                                    String json = gson.toJson(mData);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+//                                                    editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+//                                                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+//                                                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistId);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+//                                                    editor.commit();
+//                                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+//                                                    }.getType();
+//                                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+//                                                    listSize = arrayList.size();
+//                                                    for (int i = 0; i < listSize; i++) {
+//                                                        MainPlayModel mainPlayModel = new MainPlayModel();
+//                                                        mainPlayModel.setID(arrayList.get(i).getID());
+//                                                        mainPlayModel.setName(arrayList.get(i).getName());
+//                                                        mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+//                                                        mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
+//                                                        mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+//                                                        mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+//                                                        mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+//                                                        mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+//                                                        mainPlayModel.setLike(arrayList.get(i).getLike());
+//                                                        mainPlayModel.setDownload(arrayList.get(i).getDownload());
+//                                                        mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+//                                                        mainPlayModelList.add(mainPlayModel);
+//                                                    }
+//                                                    SharedPreferences sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+//                                                    SharedPreferences.Editor editor1 = sharedz.edit();
+//                                                    Gson gsonz = new Gson();
+//                                                    String jsonz = gsonz.toJson(mainPlayModelList);
+//                                                    editor1.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+//                                                    editor1.commit();
+//                                                    if (player != null) {
+//                                                        player.removeMediaItem(oldpos);
+//                                                        player.setPlayWhenReady(true);
+//                                                    }
+//                                                    finish();
+//                                                }
+//                                            }
+//                                            finish();
+//                                        } else {
+//                                            mainPlayModelList.remove(pos);
+//                                            arrayList1.remove(pos);
+//                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+//                                            if (pID.equalsIgnoreCase(PlaylistId)) {
+//                                                int oldpos = pos;
+//                                                if (mainPlayModelList.size() != 0) {
+//                                                    if (pos < mainPlayModelList.size() - 1) {
+//                                                        pos = pos;
+//                                                    } else if (pos == mainPlayModelList.size() - 1) {
+//                                                        pos = 0;
+//                                                    } else if (pos == mainPlayModelList.size()) {
+//                                                        pos = 0;
+//                                                    } else if (pos > mainPlayModelList.size()) {
+//                                                        pos = pos - 1;
+//                                                    }
+//                                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+//                                                    SharedPreferences.Editor editor = sharedd.edit();
+//                                                    Gson gson = new Gson();
+//                                                    String json = gson.toJson(mainPlayModelList);
+//                                                    String json1 = gson.toJson(arrayList1);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+//                                                    editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+//                                                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+//                                                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistId);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
+//                                                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+//                                                    editor.commit();
+////                                                if(mainPlayModelList.size()==1){
+////                                                    miniPlayer = 1;
+////                                                    audioClick = true;
+////                                                    callNewPlayerRelease();
+////                                                }else {
+//                                                    if (player != null) {
+//                                                        player.removeMediaItem(oldpos);
+//                                                    }
+////                                                }
+//                                                    Intent i = new Intent(ctx, AudioPlayerActivity.class);
+//                                                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                                                    ctx.startActivity(i);
+//                                                    finish();
+//                                                    overridePendingTransition(0, 0);
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+                                }
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<SucessModel?>, t: Throwable) {
+                            BWSApplication.hideProgressBar(progressBar, progressBarHolder, ctx as MyPlayerActivity)
+                        }
+                    })
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx)
+                }
+            }
+            llAddPlaylist.setOnClickListener { view11: View? ->
+
+//                comeAddPlaylist = 2;
+                val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.putExtra("AudioId", mainPlayModelList[position].id)
+                i.putExtra("ScreenView", "Audio Details Screen")
+                i.putExtra("PlaylistID", "")
+                i.putExtra("PlaylistName", "")
+                i.putExtra("PlaylistImage", "")
+                i.putExtra("PlaylistType", "")
+                i.putExtra("Liked", "0")
+                startActivity(i)
+            }
+            dialog.setOnKeyListener { v1: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            dialog.show()
+            dialog.setCancelable(false)
+        }
         makePlayerArray()
     }
-
+  
     private fun makePlayerArray() {
         audioClick = true
         val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -536,7 +865,7 @@ class MyPlayerActivity :AppCompatActivity(){
                 override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
                     try {
                         val model: SucessModel = response.body()!!
-                    }catch (  e:java.lang.Exception) {
+                    } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }
                 }
