@@ -28,6 +28,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RecommendedCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecommendedCategoryBinding
@@ -224,7 +225,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     Log.e("posItem", posItem.toString())
 
                     binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
-                    catList.catListadapter = SelectedCategory(binding,ctx)
+                    catList.catListadapter = SelectedCategory(binding, ctx, catList.selectedCategoriesName)
                     binding.rvSelectedCategory.adapter = catList.catListadapter
                 }
             }
@@ -313,18 +314,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
         if(selectedCategoriesTitle.size>0){
             binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
-            catListadapter = SelectedCategory(binding,ctx!!)
+            catListadapter = SelectedCategory(binding,ctx!!,selectedCategoriesName)
             binding.rvSelectedCategory.adapter = catListadapter
         }
     }
 
-    class SelectedCategory(var binding: ActivityRecommendedCategoryBinding, var ctx: Context) : RecyclerView.Adapter<SelectedCategory.MyViewHolder>() {
-        var catList = RecommendedCategoryActivity()
-        val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
-        val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, catList.gson.toString())
-        val json3 = shared.getString(CONSTANTS.selectedCategories, catList.gson.toString())
-        val json5 = shared.getString(CONSTANTS.selectedCategoriesName, catList.gson.toString())
-        val json4 = shared.getString(CONSTANTS.selectedCategoriesSort, catList.gson.toString())
+    class SelectedCategory(var binding: ActivityRecommendedCategoryBinding, var ctx: Context, var selectedCategoriesName: ArrayList<String>) : RecyclerView.Adapter<SelectedCategory.MyViewHolder>() {
 
         inner class MyViewHolder(var bindingAdapter: SelectedCategoryRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -334,17 +329,9 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            getCatSaveData()
-            if (!json2.equals(catList.gson.toString(), ignoreCase = true)) {
-                val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
-                catList.selectedCategoriesTitle = catList.gson.fromJson(json2, type1)
-                catList.selectedCategories = catList.gson.fromJson(json3, type1)
-                catList.selectedCategoriesName = catList.gson.fromJson(json5, type1)
-                catList.selectedCategoriesSort = catList.gson.fromJson(json4, type1)
-            }
-            holder.bindingAdapter.tvCategory.text = catList.selectedCategoriesName[position]
-            holder.bindingAdapter.tvhours.text = position.toString()
-            if(catList.selectedCategoriesTitle.size == 3){
+            holder.bindingAdapter.tvCategory.text = selectedCategoriesName[position]
+            holder.bindingAdapter.tvhours.text = (position + 1).toString()
+            if(selectedCategoriesName.size == 3){
                 if(position==0){
                     holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
@@ -355,7 +342,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_blue)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_blue)
                 }
-            }else  if(catList.selectedCategoriesTitle.size == 2){
+            }else  if(selectedCategoriesName.size == 2){
                 if(position==0){
                     holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
@@ -363,33 +350,15 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_green)
                 }
-            }else  if(catList.selectedCategoriesTitle.size == 1){
+            }else  if(selectedCategoriesName.size == 1){
                 if(position==0){
                     holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
                 }
             }
-            val elements: Array<String> = json5!!.split(",".toRegex()).toTypedArray()
-            val category = Arrays.asList(*elements)
-            holder.bindingAdapter.tvCategory.text = category.toString()
-        }
-        private fun getCatSaveData() {
-            val gson=Gson()
-            val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
-            val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, gson.toString())
-            val json3 = shared.getString(CONSTANTS.selectedCategories, gson.toString())
-            val json5 = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
-            val json4 = shared.getString(CONSTANTS.selectedCategoriesSort, gson.toString())
-            if (!json2.equals(gson.toString(), ignoreCase = true)) {
-                val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
-                catList.selectedCategoriesTitle = gson.fromJson(json2, type1)
-                catList.selectedCategories = gson.fromJson(json3, type1)
-                catList.selectedCategoriesName = gson.fromJson(json5, type1)
-                catList.selectedCategoriesSort = gson.fromJson(json4, type1)
-            }
         }
         override fun getItemCount(): Int {
-            return catList.selectedCategoriesTitle.size
+            return selectedCategoriesName.size
         }
     }
 
