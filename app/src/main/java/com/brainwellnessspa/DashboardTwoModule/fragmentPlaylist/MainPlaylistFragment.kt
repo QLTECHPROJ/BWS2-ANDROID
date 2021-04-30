@@ -23,14 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardModule.Account.AccountFragment
-import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel
 import com.brainwellnessspa.DashboardModule.Search.SearchFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.MainPlaylistLibraryModel
 import com.brainwellnessspa.DashboardTwoModule.manage.ManageFragment
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.APIClient
+import com.brainwellnessspa.RoomDataBase.DatabaseClient
+import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetailsUnique
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.FragmentPlaylistBinding
@@ -52,6 +52,7 @@ import java.util.*
 class MainPlaylistFragment : Fragment() {
     lateinit var binding: FragmentPlaylistBinding
     var CoUserID: String? = ""
+    var USERID: String? = ""
     var Check: String? = ""
     var AudioFlag: String? = ""
     var adapter: MainPlayListAdapter? = null
@@ -68,6 +69,7 @@ class MainPlaylistFragment : Fragment() {
         ctx = requireActivity()
         act = requireActivity()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE)
         AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0")
@@ -135,12 +137,15 @@ class MainPlaylistFragment : Fragment() {
                             listModelGloble = listModel!!.responseData
                             //                            adapter = new MainPlayListAdapter();
 //                            binding.rvMainPlayList.setAdapter(adapter);
+
+                            //                            adapter = new MainPlayListAdapter();
+//                            binding.rvMainPlayList.setAdapter(adapter);
+                            GetPlaylistDetail(listModel.responseData!!)
                             val section = ArrayList<String>()
                             for (i in listModel.responseData!!.indices) {
                                 section.add(listModel.responseData!![i].view!!)
                             }
-                            adapter = MainPlayListAdapter(ctx, binding!!, act, listModel.responseData!!, CoUserID, playlistAdapter)
-                            binding!!.rvMainPlayList.adapter = adapter
+
                             if (comeFrom.equals("onResume", ignoreCase = true)) {
                                 val p = Properties()
                                 p.putValue("userId", CoUserID)
@@ -166,11 +171,51 @@ class MainPlaylistFragment : Fragment() {
             val listModel = MainPlaylistLibraryModel.ResponseData()
             listModel.getLibraryID = "2"
             listModel.details = details
-            listModel.userID = CoUserID
+            listModel.userID = USERID
+            listModel.coUserId = CoUserID
             listModel.view = "My Downloads"
             responseData.add(listModel)
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
+    }
+    private fun GetPlaylistDetail(responseData: ArrayList<MainPlaylistLibraryModel.ResponseData>) {
+        DatabaseClient
+                .getInstance(activity)
+                .getaudioDatabase()
+                .taskDao()
+                .allPlaylist1.observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
+                    val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
+                    if (audioList.isNotEmpty()) {
+                        for (i in audioList.indices) {
+                            val detail = MainPlaylistLibraryModel.ResponseData.Detail()
+                            detail.totalAudio = audioList[i].totalAudio
+                            detail.totalhour = audioList[i].totalhour
+                            detail.totalminute = audioList[i].totalminute
+                            detail.playlistID = audioList[i].playlistID
+                            detail.playlistDesc = audioList[i].playlistDesc
+                            detail.playlistMastercat = audioList[i].playlistMastercat
+                            detail.playlistSubcat = audioList[i].playlistSubcat
+                            detail.playlistName = audioList[i].playlistName
+                            detail.playlistImage = audioList[i].playlistImage
+//                            detail.playlistImageDetails = audioList[i].playlistImageDetails
+                            detail.playlistID = audioList[i].playlistID
+                            detail.created = audioList[i].created
+                            details.add(detail)
+                        }
+                        for (i in responseData.indices) {
+                            if (responseData[i].view.equals("My Downloads", ignoreCase = true)) {
+                                responseData[i].details = details
+                            }
+                        }
+                        adapter = MainPlayListAdapter(ctx, binding, act, responseData, CoUserID, playlistAdapter)
+                        binding.rvMainPlayList.adapter = adapter
+                    } else {
+                        if (BWSApplication.isNetworkConnected(activity)) {
+                            adapter = MainPlayListAdapter(ctx, binding, act, responseData, CoUserID, playlistAdapter)
+                            binding.rvMainPlayList.adapter = adapter
+                        }
+                    }
+                })
     }
 
     private fun callBack() {

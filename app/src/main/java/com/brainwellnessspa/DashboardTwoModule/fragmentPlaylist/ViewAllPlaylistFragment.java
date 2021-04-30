@@ -26,6 +26,7 @@ import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -92,7 +93,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         return view;
     }
 
-    /*private void GetAllMedia() {
+    private void GetAllMedia() {
         DatabaseClient
                 .getInstance(getActivity())
                 .getaudioDatabase()
@@ -112,7 +113,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 detail.setPlaylistSubcat(audioList.get(i).getPlaylistSubcat());
                 detail.setPlaylistName(audioList.get(i).getPlaylistName());
                 detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
-                detail.setPlaylistImageDetails(audioList.get(i).getPlaylistImageDetails());
+//                detail.setPlaylistImageDetails("");
                 detail.setCreated(audioList.get(i).getCreated());
                 listModelList.add(detail);
             }
@@ -132,11 +133,10 @@ public class ViewAllPlaylistFragment extends Fragment {
             p.putValue("playlists", gson.toJson(section));
             p.putValue("section", ScreenView);
             BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen);
-            PlaylistAdapter adapter = new PlaylistAdapter(listModelList, IsLock);
+            PlaylistAdapter adapter = new PlaylistAdapter(listModelList);
             binding.rvMainAudio.setAdapter(adapter);
         });
     }
-*/
     private void callBack() {
         Fragment audioFragment = new MainPlaylistFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -147,11 +147,11 @@ public class ViewAllPlaylistFragment extends Fragment {
 
     @Override
     public void onResume() {
-//        if (MyDownloads.equalsIgnoreCase("1")) {
-//            GetAllMedia();
-//        } else {
-        prepareData();
-//        }
+        if (MyDownloads.equalsIgnoreCase("1")) {
+            GetAllMedia();
+        } else {
+            prepareData();
+        }
         super.onResume();
     }
 
@@ -262,7 +262,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                                 p.putValue("playlists", gson.toJson(section));
                                 p.putValue("section", ScreenView);
                                 BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen);
-                                PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().isLock());
+                                PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails());
                                 binding.rvMainAudio.setAdapter(adapter);
                             }
                         } catch (Exception e) {
@@ -289,9 +289,8 @@ public class ViewAllPlaylistFragment extends Fragment {
         int index = -1;
         private List<ViewAllPlayListModel.ResponseData.Detail> listModelList;
 
-        public PlaylistAdapter(List<ViewAllPlayListModel.ResponseData.Detail> listModelList, String IsLock) {
+        public PlaylistAdapter(List<ViewAllPlayListModel.ResponseData.Detail> listModelList) {
             this.listModelList = listModelList;
-            this.IsLock = IsLock;
         }
 
         @NonNull
@@ -384,7 +383,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                         i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                         i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
                         i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                        i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
+                        i.putExtra("PlaylistImageDetails", "");
                         i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
                         i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
                         i.putExtra("Totalminute", listModelList.get(position).getTotalminute());

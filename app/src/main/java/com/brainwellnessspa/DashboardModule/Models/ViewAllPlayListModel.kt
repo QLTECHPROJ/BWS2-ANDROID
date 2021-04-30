@@ -21,6 +21,8 @@ class ViewAllPlayListModel {
     var responseStatus: String? = null
 
     class ResponseData {
+
+
         @SerializedName("GetLibraryID")
         @Expose
         var getLibraryID: String? = null
@@ -29,13 +31,13 @@ class ViewAllPlayListModel {
         @Expose
         var view: String? = null
 
-        @SerializedName("IsLock")
-        @Expose
-        var isLock: String? = null
-
         @SerializedName("UserID")
         @Expose
         var userID: String? = null
+
+        @SerializedName("CoUserId")
+        @Expose
+        var coUserId: String? = null
 
         @SerializedName("Details")
         @Expose
@@ -65,11 +67,26 @@ class ViewAllPlayListModel {
             @SerializedName("PlaylistImage")
             @Expose
             var playlistImage: String? = null
+
+            @SerializedName("Created")
+            @Expose
             var created: String? = null
+
+            @SerializedName("TotalAudio")
+            @Expose
             var totalAudio: String? = null
+
+            @SerializedName("TotalDuration")
+            @Expose
+            var totalDuration: String? = null
+
+            @SerializedName("Totalhour")
+            @Expose
             var totalhour: String? = null
+
+            @SerializedName("Totalminute")
+            @Expose
             var totalminute: String? = null
-            var playlistImageDetails: String? = null
         }
     }
 }

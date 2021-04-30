@@ -6,37 +6,36 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.os.Bundle;
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
+import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
-
-import com.brainwellnessspa.R;
+import com.brainwellnessspa.R
+import com.brainwellnessspa.RoomDataBase.DatabaseClient
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetailsUniq
+import com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
-import com.brainwellnessspa.Utility.APIClient
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.*
@@ -49,6 +48,7 @@ import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 public class ManageFragment: Fragment() {
     lateinit var binding:FragmentManageBinding
@@ -122,17 +122,17 @@ public class ManageFragment: Fragment() {
                                     } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) ||
                                             listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
 //                                        try {
-                                            val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-                                            i.putExtra("New", 1)
-                                            i.putExtra("PlaylistID", listModel.responseData!!.id)
-                                            i.putExtra("PlaylistName", listModel.responseData!!.name)
-                                            i.putExtra("PlaylistImage", "")
-                                            i.putExtra("PlaylistSource", "0")
-                                            i.putExtra("MyDownloads", "Your Created")
-                                            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                            ctx.startActivity(i)
-                                            act.overridePendingTransition(0, 0)
-                                            dialog.dismiss()
+                                        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                                        i.putExtra("New", 1)
+                                        i.putExtra("PlaylistID", listModel.responseData!!.id)
+                                        i.putExtra("PlaylistName", listModel.responseData!!.name)
+                                        i.putExtra("PlaylistImage", "")
+                                        i.putExtra("PlaylistSource", "0")
+                                        i.putExtra("MyDownloads", "Your Created")
+                                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                        ctx.startActivity(i)
+                                        act.overridePendingTransition(0, 0)
+                                        dialog.dismiss()
 //                                        } catch (e: Exception) {
 //                                            e.printStackTrace()
 //                                            dialog.dismiss()
@@ -164,6 +164,44 @@ public class ManageFragment: Fragment() {
         prepareData()
         super.onResume()
     }
+    private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>) {
+        DatabaseClient
+                .getInstance(activity)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllDataz("").observe(requireActivity(), { downloadAudioDetails: List<DownloadAudioDetailsUniq> ->
+                    val details = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
+                    if (downloadAudioDetails.isNotEmpty()) {
+                        for (i in downloadAudioDetails.indices) {
+                            val detail = HomeDataModel.ResponseData.Audio.Detail()
+                            detail.id = downloadAudioDetails[i].id
+                            detail.name = downloadAudioDetails[i].name
+                            detail.audioFile = downloadAudioDetails[i].audioFile
+                            detail.audioDirection = downloadAudioDetails[i].audioDirection
+                            detail.audiomastercat = downloadAudioDetails[i].audiomastercat
+                            detail.audioSubCategory = downloadAudioDetails[i].audioSubCategory
+                            detail.imageFile = downloadAudioDetails[i].imageFile
+                            detail.audioDuration = downloadAudioDetails[i].audioDuration
+                            details.add(detail)
+                        }
+                        for (i in listModel.indices) {
+                            if (listModel[i].view.equals("My Downloads", ignoreCase = true)) {
+                                listModel[i].details = details
+                            }
+                        }
+                        val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
+
+                        audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1)
+                        binding.rvMainAudioList.adapter = audioAdapter
+                    } else {
+                        if (BWSApplication.isNetworkConnected(activity)) {
+                            val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
+                            audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1)
+                            binding.rvMainAudioList.adapter = audioAdapter
+                        }
+                    }
+                })
+    }
 
     fun callMainPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
@@ -172,26 +210,22 @@ public class ManageFragment: Fragment() {
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         var PlayerPosition:Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         if ((AudioPlayerFlag.equals("MainAudioList", ignoreCase = true) ||
-                        AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && MyPlaylist.equals(view, ignoreCase = true)) {
-            if(PlayFrom.equals(view, true)){
-                if (player != null) {
-                    if (position != PlayerPosition) {
-                        player.seekTo(position, 0)
-                        player.playWhenReady = true
-                        val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
-                        val editor = sharedxx.edit()
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-                        editor.apply()
-                    }
-                    callMyPlayer(ctx,act)
-                }else{
-                    callPlayer(position,view,listModel,ctx,act)
+                        AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && PlayFrom.equals(view, ignoreCase = true)) {
+            if (player != null) {
+                if (position != PlayerPosition) {
+                    player.seekTo(position, 0)
+                    player.playWhenReady = true
+                    val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+                    val editor = sharedxx.edit()
+                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+                    editor.apply()
                 }
-            }else{
-                callPlayer(position,view,listModel,ctx,act)
+                callMyPlayer(ctx, act)
+            } else {
+                callPlayer(position, view, listModel, ctx, act)
             }
         }else{
-            callPlayer(position,view,listModel,ctx,act)
+            callPlayer(position, view, listModel, ctx, act)
         }
     }
 
@@ -202,24 +236,44 @@ public class ManageFragment: Fragment() {
         act.overridePendingTransition(0, 0)
     }
 
-    private fun callPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context,act: Activity) {
+    private fun callPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity) {
+        callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
-        val json = gson.toJson(listModel)
+        var json =""
+        if(view.equals("My Downloads", true)){
+            val downloadAudioDetails = ArrayList<DownloadAudioDetails>()
+            for (i in listModel.indices) {
+                val mainPlayModel = DownloadAudioDetails()
+                mainPlayModel.id = listModel[i].id
+                mainPlayModel.name = listModel[i].name
+                mainPlayModel.audioFile = listModel[i].audioFile
+                mainPlayModel.audioDirection = listModel[i].audioDirection
+                mainPlayModel.audiomastercat = listModel[i].audiomastercat
+                mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
+                mainPlayModel.imageFile = listModel[i].imageFile
+                mainPlayModel.audioDuration = listModel[i].audioDuration
+                downloadAudioDetails.add(mainPlayModel)
+            }
+            json = gson.toJson(downloadAudioDetails)
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio")
+        }else {
+            json = gson.toJson(listModel)
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "MainAudioList")
+        }
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
-        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "MainAudioList")
         editor.apply()
         audioClick = true
-        callMyPlayer(ctx,act)
+        callMyPlayer(ctx, act)
     }
 
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder,act)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall = APINewClient.getClient().getHomeData(CoUserID)
             listCall.enqueue(object : Callback<HomeDataModel?> {
                 override fun onResponse(call: Call<HomeDataModel?>, response: Response<HomeDataModel?>) {
@@ -262,15 +316,25 @@ public class ManageFragment: Fragment() {
                                 .replace(R.id.flContainer, viewAllAudioFragment)
                                 .commit()*/
                     }
-                    audioAdapter = AudioAdapter(listModel.responseData!!.audio, ctx, binding, act, fragmentManager1)
-                    binding.rvMainAudioList.adapter = audioAdapter
-
+                    callObserverMethod(listModel.responseData!!.audio)
                 }
 
                 override fun onFailure(call: Call<HomeDataModel?>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
+        }else{
+            val responseData = ArrayList<HomeDataModel.ResponseData.Audio>()
+            val details = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
+            val listModel = HomeDataModel.ResponseData.Audio()
+            listModel.homeAudioID = "6"
+            listModel.details = details
+            listModel.view = "My Downloads"
+            listModel.coUserId = CoUserID
+            listModel.userID = USERID
+            responseData.add(listModel)
+            callObserverMethod(responseData)
+            BWSApplication.showToast(getString(R.string.no_server_found), act)
         }
     }
 
@@ -504,7 +568,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel,ctx,act)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
         }
 
@@ -527,7 +591,7 @@ public class ManageFragment: Fragment() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.binding.tvTitle.setText(listModel[position].name)
+            holder.binding.tvTitle.text = listModel[position].name
             val measureRatio = BWSApplication.measureRatio(ctx, 20f, 1f, 1f, 0.48f, 20f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
@@ -567,6 +631,9 @@ public class ManageFragment: Fragment() {
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            holder.binding.llMainLayout.setOnClickListener {
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
+            }
         }
 
         override fun getItemCount(): Int {

@@ -1278,7 +1278,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                                     Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
                                     }.getType();
                                     ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+
                                     String json2 = gson.toJson(arrayList);
                                     editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
                                 } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {

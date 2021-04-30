@@ -434,8 +434,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -919,7 +917,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                                     Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
                                     }.getType();
                                     ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
-                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+//                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
                                     String json2 = gson.toJson(arrayList);
                                     editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
                                 } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
@@ -2890,8 +2888,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -3192,8 +3188,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }

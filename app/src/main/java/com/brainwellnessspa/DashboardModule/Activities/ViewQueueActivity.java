@@ -1081,8 +1081,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1408,8 +1406,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }

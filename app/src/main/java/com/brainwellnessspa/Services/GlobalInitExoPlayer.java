@@ -1010,8 +1010,6 @@ Appointment Audios dddd*/
                             mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                             mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                             mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                            mainPlayModel.setLike(arrayList.get(i).getLike());
-                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
                             mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                             arrayList1.add(mainPlayModel);
                         }

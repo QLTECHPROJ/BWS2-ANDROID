@@ -56,17 +56,64 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />
 
-                    <ImageView
-                        android:id="@+id/ivMore"
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
-                        android:src="@drawable/ic_menu_icon"
-                        app:tint="@color/white"
-                        android:visibility="gone"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_7sdp"
+                        android:weightSum="1">
 
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_weight="0.80"
+                            android:gravity="bottom"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_2sdp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:id="@+id/tvAudioName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/cvImage"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:gravity="start"
+                                android:maxLines="3"
+                                android:paddingLeft="@dimen/_2sdp"
+                                android:paddingTop="@dimen/_8sdp"
+                                android:paddingRight="@dimen/_2sdp"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_13sdp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llMore"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_weight="0.20"
+                            android:gravity="bottom"
+                            android:visibility="gone"
+                            android:paddingVertical="2dp">
+
+                            <ImageView
+                                android:id="@+id/ivMore"
+                                android:layout_width="@dimen/_30sdp"
+                                android:layout_height="@dimen/_30sdp"
+                                android:src="@drawable/ic_menu_icon"
+                                app:tint="@color/white" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/llPlaylistName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"

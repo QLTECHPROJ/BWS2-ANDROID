@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel
+import com.brainwellnessspa.DashboardTwoModule.Model.sendRecommndedData
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -28,7 +29,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class RecommendedCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecommendedCategoryBinding
@@ -65,7 +66,20 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         prepareRecommnedData()
 
         binding.btnContinue.setOnClickListener {
-//            sendCategoryData()
+
+            var  array= arrayListOf<sendRecommndedData>()
+
+            for(i in 0 until selectedCategoriesTitle.size){
+              var sendR:sendRecommndedData = sendRecommndedData()
+
+                sendR.View = (selectedCategoriesTitle[i])
+                sendR.ProblemName = (selectedCategoriesName[i])
+                array.add(sendR)
+            }
+
+
+
+            sendCategoryData(gson.toJson(array))
         }
     }
 
@@ -88,8 +102,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
 //                                binding.rvPerantCat.adapter = adapter1
 //                            }else{
-                                adapter1 = AllCategory(binding, listModel.responseData, ctx!!)
-                                binding.rvPerantCat.adapter = adapter1
+                            adapter1 = AllCategory(binding, listModel.responseData, ctx!!)
+                            binding.rvPerantCat.adapter = adapter1
 //                            }
                         }
                     } catch (e: Exception) {
@@ -198,10 +212,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             } else {
                                 if (catList.selectedCategoriesTitle.size < 3) {
 //                                    if (pos > catList.selectedCategoriesTitle.size) {
-                                        catList.selectedCategoriesTitle.add( listModel[pos].view.toString())
+                                        catList.selectedCategoriesTitle.add(listModel[pos].view.toString())
                                         catList.selectedCategories.add(adapterPosition.toString())
                                         catList.selectedCategoriesName.add(listModel[pos].details!![position].problemName.toString())
-                                        catList.selectedCategoriesSort.add( pos.toString())
+                                        catList.selectedCategoriesSort.add(pos.toString())
 //                                    } else {
 //                                        catList.selectedCategoriesTitle.add(pos, listModel[pos].view.toString())
 //                                        catList.selectedCategories.add(pos, adapterPosition.toString())
@@ -326,7 +340,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
         if(selectedCategoriesTitle.size>0){
             binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
-            catListadapter = SelectedCategory(binding,ctx!!,selectedCategoriesName)
+            catListadapter = SelectedCategory(binding, ctx!!, selectedCategoriesName)
             binding.rvSelectedCategory.adapter = catListadapter
         }
     }
@@ -374,10 +388,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendCategoryData() {
+    private fun sendCategoryData(toJson: String) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SucessModel> = APINewClient.getClient().getSaveRecommendedCategory(CoUserID, gson.toJson(selectedCategoriesName).toString(), SleepTime)
+            val listCall: Call<SucessModel> = APINewClient.getClient().getSaveRecommendedCategory(CoUserID,toJson, SleepTime)
             listCall.enqueue(object : Callback<SucessModel> {
                 override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
                     try {

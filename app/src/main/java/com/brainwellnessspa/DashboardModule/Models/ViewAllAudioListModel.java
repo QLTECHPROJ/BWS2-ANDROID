@@ -55,55 +55,30 @@ public class ViewAllAudioListModel {
     }
 
     public static class ResponseData  implements Parcelable {
-        @SerializedName("HomeID")
+
+
+        @SerializedName("HomeAudioID")
         @Expose
-        private String homeID;
+        public String homeAudioID;
         @SerializedName("View")
         @Expose
-        private String view;
-        @SerializedName("IsLock")
-        @Expose
-        private String IsLock;
+        public String view;
         @SerializedName("UserID")
         @Expose
-        private String userID;
+        public String userID;
+        @SerializedName("CoUserId")
+        @Expose
+        public String coUserId;
         @SerializedName("Details")
         @Expose
-        private ArrayList<Detail> details = null;
+        public ArrayList<Detail> details = null;
 
-        protected ResponseData(Parcel in) {
-            homeID = in.readString();
-            view = in.readString();
-            userID = in.readString();
-            IsLock = in.readString();
+        public String getHomeAudioID() {
+            return homeAudioID;
         }
 
-        public static final Creator<MainAudioModel.ResponseData> CREATOR = new Creator<MainAudioModel.ResponseData>() {
-            @Override
-            public MainAudioModel.ResponseData createFromParcel(Parcel in) {
-                return new MainAudioModel.ResponseData(in);
-            }
-
-            @Override
-            public MainAudioModel.ResponseData[] newArray(int size) {
-                return new MainAudioModel.ResponseData[size];
-            }
-        };
-
-        public String getHomeID() {
-            return homeID;
-        }
-
-        public void setHomeID(String homeID) {
-            this.homeID = homeID;
-        }
-
-        public String getIsLock() {
-            return IsLock;
-        }
-
-        public void setIsLock(String isLock) {
-            IsLock = isLock;
+        public void setHomeAudioID(String homeAudioID) {
+            this.homeAudioID = homeAudioID;
         }
 
         public String getView() {
@@ -122,6 +97,14 @@ public class ViewAllAudioListModel {
             this.userID = userID;
         }
 
+        public String getCoUserId() {
+            return coUserId;
+        }
+
+        public void setCoUserId(String coUserId) {
+            this.coUserId = coUserId;
+        }
+
         public ArrayList<Detail> getDetails() {
             return details;
         }
@@ -130,6 +113,22 @@ public class ViewAllAudioListModel {
             this.details = details;
         }
 
+        public static Creator<MainAudioModel.ResponseData> getCREATOR() {
+            return CREATOR;
+        }
+
+        public static final Creator<MainAudioModel.ResponseData> CREATOR = new Creator<MainAudioModel.ResponseData>() {
+            @Override
+            public MainAudioModel.ResponseData createFromParcel(Parcel in) {
+                return new MainAudioModel.ResponseData(in);
+            }
+
+            @Override
+            public MainAudioModel.ResponseData[] newArray(int size) {
+                return new MainAudioModel.ResponseData[size];
+            }
+        };
+
         @Override
         public int describeContents() {
             return 0;
@@ -137,54 +136,47 @@ public class ViewAllAudioListModel {
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(homeID);
+            parcel.writeString(homeAudioID);
             parcel.writeString(view);
             parcel.writeString(userID);
-            parcel.writeString(IsLock);
+            parcel.writeString(coUserId);
         }
 
         public static class Detail  implements Parcelable {
             @SerializedName("ID")
             @Expose
-            private String iD;
+            public String ID;
             @SerializedName("Name")
             @Expose
-            private String name;
+            public String name;
             @SerializedName("AudioFile")
             @Expose
-            private String audioFile;
+            public String audioFile;
             @SerializedName("ImageFile")
             @Expose
-            private String imageFile;
+            public String imageFile;
             @SerializedName("AudioDuration")
             @Expose
-            private String audioDuration;
+            public String audioDuration;
             @SerializedName("AudioDirection")
             @Expose
-            private String audioDirection;
-            @SerializedName("IsPlay")
-            @Expose
-            private String isPlay;
+            public String audioDirection;
             @SerializedName("Audiomastercat")
             @Expose
-            private String audiomastercat;
+            public String audiomastercat;
             @SerializedName("AudioSubCategory")
             @Expose
-            private String audioSubCategory;
-            @SerializedName("Like")
+            public String audioSubCategory;
+            @SerializedName("IsPlay")
             @Expose
-            private String like;
-            @SerializedName("Download")
-            @Expose
-            private String download;
+            public String isPlay;
             @SerializedName("Bitrate")
             @Expose
-            private String bitrate;
-
+            public String bitrate;
             public Detail() {
             }
             protected Detail(Parcel in) {
-                iD = in.readString();
+                ID = in.readString();
                 name = in.readString();
                 audioFile = in.readString();
                 imageFile = in.readString();
@@ -193,8 +185,6 @@ public class ViewAllAudioListModel {
                 isPlay = in.readString();
                 audiomastercat = in.readString();
                 audioSubCategory = in.readString();
-                like = in.readString();
-                download = in.readString();
                 bitrate = in.readString();
             }
 
@@ -211,11 +201,11 @@ public class ViewAllAudioListModel {
             };
 
             public String getID() {
-                return iD;
+                return ID;
             }
 
-            public void setID(String iD) {
-                this.iD = iD;
+            public void setID(String id) {
+                this.ID = id;
             }
 
             public String getName() {
@@ -282,22 +272,6 @@ public class ViewAllAudioListModel {
                 this.isPlay = isPlay;
             }
 
-            public String getLike() {
-                return like;
-            }
-
-            public void setLike(String like) {
-                this.like = like;
-            }
-
-            public String getDownload() {
-                return download;
-            }
-
-            public void setDownload(String download) {
-                this.download = download;
-            }
-
             public String getBitrate() {
                 return bitrate;
             }
@@ -313,7 +287,7 @@ public class ViewAllAudioListModel {
 
             @Override
             public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeString(iD);
+                parcel.writeString(ID);
                 parcel.writeString(name);
                 parcel.writeString(audioFile);
                 parcel.writeString(imageFile);
@@ -322,8 +296,6 @@ public class ViewAllAudioListModel {
                 parcel.writeString(isPlay);
                 parcel.writeString(audiomastercat);
                 parcel.writeString(audioSubCategory);
-                parcel.writeString(like);
-                parcel.writeString(download);
                 parcel.writeString(bitrate);
             }
         }

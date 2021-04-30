@@ -155,6 +155,7 @@
                                 </LinearLayout>
 
                                 <LinearLayout
+                                    android:id="@+id/llPlayPause"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_gravity="center"
@@ -242,13 +243,18 @@
                         </LinearLayout>
 
                     </LinearLayout>
-
+                <LinearLayout
+                    android:id="@+id/llSuggested"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:layout_marginTop="-28dp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
-                        android:layout_marginLeft="@dimen/_17sdp"
-                        android:layout_marginTop="-28dp"
-                        android:layout_marginRight="@dimen/_17sdp"
                         android:background="@drawable/round_blue_border"
                         android:orientation="vertical">
 
@@ -278,117 +284,119 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llStepTwo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/llPlayer"
-                    android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_21sdp"
-                    android:layout_marginRight="@dimen/_16sdp"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/ivEditCategory"
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/ic_edit_number_icon"
-                            app:tint="@color/light_black" />
-
-                        <TextView
-                            android:id="@+id/tvArea"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:gravity="left"
-                            android:text="Area of focus"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_18sdp" />
-                    </RelativeLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvSelectedCategory"
+                    <LinearLayout
+                        android:id="@+id/llStepTwo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:nestedScrollingEnabled="true"
-                        android:overScrollMode="never"
-                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                        app:spanCount="3"
-                        tools:itemCount="3"
-                        tools:listitem="@layout/selected_category_raw" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_84sdp">
+                        android:layout_below="@+id/llPlayer"
+                        android:layout_marginTop="@dimen/_21sdp"
+                        android:orientation="vertical">
 
                         <RelativeLayout
-                            android:id="@+id/rlSearch"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/_16sdp"
-                            android:layout_marginTop="@dimen/_8sdp"
-                            android:layout_marginRight="@dimen/_16sdp"
-                            android:layout_weight="2"
-                            android:background="@drawable/rounded_extra_gray_corner"
-                            android:visibility="visible">
+                            android:layout_height="wrap_content">
 
                             <ImageView
-                                android:id="@+id/button1"
-                                android:layout_width="@dimen/_16sdp"
-                                android:layout_height="@dimen/_16sdp"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/_14sdp"
-                                android:src="@drawable/ic_search_icon"
-                                app:tint="@color/dark_blue_gray" />
+                                android:id="@+id/ivEditCategory"
+                                android:layout_width="@dimen/_20sdp"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_alignParentRight="true"
+                                android:src="@drawable/ic_edit_number_icon"
+                                app:tint="@color/light_black" />
 
                             <TextView
-                                android:id="@+id/tvSearch"
-                                android:layout_width="match_parent"
+                                android:id="@+id/tvArea"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/_16sdp"
-                                android:layout_marginTop="@dimen/_20sdp"
-                                android:layout_marginRight="@dimen/_16sdp"
-                                android:layout_toRightOf="@id/button1"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="start"
-                                android:text=""
-                                android:textColor="@color/light_gray"
-                                android:textSize="@dimen/_14sdp"
-                                android:visibility="gone" />
-
-                            <androidx.appcompat.widget.SearchView
-                                android:id="@+id/searchView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/button1"
-                                android:iconifiedByDefault="false"
-                                android:singleLine="true"
-                                android:theme="@style/WallSearchView"
-                                android:visibility="gone"
-                                app:queryBackground="@null"
-                                app:queryHint=""
-                                app:searchHintIcon="@null"
-                                app:searchIcon="@null" />
+                                android:gravity="left"
+                                android:text="Area of focus"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_18sdp" />
                         </RelativeLayout>
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvSelectedCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:nestedScrollingEnabled="true"
+                            android:overScrollMode="never"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:spanCount="3"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/selected_category_raw" />
                     </LinearLayout>
+                </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_84sdp"
+                    android:layout_below="@id/llPlayer">
+                    <RelativeLayout
+                        android:id="@+id/rlSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_48sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginRight="@dimen/_16sdp"
+                        android:layout_weight="2"
+                        android:background="@drawable/rounded_extra_gray_corner"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/button1"
+                            android:layout_width="@dimen/_16sdp"
+                            android:layout_height="@dimen/_16sdp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/_14sdp"
+                            android:src="@drawable/ic_search_icon"
+                            app:tint="@color/dark_blue_gray" />
+
+                        <TextView
+                            android:id="@+id/tvSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/_16sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:layout_marginRight="@dimen/_16sdp"
+                            android:layout_toRightOf="@id/button1"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="start"
+                            android:text=""
+                            android:textColor="@color/light_gray"
+                            android:textSize="@dimen/_14sdp"
+                            android:visibility="gone" />
+
+                        <androidx.appcompat.widget.SearchView
+                            android:id="@+id/searchView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/button1"
+                            android:iconifiedByDefault="false"
+                            android:singleLine="true"
+                            android:theme="@style/WallSearchView"
+                            android:visibility="gone"
+                            app:queryBackground="@null"
+                            app:queryHint=""
+                            app:searchHintIcon="@null"
+                            app:searchIcon="@null" />
+                    </RelativeLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/llplaylist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/llStepTwo"
+                    android:layout_below="@+id/llSearch"
                     android:orientation="vertical"
                     android:visibility="visible">
 
@@ -417,7 +425,7 @@
                     android:id="@+id/llAddAudio"
                     android:layout_width="match_parent"
                     android:layout_height="310dp"
-                    android:layout_below="@id/llStepTwo"
+                    android:layout_below="@id/llSearch"
                     android:layout_marginTop="@dimen/_51sdp"
                     android:gravity="center"
                     android:orientation="vertical"
