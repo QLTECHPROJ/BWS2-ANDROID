@@ -80,17 +80,17 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         val listModel: RecommendedCategoryModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             binding.rvPerantCat.layoutManager = LinearLayoutManager(ctx)
-                            if(listModel.responseData!!.size > 3) {
-                                val listModelNew = arrayListOf<RecommendedCategoryModel.ResponseData>()
-                                for(i in 0..2){
-                                    listModelNew.add(listModel.responseData!![i])
-                                }
-                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
-                                binding.rvPerantCat.adapter = adapter1
-                            }else{
+//                            if(listModel.responseData!!.size > 3) {
+//                                val listModelNew = arrayListOf<RecommendedCategoryModel.ResponseData>()
+//                                for(i in 0..2){
+//                                    listModelNew.add(listModel.responseData!![i])
+//                                }
+//                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
+//                                binding.rvPerantCat.adapter = adapter1
+//                            }else{
                                 adapter1 = AllCategory(binding, listModel.responseData, ctx!!)
                                 binding.rvPerantCat.adapter = adapter1
-                            }
+//                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -196,16 +196,18 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     }
                                 }
                             } else {
-                                if (pos > catList.selectedCategoriesTitle.size) {
-                                    catList.selectedCategoriesTitle.add(pos - 1, listModel[pos].view.toString())
-                                    catList.selectedCategories.add(pos - 1, adapterPosition.toString())
-                                    catList.selectedCategoriesName.add(pos - 1, listModel[pos].details!![position].problemName.toString())
-                                    catList.selectedCategoriesSort.add(pos - 1, pos.toString())
-                                } else {
-                                    catList.selectedCategoriesTitle.add(pos, listModel[pos].view.toString())
-                                    catList.selectedCategories.add(pos, adapterPosition.toString())
-                                    catList.selectedCategoriesName.add(pos, listModel[pos].details!![position].problemName.toString())
-                                    catList.selectedCategoriesSort.add(pos, pos.toString())
+                                if (catList.selectedCategoriesTitle.size < 3) {
+//                                    if (pos > catList.selectedCategoriesTitle.size) {
+                                        catList.selectedCategoriesTitle.add( listModel[pos].view.toString())
+                                        catList.selectedCategories.add(adapterPosition.toString())
+                                        catList.selectedCategoriesName.add(listModel[pos].details!![position].problemName.toString())
+                                        catList.selectedCategoriesSort.add( pos.toString())
+//                                    } else {
+//                                        catList.selectedCategoriesTitle.add(pos, listModel[pos].view.toString())
+//                                        catList.selectedCategories.add(pos, adapterPosition.toString())
+//                                        catList.selectedCategoriesName.add(pos, listModel[pos].details!![position].problemName.toString())
+//                                        catList.selectedCategoriesSort.add(pos, pos.toString())
+//                                    }
                                 }
                             }
                         }
@@ -249,19 +251,29 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     }
                 }
             }
-
+//            if (position == posItem) {
+//                if (pos == 0) {
+//                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+//                } else if (pos == 1) {
+//                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
+//                } else if (pos == 2) {
+//                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_blue)
+//                }
+//            } else {
+//                holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_gray)
+//            }
             if (position == posItem) {
-                if (pos == 0) {
+                if (catList.selectedCategoriesTitle.size == 1) {
                     holder.bindingAdapter.llCategory.visibility = View.GONE
                     holder.bindingAdapter.llCategoryPink.visibility = View.VISIBLE
                     holder.bindingAdapter.llCategoryGreen.visibility = View.GONE
                     holder.bindingAdapter.llCategoryBlue.visibility = View.GONE
-                } else if (pos == 1) {
+                } else if (catList.selectedCategoriesTitle.size == 2) {
                     holder.bindingAdapter.llCategory.visibility = View.GONE
                     holder.bindingAdapter.llCategoryPink.visibility = View.GONE
                     holder.bindingAdapter.llCategoryGreen.visibility = View.VISIBLE
                     holder.bindingAdapter.llCategoryBlue.visibility = View.GONE
-                } else if (pos == 2) {
+                } else if (catList.selectedCategoriesTitle.size == 3) {
                     holder.bindingAdapter.llCategory.visibility = View.GONE
                     holder.bindingAdapter.llCategoryPink.visibility = View.GONE
                     holder.bindingAdapter.llCategoryGreen.visibility = View.GONE
