@@ -34,7 +34,6 @@ class SplashActivity : AppCompatActivity() {
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
     var indexScore: String? = ""
-    var coUserDetailsModelGloble=CoUserDetailsModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
@@ -42,12 +41,27 @@ class SplashActivity : AppCompatActivity() {
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        checkAppVersion()
-        checkUserDetails()
+//        checkUserDetails()
     }
 
     override fun onResume() {
-        checkUserDetails()
+        if (USERID.equals("", ignoreCase = true)) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
+                intent.putExtra(CONSTANTS.ScreenVisible, "1")
+                startActivity(intent)
+                finish()
+            }, (2 * 800).toLong())
+        } else if (!USERID.equals("", ignoreCase = true) && CoUserID.equals("", ignoreCase = true)) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this@SplashActivity, UserListActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, (2 * 800).toLong())
+
+        } else {
+            checkUserDetails()
+        }
         super.onResume()
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -113,7 +127,8 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<VersionModel>, t: Throwable) {
                 }
             })
-        } else {
+        }else{
+            askBattryParmition()
         }
     }
 
@@ -122,12 +137,13 @@ class SplashActivity : AppCompatActivity() {
             val listCall: Call<CoUserDetailsModel> = APINewClient.getClient().getCoUserDetails(USERID, CoUserID)
             listCall.enqueue(object : Callback<CoUserDetailsModel> {
                 override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
-                    coUserDetailsModelGloble = response.body()!!
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
                         isProfileCompleted = coUserDetailsModel.getResponseData()!!.getIsProfileCompleted().toString()
                         isAssessmentCompleted = coUserDetailsModel.getResponseData()!!.getIsAssessmentCompleted().toString()
                         indexScore = coUserDetailsModel.getResponseData()!!.getIndexScore().toString()
+
+                        checkAppVersion()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -136,10 +152,10 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<CoUserDetailsModel>, t: Throwable) {
                 }
             })
-        } else {
+        } else{
+            askBattryParmition()
         }
     }
-
 
     private fun askBattryParmition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -163,7 +179,7 @@ class SplashActivity : AppCompatActivity() {
         Log.e("isProfileCompleted",isProfileCompleted.toString())
         Log.e("isAssessmentCompleted",isAssessmentCompleted.toString())
         Log.e("indexScore",indexScore.toString())
-        if (USERID.equals("", ignoreCase = true)) {
+        /*if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
                 intent.putExtra(CONSTANTS.ScreenVisible, "1")
@@ -177,14 +193,7 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             }, (2 * 800).toLong())
 
-        } else {
-
-            if(isProfileCompleted.equals("",true)){
-                isProfileCompleted = coUserDetailsModelGloble.getResponseData()?.getIsProfileCompleted().toString()
-                isAssessmentCompleted = coUserDetailsModelGloble.getResponseData()?.getIsAssessmentCompleted().toString()
-                indexScore = coUserDetailsModelGloble.getResponseData()?.getIndexScore().toString()
-            }
-
+        } else {*/
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
@@ -207,6 +216,6 @@ class SplashActivity : AppCompatActivity() {
                     finish()
                 }, (2 * 800).toLong())
             }
-        }
+//        }
     }
 }
