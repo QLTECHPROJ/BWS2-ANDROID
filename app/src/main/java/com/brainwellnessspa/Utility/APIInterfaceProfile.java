@@ -14,8 +14,8 @@ public interface APIInterfaceProfile {
 
     //  TODO Profile Image Upload
     @Multipart
-    @POST("/addprofileimage")
-    void getAddProfiles(@Part("UserID") String UserID,
+    @POST("/updateprofileimg")
+    void getAddProfiles(@Part("CoUserId") String CoUserId,
                           @Part("ProfileImage") TypedFile Avtar,
                           Callback<AddProfileModel> addProfileModelCallback);
 

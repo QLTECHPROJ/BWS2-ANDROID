@@ -198,7 +198,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvMainAudio.setLayoutManager(layoutManager);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
-        if (Name.equalsIgnoreCase("Recommended  Audios")) {
+        if (Name.equalsIgnoreCase("Suggested Audios")) {
             ArrayList<SegmentAudio> section = new ArrayList<>();
             for (int i = 0; i < AudiolistsModel.size(); i++) {
                 SegmentAudio e = new SegmentAudio();
@@ -214,12 +214,12 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             Gson gson = new Gson();
             p.putValue("audios", gson.toJson(section));
             p.putValue("source", "Search Screen");
-            BWSApplication.addToSegment("Recommended Audios List Viewed", p, CONSTANTS.screen);
+            BWSApplication.addToSegment("Suggested Audios List Viewed", p, CONSTANTS.screen);
             adpater = new AudiosListAdpater(AudiolistsModel);
             LocalBroadcastManager.getInstance(ViewSuggestedActivity.this)
                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvMainAudio.setAdapter(adpater);
-        } else if (Name.equalsIgnoreCase("Recommended Playlist")) {
+        } else if (Name.equalsIgnoreCase("Suggested Playlist")) {
             ArrayList<SegmentPlaylist> section = new ArrayList<>();
             for (int i = 0; i < PlaylistModel.size(); i++) {
                 SegmentPlaylist e = new SegmentPlaylist();
@@ -235,7 +235,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             Gson gson = new Gson();
             p.putValue("playlists", gson.toJson(section));
             p.putValue("source", "Search Screen");
-            BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
+            BWSApplication.addToSegment("Suggested Playlists List Viewed", p, CONSTANTS.screen);
             SuggestionPlayListsAdpater adpater = new SuggestionPlayListsAdpater(PlaylistModel);
             binding.rvMainAudio.setAdapter(adpater);
         }
@@ -398,27 +398,27 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-                    !AudioFlag.equalsIgnoreCase("SubPlayList") &&
-                    !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                if (myAudioId.equalsIgnoreCase(AudiolistsModel.get(position).getID())) {
-                    songId = myAudioId;
-                    if (player != null) {
-                        if (!player.getPlayWhenReady()) {
-                            holder.binds.equalizerview.pause();
-                        } else
-                            holder.binds.equalizerview.resume(true);
-                    } else
-                        holder.binds.equalizerview.stop(true);
-                    holder.binds.equalizerview.setVisibility(View.VISIBLE);
-                    holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background);
-                    holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
-                } else {
-                    holder.binds.equalizerview.setVisibility(View.GONE);
-                    holder.binds.llMainLayout.setBackgroundResource(R.color.white);
-                    holder.binds.ivBackgroundImage.setVisibility(View.GONE);
-                }
-            } else {
+//            if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
+//                    !AudioFlag.equalsIgnoreCase("SubPlayList") &&
+//                    !AudioFlag.equalsIgnoreCase("TopCategories")) {
+//                if (myAudioId.equalsIgnoreCase(AudiolistsModel.get(position).getID())) {
+//                    songId = myAudioId;
+//                    if (player != null) {
+//                        if (!player.getPlayWhenReady()) {
+//                            holder.binds.equalizerview.pause();
+//                        } else
+//                            holder.binds.equalizerview.resume(true);
+//                    } else
+//                        holder.binds.equalizerview.stop(true);
+//                    holder.binds.equalizerview.setVisibility(View.VISIBLE);
+//                    holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background);
+//                    holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                } else {
+//                    holder.binds.equalizerview.setVisibility(View.GONE);
+//                    holder.binds.llMainLayout.setBackgroundResource(R.color.white);
+//                    holder.binds.ivBackgroundImage.setVisibility(View.GONE);
+//                }
+//            } else {
                 holder.binds.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binds.ivBackgroundImage.setVisibility(View.GONE);
             }*/
@@ -599,7 +599,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     holder.binding.tvTime.setText(PlaylistModel.get(position).getTotalAudio() +
                             " Audios | " + PlaylistModel.get(position).getTotalhour() + "h " + PlaylistModel.get(position).getTotalminute() + "m");
                 }
-            }
+//            }
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -663,9 +663,9 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
 //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
 //                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    comefromDownload = "0";
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+                comefromDownload = "0";
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
@@ -675,15 +675,15 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                     } else {
-                        callAddAudioToPlaylist("",  PlaylistModel.get(position).getID(), "1");
+                        callAddAudioToPlaylist("", PlaylistModel.get(position).getID(), "1");
                     }
                 } else {
-                    callAddAudioToPlaylist("",  PlaylistModel.get(position).getID(), "1");
+                    callAddAudioToPlaylist("", PlaylistModel.get(position).getID(), "1");
                 }
-//                }
+//            }
             });
         }
-
+    }
         @Override
         public int getItemCount() {
             return PlaylistModel.size();

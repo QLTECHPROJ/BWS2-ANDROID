@@ -34,6 +34,7 @@ import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
 import com.brainwellnessspa.ResourceModule.Models.SegmentResource;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
@@ -65,7 +66,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
-    String UserID, Category = "", tabFlag = "1";
+    String USERID, Category = "", tabFlag = "1", CoUserID;
     Activity activity;
     int CurruntTab = 0;
     Dialog dialogBox;
@@ -100,10 +101,11 @@ public class ResourceActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
+        CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
         p4 = new Properties();
-        p4.putValue("userId", UserID);
+        p4.putValue("userId", USERID);
         section = new ArrayList<>();
         gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
@@ -120,7 +122,8 @@ public class ResourceActivity extends AppCompatActivity {
                 binding.viewPager.setCurrentItem(tab.getPosition());
                 CurruntTab = tab.getPosition();
                 p = new Properties();
-                p.putValue("userId", UserID);
+                p.putValue("userId", USERID);
+                p.putValue("coUserId", CoUserID);
                 if (tab.getPosition() == 0) {
                     tabFlag = CONSTANTS.FLAG_ONE;
                     p.putValue("resourceType", "Audio Books");
@@ -143,7 +146,7 @@ public class ResourceActivity extends AppCompatActivity {
                     p4.putValue("resourceType", "Documentaries");
                 }
 
-                Call<ResourceListModel> listCalls = APIClient.getClient().getResourcLists(UserID, tabFlag, Category);
+                Call<ResourceListModel> listCalls = APINewClient.getClient().getResourceList(CoUserID, tabFlag, Category);
                 listCalls.enqueue(new Callback<ResourceListModel>() {
                     @Override
                     public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
@@ -178,16 +181,19 @@ public class ResourceActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<ResourceListModel> call, Throwable t) {}
+                    public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    }
                 });
 
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
 
         setAdapter();
@@ -263,7 +269,7 @@ public class ResourceActivity extends AppCompatActivity {
     void prepareData(RecyclerView rvFilterList, Dialog dialogBox, TextView tvAll, ImageView ivFilter) {
         try {
             if (BWSApplication.isNetworkConnected(ctx)) {
-                Call<ResourceFilterModel> listCall = APIClient.getClient().getResourcFilterLists(UserID);
+                Call<ResourceFilterModel> listCall = APINewClient.getClient().getResourceCatList(CoUserID);
                 listCall.enqueue(new Callback<ResourceFilterModel>() {
                     @Override
                     public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
@@ -365,7 +371,7 @@ public class ResourceActivity extends AppCompatActivity {
                     AudioBooksFragment audioBooksFragment = new AudioBooksFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("audio_books", "audio_books");
-                    bundle.putString("UserID", UserID);
+                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     audioBooksFragment.setArguments(bundle);
                     return audioBooksFragment;
@@ -373,7 +379,7 @@ public class ResourceActivity extends AppCompatActivity {
                     PodcastsFragment podcastsFragment = new PodcastsFragment();
                     bundle = new Bundle();
                     bundle.putString("podcasts", "podcasts");
-                    bundle.putString("UserID", UserID);
+                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     podcastsFragment.setArguments(bundle);
                     return podcastsFragment;
@@ -381,7 +387,7 @@ public class ResourceActivity extends AppCompatActivity {
                     AppsFragment appsFragment = new AppsFragment();
                     bundle = new Bundle();
                     bundle.putString("apps", "apps");
-                    bundle.putString("UserID", UserID);
+                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     appsFragment.setArguments(bundle);
                     return appsFragment;
@@ -389,7 +395,7 @@ public class ResourceActivity extends AppCompatActivity {
                     WebsiteFragment websiteFragment = new WebsiteFragment();
                     bundle = new Bundle();
                     bundle.putString("website", "website");
-                    bundle.putString("UserID", UserID);
+                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     websiteFragment.setArguments(bundle);
                     return websiteFragment;
@@ -397,7 +403,7 @@ public class ResourceActivity extends AppCompatActivity {
                     DocumentariesFragment documentariesFragment = new DocumentariesFragment();
                     bundle = new Bundle();
                     bundle.putString("documentaries", "documentaries");
-                    bundle.putString("UserID", UserID);
+                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     documentariesFragment.setArguments(bundle);
                     return documentariesFragment;

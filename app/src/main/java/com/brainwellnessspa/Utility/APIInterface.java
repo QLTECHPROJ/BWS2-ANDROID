@@ -52,7 +52,7 @@ import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.RemiderDetailsModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderStatusModel;
 import com.brainwellnessspa.ReminderModule.Models.SelectPlaylistModel;
-import com.brainwellnessspa.ReminderModule.Models.SetReminderModel;
+import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
 import com.brainwellnessspa.ResourceModule.Models.ResourceFilterModel;
 import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
@@ -327,11 +327,11 @@ public interface APIInterface {
     /* TODO ReminderActivity */
     @POST("setreminder")
     @FormUrlEncoded
-    Call<SetReminderModel> SetReminder(@Field("PlaylistId") String PlaylistId,
-                                       @Field("UserID") String userID,
-                                       @Field("IsSingle") String IsSingle,
-                                       @Field("ReminderTime") String ReminderTime,
-                                       @Field("ReminderDay") String ReminderDay
+    Call<SetReminderOldModel> SetReminder(@Field("PlaylistId") String PlaylistId,
+                                          @Field("UserID") String userID,
+                                          @Field("IsSingle") String IsSingle,
+                                          @Field("ReminderTime") String ReminderTime,
+                                          @Field("ReminderDay") String ReminderDay
     );
 
     /* TODO ContactBookActivity */
@@ -468,22 +468,22 @@ public interface APIInterface {
     Call<LikesHistoryModel> getLikeAudioPlaylistListing(@Field("UserID") String userID);
 
     /* TODO AppsFragment & AudioBooksFragment & DocumentariesFragment & PodcastsFragment & WebsiteFragment */
-    @POST("resourcelist")
-    @FormUrlEncoded
-    Call<ResourceListModel> getResourcLists(@Field("UserID") String userID,
-                                            @Field("ResourceTypeId") String resourceTypeId,
-                                            @Field("Category") String category);
+//    @POST("resourcelist")
+//    @FormUrlEncoded
+//    Call<ResourceListModel> getResourcLists(@Field("UserID") String userID,
+//                                            @Field("ResourceTypeId") String resourceTypeId,
+//                                            @Field("Category") String category);
 
     /* TODO ResourceActivity */
-    @POST("resourcecategorylist")
-    @FormUrlEncoded
-    Call<ResourceFilterModel> getResourcFilterLists(@Field("UserID") String userID);
+//    @POST("resourcecategorylist")
+//    @FormUrlEncoded
+//    Call<ResourceFilterModel> getResourcFilterLists(@Field("UserID") String userID);
 
 
     /* TODO ReminderDetailsActivity */
-    @POST("getreminder")
-    @FormUrlEncoded
-    Call<RemiderDetailsModel> getGetReminderStatus(@Field("UserID") String userID);
+//    @POST("getreminder")
+//    @FormUrlEncoded
+//    Call<RemiderDetailsModel> getGetReminderStatus(@Field("UserID") String userID);
 
     /* TODO ReminderDetailsActivity */
     @POST("deletereminder")

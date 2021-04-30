@@ -284,7 +284,7 @@ class CreateAccountActivity : AppCompatActivity() {
 
             val countryCode: String = binding.tvCountry.getText().toString().replace("+", "")
             Log.e("countryCode", countryCode);
-            val listCall: Call<NewSignUpModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), countryCode, binding.etNumber.text.toString(), "1", binding.etPassword.text.toString(),
+            val listCall: Call<NewSignUpModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), countryCode, binding.etNumber.text.toString(),  CONSTANTS.FLAG_ONE, binding.etPassword.text.toString(),
                     Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), fcm_id)
             listCall.enqueue(object : Callback<NewSignUpModel> {
                 override fun onResponse(call: Call<NewSignUpModel>, response: Response<NewSignUpModel>) {
@@ -296,6 +296,9 @@ class CreateAccountActivity : AppCompatActivity() {
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.id)
                             editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_USEREMAIL, listModel.getResponseData()?.email)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_DeviceType, CONSTANTS.FLAG_ONE)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_DeviceID, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
                             editor.commit()
                             val i = Intent(ctx, UserListActivity::class.java)
                             startActivity(i)

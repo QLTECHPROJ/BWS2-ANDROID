@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -114,6 +115,7 @@ public class BWSApplication extends Application {
     private static BWSApplication BWSApplication;
     public static String BatteryStatus = "";
     public static String PlayerAudioId = "";
+
     public static Context getContext() {
         return mContext;
     }
@@ -136,7 +138,7 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void callAudioDetails(String audioId,Context ctx,Activity act,String CoUserID){
+    public static void callAudioDetails(String audioId, Context ctx, Activity act, String CoUserID) {
 //            TODO Mansi  Hint This code is Audio Detail Dialog
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -464,6 +466,74 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
+    public static void getReminderDay(Context ctx, Activity act) {
+        final Dialog dialog = new Dialog(ctx);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.select_days_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final LinearLayout llBack = dialog.findViewById(R.id.llBack);
+        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+        final LinearLayout llError = dialog.findViewById(R.id.llError);
+        final RecyclerView rvSelectDay = dialog.findViewById(R.id.rvSelectDay);
+        final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+        final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+        final Button btnSave = dialog.findViewById(R.id.btnSave);
+        llBack.setOnClickListener(view12 -> dialog.dismiss());
+
+        dialog.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dialog.dismiss();
+                return true;
+            }
+            return false;
+        });
+        llBack.setOnClickListener(v -> dialog.dismiss());
+        tvGoBack.setOnClickListener(v -> dialog.dismiss());
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getReminderTime(ctx, act);
+            }
+        });
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
+        rvSelectDay.setLayoutManager(manager);
+        rvSelectDay.setItemAnimator(new DefaultItemAnimator());
+
+        dialog.show();
+        dialog.setCancelable(false);
+    }
+
+    public static void getReminderTime(Context ctx, Activity act) {
+        final Dialog dialog = new Dialog(ctx);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.select_timeslot_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final LinearLayout llBack = dialog.findViewById(R.id.llBack);
+        final LinearLayout llError = dialog.findViewById(R.id.llError);
+        final RecyclerView rvSelectTimeSlot = dialog.findViewById(R.id.rvSelectTimeSlot);
+        final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+        final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+        llBack.setOnClickListener(view12 -> dialog.dismiss());
+
+        dialog.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dialog.dismiss();
+                return true;
+            }
+            return false;
+        });
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
+        rvSelectTimeSlot.setLayoutManager(manager);
+        rvSelectTimeSlot.setItemAnimator(new DefaultItemAnimator());
+
+        dialog.show();
+        dialog.setCancelable(false);
+    }
+
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         try {
@@ -539,7 +609,7 @@ public class BWSApplication extends Application {
         NetworkCapabilities nc;
         float downSpeed = 0;
         float upSpeed = 0;
-        if(isNetworkConnected(getContext())) {
+        if (isNetworkConnected(getContext())) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
                 downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
@@ -547,7 +617,7 @@ public class BWSApplication extends Application {
             }
         }
         properties.putValue("deviceSpace", mySpace + " MB");
-        properties.putValue("batteryLevel", batLevel +" %");
+        properties.putValue("batteryLevel", batLevel + " %");
         properties.putValue("batteryState", BatteryStatus);
         properties.putValue("internetDownSpeed", downSpeed + " Mbps");
         properties.putValue("internetUpSpeed", upSpeed + " Mbps");
@@ -726,5 +796,4 @@ public class BWSApplication extends Application {
         mContext = this;
         BWSApplication = this;
     }
-
 }

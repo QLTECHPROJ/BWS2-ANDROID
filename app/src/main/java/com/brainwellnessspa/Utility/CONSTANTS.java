@@ -95,9 +95,15 @@ public class CONSTANTS {
 
     public static final String PREFE_ACCESS_SIGNIN = "SignIn";
     public static final String PREFE_ACCESS_SIGNIN_COUSER = "CoUser";
+    public static final String PREFE_ACCESS_SLEEPTIME_CAT = "Sleeptime cat";
     public static final String PREFE_ACCESS_SIGNIN_COUSER_TEMP = "CoUserTemp";
     public static final String PREFE_ACCESS_UserID = "UserID";
     public static final String PREFE_ACCESS_NAME = "Name";
+    public static final String PREFE_ACCESS_USEREMAIL = "UserEmail";
+    public static final String PREFE_ACCESS_DeviceType = "DeviceType";
+    public static final String PREFE_ACCESS_DeviceID = "DeviceID";
+    public static final String PREFE_ACCESS_SLEEPTIME = "Sleeptime";
+    public static final String PREFE_ACCESS_INDEXSCORE = "indexScore";
     public static final String PREFE_ACCESS_EMAIL = "Email";
     public static final String PREFE_ACCESS_CoUserID = "CoUserID";
     public static final String PREF_KEY_LOGIN = "Login";

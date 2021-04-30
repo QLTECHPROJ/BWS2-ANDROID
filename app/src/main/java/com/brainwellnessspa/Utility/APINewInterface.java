@@ -1,13 +1,13 @@
 package com.brainwellnessspa.Utility;
 
-import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AverageSleepTimeModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.MainPlaylistLibraryModel;
-import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SaveRecommendedCatModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
@@ -18,12 +18,22 @@ import com.brainwellnessspa.DashboardTwoModule.Model.CreatePlaylistingModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel;
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel;
+import com.brainwellnessspa.FaqModule.Models.FaqListModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
+import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
+import com.brainwellnessspa.ReminderModule.Models.ReminderListModel;
+import com.brainwellnessspa.ReminderModule.Models.ReminderStatusModel;
 import com.brainwellnessspa.ReminderModule.Models.SelectPlaylistModel;
+import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
+import com.brainwellnessspa.ResourceModule.Models.ResourceFilterModel;
+import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
+import com.brainwellnessspa.UserModule.Models.RemoveProfileModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddUserModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel;
 import com.brainwellnessspa.UserModuleTwo.Models.AssessmentSaveDataModel;
+import com.brainwellnessspa.UserModuleTwo.Models.ChangePasswordModel;
+import com.brainwellnessspa.UserModuleTwo.Models.ChangePinModel;
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel;
@@ -110,7 +120,8 @@ public interface APINewInterface {
                                                   @Field("gender") String gender,
                                                   @Field("genderX") String genderX,
                                                   @Field("age") String age,
-                                                  @Field("prevDrugUse") String prevDrugUse);
+                                                  @Field("prevDrugUse") String prevDrugUse,
+                                                  @Field("Medication") String medication);
 
     @POST("assesmentsaveans")
     @FormUrlEncoded
@@ -213,12 +224,78 @@ public interface APINewInterface {
 
     @POST("saverecommendedcategory")
     @FormUrlEncoded
-    Call<SucessModel> getSaveRecommendedCategory(@Field("CoUserId") String CoUserId,
-                                                 @Field("CatName") String CatName,
-                                                 @Field("AvgSleepTime") String AvgSleepTime);
+    Call<SaveRecommendedCatModel> getSaveRecommendedCategory(@Field("CoUserId") String CoUserId,
+                                                             @Field("CatName") String CatName,
+                                                             @Field("AvgSleepTime") String AvgSleepTime);
 
     @POST("recentlyplayed")
     @FormUrlEncoded
     Call<SucessModel> getRecentlyPlayed(@Field("CoUserId") String CoUserId,
                                         @Field("AudioId") String AudioId);
+
+    @POST("homescreen")
+    @FormUrlEncoded
+    Call<HomeScreenModel> getHomeScreenData(@Field("CoUserId") String CoUserId);
+
+    @POST("logout")
+    @FormUrlEncoded
+    Call<SucessModel> getLogout(@Field("UserID") String UserID,
+                                @Field("Token") String Token,
+                                @Field("DeviceType") String DeviceType);
+
+    @POST("changepin")
+    @FormUrlEncoded
+    Call<ChangePinModel> getChangePin(@Field("UserID") String UserID,
+                                      @Field("CoUserId") String CoUserId,
+                                      @Field("OldPin") String OldPin,
+                                      @Field("NewPin") String NewPin);
+
+    @POST("changepassword")
+    @FormUrlEncoded
+    Call<ChangePasswordModel> getChangePassword(@Field("CoUserId") String UserID,
+                                                @Field("OldPassword") String OldPassword,
+                                                @Field("NewPassword") String NewPassword);
+
+    @POST("resourcelist")
+    @FormUrlEncoded
+    Call<ResourceListModel> getResourceList(@Field("CoUserId") String CoUserId,
+                                            @Field("ResourceTypeId") String ResourceTypeId,
+                                            @Field("Category") String Category);
+
+    @POST("resourcecatlist")
+    @FormUrlEncoded
+    Call<ResourceFilterModel> getResourceCatList(@Field("CoUserId") String CoUserId);
+
+    @GET("faqlist")
+    Call<FaqListModel> getFaqLists();
+
+    @POST("setreminder")
+    @FormUrlEncoded
+    Call<SetReminderOldModel> getSetReminder(@Field("CoUserId") String CoUserId,
+                                             @Field("PlaylistId") String PlaylistId,
+                                             @Field("ReminderDay") String ReminderDay,
+                                             @Field("ReminderTime") String ReminderTime,
+                                             @Field("IsSingle") String IsSingle);
+
+
+    @POST("reminderlist")
+    @FormUrlEncoded
+    Call<ReminderListModel> getReminderList(@Field("CoUserId") String CoUserId);
+
+
+    @POST("deletereminder")
+    @FormUrlEncoded
+    Call<DeleteRemiderModel> getDeleteRemider(@Field("CoUserId") String CoUserId,
+                                              @Field("ReminderId") String ReminderId);
+
+    @POST("reminderstatus")
+    @FormUrlEncoded
+    Call<ReminderStatusModel> getReminderStatus(@Field("CoUserId") String CoUserId,
+                                                @Field("PlaylistId") String PlaylistId,
+                                                @Field("ReminderStatus") String ReminderStatus);
+
+  @POST("removeprofileimg")
+    @FormUrlEncoded
+    Call<RemoveProfileModel> getRemoveProfile(@Field("CoUserId") String CoUserId);
+
 }

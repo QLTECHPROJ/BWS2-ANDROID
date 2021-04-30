@@ -651,31 +651,31 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
-                if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
-                    if (player != null) {
-                        if (!player.getPlayWhenReady()) {
-                            holder.binding.equalizerview.pause();
-                        } else {
-                            holder.binding.equalizerview.resume(true);
-                        }
-                    } else
-                        holder.binding.equalizerview.stop(true);
-                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
-                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                } else {
-                    holder.binding.equalizerview.setVisibility(View.GONE);
-                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                }
-//                    handler3.postDelayed(UpdateSongTime3,500);
-            } else {
+//            if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
+//                if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
+//                    if (player != null) {
+//                        if (!player.getPlayWhenReady()) {
+//                            holder.binding.equalizerview.pause();
+//                        } else {
+//                            holder.binding.equalizerview.resume(true);
+//                        }
+//                    } else
+//                        holder.binding.equalizerview.stop(true);
+//                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
+//                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                } else {
+//                    holder.binding.equalizerview.setVisibility(View.GONE);
+//                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+//                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+//                }
+////                    handler3.postDelayed(UpdateSongTime3,500);
+//            } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
 //                    handler3.removeCallbacks(UpdateSongTime3);
-            }
+//            }
             if (position == 0) {
                 AudioDatabase.databaseWriteExecutor.execute(() -> {
                     downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete");

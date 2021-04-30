@@ -25,11 +25,13 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.llChangePswd.setOnClickListener {
             val i = Intent(this, ChangePasswordActivity::class.java)
             startActivity(i)
+            finish()
         }
 
         binding.llChangePin.setOnClickListener {
             val i = Intent(this, ChangePinActivity::class.java)
             startActivity(i)
+            finish()
         }
     }
 }

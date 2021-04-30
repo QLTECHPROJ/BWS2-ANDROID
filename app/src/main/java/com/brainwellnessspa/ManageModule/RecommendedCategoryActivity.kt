@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel
+import com.brainwellnessspa.DashboardTwoModule.Model.SaveRecommendedCatModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel
 import com.brainwellnessspa.DashboardTwoModule.Model.sendRecommndedData
 import com.brainwellnessspa.R
@@ -391,14 +392,19 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     private fun sendCategoryData(toJson: String) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SucessModel> = APINewClient.getClient().getSaveRecommendedCategory(CoUserID,toJson, SleepTime)
-            listCall.enqueue(object : Callback<SucessModel> {
-                override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+            val listCall: Call<SaveRecommendedCatModel> = APINewClient.getClient().getSaveRecommendedCategory(CoUserID,toJson, SleepTime)
+            listCall.enqueue(object : Callback<SaveRecommendedCatModel> {
+                override fun onResponse(call: Call<SaveRecommendedCatModel>, response: Response<SaveRecommendedCatModel>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        val listModel: SucessModel = response.body()!!
+                        val listModel: SaveRecommendedCatModel = response.body()!!
 
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+//                            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+//                            val editor = shared.edit()
+//                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
+//                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData!!.indexScore)
+//                            editor.commit()
                             finish()
                         } else {
                             BWSApplication.showToast(listModel.responseMessage, applicationContext)
@@ -408,7 +414,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                override fun onFailure(call: Call<SaveRecommendedCatModel>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })

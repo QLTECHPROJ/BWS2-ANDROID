@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -176,33 +177,38 @@ class UserListActivity : AppCompatActivity() {
                                     try {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                         val listModel: VerifyPinModel = response.body()!!
-                                        if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                            val UserID: String = listModel.getResponseData()?.userID.toString()
-                                            val CoUserId: String = listModel.getResponseData()?.coUserId.toString()
+                                        if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            val UserID: String = listModel.responseData!!.userID.toString()
+                                            val CoUserId: String = listModel.responseData!!.coUserId.toString()
                                             UserListActivity().getUserDetails(UserID, CoUserId)
                                             val listCall: Call<CoUserDetailsModel> = APINewClient.getClient().getCoUserDetails(UserID, CoUserId)
                                             listCall.enqueue(object : Callback<CoUserDetailsModel> {
                                                 override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
                                                     try {
                                                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
-                                                        val responseData: CoUserDetailsModel.ResponseData? = coUserDetailsModel.getResponseData()
+                                                        val responseData: CoUserDetailsModel.ResponseData? = coUserDetailsModel.responseData
                                                         if (responseData != null) {
-                                                            if (responseData.getIsProfileCompleted().equals("0", ignoreCase = true)) {
+                                                            if (responseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                                                 val intent = Intent(activity, WalkScreenActivity::class.java)
                                                                 intent.putExtra(CONSTANTS.ScreenView, "ProfileView")
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
-                                                            } else if (responseData.getIsAssessmentCompleted().equals("0", ignoreCase = true)) {
+                                                            } else if (responseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                                 val intent = Intent(activity, AssProcessActivity::class.java)
                                                                 intent.putExtra(CONSTANTS.ASSPROCESS,"0")
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
-                                                            } else if (responseData.getIsProfileCompleted().equals("1", ignoreCase = true) &&
-                                                                    responseData.getIsAssessmentCompleted().equals("1", ignoreCase = true)) {
+                                                            } else if (responseData.isProfileCompleted.equals("1", ignoreCase = true) &&
+                                                                    responseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
                                                                 val intent = Intent(activity, BottomNavigationActivity::class.java)
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             }
+                                                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                                            val editor = shared.edit()
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, responseData.avgSleepTime)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, responseData.indexScore)
+                                                            editor.commit()
                                                         }
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()
@@ -214,19 +220,19 @@ class UserListActivity : AppCompatActivity() {
                                             })
                                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                             val editor = shared.edit()
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.userID)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_CoUserID, listModel.getResponseData()?.coUserId)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.getResponseData()?.email)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.responseData!!.userID)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_CoUserID, listModel.responseData!!.coUserId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.responseData!!.email)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.responseData!!.name)
                                             editor.commit()
                                             userList.dialog.dismiss()
-                                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
-                                        } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                        } else if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
                                             txtError.visibility = View.VISIBLE
-                                            txtError.text = listModel.getResponseMessage()
+                                            txtError.text = listModel.responseMessage
                                         } else {
                                             txtError.visibility = View.VISIBLE
-                                            txtError.text = listModel.getResponseMessage()
+                                            txtError.text = listModel.responseMessage
                                         }
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -309,15 +315,15 @@ class UserListActivity : AppCompatActivity() {
                                                         try {
                                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                                             val listModel: VerifyPinModel = response.body()!!
-                                                            if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                            if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                                 userList.dialog.dismiss()
-                                                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
-                                                            } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                            } else if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
                                                                 txtError.visibility = View.VISIBLE
-                                                                txtError.text = listModel.getResponseMessage()
+                                                                txtError.text = listModel.responseMessage
                                                             } else {
                                                                 txtError.visibility = View.VISIBLE
-                                                                txtError.text = listModel.getResponseMessage()
+                                                                txtError.text = listModel.responseMessage
                                                             }
 
                                                         } catch (e: Exception) {
@@ -461,12 +467,12 @@ class UserListActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AddedUserListModel = response.body()!!
-                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             binding.rvUserList.layoutManager = LinearLayoutManager(activity)
-                            adapter = UserListAdapter(listModel.getResponseData()!!, activity, binding, USERID.toString(), CoUserID.toString(), CoEMAIL.toString())
+                            adapter = UserListAdapter(listModel.responseData!!, activity, binding, USERID.toString(), CoUserID.toString(), CoEMAIL.toString())
                             binding.rvUserList.adapter = adapter
                         } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+//                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                         }
 
                     } catch (e: Exception) {

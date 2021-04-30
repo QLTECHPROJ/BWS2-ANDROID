@@ -16,6 +16,7 @@ import retrofit.converter.GsonConverter;
 import static com.brainwellnessspa.BWSApplication.getContext;
 import static com.brainwellnessspa.BWSApplication.securityKey;
 import static com.brainwellnessspa.Utility.AppUtils.BASE_URL;
+import static com.brainwellnessspa.Utility.AppUtils.New_BASE_URL;
 
 public class APIClientProfile {
     private static APIInterfaceProfile apiService;
@@ -32,7 +33,7 @@ public class APIClientProfile {
             okHttpClient.setReadTimeout(0, TimeUnit.HOURS);
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setLogLevel(RestAdapter.LogLevel.FULL)
-                    .setEndpoint(BASE_URL)
+                    .setEndpoint(New_BASE_URL)
                     .setRequestInterceptor(new MyRetrofitInterceptor())
                     .setClient(new OkClient(okHttpClient))
                     .setConverter(new GsonConverter(new Gson()))

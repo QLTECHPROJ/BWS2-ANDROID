@@ -1,9 +1,9 @@
-package com.brainwellnessspa.UserModuleTwo.Models
+package com.brainwellnessspa.ReminderModule.Models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class AssessmentSaveDataModel {
+class SetReminderModel {
     @SerializedName("ResponseData")
     @Expose
     private var responseData: ResponseData? = null
@@ -51,16 +51,10 @@ class AssessmentSaveDataModel {
     fun setResponseStatus(responseStatus: String?) {
         this.responseStatus = responseStatus
     }
-    class ResponseData {
-        @SerializedName("indexScore")
-        @Expose
-        var indexScore: String? = null
-        @SerializedName("ScoreLevel")
-        @Expose
-        var scoreLevel: String? = null
 
-        @SerializedName("errormsg")
+    class ResponseData {
+        @SerializedName("IsLock")
         @Expose
-        var errormsg: String? = null
+        var isLock: String? = null
     }
 }

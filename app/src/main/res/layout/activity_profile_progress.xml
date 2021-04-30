@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_13sdp"
-                android:max="4"
+                android:max="5"
                 app:trackColor="#DDDDDD"
                 app:indicatorColor="#6C63FF"
                 android:progress="0" />
@@ -362,6 +362,69 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_64sdp"
                 android:layout_below="@+id/btnYes"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_gray_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="No"
+                android:textAllCaps="false"
+                android:textColor="@color/light_black" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/llSixth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMainLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvSixthTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="Medication"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <TextView
+                android:id="@+id/tvSixthSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSixthTitle"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:visibility="gone"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore."
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <Button
+                android:id="@+id/btnSixYes"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/tvSixthSubTitle"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_blue_rounded_unfilled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Yes"
+                android:textAllCaps="false"
+                android:textColor="@color/light_blue_theme" />
+
+
+            <Button
+                android:id="@+id/btnSixNo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_below="@+id/btnSixYes"
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_gray_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"

@@ -39,6 +39,8 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                binding.ivCheckNumber.visibility = View.GONE
+                binding.ivCheckEmail.visibility = View.GONE
             } else if (!User.equals("", ignoreCase = true) && !MobileNumber.equals("", ignoreCase = true)
                     && Email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
@@ -49,7 +51,7 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            }  else if (User.equals("", ignoreCase = true) && !MobileNumber.equals("", ignoreCase = true)
+            } else if (User.equals("", ignoreCase = true) && !MobileNumber.equals("", ignoreCase = true)
                     && !Email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.setEnabled(false)
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
@@ -61,20 +63,25 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.btnSendPin.setBackgroundResource(R.drawable.extra_round_cornor)
             }
 
-            if(binding.etMobileNumber.getText().toString().length === 1
-                    || binding.etMobileNumber.getText().toString().length < 8
-                    || binding.etMobileNumber.getText().toString().length > 10){
+            if (MobileNumber.equals("", ignoreCase = true)) {
                 binding.ivCheckNumber.visibility = View.GONE
-            }else {
+            } else if (binding.etMobileNumber.getText().toString().length === 1
+                    || binding.etMobileNumber.getText().toString().length < 8
+                    || binding.etMobileNumber.getText().toString().length > 10) {
+                binding.ivCheckNumber.visibility = View.GONE
+            } else {
                 binding.ivCheckNumber.visibility = View.VISIBLE
             }
 
-            if (!Email.equals("", ignoreCase = true) && !Email.toString().isEmailValid()) {
+            if (Email.equals("", ignoreCase = true)) {
                 binding.ivCheckEmail.visibility = View.GONE
-            }else {
+            } else if (!Email.equals("", ignoreCase = true) && !Email.toString().isEmailValid()) {
+                binding.ivCheckEmail.visibility = View.GONE
+            } else {
                 binding.ivCheckEmail.visibility = View.VISIBLE
             }
         }
+
         override fun afterTextChanged(s: Editable) {}
     }
 

@@ -425,55 +425,55 @@ public class AudioDownloadsFragment extends Fragment {
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             comefromDownload = "1";
-            if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+//            if (IsLock.equalsIgnoreCase("1")) {
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (IsLock.equalsIgnoreCase("2")) {
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
-            }
+//            }
 
             SharedPreferences sharedzw = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
-                    songId = myAudioId;
-                    if (player != null) {
-                        if (!player.getPlayWhenReady()) {
-                            holder.binding.equalizerview.pause();
-                        } else {
-                            holder.binding.equalizerview.resume(true);
-                        }
-                    } else
-                        holder.binding.equalizerview.stop(true);
-                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
-                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                } else {
-                    holder.binding.equalizerview.setVisibility(View.GONE);
-                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                }
-            } else {
+//            if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+//                if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
+//                    songId = myAudioId;
+//                    if (player != null) {
+//                        if (!player.getPlayWhenReady()) {
+//                            holder.binding.equalizerview.pause();
+//                        } else {
+//                            holder.binding.equalizerview.resume(true);
+//                        }
+//                    } else
+//                        holder.binding.equalizerview.stop(true);
+//                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
+//                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                } else {
+//                    holder.binding.equalizerview.setVisibility(View.GONE);
+//                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+//                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+//                }
+//            } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-            }
+//            }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 ComeScreenAccount = 0;
                 comefromDownload = "1";
-                if (IsLock.equalsIgnoreCase("1")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    ctx.startActivity(i);
-                } else if (IsLock.equalsIgnoreCase("2")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+//                if (IsLock.equalsIgnoreCase("1")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    ctx.startActivity(i);
+//                } else if (IsLock.equalsIgnoreCase("2")) {
+//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     comefromDownload = "1";
                     holder.binding.ivLock.setVisibility(View.GONE);
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -563,7 +563,7 @@ public class AudioDownloadsFragment extends Fragment {
                     p.putValue("audioId", listModelList.get(position).getID());
                     p.putValue("audioName", listModelList.get(position).getName());
                     BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
-                }
+//                }
 //            handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
             });

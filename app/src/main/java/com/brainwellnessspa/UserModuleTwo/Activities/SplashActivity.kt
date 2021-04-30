@@ -139,10 +139,14 @@ class SplashActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
-                        isProfileCompleted = coUserDetailsModel.getResponseData()!!.getIsProfileCompleted().toString()
-                        isAssessmentCompleted = coUserDetailsModel.getResponseData()!!.getIsAssessmentCompleted().toString()
-                        indexScore = coUserDetailsModel.getResponseData()!!.getIndexScore().toString()
-
+                        isProfileCompleted = coUserDetailsModel.responseData!!.isProfileCompleted.toString()
+                        isAssessmentCompleted = coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
+                        indexScore = coUserDetailsModel.responseData!!.indexScore.toString()
+                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                        val editor = shared.edit()
+                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, coUserDetailsModel.responseData!!.avgSleepTime)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, coUserDetailsModel.responseData!!.indexScore)
+                        editor.commit()
                         checkAppVersion()
                     } catch (e: Exception) {
                         e.printStackTrace()

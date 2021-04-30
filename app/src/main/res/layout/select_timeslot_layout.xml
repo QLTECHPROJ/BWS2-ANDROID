@@ -52,7 +52,7 @@
             android:layout_weight="0.5"
             android:fontFamily="@font/montserrat_bold"
             android:gravity="start"
-            android:text="Choose the day"
+            android:text="When"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp" />
 
@@ -63,6 +63,7 @@
             android:layout_weight="0.5"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="right"
+            android:visibility="invisible"
             android:text="Select All"
             android:textColor="@color/white"
             android:textSize="@dimen/_12sdp" />
@@ -70,7 +71,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSelectPlaylist"
+        android:id="@+id/rvSelectTimeSlot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/llOptions"
@@ -101,19 +102,39 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnSave"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="@dimen/_33sdp"
-        android:layout_marginBottom="@dimen/_30sdp"
-        android:background="@drawable/white_round_cornor"
-        android:enabled="false"
-        android:fontFamily="@font/montserrat_bold"
-        android:paddingVertical="@dimen/_2sdp"
-        android:text="Next"
-        android:textColor="@color/app_theme_color" />
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_33sdp"
+            android:background="@drawable/white_round_cornor"
+            android:enabled="false"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="Save"
+            android:textColor="@color/app_theme_color" />
+
+        <TextView
+            android:id="@+id/tvGoBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="Back"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp" />
+
+
+    </LinearLayout>
 
 
     <LinearLayout

@@ -400,7 +400,6 @@ public class AccountFragment extends Fragment {
                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             }
         });
-
     }
 
     @Override
@@ -476,37 +475,15 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
-        myAudioId = "";
-        isDisclaimer = 0;
-        addToRecentPlayId = "";
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorcv = shared.edit();
-        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, UserID);
-        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, MobileNo);
-        editorcv.commit();
-
-        Log.e("Old UserId MobileNo", UserID + "....." + MobileNo);
-
-        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
-        edit.remove(CONSTANTS.PREF_KEY_UserID);
-        edit.remove(CONSTANTS.PREF_KEY_MobileNo);
-        edit.remove(CONSTANTS.PREF_KEY_Name);
-        edit.remove(CONSTANTS.PREF_KEY_IsDisclimer);
-        edit.remove(CONSTANTS.PREF_KEY_ExpDate);
-        edit.remove(CONSTANTS.PREF_KEY_IsLock);
-        edit.remove(CONSTANTS.PREF_KEY_PlayerFirstLogin);
-        edit.remove(CONSTANTS.PREF_KEY_AudioFirstLogin);
-        edit.remove(CONSTANTS.PREF_KEY_PlaylistFirstLogin);
-        edit.remove(CONSTANTS.PREF_KEY_AccountFirstLogin);
-        edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin);
-        edit.remove(CONSTANTS.PREF_KEY_SearchFirstLogin);
-        edit.remove(CONSTANTS.PREF_KEY_Email);
-        edit.remove(CONSTANTS.PREF_KEY_DeviceType);
-        edit.remove(CONSTANTS.PREF_KEY_Identify);
-        edit.remove(CONSTANTS.PREF_KEY_DeviceID);
-//        edit.remove(CONSTANTS.PREF_KEY_UserPromocode);
-//        edit.remove(CONSTANTS.PREF_KEY_ReferLink);
+        edit.remove(CONSTANTS.PREFE_ACCESS_UserID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_CoUserID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_NAME);
+        edit.remove(CONSTANTS.PREFE_ACCESS_EMAIL);
+        edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL);
+        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType);
         edit.clear();
         edit.commit();
 

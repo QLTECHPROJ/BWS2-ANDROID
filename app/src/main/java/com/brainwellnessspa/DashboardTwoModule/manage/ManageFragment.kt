@@ -50,8 +50,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-public class ManageFragment: Fragment() {
-    lateinit var binding:FragmentManageBinding
+public class ManageFragment : Fragment() {
+    lateinit var binding: FragmentManageBinding
     lateinit var ctx: Context
     lateinit var act: Activity
     lateinit var audioAdapter: AudioAdapter
@@ -62,7 +62,7 @@ public class ManageFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_manage, container, false)
-        val view:View = binding.root
+        val view: View = binding.root
         ctx = requireActivity()
         act = requireActivity()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
@@ -164,6 +164,7 @@ public class ManageFragment: Fragment() {
         prepareData()
         super.onResume()
     }
+
     private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>) {
         DatabaseClient
                 .getInstance(activity)
@@ -208,7 +209,7 @@ public class ManageFragment: Fragment() {
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-        var PlayerPosition:Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         if ((AudioPlayerFlag.equals("MainAudioList", ignoreCase = true) ||
                         AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && PlayFrom.equals(view, ignoreCase = true)) {
             if (player != null) {
@@ -224,7 +225,7 @@ public class ManageFragment: Fragment() {
             } else {
                 callPlayer(position, view, listModel, ctx, act)
             }
-        }else{
+        } else {
             callPlayer(position, view, listModel, ctx, act)
         }
     }
@@ -241,8 +242,8 @@ public class ManageFragment: Fragment() {
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
-        var json =""
-        if(view.equals("My Downloads", true)){
+        var json = ""
+        if (view.equals("My Downloads", true)) {
             val downloadAudioDetails = ArrayList<DownloadAudioDetails>()
             for (i in listModel.indices) {
                 val mainPlayModel = DownloadAudioDetails()
@@ -258,7 +259,7 @@ public class ManageFragment: Fragment() {
             }
             json = gson.toJson(downloadAudioDetails)
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio")
-        }else {
+        } else {
             json = gson.toJson(listModel)
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "MainAudioList")
         }
@@ -281,6 +282,9 @@ public class ManageFragment: Fragment() {
 
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
+                    binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
+                    binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute
+
                     val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
                     binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
                     binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
@@ -323,7 +327,7 @@ public class ManageFragment: Fragment() {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
-        }else{
+        } else {
             val responseData = ArrayList<HomeDataModel.ResponseData.Audio>()
             val details = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
             val listModel = HomeDataModel.ResponseData.Audio()
@@ -543,7 +547,7 @@ public class ManageFragment: Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return if(listModel.details!!.size<4)
+            return if (listModel.details!!.size < 4)
                 listModel.details!!.size
             else 4
         }
@@ -600,7 +604,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
         }
 
@@ -664,7 +668,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
         }
 
@@ -696,7 +700,7 @@ public class ManageFragment: Fragment() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
         }
 

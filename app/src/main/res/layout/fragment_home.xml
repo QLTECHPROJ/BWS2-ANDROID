@@ -212,13 +212,13 @@
                                         android:orientation="horizontal">
 
                                         <TextView
+                                            android:id="@+id/tvPlaylistName"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_centerVertical="true"
                                             android:layout_marginLeft="@dimen/_25sdp"
                                             android:fontFamily="@font/montserrat_bold"
                                             android:gravity="left"
-                                            android:text="Ultimate Anger Relief"
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/_14sdp" />
                                     </LinearLayout>
@@ -244,12 +244,12 @@
                                             android:textSize="@dimen/_13sdp" />
 
                                         <TextView
+                                            android:id="@+id/tvTime"
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="3"
                                             android:fontFamily="@font/montserrat_regular"
                                             android:gravity="right"
-                                            android:text="07:10:47"
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/_13sdp" />
                                     </LinearLayout>
@@ -265,6 +265,7 @@
                                             android:layout_marginLeft="@dimen/_25sdp"
                                             android:layout_marginTop="@dimen/_15sdp"
                                             android:layout_marginRight="@dimen/_25sdp"
+                                            android:visibility="invisible"
                                             android:max="100"
                                             android:progress="25"
                                             android:progressBackgroundTint="@color/white" />
@@ -623,5 +624,30 @@
             </RelativeLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
     </RelativeLayout>
 </layout>

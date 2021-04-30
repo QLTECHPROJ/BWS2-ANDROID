@@ -1,9 +1,9 @@
-package com.brainwellnessspa.UserModule.Models
+package com.brainwellnessspa.DashboardTwoModule.Model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class RemoveProfileModel {
+class SaveRecommendedCatModel {
     @SerializedName("ResponseData")
     @Expose
     var responseData: List<Any>? = null

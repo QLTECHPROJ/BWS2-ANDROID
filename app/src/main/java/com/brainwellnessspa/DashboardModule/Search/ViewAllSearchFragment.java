@@ -412,30 +412,30 @@ public class ViewAllSearchFragment extends Fragment {
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-                    !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                if (myAudioId.equalsIgnoreCase(AudiolistModel.get(position).getID())) {
-                    songId = myAudioId;
-                    if (player != null) {
-                        if (!player.getPlayWhenReady()) {
-                            holder.binding.equalizerview.pause();
-                        } else
-                            holder.binding.equalizerview.resume(true);
-                    } else
-                        holder.binding.equalizerview.stop(true);
-                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
-                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                } else {
-                    holder.binding.equalizerview.setVisibility(View.GONE);
-                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                }
-            } else {
+//            if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
+//                    !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+//                if (myAudioId.equalsIgnoreCase(AudiolistModel.get(position).getID())) {
+//                    songId = myAudioId;
+//                    if (player != null) {
+//                        if (!player.getPlayWhenReady()) {
+//                            holder.binding.equalizerview.pause();
+//                        } else
+//                            holder.binding.equalizerview.resume(true);
+//                    } else
+//                        holder.binding.equalizerview.stop(true);
+//                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
+//                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                } else {
+//                    holder.binding.equalizerview.setVisibility(View.GONE);
+//                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+//                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+//                }
+//            } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-            }
+//            }
 
 //            if (AudiolistModel.get(position).isLock().equalsIgnoreCase("1")) {
 //                if (AudiolistModel.get(position).isPlay().equalsIgnoreCase("1")) {

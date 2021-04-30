@@ -272,7 +272,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SuggestedModel listModel = response.body();
-                            binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
+                            binding.tvSuggestedAudios.setText(R.string.Suggested_Audios);
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
                             suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
                             binding.rvSuggestedList.setAdapter(suggestedAdpater);
@@ -282,7 +282,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             binding.tvSAViewAll.setOnClickListener(view -> {
                                 notificationStatus = true;
                                 Intent i = new Intent(ctx, ViewSuggestedActivity.class);
-                                i.putExtra("Name", "Recommended  Audios");
+                                i.putExtra("Name", "Suggested Audios");
                                 i.putExtra("PlaylistID", PlaylistID);
                                 i.putParcelableArrayListExtra("AudiolistModel", listModel.getResponseData());
                                 startActivity(i);
@@ -314,7 +314,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SearchPlaylistModel listModel = response.body();
-                            binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
+                            binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
                             binding.tvSuggestedPlaylist.setVisibility(View.GONE);
                             binding.rvPlayList.setVisibility(View.GONE);
                             /*p = new Properties();
@@ -329,7 +329,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             binding.tvSPViewAll.setOnClickListener(view -> {
                                 notificationStatus = true;
                                 Intent i = new Intent(ctx, ViewSuggestedActivity.class);
-                                i.putExtra("Name", "Recommended Playlist");
+                                i.putExtra("Name", "Suggested Playlist");
                                 i.putExtra("PlaylistID", PlaylistID);
                                 i.putParcelableArrayListExtra("PlaylistModel", listModel.getResponseData());
                                 startActivity(i);

@@ -34,10 +34,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Models.SelectPlaylistModel;
-import com.brainwellnessspa.ReminderModule.Models.SetReminderModel;
+import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -217,71 +216,6 @@ public class ReminderActivity extends AppCompatActivity {
                         ShowPlaylistName();
                     }, mHour, mMinute, false);
             timePickerDialog.show();
-        });
-
-        binding.tvSelectedDay.setOnClickListener(view -> {
-            myBackPress = true;
-            dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.select_days_layout);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final LinearLayout llBack = dialog.findViewById(R.id.llBack);
-            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-            final LinearLayout llError = dialog.findViewById(R.id.llError);
-            final RecyclerView rvSelectPlaylist = dialog.findViewById(R.id.rvSelectPlaylist);
-            final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
-            final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
-            llBack.setOnClickListener(view12 -> dialog.dismiss());
-
-            dialog.setOnKeyListener((v, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss();
-                    return true;
-                }
-                return false;
-            });
-            llBack.setOnClickListener(v -> dialog.dismiss());
-            tvGoBack.setOnClickListener(v -> dialog.dismiss());
-
-            RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
-            rvSelectPlaylist.setLayoutManager(manager);
-            rvSelectPlaylist.setItemAnimator(new DefaultItemAnimator());
-
-            prepareData(rvSelectPlaylist, llError, progressBar, progressBarHolder);
-            dialog.show();
-            dialog.setCancelable(false);
-        });
-
-        binding.ivSelectTime.setOnClickListener(view -> {
-            myBackPress = true;
-            dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.select_timeslot_layout);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final LinearLayout llBack = dialog.findViewById(R.id.llBack);
-            final LinearLayout llError = dialog.findViewById(R.id.llError);
-            final RecyclerView rvSelectPlaylist = dialog.findViewById(R.id.rvSelectPlaylist);
-            final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
-            final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
-            llBack.setOnClickListener(view12 -> dialog.dismiss());
-
-            dialog.setOnKeyListener((v, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss();
-                    return true;
-                }
-                return false;
-            });
-
-            RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
-            rvSelectPlaylist.setLayoutManager(manager);
-            rvSelectPlaylist.setItemAnimator(new DefaultItemAnimator());
-
-            prepareData(rvSelectPlaylist, llError, progressBar, progressBarHolder);
-            dialog.show();
-            dialog.setCancelable(false);
         });
 
         if (Day.contains("0")) {
@@ -487,13 +421,13 @@ public class ReminderActivity extends AppCompatActivity {
 
                     if (BWSApplication.isNetworkConnected(context)) {
                         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, CoUSERID, CONSTANTS.FLAG_ONE,
+                        Call<SetReminderOldModel> listCall = APIClient.getClient().SetReminder(PlaylistID, CoUSERID, CONSTANTS.FLAG_ONE,
                                 binding.tvTime.getText().toString(), TextUtils.join(",", remiderDays));
-                        listCall.enqueue(new Callback<SetReminderModel>() {
+                        listCall.enqueue(new Callback<SetReminderOldModel>() {
                             @Override
-                            public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
+                            public void onResponse(Call<SetReminderOldModel> call, Response<SetReminderOldModel> response) {
                                 try {
-                                    SetReminderModel listModel = response.body();
+                                    SetReminderOldModel listModel = response.body();
                                     if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
 //                                        Log.e("remiderDays", TextUtils.join(",", remiderDays));
                                         remiderDays.clear();
@@ -516,7 +450,7 @@ public class ReminderActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(Call<SetReminderModel> call, Throwable t) {
+                            public void onFailure(Call<SetReminderOldModel> call, Throwable t) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         });

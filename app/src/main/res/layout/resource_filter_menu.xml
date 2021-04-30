@@ -28,10 +28,11 @@
 
                 <ImageView
                     android:id="@+id/ivFilter"
-                    android:layout_width="@dimen/_18sdp"
-                    android:layout_height="@dimen/_18sdp"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_16sdp"
                     android:layout_gravity="center"
                     android:visibility="invisible"
+                    app:tint="@color/app_theme_color"
                     android:src="@drawable/ic_arrow_blue_icon" />
 
                 <TextView

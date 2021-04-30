@@ -28,6 +28,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     var genderX: String = ""
     var age: String = ""
     var prevDrugUse: String = ""
+    var medication: String = ""
     var USERID: String? = null
     var CoUserID: String? = null
     var EMAIL: String? = null
@@ -188,6 +189,7 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
             binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            callFifthNext()
         }
         binding.btnNo.setOnClickListener {
             prevDrugUse = "No"
@@ -199,50 +201,117 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
             binding.btnNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            callFifthNext()
         }
+
+        binding.btnSixYes.setOnClickListener {
+            medication = "Yes"
+            binding.llIndicate.progress = 5
+            binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.isClickable = true
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnSixYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        }
+
+        binding.btnSixNo.setOnClickListener {
+            medication = "No"
+            binding.llIndicate.progress = 5
+            binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.isClickable = true
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnSixNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+        }
+
 
         binding.btnNext.setOnClickListener {
             callNext()
         }
         binding.btnGenXReverse.setOnClickListener {
-           callBack()
+            callBack()
         }
         binding.btnPrev.setOnClickListener {
             callBack()
         }
     }
-    private fun callBack(){
-        if(binding.llFirst.visibility == View.VISIBLE){
+
+    private fun callBack() {
+        if (binding.llFirst.visibility == View.VISIBLE) {
             finish()
-        } else if(binding.llSecond.visibility == View.VISIBLE){
+        } else if (binding.llSecond.visibility == View.VISIBLE) {
             callSecondPrev()
-        }else if(binding.llThird.visibility == View.VISIBLE){
+        } else if (binding.llThird.visibility == View.VISIBLE) {
             callFirstNext()
-        }else if(binding.llForth.visibility == View.VISIBLE){
+        } else if (binding.llForth.visibility == View.VISIBLE) {
             callFourthPrev()
-        }else if(binding.llFifth.visibility == View.VISIBLE){
+        } else if (binding.llFifth.visibility == View.VISIBLE) {
             callSecondNext("1")
+        }else if (binding.llSixth.visibility == View.VISIBLE) {
+            callFifthPrev()
         }
     }
-    private fun callNext(){
-        if(binding.llFirst.visibility == View.VISIBLE){
+
+    private fun callNext() {
+        if (binding.llFirst.visibility == View.VISIBLE) {
             callFirstNext()
-        } else if(binding.llSecond.visibility == View.VISIBLE){
+        } else if (binding.llSecond.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
             callSecondNext("2")
-        }else if(binding.llThird.visibility == View.VISIBLE){
+        } else if (binding.llThird.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
             callSecondNext("3")
-        }else if(binding.llForth.visibility == View.VISIBLE){
+        } else if (binding.llForth.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
             callFourthNext()
-        }else if(binding.llFifth.visibility == View.VISIBLE){
+        } else if (binding.llFifth.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
-            binding.llIndicate.progress = 4
+            callFifthNext()
+        } else if (binding.llSixth.visibility == View.VISIBLE) {
+            binding.btnPrev.visibility = View.VISIBLE
+            binding.llIndicate.progress = 5
             sendProfileData()
         }
     }
 
+    private fun callFifthPrev(){
+        binding.llIndicate.progress = 4
+        binding.llFirst.visibility = View.GONE
+        binding.llSecond.visibility = View.GONE
+        binding.llThird.visibility = View.GONE
+        binding.llForth.visibility = View.GONE
+        binding.llFifth.visibility = View.VISIBLE
+        binding.llSixth.visibility = View.GONE
+        binding.btnPrev.visibility = View.VISIBLE
+
+        if (prevDrugUse.equals("Yes", true)) {
+            binding.btnNext.isClickable = true
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        } else if (prevDrugUse.equals("No", true)) {
+            binding.btnNext.isClickable = true
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+        } else {
+            binding.btnNext.isClickable = false
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        }
+
+    }
     private fun callFourthPrev() {
         if (gender.equals("Gender X")) {
             callGenderXSetData()
@@ -254,15 +323,15 @@ class ProfileProgressActivity : AppCompatActivity() {
     private fun sendProfileData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<ProfileSaveDataModel> = APINewClient.getClient().getProfileSaveData(USERID, CoUserID, profileType, gender, genderX, age, prevDrugUse)
+            val listCall: Call<ProfileSaveDataModel> = APINewClient.getClient().getProfileSaveData(USERID, CoUserID, profileType, gender, genderX, age, prevDrugUse, medication)
             listCall.enqueue(object : Callback<ProfileSaveDataModel> {
                 override fun onResponse(call: Call<ProfileSaveDataModel>, response: Response<ProfileSaveDataModel>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ProfileSaveDataModel = response.body()!!
                         if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            val i = Intent(this@ProfileProgressActivity, AssProcessActivity::class.java)
-                            i.putExtra(CONSTANTS.ASSPROCESS, "0")
+                            val i = Intent(this@ProfileProgressActivity, WalkScreenActivity::class.java)
+                            i.putExtra(CONSTANTS.ScreenView, "2")
                             startActivity(i)
                             finish()
                         } else {
@@ -312,6 +381,39 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
             binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        }
+    }
+
+    private fun callFifthNext() {
+        binding.llIndicate.progress = 4
+        binding.llFirst.visibility = View.GONE
+        binding.llSecond.visibility = View.GONE
+        binding.llThird.visibility = View.GONE
+        binding.llForth.visibility = View.GONE
+        binding.llFifth.visibility = View.GONE
+        binding.llSixth.visibility = View.VISIBLE
+        binding.btnPrev.visibility = View.VISIBLE
+        if (medication.equals("Yes", true)) {
+            binding.btnNext.isClickable = true
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnSixYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+        } else if (medication.equals("No", true)) {
+            binding.btnNext.isClickable = true
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnSixNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+        } else {
+            binding.btnNext.isClickable = false
+            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
         }
     }
 

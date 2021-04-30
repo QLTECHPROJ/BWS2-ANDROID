@@ -38,12 +38,10 @@ class WalkScreenActivity : AppCompatActivity() {
         binding.rlStepTwo.visibility = View.GONE
         binding.rlStepThree.visibility = View.GONE
         if (ScreenView.equals("1")) {
-            binding.btnContinue.setOnClickListener {
-                binding.rlWelcome.visibility = View.GONE
-                binding.rlStepOne.visibility = View.VISIBLE
-                binding.rlStepTwo.visibility = View.GONE
-                binding.rlStepThree.visibility = View.GONE
-            }
+            binding.rlWelcome.visibility = View.VISIBLE
+            binding.rlStepOne.visibility = View.GONE
+            binding.rlStepTwo.visibility = View.GONE
+            binding.rlStepThree.visibility = View.GONE
         } else if (ScreenView.equals("2")) {
             binding.rlWelcome.visibility = View.GONE
             binding.rlStepOne.visibility = View.GONE
@@ -56,6 +54,12 @@ class WalkScreenActivity : AppCompatActivity() {
             binding.rlStepThree.visibility = View.VISIBLE
         }
 
+        binding.btnContinue.setOnClickListener {
+            binding.rlWelcome.visibility = View.GONE
+            binding.rlStepOne.visibility = View.VISIBLE
+            binding.rlStepTwo.visibility = View.GONE
+            binding.rlStepThree.visibility = View.GONE
+        }
 
         binding.rlStepOne.setOnClickListener {
             val intent = Intent(this@WalkScreenActivity, ProfileProgressActivity::class.java)

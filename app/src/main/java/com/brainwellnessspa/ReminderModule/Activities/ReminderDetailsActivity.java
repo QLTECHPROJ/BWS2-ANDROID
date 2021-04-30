@@ -33,15 +33,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.BillingOrderModule.Models.SegmentPayment;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
-import com.brainwellnessspa.ReminderModule.Models.RemiderDetailsModel;
+import com.brainwellnessspa.ReminderModule.Models.ReminderListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderStatusModel;
 import com.brainwellnessspa.ReminderModule.Models.SegmentReminder;
-import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityReminderDetailsBinding;
 import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding;
@@ -65,14 +62,14 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
-    String UserID, ReminderFirstLogin = "0";
+    String USERID, CoUSERID, ReminderFirstLogin = "0";
     Context ctx;
     Activity activity;
     ArrayList<String> remiderIds = new ArrayList<>();
     RemiderDetailsAdapter adapter;
     FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2;
     FancyShowCaseQueue queue;
-    RemiderDetailsModel listReminderModel;
+    ReminderListModel listReminderModel;
     Properties p;
     private int numStarted = 0;
     int stackStatus = 0;
@@ -85,8 +82,9 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_details);
         ctx = ReminderDetailsActivity.this;
         activity = ReminderDetailsActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
+        CoUSERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
         binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());
@@ -140,21 +138,22 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<RemiderDetailsModel> listCall = APIClient.getClient().getGetReminderStatus(UserID);
-            listCall.enqueue(new Callback<RemiderDetailsModel>() {
+            Call<ReminderListModel> listCall = APINewClient.getClient().getReminderList(CoUSERID);
+            listCall.enqueue(new Callback<ReminderListModel>() {
                 @Override
-                public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
+                public void onResponse(Call<ReminderListModel> call, Response<ReminderListModel> response) {
                     try {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            RemiderDetailsModel listModel = response.body();
+                            ReminderListModel listModel = response.body();
                             listReminderModel = listModel;
                             adapter = new RemiderDetailsAdapter(listModel.getResponseData());
                             binding.rvReminderDetails.setAdapter(adapter);
-                            binding.btnAddReminder.setVisibility(View.VISIBLE);
+                            binding.btnAddReminder.setVisibility(View.GONE);
                             showTooltips();
                             p = new Properties();
-                            p.putValue("userId", UserID);
+                            p.putValue("userId", USERID);
+                            p.putValue("coUserId", CoUSERID);
                             if (listModel.getResponseData().size() == 0) {
                                 binding.llError.setVisibility(View.VISIBLE);
                                 binding.rvReminderDetails.setVisibility(View.GONE);
@@ -170,7 +169,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                                     e.setPlaylistId(listModel.getResponseData().get(i).getPlaylistId());
                                     e.setPlaylistName(listModel.getResponseData().get(i).getPlaylistName());
                                     e.setPlaylistType("");
-                                    if (listModel.getResponseData().get(i).getIsCheck().equalsIgnoreCase("1")) {
+                                    if (listModel.getResponseData().get(i).isCheck().equalsIgnoreCase("1")) {
                                         e.setReminderStatus("on");
                                     } else {
                                         e.setReminderStatus("off");
@@ -184,7 +183,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen);
                             if (remiderIds.size() == 0) {
                                 binding.llSelectAll.setVisibility(View.GONE);
-                                binding.btnAddReminder.setVisibility(View.VISIBLE);
+                                binding.btnAddReminder.setVisibility(View.GONE);
                                 binding.btnDeleteReminder.setVisibility(View.GONE);
                             } else {
                                 binding.llSelectAll.setVisibility(View.VISIBLE);
@@ -198,7 +197,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<RemiderDetailsModel> call, Throwable t) {
+                public void onFailure(Call<ReminderListModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
@@ -228,7 +227,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
             tvconfirm.setOnClickListener(v -> {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserID,
+                    Call<DeleteRemiderModel> listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
                             TextUtils.join(",", remiderIds));
                     listCall.enqueue(new Callback<DeleteRemiderModel>() {
                         @Override
@@ -317,9 +316,9 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     }
 
     public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
-        private List<RemiderDetailsModel.ResponseData> model;
+        private List<ReminderListModel.ResponseData> model;
 
-        public RemiderDetailsAdapter(List<RemiderDetailsModel.ResponseData> model) {
+        public RemiderDetailsAdapter(List<ReminderListModel.ResponseData> model) {
             this.model = model;
         }
 
@@ -385,7 +384,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }
                 if (remiderIds.size() == 0) {
                     binding.llSelectAll.setVisibility(View.GONE);
-                    binding.btnAddReminder.setVisibility(View.VISIBLE);
+                    binding.btnAddReminder.setVisibility(View.GONE);
                     binding.btnDeleteReminder.setVisibility(View.GONE);
                 } else {
                     binding.llSelectAll.setVisibility(View.VISIBLE);
@@ -445,42 +444,42 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 binding.cbChecked.setChecked(true);
                 binding.tvSelectAll.setText(remiderIds.size() + " selected");
             }
-            if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
+            if (model.get(position).isCheck().equalsIgnoreCase("1")) {
                 holder.bind.switchStatus.setChecked(true);
             } else {
                 holder.bind.switchStatus.setChecked(false);
             }
-            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
-                holder.bind.switchStatus.setClickable(false);
-                holder.bind.switchStatus.setEnabled(false);
-                holder.bind.llSwitchStatus.setClickable(true);
-                holder.bind.llSwitchStatus.setEnabled(true);
-                holder.bind.llSwitchStatus.setOnClickListener(view -> {
-                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                    i.putExtra("ComeFrom", "Plan");
-                    startActivity(i);
-                });
-            } else if (model.get(position).getIsLock().equalsIgnoreCase("2")) {
-                holder.bind.switchStatus.setClickable(false);
-                holder.bind.switchStatus.setEnabled(false);
-                holder.bind.llSwitchStatus.setClickable(true);
-                holder.bind.llSwitchStatus.setEnabled(true);
-                holder.bind.llSwitchStatus.setOnClickListener(view -> {
-                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                });
-            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
-                holder.bind.switchStatus.setClickable(true);
-                holder.bind.switchStatus.setEnabled(true);
-                holder.bind.llSwitchStatus.setClickable(false);
-                holder.bind.llSwitchStatus.setEnabled(false);
-                holder.bind.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
-                    if (checked) {
-                        prepareSwitchStatus("1", model.get(position).getPlaylistId());
-                    } else {
-                        prepareSwitchStatus("0", model.get(position).getPlaylistId());
-                    }
-                });
-            }
+//            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
+//                holder.bind.switchStatus.setClickable(false);
+//                holder.bind.switchStatus.setEnabled(false);
+//                holder.bind.llSwitchStatus.setClickable(true);
+//                holder.bind.llSwitchStatus.setEnabled(true);
+//                holder.bind.llSwitchStatus.setOnClickListener(view -> {
+//                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+//                    i.putExtra("ComeFrom", "Plan");
+//                    startActivity(i);
+//                });
+//            } else if (model.get(position).getIsLock().equalsIgnoreCase("2")) {
+//                holder.bind.switchStatus.setClickable(false);
+//                holder.bind.switchStatus.setEnabled(false);
+//                holder.bind.llSwitchStatus.setClickable(true);
+//                holder.bind.llSwitchStatus.setEnabled(true);
+//                holder.bind.llSwitchStatus.setOnClickListener(view -> {
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                });
+//            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
+            holder.bind.switchStatus.setClickable(true);
+            holder.bind.switchStatus.setEnabled(true);
+            holder.bind.llSwitchStatus.setClickable(false);
+            holder.bind.llSwitchStatus.setEnabled(false);
+            holder.bind.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
+                if (checked) {
+                    prepareSwitchStatus("1", model.get(position).getPlaylistId());
+                } else {
+                    prepareSwitchStatus("0", model.get(position).getPlaylistId());
+                }
+            });
+//            }
 
             holder.bind.llMainLayout.setOnClickListener(view -> {
                 notificationStatus = true;
@@ -493,7 +492,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 i.putExtra("Time", model.get(position).getReminderTime());
                 i.putExtra("Day", model.get(position).getRDay());
                 i.putExtra("ReminderDay", model.get(position).getReminderDay());
-                i.putExtra("IsCheck", model.get(position).getIsCheck());
+                i.putExtra("IsCheck", model.get(position).isCheck());
                 startActivity(i);
                 finish();
             });
@@ -517,7 +516,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private void prepareSwitchStatus(String reminderStatus, String PlaylistID) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserID, PlaylistID, reminderStatus);/*set 1 or not 0 */
+            Call<ReminderStatusModel> listCall = APINewClient.getClient().getReminderStatus(CoUSERID, PlaylistID, reminderStatus);/*set 1 or not 0 */
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override
                 public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
@@ -641,7 +640,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
                 tvconfirm.setOnClickListener(v -> {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserID,
+                        Call<DeleteRemiderModel> listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
                                 listReminderModel.getResponseData().get(position).getReminderId());
                         listCall.enqueue(new Callback<DeleteRemiderModel>() {
                             @Override

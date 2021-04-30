@@ -30,7 +30,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.bumptech.glide.Glide;
 import com.brainwellnessspa.BuildConfig;
@@ -474,7 +473,6 @@ public class UserProfileActivity extends AppCompatActivity {
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme,
                 (view, year, monthOfYear, dayOfMonth) -> {
                     view.setMinDate(System.currentTimeMillis() - 1000);

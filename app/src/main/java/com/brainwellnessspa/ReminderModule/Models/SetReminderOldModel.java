@@ -3,12 +3,10 @@ package com.brainwellnessspa.ReminderModule.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class DeleteRemiderModel {
+public class SetReminderOldModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<Object> responseData = null;
+    private ResponseData responseData;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +17,11 @@ public class DeleteRemiderModel {
     @Expose
     private String responseStatus;
 
-    public List<Object> getResponseData() {
+    public ResponseData getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<Object> responseData) {
+    public void setResponseData(ResponseData responseData) {
         this.responseData = responseData;
     }
 
@@ -49,5 +47,19 @@ public class DeleteRemiderModel {
 
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
+    }
+    public class ResponseData {
+
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
+
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
+        }
     }
 }
