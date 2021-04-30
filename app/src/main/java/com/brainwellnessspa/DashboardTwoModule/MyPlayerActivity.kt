@@ -413,7 +413,7 @@ class   MyPlayerActivity :AppCompatActivity(){
 
         makePlayerArray()
     }
-  
+
     private fun makePlayerArray() {
         val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
@@ -443,6 +443,27 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
         }else if (AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) {
+            val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>() {}.type
+            val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>(json, type)
+            listSize = arrayList.size
+            for (i in 0 until listSize) {
+                mainPlayModel = MainPlayModel()
+                mainPlayModel.id = arrayList[i]!!.id
+                mainPlayModel.name = arrayList[i]!!.name
+                mainPlayModel.audioFile = arrayList[i]!!.audioFile
+                mainPlayModel.playlistID = ""
+                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
+                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
+                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
+                mainPlayModel.imageFile = arrayList[i]!!.imageFile
+                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+                mainPlayModelList.add(mainPlayModel)
+            }
+            val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val editor = sharedz.edit()
+            editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
+            editor.apply()
+        }else if (AudioPlayerFlag.equals(getString(R.string.top_categories), ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>(json, type)
             listSize = arrayList.size
@@ -859,7 +880,7 @@ class   MyPlayerActivity :AppCompatActivity(){
     }
 
     private fun callAllDisable(b: Boolean) {
-        if (b) { 
+        if (b) {
             binding.llInfo.setAlpha(1f)
             binding.llInfo.setClickable(true)
             binding.llInfo.setEnabled(true)
@@ -871,13 +892,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             exoBinding.llBackWordSec.alpha = 1f
             binding.llDownload.isClickable = true
             binding.llDownload.isEnabled = true
-            binding.llDownload.alpha = 1f 
+            binding.llDownload.alpha = 1f
             exoBinding.rlSeekbar.isClickable = true
             exoBinding.rlSeekbar.isEnabled = true
             exoBinding.exoProgress.isClickable = true
             exoBinding.exoProgress.isEnabled = true
 //            callllInfoViewQClicks()
-        } else { 
+        } else {
             exoBinding.llForwardSec.isClickable = false
             exoBinding.llForwardSec.isEnabled = false
             exoBinding.llForwardSec.alpha = 0.6f
@@ -886,10 +907,10 @@ class   MyPlayerActivity :AppCompatActivity(){
             exoBinding.llBackWordSec.alpha = 0.6f
             binding.llInfo.setClickable(false)
             binding.llInfo.setEnabled(false)
-            binding.llInfo.setAlpha(0.6f) 
+            binding.llInfo.setAlpha(0.6f)
             binding.llDownload.isClickable = false
             binding.llDownload.isEnabled = false
-            binding.llDownload.alpha = 0.6f 
+            binding.llDownload.alpha = 0.6f
             exoBinding.rlSeekbar.isClickable = false
             exoBinding.rlSeekbar.isEnabled = false
             exoBinding.exoProgress.isClickable = false
