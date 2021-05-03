@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/app_theme_color">
 
     <RelativeLayout
@@ -71,31 +72,21 @@
 
     </LinearLayout>
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/llOptions"
-        android:numbersBackgroundColor="@color/white"
-        android:numbersSelectorColor="@color/white"
-        android:numbersTextColor="@color/white"
-        android:timePickerMode="spinner"
-        android:visibility="gone" />
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
+        android:layout_below="@id/llOptions"
+        android:paddingLeft="@dimen/_18sdp"
         android:layout_marginBottom="@dimen/_120sdp"
-        android:layout_below="@id/llOptions">
+        android:weightSum="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSelectHoursTimeSlot"
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
             android:layout_marginTop="@dimen/_18sdp"
+            android:layout_weight="0.2"
+            tools:listitem="@layout/reminder_timelist_layout"
             android:overScrollMode="never"
             android:paddingBottom="@dimen/_18sdp"
             android:visibility="visible" />
@@ -104,9 +95,11 @@
             android:id="@+id/rvSelectMinutesTimeSlot"
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
-            android:layout_weight="0.8"
             android:layout_marginTop="@dimen/_18sdp"
+            android:layout_weight="0.8"
+            android:paddingLeft="@dimen/_16sdp"
             android:overScrollMode="never"
+            tools:listitem="@layout/reminder_timelist_layout"
             android:paddingBottom="@dimen/_18sdp"
             android:visibility="visible" />
     </LinearLayout>

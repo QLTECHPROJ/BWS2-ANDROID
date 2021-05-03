@@ -67,6 +67,7 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.CryptLib;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
+import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -511,7 +512,6 @@ public class BWSApplication extends Application {
     }
 
     public static void getReminderTime(Context ctx, Activity act, String coUSERID, String playlistID, String playlistName, Dialog dialogOld) {
-        ArrayList<ReminderMinutesListModel> reminderMinutesModel = new ArrayList<>();
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.select_timeslot_layout);
@@ -522,7 +522,6 @@ public class BWSApplication extends Application {
         final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
         final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
         final TextView tvTime = dialog.findViewById(R.id.tvTime);
-        final TimePicker timePicker = dialog.findViewById(R.id.timePicker);
         final RecyclerView rvSelectMinutesTimeSlot = dialog.findViewById(R.id.rvSelectMinutesTimeSlot);
         final RecyclerView rvSelectHoursTimeSlot = dialog.findViewById(R.id.rvSelectHoursTimeSlot);
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
@@ -532,10 +531,33 @@ public class BWSApplication extends Application {
             dialogOld.dismiss();
             dialog.dismiss();
         });
-        timePicker.setIs24HourView(true);
 
-        ReminderMinutesListModel[] minutesListModels = new ReminderMinutesListModel[]{};
+        ReminderMinutesListModel[] minutesListModels = new ReminderMinutesListModel[]{
+                new ReminderMinutesListModel("00"),
+                new ReminderMinutesListModel("05"),
+                new ReminderMinutesListModel("10"),
+                new ReminderMinutesListModel("15"),
+                new ReminderMinutesListModel("20"),
+                new ReminderMinutesListModel("25"),
+                new ReminderMinutesListModel("30"),
+                new ReminderMinutesListModel("35"),
+                new ReminderMinutesListModel("40"),
+                new ReminderMinutesListModel("45"),
+                new ReminderMinutesListModel("50"),
+                new ReminderMinutesListModel("55"),
+        };
 
+        ReminderMinutesListModel[] hoursListModels = new ReminderMinutesListModel[]{
+                new ReminderMinutesListModel("00"), new ReminderMinutesListModel("01"), new ReminderMinutesListModel("02"),
+                new ReminderMinutesListModel("03"), new ReminderMinutesListModel("04"), new ReminderMinutesListModel("05"),
+                new ReminderMinutesListModel("06"), new ReminderMinutesListModel("07"), new ReminderMinutesListModel("08"),
+                new ReminderMinutesListModel("09"), new ReminderMinutesListModel("10"), new ReminderMinutesListModel("11"),
+                new ReminderMinutesListModel("12"), new ReminderMinutesListModel("13"), new ReminderMinutesListModel("14"),
+                new ReminderMinutesListModel("15"), new ReminderMinutesListModel("16"), new ReminderMinutesListModel("17"),
+                new ReminderMinutesListModel("18"), new ReminderMinutesListModel("19"), new ReminderMinutesListModel("20"),
+                new ReminderMinutesListModel("21"), new ReminderMinutesListModel("22"), new ReminderMinutesListModel("23"),
+                new ReminderMinutesListModel("24"),
+        };
 
         dialog.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -549,9 +571,16 @@ public class BWSApplication extends Application {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
         rvSelectMinutesTimeSlot.setLayoutManager(manager);
         rvSelectMinutesTimeSlot.setItemAnimator(new DefaultItemAnimator());
+        RecyclerView.LayoutManager manager1 = new LinearLayoutManager(ctx);
+        rvSelectHoursTimeSlot.setLayoutManager(manager1);
+        rvSelectHoursTimeSlot.setItemAnimator(new DefaultItemAnimator());
 
-        ReminderMinutesListAdapter adapter = new ReminderMinutesListAdapter(reminderMinutesModel, act, ctx, coUSERID, playlistID, playlistName, dialog);
+        ReminderMinutesListAdapter adapter = new ReminderMinutesListAdapter(minutesListModels, act, ctx, coUSERID, playlistID, playlistName, dialog);
         rvSelectMinutesTimeSlot.setAdapter(adapter);
+
+        ReminderHoursListAdapter adapter1 = new ReminderHoursListAdapter(hoursListModels, act, ctx, coUSERID, playlistID, playlistName, dialog);
+        rvSelectHoursTimeSlot.setAdapter(adapter1);
+
         btnSave.setOnClickListener(v -> {
             Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
             if (isNetworkConnected(ctx)) {
@@ -600,8 +629,8 @@ public class BWSApplication extends Application {
         BWSApplication = this;
     }
 
-    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
-        private ArrayList<ReminderMinutesListModel> minutesListModels;
+    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
+        private ReminderMinutesListModel[] minutesListModels;
         Activity act;
         Context ctx;
         TextView tvSelectAll, tvUnSelectAll;
@@ -609,7 +638,7 @@ public class BWSApplication extends Application {
         String CoUSERID, PlaylistID, PlaylistName;
         Dialog dialogOld;
 
-        public ReminderMinutesListAdapter(ArrayList<ReminderMinutesListModel> minutesListModels, Activity act, Context ctx
+        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
                 , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
             this.minutesListModels = minutesListModels;
             this.act = act;
@@ -626,25 +655,76 @@ public class BWSApplication extends Application {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_selectionlist_layout, parent, false);
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
             return new MyViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvDay.setText(minutesListModels.get(position).getMinutes());
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
 
         @Override
         public int getItemCount() {
-            return minutesListModels.size();
+            return minutesListModels.length;
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderSelectionlistLayoutBinding binding;
+            ReminderTimelistLayoutBinding binding;
 
-            public MyViewHolder(ReminderSelectionlistLayoutBinding binding) {
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
+        private ReminderMinutesListModel[] minutesListModels;
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+
+        public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.length;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderTimelistLayoutBinding binding;
+
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
             }
@@ -687,7 +767,6 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            final ReminderSelectionModel myListData = selectionModels[position];
             holder.binding.tvDay.setText(selectionModels[position].getDay());
             holder.binding.tvDay.setOnClickListener(v -> {
                 if (!remiderDays.contains(selectionModels[position].getDay())) {
@@ -744,10 +823,10 @@ public class BWSApplication extends Application {
                 } else {
 //                    Intent i = new Intent(ctx, TimeViewActivity.class);
 //                    act.startActivity(i);
-                    new SnapTimePickerDialog.Builder().setTitle(R.string.title)
+                  /*   new SnapTimePickerDialog.Builder().setTitle(R.string.title)
                             .setPrefix(R.string.time_prefix).setSuffix(R.string.time_suffix)
                             .setThemeColor(R.color.colorAccent).setTitleColor(android.R.color.black).build().show(fragmentActivity.getSupportFragmentManager(), SnapTimePickerDialog.TAG);
-                         /*   .setListener(new SnapTimePickerDialog.Listener() {
+                           .setListener(new SnapTimePickerDialog.Listener() {
                         @Override
                         public void onTimePicked(int i, int i1) {
 
