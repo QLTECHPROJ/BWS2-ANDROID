@@ -149,9 +149,12 @@ class SplashActivity : AppCompatActivity() {
                         indexScore = coUserDetailsModel.responseData!!.indexScore.toString()
                         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
-                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, coUserDetailsModel.responseData!!.avgSleepTime)
                         editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, coUserDetailsModel.responseData!!.indexScore)
                         editor.commit()
+                        val sharedd = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        val editord = sharedd.edit()
+                        editord.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, coUserDetailsModel.responseData!!.avgSleepTime)
+                        editord.commit()
                         checkAppVersion()
                         setAnalytics()
                     } catch (e: Exception) {

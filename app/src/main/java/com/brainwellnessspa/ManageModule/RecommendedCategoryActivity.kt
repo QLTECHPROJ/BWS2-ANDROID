@@ -401,12 +401,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SaveRecommendedCatModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-//                            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-//                            val editor = shared.edit()
-//                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
-//                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData!!.indexScore)
-//                            editor.commit()
-//                            finish()
+                            val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                            val editor = shared.edit()
+                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
+                            editor.commit()
+                            finish()
                         } else {
                             BWSApplication.showToast(listModel.responseMessage, applicationContext)
                         }

@@ -2,6 +2,7 @@ package com.brainwellnessspa.UserModuleTwo.Activities
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -220,6 +221,10 @@ class UserListActivity : AppCompatActivity() {
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, responseData.avgSleepTime)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, responseData.indexScore)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, responseData.image)
+                                                            editor.commit()
+                                                            val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                            val editor = shared.edit()
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, responseData.avgSleepTime)
                                                             editor.commit()
                                                         }
                                                     } catch (e: Exception) {

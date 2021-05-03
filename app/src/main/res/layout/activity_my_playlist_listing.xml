@@ -251,7 +251,7 @@
                     android:layout_marginTop="-28dp"
                     android:layout_marginRight="@dimen/_16sdp"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
@@ -316,7 +316,7 @@
                         </RelativeLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvSelectedCategory"
+                            android:id="@+id/rvAreaOfFocusCategory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"

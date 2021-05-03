@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 class SaveRecommendedCatModel {
     @SerializedName("ResponseData")
     @Expose
-    var responseData: List<Any>? = null
+    var responseData: ResponseData? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -19,4 +19,28 @@ class SaveRecommendedCatModel {
     @SerializedName("ResponseStatus")
     @Expose
     var responseStatus: String? = null
+
+    class ResponseData {
+        @SerializedName("CoUserId")
+        @Expose
+        var coUserId: String? = null
+
+        @SerializedName("AvgSleepTime")
+        @Expose
+        var avgSleepTime: String? = null
+
+        @SerializedName("CategoryData")
+        @Expose
+        var categoryData: List<CategoryData>? = null
+
+        class CategoryData {
+            @SerializedName("MainCat")
+            @Expose
+            var mainCat: String? = null
+
+            @SerializedName("RecommendedCat")
+            @Expose
+            var recommendedCat: String? = null
+        }
+    }
 }

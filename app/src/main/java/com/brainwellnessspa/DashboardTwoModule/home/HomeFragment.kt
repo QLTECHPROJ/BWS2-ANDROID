@@ -23,13 +23,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
+import com.brainwellnessspa.DashboardTwoModule.manage.ManageFragment
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity
+import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
 import com.brainwellnessspa.R
@@ -40,18 +43,19 @@ import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
-import com.brainwellnessspa.databinding.FragmentHomeBinding
-import com.brainwellnessspa.databinding.MultipleProfileChangeLayoutBinding
-import com.brainwellnessspa.databinding.UserListCustomLayoutBinding
+import com.brainwellnessspa.databinding.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -69,6 +73,8 @@ class HomeFragment : Fragment() {
     var PlaylistID = ""
     var Download = ""
     var Liked = ""
+    var SLEEPTIME: String? = null
+    var selectedCategoriesName = arrayListOf<String>()
     var PlaylistDesc = ""
     var PlaylistName = ""
     var ScreenView = ""
@@ -78,6 +84,7 @@ class HomeFragment : Fragment() {
     lateinit var editTexts: Array<EditText>
     var tvSendOTPbool = true
     var myBackPress = false
+    var gson: Gson = Gson()
     var AudioId: String? = null
     var SongListSize = 0
     private val mLastClickTime: Long = 0
@@ -95,6 +102,15 @@ class HomeFragment : Fragment() {
         CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         UserIMAGE = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+
+        val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        SLEEPTIME = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+        val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
+        if (!json.equals(gson.toString(), ignoreCase = true)) {
+            val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
+            selectedCategoriesName = gson.fromJson(json, type1)
+        }
+
         binding.tvName.text = UserName
         if (UserIMAGE.equals("", true)) {
             binding.ivUser.setImageResource(R.drawable.ic_gray_user)
@@ -104,7 +120,11 @@ class HomeFragment : Fragment() {
                     .into(binding.ivUser)
         }
         homeViewModel!!.text.observe(viewLifecycleOwner, { s: String? -> })
-        prepareHomeData()
+
+        binding.rvAreaOfFocusCategory.layoutManager = GridLayoutManager(ctx, 3)
+        val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
+        binding.rvAreaOfFocusCategory.adapter = adapter
+
 
         binding.llBottomView.setOnClickListener { v: View? ->
             val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.user_list_custom_layout, null, false)
@@ -126,7 +146,6 @@ class HomeFragment : Fragment() {
         }
         binding.tvReminder.setOnClickListener {
             BWSApplication.getReminderDay(activity, activity, CoUSERID, "15", "Ultimate Anger Relief Bundle")
-
         }
 
         binding.ivEditCategory.setOnClickListener {
@@ -190,6 +209,25 @@ class HomeFragment : Fragment() {
                     BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
                 }
             })
+        }
+    }
+
+    class AreaOfFocusAdapter(var binding: FragmentHomeBinding, var ctx: Context, var selectedCategoriesName: ArrayList<String>) : RecyclerView.Adapter<AreaOfFocusAdapter.MyViewHolder>() {
+
+        inner class MyViewHolder(var bindingAdapter: SelectedCategoryRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: SelectedCategoryRawBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.selected_category_raw, parent, false)
+            return MyViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.bindingAdapter.tvCategory.text = selectedCategoriesName[position]
+            holder.bindingAdapter.tvhours.text = (position + 1).toString()
+        }
+
+        override fun getItemCount(): Int {
+            return selectedCategoriesName.size
         }
     }
 
@@ -434,8 +472,6 @@ class HomeFragment : Fragment() {
                 btnSendCode.setTextColor(resources.getColor(R.color.light_black))
                 btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
             }
-
-            /* */
         }
 
         override fun afterTextChanged(s: Editable) {}
