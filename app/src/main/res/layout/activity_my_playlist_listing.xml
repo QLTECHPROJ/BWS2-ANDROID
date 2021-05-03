@@ -251,7 +251,7 @@
                     android:layout_marginTop="-28dp"
                     android:layout_marginRight="@dimen/_16sdp"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
