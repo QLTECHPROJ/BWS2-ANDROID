@@ -1156,6 +1156,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         callMyPlayer(ctx, act)
     }
 
+
     private fun removeobserver() {
         DatabaseClient
                 .getInstance(this)

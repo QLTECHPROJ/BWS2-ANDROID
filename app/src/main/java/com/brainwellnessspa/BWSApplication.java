@@ -662,6 +662,11 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            if(holder.binding.tvDay.getText().toString().equalsIgnoreCase("05")){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    holder.binding.tvDay.setBackgroundColor(getContext().getColor(R.color.red));
+                }
+            }
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
 
@@ -713,6 +718,11 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            if(holder.binding.tvDay.getText().toString().equalsIgnoreCase("45")){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    holder.binding.tvDay.setBackgroundColor(getContext().getColor(R.color.red));
+                }
+            }
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
 
