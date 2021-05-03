@@ -23,6 +23,7 @@ class PlaylistDetailsModel {
     val responseStatus: String? = null
 
     class ResponseData {
+
         @SerializedName("PlaylistID")
         @Expose
         var playlistID: String? = null
@@ -75,15 +76,21 @@ class PlaylistDetailsModel {
         @Expose
         var totalminute: String? = null
 
-    @SerializedName("Like")
-    @Expose
-    var like: String? = null
+        @SerializedName("IsReminder")
+        @Expose
+        var isReminder: String? = null
 
-    @SerializedName("Download")
-    @Expose
-    var download: String? = null
+        @SerializedName("ReminderDay")
+        @Expose
+        var reminderDay: String? = null
+
+        @SerializedName("ReminderTime")
+        @Expose
+        var reminderTime: String? = null
 
         class PlaylistSong {
+
+
             @SerializedName("ID")
             @Expose
             var id: String? = null

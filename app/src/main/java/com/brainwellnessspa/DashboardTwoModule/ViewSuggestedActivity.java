@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
@@ -39,7 +38,6 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlay
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -62,11 +60,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.DashboardTwoModule.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardTwoModule.AddAudioActivity.PlaylistIDMS;
 import static com.brainwellnessspa.DashboardTwoModule.AddAudioActivity.addToSearch;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
@@ -422,8 +420,35 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 holder.binds.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binds.ivBackgroundImage.setVisibility(View.GONE);
             }*/
-            holder.binds.equalizerview.setVisibility(View.GONE);
+            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            String PlayFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+            Integer PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
 
+            if (!AudioPlayerFlag.equalsIgnoreCase("Downloadlist") &&
+                    !AudioPlayerFlag.equalsIgnoreCase("SubPlayList") && !AudioPlayerFlag.equalsIgnoreCase("TopCategories")) {
+                if (PlayerAudioId.equalsIgnoreCase(AudiolistsModel.get(position).getID())) {
+                    songId = PlayerAudioId;
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
+                            holder.binds.equalizerview.pause();
+                        } else
+                            holder.binds.equalizerview.resume(true);
+                    } else
+                        holder.binds.equalizerview.stop(true);
+                    holder.binds.equalizerview.setVisibility(View.VISIBLE);
+                    holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                    holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
+                } else {
+                    holder.binds.equalizerview.setVisibility(View.GONE);
+                    holder.binds.llMainLayout.setBackgroundResource(R.color.white);
+                    holder.binds.ivBackgroundImage.setVisibility(View.GONE);
+                }
+            } else {
+                holder.binds.llMainLayout.setBackgroundResource(R.color.white);
+                holder.binds.ivBackgroundImage.setVisibility(View.GONE);
+            }
 
 //            if (AudiolistsModel.get(position).isLock().equalsIgnoreCase("1")) {
 //                if (AudiolistsModel.get(position).isPlay().equalsIgnoreCase("1")) {
@@ -476,12 +501,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
 //                } else if (AudiolistsModel.get(position).isLock().equalsIgnoreCase("0")
 //                        || AudiolistsModel.get(position).isLock().equalsIgnoreCase("")) {
-
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
-                String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
-                String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-                Integer PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
@@ -626,7 +645,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
 //                holder.binding.ivLock.setVisibility(View.VISIBLE);
 //            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+
                 holder.binding.ivLock.setVisibility(View.GONE);
 //            }
 

@@ -108,6 +108,7 @@
                                                 android:padding="@dimen/_7sdp">
 
                                                 <TextView
+                                                    android:id="@+id/tvReminder"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:fontFamily="@font/montserrat_light"
@@ -119,20 +120,33 @@
                                                     android:textSize="@dimen/_12sdp" />
                                             </LinearLayout>
 
-                                            <LinearLayout
-                                                android:id="@+id/llDownload"
+                                            <RelativeLayout
+                                                android:id="@+id/llDownloads"
                                                 android:layout_width="20dp"
                                                 android:layout_height="20dp"
                                                 android:layout_centerVertical="true"
                                                 android:orientation="horizontal">
+                                                <ProgressBar
+                                                    android:id="@+id/pbProgress"
+                                                    style="?android:attr/progressBarStyleHorizontal"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"
+                                                    android:layout_centerInParent="true"
+                                                    android:background="@drawable/circular_shapem"
+                                                    android:indeterminate="false"
+                                                    android:indeterminateTint="@color/dark_yellow"
+                                                    android:max="100"
+                                                    android:progressDrawable="@drawable/circular_progress_barm"
+                                                    android:visibility="gone" />
 
                                                 <ImageView
+                                                    android:id="@+id/ivDownloads"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:src="@drawable/ic_round_download"
                                                     app:tint="@color/white" />
 
-                                            </LinearLayout>
+                                            </RelativeLayout>
 
                                             <LinearLayout
                                                 android:id="@+id/llMore"
@@ -153,9 +167,7 @@
 
                                     </RelativeLayout>
                                 </LinearLayout>
-
                                 <LinearLayout
-                                    android:id="@+id/llPlayPause"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_gravity="center"
@@ -165,24 +177,40 @@
                                     android:gravity="center">
 
                                     <LinearLayout
-                                        android:id="@+id/llPlay"
-                                        android:layout_width="@dimen/_60sdp"
-                                        android:layout_height="@dimen/_60sdp"
-                                        android:layout_gravity="center"
-                                        android:background="@drawable/ic_light_blue_play_icon"
-                                        android:orientation="horizontal" />
-
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="left"
+                                        android:layout_weight="1.2"/>
                                     <LinearLayout
-                                        android:id="@+id/llPause"
-                                        android:layout_width="@dimen/_60sdp"
-                                        android:layout_height="@dimen/_60sdp"
+                                        android:id="@+id/llPlayPause"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
                                         android:layout_gravity="center"
-                                        android:background="@drawable/ic_pause_light_blue_icon"
-                                        android:orientation="horizontal"
-                                        android:visibility="gone" />
+                                        android:gravity="center"
+                                        android:layout_weight="0.6">
+                                        <LinearLayout
+                                            android:id="@+id/llPlay"
+                                            android:layout_width="@dimen/_60sdp"
+                                            android:layout_height="@dimen/_60sdp"
+                                            android:layout_gravity="center"
+                                            android:background="@drawable/ic_light_blue_play_icon"
+                                            android:orientation="horizontal" />
 
+                                        <LinearLayout
+                                            android:id="@+id/llPause"
+                                            android:layout_width="@dimen/_60sdp"
+                                            android:layout_height="@dimen/_60sdp"
+                                            android:layout_gravity="center"
+                                            android:background="@drawable/ic_pause_light_blue_icon"
+                                            android:orientation="horizontal"
+                                            android:visibility="gone" />
+                                    </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="right"
+                                        android:layout_weight="1.2"/>
                                 </LinearLayout>
-
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"

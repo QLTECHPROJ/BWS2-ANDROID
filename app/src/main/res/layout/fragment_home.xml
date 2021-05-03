@@ -181,33 +181,52 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_gravity="center"
-                                    android:layout_weight="0.5"
-                                    android:gravity="center">
+                                    android:layout_weight="0.6"
+                                    android:gravity="center"
+                                    android:orientation="horizontal"
+                                    android:weightSum="3">
 
                                     <LinearLayout
-                                        android:id="@+id/llPlay"
-                                        android:layout_width="@dimen/_60sdp"
-                                        android:layout_height="@dimen/_60sdp"
-                                        android:layout_gravity="center"
-                                        android:background="@drawable/ic_light_blue_play_icon"
-                                        android:orientation="horizontal" />
-
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="left"
+                                        android:layout_weight="1.2"/>
                                     <LinearLayout
-                                        android:id="@+id/llPause"
-                                        android:layout_width="@dimen/_60sdp"
-                                        android:layout_height="@dimen/_60sdp"
+                                        android:id="@+id/llPlayPause"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
                                         android:layout_gravity="center"
-                                        android:background="@drawable/ic_pause_light_blue_icon"
-                                        android:orientation="horizontal"
-                                        android:visibility="gone" />
+                                        android:gravity="center"
+                                        android:layout_weight="0.6">
+                                        <LinearLayout
+                                            android:id="@+id/llPlay"
+                                            android:layout_width="@dimen/_60sdp"
+                                            android:layout_height="@dimen/_60sdp"
+                                            android:layout_gravity="center"
+                                            android:background="@drawable/ic_light_blue_play_icon"
+                                            android:orientation="horizontal" />
 
+                                        <LinearLayout
+                                            android:id="@+id/llPause"
+                                            android:layout_width="@dimen/_60sdp"
+                                            android:layout_height="@dimen/_60sdp"
+                                            android:layout_gravity="center"
+                                            android:background="@drawable/ic_pause_light_blue_icon"
+                                            android:orientation="horizontal"
+                                            android:visibility="gone" />
+                                    </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="right"
+                                        android:layout_weight="1.2"/>
                                 </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_gravity="center"
-                                    android:layout_weight="0.3"
+                                    android:layout_weight="0.18"
                                     android:orientation="vertical">
 
                                     <LinearLayout

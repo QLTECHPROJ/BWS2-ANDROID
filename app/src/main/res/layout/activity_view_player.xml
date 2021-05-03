@@ -58,7 +58,23 @@
                 android:layout_weight="0.1"
                 android:gravity="center">
 
+
+
+                <ProgressBar
+                    android:id="@+id/pbProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circular_shapesm"
+                    android:indeterminate="false"
+                    android:indeterminateTint="@color/dark_yellow"
+                    android:max="100"
+                    android:progressDrawable="@drawable/circular_progress_barsm"
+                    android:visibility="gone" />
+
                 <ImageView
+                    android:id="@+id/ivDownloads"
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
                     android:layout_centerInParent="true"

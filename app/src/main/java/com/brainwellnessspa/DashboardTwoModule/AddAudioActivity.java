@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
@@ -63,11 +62,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeRename;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
@@ -558,7 +556,35 @@ public class AddAudioActivity extends AppCompatActivity {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }*/
-                holder.binding.equalizerview.setVisibility(View.GONE);
+                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String PlayFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+                Integer PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+
+                if (!AudioPlayerFlag.equalsIgnoreCase("Downloadlist") &&
+                        !AudioPlayerFlag.equalsIgnoreCase("SubPlayList") && !AudioPlayerFlag.equalsIgnoreCase("TopCategories")) {
+                    if (PlayerAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
+                        songId = PlayerAudioId;
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
+                                holder.binding.equalizerview.pause();
+                            } else
+                                holder.binding.equalizerview.resume(true);
+                        } else
+                            holder.binding.equalizerview.stop(true);
+                        holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                        holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.equalizerview.setVisibility(View.GONE);
+                        holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    }
+                } else {
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                }
                 holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
 //                    if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
 //                        if (modelList.get(position).isPlay().equalsIgnoreCase("1")) {
@@ -590,12 +616,6 @@ public class AddAudioActivity extends AppCompatActivity {
 //                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
 //                    } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
                         String AudioID = modelList.get(position).getID();
-
-                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
-                    String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                    String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
-                    String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-                    Integer PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     if ( AudioPlayerFlag.equalsIgnoreCase("playList") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
@@ -791,14 +811,16 @@ public class AddAudioActivity extends AppCompatActivity {
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
-         /*   SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-                    !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                if (myAudioId.equalsIgnoreCase(listModel.get(position).getID())) {
-                    songId = myAudioId;
+            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            String PlayFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+            Integer PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+
+            if (!AudioPlayerFlag.equalsIgnoreCase("Downloadlist") &&
+                    !AudioPlayerFlag.equalsIgnoreCase("SubPlayList") && !AudioPlayerFlag.equalsIgnoreCase("TopCategories")) {
+                if (PlayerAudioId.equalsIgnoreCase(listModel.get(position).getID())) {
+                    songId = PlayerAudioId;
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
                             holder.binding.equalizerview.pause();
@@ -817,9 +839,9 @@ public class AddAudioActivity extends AppCompatActivity {
             } else {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-            }*/
+            }
 
-            holder.binding.equalizerview.setVisibility(View.GONE);
+//            holder.binding.equalizerview.setVisibility(View.GONE);
 //            if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
 //                if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
 //                    holder.binding.ivLock.setVisibility(View.GONE);
@@ -870,11 +892,6 @@ public class AddAudioActivity extends AppCompatActivity {
 //                } else if (listModel.get(position).isLock().equalsIgnoreCase("2")) {
 //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
 //                } else if (listModel.get(position).isLock().equalsIgnoreCase("0") || listModel.get(position).isLock().equalsIgnoreCase("")) {
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
-                String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
-                String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-                Integer PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);

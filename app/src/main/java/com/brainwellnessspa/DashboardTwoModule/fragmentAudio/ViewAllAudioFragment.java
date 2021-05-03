@@ -403,8 +403,10 @@ public class ViewAllAudioFragment extends Fragment {
                             }
                             callMyPlayer();
                         } else {
-                            callPlayer(0, listModelList);
+                            callPlayer(position, listModelList);
                         }
+                    }else{
+                        callPlayer(position, listModelList);
                     }
                 }else if(Name.equalsIgnoreCase(getString(R.string.top_categories))){
                     String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
@@ -420,10 +422,10 @@ public class ViewAllAudioFragment extends Fragment {
                             }
                             callMyPlayer();
                         } else {
-                            callPlayer(0, listModelList);
+                            callPlayer(position, listModelList);
                         }
                     }else{
-                        callPlayer(0, listModelList);
+                        callPlayer(position, listModelList);
                     }
                 }else{
                     if((AudioPlayerFlag.equalsIgnoreCase("MainAudioList")
@@ -441,6 +443,8 @@ public class ViewAllAudioFragment extends Fragment {
                         } else {
                             callPlayer(0, listModelList);
                         }
+                    }else{
+                        callPlayer(position, listModelList);
                     }
                 }
             } catch (Exception e) {
