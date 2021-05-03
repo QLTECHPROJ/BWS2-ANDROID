@@ -316,13 +316,13 @@
 
 
                         <TextView
+                            android:id="@+id/tvSleepTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
                             android:paddingLeft="@dimen/_9sdp"
-                            android:text="Your average sleep time is 7 hours"
                             android:textColor="@color/text_new_light_blue"
                             android:textSize="@dimen/_14sdp" />
                     </LinearLayout>

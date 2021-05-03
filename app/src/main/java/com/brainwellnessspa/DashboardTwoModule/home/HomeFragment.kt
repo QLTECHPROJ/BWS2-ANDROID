@@ -104,7 +104,7 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
         prepareHomeData()
-        binding.tvTime.text = SLEEPTIME
+        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
 
         binding.tvName.text = UserName
         if (UserIMAGE.equals("", true)) {
@@ -208,6 +208,7 @@ class HomeFragment : Fragment() {
                         val listModel = response.body()!!
                         homelistModel = response.body()!!
                         binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
+                        binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
