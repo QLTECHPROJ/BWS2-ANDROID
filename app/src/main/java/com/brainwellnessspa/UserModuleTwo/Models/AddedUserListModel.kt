@@ -53,6 +53,14 @@ class AddedUserListModel {
             @SerializedName("Mobile")
             @Expose
             var mobile: String? = null
+
+            @SerializedName("DOB")
+            @Expose
+            var dob: String? = null
+
+            @SerializedName("Image")
+            @Expose
+            var image: String? = null
         }
 
         fun getResponseMessage(): String? {

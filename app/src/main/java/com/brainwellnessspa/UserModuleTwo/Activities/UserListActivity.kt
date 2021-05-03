@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -22,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
-import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
+import com.brainwellnessspa.SplashModule.SplashScreenActivity
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel
@@ -32,6 +31,9 @@ import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityUserListBinding
 import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -99,8 +101,15 @@ class UserListActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bindingAdapter.tvName.text = coUserlistModel?.get(position)!!.name
+            holder.bindingAdapter.tvName.text = coUserlistModel!![position].name
 
+            if (coUserlistModel!![position].image.equals("", true)) {
+                holder.bindingAdapter.ivProfileImage.setImageResource(R.drawable.ic_user_default_icon)
+            } else {
+                Glide.with(activity).load(coUserlistModel!![position].image)
+                        .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
+                        .into(holder.bindingAdapter.ivProfileImage)
+            }
             holder.bindingAdapter.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
             holder.bindingAdapter.ivCheck.visibility = View.INVISIBLE
             if (selectedItem == position) {
@@ -116,9 +125,9 @@ class UserListActivity : AppCompatActivity() {
                 binding.btnLogIn.isEnabled = true
                 binding.tvForgotPin.isEnabled = true
                 binding.tvForgotPin.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
-                USERID = coUserlistModel!!.get(position).userID.toString()
-                CoUserID = coUserlistModel!!.get(position).coUserId.toString()
-                CoEMAIL = coUserlistModel!!.get(position).email.toString()
+                USERID = coUserlistModel!![position].userID.toString()
+                CoUserID = coUserlistModel!![position].coUserId.toString()
+                CoEMAIL = coUserlistModel!![position].email.toString()
 
             }
 
@@ -195,7 +204,7 @@ class UserListActivity : AppCompatActivity() {
                                                                 activity.finish()
                                                             } else if (responseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                                 val intent = Intent(activity, AssProcessActivity::class.java)
-                                                                intent.putExtra(CONSTANTS.ASSPROCESS,"0")
+                                                                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             } else if (responseData.isProfileCompleted.equals("1", ignoreCase = true) &&
@@ -204,10 +213,13 @@ class UserListActivity : AppCompatActivity() {
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             }
+                                                            val activity = SplashActivity()
+                                                            activity.setAnalytics()
                                                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                                             val editor = shared.edit()
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, responseData.avgSleepTime)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, responseData.indexScore)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, responseData.image)
                                                             editor.commit()
                                                         }
                                                     } catch (e: Exception) {

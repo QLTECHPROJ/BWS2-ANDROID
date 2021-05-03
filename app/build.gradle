@@ -71,7 +71,6 @@ android {
 }
 
 dependencies {
-
 //    def room_version = "1.1.1"
     def room_version = "2.2.6"
 // def work_version = "2.4.0"
@@ -89,21 +88,21 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 // TODO  Bottom Menu and Fragment
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.4'
-    implementation 'androidx.navigation:navigation-ui:2.3.4'
+    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+    implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 // TODO  Firebase Dependency
-    implementation 'com.google.firebase:firebase-auth:20.0.3'
-    implementation 'com.google.firebase:firebase-core:18.0.2'
-    implementation 'com.google.firebase:firebase-analytics:18.0.2'
-    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+    implementation 'com.google.firebase:firebase-auth:20.0.4'
+    implementation 'com.google.firebase:firebase-core:18.0.3'
+    implementation 'com.google.firebase:firebase-analytics:18.0.3'
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
     implementation 'com.google.android.gms:play-services-basement:17.6.0'
     implementation platform('com.google.firebase:firebase-bom:26.2.0')
     implementation 'com.google.firebase:firebase-crashlytics:17.4.1'
-    implementation 'com.google.firebase:firebase-analytics:18.0.2'
+    implementation 'com.google.firebase:firebase-analytics:18.0.3'
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.4.1'
 // TODO  Segment Dependency
     implementation 'com.segment.analytics.android:analytics:4.7.1'
@@ -118,7 +117,7 @@ dependencies {
 // TODO  Use Youtube Video Player
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 // TODO  Recyclerview Design & Development Dependency
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
 // TODO Glide Dependency
     implementation 'com.github.bumptech.glide:glide:4.11.0'
 //  TODO Fancyshowcaseview Dependency
@@ -126,12 +125,12 @@ dependencies {
 //  TODO GIF Drawable Dependency
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.20'
 // TODO Exoplayer Dependency
-    implementation 'com.google.android.exoplayer:exoplayer:2.13.2'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.13.2'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.13.2'
-    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.13.2'
-    implementation 'com.google.android.exoplayer:extension-mediasession:2.13.2'
-    implementation "com.google.android.exoplayer:extension-ima:2.13.2"
+    implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.13.3'
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.13.3'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.13.3'
+    implementation "com.google.android.exoplayer:extension-ima:2.13.3"
 // TODO Retrofit Development Dependency
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'//2.6.4

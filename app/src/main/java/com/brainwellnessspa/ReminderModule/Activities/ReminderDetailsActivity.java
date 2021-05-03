@@ -338,38 +338,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             holder.bind.view.setClickable(false);
             holder.bind.view.setEnabled(false);
 
-//            checkBox = holder.bind.cbChecked;
-            /*holder.bind.llChecked.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (holder.bind.cbChecked.isChecked()) {
-//                    notifyDataSetChanged();
-                        if (!remiderIds.contains(model.get(position).getReminderId())) {
-                            remiderIds.add(model.get(position).getReminderId());
-                            binding.tvSelectAll.setText(remiderIds.size() + " selected");
-                        } else {
-                        }
-                    } else {
-                        remiderIds.remove(model.get(position).getReminderId());
-                        binding.tvSelectAll.setText(remiderIds.size() + " selected");
-                    }
-                    if (remiderIds.size() == 0) {
-                        binding.llSelectAll.setVisibility(View.GONE);
-                        binding.btnAddReminder.setVisibility(View.VISIBLE);
-                        binding.btnDeleteReminder.setVisibility(View.GONE);
-                    } else {
-                        binding.llSelectAll.setVisibility(View.VISIBLE);
-                        binding.btnAddReminder.setVisibility(View.GONE);
-                        binding.btnDeleteReminder.setVisibility(View.VISIBLE);
-                    }
-                    if (remiderIds.size() == model.size()) {
-                        binding.cbChecked.setChecked(true);
-                        binding.tvSelectAll.setText(remiderIds.size() + " selected");
-                    }
-                    Log.e("remiderIds", TextUtils.join(",", remiderIds));
-                }
-            });*/
-
             holder.bind.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (holder.bind.cbChecked.isChecked()) {
 //                    notifyDataSetChanged();
@@ -404,20 +372,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 binding.cbChecked.setChecked(false);
                 notifyDataSetChanged();
             });
-
-            /*holder.bind.llChecked.setOnClickListener(view ->  {
-                if (binding.cbChecked.isChecked()) {
-                    remiderIds.clear();
-                    for (int i = 0; i < model.size(); i++) {
-                        remiderIds.add(model.get(i).getReminderId());
-                    }
-                } else {
-                    binding.llSelectAll.setVisibility(View.GONE);
-                    remiderIds.clear();
-                }
-                Log.e("remiderIds", TextUtils.join(",", remiderIds));
-                notifyDataSetChanged();
-            });*/
 
             binding.cbChecked.setOnClickListener(view -> {
                 if (binding.cbChecked.isChecked()) {

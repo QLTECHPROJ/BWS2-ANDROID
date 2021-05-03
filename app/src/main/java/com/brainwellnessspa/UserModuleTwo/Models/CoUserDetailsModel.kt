@@ -41,9 +41,17 @@ class CoUserDetailsModel {
         @Expose
         var mobile: String? = null
 
+        @SerializedName("Image")
+        @Expose
+        var image: String? = null
+
         @SerializedName("isProfileCompleted")
         @Expose
         var isProfileCompleted: String? = null
+
+        @SerializedName("DOB")
+        @Expose
+        var dob: String? = null
 
         @SerializedName("isAssessmentCompleted")
         @Expose

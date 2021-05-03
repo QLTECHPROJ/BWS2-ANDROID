@@ -4,21 +4,13 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -26,11 +18,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -47,14 +39,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.DataBindingUtil;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,24 +51,24 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
-import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
+import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
+import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
+import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
 import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.CryptLib;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.databinding.AudiolistCustomLayoutBinding;
-import com.brainwellnessspa.databinding.OpenDetailPageLayoutBinding;
+import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.segment.analytics.Properties;
 
 import java.io.File;
@@ -102,7 +91,6 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
-import static com.brainwellnessspa.Utility.MusicService.showToast;
 
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -115,6 +103,7 @@ public class BWSApplication extends Application {
     private static BWSApplication BWSApplication;
     public static String BatteryStatus = "";
     public static String PlayerAudioId = "";
+    static List<String> remiderDays = new ArrayList<>();
 
     public static Context getContext() {
         return mContext;
@@ -466,21 +455,31 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
-    public static void getReminderDay(Context ctx, Activity act) {
+    public static void getReminderDay(Context ctx, Activity act, String CoUSERID, String playlistID, String playlistName) {
+        ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[] {
+                new ReminderSelectionModel("Sunday"),
+                new ReminderSelectionModel("Monday"),
+                new ReminderSelectionModel("Tuesday"),
+                new ReminderSelectionModel("Wednesday"),
+                new ReminderSelectionModel("Thursday"),
+                new ReminderSelectionModel("Friday"),
+                new ReminderSelectionModel("Saturday"),};
+
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.select_days_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         final LinearLayout llBack = dialog.findViewById(R.id.llBack);
-        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-        final LinearLayout llError = dialog.findViewById(R.id.llError);
         final RecyclerView rvSelectDay = dialog.findViewById(R.id.rvSelectDay);
-        final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
-        final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
-        final Button btnSave = dialog.findViewById(R.id.btnSave);
-        llBack.setOnClickListener(view12 -> dialog.dismiss());
+        final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
+        final TextView tvSelectAll = dialog.findViewById(R.id.tvSelectAll);
+        final TextView tvUnSelectAll = dialog.findViewById(R.id.tvUnSelectAll);
+        final Button btnNext = dialog.findViewById(R.id.btnNext);
 
+        tvPlaylistName.setText(playlistName);
+        llBack.setOnClickListener(view12 -> dialog.dismiss());
+        remiderDays.clear();
         dialog.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 dialog.dismiss();
@@ -489,37 +488,49 @@ public class BWSApplication extends Application {
             return false;
         });
         llBack.setOnClickListener(v -> dialog.dismiss());
-        tvGoBack.setOnClickListener(v -> dialog.dismiss());
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getReminderTime(ctx, act);
-            }
-        });
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
         rvSelectDay.setLayoutManager(manager);
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
+        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll,
+                btnNext, CoUSERID, playlistID, playlistName, dialog);
+        rvSelectDay.setAdapter(adapter);
 
+        Log.e("remiderDays", TextUtils.join(",", remiderDays));
         dialog.show();
         dialog.setCancelable(false);
     }
 
-    public static void getReminderTime(Context ctx, Activity act) {
+    public static void getReminderTime(Context ctx, Activity act, String coUSERID, String playlistID, String playlistName, Dialog dialogOld) {
+        ArrayList<ReminderMinutesListModel> reminderMinutesModel = new ArrayList<>();
+
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.select_timeslot_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         final LinearLayout llBack = dialog.findViewById(R.id.llBack);
-        final LinearLayout llError = dialog.findViewById(R.id.llError);
-        final RecyclerView rvSelectTimeSlot = dialog.findViewById(R.id.rvSelectTimeSlot);
+        final Button btnSave = dialog.findViewById(R.id.btnSave);
+        final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
+        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+        final TextView tvTime = dialog.findViewById(R.id.tvTime);
+        final TimePicker timePicker = dialog.findViewById(R.id.timePicker);
+        final RecyclerView rvSelectMinutesTimeSlot = dialog.findViewById(R.id.rvSelectMinutesTimeSlot);
+        final RecyclerView rvSelectHoursTimeSlot = dialog.findViewById(R.id.rvSelectHoursTimeSlot);
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
-        llBack.setOnClickListener(view12 -> dialog.dismiss());
+        tvPlaylistName.setText(playlistName);
+        llBack.setOnClickListener(view12 -> {
+            dialogOld.dismiss();
+            dialog.dismiss();
+        });
+        timePicker.setIs24HourView(true);
+
+        ReminderMinutesListModel[] minutesListModels = new ReminderMinutesListModel[]{};
+
 
         dialog.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dialogOld.dismiss();
                 dialog.dismiss();
                 return true;
             }
@@ -527,12 +538,221 @@ public class BWSApplication extends Application {
         });
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
-        rvSelectTimeSlot.setLayoutManager(manager);
-        rvSelectTimeSlot.setItemAnimator(new DefaultItemAnimator());
+        rvSelectMinutesTimeSlot.setLayoutManager(manager);
+        rvSelectMinutesTimeSlot.setItemAnimator(new DefaultItemAnimator());
 
+        ReminderMinutesListAdapter adapter = new ReminderMinutesListAdapter(reminderMinutesModel, act, ctx, coUSERID, playlistID, playlistName, dialog);
+        rvSelectMinutesTimeSlot.setAdapter(adapter);
+        btnSave.setOnClickListener(v -> {
+            Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
+            if (isNetworkConnected(ctx)) {
+                showProgressBar(progressBar, progressBarHolder, act);
+                Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(coUSERID, playlistID,
+                        TextUtils.join(",", remiderDays), "09:00 am", CONSTANTS.FLAG_ONE);
+                listCall.enqueue(new Callback<SetReminderOldModel>() {
+                    @Override
+                    public void onResponse(Call<SetReminderOldModel> call, Response<SetReminderOldModel> response) {
+                        try {
+                            SetReminderOldModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
+                                dialog.dismiss();
+                                dialogOld.dismiss();
+                                remiderDays.clear();
+                                hideProgressBar(progressBar, progressBarHolder, act);
+                                showToast(listModel.getResponseMessage(), act);
+                                dialog.dismiss();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SetReminderOldModel> call, Throwable t) {
+                        hideProgressBar(progressBar, progressBarHolder, act);
+                    }
+                });
+            } else {
+                showToast(ctx.getString(R.string.no_server_found), ctx);
+            }
+        });
+
+        tvGoBack.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
         dialog.setCancelable(false);
     }
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = this;
+        BWSApplication = this;
+    }
+
+    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
+        private ArrayList<ReminderMinutesListModel> minutesListModels;
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+
+        public ReminderMinutesListAdapter(ArrayList<ReminderMinutesListModel> minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_selectionlist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.tvDay.setText(minutesListModels.get(position).getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderSelectionlistLayoutBinding binding;
+
+            public MyViewHolder(ReminderSelectionlistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
+        private ReminderSelectionModel[] selectionModels;
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+
+        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
+                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID, String PlaylistID, String PlaylistName
+                , Dialog dialogOld) {
+            this.selectionModels = selectionModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_selectionlist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            final ReminderSelectionModel myListData = selectionModels[position];
+            holder.binding.tvDay.setText(selectionModels[position].getDay());
+            holder.binding.tvDay.setOnClickListener(v -> {
+                if (!remiderDays.contains(selectionModels[position].getDay())) {
+                    remiderDays.add(selectionModels[position].getDay());
+                } else {
+                    remiderDays.remove(selectionModels[position].getDay());
+                }
+                Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                if (remiderDays.size() == selectionModels.length) {
+                    tvSelectAll.setVisibility(View.GONE);
+                    tvUnSelectAll.setVisibility(View.VISIBLE);
+                } else {
+                    tvSelectAll.setVisibility(View.VISIBLE);
+                    tvUnSelectAll.setVisibility(View.GONE);
+                }
+                notifyDataSetChanged();
+            });
+
+            tvSelectAll.setOnClickListener(v -> {
+                remiderDays.clear();
+                for (int i = 0; i < selectionModels.length; i++) {
+                    if (!remiderDays.contains(selectionModels[i].getDay())) {
+                        remiderDays.add(selectionModels[i].getDay());
+                        tvSelectAll.setVisibility(View.GONE);
+                        tvUnSelectAll.setVisibility(View.VISIBLE);
+
+                    }
+                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                }
+                notifyDataSetChanged();
+            });
+
+            tvUnSelectAll.setOnClickListener(v -> {
+                remiderDays.clear();
+                tvUnSelectAll.setVisibility(View.GONE);
+                tvSelectAll.setVisibility(View.VISIBLE);
+                if (!TextUtils.join(",", remiderDays).equalsIgnoreCase("")) {
+                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                } else {
+                    Log.e("remiderDays", "days cleared");
+                }
+                notifyDataSetChanged();
+            });
+
+            if (remiderDays.contains(selectionModels[position].getDay())) {
+                holder.binding.tvDay.setTextColor(act.getResources().getColor(R.color.blue));
+            } else {
+                holder.binding.tvDay.setTextColor(act.getResources().getColor(R.color.dim_light_gray));
+            }
+
+            btnNext.setOnClickListener(v -> {
+                if (remiderDays.size() == 0) {
+                    showToast("Please select days", ctx);
+                } else {
+//                    Intent i = new Intent(ctx, TimeViewActivity.class);
+//                    act.startActivity(i);
+                    getReminderTime(ctx, act, CoUSERID, PlaylistID, PlaylistName, dialogOld);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return selectionModels.length;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderSelectionlistLayoutBinding binding;
+
+            public MyViewHolder(ReminderSelectionlistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -652,8 +872,28 @@ public class BWSApplication extends Application {
             toast.setView(view);
             toast.show();
         } else {
-            Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-            toast.show();
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.toast_above_version_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            TextView tvMessage = dialog.findViewById(R.id.tvMessage);
+            tvMessage.setText(message);
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+            dialog.show();
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                dialog.hide();
+            }, 2 * 600);
+
+            dialog.setCancelable(true);
+//            Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+//            toast.show();
         }
     }
 
@@ -788,12 +1028,5 @@ public class BWSApplication extends Application {
             }
             context.startActivity(intent);
         }
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mContext = this;
-        BWSApplication = this;
     }
 }

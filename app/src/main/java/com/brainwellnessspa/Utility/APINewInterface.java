@@ -35,6 +35,7 @@ import com.brainwellnessspa.UserModuleTwo.Models.AssessmentSaveDataModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ChangePasswordModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ChangePinModel;
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel;
+import com.brainwellnessspa.UserModuleTwo.Models.EditProfileModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel;
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPinModel;
 import com.brainwellnessspa.UserModuleTwo.Models.NewSignUpModel;
@@ -252,7 +253,8 @@ public interface APINewInterface {
 
     @POST("changepassword")
     @FormUrlEncoded
-    Call<ChangePasswordModel> getChangePassword(@Field("CoUserId") String UserID,
+    Call<ChangePasswordModel> getChangePassword(@Field("UserID") String UserID,
+                                                @Field("CoUserId") String CoUserId,
                                                 @Field("OldPassword") String OldPassword,
                                                 @Field("NewPassword") String NewPassword);
 
@@ -294,8 +296,15 @@ public interface APINewInterface {
                                                 @Field("PlaylistId") String PlaylistId,
                                                 @Field("ReminderStatus") String ReminderStatus);
 
-  @POST("removeprofileimg")
+    @POST("removeprofileimg")
     @FormUrlEncoded
     Call<RemoveProfileModel> getRemoveProfile(@Field("CoUserId") String CoUserId);
 
+    @POST("editprofile")
+    @FormUrlEncoded
+    Call<EditProfileModel> getEditProfile(@Field("CoUserId") String CoUserId,
+                                          @Field("Name") String Name,
+                                          @Field("Dob") String Dob,
+                                          @Field("MobileNo") String MobileNo,
+                                          @Field("EmailId") String EmailId);
 }

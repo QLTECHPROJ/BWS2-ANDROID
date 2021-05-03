@@ -41,6 +41,14 @@ class VerifyPinModel {
         @Expose
         var mobile: String? = null
 
+        @SerializedName("Image")
+        @Expose
+        var image: String? = null
+
+        @SerializedName("DOB")
+        @Expose
+        var dob: String? = null
+
         @SerializedName("isProfileCompleted")
         @Expose
         var isProfileCompleted: String? = null

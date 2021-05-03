@@ -22,6 +22,9 @@ class NotificationListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
 
+        binding.llBack.setOnClickListener {
+            finish()
+        }
         binding.rvNotiList.layoutManager = LinearLayoutManager(this@NotificationListActivity)
         adapter = NotiListAdapter(notiList)
         binding.rvNotiList.adapter = adapter
@@ -30,16 +33,16 @@ class NotificationListActivity : AppCompatActivity() {
     }
 
     private fun prepareNotiData() {
-        var notiAdd = NotiListModel("Playlist Reminder", "Time to listen to your playlist","Just Now")
+        var notiAdd = NotiListModel("Playlist Reminder", "Time to listen to your playlist", "Just Now")
         notiList.add(notiAdd)
-        notiAdd = NotiListModel("Home Maintenance Audio successfully added in Night Playlist","","Just Now")
+        notiAdd = NotiListModel("Home Maintenance Audio successfully added in Night Playlist", "", "Just Now")
         notiList.add(notiAdd)
-        notiAdd = NotiListModel("Your reminder is set","","Just Now")
+        notiAdd = NotiListModel("Your reminder is set", "", "Just Now")
         notiList.add(notiAdd)
-        notiAdd = NotiListModel("Your playlist is ready.","","Just Now")
+        notiAdd = NotiListModel("Your playlist is ready.", "", "Just Now")
         notiList.add(notiAdd)
 
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged()
     }
 
     class NotiListAdapter(listModel: List<NotiListModel>) : RecyclerView.Adapter<NotiListAdapter.MyViewHolder>() {
@@ -63,6 +66,10 @@ class NotificationListActivity : AppCompatActivity() {
         override fun getItemCount(): Int {
             return listModel.size
         }
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }
 

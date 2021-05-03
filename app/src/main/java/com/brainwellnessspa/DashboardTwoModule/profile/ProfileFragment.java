@@ -47,11 +47,14 @@ import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 import com.brainwellnessspa.ResourceModule.Activities.ResourceActivity;
+import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.UserModule.Activities.FileUtil;
 import com.brainwellnessspa.UserModule.Activities.RequestPermissionHandler;
 import com.brainwellnessspa.UserModule.Models.AddProfileModel;
 import com.brainwellnessspa.UserModule.Models.RemoveProfileModel;
 import com.brainwellnessspa.UserModuleTwo.Activities.GetStartedActivity;
+import com.brainwellnessspa.UserModuleTwo.Activities.SplashActivity;
+import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel;
 import com.brainwellnessspa.Utility.APIClientProfile;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -78,7 +81,6 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_CANCELED;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
-import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;
@@ -105,10 +107,10 @@ public class ProfileFragment extends Fragment {
         binding.tvName.setText(UserName);
         mRequestPermissionHandler = new RequestPermissionHandler();
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
+        profileViewData(getActivity());
         binding.llImageUpload.setOnClickListener(view15 -> {
             selectImage();
         });
-
         binding.tvName.setOnClickListener(view15 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -254,6 +256,12 @@ public class ProfileFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        profileViewData(getActivity());
+        super.onResume();
     }
 
     private void selectImage() {
@@ -403,6 +411,10 @@ public class ProfileFragment extends Fragment {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                 if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     BWSApplication.showToast(viewModel.getResponseMessage(), getActivity());
+                                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, "");
+                                    editor.commit();
                                     profileViewData(getActivity());
                                 }
                             } catch (Exception e) {
@@ -445,158 +457,55 @@ public class ProfileFragment extends Fragment {
     }
 
     void profileViewData(Context ctx) {
-        String Name;
-        if (profilePicPath.equalsIgnoreCase("")) {
-            binding.civProfile.setVisibility(View.GONE);
-            if (UserName.equalsIgnoreCase("")) {
-                Name = "Guest";
-            } else {
-                Name = UserName;
-            }
-            String Letter = Name.substring(0, 1);
-            binding.rlLetter.setVisibility(View.VISIBLE);
-            binding.tvLetter.setText(Letter);
-        } else {
-            binding.civProfile.setVisibility(View.VISIBLE);
-            binding.rlLetter.setVisibility(View.GONE);
-            setProfilePic(profilePicPath);
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+            Call<CoUserDetailsModel> listCall = APINewClient.getClient().getCoUserDetails(USERID, CoUserID);
+            listCall.enqueue(new Callback<CoUserDetailsModel>() {
+                @Override
+                public void onResponse(Call<CoUserDetailsModel> call, Response<CoUserDetailsModel> response) {
+                    try {
+                        CoUserDetailsModel viewModel = response.body();
+                        if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                    viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                    viewModel.getResponseData().getName() == null) {
+                                binding.tvName.setText(R.string.Guest);
+                            } else {
+                                binding.tvName.setText(viewModel.getResponseData().getName());
+                            }
+
+                            String Name;
+                            profilePicPath = viewModel.getResponseData().getImage();
+                            if (profilePicPath.equalsIgnoreCase("")) {
+                                binding.civProfile.setVisibility(View.GONE);
+                                if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
+                                    Name = "Guest";
+                                } else {
+                                    Name = viewModel.getResponseData().getName();
+                                }
+                                String Letter = Name.substring(0, 1);
+                                binding.rlLetter.setVisibility(View.VISIBLE);
+                                binding.tvLetter.setText(Letter);
+                            } else {
+                                binding.civProfile.setVisibility(View.VISIBLE);
+                                binding.rlLetter.setVisibility(View.GONE);
+                                setProfilePic(profilePicPath);
+                            }
+                        } else {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CoUserDetailsModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                }
+            });
         }
-//        if (BWSApplication.isNetworkConnected(ctx)) {
-//            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-//            Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
-//            listCall.enqueue(new Callback<ProfileViewModel>() {
-//                @Override
-//                public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
-//                    try {
-//                        ProfileViewModel viewModel = response.body();
-//                        if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-//                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-//                            if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
-//                                    viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-//                                    viewModel.getResponseData().getName() == null) {
-//                                binding.etUser.setText(R.string.Guest);
-//                            } else {
-//                                binding.etUser.setText(viewModel.getResponseData().getName());
-//                            }
-//                            UserName = viewModel.getResponseData().getName();
-//                            UserCalendar = viewModel.getResponseData().getDOB();
-//                            UserMobileNumber = viewModel.getResponseData().getPhoneNumber();
-//                            UserEmail = viewModel.getResponseData().getEmail();
-//                            String Name;
-//                            profilePicPath = viewModel.getResponseData().getImage();
-//                            if (profilePicPath.equalsIgnoreCase("")) {
-//                                binding.civProfile.setVisibility(View.GONE);
-//                                if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
-//                                    Name = "Guest";
-//                                } else {
-//                                    Name = viewModel.getResponseData().getName();
-//                                }
-//                                String Letter = Name.substring(0, 1);
-//                                binding.rlLetter.setVisibility(View.VISIBLE);
-//                                binding.tvLetter.setText(Letter);
-//                            } else {
-//                                binding.civProfile.setVisibility(View.VISIBLE);
-//                                binding.rlLetter.setVisibility(View.GONE);
-//                                setProfilePic(profilePicPath);
-//                            }
-//
-//                            if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
-//                                binding.etCalendar.setText("");
-//                            } else {
-//                            /*String date = viewModel.getResponseData().getDOB();
-//                            SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
-//                            if (!date.isEmpty()) {
-//                                Date newDate = null;
-//                                try {
-//                                    newDate = spf.parse(date);
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-//                                date = spf.format(newDate);*/
-//                                binding.etCalendar.setText(viewModel.getResponseData().getDOB());
-////                            }
-//                            }
-//
-//                            if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")
-//                                    && BWSApplication.isEmailValid(viewModel.getResponseData().getEmail())) {
-//                                binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.green_dark), android.graphics.PorterDuff.Mode.SRC_IN);
-//                            } else {
-//                                binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-//
-//                            }
-//                            binding.etEmail.setText(viewModel.getResponseData().getEmail());
-//                            binding.etMobileNumber.setText(viewModel.getResponseData().getPhoneNumber());
-//
-//                            if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")) {
-//                                binding.etEmail.setEnabled(true);
-//                                binding.etEmail.setClickable(true);
-//                            } else {
-//                                binding.etEmail.setEnabled(true);
-//                                binding.etEmail.setClickable(true);
-//                            }
-//
-//                            if (!viewModel.getResponseData().getPhoneNumber().equalsIgnoreCase("")) {
-//                                binding.etMobileNumber.setEnabled(false);
-//                                binding.etMobileNumber.setClickable(false);
-//                            } else {
-//                                binding.etMobileNumber.setEnabled(true);
-//                                binding.etMobileNumber.setClickable(true);
-//                            }
-//
-//                            binding.etCalendar.setOnClickListener(view -> {
-//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                                    setDate();
-//                                }
-//                            });
-//
-//                            if ((viewModel.getResponseData().getIsVerify().equalsIgnoreCase("0"))) {
-//                                binding.ivCheckEmail.setVisibility(View.GONE);
-//                                binding.llEmailApply.setClickable(true);
-//                                binding.llEmailApply.setEnabled(true);
-//                                binding.tlEmail.setErrorEnabled(false);
-//                                binding.tlEmail.clearFocus();
-////                            tvApply.setEnabled(true);
-////                            tvApply.setClickable(true);
-////                            tvApply.setText("Verify");
-////                            tvApply.setTextColor(getResources().getColor(R.color.gray));
-////                            tvApplytimer.setVisibility(View.GONE);
-//                            } else if (viewModel.getResponseData().getIsVerify().equalsIgnoreCase("1")) {
-//                                binding.ivCheckEmail.setVisibility(View.VISIBLE);
-//                                binding.llEmailApply.setClickable(false);
-//                                binding.llEmailApply.setEnabled(false);
-//                                binding.tlEmail.setErrorEnabled(false);
-//                                binding.tlEmail.clearFocus();
-////                            tvApply.setText("Verified");
-////                            tvApply.setTextColor(getResources().getColor(R.color.green));
-////                            tvApply.setEnabled(false);
-////                            tvApply.setClickable(false);
-////                            tvApplytimer.setVisibility(View.GONE);
-//                            } else if (viewModel.getResponseData().getIsVerify().equalsIgnoreCase("2")) {
-//                                binding.llEmailApply.setEnabled(false);
-//                                binding.llEmailApply.setClickable(false);
-//                                binding.tlEmail.setError(tryafter);
-//                                binding.tlEmail.setErrorEnabled(true);
-////                            tvApply.setText("Verify");
-////                            tvApplytimer.setVisibility(View.GONE);
-////                            tvApply.setClickable(false);
-////                            tvApply.setEnabled(false);
-////                            tvApply.setTextColor(getResources().getColor(R.color.gray));
-//                            }
-//                        } else {
-//                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ProfileViewModel> call, Throwable t) {
-//                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-//                }
-//            });
-//        }
     }
 
     @Override
@@ -623,6 +532,10 @@ public class ProfileFragment extends Fragment {
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         setProfilePic(profilePicPath);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), getActivity());
+                                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.getResponseData().getProfileImage());
+                                        editor.commit();
                                         profileViewData(getActivity());
                                     }
                                 }
@@ -667,6 +580,10 @@ public class ProfileFragment extends Fragment {
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         setProfilePic(profilePicPath);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), getActivity());
+                                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.getResponseData().getProfileImage());
+                                        editor.commit();
                                         profileViewData(getActivity());
                                     }
                                 }
@@ -728,33 +645,35 @@ public class ProfileFragment extends Fragment {
         listCall.enqueue(new Callback<SucessModel>() {
             @Override
             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                SucessModel loginModel = response.body();
-                try {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
-                        dialog.hide();
-                        analytics.flush();
-                        analytics.reset();
-                        Properties p1 = new Properties();
-                        p1.putValue("userId", USERID);
-                        p1.putValue("coUserId", CoUserID);
-                        p1.putValue("deviceId", DeviceID);
-                        p1.putValue("deviceType", "Android");
-                        p1.putValue("userName", UserName);
-                        p1.putValue("userEmail", UserEmail);
-                        BWSApplication.addToSegment("Signed Out", p1, CONSTANTS.track);
-                        Intent i = new Intent(getActivity(), GetStartedActivity.class);
-                        startActivity(i);
-                        getActivity().finish();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                SucessModel sucessModel = response.body();
+//                try {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
                 }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                if (sucessModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                    Properties p1 = new Properties();
+                    p1.putValue("userId", USERID);
+                    p1.putValue("coUserId", CoUserID);
+                    p1.putValue("deviceId", DeviceID);
+                    p1.putValue("deviceType", "Android");
+                    p1.putValue("userName", UserName);
+                    p1.putValue("userEmail", UserEmail);
+                    BWSApplication.addToSegment("Signed Out", p1, CONSTANTS.track);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
+                    dialog.hide();
+//                    SplashActivity activity = new SplashActivity();
+//                    activity.analytics.flush();
+//                    activity.analytics.reset();
+                    Intent i = new Intent(getActivity(), GetStartedActivity.class);
+                    i.putExtra(CONSTANTS.ScreenVisible, "1");
+                    startActivity(i);
+                    getActivity().finish();
+                }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
 
             @Override

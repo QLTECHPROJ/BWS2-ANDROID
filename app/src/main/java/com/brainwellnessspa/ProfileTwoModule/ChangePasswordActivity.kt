@@ -1,8 +1,12 @@
 package com.brainwellnessspa.ProfileTwoModule
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel
@@ -19,12 +23,53 @@ class ChangePasswordActivity : AppCompatActivity() {
     lateinit var binding: ActivityChangePasswordBinding
     var USERID: String? = null
     var CoUserID: String? = null
+    lateinit var activity: Activity
+
+    var userTextWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            val CurrentPswd: String = binding.etCurrentPswd.getText().toString().trim()
+            val NewPswd: String = binding.etNewPswd.getText().toString().trim()
+            val ConfirmPswd: String = binding.etConfirmPswd.getText().toString().trim()
+            if (CurrentPswd.equals("", ignoreCase = true) &&
+                    NewPswd.equals("", ignoreCase = true) && ConfirmPswd.equals("", ignoreCase = true)) {
+                binding.btnSave.setEnabled(false)
+                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (CurrentPswd.equals("", ignoreCase = true)) {
+                binding.btnSave.setEnabled(false)
+                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (NewPswd.equals("", ignoreCase = true)) {
+                binding.btnSave.setEnabled(false)
+                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (ConfirmPswd.equals("", ignoreCase = true)) {
+                binding.btnSave.setEnabled(false)
+                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else {
+                binding.btnSave.setEnabled(true)
+                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            }
+        }
+
+        override fun afterTextChanged(s: Editable) {}
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_password)
+        activity = this@ChangePasswordActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+
+        binding.etCurrentPswd.addTextChangedListener(userTextWatcher)
+        binding.etNewPswd.addTextChangedListener(userTextWatcher)
+        binding.etConfirmPswd.addTextChangedListener(userTextWatcher)
+
         binding.llBack.setOnClickListener {
             val i = Intent(this, AccountInfoActivity::class.java)
             startActivity(i)
@@ -36,33 +81,37 @@ class ChangePasswordActivity : AppCompatActivity() {
     }
 
     private fun changePassword() {
-        if (binding.etCurrentPIN.text.toString().equals("")) {
-            binding.flCurrentPIN.error = "Current Login PIN is required"
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = ""
-        } else if (binding.etNewPIN.text.toString().equals("")) {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = "New Login PIN is required"
-            binding.flConfirmPIN.error = ""
-        } else if (binding.etConfirmPIN.text.toString().equals("")) {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = "Confirm new Login PIN is required"
+        if (binding.etCurrentPswd.text.toString().equals("")) {
+            binding.flCurrentPswd.error = "Current Login Password is required"
+            binding.flNewPswd.error = ""
+            binding.flConfirmPswd.error = ""
+        } else if (binding.etNewPswd.text.toString().equals("")) {
+            binding.flCurrentPswd.error = ""
+            binding.flNewPswd.error = "New Login Password is required"
+            binding.flConfirmPswd.error = ""
+        } else if (binding.etConfirmPswd.text.toString().equals("")) {
+            binding.flCurrentPswd.error = ""
+            binding.flNewPswd.error = ""
+            binding.flConfirmPswd.error = "Confirm new Login Password is required"
+        } else if (!binding.etConfirmPswd.text.toString().equals(binding.etNewPswd.text.toString())) {
+            binding.flCurrentPswd.error = ""
+            binding.flNewPswd.error = ""
+            binding.flConfirmPswd.error = "New & Confirm Login Password not match"
         } else {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = ""
+            binding.flCurrentPswd.error = ""
+            binding.flNewPswd.error = ""
+            binding.flConfirmPswd.error = ""
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePasswordActivity)
-                val listCall: Call<ChangePasswordModel> = APINewClient.getClient().getChangePassword(USERID,
-                        binding.etCurrentPIN.text.toString(),
-                        binding.etConfirmPIN.text.toString())
+                val listCall: Call<ChangePasswordModel> = APINewClient.getClient().getChangePassword(USERID, CoUserID,
+                        binding.etCurrentPswd.text.toString(),
+                        binding.etConfirmPswd.text.toString())
                 listCall.enqueue(object : Callback<ChangePasswordModel> {
                     override fun onResponse(call: Call<ChangePasswordModel>, response: Response<ChangePasswordModel>) {
                         try {
-                            binding.flCurrentPIN.error = ""
-                            binding.flNewPIN.error = ""
-                            binding.flConfirmPIN.error = ""
+                            binding.flCurrentPswd.error = ""
+                            binding.flNewPswd.error = ""
+                            binding.flConfirmPswd.error = ""
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePasswordActivity)
                             val listModel: ChangePasswordModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {

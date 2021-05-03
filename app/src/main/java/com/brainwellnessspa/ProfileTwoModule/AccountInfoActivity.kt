@@ -20,6 +20,7 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.llEtProfile.setOnClickListener {
             val i = Intent(this, EditProfileActivity::class.java)
             startActivity(i)
+            finish()
         }
 
         binding.llChangePswd.setOnClickListener {

@@ -13,19 +13,19 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
-import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
-import com.brainwellnessspa.DassAssSliderTwo.Activity.DassAssSliderActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySplashBinding
+import com.segment.analytics.Analytics
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class SplashActivity : AppCompatActivity() {
+    lateinit var analytics: Analytics
     lateinit var ctx: Context
     lateinit var binding: ActivitySplashBinding
     var USERID: String? = ""
@@ -41,7 +41,9 @@ class SplashActivity : AppCompatActivity() {
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+        //        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);
 //        checkUserDetails()
+        setAnalytics()
     }
 
     override fun onResume() {
@@ -64,6 +66,7 @@ class SplashActivity : AppCompatActivity() {
         }
         super.onResume()
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
@@ -128,7 +131,9 @@ class SplashActivity : AppCompatActivity() {
                 }
             })
         }else{
+            setAnalytics()
             askBattryParmition()
+            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx)
         }
     }
 
@@ -148,6 +153,7 @@ class SplashActivity : AppCompatActivity() {
                         editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, coUserDetailsModel.responseData!!.indexScore)
                         editor.commit()
                         checkAppVersion()
+                        setAnalytics()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -180,9 +186,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun callDashboard() {
-        Log.e("isProfileCompleted",isProfileCompleted.toString())
-        Log.e("isAssessmentCompleted",isAssessmentCompleted.toString())
-        Log.e("indexScore",indexScore.toString())
+        Log.e("isProfileCompleted", isProfileCompleted.toString())
+        Log.e("isAssessmentCompleted", isAssessmentCompleted.toString())
+        Log.e("indexScore", indexScore.toString())
         /*if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
@@ -201,14 +207,14 @@ class SplashActivity : AppCompatActivity() {
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
-                    intent.putExtra(CONSTANTS.ScreenView,"1")
+                    intent.putExtra(CONSTANTS.ScreenView, "1")
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())
             } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
-                    intent.putExtra(CONSTANTS.ScreenView,"2")
+                    intent.putExtra(CONSTANTS.ScreenView, "2")
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())
@@ -222,4 +228,26 @@ class SplashActivity : AppCompatActivity() {
             }
 //        }
     }
+
+    fun setAnalytics() {
+        try {
+//     TODO : Live segment key
+//                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
+            analytics = Analytics.Builder(application, getString(R.string.segment_key_foram)) //foram
+                    .trackApplicationLifecycleEvents()
+                    .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
+                    .trackAttributionInformation()
+                    .trackDeepLinks()
+                    .collectDeviceId(true)
+                    .build()
+            /*.use(FirebaseIntegration.FACTORY) */Analytics.setSingletonInstance(analytics)
+        } catch (e: java.lang.Exception) {
+//            incatch = true;
+//            Log.e("in Catch", "True");
+//            Properties p = new Properties();
+//            p.putValue("Application Crashed", e.toString());
+//            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);
+        }
+    }
+
 }

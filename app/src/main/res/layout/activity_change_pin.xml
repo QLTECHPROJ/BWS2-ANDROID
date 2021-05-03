@@ -198,11 +198,12 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_48sdp"
             android:layout_marginBottom="@dimen/_26sdp"
-            android:background="@drawable/light_green_rounded_filled"
+            android:background="@drawable/gray_round_cornor"
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
             android:text="Save"
+            android:enabled="false"
             android:textColor="@color/white" />
 
         <LinearLayout

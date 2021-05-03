@@ -26,23 +26,27 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity
 import com.brainwellnessspa.ManageModule.SleepTimeActivity
+import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
 import com.brainwellnessspa.R
+import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity
 import com.brainwellnessspa.UserModuleTwo.Activities.WalkScreenActivity
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
-import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.FragmentHomeBinding
 import com.brainwellnessspa.databinding.MultipleProfileChangeLayoutBinding
 import com.brainwellnessspa.databinding.UserListCustomLayoutBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import retrofit2.Call
@@ -58,6 +62,7 @@ class HomeFragment : Fragment() {
     var CoUSERID: String? = null
     var USERID: String? = null
     var UserName: String? = null
+    var UserIMAGE: String? = null
     var PlaylistImage = ""
     var PlaylistType = ""
     var UserID: String? = null
@@ -89,9 +94,18 @@ class HomeFragment : Fragment() {
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+        UserIMAGE = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
         binding.tvName.text = UserName
+        if (UserIMAGE.equals("", true)) {
+            binding.ivUser.setImageResource(R.drawable.ic_gray_user)
+        } else {
+            Glide.with(ctx).load(UserIMAGE)
+                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
+                    .into(binding.ivUser)
+        }
         homeViewModel!!.text.observe(viewLifecycleOwner, { s: String? -> })
         prepareHomeData()
+
         binding.llBottomView.setOnClickListener { v: View? ->
             val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.user_list_custom_layout, null, false)
             mBottomSheetDialog = BottomSheetDialog(ctx, R.style.BaseBottomSheetDialog)
@@ -110,12 +124,25 @@ class HomeFragment : Fragment() {
                 mBottomSheetDialog!!.hide()
             }
         }
-        binding.llPlayer.setOnClickListener { v: View? ->
-            val i = Intent(activity, /*ManageAudioPlaylistActivity*/SleepTimeActivity::class.java)
+        binding.tvReminder.setOnClickListener {
+            BWSApplication.getReminderDay(activity, activity, CoUSERID, "15", "Ultimate Anger Relief Bundle")
+
+        }
+
+        binding.ivEditCategory.setOnClickListener {
+            val i = Intent(activity, SleepTimeActivity::class.java)
             startActivity(i)
         }
-        binding.llClick.setOnClickListener { v: View? -> }
-        binding.llProfile.setOnClickListener { v: View? -> }
+
+        binding.llClick.setOnClickListener {
+            val i = Intent(activity, NotificationListActivity::class.java)
+            startActivity(i)
+        }
+
+        binding.llPlayerView.setOnClickListener { v: View? ->
+            val i = Intent(activity, ManageAudioPlaylistActivity::class.java)
+            startActivity(i)
+        }
         return view
     }
 
@@ -176,6 +203,13 @@ class HomeFragment : Fragment() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val modelList = model.coUserList
             holder.bind.tvName.text = modelList!![position].name
+            if (modelList[position].image.equals("", true)) {
+                holder.bind.ivProfileImage.setImageResource(R.drawable.ic_user_default_icon)
+            } else {
+                Glide.with(activity!!).load(modelList[position].image)
+                        .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
+                        .into(holder.bind.ivProfileImage)
+            }
             holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
             holder.bind.ivCheck.visibility = View.INVISIBLE
             if (selectedItem == position) {
@@ -248,7 +282,7 @@ class HomeFragment : Fragment() {
                                                 act.finish()
                                             } else if (responseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                 val intent = Intent(activity, AssProcessActivity::class.java)
-                                                intent.putExtra(CONSTANTS.ASSPROCESS,"0")
+                                                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                 act.startActivity(intent)
                                                 act.finish()
                                             } else if (responseData.isProfileCompleted.equals("1", ignoreCase = true) &&
@@ -265,6 +299,7 @@ class HomeFragment : Fragment() {
                                             editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.responseData!!.name)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData!!.indexScore)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, responseData.image)
                                             editor.commit()
                                             BWSApplication.showToast(listModel.responseMessage, activity)
                                             dialog.dismiss()

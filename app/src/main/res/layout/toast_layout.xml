@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@drawable/ic_toast_bg"
+            android:background="@drawable/ic_toast_app_bg"
             android:layout_margin="16dp">
 
             <TextView

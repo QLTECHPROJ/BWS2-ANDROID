@@ -99,6 +99,7 @@ public class CONSTANTS {
     public static final String PREFE_ACCESS_SIGNIN_COUSER_TEMP = "CoUserTemp";
     public static final String PREFE_ACCESS_UserID = "UserID";
     public static final String PREFE_ACCESS_NAME = "Name";
+    public static final String PREFE_ACCESS_IMAGE = "Image";
     public static final String PREFE_ACCESS_USEREMAIL = "UserEmail";
     public static final String PREFE_ACCESS_DeviceType = "DeviceType";
     public static final String PREFE_ACCESS_DeviceID = "DeviceID";

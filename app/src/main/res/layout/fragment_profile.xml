@@ -42,8 +42,8 @@
 
                             <com.brainwellnessspa.RoundedImageView
                                 android:id="@+id/civProfile"
-                                android:layout_width="@dimen/_90sdp"
-                                android:layout_height="@dimen/_90sdp"
+                                android:layout_width="@dimen/_100sdp"
+                                android:layout_height="@dimen/_100sdp"
                                 android:padding="@dimen/_2sdp"
                                 android:src="@drawable/default_profile"
                                 android:visibility="gone" />
@@ -63,7 +63,7 @@
                                     android:fontFamily="@font/montserrat_semi_bold"
                                     android:gravity="center"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_26sdp" />
+                                    android:textSize="@dimen/_29sdp" />
 
                             </RelativeLayout>
                         </LinearLayout>
@@ -71,7 +71,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_12sdp"
                             android:gravity="center_vertical"
                             android:orientation="vertical">
 
