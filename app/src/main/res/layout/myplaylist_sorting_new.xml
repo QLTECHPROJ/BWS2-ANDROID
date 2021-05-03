@@ -78,7 +78,6 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:text="Home Maintenance"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
 
@@ -89,8 +88,7 @@
                     android:layout_marginTop="@dimen/_4sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
-                    android:text="57:01"
-                    android:textColor="@color/extra_light_gray"
+                    android:textColor="@color/app_theme_color"
                     android:textSize="@dimen/_13sdp" />
             </LinearLayout>
         </LinearLayout>
@@ -153,6 +151,7 @@
                     android:layout_width="@dimen/_38sdp"
                     android:layout_height="@dimen/_38sdp"
                     android:padding="@dimen/_10sdp"
+                    app:tint="@color/app_theme_color"
                     android:src="@drawable/remove_icon" />
 
             </LinearLayout>
@@ -172,6 +171,7 @@
                     android:layout_width="@dimen/_38sdp"
                     android:layout_height="@dimen/_38sdp"
                     android:padding="@dimen/_10sdp"
+                    app:tint="@color/app_theme_color"
                     android:src="@drawable/ic_sort_icon" />
 
             </LinearLayout>

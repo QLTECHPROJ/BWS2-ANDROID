@@ -169,7 +169,6 @@
                                             android:fontFamily="@font/montserrat_light"
                                             android:gravity="start"
                                             android:paddingLeft="@dimen/_9sdp"
-                                            android:text="@string/Set_Reminder"
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/_12sdp" />
 

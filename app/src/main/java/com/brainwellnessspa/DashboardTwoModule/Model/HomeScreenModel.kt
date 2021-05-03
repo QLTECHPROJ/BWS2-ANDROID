@@ -102,6 +102,10 @@ class HomeScreenModel {
             @Expose
             var reminderTime: String? = null
 
+            @SerializedName("ReminderId")
+            @Expose
+            var reminderId: String? = null
+
             class PlaylistSong {
                 @SerializedName("ID")
                 @Expose

@@ -251,7 +251,7 @@ class HomeFragment : Fragment() {
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
-                                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID)
+                                            homelistModel.responseData!!.suggestedPlaylist!!.reminderId)
                                     listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                                         override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                                             try {

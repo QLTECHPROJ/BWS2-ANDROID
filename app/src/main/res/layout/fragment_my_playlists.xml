@@ -387,8 +387,7 @@
                                     android:id="@+id/llSpace"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:orientation="horizontal"
-                                    android:weightSum="1">
+                                    android:orientation="horizontal">
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/rvPlayLists"
