@@ -29,6 +29,7 @@ import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioCl
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
+import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment
@@ -51,6 +52,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 public class ManageFragment : Fragment() {
     lateinit var binding: FragmentManageBinding
@@ -70,10 +72,10 @@ public class ManageFragment : Fragment() {
         val view: View = binding.root
         ctx = requireActivity()
         act = requireActivity()
-        val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-        binding.rvMainPlayList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+            val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
+            USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+            CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+            binding.rvMainPlayList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMainAudioList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 
         DB = Room.databaseBuilder(ctx,
@@ -459,7 +461,7 @@ public class ManageFragment : Fragment() {
                             binding.llPause.visibility = View.VISIBLE
                         } else {
                             BWSApplication.PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
-                            callMainPlayerSuggested(0, "", listModel, ctx, activity, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!)
+                            callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, activity, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!)
                             binding.llPlay.visibility = View.GONE
                             binding.llPause.visibility = View.VISIBLE
                         }
@@ -525,7 +527,7 @@ public class ManageFragment : Fragment() {
         }
     }
 
-    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: HomeDataModel, ctx: Context, activity: FragmentActivity?, playlistID: String) {
+    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, activity: FragmentActivity?, playlistID: String) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
@@ -585,12 +587,26 @@ public class ManageFragment : Fragment() {
         }
     }
 
-    private fun callPlayerSuggested(position: Int, view: String?, listModel: HomeDataModel, ctx: Context, act: Activity, playlistID: String) {
+    private fun callPlayerSuggested(position: Int, view: String?, listModel:List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
         callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
-        val json = gson.toJson(listModel)
+
+        val downloadAudioDetails = ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>()
+        for (i in listModel.indices) {
+            val mainPlayModel = PlaylistDetailsModel.ResponseData.PlaylistSong()
+            mainPlayModel.id = listModel[i].id
+            mainPlayModel.name = listModel[i].name
+            mainPlayModel.audioFile = listModel[i].audioFile
+            mainPlayModel.audioDirection = listModel[i].audioDirection
+            mainPlayModel.audiomastercat = listModel[i].audiomastercat
+            mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
+            mainPlayModel.imageFile = listModel[i].imageFile
+            mainPlayModel.audioDuration = listModel[i].audioDuration
+            downloadAudioDetails.add(mainPlayModel)
+        }
+        val json = gson.toJson(downloadAudioDetails)
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)

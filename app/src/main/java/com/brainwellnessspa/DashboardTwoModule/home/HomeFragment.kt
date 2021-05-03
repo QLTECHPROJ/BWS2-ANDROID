@@ -29,7 +29,9 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
+import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
@@ -368,7 +370,7 @@ class HomeFragment : Fragment() {
                                 binding.llPause.visibility = View.VISIBLE
                             } else {
                                 BWSApplication.PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
-                                callMainPlayerSuggested(0, "", listModel, ctx, activity, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!)
+                                callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, activity, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!)
                                 binding.llPlay.visibility = View.GONE
                                 binding.llPause.visibility = View.VISIBLE
                             }
@@ -403,7 +405,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: HomeScreenModel, ctx: Context, activity: FragmentActivity?, playlistID: String) {
+    private fun callMainPlayerSuggested(position: Int, view: String?, listModel:  List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, activity: FragmentActivity?, playlistID: String) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
@@ -463,12 +465,25 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun callPlayerSuggested(position: Int, view: String?, listModel: HomeScreenModel, ctx: Context, act: Activity, playlistID: String) {
+    private fun callPlayerSuggested(position: Int, view: String?, listModel:  List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
         GlobalInitExoPlayer.callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
-        val json = gson.toJson(listModel)
+        val downloadAudioDetails = ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>()
+        for (i in listModel.indices) {
+            val mainPlayModel = PlaylistDetailsModel.ResponseData.PlaylistSong()
+            mainPlayModel.id = listModel[i].id
+            mainPlayModel.name = listModel[i].name
+            mainPlayModel.audioFile = listModel[i].audioFile
+            mainPlayModel.audioDirection = listModel[i].audioDirection
+            mainPlayModel.audiomastercat = listModel[i].audiomastercat
+            mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
+            mainPlayModel.imageFile = listModel[i].imageFile
+            mainPlayModel.audioDuration = listModel[i].audioDuration
+            downloadAudioDetails.add(mainPlayModel)
+        }
+        val json = gson.toJson(downloadAudioDetails)
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)

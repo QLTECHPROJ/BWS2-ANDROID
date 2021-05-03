@@ -19,7 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +26,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -36,9 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
@@ -61,13 +58,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -77,7 +74,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";
     FragmentDownloadsBinding binding;
-    String UserID, AudioFlag, IsLock, IsPlayDisclimer;
+    String UserID,CoUserID, IsPlayDisclimer;
     AudioDownlaodsAdapter adapter;
     boolean isThreadStart = false;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
@@ -92,11 +89,11 @@ public class AudioDownloadsFragment extends Fragment {
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+
+                if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                     if (player != null) {
                         if (data.equalsIgnoreCase("play")) {
 //                    BWSApplication.showToast("Play", getActivity());
@@ -131,8 +128,11 @@ public class AudioDownloadsFragment extends Fragment {
         view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
-            IsLock = getArguments().getString("IsLock");
         }
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE);
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+
 //        handler1 = new Handler();
 
         DB = Room.databaseBuilder(getActivity(),
@@ -144,7 +144,6 @@ public class AudioDownloadsFragment extends Fragment {
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
         binding.tvFound.setText("Your downloaded audios will appear here");
-        RefreshData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
@@ -174,7 +173,7 @@ public class AudioDownloadsFragment extends Fragment {
                         dad.setDownloadProgress(audioList.get(i).getDownloadProgress());
                         audioList1.add(dad);
                     }
-                    getDataList(audioList1, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList, IsLock);
+                    getDataList(audioList1, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList);
                     binding.llError.setVisibility(View.GONE);
                     binding.rvDownloadsList.setVisibility(View.VISIBLE);
                 } else {
@@ -193,7 +192,7 @@ public class AudioDownloadsFragment extends Fragment {
 
     private void getDownloadData() {
         try {
-            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
             Gson gson = new Gson();
             String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
             String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
@@ -226,7 +225,6 @@ public class AudioDownloadsFragment extends Fragment {
     @Override
     public void onResume() {
         callObserverMethod();
-        RefreshData();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
 //        audioList = GetAllMedia(getActivity());
@@ -249,21 +247,7 @@ public class AudioDownloadsFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener1);
         super.onDestroy();
     }
-
-    public void RefreshData() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 9, 0, 210);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 9, 0, 28);
-            binding.llSpace.setLayoutParams(params);
-        }
-    }
-    private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, String IsLock) {
+    private void getDataList(List<DownloadAudioDetails> historyList, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
             binding.llError.setVisibility(View.VISIBLE);
@@ -271,7 +255,7 @@ public class AudioDownloadsFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.GONE);
             binding.llSpace.setVisibility(View.VISIBLE);
-            adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound, IsLock);
+            adapter = new AudioDownlaodsAdapter(historyList, getActivity(),  progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound);
             binding.rvDownloadsList.setAdapter(adapter);
             LocalBroadcastManager.getInstance(getActivity())
                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
@@ -281,16 +265,15 @@ public class AudioDownloadsFragment extends Fragment {
     }
 
     private void callAddTransFrag() {
-        Fragment fragment = new MiniPlayerFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flContainer, fragment)
-                .commit();
+        Intent i =new Intent(getActivity(), MyPlayerActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        getActivity().startActivity(i);
+        getActivity().overridePendingTransition(0, 0);
     }
 
     public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
         FragmentActivity ctx;
-        String UserID, songId, AudioFlag, IsLock;
+        String UserID;
         FrameLayout progressBarHolder;
         ProgressBar ImgV;
         LinearLayout llError;
@@ -304,8 +287,8 @@ public class AudioDownloadsFragment extends Fragment {
 //    private Runnable UpdateSongTime3;
 
 
-        public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
-                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound, String IsLock) {
+        public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx,
+                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
@@ -314,15 +297,6 @@ public class AudioDownloadsFragment extends Fragment {
             this.llError = llError;
             this.rvDownloadsList = rvDownloadsList;
             this.tvFound = tvFound;
-            this.IsLock = IsLock;
-        /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type = new TypeToken<List<String>>() {
-            }.getType();
-//            fileNameList = gson.fromJson(json, type);
-        }*/
             getDownloadData();
         }
 
@@ -433,34 +407,32 @@ public class AudioDownloadsFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
 //            }
 
-            SharedPreferences sharedzw = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-//            if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-//                if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
-//                    songId = myAudioId;
-//                    if (player != null) {
-//                        if (!player.getPlayWhenReady()) {
-//                            holder.binding.equalizerview.pause();
-//                        } else {
-//                            holder.binding.equalizerview.resume(true);
-//                        }
-//                    } else
-//                        holder.binding.equalizerview.stop(true);
-//                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
-//                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                } else {
-//                    holder.binding.equalizerview.setVisibility(View.GONE);
-//                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-//                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                }
-//            } else {
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+
+            if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
+                if (BWSApplication.PlayerAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
+                            holder.binding.equalizerview.pause();
+                        } else {
+                            holder.binding.equalizerview.resume(true);
+                        }
+                    } else
+                        holder.binding.equalizerview.stop(true);
+                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                } else {
+                    holder.binding.equalizerview.setVisibility(View.GONE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                }
+            } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//            }
+            }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 ComeScreenAccount = 0;
@@ -476,43 +448,23 @@ public class AudioDownloadsFragment extends Fragment {
 //                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     comefromDownload = "1";
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                    String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                     IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 if (player != null) {
-                                    if (position != positionSaved) {
+                                    if (position != PlayerPosition) {
                                         int i = player.getMediaItemCount();
                                         if (i < listModelList.size()) {
                                             callTransFrag(position, listModelList, true);
                                         } else {
                                             player.seekTo(position, 0);
                                             player.setPlayWhenReady(true);
-                                            miniPlayer = 1;
-                                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = sharedxx.edit();
-                                            Gson gson = new Gson();
-                                            String json = gson.toJson(listModelList);
-                                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-                                            editor.commit();
-                                            try {
-                                                callAddTransFrag();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
+                                            callTransFrag(position,listModelList,false);
                                         }
                                     }
                                 } else {
@@ -556,7 +508,7 @@ public class AudioDownloadsFragment extends Fragment {
                             callTransFrag(position, listModelList2, audioc);
                         }
                     } else {
-                        getMedia(audioPlay, AudioFlag, position);
+                        getMedia(AudioPlayerFlag, position);
                     }
                     Properties p = new Properties();
                     p.putValue("userId", UserID);
@@ -570,11 +522,9 @@ public class AudioDownloadsFragment extends Fragment {
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 try {
-                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    String AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                         String name = "";
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                         Gson gson = new Gson();
                         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
@@ -585,19 +535,18 @@ public class AudioDownloadsFragment extends Fragment {
                             arrayList.remove(0);
                         }
                         name = arrayList.get(0).getName();
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        if (  AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
                             } else {
-                                if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
+                                if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
                                     BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
                                 } else {
                                     deleteAudio(holder.getAdapterPosition());
                                 }
                             }
                         } else {
-                            if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
+                            if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
                                 BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
                             } else {
                                 deleteAudio(holder.getAdapterPosition());
@@ -612,12 +561,13 @@ public class AudioDownloadsFragment extends Fragment {
             });
         }
 
-        private void getMedia(boolean audioPlay, String AudioFlag, int position) {
+        private void getMedia(String AudioFlag, int position) {
 
             int pos = 0;
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-            if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+            if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
@@ -636,7 +586,7 @@ public class AudioDownloadsFragment extends Fragment {
                             listModelList2.add(listModelList.get(i));
                         }
                     }
-                    if (position != positionSaved) {
+                    if (position != PlayerPosition) {
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
                             callTransFrag(pos, listModelList2, true);
@@ -720,19 +670,19 @@ public class AudioDownloadsFragment extends Fragment {
                 if (audioc) {
                     callNewPlayerRelease();
                 }
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
                 String json = gson.toJson(listModelList);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-                editor.commit();
-                callAddTransFrag();
+                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
+                editor.apply();
+                if(audioc) {
+                    callAddTransFrag();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -783,7 +733,7 @@ public class AudioDownloadsFragment extends Fragment {
                                         fileNameList.remove(i);
                                         playlistDownloadId.remove(i);
                                         audiofilelist.remove(i);
-                                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         Gson gson = new Gson();
                                         String urlJson = gson.toJson(audiofilelist);
@@ -800,10 +750,9 @@ public class AudioDownloadsFragment extends Fragment {
                     } catch (Exception e) {
                         Log.e("DownloadHangCrash", e.getMessage());
                     }
-                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                    String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                    int pos = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     try {
                         Properties p = new Properties();
                         p.putValue("userId", UserID);
@@ -823,8 +772,7 @@ public class AudioDownloadsFragment extends Fragment {
                     }
 
                     listModelList.remove(position);
-                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (player != null) {
                             player.removeMediaItem(position);
                             if(player.getPlayWhenReady()){
@@ -840,7 +788,7 @@ public class AudioDownloadsFragment extends Fragment {
                             } else {
                                 if (player != null) {
 //                                player.seekTo(pos);
-                                    callTransparentFrag(pos, listModelList);
+                                    callSaveToPref(pos, listModelList);
                                 } else {
                                     callTransFrag(pos, listModelList, false);
                                 }
@@ -852,7 +800,7 @@ public class AudioDownloadsFragment extends Fragment {
                             } else {
                                 if (player != null) {
 //                                player.seekTo(pos);
-                                    callTransparentFrag(pos, listModelList);
+                                    callSaveToPref(pos, listModelList);
                                 } else {
                                     callTransFrag(pos, listModelList, false);
                                 }
@@ -860,7 +808,7 @@ public class AudioDownloadsFragment extends Fragment {
                         } else if (pos < position && pos < listModelList.size() - 1) {
                             if (player != null) {
 //                                player.seekTo(pos);
-                                callTransparentFrag(pos, listModelList);
+                                callSaveToPref(pos, listModelList);
                             } else {
                                 callTransFrag(pos, listModelList, false);
                             }
@@ -868,7 +816,7 @@ public class AudioDownloadsFragment extends Fragment {
                             pos = pos - 1;
                             if (player != null) {
 //                                player.seekTo(pos);
-                                callTransparentFrag(pos, listModelList);
+                                callSaveToPref(pos, listModelList);
                             } else {
                                 callTransFrag(pos, listModelList, false);
                             }
@@ -885,21 +833,18 @@ public class AudioDownloadsFragment extends Fragment {
             dialog.setCancelable(false);
         }
 
-        private void callTransparentFrag(int position, List<DownloadAudioDetails> listModelList) {
+        private void callSaveToPref(int position, List<DownloadAudioDetails> listModelList) {
 
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json = gson.toJson(listModelList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-            editor.commit();
-            callAddTransFrag();
+            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
+            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
+            editor.apply();
         }
 
         private void deleteDownloadFile(String audioFile, String audioName, int position) {

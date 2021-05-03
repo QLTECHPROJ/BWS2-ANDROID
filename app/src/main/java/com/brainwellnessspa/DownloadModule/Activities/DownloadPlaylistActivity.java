@@ -43,6 +43,7 @@ import androidx.room.Room;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.R;
@@ -98,7 +99,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String IsPlayDisclimer, PlaylistDescription = "", Created = "", UserID, SearchFlag = "", AudioFlag = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistImageDetails = "";
+    String IsPlayDisclimer, PlaylistDescription = "", Created = "",CoUserID, UserID, SearchFlag = "",AudioPlayerFlag="", PlaylistID = "", PlaylistName = "", PlaylistImage = "", TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistImageDetails = "";
     EditText searchEditText;
     List<String> downloadAudioDetailsList = new ArrayList<>();
     Context ctx;
@@ -117,11 +118,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences sharedw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+                int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                if ( AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistName)) {
                         /*if (data.equalsIgnoreCase("pause")) {
                             isPlayPlaylist = 1;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -155,8 +157,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_download_playlist);
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+
         ctx = DownloadPlaylistActivity.this;
         addDisclaimer();
         DB = Room.databaseBuilder(ctx,
@@ -245,31 +249,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     public void PrepareData() {
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
-        try {
-            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.UpdateMiniPlayer(ctx);
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                comefromDownload = "1";
-                callAddTranFrag();
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.setMargins(10, 8, 10, 210);
-                binding.llSpace.setLayoutParams(params);
-            } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.setMargins(10, 8, 10, 20);
-                binding.llSpace.setLayoutParams(params);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-        if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+        String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+        int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+        if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistName)) {
             if (player != null) {
                 if (player.getPlayWhenReady()) {
                     isPlayPlaylist = 1;
@@ -328,11 +313,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         binding.llDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+                int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                     BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
                 } else {
                     final Dialog dialog = new Dialog(ctx);
@@ -538,29 +524,25 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         if (audioc) {
             callNewPlayerRelease();
         }
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
+        SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedd.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(listModelList);
-        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
-        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
+        String json11 = gson.toJson(listModelList);
+        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
+        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, PlaylistID);
+        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist");
         editor.commit();
         callAddTranFrag();
     }
 
     private void callAddTranFrag() {
         try {
-
-            Fragment fragment = new MiniPlayerFragment();
-            FragmentManager fragmentManager1 = getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
+            Intent i =new Intent(ctx, MyPlayerActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            overridePendingTransition(0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -647,57 +629,57 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             }
 
-            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-//            if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
-//                if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
-//                    if (player != null) {
-//                        if (!player.getPlayWhenReady()) {
-//                            holder.binding.equalizerview.pause();
-//                        } else {
-//                            holder.binding.equalizerview.resume(true);
-//                        }
-//                    } else
-//                        holder.binding.equalizerview.stop(true);
-//                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
-//                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                } else {
-//                    holder.binding.equalizerview.setVisibility(View.GONE);
-//                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-//                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                }
-////                    handler3.postDelayed(UpdateSongTime3,500);
-//            } else {
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+            int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+            if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
+                if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
+                    if (player != null) {
+                        if (!player.getPlayWhenReady()) {
+                            holder.binding.equalizerview.pause();
+                        } else {
+                            holder.binding.equalizerview.resume(true);
+                        }
+                    } else
+                        holder.binding.equalizerview.stop(true);
+                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                } else {
+                    holder.binding.equalizerview.setVisibility(View.GONE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                }
+//                    handler3.postDelayed(UpdateSongTime3,500);
+            } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
 //                    handler3.removeCallbacks(UpdateSongTime3);
-//            }
+            }
             if (position == 0) {
                 AudioDatabase.databaseWriteExecutor.execute(() -> {
                     downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete");
                 });
             }
             binding.ivPlaylistStatus.setOnClickListener(view -> {
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+                SharedPreferences sharedx1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (sharedx1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 if (isPlayPlaylist == 1) {
                     if (player != null) {
                         player.setPlayWhenReady(false);
                     }
                     isPlayPlaylist = 2;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                    callAddTranFrag();
                 } else if (isPlayPlaylist == 2) {
                     if (player != null) {
                         if (myAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID())
                                 && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
-                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                             editor.commit();
                             player.seekTo(0, 0);
                             player.setPlayWhenReady(true);
@@ -708,15 +690,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                    callAddTranFrag();
                 } else {
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                        if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 if (player != null) {
                                     if (!player.getPlayWhenReady()) {
@@ -729,23 +705,22 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 if (player != null) {
-                                    if (position != positionSaved) {
+                                    if (position != PlayerPosition) {
                                         int ix = player.getMediaItemCount();
                                         if (ix < listModelList.size()) {
-                                            callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistName, true);
+                                            callTransparentFrag(shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0), ctx, listModelList, "", PlaylistName, true);
                                         } else {
                                             player.seekTo(position, 0);
                                             player.setPlayWhenReady(true);
-                                            miniPlayer = 1;
-                                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedxx.edit();
-                                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
                                             editor.commit();
                                             callAddTranFrag();
                                         }
                                     }
                                 } else {
-                                    callTransparentFrag(shared.getInt(CONSTANTS.PREF_KEY_position, 0), ctx, listModelList, "", PlaylistName, true);
+                                    callTransparentFrag(shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0), ctx, listModelList, "", PlaylistName, true);
                                     SegmentTag();
                                 }
                             }
@@ -776,7 +751,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                             SegmentTag();
                         }
                     } else {
-                        getAllCompletedMedia(audioPlay, AudioFlag, pID, 0);
+                        getAllCompletedMedia(0);
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -786,15 +761,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                IsPlayDisclimer = (sharedx.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                    if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             if (player != null) {
                                 if (!player.getPlayWhenReady()) {
@@ -807,7 +778,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             if (player != null) {
-                                if (position != positionSaved) {
+                                if (position != PlayerPosition) {
                                     int ix = player.getMediaItemCount();
                                     if (ix < listModelList.size()) {
                                         callTransparentFrag(position, ctx, listModelList, "", PlaylistName, true);
@@ -854,7 +825,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         SegmentTag();
                     }
                 } else {
-                    getAllCompletedMedia(audioPlay, AudioFlag, pID, position);
+                    getAllCompletedMedia(position);
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -873,11 +844,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 holder.binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             holder.binding.llMore.setOnClickListener(view -> {
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+
+                if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("You can see details after the disclaimer", ctx);
                     } else {
@@ -907,12 +875,15 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             });
         }
 
-        private void getAllCompletedMedia(boolean audioPlay, String AudioFlag, String pID, int position) {
+        private void getAllCompletedMedia(int position) {
 
-            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+            int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             int pos = 0;
-            if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+            if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
@@ -931,7 +902,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         }
                     }
 
-                    if (position != positionSaved) {
+                    if (position != PlayerPosition) {
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
                             if (listModelList2.size() != 0) {

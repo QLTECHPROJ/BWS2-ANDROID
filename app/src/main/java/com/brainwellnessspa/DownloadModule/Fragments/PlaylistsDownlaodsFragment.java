@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -69,7 +70,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     List<DownloadPlaylistDetails> playlistList;
-    String UserID, AudioFlag, IsLock;
+    String UserID,CoUserID;
     PlaylistsDownloadsAdapter adapter;
     //    Runnable UpdateSongTime1;
 //    Handler handler1;
@@ -91,10 +92,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
         View view = binding.getRoot();
-        if (getArguments() != null) {
-            UserID = getArguments().getString("UserID");
-            IsLock = getArguments().getString("IsLock");
-        }
+
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+
         DB = Room.databaseBuilder(getActivity(),
                 AudioDatabase.class,
                 "Audio_database")
@@ -103,7 +105,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         playlistList = new ArrayList<>();
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
-        RefreshData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
@@ -117,7 +118,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             comeDeletePlaylist = 0;
         }
         GetAllMedia(getActivity());
-        RefreshData();
         super.onResume();
     }
 
@@ -163,20 +163,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public void RefreshData() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 210);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 28);
-            binding.llSpace.setLayoutParams(params);
         }
     }
 
@@ -346,32 +332,31 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
-            if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                holder.binding.ivLock.setVisibility(View.GONE);
-            }
+//            if (IsLock.equalsIgnoreCase("1")) {
+//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (IsLock.equalsIgnoreCase("2")) {
+//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                holder.binding.ivLock.setVisibility(View.VISIBLE);
+//            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+//                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+//                holder.binding.ivLock.setVisibility(View.GONE);
+//            }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 try {
-                    if (IsLock.equalsIgnoreCase("1")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        ctx.startActivity(i);
-                    } else if (IsLock.equalsIgnoreCase("2")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                    } else if (IsLock.equalsIgnoreCase("0")
-                            || IsLock.equalsIgnoreCase("")) {
-//                        handler1.removeCallbacks(UpdateSongTime1);
+//                    if (IsLock.equalsIgnoreCase("1")) {
+//                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+//                        i.putExtra("ComeFrom", "Plan");
+//                        ctx.startActivity(i);
+//                    } else if (IsLock.equalsIgnoreCase("2")) {
+//                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+//                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                    } else if (IsLock.equalsIgnoreCase("0")
+//                            || IsLock.equalsIgnoreCase("")) {
                         DatabaseClient
                                 .getInstance(ctx)
                                 .getaudioDatabase()
@@ -379,7 +364,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                                 .getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID()).removeObserver(audioList -> {
                         });
                         comefromDownload = "1";
-//                playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
@@ -401,17 +385,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         p.putValue("playlistName", listModelList.get(position).getPlaylistName());
                         p.putValue("playlistType", "");
                         BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
-//                        BWSApplication.showToast("Opened", ctx);
-
-        /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
-                i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                ctx.startActivity(i);
-                ctx.finish();*/
-                    }
+//                    }
                 } catch (java.lang.IllegalStateException exception) {
                     // Attempt to catch rare mysterious Canvas stack underflow events that have been reported in
                     // ACRA, but simply should not be happening because Canvas save()/restore() calls are definitely
@@ -429,11 +403,10 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             });
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistName())) {
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                String AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
                     BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
                 } else {
                     final Dialog dialog = new Dialog(ctx);

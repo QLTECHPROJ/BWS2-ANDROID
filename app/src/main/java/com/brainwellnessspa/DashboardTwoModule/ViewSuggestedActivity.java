@@ -78,7 +78,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;
     Activity activity;
     Context ctx;
-    String UserID, Name, PlaylistID;
+    String UserID,CoUserID, Name, PlaylistID;
     ArrayList<SuggestedModel.ResponseData> AudiolistsModel;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
     AudiosListAdpater adpater;
@@ -112,8 +112,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_suggested);
         ctx = ViewSuggestedActivity.this;
         activity = ViewSuggestedActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
             Intent i = new Intent(ctx, AddAudioActivity.class);
@@ -254,7 +256,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                             String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-                            Integer PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                            int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                             if ( AudioPlayerFlag.equalsIgnoreCase("playList") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
 
                                 Gson gsonx = new Gson();
@@ -424,7 +426,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
             String PlayFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-            Integer PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+            int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
 
             if (!AudioPlayerFlag.equalsIgnoreCase("Downloadlist") &&
                     !AudioPlayerFlag.equalsIgnoreCase("SubPlayList") && !AudioPlayerFlag.equalsIgnoreCase("TopCategories")) {
@@ -520,7 +522,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-                Integer PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("SearchAudio")
                         && PlayFrom.equalsIgnoreCase("Recommended Search")) {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
@@ -689,7 +691,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-                Integer PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);

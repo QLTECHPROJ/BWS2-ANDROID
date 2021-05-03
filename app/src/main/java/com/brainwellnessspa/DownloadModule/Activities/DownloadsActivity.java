@@ -60,7 +60,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
     ActivityDownloadsBinding binding;
     List<DownloadAudioDetails> audioDownloadList;
     List<DownloadPlaylistDetails> playlistList;
-    String UserID, AudioFlag;
+    String UserID, CoUserID;
     Context ctx;
     Properties p;
     AudioDatabase DB;
@@ -78,10 +78,9 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
-        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
                 "Audio_database")
@@ -199,23 +198,23 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
     }
 
     private void callMembershipMediaPlayer() {
-        try {
-            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.UpdateMiniPlayer(ctx);
-            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                Fragment fragment = new MiniPlayerFragment();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-                comefromDownload = "1";
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+//            globalInitExoPlayer.UpdateMiniPlayer(ctx);
+//            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+//            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+//            if (!AudioFlag.equalsIgnoreCase("0")) {
+//                Fragment fragment = new MiniPlayerFragment();
+//                FragmentManager fragmentManager1 = getSupportFragmentManager();
+//                fragmentManager1.beginTransaction()
+//                        .add(R.id.flContainer, fragment)
+//                        .commit();
+//                comefromDownload = "1";
+//
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
       /*  try {
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

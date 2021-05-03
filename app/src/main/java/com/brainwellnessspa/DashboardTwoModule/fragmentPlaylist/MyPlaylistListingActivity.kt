@@ -23,7 +23,6 @@ import com.brainwellnessspa.BWSApplication.PlayerAudioId
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity
@@ -610,7 +609,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             holder.binding.llMainLayout.setOnClickListener {
-                MyPlaylistListingActivity().callMainPlayer(position, "Created", listModel, ctx, activity, listModel[0].playlistID!!)
+                MyPlaylistListingActivity().callMainPlayer(position, "Created", listModel, ctx, activity, listModel[0].playlistID!!,created)
             }
 
             binding.llPlayPause.setOnClickListener {
@@ -638,7 +637,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.llPlay.visibility = View.GONE
                     binding.llPause.visibility = View.VISIBLE
                 } else {
-                    MyPlaylistListingActivity().callMainPlayer(0, "Created", listModel, ctx, activity, listModel[0].playlistID!!)
+                    MyPlaylistListingActivity().callMainPlayer(0, "Created", listModel, ctx, activity, listModel[0].playlistID!!, created)
                     binding.llPlay.visibility = View.GONE
                     binding.llPause.visibility = View.VISIBLE
                 }
@@ -727,7 +726,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             player.playWhenReady = true
                                             saveToPref(PlayerPosition, listModel)
                                         } else {
-                                            MyPlaylistListingActivity().callMainPlayer(PlayerPosition, "Created", listModel, ctx, activity, listModel[0].playlistID!!)
+                                            MyPlaylistListingActivity().callMainPlayer(PlayerPosition, "Created", listModel, ctx, activity, listModel[0].playlistID!!, created)
                                         }
                                     }
                                 } else if (PlayerPosition == position && position == listModel.size - 1) {
@@ -740,7 +739,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             player.playWhenReady = true
                                             saveToPref(PlayerPosition, listModel)
                                         } else {
-                                            MyPlaylistListingActivity().callMainPlayer(PlayerPosition, "Created", listModel, ctx, activity, listModel[0].playlistID!!)
+                                            MyPlaylistListingActivity().callMainPlayer(PlayerPosition, "Created", listModel, ctx, activity, listModel[0].playlistID!!, created)
                                         }
                                     }
                                 } else if (PlayerPosition < position && PlayerPosition < listModel.size - 1) {
@@ -940,7 +939,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                MyPlaylistListingActivity().callMainPlayer(position, "", listFilterData, ctx, activity, listModel[0].playlistID!!)
+                MyPlaylistListingActivity().callMainPlayer(position, "", listFilterData, ctx, activity, listModel[0].playlistID!!, created)
             }
             binding.llPlayPause.setOnClickListener {
 //                MyPlaylistListingActivity().callMainPlayer(position, "", listModel, ctx, activity)
@@ -967,7 +966,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.llPlay.visibility = View.GONE
                     binding.llPause.visibility = View.VISIBLE
                 } else {
-                    MyPlaylistListingActivity().callMainPlayer(0, "", listModel, ctx, activity, listModel[0].playlistID!!)
+                    MyPlaylistListingActivity().callMainPlayer(0, "", listModel, ctx, activity, listModel[0].playlistID!!, created)
                     binding.llPlay.visibility = View.GONE
                     binding.llPause.visibility = View.VISIBLE
                 }
@@ -1058,7 +1057,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
     }
 
-    fun callMainPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
+    fun callMainPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, created: String?) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
@@ -1077,10 +1076,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                     callMyPlayer(ctx, act)
                 } else {
-                    callPlayer(position, view, listModel, ctx, act, playlistID)
+                    callPlayer(position, view, listModel, ctx, act, playlistID,created)
                 }
             } else {
-                callPlayer(position, view, listModel, ctx, act, playlistID)
+                callPlayer(position, view, listModel, ctx, act, playlistID, created)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
@@ -1095,10 +1094,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                     callMyPlayer(ctx, act)
                 } else {
-                    callPlayer(position, view, listModel, ctx, act, playlistID)
+                    callPlayer(position, view, listModel, ctx, act, playlistID, created)
                 }
             } else {
-                callPlayer(position, view, listModel, ctx, act, playlistID)
+                callPlayer(position, view, listModel, ctx, act, playlistID, created)
             }
         }
     }
@@ -1110,21 +1109,37 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         act.overridePendingTransition(0, 0)
     }
 
-    private fun callPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
+    private fun callPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, created: String?) {
         callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
-        val json = gson.toJson(listModel)
-        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
-        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)
-        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
+        val downloadAudioDetails = java.util.ArrayList<DownloadAudioDetails>()
+        var json:String
         if (MyDownloads.equals("1", ignoreCase = true)) {
+            for (i in listModel.indices) {
+                val mainPlayModel = DownloadAudioDetails()
+                mainPlayModel.id = listModel[i].id
+                mainPlayModel.name = listModel[i].name
+                mainPlayModel.audioFile = listModel[i].audioFile
+                mainPlayModel.audioDirection = listModel[i].audioDirection
+                mainPlayModel.audiomastercat = listModel[i].audiomastercat
+                mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
+                mainPlayModel.imageFile = listModel[i].imageFile
+                mainPlayModel.audioDuration = listModel[i].audioDuration
+                downloadAudioDetails.add(mainPlayModel)
+            }
+            json = gson.toJson(downloadAudioDetails)
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist")
-        } else {
+            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
+        }else {
+            json = gson.toJson(listModel)
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
+            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         }
+            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         editor.apply()
         audioClick = true
         callMyPlayer(ctx, act)
