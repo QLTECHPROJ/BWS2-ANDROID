@@ -159,6 +159,8 @@ dependencies {
     implementation 'com.google.android:flexbox:2.0.1'
     //   TODO Android Chart Dependency
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.akexorcist:snap-time-picker:1.0.0'
+
 
 }
 repositories {

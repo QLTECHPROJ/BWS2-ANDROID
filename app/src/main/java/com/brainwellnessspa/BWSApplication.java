@@ -44,12 +44,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.akexorcist.snaptimepicker.SnapTimePickerDialog;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
@@ -110,6 +112,7 @@ public class BWSApplication extends Application {
     public static Context getContext() {
         return mContext;
     }
+
 
     public static void scheduleJob(Context context) {
         ComponentName serviceComponent = new ComponentName(context, PlayerJobService.class);
@@ -462,7 +465,7 @@ public class BWSApplication extends Application {
 
     }
 
-    public static void getReminderDay(Context ctx, Activity act, String CoUSERID, String playlistID, String playlistName) {
+    public static void getReminderDay(Context ctx, Activity act, String CoUSERID, String playlistID, String playlistName, FragmentActivity fragmentActivity) {
         ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{
                 new ReminderSelectionModel("Sunday"),
                 new ReminderSelectionModel("Monday"),
@@ -499,7 +502,7 @@ public class BWSApplication extends Application {
         rvSelectDay.setLayoutManager(manager);
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
         ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll,
-                btnNext, CoUSERID, playlistID, playlistName, dialog);
+                btnNext, CoUSERID, playlistID, playlistName, dialog, fragmentActivity);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -656,10 +659,11 @@ public class BWSApplication extends Application {
         Button btnNext;
         String CoUSERID, PlaylistID, PlaylistName;
         Dialog dialogOld;
+        FragmentActivity fragmentActivity;
 
         public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
                                             TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID, String PlaylistID, String PlaylistName
-                , Dialog dialogOld) {
+                , Dialog dialogOld, FragmentActivity fragmentActivity) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -670,6 +674,7 @@ public class BWSApplication extends Application {
             this.PlaylistID = PlaylistID;
             this.PlaylistName = PlaylistName;
             this.dialogOld = dialogOld;
+            this.fragmentActivity = fragmentActivity;
         }
 
         @NonNull
@@ -728,7 +733,7 @@ public class BWSApplication extends Application {
             });
 
             if (remiderDays.contains(selectionModels[position].getDay())) {
-                holder.binding.tvDay.setTextColor(act.getResources().getColor(R.color.blue));
+                holder.binding.tvDay.setTextColor(act.getResources().getColor(R.color.white));
             } else {
                 holder.binding.tvDay.setTextColor(act.getResources().getColor(R.color.dim_light_gray));
             }
@@ -739,6 +744,15 @@ public class BWSApplication extends Application {
                 } else {
 //                    Intent i = new Intent(ctx, TimeViewActivity.class);
 //                    act.startActivity(i);
+                    new SnapTimePickerDialog.Builder().setTitle(R.string.title)
+                            .setPrefix(R.string.time_prefix).setSuffix(R.string.time_suffix)
+                            .setThemeColor(R.color.colorAccent).setTitleColor(android.R.color.black).build().show(fragmentActivity.getSupportFragmentManager(), SnapTimePickerDialog.TAG);
+                         /*   .setListener(new SnapTimePickerDialog.Listener() {
+                        @Override
+                        public void onTimePicked(int i, int i1) {
+
+                        }
+                    });*/
                     getReminderTime(ctx, act, CoUSERID, PlaylistID, PlaylistName, dialogOld);
                 }
             });

@@ -11,10 +11,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -389,7 +386,8 @@ public class ManageFragment : Fragment() {
                         if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
                                 || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                             binding.tvReminder.setText("Set Reminder")
-                            BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName)
+                            BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                             binding.tvReminder.setText("Update Reminder")
                             val dialog = Dialog(ctx)
@@ -398,7 +396,10 @@ public class ManageFragment : Fragment() {
                             dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
                             dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                             val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                            val Btn = dialog.findViewById<Button>(R.id.Btn)
+                            val tvText = dialog.findViewById<TextView>(R.id.tvText)
+                            val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
+                            tvText.text ="Update"
+                            tvGoBack.text ="Delete"
                             dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
                                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                                     dialog.hide()
@@ -406,13 +407,14 @@ public class ManageFragment : Fragment() {
                                 }
                                 false
                             }
-                            Btn.setOnClickListener { v: View? ->
+                            tvconfirm.setOnClickListener { v: View? ->
                                 dialog.hide()
-                                BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName)
+                                BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
                             }
                             tvGoBack.setOnClickListener { v: View? ->
                                 val listCall = APINewClient.getClient().getDeleteRemider(CoUserID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistID)
+                                        listModel.responseData!!.suggestedPlaylist!!.reminderId)
                                 listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                                     override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                                         try {

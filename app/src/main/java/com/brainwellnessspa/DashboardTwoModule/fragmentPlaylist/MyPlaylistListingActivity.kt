@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -173,6 +174,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     override fun onResume() {
+        binding.searchView.clearFocus()
+        searchEditText.setText("")
+        binding.searchView.setQuery("", false)
         prepareData()
         super.onResume()
     }
@@ -203,6 +207,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             e.printStackTrace()
                         }
 
+                        binding.tvTag.visibility = View.VISIBLE
+                        binding.tvTag.setText(R.string.Audios_in_Playlist)
                         downloadPlaylistDetailsList = GetPlaylistDetail()
                         binding.llDownloads.setOnClickListener { view1 ->
                             callObserveMethodGetAllMedia()
@@ -218,7 +224,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                                     || listModel.responseData!!.isReminder.equals("", ignoreCase = true)) {
                                 binding.tvReminder.setText("Set Reminder")
-                                BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                                BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?)
                             } else if (listModel.responseData!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.setText("Update Reminder")
                                 val dialog = Dialog(ctx)
@@ -227,7 +233,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
                                 dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                                 val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                                val Btn = dialog.findViewById<Button>(R.id.Btn)
+                                val tvText = dialog.findViewById<TextView>(R.id.tvText)
+                                val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
+                                tvText.text = "Update"
+                                tvGoBack.text = "Delete"
                                 dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog.hide()
@@ -235,19 +244,19 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     }
                                     false
                                 }
-                                Btn.setOnClickListener { v: View? ->
+                                tvconfirm.setOnClickListener { v: View? ->
                                     dialog.hide()
-                                    BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                                    BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?)
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUserID,
-                                            listModel.responseData!!.playlistID)
+                                            listModel.responseData!!.reminderId)
                                     listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                                         override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                                             try {
                                                 val model = response.body()
                                                 if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                    BWSApplication.showToast(model!!.responseMessage, ctx)
+                                                    BWSApplication.showToast(model.responseMessage, ctx)
                                                     dialog.dismiss()
                                                 }
                                             } catch (e: java.lang.Exception) {
@@ -1042,12 +1051,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
                 override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
                     if (listFilterData.size == 0) {
-//                        binding.llError.setVisibility(View.VISIBLE)
+                        binding.llError.visibility = View.VISIBLE
+                        binding.tvTag.visibility = View.GONE
                         binding.rvPlayLists2.visibility = View.GONE
-//                        binding.tvFound.setText("Couldn't find '$SearchFlag'. Try searching again")
+                        binding.tvFound.setText("No result found")
 //                        Log.e("search", SearchFlag)
                     } else {
-//                        binding.llError.setVisibility(View.GONE)
+                        binding.llError.visibility = View.GONE
+                        binding.tvTag.visibility = View.VISIBLE
                         binding.rvPlayLists2.visibility = View.VISIBLE
                         listFilterData = filterResults.values as List<PlaylistDetailsModel.ResponseData.PlaylistSong>
                         notifyDataSetChanged()
