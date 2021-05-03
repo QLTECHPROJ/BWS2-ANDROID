@@ -28,7 +28,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
 import com.brainwellnessspa.DashboardTwoModule.manage.ManageFragment
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity
@@ -67,27 +69,18 @@ class HomeFragment : Fragment() {
     var USERID: String? = null
     var UserName: String? = null
     var UserIMAGE: String? = null
-    var PlaylistImage = ""
-    var PlaylistType = ""
     var UserID: String? = null
-    var PlaylistID = ""
     var Download = ""
     var Liked = ""
     var SLEEPTIME: String? = null
     var selectedCategoriesName = arrayListOf<String>()
-    var PlaylistDesc = ""
-    var PlaylistName = ""
     var ScreenView = ""
-    var TotalAudio = ""
-    var Totalhour = ""
-    var Totalminute = ""
     lateinit var editTexts: Array<EditText>
     var tvSendOTPbool = true
     var myBackPress = false
     var gson: Gson = Gson()
     var AudioId: String? = null
-    var SongListSize = 0
-    private val mLastClickTime: Long = 0
+    var homelistModel: HomeScreenModel = HomeScreenModel()
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
     var mBottomSheetDialog: BottomSheetDialog? = null
     override fun onCreateView(inflater: LayoutInflater,
@@ -110,6 +103,8 @@ class HomeFragment : Fragment() {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
+        prepareHomeData()
+        binding.tvTime.text = SLEEPTIME
 
         binding.tvName.text = UserName
         if (UserIMAGE.equals("", true)) {
@@ -124,7 +119,6 @@ class HomeFragment : Fragment() {
         binding.rvAreaOfFocusCategory.layoutManager = GridLayoutManager(ctx, 3)
         val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
-
 
         binding.llBottomView.setOnClickListener { v: View? ->
             val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.user_list_custom_layout, null, false)
@@ -144,8 +138,9 @@ class HomeFragment : Fragment() {
                 mBottomSheetDialog!!.hide()
             }
         }
+
         binding.tvReminder.setOnClickListener {
-            BWSApplication.getReminderDay(activity, activity, CoUSERID, "15", "Ultimate Anger Relief Bundle")
+            BWSApplication.getReminderDay(activity, activity, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
         }
 
         binding.ivEditCategory.setOnClickListener {
@@ -159,8 +154,21 @@ class HomeFragment : Fragment() {
         }
 
         binding.llPlayerView.setOnClickListener { v: View? ->
-            val i = Intent(activity, ManageAudioPlaylistActivity::class.java)
-            startActivity(i)
+            try {
+                val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                i.putExtra("New", "0")
+                i.putExtra("PlaylistID", homelistModel.responseData!!.suggestedPlaylist!!.playlistID)
+                i.putExtra("PlaylistName", homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                i.putExtra("PlaylistImage", homelistModel.responseData!!.suggestedPlaylist!!.playlistImage)
+                i.putExtra("PlaylistSource", "")
+                i.putExtra("MyDownloads", "0")
+                i.putExtra("ScreenView", "")
+                i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                ctx.startActivity(i)
+                act.overridePendingTransition(0, 0)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         return view
     }
@@ -197,9 +205,9 @@ class HomeFragment : Fragment() {
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        val listModel = response.body()
-                        binding.tvPlaylistName.text = listModel!!.responseData!!.suggestedPlaylist!!.playlistName
-                        binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
+                        val listModel = response.body()!!
+                        homelistModel = response.body()!!
+                        binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -224,6 +232,32 @@ class HomeFragment : Fragment() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvCategory.text = selectedCategoriesName[position]
             holder.bindingAdapter.tvhours.text = (position + 1).toString()
+
+            if (selectedCategoriesName.size == 3) {
+                if (position == 0) {
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
+                } else if (position == 1) {
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_green)
+                } else if (position == 2) {
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_blue)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_blue)
+                }
+            } else if (selectedCategoriesName.size == 2) {
+                if (position == 0) {
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
+                } else if (position == 1) {
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg_green)
+                }
+            } else if (selectedCategoriesName.size == 1) {
+                if (position == 0) {
+                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.circuler_chip_bg)
+                }
+            }
         }
 
         override fun getItemCount(): Int {
@@ -458,12 +492,12 @@ class HomeFragment : Fragment() {
     inner class PopupTextWatcher(var edtCreate: EditText, var btnSendCode: Button) : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val number = edtCreate.text.toString().trim { it <= ' ' }
-            if (number.equals(PlaylistName, ignoreCase = true)) {
+            val create = edtCreate.text.toString().trim { it <= ' ' }
+            if (create.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistName, ignoreCase = true)) {
                 btnSendCode.isEnabled = false
                 btnSendCode.setTextColor(resources.getColor(R.color.white))
                 btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (number.isEmpty()) {
+            } else if (create.isEmpty()) {
                 btnSendCode.isEnabled = false
                 btnSendCode.setTextColor(resources.getColor(R.color.white))
                 btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
