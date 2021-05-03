@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -9,7 +9,7 @@
         android:background="@color/white"
         tools:context=".DashboardTwoModule.manage.ManageFragment">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -454,7 +454,7 @@
                 android:animateLayoutChanges="true"
                 android:background="#C0000000"
                 android:visibility="gone" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </FrameLayout>
 </layout>

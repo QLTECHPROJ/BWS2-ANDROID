@@ -13,32 +13,33 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
+import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
-import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
+import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
-import com.brainwellnessspa.DashboardTwoModule.manage.ManageFragment
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
-import com.brainwellnessspa.ManageModule.ManageAudioPlaylistActivity
-import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel
+import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
+import com.brainwellnessspa.RoomDataBase.AudioDatabase
+import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails
+import com.brainwellnessspa.Services.GlobalInitExoPlayer
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity
 import com.brainwellnessspa.UserModuleTwo.Activities.WalkScreenActivity
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
@@ -49,7 +50,6 @@ import com.brainwellnessspa.databinding.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
@@ -57,7 +57,7 @@ import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
+import java.util.*
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -72,7 +72,9 @@ class HomeFragment : Fragment() {
     var UserID: String? = null
     var Download = ""
     var Liked = ""
+    var MyDownloads: String? = ""
     var SLEEPTIME: String? = null
+    var DB: AudioDatabase? = null
     var selectedCategoriesName = arrayListOf<String>()
     var ScreenView = ""
     lateinit var editTexts: Array<EditText>
@@ -83,6 +85,7 @@ class HomeFragment : Fragment() {
     var homelistModel: HomeScreenModel = HomeScreenModel()
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
     var mBottomSheetDialog: BottomSheetDialog? = null
+    lateinit var dialog: Dialog
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -103,7 +106,12 @@ class HomeFragment : Fragment() {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
-        prepareHomeData()
+
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase::class.java,
+                "Audio_database")
+                .addMigrations(BWSApplication.MIGRATION_1_2)
+                .build()
         binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
 
         binding.tvName.text = UserName
@@ -139,10 +147,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        binding.tvReminder.setOnClickListener {
-            BWSApplication.getReminderDay(activity, activity, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
-        }
-
         binding.ivEditCategory.setOnClickListener {
             val i = Intent(activity, SleepTimeActivity::class.java)
             startActivity(i)
@@ -171,6 +175,11 @@ class HomeFragment : Fragment() {
             }
         }
         return view
+    }
+
+    override fun onResume() {
+        prepareHomeData()
+        super.onResume()
     }
 
     fun prepareUserData(rvUserList: RecyclerView, progressBar: ProgressBar) {
@@ -209,16 +218,276 @@ class HomeFragment : Fragment() {
                         homelistModel = response.body()!!
                         binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
                         binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
+                        if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
+                                || homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                            binding.tvReminder.setText("Set Reminder")
+                        } else if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                            binding.tvReminder.setText("Update Reminder")
+                        }
+                        binding.tvReminder.setOnClickListener {
+                            if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
+                                    || homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                                binding.tvReminder.setText("Set Reminder")
+                                BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                            } else if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                                binding.tvReminder.setText("Update Reminder")
+                                val dialog = Dialog(ctx)
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                dialog.setContentView(R.layout.delete_reminder)
+                                dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
+                                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                                val Btn = dialog.findViewById<Button>(R.id.Btn)
+                                dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.hide()
+                                        return@setOnKeyListener true
+                                    }
+                                    false
+                                }
+                                Btn.setOnClickListener { v: View? ->
+                                    dialog.hide()
+                                    BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                                }
+                                tvGoBack.setOnClickListener { v: View? ->
+                                    val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
+                                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID)
+                                    listCall.enqueue(object : Callback<DeleteRemiderModel?> {
+                                        override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
+                                            try {
+                                                val model = response.body()
+                                                if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                    BWSApplication.showToast(model!!.responseMessage, ctx)
+                                                    dialog.dismiss()
+                                                }
+                                            } catch (e: java.lang.Exception) {
+                                                e.printStackTrace()
+                                            }
+                                        }
+
+                                        override fun onFailure(call: Call<DeleteRemiderModel?>, t: Throwable) {}
+                                    })
+                                }
+                                dialog.show()
+                                dialog.setCancelable(false)
+                            }
+                        }
+
+                        GetPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!)
+                        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+                        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+                        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                        if (MyDownloads.equals("1", ignoreCase = true)) {
+                            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                                if (GlobalInitExoPlayer.player != null) {
+                                    if (GlobalInitExoPlayer.player.playWhenReady) {
+                                        MyPlaylistsFragment.isPlayPlaylist = 1
+                                        //                    handler3.postDelayed(UpdateSongTime3, 500);
+                                        binding.llPause.visibility = View.VISIBLE
+                                        binding.llPlay.visibility = View.GONE
+                                    } else {
+                                        MyPlaylistsFragment.isPlayPlaylist = 2
+                                        //                    handler3.postDelayed(UpdateSongTime3, 500);
+                                        binding.llPause.visibility = View.GONE
+                                        binding.llPlay.visibility = View.VISIBLE
+                                    }
+                                } else {
+                                    MyPlaylistsFragment.isPlayPlaylist = 0
+                                    binding.llPause.visibility = View.GONE
+                                    binding.llPlay.visibility = View.VISIBLE
+                                }
+                            } else {
+                                MyPlaylistsFragment.isPlayPlaylist = 0
+                                binding.llPause.visibility = View.GONE
+                                binding.llPlay.visibility = View.VISIBLE
+                            }
+                        } else {
+                            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                                if (GlobalInitExoPlayer.player != null) {
+                                    if (GlobalInitExoPlayer.player.playWhenReady) {
+                                        MyPlaylistsFragment.isPlayPlaylist = 1
+                                        binding.llPause.visibility = View.VISIBLE
+                                        binding.llPlay.visibility = View.GONE
+                                    } else {
+                                        MyPlaylistsFragment.isPlayPlaylist = 2
+                                        binding.llPause.visibility = View.GONE
+                                        binding.llPlay.visibility = View.VISIBLE
+                                    }
+                                } else {
+                                    MyPlaylistsFragment.isPlayPlaylist = 0
+                                    binding.llPause.visibility = View.GONE
+                                    binding.llPlay.visibility = View.VISIBLE
+                                }
+                            } else {
+                                MyPlaylistsFragment.isPlayPlaylist = 0
+                                binding.llPause.visibility = View.GONE
+                                binding.llPlay.visibility = View.VISIBLE
+                            }
+                        }
+                        val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+                        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
+
+                        binding.llPlayerView1.setOnClickListener { v: View? ->
+                            callPlaylistDetails()
+                        }
+                        binding.llPlayerView2.setOnClickListener { v: View? ->
+                            callPlaylistDetails()
+                        }
+                        binding.llPlaylistDetails.setOnClickListener { v: View? ->
+                            callPlaylistDetails()
+                        }
+
+                        binding.llPlayPause.setOnClickListener {
+                            if (MyPlaylistsFragment.isPlayPlaylist == 1) {
+                                GlobalInitExoPlayer.player.playWhenReady = false
+                                MyPlaylistsFragment.isPlayPlaylist = 2
+                                binding.llPlay.visibility = View.VISIBLE
+                                binding.llPause.visibility = View.GONE
+                            } else if (MyPlaylistsFragment.isPlayPlaylist == 2) {
+                                if (GlobalInitExoPlayer.player != null) {
+                                    val lastIndexID = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
+                                    if (BWSApplication.PlayerAudioId.equals(lastIndexID, ignoreCase = true)
+                                            && GlobalInitExoPlayer.player.duration - GlobalInitExoPlayer.player.currentPosition <= 20) {
+                                        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE)
+                                        val editor = shared.edit()
+                                        editor.putInt(CONSTANTS.PREF_KEY_position, 0)
+                                        editor.apply()
+                                        GlobalInitExoPlayer.player.seekTo(0, 0)
+                                        BWSApplication.PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
+                                        GlobalInitExoPlayer.player.playWhenReady = true
+                                    } else {
+                                        GlobalInitExoPlayer.player.playWhenReady = true
+                                    }
+                                }
+                                MyPlaylistsFragment.isPlayPlaylist = 1
+                                binding.llPlay.visibility = View.GONE
+                                binding.llPause.visibility = View.VISIBLE
+                            } else {
+                                BWSApplication.PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
+                                callMainPlayerSuggested(0, "", listModel, ctx, activity, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!)
+                                binding.llPlay.visibility = View.GONE
+                                binding.llPause.visibility = View.VISIBLE
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                private fun callPlaylistDetails() {
+                    try {
+                        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                        i.putExtra("New", "0")
+                        i.putExtra("PlaylistID", homelistModel.responseData!!.suggestedPlaylist!!.playlistID)
+                        i.putExtra("PlaylistName", homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                        i.putExtra("PlaylistImage", homelistModel.responseData!!.suggestedPlaylist!!.playlistImage)
+                        i.putExtra("PlaylistSource", "")
+                        i.putExtra("MyDownloads", "0")
+                        i.putExtra("ScreenView", "")
+                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        ctx.startActivity(i)
+                        act.overridePendingTransition(0, 0)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }
 
                 override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         }
+    }
+
+    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: HomeScreenModel, ctx: Context, activity: FragmentActivity?, playlistID: String) {
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+        var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        if (MyDownloads.equals("1", true)) {
+            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
+                if (GlobalInitExoPlayer.player != null) {
+                    if (position != PlayerPosition) {
+                        GlobalInitExoPlayer.player.seekTo(position, 0)
+                        GlobalInitExoPlayer.player.playWhenReady = true
+                        val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                        val editor = sharedxx.edit()
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+                        editor.apply()
+                    }
+                    callMyPlayer(ctx, act)
+                } else {
+                    callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                }
+            } else {
+                callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+            }
+        } else {
+            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
+                if (GlobalInitExoPlayer.player != null) {
+                    if (position != PlayerPosition) {
+                        GlobalInitExoPlayer.player.seekTo(position, 0)
+                        GlobalInitExoPlayer.player.playWhenReady = true
+                        val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                        val editor = sharedxx.edit()
+                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+                        editor.apply()
+                    }
+                    callMyPlayer(ctx, act)
+                } else {
+                    callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                }
+            } else {
+                callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+            }
+        }
+    }
+
+    private fun GetPlaylistDetail(PlaylistID: String) {
+        try {
+            DB!!.taskDao()
+                    .getPlaylist1(PlaylistID).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
+                        if (audioList.isNotEmpty()) {
+                            MyDownloads = "1"
+                        } else {
+                            MyDownloads = "0"
+                        }
+                    })
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun callPlayerSuggested(position: Int, view: String?, listModel: HomeScreenModel, ctx: Context, act: Activity, playlistID: String) {
+        GlobalInitExoPlayer.callNewPlayerRelease()
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+        val editor = shared.edit()
+        val gson = Gson()
+        val json = gson.toJson(listModel)
+        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
+        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)
+        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
+        if (MyDownloads.equals("1", ignoreCase = true)) {
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist")
+        } else {
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
+        }
+        editor.apply()
+        DashboardActivity.audioClick = true
+        callMyPlayer(ctx, act)
+    }
+
+    private fun callMyPlayer(ctx: Context, act: Activity) {
+        val i = Intent(ctx, MyPlayerActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+        ctx.startActivity(i)
+        act.overridePendingTransition(0, 0)
     }
 
     class AreaOfFocusAdapter(var binding: FragmentHomeBinding, var ctx: Context, var selectedCategoriesName: ArrayList<String>) : RecyclerView.Adapter<AreaOfFocusAdapter.MyViewHolder>() {

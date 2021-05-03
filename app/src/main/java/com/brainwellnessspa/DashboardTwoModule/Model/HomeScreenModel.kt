@@ -68,7 +68,7 @@ class HomeScreenModel {
 
             @SerializedName("PlaylistSongs")
             @Expose
-            var playlistSongs: List<PlaylistSongs>? = null
+            var playlistSongs: List<PlaylistSong>? = null
 
             @SerializedName("Created")
             @Expose
@@ -102,8 +102,54 @@ class HomeScreenModel {
             @Expose
             var reminderTime: String? = null
 
-            class PlaylistSongs {
+            class PlaylistSong {
+                @SerializedName("ID")
+                @Expose
+                var id: String? = null
 
+                @SerializedName("Name")
+                @Expose
+                var name: String? = null
+
+                @SerializedName("ImageFile")
+                @Expose
+                var imageFile: String? = null
+
+                @SerializedName("PlaylistID")
+                @Expose
+                var playlistID: String? = null
+
+                @SerializedName("PSID")
+                @Expose
+                var psid: String? = null
+
+                @SerializedName("SortId")
+                @Expose
+                var sortId: String? = null
+
+                @SerializedName("AudioFile")
+                @Expose
+                var audioFile: String? = null
+
+                @SerializedName("Audiomastercat")
+                @Expose
+                var audiomastercat: String? = null
+
+                @SerializedName("AudioSubCategory")
+                @Expose
+                var audioSubCategory: String? = null
+
+                @SerializedName("AudioDuration")
+                @Expose
+                var audioDuration: String? = null
+
+                @SerializedName("AudioDirection")
+                @Expose
+                var audioDirection: String? = null
+
+                @SerializedName("Bitrate")
+                @Expose
+                var bitrate: String? = null
             }
         }
 

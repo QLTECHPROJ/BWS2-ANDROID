@@ -1,8 +1,10 @@
 package com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.*
 import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -32,6 +34,7 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils
 import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
+import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
 import com.brainwellnessspa.RoomDataBase.DatabaseClient
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails
@@ -206,9 +209,61 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             callObserveMethodGetAllMedia()
                             callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads)
                         }
-                        binding.llReminder.setOnClickListener {
-                            BWSApplication.getReminderDay(activity, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                        if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
+                                || listModel.responseData!!.isReminder.equals("", ignoreCase = true)) {
+                            binding.tvReminder.setText("Set Reminder")
+                        } else if (listModel.responseData!!.isReminder.equals("1", ignoreCase = true)) {
+                            binding.tvReminder.setText("Update Reminder")
                         }
+                        binding.tvReminder.setOnClickListener {
+                            if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
+                                    || listModel.responseData!!.isReminder.equals("", ignoreCase = true)) {
+                                binding.tvReminder.setText("Set Reminder")
+                                BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                            } else if (listModel.responseData!!.isReminder.equals("1", ignoreCase = true)) {
+                                binding.tvReminder.setText("Update Reminder")
+                                val dialog = Dialog(ctx)
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                dialog.setContentView(R.layout.delete_reminder)
+                                dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
+                                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                                val Btn = dialog.findViewById<Button>(R.id.Btn)
+                                dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.hide()
+                                        return@setOnKeyListener true
+                                    }
+                                    false
+                                }
+                                Btn.setOnClickListener { v: View? ->
+                                    dialog.hide()
+                                    BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                                }
+                                tvGoBack.setOnClickListener { v: View? ->
+                                    val listCall = APINewClient.getClient().getDeleteRemider(CoUserID,
+                                            listModel.responseData!!.playlistID)
+                                    listCall.enqueue(object : Callback<DeleteRemiderModel?> {
+                                        override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
+                                            try {
+                                                val model = response.body()
+                                                if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                    BWSApplication.showToast(model!!.responseMessage, ctx)
+                                                    dialog.dismiss()
+                                                }
+                                            } catch (e: java.lang.Exception) {
+                                                e.printStackTrace()
+                                            }
+                                        }
+
+                                        override fun onFailure(call: Call<DeleteRemiderModel?>, t: Throwable) {}
+                                    })
+                                }
+                                dialog.show()
+                                dialog.setCancelable(false)
+                            }
+                        }
+
                         getDownloadData()
                         callObserveMethodGetAllMedia()
                         SongListSize = listModel.responseData!!.playlistSongs!!.size
@@ -389,7 +444,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.llDownloads.visibility = View.INVISIBLE
                     binding.llMore.visibility = View.GONE
                     binding.rlSearch.visibility = View.VISIBLE
-                    adpater2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, CoUserID, listModel.created, binding, activity, PlaylistID, PlaylistName,MyDownloads)
+                    adpater2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, CoUserID, listModel.created, binding, activity, PlaylistID, PlaylistName, MyDownloads)
                     binding.rvPlayLists2.adapter = adpater2
                     binding.rvPlayLists1.visibility = View.GONE
                     binding.rvPlayLists2.visibility = View.VISIBLE
@@ -448,6 +503,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     override fun requestDrag(viewHolder: RecyclerView.ViewHolder?) {
         touchHelper!!.startDrag(viewHolder!!)
     }
+
     class AreaOfFocusAdapter(var binding: ActivityMyPlaylistListingBinding, var ctx: Context, var selectedCategoriesName: java.util.ArrayList<String>) : RecyclerView.Adapter<AreaOfFocusAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var bindingAdapter: SelectedCategoryRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -1008,8 +1064,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        if(MyDownloads.equals("1", true)){
-                if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
+        if (MyDownloads.equals("1", true)) {
+            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
                 if (player != null) {
                     if (position != PlayerPosition) {
                         player.seekTo(position, 0)
@@ -1026,7 +1082,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             } else {
                 callPlayer(position, view, listModel, ctx, act, playlistID)
             }
-        }else {
+        } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
                 if (player != null) {
                     if (position != PlayerPosition) {
@@ -1066,7 +1122,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         if (MyDownloads.equals("1", ignoreCase = true)) {
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist")
-        }else {
+        } else {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
         }
         editor.apply()

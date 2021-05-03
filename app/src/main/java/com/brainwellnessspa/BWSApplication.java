@@ -54,6 +54,7 @@ import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
+import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
 import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
@@ -90,6 +91,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class BWSApplication extends Application {
@@ -455,8 +457,13 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
+    public static void getReminderCheck(Context ctx, Activity act, String isReminder, TextView tvReminder,
+                                        String CoUSERID, String playlistID, String playlistName) {
+
+    }
+
     public static void getReminderDay(Context ctx, Activity act, String CoUSERID, String playlistID, String playlistName) {
-        ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[] {
+        ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{
                 new ReminderSelectionModel("Sunday"),
                 new ReminderSelectionModel("Monday"),
                 new ReminderSelectionModel("Tuesday"),
@@ -502,7 +509,6 @@ public class BWSApplication extends Application {
 
     public static void getReminderTime(Context ctx, Activity act, String coUSERID, String playlistID, String playlistName, Dialog dialogOld) {
         ArrayList<ReminderMinutesListModel> reminderMinutesModel = new ArrayList<>();
-
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.select_timeslot_layout);

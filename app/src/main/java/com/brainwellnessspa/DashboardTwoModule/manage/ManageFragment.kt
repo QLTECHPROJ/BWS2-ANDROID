@@ -34,6 +34,7 @@ import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragmen
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
 import com.brainwellnessspa.R
+import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
 import com.brainwellnessspa.RoomDataBase.*
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
@@ -376,9 +377,61 @@ public class ManageFragment : Fragment() {
                     binding.llPlaylistDetails.setOnClickListener { v: View? ->
                         callPlaylistDetails()
                     }
-                    binding.tvReminder.setOnClickListener {
-                        BWSApplication.getReminderDay(activity, activity, CoUserID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                    if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
+                            || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                        binding.tvReminder.setText("Set Reminder")
+                    } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                        binding.tvReminder.setText("Update Reminder")
                     }
+                    binding.tvReminder.setOnClickListener {
+                        if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
+                                || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                            binding.tvReminder.setText("Set Reminder")
+                            BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName)
+                        } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                            binding.tvReminder.setText("Update Reminder")
+                            val dialog = Dialog(ctx)
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialog.setContentView(R.layout.delete_reminder)
+                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
+                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                            val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                            val Btn = dialog.findViewById<Button>(R.id.Btn)
+                            dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialog.hide()
+                                    return@setOnKeyListener true
+                                }
+                                false
+                            }
+                            Btn.setOnClickListener { v: View? ->
+                                dialog.hide()
+                                BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName)
+                            }
+                            tvGoBack.setOnClickListener { v: View? ->
+                                val listCall = APINewClient.getClient().getDeleteRemider(CoUserID,
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistID)
+                                listCall.enqueue(object : Callback<DeleteRemiderModel?> {
+                                    override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
+                                        try {
+                                            val model = response.body()
+                                            if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                BWSApplication.showToast(model.responseMessage, ctx)
+                                                dialog.dismiss()
+                                            }
+                                        } catch (e: java.lang.Exception) {
+                                            e.printStackTrace()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<DeleteRemiderModel?>, t: Throwable) {}
+                                })
+                            }
+                            dialog.show()
+                            dialog.setCancelable(false)
+                        }
+                    }
+
                     binding.llPlayPause.setOnClickListener {
                         if (isPlayPlaylist == 1) {
                             player.playWhenReady = false
