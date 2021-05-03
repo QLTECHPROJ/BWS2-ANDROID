@@ -63,7 +63,7 @@
                     android:layout_width="120dp"
                     android:layout_height="@dimen/_35sdp"
                     android:layout_gravity="center"
-                    android:background="@drawable/extra_blue_corner">
+                    android:background="@drawable/light_green_rounded_filled">
 
                     <TextView
                         android:id="@+id/tvText"

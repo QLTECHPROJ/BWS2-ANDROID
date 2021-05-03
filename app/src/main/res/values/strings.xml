@@ -299,4 +299,18 @@
     <string name="title_Elevate">Elevate</string>
     <string name="title_Profile">Profile</string>
 
+    <string name="title">Please select the time</string>
+    <string name="selected_time_prefix">Your selected time is</string>
+
+    <!-- %1$s:%2$s will add the string in HH:MM format
+    for more understanding follow the link at the end -->
+    <string name="selected_time_format">%1$s:%2$s</string>
+
+    <!-- >> means >> for more understanding follow
+    the link at the end -->
+    <string name="time_prefix">>></string>
+
+    <!-- << means << for more understanding follow
+    the link at the end -->
+    <string name="time_suffix">2</string>
 </resources>

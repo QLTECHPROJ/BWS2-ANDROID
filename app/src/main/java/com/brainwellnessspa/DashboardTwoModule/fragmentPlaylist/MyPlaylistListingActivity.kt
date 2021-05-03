@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -223,7 +224,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                                     || listModel.responseData!!.isReminder.equals("", ignoreCase = true)) {
                                 binding.tvReminder.setText("Set Reminder")
-                                BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                                BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?)
                             } else if (listModel.responseData!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.setText("Update Reminder")
                                 val dialog = Dialog(ctx)
@@ -245,7 +246,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 }
                                 tvconfirm.setOnClickListener { v: View? ->
                                     dialog.hide()
-                                    BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                                    BWSApplication.getReminderDay(ctx, activity, CoUserID, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?)
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUserID,
@@ -255,7 +256,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             try {
                                                 val model = response.body()
                                                 if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                    BWSApplication.showToast(model!!.responseMessage, ctx)
+                                                    BWSApplication.showToast(model.responseMessage, ctx)
                                                     dialog.dismiss()
                                                 }
                                             } catch (e: java.lang.Exception) {

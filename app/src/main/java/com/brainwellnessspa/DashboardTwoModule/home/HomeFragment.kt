@@ -228,7 +228,8 @@ class HomeFragment : Fragment() {
                             if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
                                     || homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                                 binding.tvReminder.setText("Set Reminder")
-                                BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                                BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                        homelistModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
                             } else if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.setText("Update Reminder")
                                 val dialog = Dialog(ctx)
@@ -247,7 +248,8 @@ class HomeFragment : Fragment() {
                                 }
                                 Btn.setOnClickListener { v: View? ->
                                     dialog.hide()
-                                    BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                                    BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                            homelistModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
