@@ -53,13 +53,18 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.akexorcist.snaptimepicker.SnapTimePickerDialog;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
+import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
+import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
 import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
@@ -73,9 +78,12 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,6 +101,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
@@ -133,7 +142,11 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void callAudioDetails(String audioId, Context ctx, Activity act, String CoUserID) {
+    public static void callAudioDetails(String audioId, Context ctx, Activity act, String CoUserID, String comeFrom,
+                                        ArrayList<DownloadAudioDetails> mDataDownload,
+                                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
+                                        ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
+                                        ArrayList<MainPlayModel> mDataPlayer,int position) {
 //            TODO Mansi  Hint This code is Audio Detail Dialog
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -149,18 +162,12 @@ public class BWSApplication extends Application {
         final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
         final TextView tvDuration = dialog.findViewById(R.id.tvDuration);
         final ImageView ivRestaurantImage = dialog.findViewById(R.id.ivRestaurantImage);
-        final ImageView ivLike = dialog.findViewById(R.id.ivLike);
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
         final RelativeLayout cvImage = dialog.findViewById(R.id.cvImage);
-        final LinearLayout llLike = dialog.findViewById(R.id.llLike);
         final LinearLayout llAddPlaylist = dialog.findViewById(R.id.llAddPlaylist);
-        final LinearLayout llAddQueue = dialog.findViewById(R.id.llAddQueue);
         final LinearLayout llDownload = dialog.findViewById(R.id.llDownload);
         final LinearLayout llRemovePlaylist = dialog.findViewById(R.id.llRemovePlaylist);
-        final LinearLayout llShuffle = dialog.findViewById(R.id.llShuffle);
-        final LinearLayout llRepeat = dialog.findViewById(R.id.llRepeat);
-        final LinearLayout llViewQueue = dialog.findViewById(R.id.llViewQueue);
         final RecyclerView rvDirlist = dialog.findViewById(R.id.rvDirlist);
         if (isNetworkConnected(ctx)) {
             progressBar.setVisibility(View.VISIBLE);
@@ -173,13 +180,8 @@ public class BWSApplication extends Application {
                         progressBar.setVisibility(View.GONE);
                         AudioDetailModel listModel = response.body();
                         cvImage.setVisibility(View.VISIBLE);
-                        llLike.setVisibility(View.GONE);
                         llAddPlaylist.setVisibility(View.VISIBLE);
-                        llAddQueue.setVisibility(View.GONE);
                         llDownload.setVisibility(View.VISIBLE);
-                        llShuffle.setVisibility(View.VISIBLE);
-                        llRepeat.setVisibility(View.VISIBLE);
-                        llViewQueue.setVisibility(View.VISIBLE);
                         llRemovePlaylist.setVisibility(View.VISIBLE);
 
 //                        if (comeFrom.equalsIgnoreCase("myPlayList") || comeFrom.equalsIgnoreCase("myLikeAudioList")) {
@@ -284,6 +286,18 @@ public class BWSApplication extends Application {
                     progressBar.setVisibility(View.GONE);
                 }
             });
+        }
+        llDownload.setOnClickListener(view ->
+                callDownload(comeFrom, mDataDownload, mDataViewAll,mDataPlaylist,mDataPlayer,position)
+        );
+        if(comeFrom.equalsIgnoreCase("downloadList")){
+
+        }else if(comeFrom.equalsIgnoreCase("playlist")){
+
+        }else if(comeFrom.equalsIgnoreCase("viewAllAudioList")){
+
+        }else if(comeFrom.equalsIgnoreCase("audioPlayer")){
+
         }
 
         llAddPlaylist.setOnClickListener(v13 -> {
@@ -436,6 +450,7 @@ public class BWSApplication extends Application {
                 showToast(ctx.getString(R.string.no_server_found), ctx);
             }
         });
+
         llAddPlaylist.setOnClickListener(view11 -> {
 
 //                comeAddPlaylist = 2;
@@ -459,6 +474,131 @@ public class BWSApplication extends Application {
         });
         dialog.show();
         dialog.setCancelable(false);
+    }
+
+    private static void callDownload(String comeFrom,
+                                     ArrayList<DownloadAudioDetails> mDataDownload,
+                                     ArrayList<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
+                                     ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
+                                     ArrayList<MainPlayModel> mDataPlayer,int position) {/*
+
+        try {
+            int i = position;
+            String audioFile = "", Name = "";
+            if(comeFrom.equalsIgnoreCase("downloadList")){
+                Name = mDataDownload.get(i).getName();
+                audioFile = mDataDownload.get(i).getAudioFile();
+                if (audioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    Name = mDataDownload.get(i).getName();
+                    audioFile = mDataDownload.get(i).getAudioFile();
+                }
+            }else if(comeFrom.equalsIgnoreCase("playlist")){
+                Name = mDataPlaylist.get(i).getName();
+                audioFile = mDataPlaylist.get(i).getAudioFile();
+                if (audioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    Name = mDataPlaylist.get(i).getName();
+                    audioFile = mDataPlaylist.get(i).getAudioFile();
+                }
+            }else if(comeFrom.equalsIgnoreCase("viewAllAudioList")){
+                Name = mDataDownload.get(i).getName();
+                audioFile = mDataDownload.get(i).getAudioFile();
+                if (audioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    Name = mDataDownload.get(i).getName();
+                    audioFile = mDataDownload.get(i).getAudioFile();
+                }
+            }else if(comeFrom.equalsIgnoreCase("audioPlayer")){
+                Name = mDataDownload.get(i).getName();
+                audioFile = mDataDownload.get(i).getAudioFile();
+                if (audioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    Name = mDataDownload.get(i).getName();
+                    audioFile = mDataDownload.get(i).getAudioFile();
+                }
+            }
+           if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
+
+                } else {
+                    Name = mData.get(i).getName();
+                    audioFile = mData.get(i).getAudioFile();
+                    if (audioFile.equalsIgnoreCase("")) {
+                        i = i + 1;
+                        Name = mData.get(i).getName();
+                        audioFile = mData.get(i).getAudioFile();
+                    }
+                }
+           else {
+                Name = mainPlayModelList.get(i).getName();
+                audioFile = mainPlayModelList.get(i).getAudioFile();
+                if (audioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    Name = mainPlayModelList.get(i).getName();
+                    audioFile = mainPlayModelList.get(i).getAudioFile();
+                }
+            }
+            if (downloadAudioDetailsList.contains(Name)) {
+                callDisableDownload();
+                SaveMedia(i, 100);
+            } else {
+                List<String> url1 = new ArrayList<>();
+                List<String> name1 = new ArrayList<>();
+                List<String> downloadPlaylistId = new ArrayList<>();
+                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                Gson gson1 = new Gson();
+                String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+                String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+                String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+                if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                    Type type = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> fileNameList = gson1.fromJson(json, type);
+                    List<String> audioFile1 = gson1.fromJson(json1, type);
+                    List<String> playlistId1 = gson1.fromJson(json2, type);
+                    if (fileNameList.size() != 0) {
+                        url1.addAll(audioFile1);
+                        name1.addAll(fileNameList);
+                        downloadPlaylistId.addAll(playlistId1);
+                    }
+                }
+                boolean entryNot = false;
+                for (int f = 0; f < fileNameList.size(); f++) {
+                    if (fileNameList.get(f).equalsIgnoreCase(Name)
+                            && playlistDownloadId.get(f).equalsIgnoreCase("")) {
+                        entryNot = true;
+                        break;
+                    }
+                }
+                if (!entryNot) {
+                    url1.add(audioFile);
+                    name1.add(Name);
+                    downloadPlaylistId.add("");
+                    if (url1.size() != 0) {
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        String urlJson = gson.toJson(url1);
+                        String nameJson = gson.toJson(name1);
+                        String playlistIdJson = gson.toJson(downloadPlaylistId);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                        editor.commit();
+                    }
+//        fileNast = url1;
+                    if (!isDownloading) {
+                        isDownloading = true;
+                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+                    }
+                    callDisableDownload();
+                    SaveMedia(i, 0);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
     }
 
     public static void getReminderCheck(Context ctx, Activity act, String isReminder, TextView tvReminder,

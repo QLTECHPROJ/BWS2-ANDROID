@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.DashboardTwoModule.manage.ManageFragment;
@@ -284,7 +286,9 @@ public class ViewAllAudioFragment extends Fragment {
 
             holder.binding.llMore.setVisibility(View.VISIBLE);
             holder.binding.llMore.setOnClickListener(v ->
-                BWSApplication.callAudioDetails(listModelList.get(position).getID(),context,getActivity(),CoUSERID)
+                BWSApplication.callAudioDetails(listModelList.get(position).getID(),context,getActivity(),CoUSERID,"viewAllAudioList",
+                        new ArrayList<DownloadAudioDetails>(),listModelList,new ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
+                        new ArrayList<MainPlayModel>(),position)
             );
 /*            if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {

@@ -3,7 +3,6 @@ package com.brainwellnessspa.DashboardTwoModule
 import android.app.Activity
 import android.app.UiModeManager
 import android.content.Context
-import android.content.Intent
 import android.graphics.PorterDuff
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -19,7 +18,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.PlayerAudioId
-import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
@@ -103,16 +101,11 @@ class   MyPlayerActivity :AppCompatActivity(){
         binding.playerControlView.addView(exoBinding.getRoot())
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         binding.llInfo.setOnClickListener { v ->
-            val i = Intent(ctx, AudioDetailActivity::class.java)
-            if (AudioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
-                i.putExtra("play", "TopCategories")
-            } else i.putExtra("play", "play")
-            i.putExtra("ID", id)
-            i.putExtra("position", position)
-            i.putExtra("PlaylistAudioId", "")
-            startActivity(i)
-            finish()
-//            BWSApplication.callAudioDetails(mainPlayModelList[position].id, ctx, act, CoUserID)
+            BWSApplication.callAudioDetails(mainPlayModelList[position].id, ctx, act, CoUserID,"audioPlayer",
+                    arrayListOf<DownloadAudioDetails>(),
+                    arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(),
+                    arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
+                    mainPlayModelList, position)
          }
         if (audioClick) {
 //            audioClick = false;
