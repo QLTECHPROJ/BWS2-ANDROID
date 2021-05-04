@@ -533,6 +533,8 @@ public class BWSApplication extends Application {
         });
 
         ReminderMinutesListModel[] minutesListModels = new ReminderMinutesListModel[]{
+                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
                 new ReminderMinutesListModel("00"),
                 new ReminderMinutesListModel("05"),
                 new ReminderMinutesListModel("10"),
@@ -545,10 +547,14 @@ public class BWSApplication extends Application {
                 new ReminderMinutesListModel("45"),
                 new ReminderMinutesListModel("50"),
                 new ReminderMinutesListModel("55"),
+                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
         };
 
         ReminderMinutesListModel[] hoursListModels = new ReminderMinutesListModel[]{
-                new ReminderMinutesListModel("00"), new ReminderMinutesListModel("01"), new ReminderMinutesListModel("02"),
+                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""), new ReminderMinutesListModel("00"),
+                new ReminderMinutesListModel("01"), new ReminderMinutesListModel("02"),
                 new ReminderMinutesListModel("03"), new ReminderMinutesListModel("04"), new ReminderMinutesListModel("05"),
                 new ReminderMinutesListModel("06"), new ReminderMinutesListModel("07"), new ReminderMinutesListModel("08"),
                 new ReminderMinutesListModel("09"), new ReminderMinutesListModel("10"), new ReminderMinutesListModel("11"),
@@ -556,7 +562,8 @@ public class BWSApplication extends Application {
                 new ReminderMinutesListModel("15"), new ReminderMinutesListModel("16"), new ReminderMinutesListModel("17"),
                 new ReminderMinutesListModel("18"), new ReminderMinutesListModel("19"), new ReminderMinutesListModel("20"),
                 new ReminderMinutesListModel("21"), new ReminderMinutesListModel("22"), new ReminderMinutesListModel("23"),
-                new ReminderMinutesListModel("24"),
+                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
         };
 
         dialog.setOnKeyListener((v, keyCode, event) -> {
@@ -637,6 +644,7 @@ public class BWSApplication extends Application {
         Button btnNext;
         String CoUSERID, PlaylistID, PlaylistName;
         Dialog dialogOld;
+        int mselectedItem = -1;
 
         public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
                 , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
@@ -662,10 +670,8 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            if(holder.binding.tvDay.getText().toString().equalsIgnoreCase("05")){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    holder.binding.tvDay.setBackgroundColor(getContext().getColor(R.color.red));
-                }
+            if (mselectedItem == position) {
+                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
             }
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
@@ -681,6 +687,16 @@ public class BWSApplication extends Application {
             public MyViewHolder(ReminderTimelistLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                        @Override
+                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                            mselectedItem = getAdapterPosition();
+                            notifyDataSetChanged();
+                        }
+                    });
+                }
             }
         }
     }
@@ -693,6 +709,7 @@ public class BWSApplication extends Application {
         Button btnNext;
         String CoUSERID, PlaylistID, PlaylistName;
         Dialog dialogOld;
+        int mselectedItem = -1;
 
         public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
                 , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
@@ -718,10 +735,8 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            if(holder.binding.tvDay.getText().toString().equalsIgnoreCase("45")){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    holder.binding.tvDay.setBackgroundColor(getContext().getColor(R.color.red));
-                }
+            if (mselectedItem == position) {
+                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
             }
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
@@ -737,6 +752,16 @@ public class BWSApplication extends Application {
             public MyViewHolder(ReminderTimelistLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                        @Override
+                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                            mselectedItem = getAdapterPosition();
+                            notifyDataSetChanged();
+                        }
+                    });
+                }
             }
         }
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/app_theme_color">
 
     <RelativeLayout
@@ -76,8 +76,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/llOptions"
-        android:paddingLeft="@dimen/_18sdp"
         android:layout_marginBottom="@dimen/_120sdp"
+        android:paddingLeft="@dimen/_18sdp"
+        android:visibility="visible"
         android:weightSum="1">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -86,10 +87,11 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/_18sdp"
             android:layout_weight="0.2"
-            tools:listitem="@layout/reminder_timelist_layout"
+            android:fastScrollEnabled="true"
             android:overScrollMode="never"
             android:paddingBottom="@dimen/_18sdp"
-            android:visibility="visible" />
+            android:visibility="visible"
+            tools:listitem="@layout/reminder_timelist_layout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSelectMinutesTimeSlot"
@@ -97,11 +99,42 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/_18sdp"
             android:layout_weight="0.8"
-            android:paddingLeft="@dimen/_16sdp"
+            android:fastScrollEnabled="true"
             android:overScrollMode="never"
-            tools:listitem="@layout/reminder_timelist_layout"
+            android:paddingLeft="@dimen/_16sdp"
             android:paddingBottom="@dimen/_18sdp"
-            android:visibility="visible" />
+            android:visibility="visible"
+            tools:listitem="@layout/reminder_timelist_layout" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/llOptions"
+        android:layout_marginBottom="@dimen/_120sdp"
+        android:paddingLeft="@dimen/_18sdp"
+        android:visibility="gone"
+        android:weightSum="1">
+
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7">
+
+
+        </LinearLayout>
     </LinearLayout>
 
 

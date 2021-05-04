@@ -10,11 +10,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
-            android:gravity="left"
+            android:gravity="start"
             android:paddingVertical="@dimen/_15sdp"
             android:paddingLeft="@dimen/_12sdp"
             android:textColor="@color/dim_light_gray"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_18sdp" />
 
     </LinearLayout>
 </layout>
