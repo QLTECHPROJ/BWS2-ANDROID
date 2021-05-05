@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SegmentAudio;
@@ -164,6 +165,18 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     }
 
     public void PrepareData() {
+        Gson gson = new Gson();
+        SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        String AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+        String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
+        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+        }.getType();
+                mainPlayModelList = gson.fromJson(json, type);
+        if(!AudioPlayerFlagx.equals("0")) {
+            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
+        }
        /* try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.UpdateMiniPlayer(ctx);
@@ -211,7 +224,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             }
             Properties p = new Properties();
             p.putValue("userId", UserID);
-            Gson gson = new Gson();
             p.putValue("audios", gson.toJson(section));
             p.putValue("source", "Search Screen");
             BWSApplication.addToSegment("Suggested Audios List Viewed", p, CONSTANTS.screen);
@@ -232,7 +244,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             }
             Properties p = new Properties();
             p.putValue("userId", UserID);
-            Gson gson = new Gson();
             p.putValue("playlists", gson.toJson(section));
             p.putValue("source", "Search Screen");
             BWSApplication.addToSegment("Suggested Playlists List Viewed", p, CONSTANTS.screen);
@@ -376,7 +387,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binds.tvTitle.setText(AudiolistsModel.get(position).getName());
             holder.binds.tvTime.setText(AudiolistsModel.get(position).getAudioDuration());
             holder.binds.pbProgress.setVisibility(View.GONE);
-            holder.binds.equalizerview.setVisibility(View.GONE);
             holder.binds.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -394,34 +404,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivBackgroundImage);
-          /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-//            if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-//                    !AudioFlag.equalsIgnoreCase("SubPlayList") &&
-//                    !AudioFlag.equalsIgnoreCase("TopCategories")) {
-//                if (myAudioId.equalsIgnoreCase(AudiolistsModel.get(position).getID())) {
-//                    songId = myAudioId;
-//                    if (player != null) {
-//                        if (!player.getPlayWhenReady()) {
-//                            holder.binds.equalizerview.pause();
-//                        } else
-//                            holder.binds.equalizerview.resume(true);
-//                    } else
-//                        holder.binds.equalizerview.stop(true);
-//                    holder.binds.equalizerview.setVisibility(View.VISIBLE);
-//                    holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background);
-//                    holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                } else {
-//                    holder.binds.equalizerview.setVisibility(View.GONE);
-//                    holder.binds.llMainLayout.setBackgroundResource(R.color.white);
-//                    holder.binds.ivBackgroundImage.setVisibility(View.GONE);
-//                }
-//            } else {
-                holder.binds.llMainLayout.setBackgroundResource(R.color.white);
-                holder.binds.ivBackgroundImage.setVisibility(View.GONE);
-            }*/
             SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
@@ -448,6 +430,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                 }
             } else {
+                holder.binds.equalizerview.setVisibility(View.GONE);
                 holder.binds.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binds.ivBackgroundImage.setVisibility(View.GONE);
             }

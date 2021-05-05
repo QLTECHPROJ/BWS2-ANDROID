@@ -1715,11 +1715,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         myBackPress = true;
         handler.removeCallbacks(UpdateSongTime);
         if (ComeFromQueue.equalsIgnoreCase("1")) {
-            Intent i = new Intent(ctx, AudioDetailActivity.class);
-            i.putExtra("ID", AudioId);
-            i.putExtra("play", play);
-            startActivity(i);
-            finish();
+//            Intent i = new Intent(ctx, AudioDetailActivity.class);
+//            i.putExtra("ID", AudioId);
+//            i.putExtra("play", play);
+//            startActivity(i);
+//            finish();
         } else if (ComeFromQueue.equalsIgnoreCase("0") ||
                 ComeFromQueue.equalsIgnoreCase("")) {
             if (binding.llPause.getVisibility() == View.VISIBLE) {

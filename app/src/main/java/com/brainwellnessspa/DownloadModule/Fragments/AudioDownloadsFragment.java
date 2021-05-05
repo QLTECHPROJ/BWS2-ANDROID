@@ -60,6 +60,7 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
@@ -224,6 +225,18 @@ public class AudioDownloadsFragment extends Fragment {
 
     @Override
     public void onResume() {
+        Gson gson = new Gson();
+        SharedPreferences shared1x = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        String AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+        String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
+        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+        }.getType();
+        mainPlayModelList = gson.fromJson(json, type);
+        if(!AudioPlayerFlagx.equals("0")) {
+            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
+        }
         callObserverMethod();
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -23,8 +24,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.Selection;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,6 +41,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,18 +54,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.akexorcist.snaptimepicker.SnapTimePickerDialog;
 import com.brainwellnessspa.DashboardModule.Adapters.DirectionAdapter;
+import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
@@ -69,7 +79,11 @@ import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
 import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
+import com.brainwellnessspa.RoomDataBase.AudioDatabase;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Services.PlayerJobService;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
@@ -124,7 +138,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.Services.GlobalInitExoPlayer.hundredVolume;
 import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class BWSApplication extends Application {
@@ -134,11 +148,13 @@ public class BWSApplication extends Application {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
         }
     };
-    private static Context mContext;
-    private static BWSApplication BWSApplication;
     public static String BatteryStatus = "";
     public static String PlayerAudioId = "";
+    public static List<String> downloadAudioDetailsList = new ArrayList<>();
+    public static List<DownloadAudioDetails> playlistDownloadAudioDetailsList = new ArrayList<>();
     static List<String> remiderDays = new ArrayList<>();
+    private static Context mContext;
+    private static BWSApplication BWSApplication;
     static String currantTime = "09:00 am", am_pm, hourString, minuteSting;
     static int mHour, mMinute;
 
@@ -164,11 +180,78 @@ public class BWSApplication extends Application {
         }
     }
 
+    public static List<String> GetAllMediaDownload(Context ctx) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllDataBYDownloaded1("Complete").observe((LifecycleOwner) ctx, audioList -> {
+            downloadAudioDetailsList = audioList;
+            DatabaseClient
+                    .getInstance(ctx)
+                    .getaudioDatabase()
+                    .taskDao()
+                    .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+            });
+        });
+        return downloadAudioDetailsList;
+    }
+
+    private static void CallObserverMethodGetAllMedia(Context ctx) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe((LifecycleOwner) ctx, audioList -> {
+            playlistDownloadAudioDetailsList = audioList;
+
+        });
+    }
+
+    private static void GetPlaylistDetail(Context ctx,String PlaylistID,
+                                              LinearLayout llDownload,ImageView ivDownloads,TextView tvDownload, int songSize) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getPlaylist1(PlaylistID).observe((LifecycleOwner) ctx, audioList -> {
+
+            if (audioList.size() != 0) {
+                enableDisableDownload(ctx,false, "orange",llDownload,ivDownloads,tvDownload);
+            } else if (songSize == 0) {
+                enableDisableDownload(ctx,false, "gray",llDownload,ivDownloads,tvDownload);
+            }   else if (audioList.size() == 0) {
+                enableDisableDownload(ctx,true, "white",llDownload,ivDownloads,tvDownload);
+            }
+        });
+    }
+
+    private static void enableDisableDownload(Context ctx,boolean b, String color,
+                                              LinearLayout llDownload,ImageView ivDownloads,TextView tvDownload) {
+        if (b) {
+            llDownload.setClickable(true);
+            llDownload.setEnabled(true);
+            ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            tvDownload.setTextColor(ctx.getResources().getColor(R.color.white));
+        } else {
+            ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            llDownload.setClickable(false);
+            llDownload.setEnabled(false);
+            if (color.equalsIgnoreCase("gray")) {
+                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            } else if (color.equalsIgnoreCase("orange")) {
+                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            }
+            tvDownload.setTextColor(ctx.getResources().getColor(R.color.white));
+        }
+    }
+
     public static void callAudioDetails(String audioId, Context ctx, Activity act, String CoUserID, String comeFrom,
-                                        ArrayList<DownloadAudioDetails> mDataDownload,
-                                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
-                                        ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                        ArrayList<MainPlayModel> mDataPlayer, int position) {
+                                        List<DownloadAudioDetails> mDataDownload,
+                                        List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
+                                        List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
+                                        List<MainPlayModel> mDataPlayer, int position) {
 //            TODO Mansi  Hint This code is Audio Detail Dialog
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -183,7 +266,9 @@ public class BWSApplication extends Application {
         final TextView tvDire = dialog.findViewById(R.id.tvDire);
         final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
         final TextView tvDuration = dialog.findViewById(R.id.tvDuration);
+        final TextView tvDownloads = dialog.findViewById(R.id.tvDownloads);
         final ImageView ivRestaurantImage = dialog.findViewById(R.id.ivRestaurantImage);
+        final ImageView ivDownloads = dialog.findViewById(R.id.ivDownloads);
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
         final RelativeLayout cvImage = dialog.findViewById(R.id.cvImage);
@@ -191,6 +276,7 @@ public class BWSApplication extends Application {
         final LinearLayout llDownload = dialog.findViewById(R.id.llDownload);
         final LinearLayout llRemovePlaylist = dialog.findViewById(R.id.llRemovePlaylist);
         final RecyclerView rvDirlist = dialog.findViewById(R.id.rvDirlist);
+        GetAllMediaDownload(ctx);
         if (isNetworkConnected(ctx)) {
             progressBar.setVisibility(View.VISIBLE);
             progressBar.invalidate();
@@ -204,18 +290,36 @@ public class BWSApplication extends Application {
                         cvImage.setVisibility(View.VISIBLE);
                         llAddPlaylist.setVisibility(View.VISIBLE);
                         llDownload.setVisibility(View.VISIBLE);
-                        llRemovePlaylist.setVisibility(View.VISIBLE);
 
-//                        if (comeFrom.equalsIgnoreCase("myPlayList") || comeFrom.equalsIgnoreCase("myLikeAudioList")) {
-//                            binding.llRemovePlaylist.setVisibility(View.GONE);
-//                        } else {
-//                            if (MyPlaylist.equalsIgnoreCase("myPlaylist")) {
-//                                binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-//                            } else {
-//                                binding.llRemovePlaylist.setVisibility(View.GONE);
-//                            }
-//                        }
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                        String PlayFrom = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
 
+                        if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                            if (PlayFrom.equalsIgnoreCase("Created")) {
+                                llRemovePlaylist.setVisibility(View.VISIBLE);
+                            } else {
+                                llRemovePlaylist.setVisibility(View.GONE);
+                            }
+                        }
+                        String AudioFile = "", PlaylistId = "", audioFileName = "";
+                        if (comeFrom.equalsIgnoreCase("downloadList")) {
+                            AudioFile = mDataDownload.get(position).getAudioFile();
+                            PlaylistId = mDataDownload.get(position).getPlaylistId();
+                            audioFileName = mDataDownload.get(position).getName();
+                        } else if (comeFrom.equalsIgnoreCase("playlist")) {
+                            AudioFile = mDataPlaylist.get(position).getAudioFile();
+                            PlaylistId = mDataPlaylist.get(position).getPlaylistID();
+                            audioFileName = mDataPlaylist.get(position).getName();
+                        } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
+                            AudioFile = mDataViewAll.get(position).getAudioFile();
+                            PlaylistId = "";
+                            audioFileName = mDataViewAll.get(position).getName();
+                        } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                            AudioFile = mDataPlayer.get(position).getAudioFile();
+                            PlaylistId = mDataPlayer.get(position).getPlaylistID();
+                            audioFileName = mDataPlayer.get(position).getName();
+                        }
+                        GetMedia(AudioFile, ctx, audioFileName, ivDownloads, tvDownloads, llDownload);
                         try {
                             Glide.with(ctx).load(listModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
                                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
@@ -309,12 +413,17 @@ public class BWSApplication extends Application {
                 }
             });
         }
-        llDownload.setOnClickListener(view ->
-                callDownload(comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position)
-        );
+        llDownload.setOnClickListener(view -> {
+            ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+            ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
+            llDownload.setClickable(false);
+            llDownload.setEnabled(false);
+            callDownload(comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx, ivDownloads, tvDownloads, llDownload);
+        });
         if (comeFrom.equalsIgnoreCase("downloadList")) {
 
-        } else if (comeFrom.equalsIgnoreCase("playlist")) {
+        }else if(comeFrom.equalsIgnoreCase("playlist")){
 
         } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
 
@@ -322,19 +431,30 @@ public class BWSApplication extends Application {
 
         }
 
-        llAddPlaylist.setOnClickListener(v13 -> {
-            if (isNetworkConnected(ctx)) {
-                showProgressBar(progressBar, progressBarHolder, act);
-                Call<SucessModel> listCall = APINewClient.getClient().RemoveAudio(CoUserID, /*AudioId*/audioId, /*PlaylistId*/"34");
-                listCall.enqueue(new Callback<SucessModel>() {
-                    @Override
-                    public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                        try {
-                            if (response.isSuccessful()) {
-                                hideProgressBar(progressBar, progressBarHolder, act);
-                                SucessModel listModel = response.body();
-                                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        llRemovePlaylist.setOnClickListener(v13 -> {
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+            String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+            String PlaylistId = "";
+            if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                PlaylistId = mDataPlayer.get(position).getPlaylistID();
+            }
+            if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistId) && mDataPlayer.size() == 1) {
+                showToast("Currently you play this playlist, you can't remove last audio", act);
+            } else {
+                if (isNetworkConnected(ctx)) {
+                    showProgressBar(progressBar, progressBarHolder, act);
+                    Call<SucessModel> listCall = APINewClient.getClient().RemoveAudio(CoUserID, audioId, PlaylistId);
+                    listCall.enqueue(new Callback<SucessModel>() {
+                        @Override
+                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                            try {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar(progressBar, progressBarHolder, act);
+                                    SucessModel listModel = response.body();
+                                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
 //                                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 //                                int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
 //
@@ -457,19 +577,20 @@ public class BWSApplication extends Application {
 //                                        }
 //                                    }
 //                                }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<SucessModel> call, Throwable t) {
-                        hideProgressBar(progressBar, progressBarHolder, act);
-                    }
-                });
-            } else {
-                showToast(ctx.getString(R.string.no_server_found), act);
+                        @Override
+                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar(progressBar, progressBarHolder, act);
+                        }
+                    });
+                } else {
+                    showToast(ctx.getString(R.string.no_server_found), act);
+                }
             }
         });
 
@@ -496,6 +617,703 @@ public class BWSApplication extends Application {
         });
         dialog.show();
         dialog.setCancelable(false);
+    }
+
+    public static void callPlaylistDetails(Context ctx, Activity act, String CoUSERID,String PlaylistId,String PlaylistName) {
+        final Dialog dialog = new Dialog(ctx);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.open_playlist_detail_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+        final TextView tvReadMore = dialog.findViewById(R.id.tvReadMore);
+        final TextView tvSubDec = dialog.findViewById(R.id.tvSubDec);
+        final TextView tvTitleDec = dialog.findViewById(R.id.tvTitleDec);
+        final TextView tvTime = dialog.findViewById(R.id.tvTime);
+        final TextView tvName = dialog.findViewById(R.id.tvName);
+        final TextView tvDownloads = dialog.findViewById(R.id.tvDownloads);
+        final LinearLayout llDownload = dialog.findViewById(R.id.llDownload);
+        final LinearLayout llOptions = dialog.findViewById(R.id.llOptions);
+        final LinearLayout llRename = dialog.findViewById(R.id.llRename);
+        final LinearLayout llDelete = dialog.findViewById(R.id.llDelete);
+        final LinearLayout llFind = dialog.findViewById(R.id.llFind);
+        final ImageView ivRestaurantImage = dialog.findViewById(R.id.ivRestaurantImage);
+        final ImageView ivDownloads = dialog.findViewById(R.id.ivDownloads);
+        final LinearLayout llAddPlaylist = dialog.findViewById(R.id.llAddPlaylist);
+        final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+        final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+        final RecyclerView rvDirlist = dialog.findViewById(R.id.rvDirlist);
+        dialog.setOnKeyListener((v1, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dialog.dismiss();
+                return true;
+            }
+            return false;
+        });
+
+        CallObserverMethodGetAllMedia(ctx);
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(progressBar, progressBarHolder, act);
+            Call<PlaylistDetailsModel> listCall = APINewClient.getClient().getPlaylistDetail(CoUSERID, PlaylistId);
+            listCall.enqueue(new Callback<PlaylistDetailsModel>() {
+                @Override
+                public void onResponse(Call<PlaylistDetailsModel> call, Response<PlaylistDetailsModel> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            hideProgressBar(progressBar, progressBarHolder, act);
+                            PlaylistDetailsModel model = response.body();
+
+                            GetPlaylistDetail(ctx,PlaylistId,llDownload,ivDownloads,tvDownloads,model.getResponseData().getPlaylistSongs().size());
+                            llDownload.setVisibility(View.VISIBLE);
+                            DownloadPlaylistDetails  downloadPlaylistDetails = new DownloadPlaylistDetails();
+                                downloadPlaylistDetails.setPlaylistID(model.getResponseData().getPlaylistID());
+                                downloadPlaylistDetails.setPlaylistName(model.getResponseData().getPlaylistName());
+                                downloadPlaylistDetails.setPlaylistDesc(model.getResponseData().getPlaylistDesc());
+                                downloadPlaylistDetails.setIsReminder("");
+                                downloadPlaylistDetails.setPlaylistMastercat(model.getResponseData().getPlaylistMastercat());
+                                downloadPlaylistDetails.setPlaylistSubcat(model.getResponseData().getPlaylistSubcat());
+                                downloadPlaylistDetails.setPlaylistImage(model.getResponseData().getPlaylistImage());
+                                downloadPlaylistDetails.setPlaylistImageDetails(model.getResponseData().getPlaylistImageDetail());
+                                downloadPlaylistDetails.setTotalAudio(model.getResponseData().getTotalAudio());
+                                downloadPlaylistDetails.setTotalDuration(model.getResponseData().getTotalDuration());
+                                downloadPlaylistDetails.setTotalhour(model.getResponseData().getTotalhour());
+                                downloadPlaylistDetails.setTotalminute(model.getResponseData().getTotalminute());
+                                downloadPlaylistDetails.setCreated(model.getResponseData().getCreated());
+                            tvName.setText(model.getResponseData().getPlaylistName());
+
+                            String PlaylistDesc = model.getResponseData().getPlaylistDesc();
+                            String PlaylistName = model.getResponseData().getPlaylistName();
+                            String PlaylistID = model.getResponseData().getPlaylistID();
+                            String TotalAudio = model.getResponseData().getTotalAudio();
+                            String Totalhour = model.getResponseData().getTotalhour();
+                            String Totalminute = model.getResponseData().getTotalminute();
+                                 llAddPlaylist.setOnClickListener(view -> {
+                                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                                     i.putExtra("AudioId", "");
+                                     i.putExtra("ScreenView", "Playlist Details Screen");
+                                     i.putExtra("PlaylistID", PlaylistID);
+                                     i.putExtra("PlaylistName", PlaylistName);
+                                     i.putExtra("PlaylistImage", model.getResponseData().getPlaylistImage());
+                                     i.putExtra("PlaylistType", model.getResponseData().getCreated());
+                                     i.putExtra("Liked", "0");
+                                     ctx.startActivity(i);
+                                     dialog.dismiss();
+                                 });
+                                 llFind.setOnClickListener(view -> {
+//                                     ComeFindAudio = 2;
+                                     dialog.dismiss();
+                                 });
+                            if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
+                                tvDesc.setVisibility(View.GONE);
+                            } else {
+                                tvDesc.setVisibility(View.VISIBLE);
+                                tvDesc.setText(model.getResponseData().getPlaylistMastercat());
+                            }
+
+//                                Properties p = new Properties();
+//                                p.putValue("userId", UserID);
+//                                p.putValue("playlistId", model.getResponseData().getPlaylistID());
+//                                p.putValue("playlistName", model.getResponseData().getPlaylistName());
+//                                p.putValue("playlistDescription", PlaylistDesc);
+//                                if (PlaylistType.equalsIgnoreCase("1")) {
+//                                    p.putValue("playlistType", "Created");
+//                                } else if (PlaylistType.equalsIgnoreCase("0")) {
+//                                    p.putValue("playlistType", "Default");
+//                                }
+//                                if (model.getResponseData().getTotalhour().equalsIgnoreCase("")) {
+//                                    p.putValue("playlistDuration", "0h " + model.getResponseData().getTotalminute() + "m");
+//                                } else if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+//                                    p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h 0m");
+//                                } else {
+//                                    p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+//                                }
+//
+//                                p.putValue("audioCount", model.getResponseData().getTotalAudio());
+//                                p.putValue("source", ScreenView);
+//                                addToSegment("Playlist Details Viewed", p, CONSTANTS.screen);
+
+                            if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
+                                    model.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
+                                            model.getResponseData().getTotalhour().equalsIgnoreCase("")
+                                            && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                tvTime.setText("0 Audio | 0h 0m");
+                            } else {
+                                if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                    tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
+                                            + model.getResponseData().getTotalhour() + "h 0m");
+                                } else {
+                                    tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
+                                            + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+                                }
+                            }
+
+                            if (model.getResponseData().getCreated().equalsIgnoreCase("1")) {
+                                llOptions.setVisibility(View.GONE);
+                                llRename.setVisibility(View.VISIBLE);
+                                llDelete.setVisibility(View.VISIBLE);
+                                llFind.setVisibility(View.GONE);
+                            } else if (model.getResponseData().getCreated().equalsIgnoreCase("0")) {
+                                llOptions.setVisibility(View.VISIBLE);
+                                llRename.setVisibility(View.GONE);
+                                llDelete.setVisibility(View.GONE);
+                                llFind.setVisibility(View.VISIBLE);
+                            }
+
+                            MeasureRatio measureRatio = measureRatio(ctx, 20,
+                                    1, 1, 0.54f, 20);
+                            ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                            ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                            ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                            if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
+                                Glide.with(ctx).load(model.getResponseData().getPlaylistImage()).thumbnail(0.05f)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
+                            } else {
+                                Glide.with(ctx).load(R.drawable.ic_playlist_bg).thumbnail(0.05f)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
+                            }
+
+//                            getDownloadData();
+                              int SongListSize = model.getResponseData().getPlaylistSongs().size();
+//                            getMediaByPer(PlaylistID,SongListSize);
+//                            SongListSize = model.getResponseData().getPlaylistSongs().size();
+                            llAddPlaylist.setVisibility(View.VISIBLE);
+//                            getDownloadData();
+
+                            if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")) {
+                                tvTitleDec.setVisibility(View.GONE);
+                                tvSubDec.setVisibility(View.GONE);
+                            } else {
+                                tvTitleDec.setVisibility(View.VISIBLE);
+                                tvSubDec.setVisibility(View.VISIBLE);
+                            }
+
+                            tvSubDec.setText(model.getResponseData().getPlaylistDesc());
+                            int linecount = tvSubDec.getLineCount();
+                            if (linecount >= 4) {
+                                tvReadMore.setVisibility(View.VISIBLE);
+                            } else {
+                                tvReadMore.setVisibility(View.GONE);
+                            }
+
+//                                if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
+//                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+//                                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+//                                    binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
+//                                    binding.llDownload.setClickable(false);
+//                                    binding.llDownload.setEnabled(false);
+//                                } else if (!model.getResponseData().getDownload().equalsIgnoreCase("")) {
+//                                    binding.llDownload.setClickable(true);
+//                                    binding.llDownload.setEnabled(true);
+//                                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+//                                    binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
+//                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+//                                }
+//                               binding.llDownload.setOnClickListener(view -> {
+//                                if (isNetworkConnected(ctx)) {
+//                                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+//                                    Call<DownloadPlaylistModel> listCall13 = null;
+//                                    listCall13 = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+//                                    listCall13.enqueue(new Callback<DownloadPlaylistModel>() {
+//                                        @Override
+//                                        public void onResponse(Call<DownloadPlaylistModel> call13, Response<DownloadPlaylistModel> response13) {
+//                                            if (response13.isSuccessful()) {
+//                                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+//                                                DownloadPlaylistModel model1 = response13.body();
+//                                                showToast(model1.getResponseMessage(), ctx);
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(Call<DownloadPlaylistModel> call13, Throwable t) {
+//                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+//                                        }
+//                                    });
+//
+//                                } else {
+//                                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+
+                            String[] elements = model.getResponseData().getPlaylistSubcat().split(",");
+                            List<String> direction = Arrays.asList(elements);
+                            DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
+                            RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+                            rvDirlist.setLayoutManager(recentlyPlayed);
+                            rvDirlist.setItemAnimator(new
+                                    DefaultItemAnimator());
+                            rvDirlist.setAdapter(directionAdapter);
+
+                            llDelete.setOnClickListener(view43 -> {
+                                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistId)) {
+                                    showToast("Currently this playlist is in player,so you can't delete this playlist as of now", act);
+                                } else {
+                                    final Dialog dialoged = new Dialog(ctx);
+                                    dialoged.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialoged.setContentView(R.layout.delete_playlist);
+                                    dialoged.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                                    dialoged.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                                    final TextView tvGoBack = dialoged.findViewById(R.id.tvGoBack);
+                                    final TextView tvHeader = dialoged.findViewById(R.id.tvHeader);
+                                    final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                                    tvHeader.setText("Are you sure you want to delete " + PlaylistName + "  playlist?");
+                                    dialoged.setOnKeyListener((v44, keyCode, event) -> {
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.dismiss();
+//                            Fragment playlistFragment = new PlaylistFragment();
+//                            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+//                            fragmentManager1.beginTransaction()
+//                                    .add(R.id.flContainer, playlistFragment)
+//                                    .commit();
+//                            Bundle bundle = new Bundle();
+//                            playlistFragment.setArguments(bundle);
+                                            return true;
+                                        }
+                                        return false;
+                                    });
+
+                                    tvconfirm.setOnClickListener(v33 -> {
+                                        if (isNetworkConnected(ctx)) {
+                                            showProgressBar(progressBar, progressBarHolder, act);
+                                            Call<SucessModel> listCall12 = APINewClient.getClient().getDeletePlaylist(CoUSERID, PlaylistId);
+                                            listCall12.enqueue(new Callback<SucessModel>() {
+                                                @Override
+                                                public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
+                                                    try {
+                                                        if (response12.isSuccessful()) {
+//                                            MyPlaylistIds = "";
+//                                            deleteFrg = 1;
+                                                            hideProgressBar(progressBar, progressBarHolder, act);
+                                                            SucessModel listModel = response12.body();
+                                                            dialoged.dismiss();
+                                                            showToast(listModel.getResponseMessage(),act);
+//                                            finish();
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<SucessModel> call12, Throwable t) {
+                                                    hideProgressBar(progressBar, progressBarHolder, act);
+                                                }
+                                            });
+                                        } else {
+                                            showToast(ctx.getString(R.string.no_server_found), act);
+                                        }
+                                    });
+
+                                    tvGoBack.setOnClickListener(v22 -> dialoged.dismiss());
+                                    dialoged.show();
+                                    dialoged.setCanceledOnTouchOutside(true);
+                                    dialoged.setCancelable(true);
+                                }
+                            });
+
+                            llRename.setOnClickListener(view22 -> {
+                                final Dialog dialogs = new Dialog(ctx);
+                                dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialogs.setContentView(R.layout.create_palylist);
+                                dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
+                                dialogs.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                EditText edtCreate = dialogs.findViewById(R.id.edtCreate);
+                                TextView tvCancel = dialogs.findViewById(R.id.tvCancel);
+                                TextView tvHeading = dialogs.findViewById(R.id.tvHeading);
+                                Button btnSendCode = dialogs.findViewById(R.id.btnSendCode);
+                                tvHeading.setText(R.string.Rename_your_playlist);
+                                btnSendCode.setText(R.string.Save);
+                                edtCreate.requestFocus();
+                                edtCreate.setText(PlaylistName);
+                                int position1 = edtCreate.getText().length();
+                                Editable editObj = edtCreate.getText();
+                                Selection.setSelection(editObj, position1);
+                                dialog.setOnKeyListener((v23, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        return true;
+                                    }
+                                    return false;
+                                });
+//            edtCreate.addTextChangedListener(new HomeFragment.PopupTextWatcher(edtCreate, btnSendCode));
+
+                                btnSendCode.setOnClickListener(view1 -> {
+                                    if (isNetworkConnected(ctx)) {
+                                        showProgressBar(progressBar, progressBarHolder, act);
+                                        Call<SucessModel> listCall1 = APINewClient.getClient().getRenameNewPlaylist(CoUSERID, /*PlaylistID*/"34", edtCreate.getText().toString());
+                                        listCall1.enqueue(new Callback<SucessModel>() {
+                                            @Override
+                                            public void onResponse(Call<SucessModel> call1, Response<SucessModel> response1) {
+                                                try {
+                                                    hideProgressBar(progressBar, progressBarHolder, act);
+                                                    SucessModel listModel = response1.body();
+                                                    if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
+                                                        showToast(listModel.getResponseMessage(), act);
+//                                        Properties p = new Properties();
+//                                        p.putValue("userId", UserID);
+//                                        p.putValue("playlistId", PlaylistID);
+//                                        p.putValue("playlistName", PlaylistName);
+//                                        p.putValue("playlistDescription", PlaylistDesc);
+//                                        if (PlaylistType.equalsIgnoreCase("1")) {
+//                                            p.putValue("playlistType", "Created");
+//                                        } else if (PlaylistType.equalsIgnoreCase("0")) {
+//                                            p.putValue("playlistType", "Default");
+//                                        }
+//                                        if (Totalhour.equalsIgnoreCase("")) {
+//                                            p.putValue("playlistDuration", "0h " + Totalminute + "m");
+//                                        } else if (Totalminute.equalsIgnoreCase("")) {
+//                                            p.putValue("playlistDuration", Totalhour + "h 0m");
+//                                        } else {
+//                                            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+//                                        }
+//                                        p.putValue("audioCount", TotalAudio);
+//                                        p.putValue("source", ScreenView);
+//                                        addToSegment("Playlist Rename Clicked", p, CONSTANTS.track);
+                                                        dialogs.dismiss();
+//                                        ctx.finish();
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<SucessModel> call1, Throwable t) {
+                                                hideProgressBar(progressBar, progressBarHolder, act);
+                                            }
+                                        });
+                                    } else {
+                                        showToast(ctx.getString(R.string.no_server_found), act);
+                                    }
+
+                                });
+                                tvCancel.setOnClickListener(v34 -> dialogs.dismiss());
+                                dialogs.show();
+                                dialogs.setCanceledOnTouchOutside(true);
+                                dialogs.setCancelable(true);
+                            });
+
+                            llDownload.setOnClickListener(view -> callDownloadPlayList(model.getResponseData().getPlaylistSongs(),ctx,llDownload,ivDownloads,tvDownloads,downloadPlaylistDetails,CoUSERID,PlaylistID));
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PlaylistDetailsModel> call, Throwable t) {
+                    hideProgressBar(progressBar, progressBarHolder, act);
+                }
+            });
+        } else {
+            showToast(ctx.getString(R.string.no_server_found), act);
+        }
+
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+
+//       TODO Mansi  Hint This code is Create playlist Dialog
+        final Dialog dialog1 = new Dialog(ctx);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setContentView(R.layout.create_palylist);
+        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
+        dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final EditText edtCreate = dialog1.findViewById(R.id.edtCreate);
+        final TextView tvCancel = dialog1.findViewById(R.id.tvCancel);
+        final Button btnSendCode = dialog1.findViewById(R.id.btnSendCode);
+        final ProgressBar progressBar1 = dialog1.findViewById(R.id.progressBar);
+        final FrameLayout progressBarHolder1 = dialog1.findViewById(R.id.progressBarHolder);
+        edtCreate.requestFocus();
+        TextWatcher popupTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String number = edtCreate.getText().toString().trim();
+                if (!number.isEmpty()) {
+                    btnSendCode.setEnabled(true);
+                    btnSendCode.setTextColor(ctx.getResources().getColor(R.color.light_black));
+                    btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
+                } else {
+                    btnSendCode.setEnabled(false);
+                    btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
+                    btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+
+        edtCreate.addTextChangedListener(popupTextWatcher);
+        dialog1.setOnKeyListener((v1, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dialog1.dismiss();
+                return true;
+            }
+            return false;
+        });
+
+        btnSendCode.setOnClickListener(view1 -> {
+            showProgressBar(progressBar1, progressBarHolder1, act);
+            if (isNetworkConnected(ctx)) {
+                Call<CreateNewPlaylistModel> listCall = APINewClient.getClient().getCreatePlaylist(CoUSERID, edtCreate.getText().toString());
+                listCall.enqueue(new Callback<CreateNewPlaylistModel>() {
+                    @Override
+                    public void onResponse(Call<CreateNewPlaylistModel> call, Response<CreateNewPlaylistModel> response) {
+                        try {
+                            CreateNewPlaylistModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
+                                hideProgressBar(progressBar1, progressBarHolder1, act);
+                                if (listModel.getResponseData().getIscreate().equalsIgnoreCase("0")) {
+                                    showToast(listModel.getResponseMessage(), act);
+                                } else if (listModel.getResponseData().getIscreate().equalsIgnoreCase("1") ||
+                                        listModel.getResponseData().getIscreate().equalsIgnoreCase("")) {
+//                                        ComeScreenMyPlaylist = 1;
+//                                        callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0", "Your Created");
+                                    dialog1.dismiss();
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateNewPlaylistModel> call, Throwable t) {
+                        hideProgressBar(progressBar1, progressBarHolder1, act);
+                    }
+                });
+            } else {
+                showToast(ctx.getString(R.string.no_server_found), act);
+            }
+        });
+        tvCancel.setOnClickListener(v13 -> dialog1.dismiss());
+        dialog1.show();
+        dialog1.setCancelable(false);
+    }
+
+    private static void callDownloadPlayList(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongsList,Context ctx,
+                                      LinearLayout llDownload,ImageView ivDownloads,
+                                             TextView tvDownload,DownloadPlaylistDetails downloadPlaylistDetails,
+                                             String CoUserId,String PlaylistID) {
+        List<String> url = new ArrayList<>();
+        List<String> name = new ArrayList<>();
+        List<String> downloadPlaylistId = new ArrayList<>();
+        List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs2;
+        playlistSongs2 = playlistSongsList;
+        if (playlistDownloadAudioDetailsList.size() != 0) {
+            for (int y = 0; y < playlistDownloadAudioDetailsList.size(); y++) {
+                if (playlistSongs2.size() == 0) {
+                    break;
+                } else {
+                    for (int x = 0; x < playlistSongs2.size(); x++) {
+                        if (playlistSongs2.size() != 0) {
+                            if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(playlistDownloadAudioDetailsList.get(y).getAudioFile())) {
+                                playlistSongs2.remove(x);
+                            }
+                            if (playlistSongs2.size() == 0) {
+                                break;
+                            }
+                        } else break;
+                    }
+                }
+            }
+        }
+        for (int x = 0; x < playlistSongs2.size(); x++) {
+            name.add(playlistSongs2.get(x).getName());
+            url.add(playlistSongs2.get(x).getAudioFile());
+            downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
+        }
+        enableDisableDownload(ctx,false, "orange",llDownload,ivDownloads,tvDownload);
+        byte[] encodedBytes = new byte[1024];
+
+        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson1 = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            List<String> fileNameList = gson1.fromJson(json, type);
+            List<String> audioFile = gson1.fromJson(json1, type);
+            List<String> playlistId1 = gson1.fromJson(json2, type);
+            if (fileNameList.size() != 0) {
+                url.addAll(audioFile);
+                name.addAll(fileNameList);
+                downloadPlaylistId.addAll(playlistId1);
+            }
+        }
+
+        if (url.size() != 0) {
+            if (!isDownloading) {
+                isDownloading = true;
+                DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
+            }
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String urlJson = gson.toJson(url);
+            String nameJson = gson.toJson(name);
+            String playlistIdJson = gson.toJson(downloadPlaylistId);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editor.commit();
+        }
+        savePlaylist(ctx,downloadPlaylistDetails);
+        saveAllMedia(playlistSongsList,PlaylistID,CoUserId,ctx,downloadPlaylistDetails);
+    }
+
+    private static void savePlaylist(Context ctx,DownloadPlaylistDetails downloadPlaylistDetails) {
+
+        AudioDatabase DB;
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
+        }catch(Exception|OutOfMemoryError e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void saveAllMedia(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs,
+                                     String PlaylistID,String CoUserId,Context ctx,DownloadPlaylistDetails downloadPlaylistDetails) {
+        AudioDatabase DB;
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
+        Properties p = new Properties();
+        p.putValue("userId", CoUserId);
+        p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
+        p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
+        p.putValue("playlistDescription", downloadPlaylistDetails.getPlaylistDesc());
+        if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("1")) {
+            p.putValue("playlistType", "Created");
+        } else if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("0")) {
+            p.putValue("playlistType", "Default");
+        }
+
+        if (downloadPlaylistDetails.getTotalhour().equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.getTotalminute() + "m");
+        } else if (downloadPlaylistDetails.getTotalminute().equalsIgnoreCase("")) {
+            p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h 0m");
+        } else {
+            p.putValue("playlistDuration", downloadPlaylistDetails.getTotalhour() + "h " + downloadPlaylistDetails.getTotalminute() + "m");
+        }
+        p.putValue("audioCount", downloadPlaylistDetails.getTotalAudio());
+        p.putValue("source", "Downloaded Playlists");
+        p.putValue("playerType", "Mini");
+        p.putValue("audioService", appStatus(ctx));
+        p.putValue("sound", String.valueOf(hundredVolume));
+        addToSegment("Playlist Download Started", p, CONSTANTS.track);
+        for (int i = 0; i < playlistSongs.size(); i++) {
+            DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+            downloadAudioDetails.setID(playlistSongs.get(i).getId());
+            downloadAudioDetails.setName(playlistSongs.get(i).getName());
+            downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
+            downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
+            downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
+            downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
+            downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
+            downloadAudioDetails.setPlaylistId(PlaylistID);
+            downloadAudioDetails.setDownload("1");
+            downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
+            downloadAudioDetails.setIsSingle("0");
+            if (playlistDownloadAudioDetailsList.size() != 0) {
+                for (int y = 0; y < playlistDownloadAudioDetailsList.size(); y++) {
+                    if (playlistSongs.get(i).getAudioFile().equalsIgnoreCase(playlistDownloadAudioDetailsList.get(y).getAudioFile())) {
+                        downloadAudioDetails.setIsDownload("Complete");
+                        downloadAudioDetails.setDownloadProgress(100);
+                        break;
+                    } else {
+                        downloadAudioDetails.setIsDownload("pending");
+                        downloadAudioDetails.setDownloadProgress(0);
+                    }
+
+                }
+            }else{
+                downloadAudioDetails.setIsDownload("pending");
+                downloadAudioDetails.setDownloadProgress(0);
+            }
+            try {
+                AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+            }catch(Exception|OutOfMemoryError e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public static void GetMedia(String AudioFile, Context ctx, String audioFileName,
+                                ImageView ivDownloads, TextView tvDownloads, LinearLayout llDownload) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .getaudioByPlaylist1(AudioFile, "").observe((LifecycleOwner) ctx, audioList -> {
+            List<String> fileNameList = new ArrayList<>();
+            List<String> audioFile1 = new ArrayList<>();
+            List<String> playlistDownloadId = new ArrayList<>();
+            SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson1 = new Gson();
+            String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+            String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+            String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+            if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson1.fromJson(json, type);
+                audioFile1 = gson1.fromJson(json1, type);
+                playlistDownloadId = gson1.fromJson(json2, type);
+            }
+            if (audioList.size() != 0) {
+                ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
+                llDownload.setClickable(false);
+                llDownload.setEnabled(false);
+            } else {
+                boolean entryNot = false;
+                if (fileNameList.size() != 0) {
+                    for (int i = 0; i < fileNameList.size(); i++) {
+                        if (fileNameList.get(i).equalsIgnoreCase(audioFileName)
+                                && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                            entryNot = true;
+                            break;
+                        }
+                    }
+                }
+                if (!entryNot) {
+                    llDownload.setClickable(true);
+                    llDownload.setEnabled(true);
+                    ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                    ivDownloads.setVisibility(View.VISIBLE);
+                } else {
+                    llDownload.setClickable(false);
+                    llDownload.setEnabled(false);
+                    ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                    ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                }
+            }
+        });
     }
 
     public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, Activity act) {
@@ -593,15 +1411,19 @@ public class BWSApplication extends Application {
 
 
     private static void callDownload(String comeFrom,
-                                     ArrayList<DownloadAudioDetails> mDataDownload,
-                                     ArrayList<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
-                                     ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                     ArrayList<MainPlayModel> mDataPlayer, int position) {/*
+                                     List<DownloadAudioDetails> mDataDownload,
+                                     List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
+                                     List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
+                                     List<MainPlayModel> mDataPlayer, int position, Context ctx,
+                                     ImageView ivDownloads, TextView tvDownloads, LinearLayout llDownload) {
+        List<String> fileNameList = new ArrayList<>();
+        List<String> audioFile1 = new ArrayList<>();
+        List<String> playlistDownloadId = new ArrayList<>();
 
         try {
             int i = position;
             String audioFile = "", Name = "";
-            if(comeFrom.equalsIgnoreCase("downloadList")){
+            if (comeFrom.equalsIgnoreCase("downloadList")) {
                 Name = mDataDownload.get(i).getName();
                 audioFile = mDataDownload.get(i).getAudioFile();
                 if (audioFile.equalsIgnoreCase("")) {
@@ -609,7 +1431,7 @@ public class BWSApplication extends Application {
                     Name = mDataDownload.get(i).getName();
                     audioFile = mDataDownload.get(i).getAudioFile();
                 }
-            }else if(comeFrom.equalsIgnoreCase("playlist")){
+            } else if (comeFrom.equalsIgnoreCase("playlist")) {
                 Name = mDataPlaylist.get(i).getName();
                 audioFile = mDataPlaylist.get(i).getAudioFile();
                 if (audioFile.equalsIgnoreCase("")) {
@@ -617,51 +1439,35 @@ public class BWSApplication extends Application {
                     Name = mDataPlaylist.get(i).getName();
                     audioFile = mDataPlaylist.get(i).getAudioFile();
                 }
-            }else if(comeFrom.equalsIgnoreCase("viewAllAudioList")){
-                Name = mDataDownload.get(i).getName();
-                audioFile = mDataDownload.get(i).getAudioFile();
+            } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
+                Name = mDataViewAll.get(i).getName();
+                audioFile = mDataViewAll.get(i).getAudioFile();
                 if (audioFile.equalsIgnoreCase("")) {
                     i = i + 1;
-                    Name = mDataDownload.get(i).getName();
-                    audioFile = mDataDownload.get(i).getAudioFile();
+                    Name = mDataViewAll.get(i).getName();
+                    audioFile = mDataViewAll.get(i).getAudioFile();
                 }
-            }else if(comeFrom.equalsIgnoreCase("audioPlayer")){
-                Name = mDataDownload.get(i).getName();
-                audioFile = mDataDownload.get(i).getAudioFile();
+            } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                Name = mDataPlayer.get(i).getName();
+                audioFile = mDataPlayer.get(i).getAudioFile();
                 if (audioFile.equalsIgnoreCase("")) {
                     i = i + 1;
-                    Name = mDataDownload.get(i).getName();
-                    audioFile = mDataDownload.get(i).getAudioFile();
-                }
-            }
-           if (comeFrom.equalsIgnoreCase("myDownloadPlaylist")) {
-
-                } else {
-                    Name = mData.get(i).getName();
-                    audioFile = mData.get(i).getAudioFile();
-                    if (audioFile.equalsIgnoreCase("")) {
-                        i = i + 1;
-                        Name = mData.get(i).getName();
-                        audioFile = mData.get(i).getAudioFile();
-                    }
-                }
-           else {
-                Name = mainPlayModelList.get(i).getName();
-                audioFile = mainPlayModelList.get(i).getAudioFile();
-                if (audioFile.equalsIgnoreCase("")) {
-                    i = i + 1;
-                    Name = mainPlayModelList.get(i).getName();
-                    audioFile = mainPlayModelList.get(i).getAudioFile();
+                    Name = mDataPlayer.get(i).getName();
+                    audioFile = mDataPlayer.get(i).getAudioFile();
                 }
             }
             if (downloadAudioDetailsList.contains(Name)) {
-                callDisableDownload();
-                SaveMedia(i, 100);
+                ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
+                llDownload.setClickable(false);
+                llDownload.setEnabled(false);
+                SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx);
             } else {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
                 List<String> downloadPlaylistId = new ArrayList<>();
-                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
                 Gson gson1 = new Gson();
                 String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
                 String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
@@ -669,13 +1475,13 @@ public class BWSApplication extends Application {
                 if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
                     Type type = new TypeToken<List<String>>() {
                     }.getType();
-                    List<String> fileNameList = gson1.fromJson(json, type);
-                    List<String> audioFile1 = gson1.fromJson(json1, type);
-                    List<String> playlistId1 = gson1.fromJson(json2, type);
+                    fileNameList = gson1.fromJson(json, type);
+                    audioFile1 = gson1.fromJson(json1, type);
+                    playlistDownloadId = gson1.fromJson(json2, type);
                     if (fileNameList.size() != 0) {
                         url1.addAll(audioFile1);
                         name1.addAll(fileNameList);
-                        downloadPlaylistId.addAll(playlistId1);
+                        downloadPlaylistId.addAll(playlistDownloadId);
                     }
                 }
                 boolean entryNot = false;
@@ -691,7 +1497,7 @@ public class BWSApplication extends Application {
                     name1.add(Name);
                     downloadPlaylistId.add("");
                     if (url1.size() != 0) {
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         Gson gson = new Gson();
                         String urlJson = gson.toJson(url1);
@@ -705,16 +1511,146 @@ public class BWSApplication extends Application {
 //        fileNast = url1;
                     if (!isDownloading) {
                         isDownloading = true;
-                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                        DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                         downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
                     }
-                    callDisableDownload();
-                    SaveMedia(i, 0);
+                    ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                    ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                    tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
+                    llDownload.setClickable(false);
+                    llDownload.setEnabled(false);
+                    SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
+    }
+
+    private static void SaveMedia(int i, int progress, String comeFrom,
+                                  List<DownloadAudioDetails> mDataDownload,
+                                  List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
+                                  List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
+                                  List<MainPlayModel> mDataPlayer, int position, Context ctx) {
+        AudioDatabase DB;
+        DB = Room.databaseBuilder(ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .addMigrations(MIGRATION_1_2)
+                .build();
+        DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+        if (comeFrom.equalsIgnoreCase("downloadList")) {
+            downloadAudioDetails.setID(mDataDownload.get(i).getID());
+            downloadAudioDetails.setName(mDataDownload.get(i).getName());
+            downloadAudioDetails.setAudioFile(mDataDownload.get(i).getAudioFile());
+            downloadAudioDetails.setPlaylistId("");
+            downloadAudioDetails.setAudioDirection(mDataDownload.get(i).getAudioDirection());
+            downloadAudioDetails.setAudiomastercat(mDataDownload.get(i).getAudiomastercat());
+            downloadAudioDetails.setAudioSubCategory(mDataDownload.get(i).getAudioSubCategory());
+            downloadAudioDetails.setImageFile(mDataDownload.get(i).getImageFile());
+            downloadAudioDetails.setAudioDuration(mDataDownload.get(i).getAudioDuration());
+        } else if (comeFrom.equalsIgnoreCase("playlist")) {
+            downloadAudioDetails.setID(mDataPlaylist.get(i).getId());
+            downloadAudioDetails.setName(mDataPlaylist.get(i).getName());
+            downloadAudioDetails.setAudioFile(mDataPlaylist.get(i).getAudioFile());
+            downloadAudioDetails.setPlaylistId("");
+            downloadAudioDetails.setAudioDirection(mDataPlaylist.get(i).getAudioDirection());
+            downloadAudioDetails.setAudiomastercat(mDataPlaylist.get(i).getAudiomastercat());
+            downloadAudioDetails.setAudioSubCategory(mDataPlaylist.get(i).getAudioSubCategory());
+            downloadAudioDetails.setImageFile(mDataPlaylist.get(i).getImageFile());
+            downloadAudioDetails.setAudioDuration(mDataPlaylist.get(i).getAudioDuration());
+        } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
+            downloadAudioDetails.setID(mDataViewAll.get(i).getID());
+            downloadAudioDetails.setName(mDataViewAll.get(i).getName());
+            downloadAudioDetails.setAudioFile(mDataViewAll.get(i).getAudioFile());
+            downloadAudioDetails.setPlaylistId("");
+            downloadAudioDetails.setAudioDirection(mDataViewAll.get(i).getAudioDirection());
+            downloadAudioDetails.setAudiomastercat(mDataViewAll.get(i).getAudiomastercat());
+            downloadAudioDetails.setAudioSubCategory(mDataViewAll.get(i).getAudioSubCategory());
+            downloadAudioDetails.setImageFile(mDataViewAll.get(i).getImageFile());
+            downloadAudioDetails.setAudioDuration(mDataViewAll.get(i).getAudioDuration());
+        } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+            downloadAudioDetails.setID(mDataPlayer.get(i).getID());
+            downloadAudioDetails.setName(mDataPlayer.get(i).getName());
+            downloadAudioDetails.setAudioFile(mDataPlayer.get(i).getAudioFile());
+            downloadAudioDetails.setPlaylistId(mDataPlayer.get(i).getPlaylistID());
+            downloadAudioDetails.setAudioDirection(mDataPlayer.get(i).getAudioDirection());
+            downloadAudioDetails.setAudiomastercat(mDataPlayer.get(i).getAudiomastercat());
+            downloadAudioDetails.setAudioSubCategory(mDataPlayer.get(i).getAudioSubCategory());
+            downloadAudioDetails.setImageFile(mDataPlayer.get(i).getImageFile());
+            downloadAudioDetails.setAudioDuration(mDataPlayer.get(i).getAudioDuration());
+        }
+        downloadAudioDetails.setDownload("1");
+        downloadAudioDetails.setIsSingle("1");
+        downloadAudioDetails.setPlaylistId("");
+        if (progress == 0) {
+            downloadAudioDetails.setIsDownload("pending");
+        } else {
+            downloadAudioDetails.setIsDownload("Complete");
+        }
+        downloadAudioDetails.setDownloadProgress(progress);
+        Log.e("Download Media Audio", "1");
+        try {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
+        } catch (Exception | OutOfMemoryError e) {
+            System.out.println(e.getMessage());
+        }
+        Log.e("Download Media Audio", "3");
+        SharedPreferences sharedx1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        String AudioPlayerFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        int PlayerPosition = sharedx1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+        Gson gsonx = new Gson();
+        String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gsonx));
+        String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_MainAudioList, String.valueOf(gsonx));
+        ArrayList<DownloadAudioDetails> arrayList = new ArrayList<>();
+        ArrayList<MainPlayModel> arrayList2 = new ArrayList<>();
+        int size = 0;
+        if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
+            Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            Type type0 = new TypeToken<ArrayList<MainPlayModel>>() {
+            }.getType();
+            Gson gson1 = new Gson();
+            arrayList = gson1.fromJson(jsonw, type1);
+            arrayList2 = gson1.fromJson(json11, type0);
+            size = arrayList2.size();
+        }
+        if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
+            arrayList.add(downloadAudioDetails);
+            MainPlayModel mainPlayModel1 = new MainPlayModel();
+            mainPlayModel1.setID(downloadAudioDetails.getID());
+            mainPlayModel1.setName(downloadAudioDetails.getName());
+            mainPlayModel1.setAudioFile(downloadAudioDetails.getAudioFile());
+            mainPlayModel1.setAudioDirection(downloadAudioDetails.getAudioDirection());
+            mainPlayModel1.setAudiomastercat(downloadAudioDetails.getAudiomastercat());
+            mainPlayModel1.setAudioSubCategory(downloadAudioDetails.getAudioSubCategory());
+            mainPlayModel1.setImageFile(downloadAudioDetails.getImageFile());
+            mainPlayModel1.setLike(downloadAudioDetails.getLike());
+            mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
+            mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
+            arrayList2.add(mainPlayModel1);
+            SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedd.edit();
+            Gson gson = new Gson();
+            String jsonx = gson.toJson(arrayList2);
+            String json1q1 = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1q1);
+            editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
+            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, PlayerPosition);
+
+
+            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
+            editor.commit();
+            if (!arrayList2.get(PlayerPosition).getAudioFile().equals("")) {
+                List<String> downloadAudioDetailsList = new ArrayList<>();
+                GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
+                downloadAudioDetailsList.add(downloadAudioDetails.getName());
+                ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList, ctx);
+            }
+//                callAddTransFrag();
+        }
     }
 
     public static void getReminderCheck(Context ctx, Activity act, String isReminder, TextView tvReminder,
@@ -867,9 +1803,11 @@ public class BWSApplication extends Application {
 
         ReminderMinutesListAdapter adapter = new ReminderMinutesListAdapter(minutesListModels, act, ctx, coUSERID, playlistID, playlistName, dialog);
         rvSelectMinutesTimeSlot.setAdapter(adapter);
+        rvSelectMinutesTimeSlot.scrollToPosition(10);
 
         ReminderHoursListAdapter adapter1 = new ReminderHoursListAdapter(hoursListModels, act, ctx, coUSERID, playlistID, playlistName, dialog);
         rvSelectHoursTimeSlot.setAdapter(adapter1);
+        rvSelectHoursTimeSlot.scrollToPosition(10);
 
         btnSave.setOnClickListener(v -> {
             dialog.dismiss();
@@ -888,6 +1826,161 @@ public class BWSApplication extends Application {
         BWSApplication = this;
     }
 
+    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
+        private ReminderMinutesListModel[] minutesListModels;
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+        int mselectedItem = -1;
+
+        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            /*if (mselectedItem == position) {
+                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
+            }*/
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.length;
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderTimelistLayoutBinding binding;
+
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+
+/*
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+*/
+            }
+        }
+    }
+
+    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
+        private ReminderMinutesListModel[] minutesListModels;
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+        int mselectedItem = -1;
+
+        public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            /*if (mselectedItem == position) {
+                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
+            }*/
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.length;
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderTimelistLayoutBinding binding;
+
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+
+/*
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+*/
+            }
+        }
+    }
+
     private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
         private ReminderSelectionModel[] selectionModels;
         Activity act;
@@ -904,9 +1997,10 @@ public class BWSApplication extends Application {
         LinearLayout llSelectTime;
 
         public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
-                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID, String PlaylistID,
-                                            String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay
-                , FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime) {
+                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID,
+                                            String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity,
+                                            CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder,
+                                            ProgressBar progressBar,LinearLayout llSelectTime) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -1084,140 +2178,6 @@ public class BWSApplication extends Application {
         }
     }
 
-    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
-        private ReminderMinutesListModel[] minutesListModels;
-        Activity act;
-        Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName;
-        Dialog dialogOld;
-        int mselectedItem = -1;
-
-        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
-                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
-            this.minutesListModels = minutesListModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_timelist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*if (mselectedItem == position) {
-                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }*/
-            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
-        }
-
-        @Override
-        public int getItemCount() {
-            return minutesListModels.length;
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderTimelistLayoutBinding binding;
-
-            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (hasFocus){
-                                mselectedItem = getAdapterPosition();
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-                }
-*/
-            }
-        }
-    }
-
-    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
-        private ReminderMinutesListModel[] minutesListModels;
-        Activity act;
-        Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName;
-        Dialog dialogOld;
-
-        public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
-                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
-            this.minutesListModels = minutesListModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_timelist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
-        }
-
-        @Override
-        public int getItemCount() {
-            return minutesListModels.length;
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderTimelistLayoutBinding binding;
-
-            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (hasFocus){
-                                mselectedItem = getAdapterPosition();
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-                }
-*/
-            }
-        }
-    }
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();

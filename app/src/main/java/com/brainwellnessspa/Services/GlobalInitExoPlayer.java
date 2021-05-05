@@ -695,10 +695,10 @@ Appointment Audios dddd*/
             e.printStackTrace();
         }
 //        }
-        playerNotificationManager.setUseNextAction(true);
-        playerNotificationManager.setUseNextActionInCompactView(true);
-        playerNotificationManager.setUsePreviousAction(true);
-        playerNotificationManager.setUsePreviousActionInCompactView(true);
+        playerNotificationManager.setUseNextAction(false);
+        playerNotificationManager.setUseNextActionInCompactView(false);
+        playerNotificationManager.setUsePreviousAction(false);
+        playerNotificationManager.setUsePreviousActionInCompactView(false);
         ControlDispatcher controlDispatcher = new DefaultControlDispatcher(30000, 30000);
         playerNotificationManager.setControlDispatcher(controlDispatcher);
         playerNotificationManager.setSmallIcon(R.drawable.noti_app_logo_icon);

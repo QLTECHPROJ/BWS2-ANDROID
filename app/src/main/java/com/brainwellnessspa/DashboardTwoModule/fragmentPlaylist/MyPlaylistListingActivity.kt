@@ -23,6 +23,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.PlayerAudioId
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
+import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel
@@ -183,6 +184,17 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun prepareData() {
+        var gson = Gson()
+        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        val PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        val json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
+        var mainPlayModelList: ArrayList<MainPlayModel>
+        val type = object : TypeToken<ArrayList<MainPlayModel>>() {}.type
+        mainPlayModelList = gson.fromJson(json, type)
+        if(!AudioPlayerFlagx.equals("0")) {
+            PlayerAudioId = mainPlayModelList[PlayerPositionx].id
+        }
         if (BWSApplication.isNetworkConnected(this)) {
             if (!MyDownloads.equals("1", true)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -283,14 +295,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.llReminder.visibility = View.VISIBLE
                         binding.llMore.setOnClickListener { view13 ->
 //            handler2.removeCallbacks(UpdateSongTime2);
-                            val i = Intent(ctx, MyPlaylistActivity::class.java)
-                            i.putExtra("PlaylistID", listModel.responseData!!.playlistID!!)
-                            i.putExtra("PlaylistName", listModel.responseData!!.playlistName!!)
-                            i.putExtra("PlaylistImage", listModel.responseData!!.playlistImage!!)
-                            i.putExtra("ScreenView", "")
-                            i.putExtra("PlaylistType", listModel.responseData!!.created)
-                            i.putExtra("Liked", "0")
-                            startActivity(i)
+                         BWSApplication.callPlaylistDetails(ctx,activity,CoUserID,PlaylistID,PlaylistName)
                         }
                         playlistSongsList = arrayListOf()
                         playlistSongsList.addAll(listModel.responseData!!.playlistSongs!!)
@@ -588,7 +593,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
             val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
             var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-            if (AudioPlayerFlag.equals("SubPlayList", ignoreCase = true) && MyPlaylist.equals(PlaylistID, ignoreCase = true)) {
+            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(PlaylistID, ignoreCase = true)) {
                 if (PlayerAudioId.equals(listModel[position].id, ignoreCase = true)) {
                     if (player != null) {
                         if (!player.playWhenReady) {
@@ -783,7 +788,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         editor.apply()
                     }
 
-//                    private fun saveToPref(pos: Int, mData: ArrayList<SubPlayListModel.ResponseData.PlaylistSong>) {
+//                    private fun saveToPref(pos: Int, mData: ArrayList<playlistModel.ResponseData.PlaylistSong>) {
 //                        val shareddd: SharedPreferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
 //                        val editor = shareddd.edit()
 //                        val gson = Gson()
@@ -794,7 +799,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 //                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true)
 //                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID)
 //                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist")
-//                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList")
+//                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "playlist")
 //                        editor.commit()
 //                        callAddTransFrag()
 //                    }
@@ -874,7 +879,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             holder.binding.tvTitleA.text = mData[position].name
             holder.binding.tvTimeA.text = mData[position].audioDuration
 //            binding.tvSearch.setVisibility(View.GONE)
-            holder.binding.equalizerview.visibility = View.GONE
             binding.searchView.visibility = View.VISIBLE
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.13f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
@@ -923,13 +927,15 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     //                    handler3.removeCallbacks(UpdateSongTime3);
                 }
             } else {
-                if (AudioPlayerFlag.equals("SubPlayList", ignoreCase = true) && MyPlaylist.equals(PlaylistID, ignoreCase = true)) {
+                if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(PlaylistID, ignoreCase = true)) {
                     if (PlayerAudioId.equals(mData[position].id, ignoreCase = true)) {
                         if (player != null) {
                             if (!player.playWhenReady) {
                                 holder.binding.equalizerview.pause()
-                            } else holder.binding.equalizerview.resume(true)
-                        } else holder.binding.equalizerview.stop(true)
+                            }
+                            else holder.binding.equalizerview.resume(true)
+                        }
+                        else holder.binding.equalizerview.stop(true)
                         holder.binding.equalizerview.visibility = View.VISIBLE
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background)
                         holder.binding.ivBackgroundImage.visibility = View.VISIBLE
@@ -948,6 +954,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 }
             }
 
+            holder.binding.llMore.setOnClickListener{
+                BWSApplication.callAudioDetails(mData[position].id, ctx, activity, CoUserID, "playlist",
+                        arrayListOf<DownloadAudioDetails>(),
+                        arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(),
+                        mData,arrayListOf<MainPlayModel>(), position)
+            }
             holder.binding.llMainLayout.setOnClickListener {
                 MyPlaylistListingActivity().callMainPlayer(position, "", listFilterData, ctx, activity, listModel[0].playlistID!!, created)
             }
@@ -976,6 +988,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.llPlay.visibility = View.GONE
                     binding.llPause.visibility = View.VISIBLE
                 } else {
+                    PlayerAudioId = mData[0].id
                     MyPlaylistListingActivity().callMainPlayer(0, "", listModel, ctx, activity, listModel[0].playlistID!!, created)
                     binding.llPlay.visibility = View.GONE
                     binding.llPause.visibility = View.VISIBLE
@@ -1081,6 +1094,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (position != PlayerPosition) {
                         player.seekTo(position, 0)
                         player.playWhenReady = true
+                        PlayerAudioId = listModel[position].id
                         val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                         val editor = sharedxx.edit()
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -1121,13 +1135,15 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         act.overridePendingTransition(0, 0)
     }
 
-    private fun callPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, created: String?) {
+    private fun callPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>,
+                           ctx: Context, act: Activity, playlistID: String, created: String?) {
         callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
         val downloadAudioDetails = java.util.ArrayList<DownloadAudioDetails>()
         var json:String
+        PlayerAudioId = listModel[position].id
         if (MyDownloads.equals("1", ignoreCase = true)) {
             for (i in listModel.indices) {
                 val mainPlayModel = DownloadAudioDetails()

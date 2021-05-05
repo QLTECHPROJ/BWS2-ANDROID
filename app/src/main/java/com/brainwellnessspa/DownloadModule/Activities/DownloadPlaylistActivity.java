@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,8 +31,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,17 +38,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AudioDetailActivity;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
-import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReferralModule.Activities.ReferFriendActivity;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
@@ -62,7 +55,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.downloader.PRDownloader;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -75,15 +67,14 @@ import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
-import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -92,7 +83,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
-public class DownloadPlaylistActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator  {
+public class DownloadPlaylistActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     //    Handler handler3;
     public static int comeDeletePlaylist = 0;
     public AudioManager audioManager;
@@ -100,18 +91,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String IsPlayDisclimer, PlaylistDescription = "", Created = "",CoUserID, UserID, SearchFlag = "",AudioPlayerFlag="", PlaylistID = "", PlaylistName = "", PlaylistImage = "", TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistImageDetails = "";
+    String IsPlayDisclimer, PlaylistDescription = "", Created = "", CoUserID, UserID, SearchFlag = "", AudioPlayerFlag = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistImageDetails = "";
     EditText searchEditText;
     List<String> downloadAudioDetailsList = new ArrayList<>();
     Context ctx;
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
     int startTime;
+    Activity act;
     AudioDatabase DB;
     long myProgress = 0, diff = 0, currentDuration = 0;
+    int stackStatus = 0;
+    boolean myBackPress = false;
     private List<DownloadPlaylistDetails> listModelList;
     private int numStarted = 0;
-    int stackStatus = 0;
-    boolean myBackPress = false ;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -124,7 +116,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                if ( AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistName)) {
+                if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistName)) {
                         /*if (data.equalsIgnoreCase("pause")) {
                             isPlayPlaylist = 1;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -163,6 +155,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
 
         ctx = DownloadPlaylistActivity.this;
+        act = DownloadPlaylistActivity.this;
         activity = DownloadPlaylistActivity.this;
         addDisclaimer();
         DB = Room.databaseBuilder(ctx,
@@ -228,6 +221,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
     @Override
     protected void onResume() {
+        Gson gson = new Gson();
+        SharedPreferences shared1x = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        String AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+        String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
+        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+        }.getType();
+        mainPlayModelList = gson.fromJson(json, type);
+        if (!AudioPlayerFlagx.equals("0")) {
+            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
+        }
         NetWatch.builder(this)
                 .setCallBack(new NetworkChangeReceiver_navigator() {
                     @Override
@@ -541,7 +546,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
     private void callAddTranFrag() {
         try {
-            Intent i =new Intent(ctx, MyPlayerActivity.class);
+            Intent i = new Intent(ctx, MyPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             overridePendingTransition(0, 0);
@@ -575,6 +580,23 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         p.putValue("audioService", appStatus(ctx));
         p.putValue("sound", String.valueOf(hundredVolume));
         BWSApplication.addToSegment("Playlist Started", p, CONSTANTS.track);
+    }
+
+    @Override
+    public void onConnected(int source) {
+        callResumePlayer(ctx);
+    }
+
+    @Override
+    public View onDisconnected() {
+        return null;
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        NetWatch.unregister(this);
+        super.onDestroy();
     }
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolders> implements Filterable {
@@ -851,28 +873,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("You can see details after the disclaimer", activity);
                     } else {
-                        Intent i = new Intent(ctx, AudioDetailActivity.class);
-                        i.putExtra("play", "playlist");
-                        i.putExtra("ID", mData.get(position).getID());
-                        i.putExtra("PlaylistAudioId", "");
-                        i.putExtra("position", position);
-                        Gson gson = new Gson();
-                        String json = gson.toJson(mData);
-                        i.putExtra("data", json);
-                        i.putExtra("comeFrom", "myDownloadPlaylist");
-                        startActivity(i);
+                        BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList",
+                                mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
                     }
                 } else {
-                    Intent i = new Intent(ctx, AudioDetailActivity.class);
-                    i.putExtra("play", "playlist");
-                    i.putExtra("ID", mData.get(position).getID());
-                    i.putExtra("PlaylistAudioId", "");
-                    i.putExtra("position", position);
-                    Gson gson = new Gson();
-                    String json = gson.toJson(mData);
-                    i.putExtra("data", json);
-                    i.putExtra("comeFrom", "myDownloadPlaylist");
-                    startActivity(i);
+                    BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList",
+                            mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
                 }
             });
         }
@@ -1028,22 +1034,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             }
         }
     }
-    @Override
-    public void onConnected(int source) {
-        callResumePlayer(ctx);
-    }
-
-    @Override
-    public View onDisconnected() {
-        return null;
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        NetWatch.unregister(this);
-        super.onDestroy();
-    }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
 
@@ -1077,10 +1067,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                if(!myBackPress) {
+                if (!myBackPress) {
                     Log.e("APPLICATION", "Back press false");
                     stackStatus = 2;
-                }else{
+                } else {
                     myBackPress = true;
                     stackStatus = 1;
                     Log.e("APPLICATION", "back press true ");
@@ -1102,7 +1092,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(notificationId);
                 relesePlayer(getApplicationContext());
-            }else{
+            } else {
                 Log.e("Destroy", "Activity go in main activity");
             }
         }

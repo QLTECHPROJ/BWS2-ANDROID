@@ -2,7 +2,10 @@ package com.brainwellnessspa.DashboardTwoModule
 
 import android.app.Activity
 import android.app.UiModeManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.PorterDuff
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -15,6 +18,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.PlayerAudioId
@@ -83,6 +87,21 @@ class   MyPlayerActivity :AppCompatActivity(){
     var fileNameList= arrayListOf<String>()
     var audioFile1= arrayListOf<String>()
     var playlistDownloadId= arrayListOf<String>()
+
+    private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            getDownloadData()
+            if (intent.hasExtra("Progress")) {
+                GetMediaPer();
+            }
+        }
+    }
+
+    override fun onResume() {
+        LocalBroadcastManager.getInstance(act).registerReceiver(listener1, IntentFilter("DownloadProgress"))
+        super.onResume()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_player)
@@ -101,7 +120,7 @@ class   MyPlayerActivity :AppCompatActivity(){
         binding.playerControlView.addView(exoBinding.getRoot())
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         binding.llInfo.setOnClickListener { v ->
-            BWSApplication.callAudioDetails(mainPlayModelList[position].id, ctx, act, CoUserID,"audioPlayer",
+            BWSApplication.callAudioDetails(mainPlayModelList[position].id, ctx, act, CoUserID, "audioPlayer",
                     arrayListOf<DownloadAudioDetails>(),
                     arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(),
                     arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
@@ -121,6 +140,11 @@ class   MyPlayerActivity :AppCompatActivity(){
             GetAllMedia1()
             makePlayerArray()
         }
+    }
+
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(act).unregisterReceiver(listener1)
+        super.onDestroy()
     }
 
     private fun makePlayerArray() {
@@ -840,7 +864,6 @@ class   MyPlayerActivity :AppCompatActivity(){
     }
 
     private fun disableDownload() {
-        binding.ivDownloads.setImageResource(R.drawable.ic_white_download_icon)
         binding.ivDownloads.setColorFilter(resources.getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN)
         binding.llDownload.isClickable = false
         binding.llDownload.isEnabled = false
@@ -850,7 +873,6 @@ class   MyPlayerActivity :AppCompatActivity(){
         binding.llDownload.isClickable = true
         binding.llDownload.isEnabled = true
         binding.ivDownloads.setColorFilter(resources.getColor(R.color.white), PorterDuff.Mode.SRC_IN)
-        binding.ivDownloads.setImageResource(R.drawable.ic_white_download_icon)
     }
 
     private fun SaveMedia(progressx: Int) {
@@ -898,8 +920,6 @@ class   MyPlayerActivity :AppCompatActivity(){
         try {
             DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "").observe(this, androidx.lifecycle.Observer { audiolist: List<DownloadAudioDetails> ->
                 if (audiolist.isNotEmpty()) {
-//                binding.ivDownloads.setVisibility(View.VISIBLE);
-//                    binding.pbProgress.setVisibility(View.GONE);
                     disableDownload()
                     if (audiolist[0].downloadProgress == 100) {
                         binding.ivDownloads.visibility = View.VISIBLE

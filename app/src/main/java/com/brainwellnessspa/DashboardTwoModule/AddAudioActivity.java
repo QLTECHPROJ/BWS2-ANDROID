@@ -215,6 +215,18 @@ public class AddAudioActivity extends AppCompatActivity {
     }
 
     private void prepareSearchData(String search, EditText searchEditText) {
+        Gson gson = new Gson();
+        SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        String AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+        String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
+        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+        }.getType();
+        mainPlayModelList = gson.fromJson(json, type);
+        if(!AudioPlayerFlagx.equals("0")) {
+            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
+        }
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SearchBothModel> listCall = APINewClient.getClient().getSearchBoth(CoUSERID, search);
@@ -260,6 +272,18 @@ public class AddAudioActivity extends AppCompatActivity {
     }
 
     private void prepareSuggestedData() {
+        Gson gson = new Gson();
+        SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        String AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+        String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
+        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+        }.getType();
+        mainPlayModelList = gson.fromJson(json, type);
+        if(!AudioPlayerFlagx.equals("0")) {
+            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
+        }
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SuggestedModel> listCall = APINewClient.getClient().getSuggestedLists(CoUSERID);
@@ -498,64 +522,11 @@ public class AddAudioActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(modelList.get(position).getName());
-            holder.binding.equalizerview.setVisibility(View.GONE);
 
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
-                holder.binding.equalizerview.setVisibility(View.GONE);
-//                if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
-//                    if (modelList.get(position).isPlay().equalsIgnoreCase("1")) {
-//                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                        holder.binding.ivLock.setVisibility(View.GONE);
-//                    } else if (modelList.get(position).isPlay().equalsIgnoreCase("0")
-//                            || modelList.get(position).isPlay().equalsIgnoreCase("")) {
-//                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                    }
-//                } else if (modelList.get(position).isLock().equalsIgnoreCase("2")) {
-//                    if (modelList.get(position).isPlay().equalsIgnoreCase("1")) {
-//                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                        holder.binding.ivLock.setVisibility(View.GONE);
-//                    } else if (modelList.get(position).isPlay().equalsIgnoreCase("0")
-//                            || modelList.get(position).isPlay().equalsIgnoreCase("")) {
-//                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                    }
-//                } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
-//                }
-           /*     SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-                        !AudioFlag.equalsIgnoreCase("SubPlayList")
-                        && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
-                        songId = myAudioId;
-                        if (player != null) {
-                            if (!player.getPlayWhenReady()) {
-                                holder.binding.equalizerview.pause();
-                            } else {
-                                holder.binding.equalizerview.resume(true);
-                            }
-                        } else
-                            holder.binding.equalizerview.stop(true);
-                        holder.binding.equalizerview.setVisibility(View.VISIBLE);
-                        holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                    } else {
-                        holder.binding.equalizerview.setVisibility(View.GONE);
-                        holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    }
-                } else {
-                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                }*/
                 SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
@@ -582,6 +553,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
                 } else {
+                    holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
@@ -793,7 +765,6 @@ public class AddAudioActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getName());
             holder.binding.tvTime.setText(listModel.get(position).getAudioDuration());
-            holder.binding.equalizerview.setVisibility(View.GONE);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -837,11 +808,12 @@ public class AddAudioActivity extends AppCompatActivity {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
             } else {
+                holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             }
 
-//            holder.binding.equalizerview.setVisibility(View.GONE);
+//
 //            if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
 //                if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
 //                    holder.binding.ivLock.setVisibility(View.GONE);
