@@ -542,12 +542,11 @@
 
                                 <ImageView
                                     android:id="@+id/ivIndexArrow"
-                                    android:layout_width="@dimen/_8sdp"
+                                    android:layout_width="@dimen/_15sdp"
                                     android:layout_height="@dimen/_15sdp"
-                                    android:layout_gravity="bottom"
-                                    android:background="@drawable/ic_arrow_blue_icon"
-                                    android:backgroundTint="@color/green_dark_s"
-                                    android:rotation="-90" />
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="@dimen/_4sdp"
+                                    android:src="@drawable/ic_down_arrow_icon"/>
 
                                 <TextView
                                     android:id="@+id/tvPercent"
@@ -555,7 +554,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="bottom"
+                                    android:gravity="center"
                                     android:textColor="@color/green_dark_s"
                                     android:textSize="@dimen/_20sdp" />
                             </LinearLayout>
@@ -581,7 +580,7 @@
                             android:maxLines="2"
                             android:text="Index scores would not improve this would not let it increase the problem."
                             android:textColor="@color/light_gray"
-                            android:textSize="@dimen/_18sdp" />
+                            android:textSize="@dimen/_15sdp" />
                     </LinearLayout>
 
                     <com.github.mikephil.charting.charts.BarChart

@@ -90,14 +90,8 @@ class HomeFragment : Fragment() {
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
     var mBottomSheetDialog: BottomSheetDialog? = null
     lateinit var dialog: Dialog
+    var score ="Increase"
 
-    /* Notification
-index score %
-severe display and 100
-score inc dec
-inc red color down arrow C5060
-dec green color up arrow 27b86a
-* */
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -234,6 +228,44 @@ dec green color up arrow 27b86a
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel = response.body()!!
                         homelistModel = response.body()!!
+
+                        if (listModel.responseData!!.scoreIncDec.equals("", ignoreCase = true)) {
+                            binding.llCheckPercent.visibility = View.INVISIBLE
+                        } else if (listModel.responseData!!.scoreIncDec.equals(
+                                "Increase",
+                                ignoreCase = true
+                            )
+                        ) {
+                            binding.llCheckPercent.visibility = View.VISIBLE
+                            binding.tvPercent.setTextColor(
+                                ContextCompat.getColor(
+                                    act,
+                                    R.color.redtheme
+                                )
+                            )
+                            binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
+                        } else if (listModel.responseData!!.scoreIncDec.equals(
+                                "Decrease",
+                                ignoreCase = true
+                            )
+                        ) {
+                            binding.llCheckPercent.visibility = View.VISIBLE
+                            binding.tvPercent.setTextColor(
+                                ContextCompat.getColor(
+                                    act,
+                                    R.color.green_dark_s
+                                )
+                            )
+                            binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
+                            binding.ivIndexArrow.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    act,
+                                    R.color.green_dark_s
+                                )
+                            )
+                        }
+                        binding.tvPercent.text = listModel.responseData!!.indexScoreDiff + "%"
+
                         binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
                         binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
 
@@ -246,18 +278,6 @@ dec green color up arrow 27b86a
                             binding.llCheckIndexSocre.visibility = View.VISIBLE
                         }
 
-                        BWSApplication.getPastIndexScore(homelistModel.responseData!!, binding.barChart, activity)
-                        binding.tvPercent.text = listModel.responseData!!.indexScoreDiff + "%"
-
-                        if (homelistModel.responseData!!.scoreIncDec.equals("", ignoreCase = true)) {
-                            binding.llCheckPercent.visibility = View.INVISIBLE
-                        } else if (homelistModel.responseData!!.scoreIncDec.equals("Increase", ignoreCase = true)) {
-                            binding.llCheckPercent.visibility = View.VISIBLE
-                            binding.tvPercent.setTextColor(ContextCompat.getColor(act, R.color.redtheme))
-                        } else if (homelistModel.responseData!!.scoreIncDec.equals("Decrease", ignoreCase = true)) {
-                            binding.llCheckPercent.visibility = View.VISIBLE
-                            binding.tvPercent.setTextColor(ContextCompat.getColor(act, R.color.green_dark_s))
-                        }
 
                         if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
                                 || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
@@ -319,6 +339,8 @@ dec green color up arrow 27b86a
                         }
 
                         GetPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!)
+
+                        BWSApplication.getPastIndexScore(homelistModel.responseData!!, binding.barChart, activity)
                         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
                         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
