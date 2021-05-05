@@ -391,7 +391,7 @@ public class AudioDetailActivity extends AppCompatActivity {
             int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistId) && mainPlayModelList.size() == 1) {
-                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", activity);
             } else {
                 callRemoveFromPlayList();
             }
@@ -505,7 +505,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                 } else
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-//                BWSApplication.showToast("Shuffle mode has been turned on", ctx);
+//                BWSApplication.showToast("Shuffle mode has been turned on", activity);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
@@ -514,7 +514,7 @@ public class AudioDetailActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             editor.commit();
             IsShuffle = "";
-//            BWSApplication.showToast("Shuffle mode has been turned off", ctx);
+//            BWSApplication.showToast("Shuffle mode has been turned off", activity);
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
@@ -536,7 +536,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-//            BWSApplication.showToast("Repeat mode has been turned on", ctx);
+//            BWSApplication.showToast("Repeat mode has been turned on", activity);
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -548,11 +548,11 @@ public class AudioDetailActivity extends AppCompatActivity {
                 editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 IsRepeat = "";
                 IsShuffle = "";
-//                BWSApplication.showToast("Repeat mode has been turned off", ctx);
+//                BWSApplication.showToast("Repeat mode has been turned off", activity);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
-//                BWSApplication.showToast("Repeat mode has been turned on", ctx);
+//                BWSApplication.showToast("Repeat mode has been turned on", activity);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -654,22 +654,22 @@ public class AudioDetailActivity extends AppCompatActivity {
             addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
         }
         if (addToQueueModelList.size() == 0) {
-            BWSApplication.showToast("Added to the queue", ctx);
+            BWSApplication.showToast("Added to the queue", activity);
             addToQueueModelList.add(addToQueueModel);
         } else {
             for (int x = 0; x < addToQueueModelList.size(); x++) {
                 if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
                     if (queuePlay && addToQueueModelList.get(position).getAudioFile().equals(addToQueueModel.getAudioFile())) {
-                        BWSApplication.showToast("Added to the queue", ctx);
+                        BWSApplication.showToast("Added to the queue", activity);
                         addToQueueModelList.add(addToQueueModel);
                         break;
                     } else {
                         addToQueueModel = new AddToQueueModel();
-                        BWSApplication.showToast("Audio already in queue", ctx);
+                        BWSApplication.showToast("Audio already in queue", activity);
                         break;
                     }
                 } else if (x == (addToQueueModelList.size() - 1)) {
-                    BWSApplication.showToast("Added to the queue", ctx);
+                    BWSApplication.showToast("Added to the queue", activity);
                     addToQueueModelList.add(addToQueueModel);
                     break;
                 }
@@ -834,7 +834,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -1357,7 +1357,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                         }
                         editor.commit();
 
-                        BWSApplication.showToast(model.getResponseMessage(), ctx);
+                        BWSApplication.showToast(model.getResponseMessage(), activity);
 
                     }
                 }
@@ -1368,7 +1368,7 @@ public class AudioDetailActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -1653,11 +1653,11 @@ public class AudioDetailActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<DirectionModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    BWSApplication.showToast(t.getMessage(), ctx);
+                    BWSApplication.showToast(t.getMessage(), activity);
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
 
     }

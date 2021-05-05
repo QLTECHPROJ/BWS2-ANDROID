@@ -104,9 +104,9 @@ class ForgotPswdActivity : AppCompatActivity() {
                                 }
                                 dialog.show()
                                 dialog.setCancelable(false)
-                                BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             } else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             }
 
                         } catch (e: Exception) {

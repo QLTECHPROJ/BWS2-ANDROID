@@ -520,7 +520,7 @@ public class ViewAllSearchFragment extends Fragment {
                             miniPlayer = 1;
                         }
                         callAddFrag();
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", getActivity());
                     } else {
                         ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                         listModelList2.add(AudiolistModel.get(position));

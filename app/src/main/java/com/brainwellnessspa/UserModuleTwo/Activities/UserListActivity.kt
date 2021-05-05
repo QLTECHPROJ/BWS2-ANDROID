@@ -278,7 +278,8 @@ class UserListActivity : AppCompatActivity() {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 val listModel: ForgotPinModel = response.body()!!
                                 if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    userList.dialog = Dialog(activity)
+                                    BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                   /* userList.dialog = Dialog(activity)
                                     userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                     userList.dialog.setContentView(R.layout.comfirm_pin_layout)
                                     userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -359,8 +360,7 @@ class UserListActivity : AppCompatActivity() {
                                     }
                                     userList.dialog.show()
                                     userList.dialog.setCanceledOnTouchOutside(true)
-                                    userList.dialog.setCancelable(true)
-                                    BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                    userList.dialog.setCancelable(true)*/
                                 } else if (listModel.getResponseCode().equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {
                                     txtError.visibility = View.VISIBLE
                                     txtError.text = listModel.getResponseMessage()

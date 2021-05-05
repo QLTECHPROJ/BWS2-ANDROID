@@ -144,11 +144,11 @@ class AddProfileActivity : AppCompatActivity() {
                                 binding.flEmail.error = ""
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@AddProfileActivity)
                                 val listModel: AddUserModel = response.body()!!
-                                if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
                                     finish()
                                 } else {
-                                    BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
                                 }
 
                             } catch (e: Exception) {

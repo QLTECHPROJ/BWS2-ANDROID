@@ -147,7 +147,7 @@ class FaqActivity : AppCompatActivity() {
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this)
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
 

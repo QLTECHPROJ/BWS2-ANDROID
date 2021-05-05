@@ -162,9 +162,9 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
                                 binding.rvFirstList.adapter = firstListAdapter
                             }
-                            BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                            BWSApplication.showToast(listModel.responseMessage, activity)
                         } else {
-                            BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                            BWSApplication.showToast(listModel.responseMessage, activity)
                         }
 
                     } catch (e: Exception) {
@@ -343,7 +343,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                             startActivity(i)
                             finish()
                         } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

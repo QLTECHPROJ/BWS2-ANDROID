@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Utility;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -757,24 +758,24 @@ public class MusicService extends Service {
         mediaPlayer.setLooping(Status);
     }
 
-    public static void ToForward(Context context) {
+    public static void ToForward(Context context,Activity activity) {
         endTime = getEndTime();
         startTime = mediaPlayer.getCurrentPosition();
         if ((startTime + forwardTime) <= endTime) {
             startTime = startTime + forwardTime;
             mediaPlayer.seekTo(startTime);
         } else {
-            BWSApplication.showToast("Please wait", context);
+            BWSApplication.showToast("Please wait", activity);
         }
     }
 
-    public static void ToBackward(Context context) {
+    public static void ToBackward(Context context, Activity activity) {
         startTime = mediaPlayer.getCurrentPosition();
         if ((startTime - backwardTime) > 0) {
             startTime = startTime - backwardTime;
             mediaPlayer.seekTo(startTime);
         } else {
-            BWSApplication.showToast("Please wait", context);
+            BWSApplication.showToast("Please wait", activity);
         }
     }
 

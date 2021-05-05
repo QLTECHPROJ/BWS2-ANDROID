@@ -152,14 +152,14 @@ public class ReferFriendActivity extends AppCompatActivity {
 
         binding.llCodeCopy.setOnClickListener(v -> {
             if (UserPromocode.equalsIgnoreCase("")) {
-                BWSApplication.showToast(getString(R.string.not_available), ctx);
+                BWSApplication.showToast(getString(R.string.not_available), activity);
             } else {
                 ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("text", binding.tvCodeCopy.getText());
                 if (manager != null) {
                     manager.setPrimaryClip(clipData);
                 }
-                BWSApplication.showToast("Promo Code Copied", ctx);
+                BWSApplication.showToast("Promo Code Copied", activity);
                 p = new Properties();
                 p.putValue("userId", UserID);
                 p.putValue("userReferCode", UserPromocode);
@@ -179,7 +179,7 @@ public class ReferFriendActivity extends AppCompatActivity {
 
         binding.llShare.setOnClickListener(v -> {
             if (ReferLink.equalsIgnoreCase("")) {
-                BWSApplication.showToast(getString(R.string.not_available), ctx);
+                BWSApplication.showToast(getString(R.string.not_available), activity);
             } else {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

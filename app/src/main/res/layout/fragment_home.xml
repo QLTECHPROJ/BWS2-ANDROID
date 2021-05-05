@@ -16,7 +16,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_80sdp">
 
                 <LinearLayout
                     android:id="@+id/llUser"
@@ -93,10 +94,10 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:paddingRight="@dimen/_10sdp"
                             android:layout_weight="0.1"
                             android:gravity="right"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingRight="@dimen/_10sdp">
 
                             <ImageView
                                 android:id="@+id/ivBall"
@@ -192,13 +193,15 @@
                                         android:layout_gravity="left"
                                         android:layout_weight="1.2"
                                         android:orientation="horizontal" />
+
                                     <LinearLayout
                                         android:id="@+id/llPlayPause"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_gravity="center"
-                                        android:gravity="center"
-                                        android:layout_weight="0.6">
+                                        android:layout_weight="0.6"
+                                        android:gravity="center">
+
                                         <LinearLayout
                                             android:id="@+id/llPlay"
                                             android:layout_width="@dimen/_60sdp"
@@ -216,6 +219,7 @@
                                             android:orientation="horizontal"
                                             android:visibility="gone" />
                                     </LinearLayout>
+
                                     <LinearLayout
                                         android:id="@+id/llPlayerView2"
                                         android:layout_width="0dp"
@@ -305,6 +309,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llSleepTime"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginLeft="@dimen/_17sdp"
@@ -312,12 +317,10 @@
                         android:layout_marginRight="@dimen/_17sdp"
                         android:orientation="horizontal">
 
-
                         <ImageView
                             android:layout_width="@dimen/_50sdp"
                             android:layout_height="match_parent"
                             android:background="@drawable/ic_moon_sleep" />
-
 
                         <TextView
                             android:id="@+id/tvSleepTime"
@@ -364,7 +367,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="left"
+                                android:gravity="start"
                                 android:text="Area of focus"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_18sdp" />
@@ -384,6 +387,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llCheckIndexSocre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -449,6 +453,12 @@
                                 android:layout_weight="4"
                                 android:orientation="vertical">
                                 <!-- graph-->
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="@dimen/_90sdp"
+                                    android:layout_marginVertical="@dimen/_10sdp"
+                                    android:layout_marginRight="@dimen/_16sdp"
+                                    android:src="@drawable/inde_score_bg" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -463,7 +473,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:fontFamily="@font/montserrat_bold"
-                            android:gravity="left"
+                            android:gravity="start"
                             android:text="Index Score"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_18sdp" />
@@ -476,7 +486,7 @@
                             android:gravity="left"
                             android:text="Your latest index score"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_13sdp" />
 
                     </LinearLayout>
 
@@ -500,11 +510,11 @@
                                 android:orientation="horizontal">
 
                                 <TextView
+                                    android:id="@+id/tvSevere"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="left"
-                                    android:text="46"
+                                    android:gravity="start"
                                     android:textColor="@color/dark_yellow"
                                     android:textSize="@dimen/_35sdp" />
 
@@ -520,10 +530,9 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/llCheckPercent"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentBottom="true"
                                 android:layout_gravity="right"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
@@ -532,6 +541,7 @@
                                 android:orientation="horizontal">
 
                                 <ImageView
+                                    android:id="@+id/ivIndexArrow"
                                     android:layout_width="@dimen/_8sdp"
                                     android:layout_height="@dimen/_15sdp"
                                     android:layout_gravity="bottom"
@@ -540,12 +550,12 @@
                                     android:rotation="-90" />
 
                                 <TextView
+                                    android:id="@+id/tvPercent"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="bottom"
-                                    android:text="15%"
                                     android:textColor="@color/green_dark_s"
                                     android:textSize="@dimen/_20sdp" />
                             </LinearLayout>
@@ -554,12 +564,13 @@
                         </LinearLayout>
 
                         <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/llIndicate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_20sdp"
                             android:max="100"
-                            android:progress="46"
-                            android:progressBackgroundTint="@color/green_dark_s" />
+                            app:trackColor="#DDDDDD"
+                            app:indicatorColor="@color/dark_yellow"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -570,13 +581,275 @@
                             android:maxLines="2"
                             android:text="Index scores would not improve this would not let it increase the problem."
                             android:textColor="@color/light_gray"
-                            android:textSize="@dimen/_20sdp" />
+                            android:textSize="@dimen/_18sdp" />
                     </LinearLayout>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/barChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_260sdp"
+                        android:layout_marginTop="@dimen/_20sdp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="start"
+                            android:text="My activities"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_18sdp" />
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/barMyActivitiesChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_260sdp"
+                            android:layout_marginTop="@dimen/_20sdp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:weightSum="1">
+
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.35"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvToday"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="Today"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/_15sdp" />
+
+                                    <ImageView
+                                        android:id="@+id/ivToday"
+                                        android:layout_width="@dimen/_20sdp"
+                                        android:layout_height="@dimen/_20sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:src="@drawable/ic_arrow_blue_icon"
+                                        android:rotation="90"
+                                        app:tint="@color/light_black" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.3"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvMonth"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="Month"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_15sdp" />
+
+                                    <ImageView
+                                        android:id="@+id/ivMonth"
+                                        android:layout_width="@dimen/_20sdp"
+                                        android:layout_height="@dimen/_20sdp"
+                                        android:visibility="invisible"
+                                        android:src="@drawable/ic_arrow_blue_icon"
+                                        android:rotation="90"
+                                        app:tint="@color/light_black"  />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.35"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvYear"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="Year"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_15sdp" />
+
+                                    <ImageView
+                                        android:id="@+id/ivYear"
+                                        android:layout_width="@dimen/_20sdp"
+                                        android:layout_height="@dimen/_20sdp"
+                                        android:visibility="invisible"
+                                        android:src="@drawable/ic_arrow_blue_icon"
+                                        android:rotation="90"
+                                        app:tint="@color/light_black"  />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:paddingTop="@dimen/_20sdp"
+                                android:paddingBottom="@dimen/_20sdp"
+                                android:background="@drawable/account_gray_bg"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:weightSum="1">
+
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.35"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:id="@+id/ivFeq"
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:src="@drawable/ic_feq_icon"/>
+
+                                    <TextView
+                                        android:id="@+id/tvFeq"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:text="Frequency"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_14sdp" />
+
+                                    <TextView
+                                        android:id="@+id/tvFeqNum"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:text="2"
+                                        android:textColor="@color/app_theme_color"
+                                        android:textSize="@dimen/_22sdp" />
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.3"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:id="@+id/ivTotalTime"
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:src="@drawable/ic_stopwatch_icon"/>
+
+                                    <TextView
+                                        android:id="@+id/tvTotalTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:text="Total Time"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_14sdp" />
+
+                                    <TextView
+                                        android:id="@+id/tvTotalTimeNum"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:text="11:38:47"
+                                        android:textColor="@color/app_theme_color"
+                                        android:textSize="@dimen/_22sdp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.35"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:id="@+id/ivRegularity"
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:src="@drawable/ic_bar_chart_icon"/>
+
+                                    <TextView
+                                        android:id="@+id/tvRegularity"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:layout_marginTop="@dimen/_4sdp"
+                                        android:text="Regularity"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_14sdp" />
+
+                                    <TextView
+                                        android:id="@+id/tvRegularityNum"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:text="60%"
+                                        android:textColor="@color/app_theme_color"
+                                        android:textSize="@dimen/_22sdp" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -645,12 +918,8 @@
                                     android:src="@drawable/ic_star" />
                             </LinearLayout>
                         </LinearLayout>
-
                     </LinearLayout>
-
                 </LinearLayout>
-
-
             </RelativeLayout>
 
         </androidx.core.widget.NestedScrollView>

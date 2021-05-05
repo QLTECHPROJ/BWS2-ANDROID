@@ -591,7 +591,7 @@ public class LikeAudiosFragment extends Fragment {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, AudioDetailActivity.class);
                     if (AudioFlag.equalsIgnoreCase("TopCategories")) {
@@ -633,7 +633,7 @@ public class LikeAudiosFragment extends Fragment {
                     } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                     }
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
@@ -653,7 +653,7 @@ public class LikeAudiosFragment extends Fragment {
             Log.e("position of play", String.valueOf(pos));
             if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
                 if (isDisclaimer == 1) {
-                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    BWSApplication.showToast("The audio shall start playing after the disclaimer", getActivity());
                 } else {
                    /* if (player != null) {
                         player.seekTo(pos,0);

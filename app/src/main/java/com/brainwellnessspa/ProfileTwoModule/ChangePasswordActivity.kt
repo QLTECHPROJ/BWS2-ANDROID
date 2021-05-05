@@ -116,9 +116,9 @@ class ChangePasswordActivity : AppCompatActivity() {
                             val listModel: ChangePasswordModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 finish()
-                                BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {
-                                BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             }
 
                         } catch (e: Exception) {

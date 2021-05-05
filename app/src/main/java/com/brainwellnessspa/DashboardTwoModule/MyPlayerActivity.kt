@@ -570,7 +570,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             exoBinding.llForwardSec.setOnClickListener { view ->
                 try {
                     if (GlobalInitExoPlayer.player.duration - GlobalInitExoPlayer.player.currentPosition <= 30000) {
-                        BWSApplication.showToast("Please Wait... ", ctx)
+                        BWSApplication.showToast("Please Wait... ", act)
                     } else {
                         GlobalInitExoPlayer.player.seekTo(position, GlobalInitExoPlayer.player.currentPosition + 30000)
                     }
@@ -688,7 +688,7 @@ class   MyPlayerActivity :AppCompatActivity(){
                 callDownload()
 //                }
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx)
+                BWSApplication.showToast(getString(R.string.no_server_found), act)
             }
         }
         if (!BWSApplication.isNetworkConnected(ctx)) {

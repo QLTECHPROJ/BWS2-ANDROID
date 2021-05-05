@@ -126,7 +126,7 @@ public class ManageFragment : Fragment() {
                                 if (response.isSuccessful) {
                                     val listModel = response.body()
                                     if (listModel!!.responseData!!.iscreate.equals("0", ignoreCase = true)) {
-                                        BWSApplication.showToast(listModel.responseMessage, ctx)
+                                        BWSApplication.showToast(listModel.responseMessage, activity)
                                         dialog.dismiss()
                                     } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) ||
                                             listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
@@ -158,7 +158,7 @@ public class ManageFragment : Fragment() {
                         }
                     })
                 } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx)
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
                 }
             }
             tvCancel.setOnClickListener { v: View? -> dialog.dismiss() }
@@ -420,7 +420,7 @@ public class ManageFragment : Fragment() {
                                         try {
                                             val model = response.body()
                                             if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                BWSApplication.showToast(model.responseMessage, ctx)
+                                                BWSApplication.showToast(model.responseMessage, activity)
                                                 dialog.dismiss()
                                             }
                                         } catch (e: java.lang.Exception) {

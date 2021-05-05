@@ -117,7 +117,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             } else {
-                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
             }
         });
     }
@@ -202,7 +202,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
 
         binding.btnDeleteReminder.setOnClickListener(view -> {
@@ -236,7 +236,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                                 DeleteRemiderModel model = response.body();
                                 if (model.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     remiderIds.clear();
-                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                    BWSApplication.showToast(model.getResponseMessage(), activity);
                                     dialog.dismiss();
                                     prepareData();
                                 }
@@ -250,7 +250,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity);
                 }
             });
 
@@ -419,7 +419,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 //                holder.bind.llSwitchStatus.setClickable(true);
 //                holder.bind.llSwitchStatus.setEnabled(true);
 //                holder.bind.llSwitchStatus.setOnClickListener(view -> {
-//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
 //                });
 //            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
             holder.bind.switchStatus.setClickable(true);
@@ -491,7 +491,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -602,7 +602,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                                 try {
                                     if (response.isSuccessful()) {
                                         DeleteRemiderModel model = response.body();
-                                        BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                        BWSApplication.showToast(model.getResponseMessage(), activity);
                                         prepareData();
                                         dialog.dismiss();
                                     }
@@ -616,7 +616,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
                     }
                 });
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -33,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,9 +60,11 @@ import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
@@ -78,12 +83,28 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,11 +139,12 @@ public class BWSApplication extends Application {
     public static String BatteryStatus = "";
     public static String PlayerAudioId = "";
     static List<String> remiderDays = new ArrayList<>();
+    static String currantTime = "09:00 am", am_pm, hourString, minuteSting;
+    static int mHour, mMinute;
 
     public static Context getContext() {
         return mContext;
     }
-
 
     public static void scheduleJob(Context context) {
         ComponentName serviceComponent = new ComponentName(context, PlayerJobService.class);
@@ -146,7 +168,7 @@ public class BWSApplication extends Application {
                                         ArrayList<DownloadAudioDetails> mDataDownload,
                                         ArrayList<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
                                         ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                        ArrayList<MainPlayModel> mDataPlayer,int position) {
+                                        ArrayList<MainPlayModel> mDataPlayer, int position) {
 //            TODO Mansi  Hint This code is Audio Detail Dialog
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -288,15 +310,15 @@ public class BWSApplication extends Application {
             });
         }
         llDownload.setOnClickListener(view ->
-                callDownload(comeFrom, mDataDownload, mDataViewAll,mDataPlaylist,mDataPlayer,position)
+                callDownload(comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position)
         );
-        if(comeFrom.equalsIgnoreCase("downloadList")){
+        if (comeFrom.equalsIgnoreCase("downloadList")) {
 
-        }else if(comeFrom.equalsIgnoreCase("playlist")){
+        } else if (comeFrom.equalsIgnoreCase("playlist")) {
 
-        }else if(comeFrom.equalsIgnoreCase("viewAllAudioList")){
+        } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
 
-        }else if(comeFrom.equalsIgnoreCase("audioPlayer")){
+        } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
 
         }
 
@@ -447,7 +469,7 @@ public class BWSApplication extends Application {
                     }
                 });
             } else {
-                showToast(ctx.getString(R.string.no_server_found), ctx);
+                showToast(ctx.getString(R.string.no_server_found), act);
             }
         });
 
@@ -476,11 +498,105 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
+    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, Activity act) {
+        if (indexData.getPastIndexScore().size() == 0) {
+            barChart.clear();
+        } else {
+            int spaceForBar = 1;
+            ArrayList<BarEntry> yVals1 = new ArrayList<>();
+
+            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
+                int val1 = Integer.parseInt(indexData.getPastIndexScore().get(i).getMonth());
+                yVals1.add(new BarEntry(i * spaceForBar, val1));
+            }
+
+            final ArrayList<String> xAxisValues = new ArrayList<>();
+
+            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
+                xAxisValues.add(indexData.getPastIndexScore().get(i).getIndexScore());
+            }
+//            barChart.getXAxis().setValueFormatter(new IAxisValueFormatter(formatter));
+            float minXRange = 10;
+            float maxXRange = 10;
+            barChart.setVisibleXRange(minXRange, maxXRange);
+            barChart.getAxisLeft().setAxisMinimum(0);
+//            barChart.setBackgroundColor(Color.TRANSPARENT); //set whatever color you prefer
+
+            BarDataSet set1;
+            set1 = new BarDataSet(yVals1, "Past Index Score");
+            set1.setColor(act.getResources().getColor(R.color.app_theme_color));
+            BarData barData = new BarData(set1);
+            barData.setBarWidth(5f);
+            barData.setValueFormatter(new MyValueFormatter());
+            barData.setValueTextSize(10f);
+            barChart.setDrawGridBackground(false);
+            barChart.getXAxis().setDrawGridLines(true);
+            barChart.getAxisLeft().setDrawGridLines(true);
+            barChart.getAxisRight().setDrawGridLines(true);
+            barChart.setData(barData);
+            barChart.animateX(2000);
+            barChart.animateY(2000);
+            barChart.animateXY(2000, 2000);
+
+            barChart.getDescription().setEnabled(false);
+            barChart.getAxisRight().setAxisMinimum(0);
+            float chartbarWidth = 2f;
+            float chartbarSpace = 0.02f;
+            float chartgroupSpace = 0.4f;
+            barChart.getXAxis().setAxisMinValue(10f);
+            barData.setValueFormatter(new LargeValueFormatter());
+            barChart.setData(barData);
+            barChart.getBarData().setBarWidth(chartbarWidth);
+            barChart.getXAxis().setAxisMinimum(0);
+            barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(chartgroupSpace, chartbarSpace) * 4);
+            barChart.groupBars(0, chartgroupSpace, chartbarSpace);
+            barChart.notifyDataSetChanged();
+            barChart.invalidate();
+
+            XAxis xl = barChart.getXAxis();
+            xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xl.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    return indexData.getPastIndexScore().get((int) value).getMonth();
+                }
+            });
+            YAxis yl = barChart.getAxisLeft();
+            yl.removeAllLimitLines();
+            yl.setTypeface(Typeface.DEFAULT);
+            yl.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+            yl.setTextColor(R.color.app_theme_color);
+
+            barChart.setVisibleXRangeMaximum(xAxisValues.size());
+            barChart.getAxisRight().setEnabled(false);
+            barChart.setVisibleXRange(0, xAxisValues.size());
+            barChart.getBarData().setBarWidth(0.29f);
+
+            Legend l = barChart.getLegend();
+            l.setWordWrapEnabled(true);
+            l.setTextSize(14);
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+            l.setDrawInside(false);
+            l.setForm(Legend.LegendForm.CIRCLE);
+
+        }
+    }
+
+    public static class MyValueFormatter extends ValueFormatter implements IValueFormatter {
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return Math.round(value) + "";
+        }
+    }
+
+
     private static void callDownload(String comeFrom,
                                      ArrayList<DownloadAudioDetails> mDataDownload,
                                      ArrayList<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
                                      ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                     ArrayList<MainPlayModel> mDataPlayer,int position) {/*
+                                     ArrayList<MainPlayModel> mDataPlayer, int position) {/*
 
         try {
             int i = position;
@@ -626,8 +742,32 @@ public class BWSApplication extends Application {
         final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
         final TextView tvSelectAll = dialog.findViewById(R.id.tvSelectAll);
         final TextView tvUnSelectAll = dialog.findViewById(R.id.tvUnSelectAll);
+        final TextView tvTime = dialog.findViewById(R.id.tvTime);
         final Button btnNext = dialog.findViewById(R.id.btnNext);
+        final CheckBox cbChecked = dialog.findViewById(R.id.cbChecked);
+        final LinearLayout llSelectTime = dialog.findViewById(R.id.llSelectTime);
+        final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+        final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
 
+
+        /*if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
+            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
+            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            DateFormat df = DateFormat.getTimeInstance();
+            String gmtTime = df.format(new Date());
+            Date currdate = new Date();
+            try {
+                currdate = simpleDateFormat1.parse(gmtTime);
+//                Log.e("currant currdate !!!!", String.valueOf(currdate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            currantTime = simpleDateFormat1.format(currdate);
+            tvTime.setText(currantTime);
+        } else {
+            tvTime.setText(Time);
+            currantTime = Time;
+        }*/
         tvPlaylistName.setText(playlistName);
         llBack.setOnClickListener(view12 -> dialog.dismiss());
         remiderDays.clear();
@@ -643,7 +783,8 @@ public class BWSApplication extends Application {
         rvSelectDay.setLayoutManager(manager);
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
         ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll,
-                btnNext, CoUSERID, playlistID, playlistName, dialog, fragmentActivity);
+                btnNext, CoUSERID, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder
+                , progressBar,llSelectTime);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -666,6 +807,8 @@ public class BWSApplication extends Application {
         final RecyclerView rvSelectHoursTimeSlot = dialog.findViewById(R.id.rvSelectHoursTimeSlot);
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+        final TimePicker timePicker = dialog.findViewById(R.id.timePicker);
+        timePicker.setIs24HourView(true);
         tvPlaylistName.setText(playlistName);
         llBack.setOnClickListener(view12 -> {
             dialogOld.dismiss();
@@ -729,38 +872,7 @@ public class BWSApplication extends Application {
         rvSelectHoursTimeSlot.setAdapter(adapter1);
 
         btnSave.setOnClickListener(v -> {
-            Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
-            if (isNetworkConnected(ctx)) {
-                showProgressBar(progressBar, progressBarHolder, act);
-                Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(coUSERID, playlistID,
-                        TextUtils.join(",", remiderDays), "09:00 am", CONSTANTS.FLAG_ONE);
-                listCall.enqueue(new Callback<SetReminderOldModel>() {
-                    @Override
-                    public void onResponse(Call<SetReminderOldModel> call, Response<SetReminderOldModel> response) {
-                        try {
-                            SetReminderOldModel listModel = response.body();
-                            if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
-                                dialog.dismiss();
-                                dialogOld.dismiss();
-                                remiderDays.clear();
-                                hideProgressBar(progressBar, progressBarHolder, act);
-                                showToast(listModel.getResponseMessage(), act);
-                                dialog.dismiss();
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SetReminderOldModel> call, Throwable t) {
-                        hideProgressBar(progressBar, progressBarHolder, act);
-                    }
-                });
-            } else {
-                showToast(ctx.getString(R.string.no_server_found), ctx);
-            }
+            dialog.dismiss();
         });
 
         tvGoBack.setOnClickListener(v -> dialog.dismiss());
@@ -810,9 +922,9 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            if (mselectedItem == position) {
+            /*if (mselectedItem == position) {
                 holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }
+            }*/
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
 
@@ -828,15 +940,19 @@ public class BWSApplication extends Application {
                 super(binding.getRoot());
                 this.binding = binding;
 
+/*
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
-                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                            mselectedItem = getAdapterPosition();
-                            notifyDataSetChanged();
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
                         }
                     });
                 }
+*/
             }
         }
     }
@@ -875,9 +991,9 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            if (mselectedItem == position) {
+            /*if (mselectedItem == position) {
                 holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }
+            }*/
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
 
@@ -893,15 +1009,19 @@ public class BWSApplication extends Application {
                 super(binding.getRoot());
                 this.binding = binding;
 
+/*
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
-                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                            mselectedItem = getAdapterPosition();
-                            notifyDataSetChanged();
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
                         }
                     });
                 }
+*/
             }
         }
     }
@@ -914,11 +1034,17 @@ public class BWSApplication extends Application {
         Button btnNext;
         String CoUSERID, PlaylistID, PlaylistName;
         Dialog dialogOld;
+        CheckBox cbCheck;
         FragmentActivity fragmentActivity;
+        TextView timeDisplay;
+        ProgressBar progressBar;
+        FrameLayout progressBarHolder;
+        LinearLayout llSelectTime;
 
         public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
-                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID, String PlaylistID, String PlaylistName
-                , Dialog dialogOld, FragmentActivity fragmentActivity) {
+                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID, String PlaylistID,
+                                            String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay
+                , FrameLayout progressBarHolder, ProgressBar progressBar,LinearLayout llSelectTime) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -930,6 +1056,11 @@ public class BWSApplication extends Application {
             this.PlaylistName = PlaylistName;
             this.dialogOld = dialogOld;
             this.fragmentActivity = fragmentActivity;
+            this.cbCheck = cbCheck;
+            this.timeDisplay = timeDisplay;
+            this.progressBarHolder = progressBarHolder;
+            this.progressBar = progressBar;
+            this.llSelectTime = llSelectTime;
         }
 
         @NonNull
@@ -942,72 +1073,135 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvDay.setText(selectionModels[position].getDay());
-            holder.binding.tvDay.setOnClickListener(v -> {
-                if (!remiderDays.contains(selectionModels[position].getDay())) {
-                    remiderDays.add(selectionModels[position].getDay());
+            holder.binding.cbChecked.setText(selectionModels[position].getDay());
+            holder.binding.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
+                if (holder.binding.cbChecked.isChecked()) {
+                    if (!remiderDays.contains(selectionModels[position].getDay())) {
+                        remiderDays.add(selectionModels[position].getDay());
+                    }
                 } else {
                     remiderDays.remove(selectionModels[position].getDay());
                 }
-                Log.e("remiderDays", TextUtils.join(",", remiderDays));
+
                 if (remiderDays.size() == selectionModels.length) {
+                    cbCheck.setChecked(true);
                     tvSelectAll.setVisibility(View.GONE);
                     tvUnSelectAll.setVisibility(View.VISIBLE);
                 } else {
                     tvSelectAll.setVisibility(View.VISIBLE);
                     tvUnSelectAll.setVisibility(View.GONE);
                 }
-                notifyDataSetChanged();
-            });
-
-            tvSelectAll.setOnClickListener(v -> {
-                remiderDays.clear();
-                for (int i = 0; i < selectionModels.length; i++) {
-                    if (!remiderDays.contains(selectionModels[i].getDay())) {
-                        remiderDays.add(selectionModels[i].getDay());
-                        tvSelectAll.setVisibility(View.GONE);
-                        tvUnSelectAll.setVisibility(View.VISIBLE);
-
-                    }
-                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                }
-                notifyDataSetChanged();
-            });
-
-            tvUnSelectAll.setOnClickListener(v -> {
-                remiderDays.clear();
-                tvUnSelectAll.setVisibility(View.GONE);
-                tvSelectAll.setVisibility(View.VISIBLE);
-                if (!TextUtils.join(",", remiderDays).equalsIgnoreCase("")) {
-                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                if (remiderDays.size() == 0) {
+                    Log.e("remiderDays", "no data");
                 } else {
-                    Log.e("remiderDays", "days cleared");
+                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
                 }
+            });
+
+            cbCheck.setOnClickListener(view -> {
+                if (cbCheck.isChecked()) {
+                    remiderDays.clear();
+                    for (int i = 0; i < selectionModels.length; i++) {
+                        remiderDays.add(selectionModels[i].getDay());
+                    }
+                } else {
+                    tvSelectAll.setVisibility(View.GONE);
+                    remiderDays.clear();
+                }
+
+                Log.e("remiderDays", TextUtils.join(",", remiderDays));
                 notifyDataSetChanged();
             });
 
             if (remiderDays.contains(selectionModels[position].getDay())) {
-                holder.binding.tvDay.setTextColor(act.getResources().getColor(R.color.white));
+                holder.binding.cbChecked.setChecked(true);
             } else {
-                holder.binding.tvDay.setTextColor(act.getResources().getColor(R.color.dim_light_gray));
+                holder.binding.cbChecked.setChecked(false);
             }
+
+            if (remiderDays.size() == selectionModels.length) {
+                cbCheck.setChecked(true);
+            }
+
+            llSelectTime.setOnClickListener(view -> {
+                String[] time = currantTime.split(":");
+                String min[] = time[1].split(" ");
+                mHour = Integer.parseInt(time[0]);
+//            mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = Integer.parseInt(min[0]);
+                String displayAmPm = min[1];
+                if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
+                    if (mHour != 12)
+                        mHour = mHour + 12;
+                }
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(ctx, R.style.TimePickerTheme,
+                        (view1, hourOfDay, minute) -> {
+                            if (hourOfDay < 10) {
+                                if (hourOfDay == 0) {
+                                    hourString = "12";
+                                } else {
+                                    hourString = "0" + hourOfDay;
+                                }
+                                am_pm = "AM";
+                            } else if (hourOfDay > 12) {
+                                am_pm = "PM";
+                                hourOfDay = hourOfDay - 12;
+                                hourString = "" + hourOfDay;
+                                if (hourOfDay < 10) {
+                                    hourString = "0" + hourString;
+                                }
+                            } else if (hourOfDay == 12) {
+                                am_pm = "PM";
+                                hourString = "" + hourOfDay;
+                            } else {
+                                hourString = "" + hourOfDay;
+                                am_pm = "AM";
+                            }
+                            if (minute < 10)
+                                minuteSting = "0" + minute;
+                            else
+                                minuteSting = "" + minute;
+//                        binding.tvTime.setText(hourOfDay + ":" + minute);
+                            timeDisplay.setText(hourString + ":" + minuteSting + " " + am_pm);
+                        }, mHour, mMinute, false);
+                timePickerDialog.show();
+            });
 
             btnNext.setOnClickListener(v -> {
                 if (remiderDays.size() == 0) {
-                    showToast("Please select days", ctx);
+                    showToast("Please select days", act);
                 } else {
-//                    Intent i = new Intent(ctx, TimeViewActivity.class);
-//                    act.startActivity(i);
-                  /*   new SnapTimePickerDialog.Builder().setTitle(R.string.title)
-                            .setPrefix(R.string.time_prefix).setSuffix(R.string.time_suffix)
-                            .setThemeColor(R.color.colorAccent).setTitleColor(android.R.color.black).build().show(fragmentActivity.getSupportFragmentManager(), SnapTimePickerDialog.TAG);
-                           .setListener(new SnapTimePickerDialog.Listener() {
-                        @Override
-                        public void onTimePicked(int i, int i1) {
+                    Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
+                    if (isNetworkConnected(ctx)) {
+                        showProgressBar(progressBar, progressBarHolder, act);
+                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(CoUSERID, PlaylistID,
+                                TextUtils.join(",", remiderDays), timeDisplay.toString(), CONSTANTS.FLAG_ONE);
+                        listCall.enqueue(new Callback<SetReminderOldModel>() {
+                            @Override
+                            public void onResponse(Call<SetReminderOldModel> call, Response<SetReminderOldModel> response) {
+                                try {
+                                    SetReminderOldModel listModel = response.body();
+                                    if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
+                                        dialogOld.dismiss();
+                                        remiderDays.clear();
+                                        hideProgressBar(progressBar, progressBarHolder, act);
+                                        showToast(listModel.getResponseMessage(), act);
+                                    }
 
-                        }
-                    });*/
-                    getReminderTime(ctx, act, CoUSERID, PlaylistID, PlaylistName, dialogOld);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SetReminderOldModel> call, Throwable t) {
+                                hideProgressBar(progressBar, progressBarHolder, act);
+                            }
+                        });
+                    } else {
+                        showToast(ctx.getString(R.string.no_server_found), act);
+                    }
                 }
             });
         }
@@ -1136,7 +1330,7 @@ public class BWSApplication extends Application {
         return key;
     }
 
-    public static void showToast(String message, Context context) {
+    public static void showToast(String message, Activity context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             Toast toast = new Toast(context);
             View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);

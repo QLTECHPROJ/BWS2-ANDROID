@@ -200,7 +200,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                     if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         if (!listModel.getResponseData().getCodeExist().equalsIgnoreCase("0")){
-                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
                                             Properties p1 = new Properties();
                                             if (!comeFrom.equalsIgnoreCase("")) {
                                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -249,7 +249,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                             }
                                             BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
                                         }else {
-                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
                                         }
                                     }
                             }
@@ -260,7 +260,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
                     }
                 }
 
@@ -318,9 +318,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
                         if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             if (listModel.getResponseData().getCodeExist().equalsIgnoreCase("0")){
-                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
                             }else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
                             }
                         }
                     } catch (Exception e) {
@@ -334,7 +334,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 }

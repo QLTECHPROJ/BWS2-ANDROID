@@ -128,9 +128,9 @@ class ChangePinActivity : AppCompatActivity() {
                             val listModel: ChangePinModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 finish()
-                                BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {
-                                BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             }
 
                         } catch (e: Exception) {
@@ -143,7 +143,7 @@ class ChangePinActivity : AppCompatActivity() {
                     }
                 })
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), this)
+                BWSApplication.showToast(getString(R.string.no_server_found), activity)
             }
         }
     }

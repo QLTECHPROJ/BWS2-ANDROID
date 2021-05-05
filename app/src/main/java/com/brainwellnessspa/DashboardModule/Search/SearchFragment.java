@@ -791,7 +791,7 @@ public class SearchFragment extends Fragment {
                         miniPlayer = 1;
                     }
                     callAddFrag();
-                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    BWSApplication.showToast("The audio shall start playing after the disclaimer", getActivity());
                 } else {
                     ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
                     listModelList2.add(modelList.get(position));
@@ -1035,7 +1035,7 @@ public class SearchFragment extends Fragment {
                             miniPlayer = 1;
                         }
                         callAddFrag();
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", getActivity());
                     } else {
                         ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                         listModelList2.add(modelList.get(position));

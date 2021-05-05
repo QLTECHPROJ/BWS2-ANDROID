@@ -407,7 +407,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             editor.commit()
                             finish()
                         } else {
-                            BWSApplication.showToast(listModel.responseMessage, applicationContext)
+                            BWSApplication.showToast(listModel.responseMessage, activity)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

@@ -318,7 +318,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                BWSApplication.showToast(getString(R.string.reactive_plan), activity);
             } else {
                 notificationStatus = true;
                 Intent i = new Intent(ctx, AudioDetailActivity.class);
@@ -991,7 +991,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                             }
                             editor.putInt(CONSTANTS.PREF_KEY_position, position);
                             editor.commit();
-                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                            BWSApplication.showToast(model.getResponseMessage(), activity);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1004,7 +1004,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -1807,7 +1807,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             exoBinding.llForwardSec.setOnClickListener(view -> {
                 try {
                     if (player.getDuration() - player.getCurrentPosition() <= 30000) {
-                        BWSApplication.showToast("Please Wait... ", ctx);
+                        BWSApplication.showToast("Please Wait... ", activity);
                     } else {
                         player.seekTo(position, player.getCurrentPosition() + 30000);
                     }
@@ -2505,7 +2505,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                 }
             });
         } else {
-//            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+//            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -2562,12 +2562,12 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
-                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
                 } else {
                     callDownload();
                 }
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         });
         exoBinding.llPlay.setOnClickListener(view -> {

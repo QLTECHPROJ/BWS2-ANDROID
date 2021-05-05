@@ -1,5 +1,6 @@
 package com.brainwellnessspa.EncryptDecryptUtils;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -51,12 +52,12 @@ public class DownloadMedia implements OnDownloadListener {
     Properties p;
     String UserID;
     AudioDatabase DB;
-        LocalBroadcastManager lBM;
+    LocalBroadcastManager lBM;
     Intent localIntent;
     MyNetworkReceiver myNetworkReceiver;
     List<String> fileNameList, audioFile, playlistDownloadId;
 
-        private BroadcastReceiver listener = new BroadcastReceiver() {
+    private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
         }
@@ -67,8 +68,8 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
-        BWSApplication.showToast("Downloading file...", ctx);
-        Log.e("Downloading file..",String.valueOf(downloadProgress));
+        BWSApplication.showToast("Downloading file...", (Activity) ctx);
+        Log.e("Downloading file..", String.valueOf(downloadProgress));
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
                 "Audio_database")
@@ -169,8 +170,8 @@ public class DownloadMedia implements OnDownloadListener {
                         }
                     }).start(this);
         } catch (OutOfMemoryError e) {
-        e.printStackTrace();
-    }
+            e.printStackTrace();
+        }
 
         return encodedBytes;
     }
@@ -338,8 +339,8 @@ public class DownloadMedia implements OnDownloadListener {
                 updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
                 encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
-                BWSApplication.showToast("Download Complete...", ctx);
-                Log.e("Downloading file..",String.valueOf(downloadProgress));
+                BWSApplication.showToast("Download Complete...", (Activity) ctx);
+                Log.e("Downloading file..", String.valueOf(downloadProgress));
                 downloadProgress = 0;
                 filename = "";
                 isDownloading = false;
@@ -362,16 +363,17 @@ public class DownloadMedia implements OnDownloadListener {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename));
             localIntent.putExtra("Progress", downloadProgress);
             lBM.sendBroadcast(localIntent);
-        }catch(Exception|OutOfMemoryError e) {
+        } catch (Exception | OutOfMemoryError e) {
             System.out.println(e.getMessage());
         }
     }
+
     private void getPending(Context ctx) {
         DB.taskDao()
                 .getNotDownloadData("Complete").observe((LifecycleOwner) ctx, audioList -> {
 
             notDownloadedData = new ArrayList<>();
-            if(audioList!=null) {
+            if (audioList != null) {
                 notDownloadedData.addAll(audioList);
                 if (notDownloadedData.size() != 0) {
                     fileNameList = new ArrayList<>();

@@ -145,7 +145,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             }
             if (CancelId.equalsIgnoreCase("4") &&
                     binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
-                BWSApplication.showToast("Cancellation reason is required", ctx);
+                BWSApplication.showToast("Cancellation reason is required", activity);
             } else {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -184,7 +184,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                     public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
                                         try {
                                             CancelPlanModel model = response.body();
-                                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                            BWSApplication.showToast(model.getResponseMessage(), activity);
                                             dialog.dismiss();
                                             String CancelReason = binding.edtCancelBox.getText().toString();
                                             /*Properties p = new Properties();
@@ -209,7 +209,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                     }
                                 });
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity);
                             }
                         case MotionEvent.ACTION_CANCEL: {
                             Button views = (Button) view1;
@@ -265,7 +265,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         } else {
             String errorMessage = String.format(
                     getString(R.string.error_player), errorReason.toString());
-            BWSApplication.showToast(errorMessage, this);
+            BWSApplication.showToast(errorMessage, activity);
         }
     }
 

@@ -335,7 +335,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                             startActivity(i)
                             finish()
                         } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
                         }
 
                     } catch (e: Exception) {

@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
                                     i.putExtra("Code", binding.tvCountryCode.getText().toString());
                                     startActivity(i);
                                     finish();
-                                    BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
+                                    BWSApplication.showToast(loginModel.getResponseMessage(), activity);
                                 } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                     binding.txtError.setVisibility(View.VISIBLE);
                                     binding.txtError.setText(loginModel.getResponseMessage());
@@ -233,7 +233,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         }
     }

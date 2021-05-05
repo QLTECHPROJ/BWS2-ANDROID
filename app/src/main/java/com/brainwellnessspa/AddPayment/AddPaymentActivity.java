@@ -198,7 +198,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                     @Override
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
-                        BWSApplication.showToast("Please enter valid card details", context);
+                        BWSApplication.showToast("Please enter valid card details", activity);
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
 
@@ -223,11 +223,11 @@ public class AddPaymentActivity extends AppCompatActivity {
                                                 p.putValue("userId", UserID);
                                                 BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track);
                                                 finish();
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                             } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                             } else {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                             }
 
                                         } catch (Exception e) {
@@ -241,7 +241,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity);
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         }

@@ -32,6 +32,7 @@ import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils
+import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
@@ -132,7 +133,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
 
         binding.ivEditCategory.setOnClickListener {
-            val i = Intent(activity, SleepTimeActivity::class.java)
+            val i = Intent(activity, RecommendedCategoryActivity::class.java)
             startActivity(i)
         }
         DB = Room.databaseBuilder(ctx,
@@ -256,7 +257,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             try {
                                                 val model = response.body()
                                                 if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                    BWSApplication.showToast(model.responseMessage, ctx)
+                                                    BWSApplication.showToast(model.responseMessage, activity)
                                                     dialog.dismiss()
                                                 }
                                             } catch (e: java.lang.Exception) {
@@ -664,17 +665,17 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                     if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(PlaylistID, ignoreCase = true)) {
                         if (isDisclaimer == 1) {
-                            BWSApplication.showToast("The audio shall remove after the disclaimer", ctx)
+                            BWSApplication.showToast("The audio shall remove after the disclaimer", activity)
                         } else {
                             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(PlaylistID, ignoreCase = true) && listModel.size == 1) {
-                                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx)
+                                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", activity)
                             } else {
                                 callRemove(listModel[position].id.toString(), listModel, holder.adapterPosition, ctx, activity, PlaylistID.toString())
                             }
                         }
                     } else {
                         if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(PlaylistID, ignoreCase = true) && listModel.size == 1) {
-                            BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx)
+                            BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", activity)
                         } else {
                             callRemove(listModel[position].id.toString(), listModel, holder.adapterPosition, ctx, activity, PlaylistID.toString())
                         }
@@ -762,7 +763,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             }
                             MyPlaylistListingActivity().adpater.notifyItemRemoved(position)
                             MyPlaylistListingActivity().prepareData()
-                            BWSApplication.showToast(listModel1.responseMessage, this@PlayListsAdpater.ctx)
+                            BWSApplication.showToast(listModel1.responseMessage, activity)
                         }
 //                        } catch (e: java.lang.Exception) {
 //                            e.printStackTrace()
@@ -803,7 +804,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                 })
             } else {
-                BWSApplication.showToast(this.ctx.getString(R.string.no_server_found), this.ctx)
+                BWSApplication.showToast(this.ctx.getString(R.string.no_server_found),activity)
             }
         }
 

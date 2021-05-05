@@ -437,7 +437,7 @@ public class AptAudioFragment extends Fragment {
                             miniPlayer = 1;
                         }
                         callAddTransFrag();
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", getActivity());
                     } else {
                         ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
                         listModelList2.add(listModelList.get(position));
@@ -540,7 +540,7 @@ public class AptAudioFragment extends Fragment {
                         i.putExtra("ComeFrom", "Plan");
                         ctx.startActivity(i);
                     } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                     } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") ||
                             listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);

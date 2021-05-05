@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardTwoModule.home
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -20,6 +21,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,13 +31,12 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
-import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
-import com.brainwellnessspa.ManageModule.SleepTimeActivity
+import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
@@ -52,6 +53,7 @@ import com.brainwellnessspa.databinding.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.github.mikephil.charting.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
@@ -88,8 +90,16 @@ class HomeFragment : Fragment() {
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
     var mBottomSheetDialog: BottomSheetDialog? = null
     lateinit var dialog: Dialog
+
+    /* Notification
+index score %
+severe display and 100
+score inc dec
+inc red color down arrow C5060
+dec green color up arrow 27b86a
+* */
     override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+                              container: ViewGroup?, savedInstanceState: Bundle?): View {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.getRoot()
@@ -114,21 +124,26 @@ class HomeFragment : Fragment() {
                 "Audio_database")
                 .addMigrations(BWSApplication.MIGRATION_1_2)
                 .build()
-        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
 
         binding.tvName.text = UserName
         if (UserIMAGE.equals("", true)) {
             binding.ivUser.setImageResource(R.drawable.ic_gray_user)
         } else {
-            Glide.with(ctx).load(UserIMAGE)
+            Glide.with(requireActivity()).load(UserIMAGE)
                     .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
                     .into(binding.ivUser)
         }
-        homeViewModel!!.text.observe(viewLifecycleOwner, { s: String? -> })
+//        homeViewModel!!.text.observe(viewLifecycleOwner, { s: String? -> })
 
         binding.rvAreaOfFocusCategory.layoutManager = GridLayoutManager(ctx, 3)
         val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
+
+        binding.llCheckIndexSocre.setOnClickListener {
+            val intent = Intent(ctx, WalkScreenActivity::class.java)
+            intent.putExtra(CONSTANTS.ScreenView, "2")
+            startActivity(intent)
+        }
 
         binding.llBottomView.setOnClickListener { v: View? ->
             val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.user_list_custom_layout, null, false)
@@ -150,7 +165,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivEditCategory.setOnClickListener {
-            val i = Intent(activity, SleepTimeActivity::class.java)
+            val i = Intent(activity, RecommendedCategoryActivity::class.java)
             startActivity(i)
         }
 
@@ -193,7 +208,7 @@ class HomeFragment : Fragment() {
                 override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
                     try {
                         progressBar.visibility = View.GONE
-                        var listModel: AddedUserListModel = response.body()!!
+                        val listModel: AddedUserListModel = response.body()!!
                         adapter = UserListAdapter(listModel.responseData!!)
                         rvUserList.adapter = adapter
                     } catch (e: Exception) {
@@ -211,8 +226,9 @@ class HomeFragment : Fragment() {
     fun prepareHomeData() {
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getHomeScreenData(USERID)
+            val listCall = APINewClient.getClient().getHomeScreenData(CoUSERID)
             listCall.enqueue(object : Callback<HomeScreenModel?> {
+                @SuppressLint("ResourceAsColor")
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -220,19 +236,44 @@ class HomeFragment : Fragment() {
                         homelistModel = response.body()!!
                         binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
                         binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
-                        if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
-                                || homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+
+                        binding.tvSevere.text = listModel.responseData!!.indexScore.toString()
+                        binding.llIndicate.progress = listModel.responseData!!.indexScore!!.toInt()
+
+                        if (listModel.responseData!!.shouldCheckIndexScore.equals("0", true)) {
+                            binding.llCheckIndexSocre.visibility = View.GONE
+                        } else if (listModel.responseData!!.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
+                            binding.llCheckIndexSocre.visibility = View.VISIBLE
+                        }
+
+                        BWSApplication.getPastIndexScore(homelistModel.responseData!!, binding.barChart, activity)
+                        binding.tvPercent.text = listModel.responseData!!.indexScoreDiff + "%"
+
+                        if (homelistModel.responseData!!.scoreIncDec.equals("", ignoreCase = true)) {
+                            binding.llCheckPercent.visibility = View.INVISIBLE
+                        } else if (homelistModel.responseData!!.scoreIncDec.equals("Increase", ignoreCase = true)) {
+                            binding.llCheckPercent.visibility = View.VISIBLE
+                            binding.tvPercent.setTextColor(ContextCompat.getColor(act, R.color.redtheme))
+                        } else if (homelistModel.responseData!!.scoreIncDec.equals("Decrease", ignoreCase = true)) {
+                            binding.llCheckPercent.visibility = View.VISIBLE
+                            binding.tvPercent.setTextColor(ContextCompat.getColor(act, R.color.green_dark_s))
+                        }
+
+                        if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
+                                || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                             binding.tvReminder.setText("Set Reminder")
-                        } else if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                        } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                             binding.tvReminder.setText("Update Reminder")
                         }
+
+
                         binding.tvReminder.setOnClickListener {
-                            if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
-                                    || homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                            if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
+                                    || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                                 binding.tvReminder.setText("Set Reminder")
-                                BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                        homelistModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
-                            } else if (homelistModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                                BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
+                            } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.setText("Update Reminder")
                                 val dialog = Dialog(ctx)
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -250,18 +291,18 @@ class HomeFragment : Fragment() {
                                 }
                                 Btn.setOnClickListener { v: View? ->
                                     dialog.hide()
-                                    BWSApplication.getReminderDay(ctx, act, CoUSERID, homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                            homelistModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
+                                    BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
-                                            homelistModel.responseData!!.suggestedPlaylist!!.reminderId)
+                                            listModel.responseData!!.suggestedPlaylist!!.reminderId)
                                     listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                                         override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                                             try {
                                                 val model = response.body()
                                                 if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                    BWSApplication.showToast(model!!.responseMessage, ctx)
+                                                    BWSApplication.showToast(model.responseMessage, activity)
                                                     dialog.dismiss()
                                                 }
                                             } catch (e: java.lang.Exception) {
@@ -333,6 +374,11 @@ class HomeFragment : Fragment() {
                         val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
+                        if (SLEEPTIME.equals("",true)){
+                            binding.llSleepTime.visibility = View.GONE
+                        }else {
+                            binding.llSleepTime.visibility = View.VISIBLE
+                        }
                         binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
 
                         binding.llPlayerView1.setOnClickListener { v: View? ->
@@ -407,7 +453,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun callMainPlayerSuggested(position: Int, view: String?, listModel:  List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, activity: FragmentActivity?, playlistID: String) {
+    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, activity: FragmentActivity?, playlistID: String) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
@@ -454,20 +500,20 @@ class HomeFragment : Fragment() {
 
     private fun GetPlaylistDetail(PlaylistID: String) {
         try {
-            DB!!.taskDao()
+           /* DB!!.taskDao()
                     .getPlaylist1(PlaylistID).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
                         if (audioList.isNotEmpty()) {
                             MyDownloads = "1"
                         } else {
                             MyDownloads = "0"
                         }
-                    })
+                    })*/
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun callPlayerSuggested(position: Int, view: String?, listModel:  List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
+    private fun callPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
         GlobalInitExoPlayer.callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()
@@ -660,6 +706,7 @@ class HomeFragment : Fragment() {
                                             editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData!!.indexScore)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, responseData.image)
                                             editor.commit()
+                                            prepareHomeData()
                                             BWSApplication.showToast(listModel.responseMessage, activity)
                                             dialog.dismiss()
                                             mBottomSheetDialog!!.hide()

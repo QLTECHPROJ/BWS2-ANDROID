@@ -643,7 +643,7 @@ Appointment Audios dddd*/
         if (position == (mainPlayModelList1.size() - 1)) {
             playerNotificationManager.setUseNextAction(true);
             playerNotificationManager.setUseNextActionInCompactView(true);
-//            BWSApplication.showToast("Next available", ctx);
+//            BWSApplication.showToast("Next available", activity);
         }
 //        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
         try {
@@ -853,7 +853,7 @@ Appointment Audios dddd*/
    /* @Override
     public void onDestroy() {
         Log.e("APPLICATION", "App is in onActivityDestroyed");
-        BWSApplication.showToast("onDestroy Called", getApplicationContext());
+        BWSApplication.showToast("onDestroy Called", activity);
         relesePlayer(getApplication());
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
@@ -864,7 +864,7 @@ Appointment Audios dddd*/
    /* @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.e("Appplication log", "onTaskRemoved Called");
-//        BWSApplication.showToast("onTaskRemoved Called", getApplicationContext());
+//        BWSApplication.showToast("onTaskRemoved Called", activity);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
         relesePlayer(getApplicationContext());

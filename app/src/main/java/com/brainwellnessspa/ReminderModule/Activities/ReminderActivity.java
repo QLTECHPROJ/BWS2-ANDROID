@@ -399,12 +399,12 @@ public class ReminderActivity extends AppCompatActivity {
                 i.putExtra("ComeFrom", "Plan");
                 startActivity(i);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                BWSApplication.showToast(getString(R.string.reactive_plan), context);
+                BWSApplication.showToast(getString(R.string.reactive_plan), activity);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 if (PlaylistName.equalsIgnoreCase("")) {
-                    BWSApplication.showToast("Please select playlist name", context);
+                    BWSApplication.showToast("Please select playlist name", activity);
                 } else if (remiderDays.size() == 0) {
-                    BWSApplication.showToast("Please select days", context);
+                    BWSApplication.showToast("Please select days", activity);
                 } else {
                     String sendTime = binding.tvTime.getText().toString();
                     SimpleDateFormat simpleDateFormat1x = new SimpleDateFormat("hh:mm a");
@@ -455,7 +455,7 @@ public class ReminderActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), context);
+                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
                     }
                 }
             }
@@ -537,7 +537,7 @@ public class ReminderActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), context);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 

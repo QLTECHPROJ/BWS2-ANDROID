@@ -340,7 +340,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 RemoveProfileModel viewModel = response.body();
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
+                                    BWSApplication.showToast(viewModel.getResponseMessage(), activity);
                                     profileViewData(ctx);
                                 }
                             } catch (Exception e) {
@@ -388,7 +388,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         setProfilePic(profilePicPath);
-                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), activity);
                                         profileViewData(ctx);
                                     }
                                 }
@@ -396,11 +396,11 @@ public class UserProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void failure(RetrofitError e) {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    BWSApplication.showToast(e.getMessage(), ctx);
+                                    BWSApplication.showToast(e.getMessage(), activity);
                                 }
                             });
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -431,7 +431,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         setProfilePic(profilePicPath);
-                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), activity);
                                         profileViewData(ctx);
                                     }
                                 }
@@ -439,11 +439,11 @@ public class UserProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void failure(RetrofitError e) {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    BWSApplication.showToast(e.getMessage(), ctx);
+                                    BWSApplication.showToast(e.getMessage(), activity);
                                 }
                             });
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity);
                 }
             }
         } else if (requestCode == RESULT_CANCELED) {
@@ -723,7 +723,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         .putValue("phone", viewModel.getResponseData().getPhoneNumber())
                                         .putValue("email", viewModel.getResponseData().getEmail()));
                                 finish();
-                                BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
+                                BWSApplication.showToast(viewModel.getResponseMessage(), activity);
                             } else {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }

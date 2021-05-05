@@ -135,7 +135,7 @@ public class PaymentActivity extends AppCompatActivity {
                 i.putExtra("position", position);
                 startActivity(i);
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         });
 //        prepareCardList();
@@ -185,7 +185,7 @@ public class PaymentActivity extends AppCompatActivity {
                                 BWSApplication.addToSegment("Payment Screen Viewed", p, CONSTANTS.screen);
                                 binding.btnCheckout.setOnClickListener(view -> {
                                     if (cardListModel.getResponseData().size() == 0) {
-                                        BWSApplication.showToast("Please enter card details", context);
+                                        BWSApplication.showToast("Please enter card details", activity);
                                     } else {
 
                                         if (BWSApplication.isNetworkConnected(context)) {
@@ -199,7 +199,7 @@ public class PaymentActivity extends AppCompatActivity {
                                                         if (response.isSuccessful()) {
                                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                                             PayNowDetailsModel listModel1 = response.body();
-                                                            BWSApplication.showToast(listModel1.getResponseMessage(), context);
+                                                            BWSApplication.showToast(listModel1.getResponseMessage(), activity);
                                                             Intent i = new Intent(context, BillingOrderActivity.class);
                                                             startActivity(i);
                                                             finish();
@@ -216,12 +216,12 @@ public class PaymentActivity extends AppCompatActivity {
                                             });
                                         } else {
                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                            BWSApplication.showToast(getString(R.string.no_server_found), context);
+                                            BWSApplication.showToast(getString(R.string.no_server_found), activity);
                                         }
                                     }
                                 });
                             } else {
-                                BWSApplication.showToast(cardListModel.getResponseMessage(), context);
+                                BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -235,7 +235,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 });
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -304,7 +304,7 @@ public class PaymentActivity extends AppCompatActivity {
                                     }
                                     BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                                 } else {
-                                    BWSApplication.showToast(cardListModel.getResponseMessage(), context);
+                                    BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -318,7 +318,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                     });
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), context);
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity);
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
@@ -364,7 +364,7 @@ public class PaymentActivity extends AppCompatActivity {
                                                     dialog.dismiss();
                                                     BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                                 } else {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                                 }
                                             }
                                         } catch (Exception e) {
@@ -378,7 +378,7 @@ public class PaymentActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity);
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         case MotionEvent.ACTION_CANCEL: {

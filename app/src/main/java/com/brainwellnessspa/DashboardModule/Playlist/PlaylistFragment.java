@@ -567,7 +567,7 @@ public class PlaylistFragment extends Fragment {
                     startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                    BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     if (MyDownloads.equalsIgnoreCase("1")) {

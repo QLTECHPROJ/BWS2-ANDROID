@@ -304,7 +304,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     comeRename = 1;
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     RenamePlaylistModel listModel = response1.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                    BWSApplication.showToast(listModel.getResponseMessage(), activity);
                                     Properties p = new Properties();
                                     p.putValue("userId", UserID);
                                     p.putValue("playlistId", PlaylistID);
@@ -339,7 +339,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity);
                 }
 
             });
@@ -355,7 +355,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
+                BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", activity);
             } else {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -397,7 +397,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         SucessModel listModel = response12.body();
                                         dialog.dismiss();
-                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
                                         finish();
                                     }
                                 } catch (Exception e) {
@@ -411,7 +411,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
                     }
                 });
 
@@ -793,7 +793,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                             if (response13.isSuccessful()) {
                                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                                 DownloadPlaylistModel model1 = response13.body();
-                                                BWSApplication.showToast(model1.getResponseMessage(), ctx);
+                                                BWSApplication.showToast(model1.getResponseMessage(), activity);
                                             }
                                         }
 
@@ -831,7 +831,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -852,7 +852,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             }
-                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                            BWSApplication.showToast(model.getResponseMessage(), activity);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -865,7 +865,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 

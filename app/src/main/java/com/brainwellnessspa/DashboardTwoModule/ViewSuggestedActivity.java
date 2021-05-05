@@ -327,7 +327,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                         callAddFrag();
                                     }
                                 }
-                            BWSApplication.showToast(listModels.getResponseMessage(), ctx);
+                            BWSApplication.showToast(listModels.getResponseMessage(), activity);
                             if (s1.equalsIgnoreCase("1")) {
                                 finish();
                             }
@@ -344,7 +344,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -486,7 +486,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                        callMainTransFrag(position);
 //                    } else if (AudiolistsModel.get(position).isPlay().equalsIgnoreCase("0")
 //                            || AudiolistsModel.get(position).isPlay().equalsIgnoreCase("")) {
-//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                        BWSApplication.showToast(getString(R.string.reactive_plan), activity);
 //                    }
 //                } else if (AudiolistsModel.get(position).isLock().equalsIgnoreCase("0")
 //                        || AudiolistsModel.get(position).isLock().equalsIgnoreCase("")) {
@@ -500,12 +500,12 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                    i.putExtra("ComeFrom", "Plan");
 //                    startActivity(i);
 //                } else if (AudiolistsModel.get(position).isLock().equalsIgnoreCase("2")) {
-//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
 //                } else if (AudiolistsModel.get(position).isLock().equalsIgnoreCase("0")
 //                        || AudiolistsModel.get(position).isLock().equalsIgnoreCase("")) {
                 if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
                     } else {
                         callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
                     }
@@ -661,7 +661,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
 //                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
 //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
 //                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0")
 //                        || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
                     comefromDownload = "0";
@@ -680,7 +680,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                    i.putExtra("ComeFrom", "Plan");
 //                    startActivity(i);
 //                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
-//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+//                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
 //                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
 //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
 //                } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
@@ -694,7 +694,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
                     } else {
                         callAddAudioToPlaylist("", PlaylistModel.get(position).getID(), "1");
                     }

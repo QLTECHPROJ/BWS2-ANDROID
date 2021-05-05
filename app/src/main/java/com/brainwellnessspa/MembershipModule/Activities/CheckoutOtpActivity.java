@@ -157,7 +157,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                                     binding.edtOTP3.setText("");
                                     binding.edtOTP4.setText("");
                                     tvSendOTPbool = true;
-                                    BWSApplication.showToast(loginModel.getResponseMessage(), getApplicationContext());
+                                    BWSApplication.showToast(loginModel.getResponseMessage(), activity);
                                     startSMSListener();
                                 } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                     binding.txtError.setVisibility(View.VISIBLE);
@@ -175,11 +175,11 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                     @Override
                     public void onFailure(Call<SignUpModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        BWSApplication.showToast(t.getMessage(), getApplicationContext());
+                        BWSApplication.showToast(t.getMessage(), activity);
                     }
                 });
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         });
 
@@ -288,7 +288,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                     }
                 });
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         });
     }

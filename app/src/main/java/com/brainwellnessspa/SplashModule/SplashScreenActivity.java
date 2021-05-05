@@ -277,7 +277,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         } else {
             setAnalytics();
             askBattryParmition();
-            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
+            BWSApplication.showToast(context.getString(R.string.no_server_found), this);
         }
     }
 

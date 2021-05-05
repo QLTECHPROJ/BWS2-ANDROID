@@ -96,6 +96,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     //    Handler handler3;
     public static int comeDeletePlaylist = 0;
     public AudioManager audioManager;
+    Activity activity;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
@@ -162,6 +163,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
 
         ctx = DownloadPlaylistActivity.this;
+        activity = DownloadPlaylistActivity.this;
         addDisclaimer();
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
@@ -319,7 +321,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
-                    BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
+                    BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", activity);
                 } else {
                     final Dialog dialog = new Dialog(ctx);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -700,9 +702,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                     } else
                                         player.setPlayWhenReady(true);
                                     callAddTranFrag();
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                                 } else
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                             } else {
                                 if (player != null) {
                                     if (position != PlayerPosition) {
@@ -773,9 +775,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                 } else
                                     player.setPlayWhenReady(true);
                                 callAddTranFrag();
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                             } else
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                         } else {
                             if (player != null) {
                                 if (position != PlayerPosition) {
@@ -847,7 +849,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
                 if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
-                        BWSApplication.showToast("You can see details after the disclaimer", ctx);
+                        BWSApplication.showToast("You can see details after the disclaimer", activity);
                     } else {
                         Intent i = new Intent(ctx, AudioDetailActivity.class);
                         i.putExtra("play", "playlist");
@@ -891,9 +893,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         } else
                             player.setPlayWhenReady(true);
                         callAddTranFrag();
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                     } else
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                 } else {
                     ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                     for (int i = 0; i < listModelList.size(); i++) {
@@ -908,11 +910,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                             if (listModelList2.size() != 0) {
                                 callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, true);
                             } else {
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                             }
                         } else {
 //                                pos = 0;
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                         }
                     }
                     SegmentTag();
@@ -953,18 +955,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                             if (listModelList2.size() != 0) {
                                 callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
                             } else {
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                             }
                         } else if (listModelList2.get(pos).getAudioFile().equalsIgnoreCase("") && listModelList2.size() > 1) {
                             callTransparentFrag(pos, ctx, listModelList2, "", PlaylistName, audioc);
                         } else {
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                         }
                     } else {
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                     }
                 } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                 }
                 SegmentTag();
             }

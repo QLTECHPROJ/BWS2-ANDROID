@@ -38,56 +38,97 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_weight="0.5"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_below="@id/rlLayout"
+        android:fontFamily="@font/montserrat_bold"
+        android:gravity="start"
+        android:text="Choose the day &amp; Time"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13sdp" />
+
+    <LinearLayout
+        android:id="@+id/llSelectTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tvText"
+        android:background="@drawable/transparent_bg"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/_18sdp"
+        android:paddingVertical="@dimen/_12sdp">
+
+        <ImageView
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:src="@drawable/ic_big_clock_icon"
+            app:tint="@color/app_theme_color"/>
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_14sdp"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:text="09:00 am"
+            android:textColor="@color/app_theme_color"
+            android:textSize="@dimen/_14sdp" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/llOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rlLayout"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:weightSum="1">
+        android:layout_below="@+id/llSelectTime"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_16sdp">
+
+        <CheckBox
+            android:id="@+id/cbChecked"
+            style="@android:style/Widget.CompoundButton.CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:button="@drawable/ic_double_checked_icon"
+            android:gravity="center"
+            android:buttonTint="@color/white"
+            android:overScrollMode="never"
+            android:paddingLeft="@dimen/_22sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp"
+            android:visibility="visible" />
 
         <TextView
-            android:layout_width="@dimen/_0sdp"
+            android:id="@+id/tvSelectAll"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_weight="0.5"
             android:fontFamily="@font/montserrat_bold"
-            android:gravity="start"
-            android:text="Choose the day"
+            android:text="Select All"
             android:textColor="@color/white"
-            android:textSize="@dimen/_13sdp" />
+            android:visibility="visible"
+            android:textSize="@dimen/_15sdp" />
 
-        <LinearLayout
-            android:layout_width="@dimen/_0sdp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvUnSelectAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Unselect All"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tvSelectAll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_16sdp"
-                android:layout_weight="0.5"
-                android:fontFamily="@font/montserrat_medium"
-                android:gravity="right"
-                android:text="Select All"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp" />
 
-            <TextView
-                android:id="@+id/tvUnSelectAll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_16sdp"
-                android:fontFamily="@font/montserrat_medium"
-                android:gravity="right"
-                android:text="Unselect All"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp"
-                android:visibility="gone" />
-
-        </LinearLayout>
 
 
     </LinearLayout>
@@ -98,7 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/llOptions"
         android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:overScrollMode="never"
         android:paddingBottom="@dimen/_18sdp"
         tools:listitem="@layout/reminder_selectionlist_layout" />
@@ -120,7 +161,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
             android:text="No result found"
-            android:textColor="@color/dark_blue_gray"
+            android:textColor="@color/white"
             android:textSize="@dimen/_16sdp" />
 
     </LinearLayout>
@@ -136,7 +177,7 @@
         android:enabled="true"
         android:fontFamily="@font/montserrat_bold"
         android:paddingVertical="@dimen/_2sdp"
-        android:text="Next"
+        android:text="@string/Save"
         android:textColor="@color/app_theme_color" />
 
     <LinearLayout

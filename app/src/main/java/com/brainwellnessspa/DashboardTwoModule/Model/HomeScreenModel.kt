@@ -25,6 +25,18 @@ class HomeScreenModel {
         @Expose
         var indexScore: String? = null
 
+        @SerializedName("shouldCheckIndexScore")
+        @Expose
+        var shouldCheckIndexScore: String? = null
+
+        @SerializedName("ScoreIncDec")
+        @Expose
+        var scoreIncDec: String? = null
+
+        @SerializedName("IndexScoreDiff")
+        @Expose
+        var indexScoreDiff: String? = null
+
         @SerializedName("SuggestedPlaylist")
         @Expose
         var suggestedPlaylist: SuggestedPlaylist? = null
@@ -162,7 +174,13 @@ class HomeScreenModel {
         }
 
         class PastIndexScore {
+            @SerializedName("Month")
+            @Expose
+            var month: String? = null
 
+            @SerializedName("IndexScore")
+            @Expose
+            var indexScore: String? = null
         }
 
         class SessionProgress {

@@ -540,7 +540,7 @@ class ManageAudioPlaylistActivity : AppCompatActivity() {
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(124))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
-            holder.binding.llMainLayout.setOnClickListener { view ->
+            holder.binding.llMainLayout.setOnClickListener { _ ->
                 val bundle = Bundle()
                 bundle.putString("ID", homeView)
                 bundle.putString("Name", viewString)

@@ -171,7 +171,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                                     i.putExtra("Name", binding.tvCountry.getText().toString());
                                     i.putExtra("Code", binding.tvCountryCode.getText().toString());
                                     i.putExtra("Promocode", Promocode);
-                                    BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
+                                    BWSApplication.showToast(loginModel.getResponseMessage(), activity);
                                     startActivity(i);
                                     finish();
                                 } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
@@ -189,7 +189,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         }
     }

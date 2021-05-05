@@ -147,9 +147,9 @@ class SignInActivity : AppCompatActivity() {
                                 editor.commit()
                                 val i = Intent(this@SignInActivity, UserListActivity::class.java)
                                 startActivity(i)
-                                BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             } else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             }
 
                         } catch (e: Exception) {

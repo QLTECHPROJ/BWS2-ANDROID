@@ -304,7 +304,7 @@ class CreateAccountActivity : AppCompatActivity() {
                             startActivity(i)
                             finish()
                         }
-                        BWSApplication.showToast(listModel.getResponseMessage(), ctx)
+                        BWSApplication.showToast(listModel.getResponseMessage(), activity)
 
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -316,7 +316,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx)
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
 

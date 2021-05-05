@@ -306,7 +306,7 @@ class MainPlaylistFragment : Fragment() {
                                     if (response.isSuccessful) {
                                         val listModel = response.body()
                                         if (listModel!!.responseData!!.iscreate.equals("0", ignoreCase = true)) {
-                                            BWSApplication.showToast(listModel.responseMessage, ctx)
+                                            BWSApplication.showToast(listModel.responseMessage, act)
                                             dialog.dismiss()
                                         } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) ||
                                                 listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
@@ -324,7 +324,7 @@ class MainPlaylistFragment : Fragment() {
                             }
                         })
                     } else {
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx)
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 }
                 tvCancel.setOnClickListener { v: View? -> dialog.dismiss() }

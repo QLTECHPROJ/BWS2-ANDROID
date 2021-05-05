@@ -228,7 +228,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                     @Override
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
-                        BWSApplication.showToast("Please enter valid card details", getApplicationContext());
+                        BWSApplication.showToast("Please enter valid card details",activity);
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
 
@@ -326,9 +326,9 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 startActivity(i);
                                                 finish();
                                             } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                             } else {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -341,7 +341,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity);
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         }

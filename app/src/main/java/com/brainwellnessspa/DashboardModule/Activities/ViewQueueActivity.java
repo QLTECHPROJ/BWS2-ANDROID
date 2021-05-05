@@ -460,7 +460,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
             buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -526,7 +526,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
             buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
         }
     }
 
@@ -878,7 +878,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         binding.llProgressBar.setVisibility(View.GONE);
                         binding.llPlay.setVisibility(View.VISIBLE);
                         binding.llPause.setVisibility(View.GONE);
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
                     }
                 }
             } catch (IOException e) {
@@ -896,7 +896,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         }
     }
@@ -1704,7 +1704,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 });
             } else {
-//            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+//            BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1932,7 +1932,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     getPrepareShowData(position);
                     callRemoveList1(position1);
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity);
                 }
             });
         }
@@ -1970,7 +1970,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
             if (s.equalsIgnoreCase("0")) {
-                BWSApplication.showToast("Removed from the queue", ctx);
+                BWSApplication.showToast("Removed from the queue", activity);
             }
             addToQueueModelList2 = listModelList;
         }

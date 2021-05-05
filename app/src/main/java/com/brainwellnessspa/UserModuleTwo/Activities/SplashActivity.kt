@@ -1,5 +1,6 @@
 package com.brainwellnessspa.UserModuleTwo.Activities
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -27,6 +28,7 @@ import retrofit2.Response
 class SplashActivity : AppCompatActivity() {
     lateinit var analytics: Analytics
     lateinit var ctx: Context
+    lateinit var act: Activity
     lateinit var binding: ActivitySplashBinding
     var USERID: String? = ""
     var CoUserID: String? = ""
@@ -133,7 +135,7 @@ class SplashActivity : AppCompatActivity() {
         }else{
             setAnalytics()
             askBattryParmition()
-            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx)
+            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
         }
     }
 

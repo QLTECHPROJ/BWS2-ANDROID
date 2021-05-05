@@ -98,7 +98,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
                 activity.startActivity(i);
                 activity.finish();
             } else {
-                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
             }
         });
     }

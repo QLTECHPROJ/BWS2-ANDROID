@@ -95,7 +95,7 @@ public interface APINewInterface {
 
     @POST("verifypin")
     @FormUrlEncoded
-    Call<VerifyPinModel> getVerifyPin(@Field("UserID") String userID,
+    Call<VerifyPinModel> getVerifyPin(@Field("CoUserId") String CoUserId,
                                       @Field("Pin") String pin);
 
     @POST("userlist")

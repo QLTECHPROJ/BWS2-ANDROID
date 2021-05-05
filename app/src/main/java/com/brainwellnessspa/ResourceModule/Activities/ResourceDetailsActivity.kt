@@ -27,6 +27,7 @@ import com.segment.analytics.Properties
 
 class ResourceDetailsActivity : AppCompatActivity() {
     lateinit var binding: ActivityResourceDetailsBinding
+    lateinit var act: Activity
     var id: String? = null
     var title: String? = null
     var author: String? = null
@@ -48,6 +49,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource_details)
         ctx = this@ResourceDetailsActivity
+        act = this@ResourceDetailsActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         if (intent.extras != null) {
@@ -134,7 +136,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
                     .skipMemoryCache(false).into(binding.ivRestaurantImage)
             binding.btnComplete.setOnClickListener { _ ->
                 if (linkOne.equals("", ignoreCase = true)) {
-                    BWSApplication.showToast("Not Available", ctx)
+                    BWSApplication.showToast("Not Available", act)
                 } else {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(linkOne)
@@ -152,7 +154,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
             }
             binding.ivAndroid.setOnClickListener { _ ->
                 if (linkOne.equals("", ignoreCase = true)) {
-                    BWSApplication.showToast("Not Available", ctx)
+                    BWSApplication.showToast("Not Available", act)
                 } else {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(linkOne)
@@ -170,7 +172,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
             }
             binding.ivIos.setOnClickListener { _ ->
                 if (linkTwo.equals("", ignoreCase = true)) {
-                    BWSApplication.showToast("Not Available", ctx)
+                    BWSApplication.showToast("Not Available", act)
                 } else {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(linkTwo)
