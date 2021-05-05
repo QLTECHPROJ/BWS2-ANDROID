@@ -784,7 +784,7 @@ public class BWSApplication extends Application {
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
         ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll,
                 btnNext, CoUSERID, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder
-                , progressBar,llSelectTime);
+                , progressBar, llSelectTime);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -888,144 +888,6 @@ public class BWSApplication extends Application {
         BWSApplication = this;
     }
 
-    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
-        private ReminderMinutesListModel[] minutesListModels;
-        Activity act;
-        Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName;
-        Dialog dialogOld;
-        int mselectedItem = -1;
-
-        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
-                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
-            this.minutesListModels = minutesListModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_timelist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*if (mselectedItem == position) {
-                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }*/
-            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
-        }
-
-        @Override
-        public int getItemCount() {
-            return minutesListModels.length;
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderTimelistLayoutBinding binding;
-
-            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (hasFocus){
-                                mselectedItem = getAdapterPosition();
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-                }
-*/
-            }
-        }
-    }
-
-    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
-        private ReminderMinutesListModel[] minutesListModels;
-        Activity act;
-        Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName;
-        Dialog dialogOld;
-        int mselectedItem = -1;
-
-        public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
-                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
-            this.minutesListModels = minutesListModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_timelist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*if (mselectedItem == position) {
-                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }*/
-            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
-        }
-
-        @Override
-        public int getItemCount() {
-            return minutesListModels.length;
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderTimelistLayoutBinding binding;
-
-            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (hasFocus){
-                                mselectedItem = getAdapterPosition();
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-                }
-*/
-            }
-        }
-    }
-
     private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
         private ReminderSelectionModel[] selectionModels;
         Activity act;
@@ -1044,7 +906,7 @@ public class BWSApplication extends Application {
         public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
                                             TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID, String PlaylistID,
                                             String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay
-                , FrameLayout progressBarHolder, ProgressBar progressBar,LinearLayout llSelectTime) {
+                , FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -1135,7 +997,7 @@ public class BWSApplication extends Application {
                         mHour = mHour + 12;
                 }
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(ctx, R.style.TimePickerTheme,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(ctx, 2,
                         (view1, hourOfDay, minute) -> {
                             if (hourOfDay < 10) {
                                 if (hourOfDay == 0) {
@@ -1165,6 +1027,7 @@ public class BWSApplication extends Application {
 //                        binding.tvTime.setText(hourOfDay + ":" + minute);
                             timeDisplay.setText(hourString + ":" + minuteSting + " " + am_pm);
                         }, mHour, mMinute, false);
+                timePickerDialog.setTitle("Select Time");
                 timePickerDialog.show();
             });
 
@@ -1221,6 +1084,140 @@ public class BWSApplication extends Application {
         }
     }
 
+    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
+        private ReminderMinutesListModel[] minutesListModels;
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+        int mselectedItem = -1;
+
+        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            /*if (mselectedItem == position) {
+                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
+            }*/
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.length;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderTimelistLayoutBinding binding;
+
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+
+/*
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+*/
+            }
+        }
+    }
+
+    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
+        private ReminderMinutesListModel[] minutesListModels;
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+
+        public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.length;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderTimelistLayoutBinding binding;
+
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+
+/*
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+*/
+            }
+        }
+    }
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
