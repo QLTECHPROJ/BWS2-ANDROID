@@ -3,6 +3,7 @@ package com.brainwellnessspa.ReminderModule.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -438,7 +439,10 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             holder.bind.llMainLayout.setOnClickListener(view -> {
                 notificationStatus = true;
                 myBackPress = false;
-                Intent i = new Intent(ctx, ReminderActivity.class);
+                BWSApplication.getReminderDay(ctx, activity, CoUSERID, model.get(position).getPlaylistId(),
+                        model.get(position).getPlaylistName(), (FragmentActivity) activity,
+                        model.get(position).getReminderTime(), model.get(position).getRDay());
+              /*  Intent i = new Intent(ctx, ReminderActivity.class);
                 i.putExtra("ComeFrom", "1");
                 i.putExtra("ReminderId", model.get(position).getReminderId());
                 i.putExtra("PlaylistID", model.get(position).getPlaylistId());
@@ -448,7 +452,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 i.putExtra("ReminderDay", model.get(position).getReminderDay());
                 i.putExtra("IsCheck", model.get(position).isCheck());
                 startActivity(i);
-                finish();
+                finish();*/
             });
         }
 

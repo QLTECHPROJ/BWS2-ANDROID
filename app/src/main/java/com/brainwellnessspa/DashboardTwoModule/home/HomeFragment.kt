@@ -292,7 +292,8 @@ class HomeFragment : Fragment() {
                                     || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                                 binding.tvReminder.setText("Set Reminder")
                                 BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.setText("Update Reminder")
                                 val dialog = Dialog(ctx)
@@ -300,8 +301,15 @@ class HomeFragment : Fragment() {
                                 dialog.setContentView(R.layout.delete_reminder)
                                 dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
                                 dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                                val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
+                                val tvText = dialog.findViewById<TextView>(R.id.tvText)
                                 val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                                val Btn = dialog.findViewById<Button>(R.id.Btn)
+                                val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
+                                tvTitle.text = "Update Reminder"
+                                tvSubTitle.text = "You can update or delete your reminder"
+                                tvText.text ="Update"
+                                tvGoBack.text ="Delete"
                                 dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog.hide()
@@ -309,10 +317,11 @@ class HomeFragment : Fragment() {
                                     }
                                     false
                                 }
-                                Btn.setOnClickListener { v: View? ->
+                                tvconfirm.setOnClickListener { v: View? ->
                                     dialog.hide()
                                     BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                            listModel.responseData!!.suggestedPlaylist!!.playlistName, activity)
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
+                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
