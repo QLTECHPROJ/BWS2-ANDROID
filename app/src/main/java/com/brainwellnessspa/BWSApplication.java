@@ -104,7 +104,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -152,8 +151,8 @@ public class BWSApplication extends Application {
     static BWSApplication BWSApplication;
     static String currantTime = "", am_pm, hourString, minuteSting;
     static int Chour, Cminute;
-    static Calendar calendar;
     static TextView tvTime;
+    public static int comeReminder = 0;
 
     public static Context getContext() {
         return mContext;
@@ -1305,80 +1304,91 @@ public class BWSApplication extends Application {
             int spaceForBar = 1;
             ArrayList<BarEntry> yVals1 = new ArrayList<>();
 
-            final ArrayList<String> xAxisValues = new ArrayList<>();
-
             for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-                xAxisValues.add(indexData.getPastIndexScore().get(i).getIndexScore());
-            }
-
-            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-                int val1 = Integer.parseInt(indexData.getPastIndexScore().get(i).getMonth());
+                int val1 = Integer.parseInt(indexData.getPastIndexScore().get(i).getIndexScore());
                 yVals1.add(new BarEntry(i * spaceForBar, val1));
             }
 
+            final ArrayList<String> xAxisValues = new ArrayList<>();
+
+            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
+                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
+            }
+
+
             float minXRange = 10;
             float maxXRange = 10;
-            barChart.setVisibleXRange(minXRange, maxXRange);
-            barChart.getAxisLeft().setAxisMinimum(0);
-            barChart.setBackgroundColor(Color.TRANSPARENT);
             BarDataSet set1;
             set1 = new BarDataSet(yVals1, "Past Index Score");
             set1.setColor(act.getResources().getColor(R.color.app_theme_color));
             BarData barData = new BarData(set1);
             barData.setBarWidth(5f);
-            barData.setValueFormatter(new MyValueFormatter());
-            barData.setValueTextSize(10f);
-            barChart.setDrawGridBackground(false);
-            barChart.getXAxis().setDrawGridLines(true);
-            barChart.getAxisLeft().setDrawGridLines(true);
-            barChart.getAxisRight().setDrawGridLines(true);
+            barData.setValueTextSize(7f);
+            barData.setValueFormatter(new LargeValueFormatter());
             barChart.setData(barData);
+            barChart.setDescription(null);
+            barChart.setPinchZoom(false);
+            barChart.setScaleEnabled(false);
+            barChart.setDrawBarShadow(false);
+            barChart.setDrawGridBackground(false);
+            barChart.setVisibleXRange(minXRange, maxXRange);
+            barChart.getAxisLeft().setDrawGridLines(true);
+            barChart.getXAxis().setDrawGridLines(true);
+            barChart.setBackgroundColor(Color.TRANSPARENT);
+            barChart.getAxisLeft().setAxisMinimum(0);
+            barChart.setBackgroundColor(Color.TRANSPARENT);
+            barChart.notifyDataSetChanged();
+            barChart.invalidate();
             barChart.animateX(2000);
             barChart.animateY(2000);
             barChart.animateXY(2000, 2000);
-
-            barChart.getDescription().setEnabled(false);
-            barChart.getAxisRight().setAxisMinimum(0);
-            float chartbarWidth = 2f;
-            float chartbarSpace = 0.02f;
+            float chartbarWidth = 0.4f;
+            float chartbarSpace = 0.1f;
             float chartgroupSpace = 0.4f;
-            barData.setValueFormatter(new LargeValueFormatter());
+
             barChart.setData(barData);
             barChart.getBarData().setBarWidth(chartbarWidth);
             barChart.getXAxis().setAxisMinimum(0);
             barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(chartgroupSpace, chartbarSpace) * 4);
             barChart.groupBars(0, chartgroupSpace, chartbarSpace);
+            barChart.getData().setHighlightEnabled(false);
             barChart.notifyDataSetChanged();
             barChart.invalidate();
+            barChart.setVisibleXRangeMaximum(xAxisValues.size());
+            barChart.setDragEnabled(false);
+            barChart.setTouchEnabled(false);
+            barChart.getAxisRight().setEnabled(true);
+            barChart.setVisibleXRange(0, xAxisValues.size());
+            barChart.getBarData().setBarWidth(0.4f);
+            barChart.setFitBars(true);
 
             XAxis xl = barChart.getXAxis();
+            xl.setCenterAxisLabels(true);
+            xl.setGranularity(1f);
+            xl.setLabelCount(7);
+            xl.setLabelRotationAngle(0);
+            xl.setAxisLineWidth(0.6f);
             xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xl.setValueFormatter(new ValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, AxisBase axis) {
-                    return indexData.getPastIndexScore().get((int) value).getMonth();
+            xl.setValueFormatter((value, axis) -> {
+                try {
+                    return indexData.getPastIndexScore().get((int) value).getMonth();//dividing the value by 10 to get the multiplied value.
+                } catch (Exception e) {
+                    return "";
                 }
             });
-            YAxis yl = barChart.getAxisLeft();
-            yl.removeAllLimitLines();
-            yl.setTypeface(Typeface.DEFAULT);
-            yl.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-            yl.setTextColor(R.color.app_theme_color);
 
-            barChart.setVisibleXRangeMaximum(xAxisValues.size());
-            barChart.getAxisRight().setEnabled(false);
-            barChart.setVisibleXRange(0, xAxisValues.size());
-            barChart.getBarData().setBarWidth(0.29f);
+            YAxis yl = barChart.getAxisLeft();
+            yl.setValueFormatter(new LargeValueFormatter());
+            yl.setDrawAxisLine(true);
+            yl.setDrawGridLines(false);
+            yl.setSpaceTop(35f);
+            yl.setGranularity(1f);
+            yl.setGranularityEnabled(true);
+            yl.setAxisMinimum(0f);
 
             Legend l = barChart.getLegend();
+            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
             l.setWordWrapEnabled(true);
-            l.setTextSize(14);
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-            l.setOrientation(Legend.LegendOrientation.VERTICAL);
-            l.setDrawInside(false);
-            l.setForm(Legend.LegendForm.CIRCLE);
-
         }
     }
 
@@ -1681,7 +1691,7 @@ public class BWSApplication extends Application {
         Cminute = Integer.parseInt(min[0]);
         String displayAmPm = min[1];
         if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
-            if(Chour!=12)
+            if (Chour != 12)
                 Chour = Chour + 12;
         }
 
@@ -1706,7 +1716,7 @@ public class BWSApplication extends Application {
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
         ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll,
                 btnNext, CoUSERID, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder
-                , progressBar, llSelectTime, RDay);
+                , progressBar, llSelectTime, RDay, Time);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -2091,19 +2101,12 @@ public class BWSApplication extends Application {
         BWSApplication = this;
     }
 
-    public static class MyValueFormatter extends ValueFormatter implements IValueFormatter {
-        @Override
-        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return Math.round(value) + "";
-        }
-    }
-
     private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
         Activity act;
         Context ctx;
         TextView tvSelectAll, tvUnSelectAll;
         Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName, RDay;
+        String CoUSERID, PlaylistID, PlaylistName, RDay, Time;
         Dialog dialogOld;
         CheckBox cbCheck;
         FragmentActivity fragmentActivity;
@@ -2117,7 +2120,7 @@ public class BWSApplication extends Application {
                                             TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID,
                                             String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity,
                                             CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder,
-                                            ProgressBar progressBar, LinearLayout llSelectTime, String RDay) {
+                                            ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -2135,6 +2138,7 @@ public class BWSApplication extends Application {
             this.progressBar = progressBar;
             this.llSelectTime = llSelectTime;
             this.RDay = RDay;
+            this.Time = Time;
         }
 
         @Override
@@ -2150,7 +2154,7 @@ public class BWSApplication extends Application {
 
             Log.e("Reminder Day", RDay);
 
-            if(RDay.contains(selectionModels[position].getDay())){
+            if (RDay.contains(selectionModels[position].getDay())) {
                 remiderDays.add(selectionModels[position].getDay());
                 holder.binding.cbChecked.setSelected(true);
             }
@@ -2220,8 +2224,10 @@ public class BWSApplication extends Application {
                                     if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
                                         dialogOld.dismiss();
                                         remiderDays.clear();
+                                        Time = tvTime.getText().toString();
                                         hideProgressBar(progressBar, progressBarHolder, act);
                                         showToast(listModel.getResponseMessage(), act);
+                                        comeReminder = 1;
                                     }
 
                                 } catch (Exception e) {

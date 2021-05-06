@@ -279,7 +279,7 @@
                         </LinearLayout>
 
                         <LinearLayout
-
+                            android:id="@+id/llSleepTime"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:layout_marginLeft="@dimen/_17sdp"

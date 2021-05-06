@@ -178,6 +178,10 @@ class HomeScreenModel {
             @Expose
             var month: String? = null
 
+            @SerializedName("MonthName")
+            @Expose
+            var monthName: String? = null
+
             @SerializedName("IndexScore")
             @Expose
             var indexScore: String? = null

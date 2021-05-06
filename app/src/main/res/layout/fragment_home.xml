@@ -545,8 +545,7 @@
                                     android:layout_width="@dimen/_15sdp"
                                     android:layout_height="@dimen/_15sdp"
                                     android:layout_gravity="center"
-                                    android:layout_marginTop="@dimen/_4sdp"
-                                    android:src="@drawable/ic_down_arrow_icon"/>
+                                    android:layout_marginTop="@dimen/_4sdp" />
 
                                 <TextView
                                     android:id="@+id/tvPercent"
@@ -586,7 +585,11 @@
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/barChart"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_260sdp"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:minHeight="@dimen/_220sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_20sdp"/>
 
                     <LinearLayout
@@ -607,7 +610,11 @@
                         <com.github.mikephil.charting.charts.BarChart
                             android:id="@+id/barMyActivitiesChart"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_260sdp"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:minHeight="@dimen/_220sdp"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
                             android:layout_marginTop="@dimen/_20sdp"/>
 
                         <LinearLayout

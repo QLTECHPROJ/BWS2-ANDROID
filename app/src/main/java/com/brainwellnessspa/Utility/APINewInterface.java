@@ -6,6 +6,8 @@ import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AverageSleepTimeModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.MainPlaylistLibraryModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.NotificationlistModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistInappModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SaveRecommendedCatModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchPlaylistModel;
@@ -307,4 +309,13 @@ public interface APINewInterface {
                                           @Field("Dob") String Dob,
                                           @Field("MobileNo") String MobileNo,
                                           @Field("EmailId") String EmailId);
+
+    @POST("planlist")
+    @FormUrlEncoded
+    Call<PlanlistInappModel> getPlanlistInapp(@Field("CoUserId") String CoUserId);
+
+    @POST("getnotificationlist")
+    @FormUrlEncoded
+    Call<NotificationlistModel> getNotificationlist(@Field("UserID") String UserID,
+                                                    @Field("CoUserId") String CoUserId);
 }

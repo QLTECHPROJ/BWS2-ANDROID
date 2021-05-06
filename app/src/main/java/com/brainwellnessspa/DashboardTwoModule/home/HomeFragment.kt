@@ -21,13 +21,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.comeReminder
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
@@ -36,12 +36,12 @@ import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
+import com.brainwellnessspa.ManageModule.ManageActivity
 import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
-import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity
 import com.brainwellnessspa.UserModuleTwo.Activities.WalkScreenActivity
@@ -113,6 +113,13 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
+        if (SLEEPTIME.equals("",true)){
+            binding.llSleepTime.visibility = View.GONE
+        }else {
+            binding.llSleepTime.visibility = View.VISIBLE
+        }
+
+        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase::class.java,
                 "Audio_database")
@@ -189,6 +196,9 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
+        if(comeReminder.equals("1")){
+            prepareHomeData()
+        }
         prepareHomeData()
         super.onResume()
     }
@@ -257,20 +267,15 @@ class HomeFragment : Fragment() {
                                 )
                             )
                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
-                            binding.ivIndexArrow.setBackgroundColor(
-                                ContextCompat.getColor(
-                                    act,
-                                    R.color.green_dark_s
-                                )
-                            )
                         }
-                        binding.tvPercent.text = listModel.responseData!!.indexScoreDiff + "%"
+
+                        binding.tvPercent.text = listModel.responseData!!.indexScoreDiff!!.split(".")[0] + "%"
+                        binding.tvSevere.text = listModel.responseData!!.indexScore.toString()
+                        binding.llIndicate.progress = listModel.responseData!!.indexScore!!.toInt()
 
                         binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
                         binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
 
-                        binding.tvSevere.text = listModel.responseData!!.indexScore.toString()
-                        binding.llIndicate.progress = listModel.responseData!!.indexScore!!.toInt()
 
                         if (listModel.responseData!!.shouldCheckIndexScore.equals("0", true)) {
                             binding.llCheckIndexSocre.visibility = View.GONE
@@ -285,7 +290,6 @@ class HomeFragment : Fragment() {
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                             binding.tvReminder.setText("Update Reminder")
                         }
-
 
                         binding.tvReminder.setOnClickListener {
                             if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
@@ -350,6 +354,8 @@ class HomeFragment : Fragment() {
                         GetPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!)
 
                         BWSApplication.getPastIndexScore(homelistModel.responseData!!, binding.barChart, activity)
+
+
                         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
                         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
@@ -402,15 +408,6 @@ class HomeFragment : Fragment() {
                                 binding.llPlay.visibility = View.VISIBLE
                             }
                         }
-                        val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                        SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-
-                        if (SLEEPTIME.equals("",true)){
-                            binding.llSleepTime.visibility = View.GONE
-                        }else {
-                            binding.llSleepTime.visibility = View.VISIBLE
-                        }
-                        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
 
                         binding.llPlayerView1.setOnClickListener { v: View? ->
                             callPlaylistDetails()

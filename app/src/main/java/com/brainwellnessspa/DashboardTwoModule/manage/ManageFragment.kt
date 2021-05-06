@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.comeReminder
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
@@ -75,11 +76,22 @@ public class ManageFragment : Fragment() {
             binding.rvMainPlayList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMainAudioList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 
+        val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+        if (SLEEPTIME.equals("",true)){
+            binding.llSleepTime.visibility = View.GONE
+        }else {
+            binding.llSleepTime.visibility = View.VISIBLE
+
+        }
+        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase::class.java,
                 "Audio_database")
                 .addMigrations(BWSApplication.MIGRATION_1_2)
                 .build()
+
         binding.rlCreatePlaylist.setOnClickListener { view ->
             val dialog = Dialog(ctx)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -170,6 +182,9 @@ public class ManageFragment : Fragment() {
     }
 
     override fun onResume() {
+        if(comeReminder.equals("1")){
+            prepareData()
+        }
         prepareData()
         super.onResume()
     }
@@ -362,10 +377,6 @@ public class ManageFragment : Fragment() {
                             binding.llPlay.visibility = View.VISIBLE
                         }
                     }
-                    val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                    SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-
-                    binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
 
                     binding.llPlayerView1.setOnClickListener { v: View? ->
                         callPlaylistDetails()
