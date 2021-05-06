@@ -22,7 +22,6 @@ import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.PlayerAudioId
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
@@ -34,7 +33,6 @@ import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils
 import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
-import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
@@ -85,7 +83,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     lateinit var adpater: PlayListsAdpater
     lateinit var adpater2: PlayListsAdpater2
     lateinit var binding: ActivityMyPlaylistListingBinding
-    var RefreshIcon = 0
     var SongListSize: Int = 0
     var count: Int = 0
     var hundredVolume: Int = 0
@@ -222,7 +219,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
                         binding.tvTag.visibility = View.VISIBLE
                         binding.tvTag.setText(R.string.Audios_in_Playlist)
-                        downloadPlaylistDetailsList = GetPlaylistDetail()
+                        downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize)
                         binding.llDownloads.setOnClickListener { view1 ->
                             callObserveMethodGetAllMedia()
                             callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads)
@@ -1186,7 +1183,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 .getPlaylist1(PlaylistID).removeObserver { dc: List<DownloadPlaylistDetails?>? -> }
     }
 
-    private fun GetPlaylistDetail(): ArrayList<DownloadPlaylistDetails?> {
+    private fun GetPlaylistDetail(SongListSize: Int): ArrayList<DownloadPlaylistDetails?> {
         try {
             DB!!.taskDao()
                     .getPlaylist1(PlaylistID).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
@@ -1194,9 +1191,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         downloadPlaylistDetailsList.addAll(audioList)
                         if (audioList.isNotEmpty()) {
                             enableDisableDownload(false, "orange")
-                            getMediaByPer(PlaylistID!!, SongListSize)
+                            getMediaByPer(PlaylistID!!, this.SongListSize)
                             removeobserver()
-                        } else if (RefreshIcon == 0) {
+                        } else if (SongListSize == 0) {
                             enableDisableDownload(false, "gray")
                             removeobserver()
                         } /*else if (download.equals("1", ignoreCase = true) *//* New.equalsIgnoreCase("1") ||*//*) {
@@ -1589,7 +1586,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         try {
             AudioDatabase.databaseWriteExecutor.execute {
                 DB!!.taskDao().insertPlaylist(downloadPlaylistDetails)
-                downloadPlaylistDetailsList = GetPlaylistDetail()
+                downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize)
                 getMediaByPer(PlaylistID!!, SongListSize)
             }
         } catch (e: java.lang.Exception) {

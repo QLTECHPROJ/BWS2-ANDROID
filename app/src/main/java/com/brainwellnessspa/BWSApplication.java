@@ -30,7 +30,6 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -69,7 +68,6 @@ import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
-import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
@@ -207,8 +205,8 @@ public class BWSApplication extends Application {
         });
     }
 
-    private static void GetPlaylistDetail(Context ctx, String PlaylistID,
-                                          LinearLayout llDownload, ImageView ivDownloads, TextView tvDownload, int songSize) {
+    private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID,
+                                          LinearLayout llDownload, ImageView ivDownloads, int songSize) {
         DatabaseClient
                 .getInstance(ctx)
                 .getaudioDatabase()
@@ -216,34 +214,22 @@ public class BWSApplication extends Application {
                 .getPlaylist1(PlaylistID).observe((LifecycleOwner) ctx, audioList -> {
 
             if (audioList.size() != 0) {
-                enableDisableDownload(ctx, false, "orange", llDownload, ivDownloads, tvDownload);
+                ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                llDownload.setClickable(false);
+                llDownload.setEnabled(false);
+                ivDownloads.setColorFilter(act.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
             } else if (songSize == 0) {
-                enableDisableDownload(ctx, false, "gray", llDownload, ivDownloads, tvDownload);
+                ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                llDownload.setClickable(false);
+                llDownload.setEnabled(false);
+                ivDownloads.setColorFilter(act.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
             } else if (audioList.size() == 0) {
-                enableDisableDownload(ctx, true, "white", llDownload, ivDownloads, tvDownload);
+                llDownload.setClickable(true);
+                llDownload.setEnabled(true);
+                ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                ivDownloads.setColorFilter(act.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             }
         });
-    }
-
-    private static void enableDisableDownload(Context ctx, boolean b, String color,
-                                              LinearLayout llDownload, ImageView ivDownloads, TextView tvDownload) {
-        if (b) {
-            llDownload.setClickable(true);
-            llDownload.setEnabled(true);
-            ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-            tvDownload.setTextColor(ctx.getResources().getColor(R.color.white));
-        } else {
-            ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            llDownload.setClickable(false);
-            llDownload.setEnabled(false);
-            if (color.equalsIgnoreCase("gray")) {
-                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
-            } else if (color.equalsIgnoreCase("orange")) {
-                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-            }
-            tvDownload.setTextColor(ctx.getResources().getColor(R.color.white));
-        }
     }
 
     public static void callAudioDetails(String audioId, Context ctx, Activity act, String CoUserID, String comeFrom,
@@ -415,7 +401,6 @@ public class BWSApplication extends Application {
         llDownload.setOnClickListener(view -> {
             ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
             ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-            tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
             llDownload.setClickable(false);
             llDownload.setEnabled(false);
             callDownload(comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx, ivDownloads, tvDownloads, llDownload);
@@ -662,7 +647,7 @@ public class BWSApplication extends Application {
                             hideProgressBar(progressBar, progressBarHolder, act);
                             PlaylistDetailsModel model = response.body();
 
-                            GetPlaylistDetail(ctx, PlaylistId, llDownload, ivDownloads, tvDownloads, model.getResponseData().getPlaylistSongs().size());
+                            GetPlaylistDetail(act, ctx, PlaylistId, llDownload, ivDownloads, model.getResponseData().getPlaylistSongs().size());
                             llDownload.setVisibility(View.VISIBLE);
                             DownloadPlaylistDetails downloadPlaylistDetails = new DownloadPlaylistDetails();
                             downloadPlaylistDetails.setPlaylistID(model.getResponseData().getPlaylistID());
@@ -998,7 +983,7 @@ public class BWSApplication extends Application {
                                 dialogs.setCancelable(true);
                             });
 
-                            llDownload.setOnClickListener(view -> callDownloadPlayList(model.getResponseData().getPlaylistSongs(), ctx, llDownload, ivDownloads, tvDownloads, downloadPlaylistDetails, CoUSERID, PlaylistID));
+                            llDownload.setOnClickListener(view -> callDownloadPlayList(act, model.getResponseData().getPlaylistSongs(), ctx, llDownload, ivDownloads, downloadPlaylistDetails, CoUSERID, PlaylistID));
 
                         }
                     } catch (Exception e) {
@@ -1020,7 +1005,7 @@ public class BWSApplication extends Application {
         dialog.setCancelable(true);
 
 //       TODO Mansi  Hint This code is Create playlist Dialog
-        final Dialog dialog1 = new Dialog(ctx);
+       /* final Dialog dialog1 = new Dialog(ctx);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog1.setContentView(R.layout.create_palylist);
         dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
@@ -1100,12 +1085,11 @@ public class BWSApplication extends Application {
         });
         tvCancel.setOnClickListener(v13 -> dialog1.dismiss());
         dialog1.show();
-        dialog1.setCancelable(false);
+        dialog1.setCancelable(false);*/
     }
 
-    private static void callDownloadPlayList(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongsList, Context ctx,
-                                             LinearLayout llDownload, ImageView ivDownloads,
-                                             TextView tvDownload, DownloadPlaylistDetails downloadPlaylistDetails,
+    private static void callDownloadPlayList(Activity act, List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongsList, Context ctx,
+                                             LinearLayout llDownload, ImageView ivDownloads, DownloadPlaylistDetails downloadPlaylistDetails,
                                              String CoUserId, String PlaylistID) {
         List<String> url = new ArrayList<>();
         List<String> name = new ArrayList<>();
@@ -1135,9 +1119,10 @@ public class BWSApplication extends Application {
             url.add(playlistSongs2.get(x).getAudioFile());
             downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
         }
-        enableDisableDownload(ctx, false, "orange", llDownload, ivDownloads, tvDownload);
-        byte[] encodedBytes = new byte[1024];
-
+        ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+        llDownload.setClickable(false);
+        llDownload.setEnabled(false);
+        ivDownloads.setColorFilter(act.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson1 = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
@@ -1285,7 +1270,6 @@ public class BWSApplication extends Application {
             if (audioList.size() != 0) {
                 ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                 ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
             } else {
@@ -1398,14 +1382,6 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static class MyValueFormatter extends ValueFormatter implements IValueFormatter {
-        @Override
-        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return Math.round(value) + "";
-        }
-    }
-
-
     private static void callDownload(String comeFrom,
                                      List<DownloadAudioDetails> mDataDownload,
                                      List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
@@ -1455,7 +1431,6 @@ public class BWSApplication extends Application {
             if (downloadAudioDetailsList.contains(Name)) {
                 ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                 ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
                 SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx);
@@ -1512,7 +1487,6 @@ public class BWSApplication extends Application {
                     }
                     ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                     ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                    tvDownloads.setTextColor(ctx.getResources().getColor(R.color.white));
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
                     SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx);
@@ -1678,9 +1652,9 @@ public class BWSApplication extends Application {
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
 
-        calendar = Calendar.getInstance();
-        Chour = calendar.get(Calendar.HOUR_OF_DAY);
-        Cminute = calendar.get(Calendar.MINUTE);
+//        calendar = Calendar.getInstance();
+//        Chour = calendar.get(Calendar.HOUR_OF_DAY);
+//        Cminute = calendar.get(Calendar.MINUTE);
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
@@ -1699,6 +1673,16 @@ public class BWSApplication extends Application {
         } else {
             tvTime.setText(Time);
             currantTime = Time;
+        }
+        String[] time = currantTime.split(":");
+        String min[] = time[1].split(" ");
+        Chour = Integer.parseInt(time[0]);
+//            mHour = c.get(Calendar.HOUR_OF_DAY);
+        Cminute = Integer.parseInt(min[0]);
+        String displayAmPm = min[1];
+        if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
+            if(Chour!=12)
+                Chour = Chour + 12;
         }
 
         tvPlaylistName.setText(playlistName);
@@ -1730,201 +1714,6 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
-    private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
-        private ReminderSelectionModel[] selectionModels;
-        Activity act;
-        Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName, RDay;
-        Dialog dialogOld;
-        CheckBox cbCheck;
-        FragmentActivity fragmentActivity;
-        TextView timeDisplay;
-        ProgressBar progressBar;
-        FrameLayout progressBarHolder;
-        LinearLayout llSelectTime;
-
-        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
-                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID,
-                                            String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity,
-                                            CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder,
-                                            ProgressBar progressBar, LinearLayout llSelectTime, String RDay) {
-            this.selectionModels = selectionModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-            this.fragmentActivity = fragmentActivity;
-            this.cbCheck = cbCheck;
-            this.timeDisplay = timeDisplay;
-            this.progressBarHolder = progressBarHolder;
-            this.progressBar = progressBar;
-            this.llSelectTime = llSelectTime;
-            this.RDay = RDay;
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_selectionlist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            holder.binding.cbChecked.setText(selectionModels[position].getDay());
-
-            Log.e("Reminder Day", RDay);
-
-            holder.binding.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
-                if (holder.binding.cbChecked.isChecked()) {
-                    if (!remiderDays.contains(selectionModels[position].getDay())) {
-                        remiderDays.add(selectionModels[position].getDay());
-                    }
-                } else {
-                    remiderDays.remove(selectionModels[position].getDay());
-                }
-
-                if (remiderDays.size() == selectionModels.length) {
-                    cbCheck.setChecked(true);
-                    tvSelectAll.setVisibility(View.GONE);
-                    tvUnSelectAll.setVisibility(View.VISIBLE);
-                } else {
-                    tvSelectAll.setVisibility(View.VISIBLE);
-                    tvUnSelectAll.setVisibility(View.GONE);
-                }
-                if (remiderDays.size() == 0) {
-                    Log.e("remiderDays", "no data");
-                } else {
-                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                }
-            });
-
-            cbCheck.setOnClickListener(view -> {
-                if (cbCheck.isChecked()) {
-                    remiderDays.clear();
-                    for (int i = 0; i < selectionModels.length; i++) {
-                        remiderDays.add(selectionModels[i].getDay());
-                    }
-                } else {
-                    tvSelectAll.setVisibility(View.GONE);
-                    remiderDays.clear();
-                }
-
-                Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                notifyDataSetChanged();
-            });
-
-            if (remiderDays.contains(selectionModels[position].getDay())) {
-                holder.binding.cbChecked.setChecked(true);
-            } else {
-                holder.binding.cbChecked.setChecked(false);
-            }
-
-            if (remiderDays.size() == selectionModels.length) {
-                cbCheck.setChecked(true);
-            }
-
-            btnNext.setOnClickListener(v -> {
-                if (remiderDays.size() == 0) {
-                    showToast("Please select days", act);
-                } else {
-                    Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
-                    if (isNetworkConnected(ctx)) {
-                        showProgressBar(progressBar, progressBarHolder, act);
-                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(CoUSERID, PlaylistID,
-                                TextUtils.join(",", remiderDays), tvTime.getText().toString(), CONSTANTS.FLAG_ONE);
-                        listCall.enqueue(new Callback<SetReminderOldModel>() {
-                            @Override
-                            public void onResponse(Call<SetReminderOldModel> call, Response<SetReminderOldModel> response) {
-                                try {
-                                    SetReminderOldModel listModel = response.body();
-                                    if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
-                                        dialogOld.dismiss();
-                                        remiderDays.clear();
-                                        hideProgressBar(progressBar, progressBarHolder, act);
-                                        showToast(listModel.getResponseMessage(), act);
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<SetReminderOldModel> call, Throwable t) {
-                                hideProgressBar(progressBar, progressBarHolder, act);
-                            }
-                        });
-                    } else {
-                        showToast(ctx.getString(R.string.no_server_found), act);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return selectionModels.length;
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderSelectionlistLayoutBinding binding;
-
-            public MyViewHolder(ReminderSelectionlistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
-    }
-
-    public static class TimePickerThemeclass extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            TimePickerDialog timepickerdialog1 = new TimePickerDialog(getActivity(),
-                    AlertDialog.THEME_HOLO_LIGHT, this, Chour, Cminute, false);
-            timepickerdialog1.setTitle("Select Time");
-            return timepickerdialog1;
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            if (hourOfDay < 10) {
-                if (hourOfDay == 0) {
-                    hourString = "12";
-                } else {
-                    hourString = "0" + hourOfDay;
-                }
-                am_pm = "AM";
-            } else if (hourOfDay > 12) {
-                am_pm = "PM";
-                hourOfDay = hourOfDay - 12;
-                hourString = "" + hourOfDay;
-                if (hourOfDay < 10) {
-                    hourString = "0" + hourString;
-                }
-            } else if (hourOfDay == 12) {
-                am_pm = "PM";
-                hourString = "" + hourOfDay;
-            } else {
-                hourString = "" + hourOfDay;
-                am_pm = "AM";
-            }
-            if (minute < 10)
-                minuteSting = "0" + minute;
-            else
-                minuteSting = "" + minute;
-            tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
-        }
-    }
-
     public static void getReminderTime(Context ctx, Activity act, String coUSERID, String playlistID, String playlistName, Dialog dialogOld) {
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1949,7 +1738,9 @@ public class BWSApplication extends Application {
         });
 
         ReminderMinutesListModel[] minutesListModels = new ReminderMinutesListModel[]{
-                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
                 new ReminderMinutesListModel(""),
                 new ReminderMinutesListModel("00"),
                 new ReminderMinutesListModel("05"),
@@ -1963,7 +1754,9 @@ public class BWSApplication extends Application {
                 new ReminderMinutesListModel("45"),
                 new ReminderMinutesListModel("50"),
                 new ReminderMinutesListModel("55"),
-                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
+                new ReminderMinutesListModel(""),
                 new ReminderMinutesListModel(""),
         };
 
@@ -2014,173 +1807,6 @@ public class BWSApplication extends Application {
         dialog.show();
         dialog.setCancelable(false);
     }
-
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mContext = this;
-        BWSApplication = this;
-    }
-
-    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
-        private ReminderMinutesListModel[] minutesListModels;
-        Activity act;
-        Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName;
-        Dialog dialogOld;
-        int mselectedItem = -1;
-
-        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
-                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
-            this.minutesListModels = minutesListModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_timelist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*if (mselectedItem == position) {
-                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }*/
-            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
-        }
-
-        @Override
-        public int getItemCount() {
-            return minutesListModels.length;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderTimelistLayoutBinding binding;
-
-            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (hasFocus){
-                                mselectedItem = getAdapterPosition();
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-                }
-*/
-            }
-        }
-    }
-
-    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
-        private ReminderMinutesListModel[] minutesListModels;
-        Activity act;
-        Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
-        String CoUSERID, PlaylistID, PlaylistName;
-        Dialog dialogOld;
-        int mselectedItem = -1;
-
-        public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
-                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
-            this.minutesListModels = minutesListModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_timelist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*if (mselectedItem == position) {
-                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }*/
-            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
-        }
-
-        @Override
-        public int getItemCount() {
-            return minutesListModels.length;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderTimelistLayoutBinding binding;
-
-            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (hasFocus){
-                                mselectedItem = getAdapterPosition();
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-                }
-*/
-            }
-        }
-    }
-
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -2455,6 +2081,377 @@ public class BWSApplication extends Application {
                 intent.setData(Uri.parse("package:" + packageName));
             }
             context.startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = this;
+        BWSApplication = this;
+    }
+
+    public static class MyValueFormatter extends ValueFormatter implements IValueFormatter {
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return Math.round(value) + "";
+        }
+    }
+
+    private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName, RDay;
+        Dialog dialogOld;
+        CheckBox cbCheck;
+        FragmentActivity fragmentActivity;
+        TextView timeDisplay;
+        ProgressBar progressBar;
+        FrameLayout progressBarHolder;
+        LinearLayout llSelectTime;
+        private ReminderSelectionModel[] selectionModels;
+
+        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
+                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID,
+                                            String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity,
+                                            CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder,
+                                            ProgressBar progressBar, LinearLayout llSelectTime, String RDay) {
+            this.selectionModels = selectionModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+            this.fragmentActivity = fragmentActivity;
+            this.cbCheck = cbCheck;
+            this.timeDisplay = timeDisplay;
+            this.progressBarHolder = progressBarHolder;
+            this.progressBar = progressBar;
+            this.llSelectTime = llSelectTime;
+            this.RDay = RDay;
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_selectionlist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+            holder.binding.cbChecked.setText(selectionModels[position].getDay());
+
+            Log.e("Reminder Day", RDay);
+
+            if(RDay.contains(selectionModels[position].getDay())){
+                remiderDays.add(selectionModels[position].getDay());
+                holder.binding.cbChecked.setSelected(true);
+            }
+            holder.binding.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
+                if (holder.binding.cbChecked.isChecked()) {
+                    if (!remiderDays.contains(selectionModels[position].getDay())) {
+                        remiderDays.add(selectionModels[position].getDay());
+                    }
+                } else {
+                    remiderDays.remove(selectionModels[position].getDay());
+                }
+
+                if (remiderDays.size() == selectionModels.length) {
+                    cbCheck.setChecked(true);
+                    tvSelectAll.setVisibility(View.GONE);
+                    tvUnSelectAll.setVisibility(View.VISIBLE);
+                } else {
+                    tvSelectAll.setVisibility(View.VISIBLE);
+                    tvUnSelectAll.setVisibility(View.GONE);
+                }
+                if (remiderDays.size() == 0) {
+                    Log.e("remiderDays", "no data");
+                } else {
+                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                }
+            });
+
+            cbCheck.setOnClickListener(view -> {
+                if (cbCheck.isChecked()) {
+                    remiderDays.clear();
+                    for (int i = 0; i < selectionModels.length; i++) {
+                        remiderDays.add(selectionModels[i].getDay());
+                    }
+                } else {
+                    tvSelectAll.setVisibility(View.GONE);
+                    remiderDays.clear();
+                }
+
+                Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                notifyDataSetChanged();
+            });
+
+            if (remiderDays.contains(selectionModels[position].getDay())) {
+                holder.binding.cbChecked.setChecked(true);
+            } else {
+                holder.binding.cbChecked.setChecked(false);
+            }
+
+            if (remiderDays.size() == selectionModels.length) {
+                cbCheck.setChecked(true);
+            }
+
+            btnNext.setOnClickListener(v -> {
+                if (remiderDays.size() == 0) {
+                    showToast("Please select days", act);
+                } else {
+                    Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
+                    if (isNetworkConnected(ctx)) {
+                        showProgressBar(progressBar, progressBarHolder, act);
+                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(CoUSERID, PlaylistID,
+                                TextUtils.join(",", remiderDays), tvTime.getText().toString(), CONSTANTS.FLAG_ONE);
+                        listCall.enqueue(new Callback<SetReminderOldModel>() {
+                            @Override
+                            public void onResponse(Call<SetReminderOldModel> call, Response<SetReminderOldModel> response) {
+                                try {
+                                    SetReminderOldModel listModel = response.body();
+                                    if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
+                                        dialogOld.dismiss();
+                                        remiderDays.clear();
+                                        hideProgressBar(progressBar, progressBarHolder, act);
+                                        showToast(listModel.getResponseMessage(), act);
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SetReminderOldModel> call, Throwable t) {
+                                hideProgressBar(progressBar, progressBarHolder, act);
+                            }
+                        });
+                    } else {
+                        showToast(ctx.getString(R.string.no_server_found), act);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return selectionModels.length;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderSelectionlistLayoutBinding binding;
+
+            public MyViewHolder(ReminderSelectionlistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    public static class TimePickerThemeclass extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            TimePickerDialog timepickerdialog1 = new TimePickerDialog(getActivity(),
+                    AlertDialog.THEME_HOLO_LIGHT, this, Chour, Cminute, false);
+            timepickerdialog1.setTitle("Select Time");
+            return timepickerdialog1;
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            if (hourOfDay < 10) {
+                if (hourOfDay == 0) {
+                    hourString = "12";
+                } else {
+                    hourString = "0" + hourOfDay;
+                }
+                am_pm = "AM";
+            } else if (hourOfDay > 12) {
+                am_pm = "PM";
+                hourOfDay = hourOfDay - 12;
+                hourString = "" + hourOfDay;
+                if (hourOfDay < 10) {
+                    hourString = "0" + hourString;
+                }
+            } else if (hourOfDay == 12) {
+                am_pm = "PM";
+                hourString = "" + hourOfDay;
+            } else {
+                hourString = "" + hourOfDay;
+                am_pm = "AM";
+            }
+            if (minute < 10)
+                minuteSting = "0" + minute;
+            else
+                minuteSting = "" + minute;
+            tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
+        }
+    }
+
+    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+        int mselectedItem = -1;
+        private ReminderMinutesListModel[] minutesListModels;
+
+        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            /*if (mselectedItem == position) {
+                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
+            }*/
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.length;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderTimelistLayoutBinding binding;
+
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+
+/*
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+*/
+            }
+        }
+    }
+
+    private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
+        Activity act;
+        Context ctx;
+        TextView tvSelectAll, tvUnSelectAll;
+        Button btnNext;
+        String CoUSERID, PlaylistID, PlaylistName;
+        Dialog dialogOld;
+        int mselectedItem = -1;
+        private ReminderMinutesListModel[] minutesListModels;
+
+        public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
+                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+            this.minutesListModels = minutesListModels;
+            this.act = act;
+            this.ctx = ctx;
+            this.tvSelectAll = tvSelectAll;
+            this.tvUnSelectAll = tvUnSelectAll;
+            this.btnNext = btnNext;
+            this.CoUSERID = CoUSERID;
+            this.PlaylistID = PlaylistID;
+            this.PlaylistName = PlaylistName;
+            this.dialogOld = dialogOld;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.reminder_timelist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            /*if (mselectedItem == position) {
+                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
+            }*/
+            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
+        }
+
+        @Override
+        public int getItemCount() {
+            return minutesListModels.length;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ReminderTimelistLayoutBinding binding;
+
+            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+
+/*
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus){
+                                mselectedItem = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+*/
+            }
         }
     }
 }
