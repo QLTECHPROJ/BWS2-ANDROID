@@ -3,26 +3,21 @@ package com.brainwellnessspa.NotificationTwoModule
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.Model.NotificationlistModel
-import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistInappModel
-import com.brainwellnessspa.ManageModule.ManageActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.UserModuleTwo.Activities.UserListActivity
-import com.brainwellnessspa.UserModuleTwo.Models.UserListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityNotificationListBinding
 import com.brainwellnessspa.databinding.NotificationListLayoutBinding
-import com.brainwellnessspa.databinding.UserListLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -51,7 +46,8 @@ class NotificationListActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             finish()
         }
-
+        binding.llError.visibility = View.GONE
+        binding.tvFound.text = "No result found"
         prepareNotiData()
     }
 
@@ -72,17 +68,23 @@ class NotificationListActivity : AppCompatActivity() {
                             activity
                         )
                         val listModel: NotificationlistModel = response.body()!!
-                       /* if (listModel.responseCode.equals(
+                        if (listModel.responseCode.equals(
                                 getString(R.string.ResponseCodesuccess),
                                 ignoreCase = true
                             )
                         ) {
                             binding.rvNotiList.layoutManager =
                                 LinearLayoutManager(this@NotificationListActivity)
-                            adapter = NotiListAdapter(listModel)
-                            binding.rvNotiList.adapter = adapter
-
-                        }*/
+                            if (listModel.responseData!!.size == 0) {
+                                binding.llError.visibility = View.VISIBLE
+                                binding.rvNotiList.visibility = View.GONE
+                            } else {
+                                binding.llError.visibility = View.GONE
+                                binding.rvNotiList.visibility = View.VISIBLE
+                                adapter = NotiListAdapter(listModel.responseData!!, activity)
+                                binding.rvNotiList.adapter = adapter
+                            }
+                        }
 
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -102,9 +104,13 @@ class NotificationListActivity : AppCompatActivity() {
         }
     }
 
-    class NotiListAdapter(listModel: List<NotificationlistModel>) :
+    class NotiListAdapter(
+        listModel: List<NotificationlistModel.ResponseData?>,
+        activity: Activity
+    ) :
         RecyclerView.Adapter<NotiListAdapter.MyViewHolder>() {
-        private val listModel: List<NotificationlistModel> = listModel
+        private val listModel: List<NotificationlistModel.ResponseData?> = listModel
+        var activity: Activity = activity
 
         inner class MyViewHolder(bindingAdapter: NotificationListLayoutBinding) :
             RecyclerView.ViewHolder(bindingAdapter.root) {
@@ -122,9 +128,13 @@ class NotificationListActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-//            holder.bindingAdapter.tvTitle.text = listModel.get(position).title
-//            holder.bindingAdapter.tvDesc.text = listModel.get(position).desc
-//            holder.bindingAdapter.tvTime.text = listModel.get(position).time
+            Glide.with(activity).load(listModel[position]!!.image).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(18))).priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
+                .into(holder.bindingAdapter.ivImage)
+            holder.bindingAdapter.tvTitle.text = listModel[position]!!.msg
+            holder.bindingAdapter.tvDesc.text = listModel[position]!!.desc
+            holder.bindingAdapter.tvTime.text = listModel[position]!!.durationTime
         }
 
         override fun getItemCount(): Int {
@@ -136,6 +146,3 @@ class NotificationListActivity : AppCompatActivity() {
         finish()
     }
 }
-
-//ic_remind_noti_icon
-//ic_music_noti_icon

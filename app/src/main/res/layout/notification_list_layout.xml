@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/_16sdp"
-            android:paddingVertical="@dimen/_18sdp"
+            android:paddingVertical="@dimen/_16sdp"
             android:weightSum="1">
 
             <LinearLayout
@@ -25,9 +25,9 @@
                 android:gravity="center_vertical|left">
 
                 <ImageView
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:src="@drawable/ic_music_noti_icon" />
+                    android:id="@+id/ivImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </LinearLayout>
 

@@ -1,19 +1,16 @@
-package com.brainwellnessspa.DashboardTwoModule.home;
+package com.brainwellnessspa.DashboardTwoModule.home
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-public class HomeViewModel extends ViewModel {
+class HomeViewModel : ViewModel() {
+    private val mText: MutableLiveData<String>
+    val text: LiveData<String>
+        get() = mText
 
-    private MutableLiveData<String> mText;
-
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
+    init {
+        mText = MutableLiveData()
+        mText.value = "This is home fragment"
     }
 }

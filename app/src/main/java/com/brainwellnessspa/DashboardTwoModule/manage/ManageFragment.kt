@@ -108,8 +108,8 @@ public class ManageFragment : Fragment() {
                     val number = edtCreate.text.toString().trim { it <= ' ' }
                     if (!number.isEmpty()) {
                         btnSendCode.isEnabled = true
-                        btnSendCode.setTextColor(ctx.resources.getColor(R.color.white))
-                        btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor)
+                        btnSendCode.setTextColor(ctx.resources.getColor(R.color.black))
+                        btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
                     } else {
                         btnSendCode.isEnabled = false
                         btnSendCode.setTextColor(ctx.resources.getColor(R.color.white))

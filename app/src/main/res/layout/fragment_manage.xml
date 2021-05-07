@@ -383,7 +383,7 @@
                                         android:paddingBottom="@dimen/_8sdp"
                                         android:text="Create \n New Playlist"
                                         android:textColor="@color/white"
-                                        android:textSize="@dimen/_12sdp" />
+                                        android:textSize="@dimen/_13sdp" />
                                     <!-- <ImageView
                                          android:id="@+id/ivLock"
                                          android:layout_width="@dimen/_24sdp"
