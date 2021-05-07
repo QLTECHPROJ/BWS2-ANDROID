@@ -53,6 +53,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+
 public class AddPaymentActivity extends AppCompatActivity {
     ActivityAddPaymentBinding binding;
     Context context;

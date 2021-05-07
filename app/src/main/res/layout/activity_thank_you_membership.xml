@@ -84,6 +84,7 @@
                     android:paddingTop="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
+                    android:visibility="invisible"
                     android:text="@string/view_invoice"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp"

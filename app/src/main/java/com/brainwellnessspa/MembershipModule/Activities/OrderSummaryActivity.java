@@ -176,7 +176,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                         p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
                         p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
                         p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
-                        Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                        Intent i = new Intent(ctx, ThankYouMpActivity.class);
                         i.putExtra("Name", "");
                         i.putExtra("Code", "");
                         i.putExtra("MobileNo", "");
@@ -236,7 +236,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                                 p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
                                                 p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
                                                 p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
-                                                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                                                Intent i = new Intent(ctx, ThankYouMpActivity.class);
                                                 i.putExtra("Name", "");
                                                 i.putExtra("Code", "");
                                                 i.putExtra("MobileNo", "");

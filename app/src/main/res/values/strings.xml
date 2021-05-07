@@ -288,7 +288,7 @@
     <string name="step_three">Step 3</string>
     <string name="Unlock_the_app">Unlock the app</string>
     <string name="Your_Assessment_Result">Your Assessment Result</string>
-    <string name="ass_quotes">We\'re done with the first part.\nLorem ipsum dolor sit amet, consetetur\nsadipscing elitr, sed diam nonumy eirmod\ntempor invidunt ut labore. \n\nAt vero eos et accusam et justo duo dolores \net ea</string>
+    <string name="ass_quotes">We\'re done with the first part.\nIn the next step, you will have to fill an assessment form which will help us assess your mental health. \n\nAt vero eos et accusam et justo duo dolores \net ea</string>
     <string name="noti_title">Your Notifications</string>
     <string name="title_activity_bottom_navigation">MainActivity</string>
     <string name="title_home">Home</string>
@@ -313,4 +313,14 @@
     <!-- << means << for more understanding follow
     the link at the end -->
     <string name="time_suffix">2</string>
+    <string name="create_ac_qutoes">We just need few details to get you started!!</string>
+    <string name="signin_quotes">Hope you\'re feeling much better than you felt before!!</string>
+    <string name="couser_quotes"><![CDATA[Simply sign-in to your account and continue your journey towwards mental & emotional transformation]]></string>
+    <string name="step_one_quotes">Simply fill in your assessment form and we\'ll recommend the programs best suited to your needs</string>
+    <string name="drug_quotes">Have you ever taken any illicit drugs in your life?</string>
+    <string name="index_quotes">The index score determines the intensity of your mental health challenge and based on your score we will recommend the programs to help you.</string>
+    <string name="doing_good_quotes">We are analysing the information you provided and in the process of devising a personalised treatment plan for you.</string>
+    <string name="good_quotes">You are Doing Good</string>
+    <string name="get_started_quotes">The Brain Wellness Spa App</string>
+    <string name="get_started_subtitle_quotes"><![CDATA[Your one-stop solution for mental & emotional health challenges]]></string>
 </resources>

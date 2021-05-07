@@ -40,6 +40,7 @@ import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
+import com.brainwellnessspa.ManageModule.ManageActivity;
 import com.brainwellnessspa.ProfileTwoModule.AccountInfoActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.FaqModule.Activities.FaqActivity;
@@ -192,6 +193,12 @@ public class ProfileFragment extends Fragment {
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
+        });
+
+        binding.llPlan.setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), ManageActivity.class);
+            startActivity(i);
+            getActivity().overridePendingTransition(0, 0);
         });
 
         binding.llResources.setOnClickListener(view17 -> {
@@ -614,11 +621,15 @@ public class ProfileFragment extends Fragment {
     }
 
     void DeleteCall(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
-        edit.remove(CONSTANTS.PREF_KEY_UserID);
-        edit.remove(CONSTANTS.PREF_KEY_MobileNo);
-        edit.remove(CONSTANTS.PREF_KEY_Name);
+        edit.remove(CONSTANTS.PREFE_ACCESS_UserID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_CoUserID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER);
+        edit.remove(CONSTANTS.PREFE_ACCESS_NAME);
+        edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL);
+        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType);
+        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID);
         edit.clear();
         edit.commit();
 
@@ -667,7 +678,6 @@ public class ProfileFragment extends Fragment {
 //                    activity.analytics.flush();
 //                    activity.analytics.reset();
                     Intent i = new Intent(getActivity(), GetStartedActivity.class);
-                    i.putExtra(CONSTANTS.ScreenVisible, "1");
                     startActivity(i);
                     getActivity().finish();
                 }

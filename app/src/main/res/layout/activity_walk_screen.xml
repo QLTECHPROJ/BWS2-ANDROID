@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/step_one_bg"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -106,7 +106,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"
+                    android:text="@string/step_one_quotes"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp" />
 

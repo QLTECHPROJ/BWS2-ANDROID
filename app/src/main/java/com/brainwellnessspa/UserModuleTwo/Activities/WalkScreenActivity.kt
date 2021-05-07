@@ -7,6 +7,7 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
+import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
@@ -46,7 +47,7 @@ class WalkScreenActivity : AppCompatActivity() {
             binding.rlStepOne.visibility = View.GONE
             binding.rlStepTwo.visibility = View.VISIBLE
             binding.rlStepThree.visibility = View.GONE
-        }else if (ScreenView.equals("3")) {
+        } else if (ScreenView.equals("3")) {
             binding.rlWelcome.visibility = View.GONE
             binding.rlStepOne.visibility = View.GONE
             binding.rlStepTwo.visibility = View.GONE
@@ -73,11 +74,11 @@ class WalkScreenActivity : AppCompatActivity() {
             finish()
         }
 
-         binding.rlStepThree.setOnClickListener {
-             val intent = Intent(this@WalkScreenActivity, BottomNavigationActivity::class.java)
-             startActivity(intent)
-             finish()
-         }
+        binding.rlStepThree.setOnClickListener {
+            val intent = Intent(this@WalkScreenActivity, SleepTimeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onBackPressed() {

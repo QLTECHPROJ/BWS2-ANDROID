@@ -64,6 +64,8 @@ class SignInActivity : AppCompatActivity() {
         binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
 
         binding.llBack.setOnClickListener {
+            val i = Intent(activity, GetStartedActivity::class.java)
+            startActivity(i)
             finish()
         }
 
@@ -94,8 +96,9 @@ class SignInActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        val i = Intent(activity, GetStartedActivity::class.java)
+        startActivity(i)
         finish()
-        super.onBackPressed()
     }
 
     fun prepareData() {

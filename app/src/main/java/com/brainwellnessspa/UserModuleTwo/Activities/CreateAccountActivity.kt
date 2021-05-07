@@ -93,6 +93,8 @@ class CreateAccountActivity : AppCompatActivity() {
         activity = this@CreateAccountActivity
         binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
         binding.llBack.setOnClickListener {
+            val i = Intent(activity, GetStartedActivity::class.java)
+            startActivity(i)
             finish()
         }
         binding.etUser.addTextChangedListener(userTextWatcher)
@@ -102,24 +104,24 @@ class CreateAccountActivity : AppCompatActivity() {
 
         binding.btnCreateAc.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
-                binding.flUser.error = "Name is required"
+                binding.flUser.error = "Please provide  a Name"
                 binding.flNumber.error = ""
                 binding.flEmail.error = ""
                 binding.flPassword.error = ""
             } else if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = ""
-                binding.flNumber.error = "Number is required"
+                binding.flNumber.error = "Please provide a valid mobile number"
                 binding.flEmail.error = ""
                 binding.flPassword.error = ""
             } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = ""
                 binding.flNumber.error = ""
-                binding.flEmail.error = "Email address is required"
+                binding.flEmail.error = "Please provide a valid email address"
                 binding.flPassword.error = ""
             } else if (!binding.etEmail.text.toString().isEmailValid()) {
                 binding.flUser.error = ""
                 binding.flNumber.error = ""
-                binding.flEmail.error = "Valid Email address is required"
+                binding.flEmail.error = "Please provide a valid email address"
                 binding.flPassword.error = ""
             } else if (binding.etPassword.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = ""
@@ -236,6 +238,11 @@ class CreateAccountActivity : AppCompatActivity() {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
+    override fun onBackPressed() {
+        val i = Intent(activity, GetStartedActivity::class.java)
+        startActivity(i)
+        finish()
+    }
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar,
                     progressBarHolder: FrameLayout, searchFilter: String) {
         if (BWSApplication.isNetworkConnected(this)) {
@@ -292,17 +299,17 @@ class CreateAccountActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: NewSignUpModel = response.body()!!
                         if (listModel.getResponseCode().equals("200")) {
-                            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            val i = Intent(ctx, SignInActivity::class.java)
+                            startActivity(i)
+                            finish()
+                          /*  val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.id)
                             editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
                             editor.putString(CONSTANTS.PREFE_ACCESS_USEREMAIL, listModel.getResponseData()?.email)
                             editor.putString(CONSTANTS.PREFE_ACCESS_DeviceType, CONSTANTS.FLAG_ONE)
                             editor.putString(CONSTANTS.PREFE_ACCESS_DeviceID, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
-                            editor.commit()
-                            val i = Intent(ctx, UserListActivity::class.java)
-                            startActivity(i)
-                            finish()
+                            editor.commit()*/
                         }
                         BWSApplication.showToast(listModel.getResponseMessage(), activity)
 
@@ -384,7 +391,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
                     if (listFilterData.size == 0) {
                         tvFound.setVisibility(View.VISIBLE)
-                        tvFound.setText("No result found")
+                        tvFound.setText("Sorry we are not available in this country yet")
                         rvCountryList.setVisibility(View.GONE)
                     } else {
                         tvFound.setVisibility(View.GONE)

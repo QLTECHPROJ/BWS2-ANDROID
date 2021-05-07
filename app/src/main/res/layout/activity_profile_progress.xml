@@ -339,7 +339,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore."
+                android:text="@string/drug_quotes"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 

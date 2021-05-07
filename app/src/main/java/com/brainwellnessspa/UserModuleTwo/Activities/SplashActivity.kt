@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
@@ -52,7 +53,6 @@ class SplashActivity : AppCompatActivity() {
         if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
-                intent.putExtra(CONSTANTS.ScreenVisible, "1")
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())

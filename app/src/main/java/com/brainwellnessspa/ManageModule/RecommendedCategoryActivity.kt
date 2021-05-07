@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SaveRecommendedCatModel
@@ -99,10 +100,9 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 return false
             }
         })
+
         binding.btnContinue.setOnClickListener {
-
             var array = arrayListOf<sendRecommndedData>()
-
             for (i in 0 until selectedCategoriesTitle.size) {
                 var sendR: sendRecommndedData = sendRecommndedData()
 
@@ -110,10 +110,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 sendR.ProblemName = (selectedCategoriesName[i])
                 array.add(sendR)
             }
-
-
-
             sendCategoryData(gson.toJson(array))
+
+            val i = Intent(ctx, BottomNavigationActivity::class.java)
+            startActivity(i)
+            finish()
         }
     }
 

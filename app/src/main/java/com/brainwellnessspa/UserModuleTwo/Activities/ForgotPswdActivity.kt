@@ -3,16 +3,13 @@ package com.brainwellnessspa.UserModuleTwo.Activities
 import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
-import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
@@ -21,9 +18,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel
-import com.brainwellnessspa.UserModuleTwo.Models.SignInModel
 import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityForgotPswdBinding
 import retrofit2.Call
 import retrofit2.Callback

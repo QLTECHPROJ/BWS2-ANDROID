@@ -65,7 +65,7 @@ class AddProfileActivity : AppCompatActivity() {
 
             if (MobileNumber.equals("", ignoreCase = true)) {
                 binding.ivCheckNumber.visibility = View.GONE
-            } else if (binding.etMobileNumber.getText().toString().length === 1
+            } else if (binding.etMobileNumber.getText().toString().length == 1
                     || binding.etMobileNumber.getText().toString().length < 8
                     || binding.etMobileNumber.getText().toString().length > 10) {
                 binding.ivCheckNumber.visibility = View.GONE

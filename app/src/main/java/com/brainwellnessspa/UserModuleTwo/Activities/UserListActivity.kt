@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
+import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.SplashScreenActivity
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
@@ -210,14 +211,16 @@ class UserListActivity : AppCompatActivity() {
                                                                 activity.finish()
                                                             } else if (responseData.isProfileCompleted.equals("1", ignoreCase = true) &&
                                                                     responseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                                val intent = Intent(activity, SleepTimeActivity::class.java)
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             }
-                                                            val activity = SplashActivity()
-                                                            activity.setAnalytics()
                                                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                                             val editor = shared.edit()
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.responseData!!.userID)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_CoUserID, listModel.responseData!!.coUserId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.responseData!!.email)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.responseData!!.name)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, responseData.avgSleepTime)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, responseData.indexScore)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, responseData.image)
@@ -226,6 +229,9 @@ class UserListActivity : AppCompatActivity() {
                                                             val editord = sharedd.edit()
                                                             editord.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, responseData.avgSleepTime)
                                                             editord.commit()
+
+                                                            val activity = SplashActivity()
+                                                            activity.setAnalytics()
                                                         }
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()
@@ -235,13 +241,7 @@ class UserListActivity : AppCompatActivity() {
                                                 override fun onFailure(call: Call<CoUserDetailsModel>, t: Throwable) {
                                                 }
                                             })
-                                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                                            val editor = shared.edit()
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.responseData!!.userID)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_CoUserID, listModel.responseData!!.coUserId)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.responseData!!.email)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.responseData!!.name)
-                                            editor.commit()
+
                                             userList.dialog.dismiss()
                                             BWSApplication.showToast(listModel.responseMessage, activity)
                                         } else if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true)) {

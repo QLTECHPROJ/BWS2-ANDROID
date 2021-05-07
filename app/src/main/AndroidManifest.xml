@@ -71,7 +71,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReminderModule.Activities.TimeViewActivity"></activity>
+        <activity android:name=".UserModuleTwo.Activities.DoingGoodActivity"></activity>
+        <activity android:name=".ReminderModule.Activities.TimeViewActivity" />
         <activity
             android:name=".ProfileTwoModule.ChangePinActivity"
             android:configChanges="orientation|screenSize"

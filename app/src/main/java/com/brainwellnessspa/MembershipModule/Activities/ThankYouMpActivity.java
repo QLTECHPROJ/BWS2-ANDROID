@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity;
 import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
+import com.brainwellnessspa.ManageModule.SleepTimeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -49,7 +51,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             invoiceToDashboard = 1;
-            Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
+            Intent i = new Intent(ThankYouMpActivity.this, SleepTimeActivity.class);
             startActivity(i);
             finish();
         });

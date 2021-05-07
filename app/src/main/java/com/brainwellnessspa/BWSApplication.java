@@ -96,13 +96,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -110,6 +116,7 @@ import com.segment.analytics.Properties;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1291,94 +1298,94 @@ public class BWSApplication extends Application {
         if (indexData.getPastIndexScore().size() == 0) {
             barChart.clear();
         } else {
-            int spaceForBar = 1;
-            ArrayList<BarEntry> yVals1 = new ArrayList<>();
-
-            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-                int val1 = Integer.parseInt(indexData.getPastIndexScore().get(i).getIndexScore());
-                yVals1.add(new BarEntry(i * spaceForBar, val1));
-            }
-
-            final ArrayList<String> xAxisValues = new ArrayList<>();
-
-            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
-            }
-
-
-            float minXRange = 10;
-            float maxXRange = 10;
-            BarDataSet set1;
-            set1 = new BarDataSet(yVals1, "Past Index Score");
-            set1.setColor(act.getResources().getColor(R.color.app_theme_color));
-            BarData barData = new BarData(set1);
-            barData.setBarWidth(5f);
-            barData.setValueTextSize(7f);
-            barData.setValueFormatter(new LargeValueFormatter());
-            barChart.setData(barData);
             barChart.setDescription(null);
             barChart.setPinchZoom(false);
             barChart.setScaleEnabled(false);
             barChart.setDrawBarShadow(false);
             barChart.setDrawGridBackground(false);
-            barChart.setVisibleXRange(minXRange, maxXRange);
-            barChart.getAxisLeft().setDrawGridLines(true);
-            barChart.getXAxis().setDrawGridLines(true);
-            barChart.setBackgroundColor(Color.TRANSPARENT);
-            barChart.getAxisLeft().setAxisMinimum(0);
-            barChart.setBackgroundColor(Color.TRANSPARENT);
+            barChart.getAxisLeft().setDrawGridLines(false);
+            barChart.getXAxis().setDrawGridLines(false);
+            barChart.setBackgroundColor(Color.TRANSPARENT); //set whatever color you prefer
+
+            //        float barWidth = 1f;
+            int spaceForBar = 1;
+            ArrayList<BarEntry> yAxisValues = new ArrayList<>();
+
+            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
+                float val = Float.parseFloat(indexData.getPastIndexScore().get(i).getIndexScore());
+                yAxisValues.add(new BarEntry(i * spaceForBar, val));
+            }
+
+            final ArrayList<String> xAxisValues = new ArrayList<>();
+            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
+                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
+            }
+
+            BarDataSet barDataSet;
+            barDataSet = new BarDataSet(yAxisValues, "Past Index Score");
+            barDataSet.setDrawIcons(false);
+            barDataSet.setColor(act.getResources().getColor(R.color.app_theme_color));
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(barDataSet);
+
+            BarData barData = new BarData(dataSets);
+            barData.setBarWidth(4f);
+            barData.setValueFormatter(new MyValueFormatter());
+            barData.setValueTextSize(7f);
+
+            barChart.setData(barData);
             barChart.notifyDataSetChanged();
             barChart.invalidate();
+
             barChart.animateX(2000);
             barChart.animateY(2000);
             barChart.animateXY(2000, 2000);
-            float chartbarWidth = 0.4f;
-            float chartbarSpace = 0.1f;
-            float chartgroupSpace = 0.4f;
-
-            barChart.setData(barData);
-            barChart.getBarData().setBarWidth(chartbarWidth);
-            barChart.getXAxis().setAxisMinimum(0);
-            barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(chartgroupSpace, chartbarSpace) * 4);
-            barChart.groupBars(0, chartgroupSpace, chartbarSpace);
-            barChart.getData().setHighlightEnabled(false);
-            barChart.notifyDataSetChanged();
-            barChart.invalidate();
-            barChart.setVisibleXRangeMaximum(xAxisValues.size());
-            barChart.setDragEnabled(false);
-            barChart.setTouchEnabled(false);
-            barChart.getAxisRight().setEnabled(true);
-            barChart.setVisibleXRange(0, xAxisValues.size());
-            barChart.getBarData().setBarWidth(0.4f);
-            barChart.setFitBars(true);
 
             XAxis xl = barChart.getXAxis();
-            xl.setCenterAxisLabels(true);
             xl.setGranularity(1f);
             xl.setLabelCount(7);
             xl.setLabelRotationAngle(0);
-            xl.setAxisLineWidth(0.6f);
             xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-//            xl.setValueFormatter((value, axis) -> {
-//                try {
-//                    return indexData.getPastIndexScore().get((int) value).getMonth();//dividing the value by 10 to get the multiplied value.
-//                } catch (Exception e) {
-//                    return "";
-//                }
-//            });
+            xl.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    return String.valueOf(xAxisValues.get((int) value));
+                }
+            });
 
             YAxis yl = barChart.getAxisLeft();
-            yl.setValueFormatter(new LargeValueFormatter());
             yl.setDrawAxisLine(true);
             yl.setDrawGridLines(false);
-            yl.setSpaceTop(35f);
             yl.setGranularity(1f);
             yl.setGranularityEnabled(true);
-            yl.setAxisMinimum(0f);
+            yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+            barChart.setVisibleXRangeMaximum(xAxisValues.size());
+            barChart.setDragEnabled(false);
+            barChart.setTouchEnabled(false);
+            barChart.getAxisRight().setEnabled(false);
+            barChart.setVisibleXRange(0, xAxisValues.size());
+            barChart.getBarData().setBarWidth(0.4f);
+            barChart.getXAxis().setDrawGridLines(false);
+            barChart.setFitBars(true);
 
             Legend l = barChart.getLegend();
 //            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
             l.setWordWrapEnabled(true);
+        }
+    }
+
+    public static class MyValueFormatter extends ValueFormatter implements IValueFormatter {
+        private DecimalFormat mFormat;
+
+        public MyValueFormatter() {
+            mFormat = new DecimalFormat("###,###,##0.00");
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return mFormat.format(value);
         }
     }
 

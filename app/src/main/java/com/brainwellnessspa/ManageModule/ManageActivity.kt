@@ -3,6 +3,7 @@ package com.brainwellnessspa.ManageModule
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistInappModel
+import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.UserListModel
 import com.brainwellnessspa.Utility.APINewClient
@@ -50,6 +52,11 @@ class ManageActivity : AppCompatActivity() {
         ctx = this@ManageActivity
         binding.llBack.setOnClickListener { _ ->
             finish()
+        }
+
+        binding.btnFreeJoin.setOnClickListener {
+            val i = Intent(ctx, OrderSummaryActivity::class.java)
+            startActivity(i)
         }
 
 
