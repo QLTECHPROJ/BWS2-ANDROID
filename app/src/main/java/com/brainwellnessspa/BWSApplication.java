@@ -1359,13 +1359,13 @@ public class BWSApplication extends Application {
             xl.setLabelRotationAngle(0);
             xl.setAxisLineWidth(0.6f);
             xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xl.setValueFormatter((value, axis) -> {
-                try {
-                    return indexData.getPastIndexScore().get((int) value).getMonth();//dividing the value by 10 to get the multiplied value.
-                } catch (Exception e) {
-                    return "";
-                }
-            });
+//            xl.setValueFormatter((value, axis) -> {
+//                try {
+//                    return indexData.getPastIndexScore().get((int) value).getMonth();//dividing the value by 10 to get the multiplied value.
+//                } catch (Exception e) {
+//                    return "";
+//                }
+//            });
 
             YAxis yl = barChart.getAxisLeft();
             yl.setValueFormatter(new LargeValueFormatter());
@@ -1377,7 +1377,7 @@ public class BWSApplication extends Application {
             yl.setAxisMinimum(0f);
 
             Legend l = barChart.getLegend();
-            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+//            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
             l.setWordWrapEnabled(true);
         }
     }

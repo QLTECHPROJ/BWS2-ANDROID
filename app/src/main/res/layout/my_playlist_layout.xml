@@ -13,48 +13,42 @@
 
         <LinearLayout
             android:layout_width="@dimen/_0sdp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="0.18"
-            android:gravity="center"
-            android:padding="@dimen/_8sdp">
+            android:gravity="center">
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:id="@+id/cvCardView"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp">
 
-                <RelativeLayout
-                    android:id="@+id/rlImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/ivRestaurantImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
 
-                    <ImageView
-                        android:id="@+id/ivRestaurantImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/ivBackgroundImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/disclaimer"
+                    android:scaleType="fitXY" />
 
-                    <ImageView
-                        android:id="@+id/ivBackgroundImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/disclaimer"
-                        android:layout_centerInParent="true" />
-
-                    <io.gresse.hugo.vumeterlibrary.VuMeterView
-                        android:id="@+id/equalizerview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:layout_marginBottom="@dimen/_4sdp"
-                        android:paddingHorizontal="@dimen/_10sdp"
-                        vumeter:vumeter_backgroundColor="@color/white"
-                        vumeter:vumeter_blockNumber="4"
-                        vumeter:vumeter_blockSpacing="2dp"
-                        vumeter:vumeter_speed="2"
-                        vumeter:vumeter_stopSize="5dp" />
-
-                </RelativeLayout>
-
+                <io.gresse.hugo.vumeterlibrary.VuMeterView
+                    android:id="@+id/equalizerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    vumeter:vumeter_backgroundColor="@color/white"
+                    vumeter:vumeter_blockNumber="4"
+                    vumeter:vumeter_blockSpacing="2dp"
+                    vumeter:vumeter_speed="2"
+                    vumeter:vumeter_stopSize="5dp"/>
             </RelativeLayout>
 
         </LinearLayout>

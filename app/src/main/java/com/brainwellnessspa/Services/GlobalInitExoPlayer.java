@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
@@ -21,15 +25,19 @@ import android.os.StatFs;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
+import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
@@ -42,16 +50,20 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.gson.Gson;
@@ -75,8 +87,15 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.brainwellnessspa.BWSApplication.BatteryStatus;
+import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
+import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.oldSongPos;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
@@ -101,6 +120,8 @@ public class GlobalInitExoPlayer extends Service {
     List<DownloadAudioDetails> notDownloadedData;
     Notification notification1;
     Intent playbackServiceIntent;
+    LocalBroadcastManager localBroadcastManager;
+    Intent localIntent;
     ArrayList<MainPlayModel> mainPlayModelList1 = new ArrayList<>();
 
     public static void callNewPlayerRelease() {
@@ -338,6 +359,8 @@ Appointment Audios dddd*/
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         percent = 100;
         hundredVolume = (int) (currentVolume * percent) / maxVolume;
+        localIntent = new Intent("play_pause_Action");
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
         if (downloadAudioDetailsList.size() != 0) {
             if (downloadAudioDetailsList.contains(mainPlayModelList.get(0).getName())) {
@@ -401,6 +424,85 @@ Appointment Audios dddd*/
         player.setPlayWhenReady(true);
         audioClick = false;
         PlayerINIT = true;
+        player.addListener(new ExoPlayer.EventListener() {
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+                Log.v("TAG", "Listener-onTracksChanged... MINI PLAYER");
+
+                oldSongPos = 0;
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
+                ArrayList<MainPlayModel>  mainPlayModelList1x = new ArrayList<>();
+                if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                    }.getType();
+                   mainPlayModelList1x = gson.fromJson(json, type);
+                }
+
+//                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                PlayerAudioId = mainPlayModelList1x.get(player.getCurrentWindowIndex()).getID();
+            }
+
+            @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                if (player.getPlaybackState() == ExoPlayer.STATE_BUFFERING) {
+                } else if (isPlaying) {
+                    localIntent.putExtra("MyData", "play");
+                    localBroadcastManager.sendBroadcast(localIntent);
+                } else if (!isPlaying) {
+                    localIntent.putExtra("MyData", "pause");
+                    localBroadcastManager.sendBroadcast(localIntent);
+                }
+            }
+
+            @Override
+            public void onPlaybackStateChanged(int state) {
+                if (state == ExoPlayer.STATE_READY) {
+
+                    if (player.getPlayWhenReady()) {
+
+                        localIntent.putExtra("MyData", "play");
+                        localBroadcastManager.sendBroadcast(localIntent);
+
+                    } else if (!player.getPlayWhenReady()) {
+                        localIntent.putExtra("MyData", "pause");
+                        localBroadcastManager.sendBroadcast(localIntent);
+                    }
+
+//                        isprogressbar = false;
+                } else if (state == ExoPlayer.STATE_BUFFERING) {
+
+                } else if (state == ExoPlayer.STATE_ENDED) {
+                    try {
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
+                        ArrayList<MainPlayModel>  mainPlayModelList1x = new ArrayList<>();
+                        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            mainPlayModelList1x = gson.fromJson(json, type);
+                        }
+                        if (mainPlayModelList1x.get(player.getCurrentWindowIndex()).getID().
+                                equalsIgnoreCase(mainPlayModelList1x.get(mainPlayModelList1x.size() - 1).getID())) {
+
+                            player.setPlayWhenReady(false);
+                            localIntent.putExtra("MyData", "pause");
+                            localBroadcastManager.sendBroadcast(localIntent);
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("End State: ", e.getMessage());
+                    }
+                }
+
+            }
+        });
+
         InitNotificationAudioPLayer(ctx, mainPlayModelList);
         if (!serviceConected) {
             try {

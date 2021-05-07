@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -31,6 +32,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.comeReminder
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
@@ -65,6 +67,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -116,7 +119,7 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
-        if (SLEEPTIME.equals("",true)){
+        if (SLEEPTIME.equals("", true)){
             binding.llSleepTime.visibility = View.GONE
         }else {
             binding.llSleepTime.visibility = View.VISIBLE
@@ -177,24 +180,6 @@ class HomeFragment : Fragment() {
             val i = Intent(activity, NotificationListActivity::class.java)
             startActivity(i)
         }
-
-        binding.llPlayerView.setOnClickListener { v: View? ->
-            try {
-                val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-                i.putExtra("New", "0")
-                i.putExtra("PlaylistID", homelistModel.responseData!!.suggestedPlaylist!!.playlistID)
-                i.putExtra("PlaylistName", homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
-                i.putExtra("PlaylistImage", homelistModel.responseData!!.suggestedPlaylist!!.playlistImage)
-                i.putExtra("PlaylistSource", "")
-                i.putExtra("MyDownloads", "0")
-                i.putExtra("ScreenView", "")
-                i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                ctx.startActivity(i)
-                act.overridePendingTransition(0, 0)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
         return view
     }
 
@@ -233,8 +218,12 @@ class HomeFragment : Fragment() {
     fun prepareHomeData() {
         val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
         var fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")
+        val DeviceId = Settings.Secure.getString(BWSApplication.getContext().contentResolver, Settings.Secure.ANDROID_ID)
 
         Log.e("newToken", fcm_id!!)
+        Log.e("deviceid", DeviceId!!)
+        Log.e("UserID", USERID!!)
+        Log.e("CoUSerID", CoUSERID!!)
         if (TextUtils.isEmpty(fcm_id)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
                 val newToken = task.result.token
@@ -280,10 +269,10 @@ class HomeFragment : Fragment() {
                         ) {
                             binding.llCheckPercent.visibility = View.VISIBLE
                             binding.tvPercent.setTextColor(
-                                ContextCompat.getColor(
-                                    act,
-                                    R.color.green_dark_s
-                                )
+                                    ContextCompat.getColor(
+                                            act,
+                                            R.color.green_dark_s
+                                    )
                             )
                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
                         }
@@ -515,41 +504,129 @@ class HomeFragment : Fragment() {
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
+        val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (MyDownloads.equals("1", true)) {
             if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
-                if (GlobalInitExoPlayer.player != null) {
-                    if (position != PlayerPosition) {
-                        GlobalInitExoPlayer.player.seekTo(position, 0)
-                        GlobalInitExoPlayer.player.playWhenReady = true
-                        val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                        val editor = sharedxx.edit()
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-                        editor.apply()
+                if (MiniPlayerFragment.isDisclaimer == 1) {
+                    if (GlobalInitExoPlayer.player != null) {
+                        if (!GlobalInitExoPlayer.player.playWhenReady) {
+                            GlobalInitExoPlayer.player.playWhenReady = true
+                        }
+                    } else {
+                        DashboardActivity.audioClick = true
                     }
                     callMyPlayer(ctx, act)
+                    BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
                 } else {
-                    callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                    if (GlobalInitExoPlayer.player != null) {
+                        if (position != PlayerPosition) {
+                            GlobalInitExoPlayer.player.seekTo(position, 0)
+                            GlobalInitExoPlayer.player.playWhenReady = true
+                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                            val editor = sharedxx.edit()
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+                            editor.apply()
+                        }
+                        callMyPlayer(ctx, act)
+                    } else {
+                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                    }
                 }
-            } else {
-                callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+            }else {
+                val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                listModelList2.addAll(listModel)
+                val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
+                mainPlayModel.id = "0"
+                mainPlayModel.name = "Disclaimer"
+                mainPlayModel.audioFile = ""
+                mainPlayModel.audioDirection = "The audio shall start playing after the disclaimer"
+                mainPlayModel.audiomastercat = ""
+                mainPlayModel.audioSubCategory = ""
+                mainPlayModel.imageFile = ""
+                mainPlayModel.audioDuration = "00:48"
+                var audioc = true
+                if (MiniPlayerFragment.isDisclaimer == 1) {
+                    if (GlobalInitExoPlayer.player != null) {
+                        GlobalInitExoPlayer.player.playWhenReady = true
+                        audioc = false
+                        listModelList2.add(position, mainPlayModel)
+                    } else {
+                        MiniPlayerFragment.isDisclaimer = 0
+                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                            audioc = true
+                            listModelList2.add(position, mainPlayModel)
+                        }
+                    }
+                } else {
+                    MiniPlayerFragment.isDisclaimer = 0
+                    if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                        audioc = true
+                        listModelList2.add(position, mainPlayModel)
+                    }
+                }
+                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
-                if (GlobalInitExoPlayer.player != null) {
-                    if (position != PlayerPosition) {
-                        GlobalInitExoPlayer.player.seekTo(position, 0)
-                        GlobalInitExoPlayer.player.playWhenReady = true
-                        val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                        val editor = sharedxx.edit()
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-                        editor.apply()
+                if (MiniPlayerFragment.isDisclaimer == 1) {
+                    if (GlobalInitExoPlayer.player != null) {
+                        if (!GlobalInitExoPlayer.player.playWhenReady) {
+                            GlobalInitExoPlayer.player.playWhenReady = true
+                        }
+                    } else {
+                        DashboardActivity.audioClick = true
                     }
                     callMyPlayer(ctx, act)
+                    BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
                 } else {
-                    callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                    if (GlobalInitExoPlayer.player != null) {
+                        if (position != PlayerPosition) {
+                            GlobalInitExoPlayer.player.seekTo(position, 0)
+                            GlobalInitExoPlayer.player.playWhenReady = true
+                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                            val editor = sharedxx.edit()
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+                            editor.apply()
+                        }
+                        callMyPlayer(ctx, act)
+                    } else {
+                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                    }
                 }
             } else {
-                callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                listModelList2.addAll(listModel)
+                val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
+                mainPlayModel.id = "0"
+                mainPlayModel.name = "Disclaimer"
+                mainPlayModel.audioFile = ""
+                mainPlayModel.audioDirection = "The audio shall start playing after the disclaimer"
+                mainPlayModel.audiomastercat = ""
+                mainPlayModel.audioSubCategory = ""
+                mainPlayModel.imageFile = ""
+                mainPlayModel.audioDuration = "00:48"
+                var audioc = true
+                if (MiniPlayerFragment.isDisclaimer == 1) {
+                    if (GlobalInitExoPlayer.player != null) {
+                        GlobalInitExoPlayer.player.playWhenReady = true
+                        audioc = false
+                        listModelList2.add(position, mainPlayModel)
+                    } else {
+                        MiniPlayerFragment.isDisclaimer = 0
+                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                            audioc = true
+                            listModelList2.add(position, mainPlayModel)
+                        }
+                    }
+                } else {
+                    MiniPlayerFragment.isDisclaimer = 0
+                    if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                        audioc = true
+                        listModelList2.add(position, mainPlayModel)
+                    }
+                }
+                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID)
             }
         }
     }

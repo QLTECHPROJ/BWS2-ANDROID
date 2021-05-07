@@ -90,19 +90,18 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra("MyData")) {
-   /*             String data = intent.getStringExtra("MyData");
+                String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                String AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-                        !AudioFlag.equalsIgnoreCase("SubPlayList") &&
+                        !AudioFlag.equalsIgnoreCase("playlist") &&
                         !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (player != null) {
                         adpater.notifyDataSetChanged();
                     }
-                }*/
+                }
             }
         }
     };
@@ -508,24 +507,63 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("SearchAudio")
                         && PlayFrom.equalsIgnoreCase("Recommended Search")) {
-                    ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                    listModelList2.add(AudiolistsModel.get(position));
-                    if (player != null) {
-                        if (position != PlayerPosition) {
-                            player.seekTo(position, 0);
-                            player.setPlayWhenReady(true);
-                            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedxx.edit();
-                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-                            editor.apply();
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
+                            }
+                        } else {
+                            audioClick = true;
                         }
                         callMyPlayer();
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                     } else {
-                        callPlayer(0, listModelList2);
+                        ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                        listModelList2.add(AudiolistsModel.get(position));
+                        if (player != null) {
+                            if (position != PlayerPosition) {
+                                player.seekTo(position, 0);
+                                player.setPlayWhenReady(true);
+                                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedxx.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+                                editor.apply();
+                            }
+                            callMyPlayer();
+                        } else {
+                            callPlayer(0, listModelList2);
+                        }
                     }
                 } else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                     listModelList2.add(AudiolistsModel.get(position));
+                    SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                    String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                    SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            listModelList2.add(position, mainPlayModel);
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                listModelList2.add(position, mainPlayModel);
+                            }
+                        }
+                    } else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                            listModelList2.add(position, mainPlayModel);
+                        }
+                    }
                     callPlayer(0,listModelList2);
                 }
             } catch (Exception e) {

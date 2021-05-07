@@ -321,6 +321,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
                                     catList.catListadapter = SelectedCategory(binding, ctx, catList.selectedCategoriesName)
                                     binding.rvSelectedCategory.adapter = catList.catListadapter
+
                                     catList.adapter1 = AllCategory(binding, listModel, ctx,activity)
                                     binding.rvPerantCat.adapter = catList.adapter1
                                     break
@@ -351,6 +352,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     catList.catListadapter = SelectedCategory(binding, ctx, catList.selectedCategoriesName)
                                     binding.rvSelectedCategory.adapter = catList.catListadapter
 
+                                    catList.adapter1 = AllCategory(binding, listModel, ctx,activity)
+                                    binding.rvPerantCat.adapter = catList.adapter1
                                     break
                                 }
                             }

@@ -129,10 +129,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         }*/
                     if (data.equalsIgnoreCase("play")) {
                         isPlayPlaylist = 1;
-                        binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        binding.llPause.setVisibility(View.VISIBLE);
+                        binding.llPlay.setVisibility(View.GONE);
                     } else {
                         isPlayPlaylist = 2;
-                        binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        binding.llPause.setVisibility(View.GONE);
+                        binding.llPlay.setVisibility(View.VISIBLE);
                     }
                     if (player != null) {
                         adpater.notifyDataSetChanged();
@@ -140,7 +142,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
                 } else {
                     isPlayPlaylist = 0;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -266,22 +269,29 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 if (player.getPlayWhenReady()) {
                     isPlayPlaylist = 1;
 //                    handler3.postDelayed(UpdateSongTime3, 500);
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
                 } else {
                     isPlayPlaylist = 2;
 //                    handler3.postDelayed(UpdateSongTime3, 500);
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
                 }
             } else {
                 isPlayPlaylist = 0;
-                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+
+                binding.llPause.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.VISIBLE);
             }
         } else {
             isPlayPlaylist = 0;
-            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+
+            binding.llPause.setVisibility(View.GONE);
+            binding.llPlay.setVisibility(View.VISIBLE);
         }
-        binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
-        binding.tvLibraryName.setText(PlaylistName);
+        binding.tvPlayListName.setText(PlaylistName);
         /*MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 5, 3, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -290,19 +300,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (!PlaylistImageDetails.equalsIgnoreCase("")) {
                 try {
-                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
-                            .placeholder(R.drawable.audio_bg)
-                            .error(R.drawable.audio_bg)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
-
+//                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
+//                            .placeholder(R.drawable.audio_bg)
+//                            .error(R.drawable.audio_bg)
+//                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+//
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
-                binding.ivBanner.setImageResource(R.drawable.audio_bg);
+                binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.audio_bg));
             }
         } else {
-            binding.ivBanner.setImageResource(R.drawable.audio_bg);
+            binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.audio_bg));
         }
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
@@ -363,7 +373,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             }
         });
 
-        if (TotalAudio.equalsIgnoreCase("") || TotalAudio.equalsIgnoreCase("0") &&
+      /*  if (TotalAudio.equalsIgnoreCase("") || TotalAudio.equalsIgnoreCase("0") &&
                 Totalhour.equalsIgnoreCase("") && Totalminute.equalsIgnoreCase("")) {
             binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
         } else {
@@ -373,7 +383,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 binding.tvLibraryDetail.setText(TotalAudio + " Audio | " + Totalhour + "h " + Totalminute + "m");
             }
         }
-
+*/
         RecyclerView.LayoutManager playList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(playList);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
@@ -401,7 +411,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         });
         binding.tvTag.setVisibility(View.VISIBLE);
         binding.tvTag.setText("Audios in Playlist");
-        binding.tvPlaylist.setText("Playlist");
+//        binding.tvPlaylist.setText("Playlist");
     }
 
     private void getDownloadData() {
@@ -688,7 +698,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete");
                 });
             }
-            binding.ivPlaylistStatus.setOnClickListener(view -> {
+            binding.llPlayPause.setOnClickListener(view -> {
                 SharedPreferences sharedx1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 IsPlayDisclimer = (sharedx1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 if (isPlayPlaylist == 1) {
@@ -696,7 +706,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         player.setPlayWhenReady(false);
                     }
                     isPlayPlaylist = 2;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
                 } else if (isPlayPlaylist == 2) {
                     if (player != null) {
                         if (myAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID())
@@ -713,7 +725,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         }
                     }
                     isPlayPlaylist = 1;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
                 } else {
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
@@ -778,7 +791,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         getAllCompletedMedia(0);
                     }
                     isPlayPlaylist = 1;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
                 }
 //                handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
@@ -852,7 +866,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     getAllCompletedMedia(position);
                 }
                 isPlayPlaylist = 1;
-                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
 //                handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });
