@@ -928,7 +928,7 @@ public class AudioDetailActivity extends AppCompatActivity {
 //        fileNast = url1;
                     if (!isDownloading) {
                         isDownloading = true;
-                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(),activity);
                         downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
                     }
                     callDisableDownload();

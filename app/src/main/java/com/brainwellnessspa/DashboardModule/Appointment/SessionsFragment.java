@@ -133,7 +133,7 @@ public class SessionsFragment extends Fragment {
     private void prepareSessionList() {
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.UpdateMiniPlayer(getActivity());
+            globalInitExoPlayer.UpdateMiniPlayer(getActivity(),getActivity());
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {

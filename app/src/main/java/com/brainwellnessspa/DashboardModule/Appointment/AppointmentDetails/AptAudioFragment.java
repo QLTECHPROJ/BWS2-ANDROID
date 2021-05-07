@@ -521,7 +521,7 @@ public class AptAudioFragment extends Fragment {
                 }
                 if (!isDownloading) {
                     isDownloading = true;
-                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(),getActivity());
                     downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
                 }
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);

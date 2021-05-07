@@ -48,6 +48,7 @@ public class DownloadMedia implements OnDownloadListener {
     int downloadProgress2 = 0;
     List<DownloadAudioDetails> Myaudiolist;
     Context ctx;
+    Activity act;
     byte[] encodedBytes;
     Properties p;
     String UserID;
@@ -63,12 +64,13 @@ public class DownloadMedia implements OnDownloadListener {
         }
     };
 
-    public DownloadMedia(Context ctx) {
+    public DownloadMedia(Context ctx,Activity act) {
         this.ctx = ctx;
+        this.act = act;
     }
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
-        BWSApplication.showToast("Downloading file...", (Activity) ctx);
+        BWSApplication.showToast("Downloading file...",act);
         Log.e("Downloading file..", String.valueOf(downloadProgress));
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
@@ -397,7 +399,7 @@ public class DownloadMedia implements OnDownloadListener {
                     editor.commit();
                     if (fileNameList.size() != 0) {
                         isDownloading = true;
-                        DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                        DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext(),act);
                         downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
                     }
                 }

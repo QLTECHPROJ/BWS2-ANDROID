@@ -310,7 +310,7 @@ class MainPlaylistFragment : Fragment() {
                                             dialog.dismiss()
                                         } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) ||
                                                 listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
-                                            MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.id.toString(), listModel.responseData!!.name.toString(), "", "0", "Your Created", act, ctx)
+                                            MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
                                             dialog.dismiss()
                                         }
                                     }

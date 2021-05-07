@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Utility;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -68,7 +69,7 @@ public class MyNetworkReceiver extends BroadcastReceiver {
                     editor.commit();*/
                         if (fileNameList.size() != 0) {
                             isDownloading = true;
-                            DownloadMedia downloadMedia = new DownloadMedia(context.getApplicationContext());
+                            DownloadMedia downloadMedia = new DownloadMedia(context.getApplicationContext(), (Activity) context);
                             downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
                         }
                     }

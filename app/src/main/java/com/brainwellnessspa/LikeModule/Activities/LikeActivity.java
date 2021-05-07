@@ -131,7 +131,7 @@ public class LikeActivity extends AppCompatActivity implements NetworkChangeRece
     private void callMembershipMediaPlayer() {
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.UpdateMiniPlayer(ctx);
+            globalInitExoPlayer.UpdateMiniPlayer(ctx,activity);
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {

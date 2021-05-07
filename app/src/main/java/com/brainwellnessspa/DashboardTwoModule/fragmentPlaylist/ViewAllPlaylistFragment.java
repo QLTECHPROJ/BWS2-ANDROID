@@ -393,19 +393,16 @@ public class ViewAllPlaylistFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         comefrom_search = 2;
                         GetPlaylistLibraryID = GetLibraryID;
-                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        bundle.putString("New", "0");
-                        bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                        bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                        bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                        bundle.putString("MyDownloads", MyDownloads);
-                        bundle.putString("ScreenView", ScreenView);
-                        bundle.putString("PlaylistType", listModelList.get(position).getCreated());
-                        myPlaylistsFragment.setArguments(bundle);
-                        fragmentManager1.beginTransaction()
-                                .replace(R.id.flContainer, myPlaylistsFragment)
-                                .commit();
+                        Intent i = new Intent(getActivity(),MyPlaylistListingActivity.class);
+                        i.putExtra("New", "0");
+                        i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                        i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                        i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        i.putExtra("MyDownloads", MyDownloads);
+                        i.putExtra("ScreenView", ScreenView);
+                        i.putExtra("PlaylistType", listModelList.get(position).getCreated());
+                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(i);
                         }
 //                    }
                 });

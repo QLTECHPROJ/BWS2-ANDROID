@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Services;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -882,7 +883,7 @@ Appointment Audios dddd*/
         return null;
     }
 
-    public String UpdateMiniPlayer(Context ctx) {
+    public String UpdateMiniPlayer(Context ctx, Activity activity) {
         String AudioFlag = "0";
         SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String expDate = (shared1x.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
@@ -1236,12 +1237,12 @@ Appointment Audios dddd*/
             e.printStackTrace();
         }
         if (!isDownloading) {
-            getPending(ctx);
+            getPending(ctx,activity);
         }
         return AudioFlag;
     }
 
-    private void getPending(Context ctx) {
+    private void getPending(Context ctx,Activity activity) {
         DatabaseClient
                 .getInstance(ctx)
                 .getaudioDatabase()
@@ -1290,7 +1291,7 @@ Appointment Audios dddd*/
                         editor.commit();
                         if (fileNameList.size() != 0) {
                             isDownloading = true;
-                            DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                            DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext(),activity);
                             downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId);
                         }
                     }

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -199,7 +200,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 listCall.enqueue(object : Callback<PlaylistDetailsModel> {
                     override fun onResponse(call: Call<PlaylistDetailsModel>, response: Response<PlaylistDetailsModel>) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        var listModel: PlaylistDetailsModel = PlaylistDetailsModel()
+                        var listModel = PlaylistDetailsModel()
                         try {
                             listModel = response.body()!!
                             listMOdelGloble = response.body()!!
@@ -219,6 +220,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
                         binding.tvTag.visibility = View.VISIBLE
                         binding.tvTag.setText(R.string.Audios_in_Playlist)
+
+
+                        getDownloadData()
+                        callObserveMethodGetAllMedia()
+                        SongListSize = listModel.responseData!!.playlistSongs!!.size
                         downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize)
                         binding.llDownloads.setOnClickListener { view1 ->
                             callObserveMethodGetAllMedia()
@@ -286,9 +292,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             }
                         }
 
-                        getDownloadData()
-                        callObserveMethodGetAllMedia()
-                        SongListSize = listModel.responseData!!.playlistSongs!!.size
                         //                            GetMedia();
 //                            getMediaByPer(PlaylistId, SongListSize);
                         binding.rlSearch.visibility = View.VISIBLE
@@ -296,7 +299,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.llReminder.visibility = View.VISIBLE
                         binding.llMore.setOnClickListener { view13 ->
 //            handler2.removeCallbacks(UpdateSongTime2);
-                         BWSApplication.callPlaylistDetails(ctx,activity,CoUserID,PlaylistID,PlaylistName)
+                            val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
+
+                            BWSApplication.callPlaylistDetails(ctx,activity,CoUserID,PlaylistID,PlaylistName,fragmentManager1)
                         }
                         playlistSongsList = arrayListOf()
                         playlistSongsList.addAll(listModel.responseData!!.playlistSongs!!)
@@ -915,6 +920,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         holder.binding.equalizerview.visibility = View.VISIBLE
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background)
                         holder.binding.ivBackgroundImage.visibility = View.VISIBLE
+                        holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg)
                     } else {
                         holder.binding.equalizerview.visibility = View.GONE
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white)
@@ -933,10 +939,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         if (player != null) {
                             if (!player.playWhenReady) {
                                 holder.binding.equalizerview.pause()
-                            }
-                            else holder.binding.equalizerview.resume(true)
-                        }
-                        else holder.binding.equalizerview.stop(true)
+                            } else holder.binding.equalizerview.resume(true)
+                        } else holder.binding.equalizerview.stop(true)
                         holder.binding.equalizerview.visibility = View.VISIBLE
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background)
                         holder.binding.ivBackgroundImage.visibility = View.VISIBLE
@@ -1200,11 +1204,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             enableDisableDownload(false, "orange")
                             getMediaByPer(PlaylistID!!, SongListSize)
                             removeobserver()
-                        } else if (download.equals("0", ignoreCase = true) || download.equals("", ignoreCase = true) ||
-                                New.equals("0", ignoreCase = true) || RefreshIcon != 0) {
+                        } */else {
                             enableDisableDownload(true, "white")
                             removeobserver()
-                        }*/
+                        }
                     })
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -1288,7 +1291,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     .geAllData12().observe(this, { audioList: List<DownloadAudioDetails?>? ->
                         if (audioList != null) {
                             downloadAudioDetailsList = audioList as ArrayList<DownloadAudioDetails?>
-                            onlySingleDownloaded = ArrayList<String>()
+                            onlySingleDownloaded = ArrayList()
                             if (downloadAudioDetailsList.isNotEmpty()) {
                                 for (i in downloadAudioDetailsList.indices) {
                                     if (downloadAudioDetailsList[i]!!.playlistId.equals("", ignoreCase = true)) {
@@ -1296,11 +1299,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     }
                                 }
                             } else {
-                                onlySingleDownloaded = ArrayList<String>()
+                                onlySingleDownloaded = ArrayList()
                             }
                         } else {
-                            onlySingleDownloaded = ArrayList<String>()
-                            downloadAudioDetailsList = ArrayList<DownloadAudioDetails?>()
+                            onlySingleDownloaded = ArrayList()
+                            downloadAudioDetailsList = ArrayList()
                         }
                     })
         } catch (e: java.lang.Exception) {
@@ -1312,12 +1315,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         if (b) {
             binding.llDownloads.setClickable(true)
             binding.llDownloads.setEnabled(true)
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon)
             binding.ivDownloads.setColorFilter(activity.resources.getColor(R.color.white), PorterDuff.Mode.SRC_IN)
         } else {
             binding.llDownloads.setClickable(false)
             binding.llDownloads.setEnabled(false)
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon)
             if (color.equals("gray", ignoreCase = true)) {
                 binding.ivDownloads.setColorFilter(activity.resources.getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN)
             } else if (color.equals("orange", ignoreCase = true)) {
@@ -1377,7 +1378,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             if (url.size != 0) {
                 if (!DownloadMedia.isDownloading) {
                     DownloadMedia.isDownloading = true
-                    val downloadMedia = DownloadMedia(applicationContext)
+                    val downloadMedia = DownloadMedia(applicationContext,this@MyPlaylistListingActivity)
                     downloadMedia.encrypt1(url, name, downloadPlaylistId)
                 }
                 val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
@@ -1436,7 +1437,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 if (url.size != 0) {
                     if (!DownloadMedia.isDownloading) {
                         DownloadMedia.isDownloading = true
-                        val downloadMedia = DownloadMedia(getApplicationContext())
+                        val downloadMedia = DownloadMedia(getApplicationContext(),this@MyPlaylistListingActivity)
                         downloadMedia.encrypt1(url, name, downloadPlaylistId /*, playlistSongs*/)
                     }
                     val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
@@ -1695,12 +1696,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     private fun enableDownload(llDownload: RelativeLayout, ivDownloads: ImageView) {
         llDownload.isClickable = true
         llDownload.isEnabled = true
-        ivDownloads.setImageResource(R.drawable.ic_download_play_icon)
         ivDownloads.setColorFilter(activity.resources.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
     }
 
     private fun disableDownload(llDownload: RelativeLayout, ivDownloads: ImageView) {
-        ivDownloads.setImageResource(R.drawable.ic_download_play_icon)
         ivDownloads.setColorFilter(activity.resources.getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN)
         llDownload.isClickable = false
         llDownload.isEnabled = false

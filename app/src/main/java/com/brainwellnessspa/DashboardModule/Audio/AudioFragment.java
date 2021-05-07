@@ -137,7 +137,7 @@ public class AudioFragment extends Fragment {
                     editor.commit();*/
                     if (fileNameList.size() != 0) {
                         isDownloading = true;
-                        DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                        DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(),getActivity());
                         downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
                     }
                 }
@@ -411,7 +411,7 @@ public class AudioFragment extends Fragment {
 
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.UpdateMiniPlayer(getActivity());
+            globalInitExoPlayer.UpdateMiniPlayer(getActivity(),getActivity());
         } catch (Exception e) {
             e.printStackTrace();
         }

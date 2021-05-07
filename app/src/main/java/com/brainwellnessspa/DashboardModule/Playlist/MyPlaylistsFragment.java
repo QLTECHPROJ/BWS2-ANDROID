@@ -782,7 +782,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.tvPlaylist.setText("Playlist");
         try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-            globalInitExoPlayer.UpdateMiniPlayer(getActivity());
+            globalInitExoPlayer.UpdateMiniPlayer(getActivity(),getActivity());
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
@@ -1390,7 +1390,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (url.size() != 0) {
                 if (!isDownloading) {
                     isDownloading = true;
-                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(),activity);
                     downloadMedia.encrypt1(url, name, downloadPlaylistId);
                 }
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
@@ -1450,7 +1450,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (url.size() != 0) {
                     if (!isDownloading) {
                         isDownloading = true;
-                        DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                        DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(),activity);
                         downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
                     }
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);

@@ -830,7 +830,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.commit()
             if (!DownloadMedia.isDownloading) {
                 DownloadMedia.isDownloading = true
-                val downloadMedia = DownloadMedia(applicationContext)
+                val downloadMedia = DownloadMedia(applicationContext,act)
                 downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId)
             }
             binding.pbProgress.setVisibility(View.VISIBLE)

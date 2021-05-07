@@ -9,12 +9,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SaveRecommendedCatModel
 import com.brainwellnessspa.DashboardTwoModule.Model.sendRecommndedData
@@ -29,6 +35,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class RecommendedCategoryActivity : AppCompatActivity() {
@@ -44,6 +51,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     var selectedCategoriesTitle = arrayListOf<String>()
     var selectedCategoriesName = arrayListOf<String>()
     var gson: Gson = Gson()
+    lateinit var searchEditText: EditText
     lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +70,35 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
         getCatSaveData()
         prepareRecommnedData()
+        binding.searchView.onActionViewExpanded()
+        searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
+        searchEditText.setTextColor(resources.getColor(R.color.dark_blue_gray))
+        searchEditText.setHintTextColor(resources.getColor(R.color.gray))
+        val closeButton: ImageView = binding.searchView.findViewById(R.id.search_close_btn)
+        binding.searchView.clearFocus()
+        closeButton.setOnClickListener { _: View? ->
+            binding.searchView.clearFocus()
+            searchEditText.setText("")
+            binding.searchView.setQuery("", false)
+        }
 
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(search: String): Boolean {
+                binding.searchView.clearFocus()
+                return false
+            }
+
+            override fun onQueryTextChange(search: String): Boolean {
+                try {
+                    adapter1.filter.filter(search)
+//                        SearchFlag = search
+                    Log.e("searchsearch", "" + search)
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+                return false
+            }
+        })
         binding.btnContinue.setOnClickListener {
 
             var array = arrayListOf<sendRecommndedData>()
@@ -100,7 +136,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
 //                                binding.rvPerantCat.adapter = adapter1
 //                            }else{
-                            adapter1 = AllCategory(binding, listModel.responseData, ctx!!,activity)
+                            adapter1 = AllCategory(binding, listModel.responseData!!, ctx!!,activity)
                             binding.rvPerantCat.adapter = adapter1
 //                            }
                         }
@@ -118,8 +154,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
     }
 
-    class AllCategory(var binding: ActivityRecommendedCategoryBinding, private val listModel: List<RecommendedCategoryModel.ResponseData>?, var ctx: Context, var activity: Activity) : RecyclerView.Adapter<AllCategory.MyViewHolder>() {
+    class AllCategory(var binding: ActivityRecommendedCategoryBinding, private val listModel: List<RecommendedCategoryModel.ResponseData>, var ctx: Context, var activity: Activity) : RecyclerView.Adapter<AllCategory.MyViewHolder>() , Filterable {
         private lateinit var adapter2: ChildCategory
+
+        private var listFilterData: List<RecommendedCategoryModel.ResponseData> = listModel
 
         inner class MyViewHolder(var bindingAdapter: AllCategoryRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -129,25 +167,68 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            if (listModel != null) {
-                holder.bindingAdapter.tvHeader.text = listModel[position].view
-                val layoutManager = FlexboxLayoutManager(ctx)
-                layoutManager.flexWrap = FlexWrap.WRAP
-                layoutManager.alignItems = AlignItems.STRETCH
-                layoutManager.flexDirection = FlexDirection.ROW
-                layoutManager.justifyContent = JustifyContent.FLEX_START
-                holder.bindingAdapter.rvChildCategory.layoutManager = layoutManager
-                callAdapter(position, holder, position)
-            }
+
+            holder.bindingAdapter.tvHeader.text = listFilterData[position].view
+            val layoutManager = FlexboxLayoutManager(ctx)
+            layoutManager.flexWrap = FlexWrap.WRAP
+            layoutManager.alignItems = AlignItems.STRETCH
+            layoutManager.flexDirection = FlexDirection.ROW
+            layoutManager.justifyContent = JustifyContent.FLEX_START
+            holder.bindingAdapter.rvChildCategory.layoutManager = layoutManager
+            callAdapter(position, holder, position)
         }
 
         private fun callAdapter(position: Int, holder: MyViewHolder, pos: Int) {
-            adapter2 = ChildCategory(binding, listModel!![position].details, listModel, pos, ctx,activity)
+            adapter2 = ChildCategory(binding, listFilterData[position].details, listFilterData, pos, ctx,activity)
             holder.bindingAdapter.rvChildCategory.adapter = adapter2
         }
 
         override fun getItemCount(): Int {
-            return listModel!!.size
+            return listFilterData.size
+        }
+
+        override fun getFilter(): Filter {
+            return object : Filter() {
+                override fun performFiltering(charSequence: CharSequence): FilterResults {
+                    val filterResults = FilterResults()
+                    val charString = charSequence.toString()
+                    if (charString.isEmpty()) {
+                        listFilterData = listModel
+                    } else {
+                        val filteredList = ArrayList<RecommendedCategoryModel.ResponseData>()
+                        for (row in listModel) {
+                            if (row.view!!.toLowerCase(Locale.ROOT).contains(charString.toLowerCase(Locale.ROOT))) {
+                                filteredList.add(row)
+                            }
+                        }
+                        listFilterData = filteredList
+                    }
+                    filterResults.values = listFilterData
+                    return filterResults
+                }
+
+                override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                    if (listFilterData.isEmpty()) {
+//                        binding.llError.visibility = View.VISIBLE
+//                        binding.tvTag.visibility = View.GONE
+//                        binding.rvPlayLists2.visibility = View.GONE
+//                        binding.tvFound.setText("No result found")
+//                        Log.e("search", SearchFlag)
+                    } else {
+//                        binding.llError.visibility = View.GONE
+//                        binding.tvTag.visibility = View.VISIBLE
+//                        binding.rvPlayLists2.visibility = View.VISIBLE
+                        listFilterData = filterResults.values as List<RecommendedCategoryModel.ResponseData>
+                        for (i in listFilterData.indices) {
+                           notifyItemChanged(i)
+                        }
+
+                        notifyDataSetChanged()
+//                        RecommendedCategoryActivity().adapter1 = AllCategory(binding, listModel, ctx,activity)
+//                        binding.rvPerantCat.adapter = RecommendedCategoryActivity().adapter1
+                    }
+                }
+            }
         }
     }
 

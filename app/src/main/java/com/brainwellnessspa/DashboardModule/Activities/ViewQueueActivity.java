@@ -858,7 +858,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.progressBar.setVisibility(View.VISIBLE);
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.GONE);
-            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(),activity);
 
             try {
                 byte[] decrypt = null;

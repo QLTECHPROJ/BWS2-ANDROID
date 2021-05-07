@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
@@ -53,8 +54,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.github.mikephil.charting.utils.*
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -227,6 +231,22 @@ class HomeFragment : Fragment() {
     }
 
     fun prepareHomeData() {
+        val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        var fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")
+
+        Log.e("newToken", fcm_id!!)
+        if (TextUtils.isEmpty(fcm_id)) {
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
+                val newToken = task.result.token
+                Log.e("newToken", newToken)
+                val editor = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, newToken) //Friend
+                editor.apply()
+                editor.commit()
+            }
+            val sharedPreferences3 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+            fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")
+        }
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().getHomeScreenData(CoUSERID)
@@ -241,22 +261,22 @@ class HomeFragment : Fragment() {
                         if (listModel.responseData!!.scoreIncDec.equals("", ignoreCase = true)) {
                             binding.llCheckPercent.visibility = View.INVISIBLE
                         } else if (listModel.responseData!!.scoreIncDec.equals(
-                                "Increase",
-                                ignoreCase = true
-                            )
+                                        "Increase",
+                                        ignoreCase = true
+                                )
                         ) {
                             binding.llCheckPercent.visibility = View.VISIBLE
                             binding.tvPercent.setTextColor(
-                                ContextCompat.getColor(
-                                    act,
-                                    R.color.redtheme
-                                )
+                                    ContextCompat.getColor(
+                                            act,
+                                            R.color.redtheme
+                                    )
                             )
                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
                         } else if (listModel.responseData!!.scoreIncDec.equals(
-                                "Decrease",
-                                ignoreCase = true
-                            )
+                                        "Decrease",
+                                        ignoreCase = true
+                                )
                         ) {
                             binding.llCheckPercent.visibility = View.VISIBLE
                             binding.tvPercent.setTextColor(
@@ -296,7 +316,7 @@ class HomeFragment : Fragment() {
                                 binding.tvReminder.setText("Set Reminder")
                                 BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                         listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.setText("Update Reminder")
                                 val dialog = Dialog(ctx)
@@ -311,8 +331,8 @@ class HomeFragment : Fragment() {
                                 val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
                                 tvTitle.text = "Update Reminder"
                                 tvSubTitle.text = "You can update or delete your reminder"
-                                tvText.text ="Update"
-                                tvGoBack.text ="Delete"
+                                tvText.text = "Update"
+                                tvGoBack.text = "Delete"
                                 dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog.hide()
@@ -324,7 +344,7 @@ class HomeFragment : Fragment() {
                                     dialog.hide()
                                     BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                             listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                            listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
@@ -407,6 +427,15 @@ class HomeFragment : Fragment() {
                                 binding.llPlay.visibility = View.VISIBLE
                             }
                         }
+                        val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+                        if (SLEEPTIME.equals("", true)) {
+                            binding.llSleepTime.visibility = View.GONE
+                        } else {
+                            binding.llSleepTime.visibility = View.VISIBLE
+                        }
+                        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
 
                         binding.llPlayerView1.setOnClickListener { v: View? ->
                             callPlaylistDetails()

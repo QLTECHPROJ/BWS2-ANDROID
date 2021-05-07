@@ -524,7 +524,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         if (url.size() != 0) {
             if (!isDownloading) {
                 isDownloading = true;
-                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(),activity);
                 downloadMedia.encrypt1(url, name, downloadPlaylistId/*, playlistSongs*/);
             }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);

@@ -195,7 +195,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         if (listsModel.getResponseData().getIscreate().equalsIgnoreCase("1")) {
                                             dialog.dismiss();
                                             prepareData(ctx);
-                                            String PlaylistID = listsModel.getResponseData().getId();
+                                            String PlaylistID = listsModel.getResponseData().getPlaylistID();
                                             String Created = listsModel.getResponseData().getIscreate();
                                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -205,10 +205,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                 if (isDisclaimer == 1) {
                                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
                                                 } else {
-                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created, "1");
+                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getPlaylistName(), dialog, "0", Created, "1");
                                                 }
                                             } else {
-                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0", Created, "1");
+                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getPlaylistName(), dialog, "0", Created, "1");
                                             }
 //                                            Properties p = new Properties();
 //                                            p.putValue("userId", UserID);

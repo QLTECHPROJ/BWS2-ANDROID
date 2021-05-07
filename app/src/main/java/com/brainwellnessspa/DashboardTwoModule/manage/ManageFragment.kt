@@ -79,7 +79,7 @@ public class ManageFragment : Fragment() {
         val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
-        if (SLEEPTIME.equals("",true)){
+        if (SLEEPTIME.equals("", true)){
             binding.llSleepTime.visibility = View.GONE
         }else {
             binding.llSleepTime.visibility = View.VISIBLE
@@ -127,7 +127,7 @@ public class ManageFragment : Fragment() {
                 }
                 false
             }
-            btnSendCode.setOnClickListener { view1: View? ->
+            btnSendCode.setOnClickListener {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     val listCall = APINewClient.getClient().getCreatePlaylist(CoUserID, edtCreate.text.toString())
@@ -144,12 +144,11 @@ public class ManageFragment : Fragment() {
                                             listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
 //                                        try {
                                         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-                                        i.putExtra("New", 1)
-                                        i.putExtra("PlaylistID", listModel.responseData!!.id)
-                                        i.putExtra("PlaylistName", listModel.responseData!!.name)
+                                        i.putExtra("New", "1")
+                                        i.putExtra("PlaylistID", listModel.responseData!!.playlistID)
+                                        i.putExtra("PlaylistName", listModel.responseData!!.playlistName)
                                         i.putExtra("PlaylistImage", "")
-                                        i.putExtra("PlaylistSource", "0")
-                                        i.putExtra("MyDownloads", "Your Created")
+                                        i.putExtra("MyDownloads", "0")
                                         i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         ctx.startActivity(i)
                                         act.overridePendingTransition(0, 0)
@@ -399,7 +398,7 @@ public class ManageFragment : Fragment() {
                             binding.tvReminder.setText("Set Reminder")
                             BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
-                                listModel.responseData!!.suggestedPlaylist!!.reminderTime,  listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                             binding.tvReminder.setText("Update Reminder")
                             val dialog = Dialog(ctx)
@@ -414,8 +413,8 @@ public class ManageFragment : Fragment() {
                             val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
                             tvTitle.text = "Update Reminder"
                             tvSubTitle.text = "You can update or delete your reminder"
-                            tvText.text ="Update"
-                            tvGoBack.text ="Delete"
+                            tvText.text = "Update"
+                            tvGoBack.text = "Delete"
                             dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
                                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                                     dialog.hide()
@@ -427,7 +426,7 @@ public class ManageFragment : Fragment() {
                                 dialog.hide()
                                 BWSApplication.getReminderDay(ctx, act, CoUserID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                         listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                             }
                             tvGoBack.setOnClickListener { v: View? ->
                                 val listCall = APINewClient.getClient().getDeleteRemider(CoUserID,
@@ -488,9 +487,10 @@ public class ManageFragment : Fragment() {
 
                     val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
                     binding.tvViewAll.setOnClickListener {
-                        val playlistFragment: Fragment = MainPlaylistFragment()
+                        val audioFragment: Fragment = MainPlaylistFragment()
+                        val fragmentManager1 = activity!!.supportFragmentManager
                         fragmentManager1.beginTransaction()
-                                .replace(R.id.flContainer, playlistFragment)
+                                .replace(R.id.flContainer, audioFragment)
                                 .commit()
                         /*val bundle = Bundle()
                         if (listModel.responseData!!.playlist[0].view.equals("My Downloads", ignoreCase = true)) {
@@ -606,7 +606,7 @@ public class ManageFragment : Fragment() {
         }
     }
 
-    private fun callPlayerSuggested(position: Int, view: String?, listModel:List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
+    private fun callPlayerSuggested(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
         callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val editor = shared.edit()

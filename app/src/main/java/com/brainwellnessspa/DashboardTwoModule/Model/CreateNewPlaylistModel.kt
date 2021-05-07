@@ -21,13 +21,13 @@ class CreateNewPlaylistModel {
     var responseStatus: String? = null
 
     class ResponseData {
-        @SerializedName("id")
+        @SerializedName("PlaylistID")
         @Expose
-        var id: String? = null
+        var playlistID: String? = null
 
-        @SerializedName("name")
+        @SerializedName("PlaylistName")
         @Expose
-        var name: String? = null
+        var playlistName: String? = null
 
         @SerializedName("Iscreate")
         @Expose

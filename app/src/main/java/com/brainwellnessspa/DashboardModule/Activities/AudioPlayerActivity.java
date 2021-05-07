@@ -2353,7 +2353,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements NetworkCha
             editor.commit();
             if (!isDownloading) {
                 isDownloading = true;
-                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(),activity);
                 downloadMedia.encrypt1(audioFile1, fileNameList, playlistDownloadId);
             }
             binding.pbProgress.setVisibility(View.VISIBLE);
