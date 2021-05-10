@@ -272,6 +272,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             medication = "Yes"
             binding.llIndicate.progress = 5
             binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.visibility = View.GONE
+            binding.btnContinue.isClickable = true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             binding.btnNext.isClickable = true
             binding.btnNext.setColorFilter(
                 ContextCompat.getColor(activity, R.color.black),
@@ -292,6 +296,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             medication = "No"
             binding.llIndicate.progress = 5
             binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.visibility = View.GONE
+            binding.btnContinue.isClickable = true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             binding.btnNext.isClickable = true
             binding.btnNext.setColorFilter(
                 ContextCompat.getColor(activity, R.color.black),
@@ -318,43 +326,69 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.btnPrev.setOnClickListener {
             callBack()
         }
+
+        binding.btnContinue.setOnClickListener {
+            sendProfileData()
+        }
     }
 
     private fun callBack() {
         if (binding.llFirst.visibility == View.VISIBLE) {
+            binding.btnContinue.visibility = View.GONE
+            binding.btnNext.visibility = View.VISIBLE
             finish()
         } else if (binding.llSecond.visibility == View.VISIBLE) {
+            binding.btnContinue.visibility = View.GONE
+            binding.btnNext.visibility = View.VISIBLE
             callSecondPrev()
         } else if (binding.llThird.visibility == View.VISIBLE) {
+            binding.btnContinue.visibility = View.GONE
+            binding.btnNext.visibility = View.VISIBLE
             callFirstNext()
         } else if (binding.llForth.visibility == View.VISIBLE) {
+            binding.btnContinue.visibility = View.GONE
+            binding.btnNext.visibility = View.VISIBLE
             callFourthPrev()
         } else if (binding.llFifth.visibility == View.VISIBLE) {
+            binding.btnContinue.visibility = View.GONE
+            binding.btnNext.visibility = View.VISIBLE
             callSecondNext("1")
         } else if (binding.llSixth.visibility == View.VISIBLE) {
+            binding.btnContinue.visibility = View.GONE
+            binding.btnNext.visibility = View.VISIBLE
             callFifthPrev()
         }
     }
 
     private fun callNext() {
         if (binding.llFirst.visibility == View.VISIBLE) {
+            binding.btnContinue.visibility = View.GONE
+            binding.btnNext.visibility = View.VISIBLE
             callFirstNext()
         } else if (binding.llSecond.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.visibility = View.VISIBLE
+            binding.btnContinue.visibility = View.GONE
             callSecondNext("2")
         } else if (binding.llThird.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.visibility = View.VISIBLE
+            binding.btnContinue.visibility = View.GONE
             callSecondNext("3")
         } else if (binding.llForth.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.visibility = View.VISIBLE
+            binding.btnContinue.visibility = View.GONE
             callFourthNext()
         } else if (binding.llFifth.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
+            binding.btnNext.visibility = View.VISIBLE
+            binding.btnContinue.visibility = View.GONE
             callFifthNext()
         } else if (binding.llSixth.visibility == View.VISIBLE) {
             binding.btnPrev.visibility = View.VISIBLE
-            binding.llIndicate.progress = 5
-            sendProfileData()
+            binding.btnNext.visibility = View.GONE
+            binding.btnContinue.visibility = View.VISIBLE
         }
     }
 
@@ -367,6 +401,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.llFifth.visibility = View.VISIBLE
         binding.llSixth.visibility = View.GONE
         binding.btnPrev.visibility = View.VISIBLE
+        binding.btnNext.visibility = View.VISIBLE
+        binding.btnContinue.visibility = View.GONE
 
         if (prevDrugUse.equals("Yes", true)) {
             binding.btnNext.isClickable = true
@@ -473,6 +509,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.llForth.visibility = View.GONE
         binding.llFifth.visibility = View.VISIBLE
         binding.btnPrev.visibility = View.VISIBLE
+        binding.btnNext.visibility = View.VISIBLE
+        binding.btnContinue.visibility = View.GONE
         if (prevDrugUse.equals("Yes", true)) {
             binding.btnNext.isClickable = true
             binding.btnNext.setColorFilter(
@@ -515,7 +553,16 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.llFifth.visibility = View.GONE
         binding.llSixth.visibility = View.VISIBLE
         binding.btnPrev.visibility = View.VISIBLE
+        binding.btnNext.visibility = View.GONE
+        binding.btnContinue.visibility = View.VISIBLE
+        binding.btnContinue.isClickable = false
+        binding.btnContinue.isEnabled = false
+        binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
         if (medication.equals("Yes", true)) {
+            binding.llIndicate.progress = 5
+            binding.btnContinue.isClickable = true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             binding.btnNext.isClickable = true
             binding.btnNext.setColorFilter(
                 ContextCompat.getColor(activity, R.color.black),
@@ -531,6 +578,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
             binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
         } else if (medication.equals("No", true)) {
+            binding.llIndicate.progress = 5
+            binding.btnContinue.isClickable = true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             binding.btnNext.isClickable = true
             binding.btnNext.setColorFilter(
                 ContextCompat.getColor(activity, R.color.black),
@@ -560,6 +611,8 @@ class ProfileProgressActivity : AppCompatActivity() {
 
     private fun callSecondNext(s: String) {
         binding.btnPrev.visibility = View.VISIBLE
+        binding.btnNext.visibility = View.VISIBLE
+        binding.btnContinue.visibility = View.GONE
         if (s.equals("2", true)) {
             if (gender.equals("Gender X")) {
                 callGenderXSetData()
@@ -711,6 +764,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.llForth.visibility = View.GONE
         binding.llFifth.visibility = View.GONE
         binding.btnPrev.visibility = View.GONE
+        binding.btnNext.visibility = View.VISIBLE
+        binding.btnContinue.visibility = View.GONE
         if (profileType.equals("Myself", true)) {
             profileType = "Myself"
             binding.btnNext.isClickable = true
@@ -764,6 +819,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.llForth.visibility = View.GONE
         binding.llFifth.visibility = View.GONE
         binding.btnPrev.visibility = View.VISIBLE
+        binding.btnNext.visibility = View.VISIBLE
+        binding.btnContinue.visibility = View.GONE
         if (gender.equals("Male", true)) {
             binding.btnNext.isClickable = true
             binding.btnNext.setColorFilter(

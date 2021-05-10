@@ -1359,7 +1359,6 @@ public class BWSApplication extends Application {
             yl.setGranularity(1f);
             yl.setGranularityEnabled(true);
             yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
             barChart.setVisibleXRangeMaximum(xAxisValues.size());
             barChart.setDragEnabled(false);
             barChart.setTouchEnabled(false);
@@ -1370,6 +1369,7 @@ public class BWSApplication extends Application {
             barChart.setFitBars(true);
 
             Legend l = barChart.getLegend();
+            l.setEnabled(true);
 //            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
             l.setWordWrapEnabled(true);
         }

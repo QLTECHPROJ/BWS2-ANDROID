@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
+import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
 import com.brainwellnessspa.SplashModule.SplashScreenActivity

@@ -199,7 +199,7 @@ class ManageActivity : YouTubeBaseActivity() , YouTubePlayer.OnInitializedListen
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)*/
 
-            fun getYouTubePlayerProvider(): YouTubePlayer.Provider? {
+            fun getYouTubePlayerProvider(): YouTubePlayer.Provider {
                 return holder.binding.youtubeView
             }
         }
@@ -207,8 +207,6 @@ class ManageActivity : YouTubeBaseActivity() , YouTubePlayer.OnInitializedListen
         override fun getItemCount(): Int {
             return listModelList.size
         }
-
-
 
         inner class MyViewHolder(binding: VideoSeriesBoxLayoutBinding) :
             RecyclerView.ViewHolder(binding.getRoot()) {
