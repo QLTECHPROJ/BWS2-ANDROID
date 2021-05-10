@@ -42,6 +42,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class CreateAccountActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateAccountBinding
@@ -110,7 +112,14 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.flPassword.error = ""
             } else if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = ""
-                binding.flNumber.error = "Please provide a valid mobile number"
+                binding.flNumber.error = "Mobile number is required"
+                binding.flEmail.error = ""
+                binding.flPassword.error = ""
+            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 8 ||
+                binding.etNumber.text.toString().length > 10
+            ) {
+                binding.flUser.error = ""
+                binding.flNumber.error = "Valid Mobile number is required"
                 binding.flEmail.error = ""
                 binding.flPassword.error = ""
             } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
@@ -128,6 +137,12 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.flNumber.error = ""
                 binding.flEmail.error = ""
                 binding.flPassword.error = "Password is required"
+            } else if (binding.etPassword.text.toString().length < 8 || !isValidPassword(binding.etPassword.text.toString())
+            ) {
+                binding.flUser.error = ""
+                binding.flNumber.error = ""
+                binding.flEmail.error = ""
+                binding.flPassword.error = "Valid password is required"
             } else {
                 SignUpUser()
             }
@@ -179,7 +194,7 @@ class CreateAccountActivity : AppCompatActivity() {
             dialog.setCancelable(true)
         }
 
-        binding.tvCountry.setOnClickListener {
+        binding.llCountryCode.setOnClickListener {
             dialog = Dialog(this)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.country_list_layout)
@@ -227,15 +242,32 @@ class CreateAccountActivity : AppCompatActivity() {
                 }
             })
 
-            prepareData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder, searchFilter)
+            prepareData(
+                dialog,
+                rvCountryList,
+                tvFound,
+                progressBar,
+                progressBarHolder,
+                searchFilter
+            )
             dialog.show()
             dialog.setCanceledOnTouchOutside(true)
             dialog.setCancelable(true)
         }
     }
 
+    fun isValidPassword(password: String?): Boolean {
+        val pattern: Pattern
+        val matcher: Matcher
+        val PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(PASSWORD_PATTERN)
+        matcher = pattern.matcher(password)
+        return matcher.matches()
+    }
+
     fun String.isEmailValid(): Boolean {
-        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this)
+            .matches()
     }
 
     override fun onBackPressed() {
@@ -243,19 +275,27 @@ class CreateAccountActivity : AppCompatActivity() {
         startActivity(i)
         finish()
     }
-    fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar,
-                    progressBarHolder: FrameLayout, searchFilter: String) {
+
+    fun prepareData(
+        dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar,
+        progressBarHolder: FrameLayout, searchFilter: String
+    ) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
             val listCall: Call<CountryListModel> = APINewClient.getClient().countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
-                override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
+                override fun onResponse(
+                    call: Call<CountryListModel>,
+                    response: Response<CountryListModel>
+                ) {
                     try {
                         BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
                         rvCountryList.layoutManager = LinearLayoutManager(ctx)
-                        adapter = CountrySelectAdapter(dialog, searchFilter, binding, listModel.responseData, rvCountryList,
-                                tvFound)
+                        adapter = CountrySelectAdapter(
+                            dialog, searchFilter, binding, listModel.responseData, rvCountryList,
+                            tvFound
+                        )
                         rvCountryList.adapter = adapter
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -276,14 +316,16 @@ class CreateAccountActivity : AppCompatActivity() {
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcm_id)) {
-                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this, OnCompleteListener { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result!!.token
-                    Log.e("newToken", newToken)
-                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, newToken) //Friend
-                    editor.apply()
-                    editor.commit()
-                })
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
+                    this,
+                    OnCompleteListener { task: Task<InstallationTokenResult> ->
+                        val newToken = task.result!!.token
+                        Log.e("newToken", newToken)
+                        val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+                        editor.putString(CONSTANTS.Token, newToken) //Friend
+                        editor.apply()
+                        editor.commit()
+                    })
                 val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
                 fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
@@ -291,25 +333,40 @@ class CreateAccountActivity : AppCompatActivity() {
 
             val countryCode: String = binding.tvCountry.getText().toString().replace("+", "")
             Log.e("countryCode", countryCode);
-            val listCall: Call<NewSignUpModel> = APINewClient.getClient().getSignUp(binding.etUser.text.toString(), binding.etEmail.text.toString(), countryCode, binding.etNumber.text.toString(),  CONSTANTS.FLAG_ONE, binding.etPassword.text.toString(),
-                    Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), fcm_id)
+            val listCall: Call<NewSignUpModel> = APINewClient.getClient().getSignUp(
+                binding.etUser.text.toString(),
+                binding.etEmail.text.toString(),
+                countryCode,
+                binding.etNumber.text.toString(),
+                CONSTANTS.FLAG_ONE,
+                binding.etPassword.text.toString(),
+                Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
+                fcm_id
+            )
             listCall.enqueue(object : Callback<NewSignUpModel> {
-                override fun onResponse(call: Call<NewSignUpModel>, response: Response<NewSignUpModel>) {
+                override fun onResponse(
+                    call: Call<NewSignUpModel>,
+                    response: Response<NewSignUpModel>
+                ) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            activity
+                        )
                         val listModel: NewSignUpModel = response.body()!!
                         if (listModel.getResponseCode().equals("200")) {
                             val i = Intent(ctx, SignInActivity::class.java)
                             startActivity(i)
                             finish()
-                          /*  val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                            val editor = shared.edit()
-                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.id)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_USEREMAIL, listModel.getResponseData()?.email)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_DeviceType, CONSTANTS.FLAG_ONE)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_DeviceID, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
-                            editor.commit()*/
+                            /*  val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                              val editor = shared.edit()
+                              editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.id)
+                              editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
+                              editor.putString(CONSTANTS.PREFE_ACCESS_USEREMAIL, listModel.getResponseData()?.email)
+                              editor.putString(CONSTANTS.PREFE_ACCESS_DeviceType, CONSTANTS.FLAG_ONE)
+                              editor.putString(CONSTANTS.PREFE_ACCESS_DeviceID, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
+                              editor.commit()*/
                         }
                         BWSApplication.showToast(listModel.getResponseMessage(), activity)
 
@@ -327,9 +384,14 @@ class CreateAccountActivity : AppCompatActivity() {
         }
     }
 
-    class CountrySelectAdapter(dialog: Dialog, searchFilter: String, binding: ActivityCreateAccountBinding,
-                               modelList: List<CountryListModel.ResponseData>, rvCountryList: RecyclerView, tvFound: TextView)
-        : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
+    class CountrySelectAdapter(
+        dialog: Dialog,
+        searchFilter: String,
+        binding: ActivityCreateAccountBinding,
+        modelList: List<CountryListModel.ResponseData>,
+        rvCountryList: RecyclerView,
+        tvFound: TextView
+    ) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private val modelList: List<CountryListModel.ResponseData>
         private var listFilterData: List<CountryListModel.ResponseData>
         private var rvCountryList: RecyclerView
@@ -338,7 +400,12 @@ class CreateAccountActivity : AppCompatActivity() {
         private var searchFilter: String
         private var dialog: Dialog
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.country_popup_layout, parent, false)
+            val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.country_popup_layout,
+                parent,
+                false
+            )
             return MyViewHolder(v)
         }
 
@@ -376,7 +443,8 @@ class CreateAccountActivity : AppCompatActivity() {
                     listFilterData = if (charString.isEmpty()) {
                         modelList
                     } else {
-                        val filteredList: MutableList<CountryListModel.ResponseData> = ArrayList<CountryListModel.ResponseData>()
+                        val filteredList: MutableList<CountryListModel.ResponseData> =
+                            ArrayList<CountryListModel.ResponseData>()
                         for (row in modelList) {
                             if (row.name.toLowerCase().contains(charString.toLowerCase())) {
                                 filteredList.add(row)
@@ -388,7 +456,10 @@ class CreateAccountActivity : AppCompatActivity() {
                     return filterResults
                 }
 
-                override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                override fun publishResults(
+                    charSequence: CharSequence,
+                    filterResults: FilterResults
+                ) {
                     if (listFilterData.size == 0) {
                         tvFound.setVisibility(View.VISIBLE)
                         tvFound.setText("Sorry we are not available in this country yet")
@@ -403,7 +474,8 @@ class CreateAccountActivity : AppCompatActivity() {
             }
         }
 
-        inner class MyViewHolder(bindingAdapter: CountryPopupLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
+        inner class MyViewHolder(bindingAdapter: CountryPopupLayoutBinding) :
+            RecyclerView.ViewHolder(bindingAdapter.root) {
             var bindingAdapter: CountryPopupLayoutBinding
 
             init {

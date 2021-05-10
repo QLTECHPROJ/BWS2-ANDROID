@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.ManageModule.ManageActivity
+import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityDoingGoodBinding
 

@@ -96,16 +96,19 @@ class HomeFragment : Fragment() {
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
     var mBottomSheetDialog: BottomSheetDialog? = null
     lateinit var dialog: Dialog
-    var score ="Increase"
+    var score = "Increase"
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.getRoot()
         ctx = requireActivity()
         act = requireActivity()
-        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1 =
+            ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
@@ -119,26 +122,28 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
-        if (SLEEPTIME.equals("", true)){
+        if (SLEEPTIME.equals("", true)) {
             binding.llSleepTime.visibility = View.GONE
-        }else {
+        } else {
             binding.llSleepTime.visibility = View.VISIBLE
         }
 
         binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase::class.java,
-                "Audio_database")
-                .addMigrations(BWSApplication.MIGRATION_1_2)
-                .build()
+        DB = Room.databaseBuilder(
+            ctx,
+            AudioDatabase::class.java,
+            "Audio_database"
+        )
+            .addMigrations(BWSApplication.MIGRATION_1_2)
+            .build()
 
         binding.tvName.text = UserName
         if (UserIMAGE.equals("", true)) {
             binding.ivUser.setImageResource(R.drawable.ic_gray_user)
         } else {
             Glide.with(requireActivity()).load(UserIMAGE)
-                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
-                    .into(binding.ivUser)
+                .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
+                .into(binding.ivUser)
         }
 //        homeViewModel!!.text.observe(viewLifecycleOwner, { s: String? -> })
 
@@ -153,7 +158,12 @@ class HomeFragment : Fragment() {
         }
 
         binding.llBottomView.setOnClickListener { v: View? ->
-            val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.user_list_custom_layout, null, false)
+            val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(activity),
+                R.layout.user_list_custom_layout,
+                null,
+                false
+            )
             mBottomSheetDialog = BottomSheetDialog(ctx, R.style.BaseBottomSheetDialog)
             mBottomSheetDialog!!.setContentView(layoutBinding.root)
             mBottomSheetBehavior = BottomSheetBehavior<View>()
@@ -166,6 +176,11 @@ class HomeFragment : Fragment() {
             prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar)
             layoutBinding.llAddNewUser.setOnClickListener { v1: View? ->
                 val i = Intent(activity, AddProfileActivity::class.java)
+                i.putExtra("AddProfile", "Add")
+                i.putExtra("CoUserID", "")
+                i.putExtra("CoEMAIL", "")
+                i.putExtra("CoName", "")
+                i.putExtra("CoNumber", "")
                 startActivity(i)
                 mBottomSheetDialog!!.hide()
             }
@@ -173,6 +188,7 @@ class HomeFragment : Fragment() {
 
         binding.ivEditCategory.setOnClickListener {
             val i = Intent(activity, RecommendedCategoryActivity::class.java)
+            i.putExtra("BackClick","1")
             startActivity(i)
         }
 
@@ -184,7 +200,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
-        if(comeReminder.equals("1")){
+        if (comeReminder.equals("1")) {
             prepareHomeData()
         }
         prepareHomeData()
@@ -197,7 +213,10 @@ class HomeFragment : Fragment() {
             progressBar.invalidate()
             val listCall = APINewClient.getClient().getUserList(USERID)
             listCall.enqueue(object : Callback<AddedUserListModel> {
-                override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
+                override fun onResponse(
+                    call: Call<AddedUserListModel>,
+                    response: Response<AddedUserListModel>
+                ) {
                     try {
                         progressBar.visibility = View.GONE
                         val listModel: AddedUserListModel = response.body()!!
@@ -218,21 +237,26 @@ class HomeFragment : Fragment() {
     fun prepareHomeData() {
         val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
         var fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")
-        val DeviceId = Settings.Secure.getString(BWSApplication.getContext().contentResolver, Settings.Secure.ANDROID_ID)
+        val DeviceId = Settings.Secure.getString(
+            BWSApplication.getContext().contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
 
         Log.e("newToken", fcm_id!!)
         Log.e("deviceid", DeviceId!!)
         Log.e("UserID", USERID!!)
         Log.e("CoUSerID", CoUSERID!!)
         if (TextUtils.isEmpty(fcm_id)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
-                val newToken = task.result.token
-                Log.e("newToken", newToken)
-                val editor = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, newToken) //Friend
-                editor.apply()
-                editor.commit()
-            }
+            FirebaseInstallations.getInstance().getToken(true)
+                .addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
+                    val newToken = task.result.token
+                    Log.e("newToken", newToken)
+                    val editor =
+                        ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+                    editor.putString(CONSTANTS.Token, newToken) //Friend
+                    editor.apply()
+                    editor.commit()
+                }
             val sharedPreferences3 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
             fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")
         }
@@ -241,78 +265,130 @@ class HomeFragment : Fragment() {
             val listCall = APINewClient.getClient().getHomeScreenData(CoUSERID)
             listCall.enqueue(object : Callback<HomeScreenModel?> {
                 @SuppressLint("ResourceAsColor")
-                override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
+                override fun onResponse(
+                    call: Call<HomeScreenModel?>,
+                    response: Response<HomeScreenModel?>
+                ) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            activity
+                        )
                         val listModel = response.body()!!
                         homelistModel = response.body()!!
 
                         if (listModel.responseData!!.scoreIncDec.equals("", ignoreCase = true)) {
                             binding.llCheckPercent.visibility = View.INVISIBLE
                         } else if (listModel.responseData!!.scoreIncDec.equals(
-                                        "Increase",
-                                        ignoreCase = true
-                                )
+                                "Increase",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.llCheckPercent.visibility = View.VISIBLE
                             binding.tvPercent.setTextColor(
-                                    ContextCompat.getColor(
-                                            act,
-                                            R.color.redtheme
-                                    )
+                                ContextCompat.getColor(
+                                    act,
+                                    R.color.redtheme
+                                )
                             )
                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
                         } else if (listModel.responseData!!.scoreIncDec.equals(
-                                        "Decrease",
-                                        ignoreCase = true
-                                )
+                                "Decrease",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.llCheckPercent.visibility = View.VISIBLE
                             binding.tvPercent.setTextColor(
-                                    ContextCompat.getColor(
-                                            act,
-                                            R.color.green_dark_s
-                                    )
+                                ContextCompat.getColor(
+                                    act,
+                                    R.color.green_dark_s
+                                )
                             )
                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
                         }
 
-                        binding.tvPercent.text = listModel.responseData!!.indexScoreDiff!!.split(".")[0] + "%"
+                        binding.tvPercent.text =
+                            listModel.responseData!!.indexScoreDiff!!.split(".")[0] + "%"
                         binding.tvSevere.text = listModel.responseData!!.indexScore.toString()
                         binding.llIndicate.progress = listModel.responseData!!.indexScore!!.toInt()
 
-                        binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
-                        binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
+                        binding.tvPlaylistName.text =
+                            listModel.responseData!!.suggestedPlaylist!!.playlistName
+                        binding.tvTime.text =
+                            listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
 
 
                         if (listModel.responseData!!.shouldCheckIndexScore.equals("0", true)) {
                             binding.llCheckIndexSocre.visibility = View.GONE
-                        } else if (listModel.responseData!!.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
+                        } else if (listModel.responseData!!.shouldCheckIndexScore.equals(
+                                "1",
+                                ignoreCase = true
+                            )
+                        ) {
                             binding.llCheckIndexSocre.visibility = View.VISIBLE
                         }
 
 
-                        if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
-                                || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                        if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                "0",
+                                ignoreCase = true
+                            )
+                            || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                "",
+                                ignoreCase = true
+                            )
+                        ) {
                             binding.tvReminder.setText("Set Reminder")
-                        } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                        } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                "1",
+                                ignoreCase = true
+                            )
+                        ) {
                             binding.tvReminder.setText("Update Reminder")
                         }
 
                         binding.tvReminder.setOnClickListener {
-                            if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true)
-                                    || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                            if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                    "0",
+                                    ignoreCase = true
+                                )
+                                || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                    "",
+                                    ignoreCase = true
+                                )
+                            ) {
                                 binding.tvReminder.setText("Set Reminder")
-                                BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
-                            } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                                BWSApplication.getReminderDay(
+                                    ctx,
+                                    act,
+                                    CoUSERID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                    activity,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                                )
+                            } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                    "1",
+                                    ignoreCase = true
+                                )
+                            ) {
                                 binding.tvReminder.setText("Update Reminder")
                                 val dialog = Dialog(ctx)
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                 dialog.setContentView(R.layout.delete_reminder)
-                                dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
-                                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                dialog.window!!.setBackgroundDrawable(
+                                    ColorDrawable(
+                                        ctx.resources.getColor(
+                                            R.color.dark_blue_gray
+                                        )
+                                    )
+                                )
+                                dialog.window!!.setLayout(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
                                 val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                                 val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
                                 val tvText = dialog.findViewById<TextView>(R.id.tvText)
@@ -331,19 +407,38 @@ class HomeFragment : Fragment() {
                                 }
                                 tvconfirm.setOnClickListener { v: View? ->
                                     dialog.hide()
-                                    BWSApplication.getReminderDay(ctx, act, CoUSERID, listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                            listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
-                                            listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                    BWSApplication.getReminderDay(
+                                        ctx,
+                                        act,
+                                        CoUSERID,
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                        activity,
+                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                        listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                                    )
                                 }
                                 tvGoBack.setOnClickListener { v: View? ->
-                                    val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
-                                            listModel.responseData!!.suggestedPlaylist!!.reminderId)
+                                    val listCall = APINewClient.getClient().getDeleteRemider(
+                                        CoUSERID,
+                                        listModel.responseData!!.suggestedPlaylist!!.reminderId
+                                    )
                                     listCall.enqueue(object : Callback<DeleteRemiderModel?> {
-                                        override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
+                                        override fun onResponse(
+                                            call: Call<DeleteRemiderModel?>,
+                                            response: Response<DeleteRemiderModel?>
+                                        ) {
                                             try {
                                                 val model = response.body()
-                                                if (model!!.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                    BWSApplication.showToast(model.responseMessage, activity)
+                                                if (model!!.responseCode.equals(
+                                                        ctx.getString(R.string.ResponseCodesuccess),
+                                                        ignoreCase = true
+                                                    )
+                                                ) {
+                                                    BWSApplication.showToast(
+                                                        model.responseMessage,
+                                                        activity
+                                                    )
                                                     dialog.dismiss()
                                                 }
                                             } catch (e: java.lang.Exception) {
@@ -351,7 +446,11 @@ class HomeFragment : Fragment() {
                                             }
                                         }
 
-                                        override fun onFailure(call: Call<DeleteRemiderModel?>, t: Throwable) {}
+                                        override fun onFailure(
+                                            call: Call<DeleteRemiderModel?>,
+                                            t: Throwable
+                                        ) {
+                                        }
                                     })
                                 }
                                 dialog.show()
@@ -361,16 +460,31 @@ class HomeFragment : Fragment() {
 
                         GetPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!)
 
-                        BWSApplication.getPastIndexScore(homelistModel.responseData!!, binding.barChart, activity)
+                        BWSApplication.getPastIndexScore(
+                            homelistModel.responseData!!,
+                            binding.barChart,
+                            activity
+                        )
 
 
-                        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
-                        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                        val shared1 = ctx.getSharedPreferences(
+                            CONSTANTS.PREF_KEY_PLAYER,
+                            AppCompatActivity.MODE_PRIVATE
+                        )
+                        val AudioPlayerFlag =
+                            shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
                         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                         val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                         if (MyDownloads.equals("1", ignoreCase = true)) {
-                            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                            if (AudioPlayerFlag.equals(
+                                    "Downloadlist",
+                                    ignoreCase = true
+                                ) && MyPlaylist.equals(
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    ignoreCase = true
+                                )
+                            ) {
                                 if (GlobalInitExoPlayer.player != null) {
                                     if (GlobalInitExoPlayer.player.playWhenReady) {
                                         MyPlaylistsFragment.isPlayPlaylist = 1
@@ -394,7 +508,14 @@ class HomeFragment : Fragment() {
                                 binding.llPlay.visibility = View.VISIBLE
                             }
                         } else {
-                            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                            if (AudioPlayerFlag.equals(
+                                    "playlist",
+                                    ignoreCase = true
+                                ) && MyPlaylist.equals(
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    ignoreCase = true
+                                )
+                            ) {
                                 if (GlobalInitExoPlayer.player != null) {
                                     if (GlobalInitExoPlayer.player.playWhenReady) {
                                         MyPlaylistsFragment.isPlayPlaylist = 1
@@ -416,7 +537,10 @@ class HomeFragment : Fragment() {
                                 binding.llPlay.visibility = View.VISIBLE
                             }
                         }
-                        val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        val sharedd = ctx.getSharedPreferences(
+                            CONSTANTS.RecommendedCatMain,
+                            Context.MODE_PRIVATE
+                        )
                         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
                         if (SLEEPTIME.equals("", true)) {
@@ -444,15 +568,24 @@ class HomeFragment : Fragment() {
                                 binding.llPause.visibility = View.GONE
                             } else if (MyPlaylistsFragment.isPlayPlaylist == 2) {
                                 if (GlobalInitExoPlayer.player != null) {
-                                    val lastIndexID = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
-                                    if (BWSApplication.PlayerAudioId.equals(lastIndexID, ignoreCase = true)
-                                            && GlobalInitExoPlayer.player.duration - GlobalInitExoPlayer.player.currentPosition <= 20) {
-                                        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE)
+                                    val lastIndexID =
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
+                                    if (BWSApplication.PlayerAudioId.equals(
+                                            lastIndexID,
+                                            ignoreCase = true
+                                        )
+                                        && GlobalInitExoPlayer.player.duration - GlobalInitExoPlayer.player.currentPosition <= 20
+                                    ) {
+                                        val shared = ctx.getSharedPreferences(
+                                            CONSTANTS.PREF_KEY_AUDIO,
+                                            Context.MODE_PRIVATE
+                                        )
                                         val editor = shared.edit()
                                         editor.putInt(CONSTANTS.PREF_KEY_position, 0)
                                         editor.apply()
                                         GlobalInitExoPlayer.player.seekTo(0, 0)
-                                        BWSApplication.PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
+                                        BWSApplication.PlayerAudioId =
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
                                         GlobalInitExoPlayer.player.playWhenReady = true
                                     } else {
                                         GlobalInitExoPlayer.player.playWhenReady = true
@@ -462,8 +595,16 @@ class HomeFragment : Fragment() {
                                 binding.llPlay.visibility = View.GONE
                                 binding.llPause.visibility = View.VISIBLE
                             } else {
-                                BWSApplication.PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
-                                callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, activity, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!)
+                                BWSApplication.PlayerAudioId =
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
+                                callMainPlayerSuggested(
+                                    0,
+                                    "",
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
+                                    ctx,
+                                    activity,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!
+                                )
                                 binding.llPlay.visibility = View.GONE
                                 binding.llPause.visibility = View.VISIBLE
                             }
@@ -477,9 +618,18 @@ class HomeFragment : Fragment() {
                     try {
                         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
                         i.putExtra("New", "0")
-                        i.putExtra("PlaylistID", homelistModel.responseData!!.suggestedPlaylist!!.playlistID)
-                        i.putExtra("PlaylistName", homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
-                        i.putExtra("PlaylistImage", homelistModel.responseData!!.suggestedPlaylist!!.playlistImage)
+                        i.putExtra(
+                            "PlaylistID",
+                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID
+                        )
+                        i.putExtra(
+                            "PlaylistName",
+                            homelistModel.responseData!!.suggestedPlaylist!!.playlistName
+                        )
+                        i.putExtra(
+                            "PlaylistImage",
+                            homelistModel.responseData!!.suggestedPlaylist!!.playlistImage
+                        )
                         i.putExtra("PlaylistSource", "")
                         i.putExtra("MyDownloads", "0")
                         i.putExtra("ScreenView", "")
@@ -492,13 +642,24 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
             })
         }
     }
 
-    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, activity: FragmentActivity?, playlistID: String) {
+    private fun callMainPlayerSuggested(
+        position: Int,
+        view: String?,
+        listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        activity: FragmentActivity?,
+        playlistID: String
+    ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
@@ -507,7 +668,11 @@ class HomeFragment : Fragment() {
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (MyDownloads.equals("1", true)) {
-            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
+            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
+                    playlistID,
+                    ignoreCase = true
+                )
+            ) {
                 if (MiniPlayerFragment.isDisclaimer == 1) {
                     if (GlobalInitExoPlayer.player != null) {
                         if (!GlobalInitExoPlayer.player.playWhenReady) {
@@ -517,13 +682,19 @@ class HomeFragment : Fragment() {
                         DashboardActivity.audioClick = true
                     }
                     callMyPlayer(ctx, act)
-                    BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                    BWSApplication.showToast(
+                        "The audio shall start playing after the disclaimer",
+                        activity
+                    )
                 } else {
                     if (GlobalInitExoPlayer.player != null) {
                         if (position != PlayerPosition) {
                             GlobalInitExoPlayer.player.seekTo(position, 0)
                             GlobalInitExoPlayer.player.playWhenReady = true
-                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                            val sharedxx = ctx.getSharedPreferences(
+                                CONSTANTS.PREF_KEY_PLAYER,
+                                Context.MODE_PRIVATE
+                            )
                             val editor = sharedxx.edit()
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                             editor.apply()
@@ -533,8 +704,9 @@ class HomeFragment : Fragment() {
                         callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
                     }
                 }
-            }else {
-                val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+            } else {
+                val listModelList2 =
+                    arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 listModelList2.addAll(listModel)
                 val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                 mainPlayModel.id = "0"
@@ -568,7 +740,11 @@ class HomeFragment : Fragment() {
                 callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID)
             }
         } else {
-            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
+            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
+                    playlistID,
+                    ignoreCase = true
+                )
+            ) {
                 if (MiniPlayerFragment.isDisclaimer == 1) {
                     if (GlobalInitExoPlayer.player != null) {
                         if (!GlobalInitExoPlayer.player.playWhenReady) {
@@ -578,13 +754,19 @@ class HomeFragment : Fragment() {
                         DashboardActivity.audioClick = true
                     }
                     callMyPlayer(ctx, act)
-                    BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                    BWSApplication.showToast(
+                        "The audio shall start playing after the disclaimer",
+                        activity
+                    )
                 } else {
                     if (GlobalInitExoPlayer.player != null) {
                         if (position != PlayerPosition) {
                             GlobalInitExoPlayer.player.seekTo(position, 0)
                             GlobalInitExoPlayer.player.playWhenReady = true
-                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                            val sharedxx = ctx.getSharedPreferences(
+                                CONSTANTS.PREF_KEY_PLAYER,
+                                Context.MODE_PRIVATE
+                            )
                             val editor = sharedxx.edit()
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                             editor.apply()
@@ -595,7 +777,8 @@ class HomeFragment : Fragment() {
                     }
                 }
             } else {
-                val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                val listModelList2 =
+                    arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 listModelList2.addAll(listModel)
                 val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                 mainPlayModel.id = "0"
@@ -633,20 +816,27 @@ class HomeFragment : Fragment() {
 
     private fun GetPlaylistDetail(PlaylistID: String) {
         try {
-           /* DB!!.taskDao()
-                    .getPlaylist1(PlaylistID).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
-                        if (audioList.isNotEmpty()) {
-                            MyDownloads = "1"
-                        } else {
-                            MyDownloads = "0"
-                        }
-                    })*/
+            /* DB!!.taskDao()
+                     .getPlaylist1(PlaylistID).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
+                         if (audioList.isNotEmpty()) {
+                             MyDownloads = "1"
+                         } else {
+                             MyDownloads = "0"
+                         }
+                     })*/
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun callPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String) {
+    private fun callPlayerSuggested(
+        position: Int,
+        view: String?,
+        listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity,
+        playlistID: String
+    ) {
         GlobalInitExoPlayer.callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()
@@ -686,12 +876,22 @@ class HomeFragment : Fragment() {
         act.overridePendingTransition(0, 0)
     }
 
-    class AreaOfFocusAdapter(var binding: FragmentHomeBinding, var ctx: Context, var selectedCategoriesName: ArrayList<String>) : RecyclerView.Adapter<AreaOfFocusAdapter.MyViewHolder>() {
+    class AreaOfFocusAdapter(
+        var binding: FragmentHomeBinding,
+        var ctx: Context,
+        var selectedCategoriesName: ArrayList<String>
+    ) : RecyclerView.Adapter<AreaOfFocusAdapter.MyViewHolder>() {
 
-        inner class MyViewHolder(var bindingAdapter: SelectedCategoryRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
+        inner class MyViewHolder(var bindingAdapter: SelectedCategoryRawBinding) :
+            RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: SelectedCategoryRawBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.selected_category_raw, parent, false)
+            val v: SelectedCategoryRawBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.selected_category_raw,
+                parent,
+                false
+            )
             return MyViewHolder(v)
         }
 
@@ -731,10 +931,16 @@ class HomeFragment : Fragment() {
         }
     }
 
-    inner class UserListAdapter(private val model: AddedUserListModel.ResponseData) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
+    inner class UserListAdapter(private val model: AddedUserListModel.ResponseData) :
+        RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var selectedItem = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: MultipleProfileChangeLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.multiple_profile_change_layout, parent, false)
+            val v: MultipleProfileChangeLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.multiple_profile_change_layout,
+                parent,
+                false
+            )
             return MyViewHolder(v)
         }
 
@@ -745,8 +951,8 @@ class HomeFragment : Fragment() {
                 holder.bind.ivProfileImage.setImageResource(R.drawable.ic_user_default_icon)
             } else {
                 Glide.with(activity!!).load(modelList[position].image)
-                        .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
-                        .into(holder.bind.ivProfileImage)
+                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
+                    .into(holder.bind.ivProfileImage)
             }
             holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
             holder.bind.ivCheck.visibility = View.INVISIBLE
@@ -762,7 +968,7 @@ class HomeFragment : Fragment() {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.comfirm_pin_layout)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog.window!!.setLayout(700, ViewGroup.LayoutParams.WRAP_CONTENT)
+                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 val btnDone = dialog.findViewById<Button>(R.id.btnDone)
                 val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                 val txtError = dialog.findViewById<TextView>(R.id.txtError)
@@ -773,10 +979,46 @@ class HomeFragment : Fragment() {
                 val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
                 tvTitle.text = "Unlock"
                 editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-                edtOTP1.addTextChangedListener(PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                edtOTP2.addTextChangedListener(PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                edtOTP3.addTextChangedListener(PinTextWatcher(2, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                edtOTP4.addTextChangedListener(PinTextWatcher(3, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                edtOTP1.addTextChangedListener(
+                    PinTextWatcher(
+                        0,
+                        edtOTP1,
+                        edtOTP2,
+                        edtOTP3,
+                        edtOTP4,
+                        btnDone
+                    )
+                )
+                edtOTP2.addTextChangedListener(
+                    PinTextWatcher(
+                        1,
+                        edtOTP1,
+                        edtOTP2,
+                        edtOTP3,
+                        edtOTP4,
+                        btnDone
+                    )
+                )
+                edtOTP3.addTextChangedListener(
+                    PinTextWatcher(
+                        2,
+                        edtOTP1,
+                        edtOTP2,
+                        edtOTP3,
+                        edtOTP4,
+                        btnDone
+                    )
+                )
+                edtOTP4.addTextChangedListener(
+                    PinTextWatcher(
+                        3,
+                        edtOTP1,
+                        edtOTP2,
+                        edtOTP3,
+                        edtOTP4,
+                        btnDone
+                    )
+                )
                 edtOTP1.setOnKeyListener(PinOnKeyListener(0))
                 edtOTP2.setOnKeyListener(PinOnKeyListener(1))
                 edtOTP3.setOnKeyListener(PinOnKeyListener(2))
@@ -790,9 +1032,10 @@ class HomeFragment : Fragment() {
                 }
                 btnDone.setOnClickListener { v1: View? ->
                     if (edtOTP1.text.toString().equals("", ignoreCase = true)
-                            && edtOTP2.text.toString().equals("", ignoreCase = true)
-                            && edtOTP3.text.toString().equals("", ignoreCase = true)
-                            && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                        && edtOTP2.text.toString().equals("", ignoreCase = true)
+                        && edtOTP3.text.toString().equals("", ignoreCase = true)
+                        && edtOTP4.text.toString().equals("", ignoreCase = true)
+                    ) {
                         txtError.visibility = View.VISIBLE
                         txtError.text = "Please enter OTP"
                     } else {
@@ -801,49 +1044,110 @@ class HomeFragment : Fragment() {
                             txtError.text = ""
                             progressBar.visibility = View.VISIBLE
                             progressBar.invalidate()
-                            val listCall = APINewClient.getClient().getVerifyPin(modelList[position].coUserId,
-                                    edtOTP1.text.toString() + "" +
-                                            edtOTP2.text.toString() + "" +
-                                            edtOTP3.text.toString() + "" +
-                                            edtOTP4.text.toString())
+                            val listCall = APINewClient.getClient().getVerifyPin(
+                                modelList[position].coUserId,
+                                edtOTP1.text.toString() + "" +
+                                        edtOTP2.text.toString() + "" +
+                                        edtOTP3.text.toString() + "" +
+                                        edtOTP4.text.toString()
+                            )
                             listCall.enqueue(object : Callback<VerifyPinModel?> {
-                                override fun onResponse(call: Call<VerifyPinModel?>, response: Response<VerifyPinModel?>) {
+                                override fun onResponse(
+                                    call: Call<VerifyPinModel?>,
+                                    response: Response<VerifyPinModel?>
+                                ) {
                                     try {
                                         progressBar.visibility = View.GONE
                                         val listModel = response.body()
-                                        val responseData: VerifyPinModel.ResponseData? = listModel!!.responseData
-                                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                            if (responseData!!.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                                val intent = Intent(activity, WalkScreenActivity::class.java)
+                                        val responseData: VerifyPinModel.ResponseData? =
+                                            listModel!!.responseData
+                                        if (listModel.responseCode.equals(
+                                                getString(R.string.ResponseCodesuccess),
+                                                ignoreCase = true
+                                            )
+                                        ) {
+                                            if (responseData!!.isProfileCompleted.equals(
+                                                    "0",
+                                                    ignoreCase = true
+                                                )
+                                            ) {
+                                                val intent =
+                                                    Intent(activity, WalkScreenActivity::class.java)
                                                 intent.putExtra(CONSTANTS.ScreenView, "ProfileView")
                                                 act.startActivity(intent)
                                                 act.finish()
-                                            } else if (responseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                                                val intent = Intent(activity, AssProcessActivity::class.java)
+                                            } else if (responseData.isAssessmentCompleted.equals(
+                                                    "0",
+                                                    ignoreCase = true
+                                                )
+                                            ) {
+                                                val intent =
+                                                    Intent(activity, AssProcessActivity::class.java)
                                                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                 act.startActivity(intent)
                                                 act.finish()
-                                            } else if (responseData.isProfileCompleted.equals("1", ignoreCase = true) &&
-                                                    responseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                            } else if (responseData.isProfileCompleted.equals(
+                                                    "1",
+                                                    ignoreCase = true
+                                                ) &&
+                                                responseData.isAssessmentCompleted.equals(
+                                                    "1",
+                                                    ignoreCase = true
+                                                )
+                                            ) {
+                                                val intent = Intent(
+                                                    activity,
+                                                    BottomNavigationActivity::class.java
+                                                )
                                                 act.startActivity(intent)
                                                 act.finish()
                                             }
-                                            val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
+                                            val shared = act.getSharedPreferences(
+                                                CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                                                AppCompatActivity.MODE_PRIVATE
+                                            )
                                             val editor = shared.edit()
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.responseData!!.userID)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_CoUserID, listModel.responseData!!.coUserId)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.responseData!!.email)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.responseData!!.name)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData!!.indexScore)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, responseData.image)
+                                            editor.putString(
+                                                CONSTANTS.PREFE_ACCESS_UserID,
+                                                listModel.responseData!!.userID
+                                            )
+                                            editor.putString(
+                                                CONSTANTS.PREFE_ACCESS_CoUserID,
+                                                listModel.responseData!!.coUserId
+                                            )
+                                            editor.putString(
+                                                CONSTANTS.PREFE_ACCESS_EMAIL,
+                                                listModel.responseData!!.email
+                                            )
+                                            editor.putString(
+                                                CONSTANTS.PREFE_ACCESS_NAME,
+                                                listModel.responseData!!.name
+                                            )
+                                            editor.putString(
+                                                CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                                                listModel.responseData!!.avgSleepTime
+                                            )
+                                            editor.putString(
+                                                CONSTANTS.PREFE_ACCESS_INDEXSCORE,
+                                                listModel.responseData!!.indexScore
+                                            )
+                                            editor.putString(
+                                                CONSTANTS.PREFE_ACCESS_IMAGE,
+                                                responseData.image
+                                            )
                                             editor.commit()
                                             prepareHomeData()
-                                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                            BWSApplication.showToast(
+                                                listModel.responseMessage,
+                                                activity
+                                            )
                                             dialog.dismiss()
                                             mBottomSheetDialog!!.hide()
-                                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                                        } else if (listModel.responseCode.equals(
+                                                getString(R.string.ResponseCodefail),
+                                                ignoreCase = true
+                                            )
+                                        ) {
                                             txtError.visibility = View.VISIBLE
                                             txtError.text = listModel.responseMessage
                                         } else {
@@ -872,10 +1176,18 @@ class HomeFragment : Fragment() {
             return model.getCoUser()!!.size
         }
 
-        inner class MyViewHolder(var bind: MultipleProfileChangeLayoutBinding) : RecyclerView.ViewHolder(bind.root)
+        inner class MyViewHolder(var bind: MultipleProfileChangeLayoutBinding) :
+            RecyclerView.ViewHolder(bind.root)
     }
 
-    inner class PinTextWatcher internal constructor(private val currentIndex: Int, var edtOTP1: EditText, var edtOTP2: EditText, var edtOTP3: EditText, var edtOTP4: EditText, var btnDone: Button) : TextWatcher {
+    inner class PinTextWatcher internal constructor(
+        private val currentIndex: Int,
+        var edtOTP1: EditText,
+        var edtOTP2: EditText,
+        var edtOTP3: EditText,
+        var edtOTP4: EditText,
+        var btnDone: Button
+    ) : TextWatcher {
         private var isFirst = false
         private var isLast = false
         private var newTypedString = ""
@@ -901,7 +1213,8 @@ class HomeFragment : Fragment() {
             var text = newTypedString
             Log.e("OTP VERIFICATION", "" + text)
 
-            /* Detect paste event and set first char */if (text.length > 1) text = text[0].toString() // TODO: We can fill out other EditTexts
+            /* Detect paste event and set first char */if (text.length > 1) text =
+                text[0].toString() // TODO: We can fill out other EditTexts
             editTexts[currentIndex].removeTextChangedListener(this)
             editTexts[currentIndex].setText(text)
             editTexts[currentIndex].setSelection(text.length)
@@ -931,26 +1244,33 @@ class HomeFragment : Fragment() {
 
         private val isAllEditTextsFilled: Boolean
             private get() {
-                for (editText in editTexts) if (editText.text.toString().trim { it <= ' ' }.length == 0) return false
+                for (editText in editTexts) if (editText.text.toString()
+                        .trim { it <= ' ' }.length == 0
+                ) return false
                 return true
             }
 
         private fun hideKeyboard() {
             if (activity!!.currentFocus != null) {
-                val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager =
+                    activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(activity!!.currentFocus!!.windowToken, 0)
             }
         }
 
         init {
-            if (currentIndex == 0) isFirst = true else if (currentIndex == editTexts.size - 1) isLast = true
+            if (currentIndex == 0) isFirst =
+                true else if (currentIndex == editTexts.size - 1) isLast = true
         }
     }
 
-    inner class PinOnKeyListener internal constructor(private val currentIndex: Int) : View.OnKeyListener {
+    inner class PinOnKeyListener internal constructor(private val currentIndex: Int) :
+        View.OnKeyListener {
         override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
             if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
-                if (editTexts[currentIndex].text.toString().isEmpty() && currentIndex != 0) editTexts[currentIndex - 1].requestFocus()
+                if (editTexts[currentIndex].text.toString()
+                        .isEmpty() && currentIndex != 0
+                ) editTexts[currentIndex - 1].requestFocus()
             }
             return false
         }
@@ -960,7 +1280,11 @@ class HomeFragment : Fragment() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             val create = edtCreate.text.toString().trim { it <= ' ' }
-            if (create.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistName, ignoreCase = true)) {
+            if (create.equals(
+                    homelistModel.responseData!!.suggestedPlaylist!!.playlistName,
+                    ignoreCase = true
+                )
+            ) {
                 btnSendCode.isEnabled = false
                 btnSendCode.setTextColor(resources.getColor(R.color.white))
                 btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)

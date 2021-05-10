@@ -207,6 +207,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
         binding.ivEditCategory.setOnClickListener {
             val i = Intent(activity, RecommendedCategoryActivity::class.java)
+            i.putExtra("BackClick","1")
             startActivity(i)
         }
         DB = Room.databaseBuilder(ctx,

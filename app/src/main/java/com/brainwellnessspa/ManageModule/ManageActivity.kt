@@ -14,29 +14,37 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistInappModel
 import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity
+import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter
 import com.brainwellnessspa.R
-import com.brainwellnessspa.UserModuleTwo.Models.UserListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityManageBinding
 import com.brainwellnessspa.databinding.MembershipFaqLayoutBinding
+import com.brainwellnessspa.databinding.VideoSeriesBoxLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.youtube.player.YouTubeBaseActivity
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ManageActivity : AppCompatActivity() {
+class ManageActivity : YouTubeBaseActivity() , YouTubePlayer.OnInitializedListener{
     lateinit var binding: ActivityManageBinding
     lateinit var adapter: MembershipFaqAdapter
+    lateinit var subscriptionAdapter: SubscriptionAdapter
+    lateinit var videoListAdapter: VideoListAdapter
     lateinit var activity: Activity
     var USERID: String? = null
     var CoUserID: String? = null
@@ -54,20 +62,44 @@ class ManageActivity : AppCompatActivity() {
             finish()
         }
 
+        val mLayoutManager: RecyclerView.LayoutManager =
+            LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvList.layoutManager = mLayoutManager
+        binding.rvList.itemAnimator = DefaultItemAnimator()
+
+        val mLayoutManager1: RecyclerView.LayoutManager =
+            LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvVideoList.layoutManager = mLayoutManager1
+        binding.rvVideoList.itemAnimator = DefaultItemAnimator()
+
         binding.btnFreeJoin.setOnClickListener {
             val i = Intent(ctx, OrderSummaryActivity::class.java)
             startActivity(i)
         }
 
-
-//        SubscriptionAdapter TODO Audio List Adapter
+       /* {
+            "PlanPosition": "1",
+            "ProfileCount": "2",
+            "PlanID": "1",
+            "PlanAmount": "9.99",
+            "PlanCurrency": "Aus",
+            "PlanInterval": "Weekly",
+            "PlanImage": "",
+            "PlanTenure": "1 Week",
+            "PlanNextRenewal": "16 May, 2021",
+            "FreeTrial": "TRY 14 DAYS FOR FREE",
+            "SubName": "Week / Per 2 User",
+            "RecommendedFlag": "0",
+            "PlanFlag": "1"
+        }*/
         prepareUserData();
     }
 
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<PlanlistInappModel> = APINewClient.getClient().getPlanlistInapp(CoUserID)
+            val listCall: Call<PlanlistInappModel> =
+                APINewClient.getClient().getPlanlistInapp(CoUserID)
             listCall.enqueue(object : Callback<PlanlistInappModel> {
                 override fun onResponse(
                     call: Call<PlanlistInappModel>,
@@ -99,16 +131,35 @@ class ManageActivity : AppCompatActivity() {
 
                             binding.tvTitle.text = listModel.responseData!!.title
                             binding.tvDesc.text = listModel.responseData!!.desc
-                            binding.tvPlanFeatures01.text = listModel.responseData!!.planFeatures!![0].feature
-                            binding.tvPlanFeatures02.text = listModel.responseData!!.planFeatures!![1].feature
-                            binding.tvPlanFeatures03.text = listModel.responseData!!.planFeatures!![2].feature
-                            binding.tvPlanFeatures04.text = listModel.responseData!!.planFeatures!![3].feature
+                            binding.tvPlanFeatures01.text =
+                                listModel.responseData!!.planFeatures!![0].feature
+                            binding.tvPlanFeatures02.text =
+                                listModel.responseData!!.planFeatures!![1].feature
+                            binding.tvPlanFeatures03.text =
+                                listModel.responseData!!.planFeatures!![2].feature
+                            binding.tvPlanFeatures04.text =
+                                listModel.responseData!!.planFeatures!![3].feature
 
-                            binding.rvFaqList.layoutManager = LinearLayoutManager(this@ManageActivity)
-                            adapter = MembershipFaqAdapter(listModel.responseData!!.fAQs!!, ctx, binding.rvFaqList, binding.tvFound)
+                            subscriptionAdapter = SubscriptionAdapter(
+                                listModel.responseData!!.audioFiles, ctx
+                            )
+                            binding.rvList.adapter = subscriptionAdapter
+
+                            videoListAdapter = VideoListAdapter(
+                                listModel.responseData!!.testminialVideo!!, ctx
+                            )
+                            binding.rvVideoList.adapter = videoListAdapter
+
+                            binding.rvFaqList.layoutManager =
+                                LinearLayoutManager(this@ManageActivity)
+                            adapter = MembershipFaqAdapter(
+                                listModel.responseData!!.fAQs!!,
+                                ctx,
+                                binding.rvFaqList,
+                                binding.tvFound
+                            )
                             binding.rvFaqList.adapter = adapter
                         }
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -127,6 +178,79 @@ class ManageActivity : AppCompatActivity() {
         }
     }
 
+
+    class VideoListAdapter(
+        private val listModelList: List<PlanlistInappModel.ResponseData.TestminialVideo>,
+        var ctx: Context
+    ) :
+        RecyclerView.Adapter<VideoListAdapter.MyViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: VideoSeriesBoxLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context), R.layout.video_series_box_layout, parent, false
+            )
+            return MyViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+           /* binding.youtubeView.initialize(CancelMembershipActivity.API_KEY, this)
+            holder.binding.tvTitle.setText(listModelList[position].name)
+            Glide.with(ctx).load(listModelList[position].imageFile).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(12))).priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
+                .into(holder.binding.ivRestaurantImage)*/
+
+            fun getYouTubePlayerProvider(): YouTubePlayer.Provider? {
+                return holder.binding.youtubeView
+            }
+        }
+
+        override fun getItemCount(): Int {
+            return listModelList.size
+        }
+
+
+
+        inner class MyViewHolder(binding: VideoSeriesBoxLayoutBinding) :
+            RecyclerView.ViewHolder(binding.getRoot()) {
+            var binding: VideoSeriesBoxLayoutBinding
+
+            init {
+                this.binding = binding
+            }
+        }
+    }
+
+    override fun onInitializationSuccess(
+        provider: YouTubePlayer.Provider?,
+        youTubePlayer: YouTubePlayer,
+        wasRestored: Boolean
+    ) {
+        if (!wasRestored) {
+            youTubePlayer.loadVideo(CancelMembershipActivity.VIDEO_ID)
+            youTubePlayer.setShowFullscreenButton(true)
+        }
+    }
+
+    override fun onInitializationFailure(
+        provider: YouTubePlayer.Provider?,
+        errorReason: YouTubeInitializationResult
+    ) {
+        if (errorReason.isUserRecoverableError) {
+            errorReason.getErrorDialog(this, CancelMembershipActivity.RECOVERY_DIALOG_REQUEST)
+                .show()
+        } else {
+            val errorMessage = String.format(
+                getString(R.string.error_player), errorReason.toString()
+            )
+            BWSApplication.showToast(errorMessage, activity)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CancelMembershipActivity.RECOVERY_DIALOG_REQUEST) {
+//            getYouTubePlayerProvider().initialize(CancelMembershipActivity.API_KEY, this)
+        }
+    }
 
     class MembershipFaqAdapter(
         private val modelList: List<PlanlistInappModel.ResponseData.Faq>,

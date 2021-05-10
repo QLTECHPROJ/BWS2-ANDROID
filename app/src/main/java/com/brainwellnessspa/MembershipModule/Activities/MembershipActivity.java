@@ -192,8 +192,8 @@ public class MembershipActivity extends AppCompatActivity {
                                         membershipPlanListModel.getResponseData().getTrialPeriod(), activity);
                                 binding.rvPlanList.setAdapter(membershipPlanAdapter);
 
-                                subscriptionAdapter = new SubscriptionAdapter(membershipPlanListModel.getResponseData().getAudioFiles(), ctx);
-                                binding.rvList.setAdapter(subscriptionAdapter);
+//                                subscriptionAdapter = new SubscriptionAdapter(membershipPlanListModel.getResponseData().getAudioFiles(), ctx);
+//                                binding.rvList.setAdapter(subscriptionAdapter);
                             }
                         }
                     } catch (Exception e) {

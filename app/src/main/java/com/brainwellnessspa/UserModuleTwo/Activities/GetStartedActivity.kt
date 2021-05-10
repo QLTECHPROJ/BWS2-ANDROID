@@ -41,8 +41,6 @@ class GetStartedActivity : AppCompatActivity() {
     }
 
     fun prepareData() {
-        binding.tvSubTitle.text =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo."
 
     }
 

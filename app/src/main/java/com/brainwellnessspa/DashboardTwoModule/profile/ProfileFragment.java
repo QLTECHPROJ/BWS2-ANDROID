@@ -633,6 +633,14 @@ public class ProfileFragment extends Fragment {
         edit.clear();
         edit.commit();
 
+        SharedPreferences preferencesd = getActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edited = preferencesd.edit();
+        edited.remove(CONSTANTS.selectedCategoriesTitle);
+        edited.remove(CONSTANTS.selectedCategoriesName);
+        edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME);
+        edited.clear();
+        edited.commit();
+
         deleteCache(getActivity());
         callLogoutApi(dialog, progressBar, progressBarHolder);
     }

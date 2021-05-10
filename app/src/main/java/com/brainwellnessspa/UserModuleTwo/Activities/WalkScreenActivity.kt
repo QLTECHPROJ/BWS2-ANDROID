@@ -75,7 +75,7 @@ class WalkScreenActivity : AppCompatActivity() {
         }
 
         binding.rlStepThree.setOnClickListener {
-            val intent = Intent(this@WalkScreenActivity, SleepTimeActivity::class.java)
+            val intent = Intent(this@WalkScreenActivity, DoingGoodActivity::class.java)
             startActivity(intent)
             finish()
         }

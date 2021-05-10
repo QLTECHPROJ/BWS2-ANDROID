@@ -18,6 +18,8 @@ import com.brainwellnessspa.databinding.ActivityChangePasswordBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class ChangePasswordActivity : AppCompatActivity() {
     lateinit var binding: ActivityChangePasswordBinding
@@ -32,7 +34,8 @@ class ChangePasswordActivity : AppCompatActivity() {
             val NewPswd: String = binding.etNewPswd.getText().toString().trim()
             val ConfirmPswd: String = binding.etConfirmPswd.getText().toString().trim()
             if (CurrentPswd.equals("", ignoreCase = true) &&
-                    NewPswd.equals("", ignoreCase = true) && ConfirmPswd.equals("", ignoreCase = true)) {
+                NewPswd.equals("", ignoreCase = true) && ConfirmPswd.equals("", ignoreCase = true)
+            ) {
                 binding.btnSave.setEnabled(false)
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -85,15 +88,35 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.flCurrentPswd.error = "Current Login Password is required"
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = ""
+        } else if (binding.etCurrentPswd.text.toString().length < 8
+            || !isValidPassword(binding.etCurrentPswd.text.toString())
+        ) {
+            binding.flCurrentPswd.error = "Valid current Login Password is required"
+            binding.flNewPswd.error = ""
+            binding.flConfirmPswd.error = ""
         } else if (binding.etNewPswd.text.toString().equals("")) {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = "New Login Password is required"
+            binding.flConfirmPswd.error = ""
+        } else if (binding.etNewPswd.text.toString().length < 8
+            || !isValidPassword(binding.etNewPswd.text.toString())
+        ) {
+            binding.flCurrentPswd.error = "Valid new Login Password is required"
+            binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = ""
         } else if (binding.etConfirmPswd.text.toString().equals("")) {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = "Confirm new Login Password is required"
-        } else if (!binding.etConfirmPswd.text.toString().equals(binding.etNewPswd.text.toString())) {
+        } else if (binding.etConfirmPswd.text.toString().length < 8
+            || !isValidPassword(binding.etConfirmPswd.text.toString())
+        ) {
+            binding.flCurrentPswd.error = "Valid confirm new Login Password is required"
+            binding.flNewPswd.error = ""
+            binding.flConfirmPswd.error = ""
+        }  else if (!binding.etConfirmPswd.text.toString()
+                .equals(binding.etNewPswd.text.toString())
+        ) {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = "New & Confirm Login Password not match"
@@ -102,19 +125,37 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = ""
             if (BWSApplication.isNetworkConnected(this)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePasswordActivity)
-                val listCall: Call<ChangePasswordModel> = APINewClient.getClient().getChangePassword(USERID, CoUserID,
+                BWSApplication.showProgressBar(
+                    binding.progressBar,
+                    binding.progressBarHolder,
+                    this@ChangePasswordActivity
+                )
+                val listCall: Call<ChangePasswordModel> =
+                    APINewClient.getClient().getChangePassword(
+                        USERID, CoUserID,
                         binding.etCurrentPswd.text.toString(),
-                        binding.etConfirmPswd.text.toString())
+                        binding.etConfirmPswd.text.toString()
+                    )
                 listCall.enqueue(object : Callback<ChangePasswordModel> {
-                    override fun onResponse(call: Call<ChangePasswordModel>, response: Response<ChangePasswordModel>) {
+                    override fun onResponse(
+                        call: Call<ChangePasswordModel>,
+                        response: Response<ChangePasswordModel>
+                    ) {
                         try {
                             binding.flCurrentPswd.error = ""
                             binding.flNewPswd.error = ""
                             binding.flConfirmPswd.error = ""
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePasswordActivity)
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                this@ChangePasswordActivity
+                            )
                             val listModel: ChangePasswordModel = response.body()!!
-                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            if (listModel.responseCode.equals(
+                                    getString(R.string.ResponseCodesuccess),
+                                    ignoreCase = true
+                                )
+                            ) {
                                 finish()
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {
@@ -127,13 +168,26 @@ class ChangePasswordActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<ChangePasswordModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePasswordActivity)
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            this@ChangePasswordActivity
+                        )
                     }
                 })
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), this)
             }
         }
+    }
+
+    fun isValidPassword(password: String?): Boolean {
+        val pattern: Pattern
+        val matcher: Matcher
+        val PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(PASSWORD_PATTERN)
+        matcher = pattern.matcher(password)
+        return matcher.matches()
     }
 
     override fun onBackPressed() {

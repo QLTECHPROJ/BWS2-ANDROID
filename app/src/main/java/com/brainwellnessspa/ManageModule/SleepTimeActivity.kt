@@ -88,6 +88,7 @@ class SleepTimeActivity : AppCompatActivity() {
             holder.bindingAdapter.llHourSlots.setOnClickListener {
                 val i = Intent(ctx, RecommendedCategoryActivity::class.java)
                 i.putExtra("SleepTime", listModel.get(position).name)
+                i.putExtra("BackClick","0")
                 ctx.startActivity(i)
                 activity.finish()
             }

@@ -254,7 +254,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="Manage Payment plan"
+                        android:text="Payment plan"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp" />
 
@@ -302,11 +302,11 @@
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginRight="@dimen/_14sdp"
                             android:layout_weight="0.25"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
                             android:text="$9.99"
-                            android:layout_marginRight="@dimen/_14sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_18sdp" />
 
@@ -355,8 +355,8 @@
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight="0.25"
                             android:layout_marginRight="@dimen/_14sdp"
+                            android:layout_weight="0.25"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
                             android:text="$29.99"
@@ -414,10 +414,10 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_marginRight="@dimen/_14sdp"
                                 android:layout_weight="0.25"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
-                                android:layout_marginRight="@dimen/_14sdp"
                                 android:text="$149.99"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_18sdp" />
@@ -493,11 +493,11 @@
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginRight="@dimen/_14sdp"
                             android:layout_weight="0.25"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
                             android:text="$249.99"
-                            android:layout_marginRight="@dimen/_14sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_18sdp" />
 
@@ -511,8 +511,8 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_20sdp"
-                            android:layout_centerInParent="true">
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="@dimen/_20sdp">
 
                             <Button
                                 android:id="@+id/btnFreeJoin"
@@ -561,6 +561,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
+                        android:visibility="gone"
                         android:text="Payment plan"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp" />
@@ -570,6 +571,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_30sdp"
+                        android:visibility="gone"
                         android:background="@drawable/account_gray_bg"
                         android:orientation="vertical">
 
@@ -613,10 +615,10 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_marginRight="@dimen/_16sdp"
                                 android:layout_weight="0.25"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
-                                android:layout_marginRight="@dimen/_16sdp"
                                 android:text="$99.99"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_18sdp" />
@@ -668,10 +670,10 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_marginRight="@dimen/_16sdp"
                                 android:layout_weight="0.25"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
-                                android:layout_marginRight="@dimen/_16sdp"
                                 android:text="$299.99"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_18sdp" />
@@ -723,16 +725,17 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_marginRight="@dimen/_16sdp"
                                 android:layout_weight="0.25"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
-                                android:layout_marginRight="@dimen/_16sdp"
                                 android:text="$999.99"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_18sdp" />
 
                         </LinearLayout>
                     </LinearLayout>
+
                     <TextView
                         android:id="@+id/tvTag"
                         android:layout_width="match_parent"
@@ -761,6 +764,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:text="Introductory Session"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp" />
@@ -774,6 +778,7 @@
                         android:layout_marginBottom="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:text="Self reported date of 2173 clients before and after the introductory session"
                         android:textColor="@color/dark_blue_gray"
@@ -792,30 +797,12 @@
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_24sdp" />
 
-                    <TextView
-                        android:id="@+id/tvHeadingTwo"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvVideoList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_12sdp"
-                        android:layout_marginTop="@dimen/_14sdp"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:gravity="center"
-                        android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="“I would pay it all over again. It was worth every penny. On a bad day I would be very agitated and very angry about everyday occurrences.”"
-                        android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
-
-                    <TextView
-                        android:id="@+id/tvName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_12sdp"
-                        android:layout_marginTop="@dimen/_16sdp"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:gravity="center"
-                        android:text="Tayla"
-                        android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:overScrollMode="never" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

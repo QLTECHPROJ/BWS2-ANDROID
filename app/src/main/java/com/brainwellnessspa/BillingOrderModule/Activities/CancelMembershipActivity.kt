@@ -1,345 +1,329 @@
-package com.brainwellnessspa.BillingOrderModule.Activities;
+package com.brainwellnessspa.BillingOrderModule.Activities
 
-import androidx.databinding.DataBindingUtil;
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import android.app.Dialog
+import android.app.NotificationManager
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.*
+import android.widget.Button
+import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity
+import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel
+import com.brainwellnessspa.DashboardModule.Account.AccountFragment
+import com.brainwellnessspa.R
+import com.brainwellnessspa.Services.GlobalInitExoPlayer
+import com.brainwellnessspa.Utility.APIClient
+import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
+import com.google.android.youtube.player.YouTubeBaseActivity
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.segment.analytics.Properties
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.Dialog;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
-
-import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
-import com.google.android.youtube.player.YouTubeBaseActivity;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel;
-import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.APIClient;
-
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding;
-import com.segment.analytics.Properties;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class CancelMembershipActivity extends YouTubeBaseActivity implements
-        YouTubePlayer.OnInitializedListener {
-    ActivityCancelMembershipBinding binding;
-    Context ctx;
-    String UserID, CancelId = "";
-    Activity activity;
-    boolean audioPause = false;
-    public static final String API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ", VIDEO_ID = "y1rfRW6WX08";
-    private static final int RECOVERY_DIALOG_REQUEST = 1;
-    private int numStarted = 0;
-    int stackStatus = 0;
-    boolean myBackPress = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership);
-        ctx = CancelMembershipActivity.this;
-        activity = CancelMembershipActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        binding.llBack.setOnClickListener(view -> {
-            myBackPress = true;
-            ComeScreenAccount = 1;
+class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
+    lateinit var binding: ActivityCancelMembershipBinding
+    lateinit var ctx: Context
+    var UserID: String? = null
+    var CancelId = ""
+    lateinit var activity: Activity
+    var audioPause = false
+    private var numStarted = 0
+    var stackStatus = 0
+    var myBackPress = false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership)
+        ctx = this@CancelMembershipActivity
+        activity = this@CancelMembershipActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        binding.llBack.setOnClickListener { view: View? ->
+            myBackPress = true
+            AccountFragment.ComeScreenAccount = 1
             if (audioPause) {
-                player.setPlayWhenReady(true);
+                GlobalInitExoPlayer.player.playWhenReady = true
             } else {
             }
-            finish();
-//            resumeMedia();
-//            isPause = false;
-        });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+            finish()
         }
-        binding.youtubeView.initialize(API_KEY, this);
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        p.putValue("plan", "");
-        p.putValue("planStatus", "");
-        p.putValue("planStartDt", "");
-        p.putValue("planExpiryDt", "");
-        p.putValue("planAmount", "");
-        BWSApplication.addToSegment("Cancel Subscription Viewed", p, CONSTANTS.screen);
-        if (player != null) {
-            if (player.getPlayWhenReady()) {
-                player.setPlayWhenReady(false);
-                audioPause = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(AppLifecycleCallback())
+        }
+        binding.youtubeView.initialize(API_KEY, this)
+        val p = Properties()
+        p.putValue("userId", UserID)
+        p.putValue("plan", "")
+        p.putValue("planStatus", "")
+        p.putValue("planStartDt", "")
+        p.putValue("planExpiryDt", "")
+        p.putValue("planAmount", "")
+        BWSApplication.addToSegment("Cancel Subscription Viewed", p, CONSTANTS.screen)
+        if (GlobalInitExoPlayer.player != null) {
+            if (GlobalInitExoPlayer.player.playWhenReady) {
+                GlobalInitExoPlayer.player.playWhenReady = false
+                audioPause = true
             }
         }
-
-        binding.cbOne.setOnClickListener(view -> {
-            binding.cbOne.setChecked(true);
-            binding.cbTwo.setChecked(false);
-            binding.cbThree.setChecked(false);
-            binding.cbFour.setChecked(false);
-            CancelId = "1";
-            binding.edtCancelBox.setVisibility(View.GONE);
-            binding.edtCancelBox.setText("");
-        });
-
-        binding.cbTwo.setOnClickListener(view -> {
-            binding.cbOne.setChecked(false);
-            binding.cbTwo.setChecked(true);
-            binding.cbThree.setChecked(false);
-            binding.cbFour.setChecked(false);
-            CancelId = "2";
-            binding.edtCancelBox.setVisibility(View.GONE);
-            binding.edtCancelBox.setText("");
-        });
-
-        binding.cbThree.setOnClickListener(view -> {
-            binding.cbOne.setChecked(false);
-            binding.cbTwo.setChecked(false);
-            binding.cbThree.setChecked(true);
-            binding.cbFour.setChecked(false);
-            CancelId = "3";
-            binding.edtCancelBox.setVisibility(View.GONE);
-            binding.edtCancelBox.setText("");
-        });
-
-        binding.cbFour.setOnClickListener(view -> {
-            binding.cbOne.setChecked(false);
-            binding.cbTwo.setChecked(false);
-            binding.cbThree.setChecked(false);
-            binding.cbFour.setChecked(true);
-            CancelId = "4";
-            binding.edtCancelBox.setVisibility(View.VISIBLE);
-        });
-
-        binding.btnCancelSubscrible.setOnClickListener(view -> {
-            myBackPress = true;
-            if (player != null) {
-                if (player.getPlayWhenReady()) {
-                    player.setPlayWhenReady(false);
-                    audioPause = true;
+        binding.cbOne.setOnClickListener { view: View? ->
+            binding.cbOne.isChecked = true
+            binding.cbTwo.isChecked = false
+            binding.cbThree.isChecked = false
+            binding.cbFour.isChecked = false
+            CancelId = "1"
+            binding.edtCancelBox.visibility = View.GONE
+            binding.edtCancelBox.setText("")
+        }
+        binding.cbTwo.setOnClickListener { view: View? ->
+            binding.cbOne.isChecked = false
+            binding.cbTwo.isChecked = true
+            binding.cbThree.isChecked = false
+            binding.cbFour.isChecked = false
+            CancelId = "2"
+            binding.edtCancelBox.visibility = View.GONE
+            binding.edtCancelBox.setText("")
+        }
+        binding.cbThree.setOnClickListener { view: View? ->
+            binding.cbOne.isChecked = false
+            binding.cbTwo.isChecked = false
+            binding.cbThree.isChecked = true
+            binding.cbFour.isChecked = false
+            CancelId = "3"
+            binding.edtCancelBox.visibility = View.GONE
+            binding.edtCancelBox.setText("")
+        }
+        binding.cbFour.setOnClickListener { view: View? ->
+            binding.cbOne.isChecked = false
+            binding.cbTwo.isChecked = false
+            binding.cbThree.isChecked = false
+            binding.cbFour.isChecked = true
+            CancelId = "4"
+            binding.edtCancelBox.visibility = View.VISIBLE
+        }
+        binding.btnCancelSubscrible.setOnClickListener { view: View? ->
+            myBackPress = true
+            if (GlobalInitExoPlayer.player != null) {
+                if (GlobalInitExoPlayer.player.playWhenReady) {
+                    GlobalInitExoPlayer.player.playWhenReady = false
+                    audioPause = true
                 }
             }
-            if (CancelId.equalsIgnoreCase("4") &&
-                    binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
-                BWSApplication.showToast("Cancellation reason is required", activity);
+            if (CancelId.equals("4", ignoreCase = true) &&
+                binding.edtCancelBox.text.toString().equals("", ignoreCase = true)
+            ) {
+                BWSApplication.showToast("Cancellation reason is required", activity)
             } else {
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.cancel_membership);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final Button Btn = dialog.findViewById(R.id.Btn);
-                dialog.setOnKeyListener((v, keyCode, event) -> {
+                val dialog = Dialog(ctx)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.cancel_membership)
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.dark_blue_gray)))
+                dialog.window!!.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                val Btn = dialog.findViewById<Button>(R.id.Btn)
+                dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
-                        if (player != null) {
-                            if (player.getPlayWhenReady()) {
-                                player.setPlayWhenReady(false);
-                                audioPause = true;
+                        dialog.dismiss()
+                        if (GlobalInitExoPlayer.player != null) {
+                            if (GlobalInitExoPlayer.player.playWhenReady) {
+                                GlobalInitExoPlayer.player.playWhenReady = false
+                                audioPause = true
                             }
                         }
-                        return true;
+                        return@setOnKeyListener true
                     }
-                    return false;
-                });
-
-                Btn.setOnTouchListener((view1, event) -> {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN: {
-                            Button views = (Button) view1;
-                            views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
-                            view1.invalidate();
-                            break;
+                    false
+                }
+                Btn.setOnTouchListener { view1: View, event: MotionEvent ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            val views = view1 as Button
+                            views.background.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+                            view1.invalidate()
                         }
-                        case MotionEvent.ACTION_UP:
+                        MotionEvent.ACTION_UP -> {
                             if (BWSApplication.isNetworkConnected(ctx)) {
-                                Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
-                                listCall.enqueue(new Callback<CancelPlanModel>() {
-                                    @Override
-                                    public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
+                                val listCall = APIClient.getClient().getCancelPlan(
+                                    UserID,
+                                    CancelId,
+                                    binding.edtCancelBox.text.toString()
+                                )
+                                listCall.enqueue(object : Callback<CancelPlanModel?> {
+                                    override fun onResponse(
+                                        call: Call<CancelPlanModel?>,
+                                        response: Response<CancelPlanModel?>
+                                    ) {
                                         try {
-                                            CancelPlanModel model = response.body();
-                                            BWSApplication.showToast(model.getResponseMessage(), activity);
-                                            dialog.dismiss();
-                                            String CancelReason = binding.edtCancelBox.getText().toString();
+                                            val model = response.body()
+                                            BWSApplication.showToast(
+                                                model!!.responseMessage,
+                                                activity
+                                            )
+                                            dialog.dismiss()
+                                            val CancelReason = binding.edtCancelBox.text.toString()
                                             /*Properties p = new Properties();
                                             p.putValue("userId", UserID);
                                             p.putValue("cancelId", CancelId);
                                             p.putValue("cancelReason", CancelReason);
-                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);*/
-                                            if (player != null) {
-                                                if (player.getPlayWhenReady()) {
-                                                    player.setPlayWhenReady(false);
-                                                    audioPause = true;
+                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);*/if (GlobalInitExoPlayer.player != null) {
+                                                if (GlobalInitExoPlayer.player.playWhenReady) {
+                                                    GlobalInitExoPlayer.player.playWhenReady = false
+                                                    audioPause = true
                                                 }
                                             }
-                                            finish();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
+                                            finish()
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
                                         }
                                     }
 
-                                    @Override
-                                    public void onFailure(Call<CancelPlanModel> call, Throwable t) {
+                                    override fun onFailure(
+                                        call: Call<CancelPlanModel?>,
+                                        t: Throwable
+                                    ) {
                                     }
-                                });
+                                })
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), activity);
+                                BWSApplication.showToast(
+                                    getString(R.string.no_server_found),
+                                    activity
+                                )
                             }
-                        case MotionEvent.ACTION_CANCEL: {
-                            Button views = (Button) view1;
-                            views.getBackground().clearColorFilter();
-                            views.invalidate();
-                            break;
+                            run {
+                                val views = view1 as Button
+                                views.background.clearColorFilter()
+                                views.invalidate()
+                            }
+                        }
+                        MotionEvent.ACTION_CANCEL -> {
+                            val views = view1 as Button
+                            views.background.clearColorFilter()
+                            views.invalidate()
                         }
                     }
-                    return true;
-                });
-
-                tvGoBack.setOnClickListener(v -> {
-                    dialog.dismiss();
-                    if (player != null) {
-                        if (player.getPlayWhenReady()) {
-                            player.setPlayWhenReady(false);
-                            audioPause = true;
+                    true
+                }
+                tvGoBack.setOnClickListener { v: View? ->
+                    dialog.dismiss()
+                    if (GlobalInitExoPlayer.player != null) {
+                        if (GlobalInitExoPlayer.player.playWhenReady) {
+                            GlobalInitExoPlayer.player.playWhenReady = false
+                            audioPause = true
                         }
                     }
-                });
-                dialog.show();
-                dialog.setCancelable(false);
+                }
+                dialog.show()
+                dialog.setCancelable(false)
             }
-        });
+        }
     }
 
-    @Override
-    public void onBackPressed() {
-        myBackPress = true;
-        ComeScreenAccount = 1;
+    override fun onBackPressed() {
+        myBackPress = true
+        AccountFragment.ComeScreenAccount = 1
         if (audioPause) {
-            player.setPlayWhenReady(true);
+            GlobalInitExoPlayer.player.playWhenReady = true
         } else {
         }
-        finish();
-//        resumeMedia();
+        finish()
+        //        resumeMedia();
 //        isPause = false;
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer
-            youTubePlayer, boolean wasRestored) {
+    override fun onInitializationSuccess(
+        provider: YouTubePlayer.Provider,
+        youTubePlayer: YouTubePlayer,
+        wasRestored: Boolean
+    ) {
         if (!wasRestored) {
-            youTubePlayer.loadVideo(VIDEO_ID);
-            youTubePlayer.setShowFullscreenButton(true);
+            youTubePlayer.loadVideo(VIDEO_ID)
+            youTubePlayer.setShowFullscreenButton(true)
         }
     }
 
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
-        if (errorReason.isUserRecoverableError()) {
-            errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show();
+    override fun onInitializationFailure(
+        provider: YouTubePlayer.Provider,
+        errorReason: YouTubeInitializationResult
+    ) {
+        if (errorReason.isUserRecoverableError) {
+            errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show()
         } else {
-            String errorMessage = String.format(
-                    getString(R.string.error_player), errorReason.toString());
-            BWSApplication.showToast(errorMessage, activity);
+            val errorMessage = String.format(
+                getString(R.string.error_player), errorReason.toString()
+            )
+            BWSApplication.showToast(errorMessage, activity)
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == RECOVERY_DIALOG_REQUEST) {
-            getYouTubePlayerProvider().initialize(API_KEY, this);
+            youTubePlayerProvider.initialize(API_KEY, this)
         }
     }
 
-    private YouTubePlayer.Provider getYouTubePlayerProvider() {
-        return binding.youtubeView;
-    }
+    private val youTubePlayerProvider: YouTubePlayer.Provider
+        private get() = binding.youtubeView
 
-    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
+    internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
-                stackStatus = 1;
-                Log.e("APPLICATION", "APP IN FOREGROUND");
+                stackStatus = 1
+                Log.e("APPLICATION", "APP IN FOREGROUND")
                 //app went to foreground
             }
-            numStarted++;
+            numStarted++
         }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            numStarted--;
+        override fun onActivityResumed(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {
+            numStarted--
             if (numStarted == 0) {
                 if (!myBackPress) {
-                    Log.e("APPLICATION", "Back press false");
-                    stackStatus = 2;
+                    Log.e("APPLICATION", "Back press false")
+                    stackStatus = 2
                 } else {
-                    myBackPress = true;
-                    stackStatus = 1;
-                    Log.e("APPLICATION", "back press true ");
+                    myBackPress = true
+                    stackStatus = 1
+                    Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND");
+                Log.e("APPLICATION", "App is in BACKGROUND")
                 // app went to background
             }
         }
 
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
+                Log.e("Destroy", "Activity Destoryed")
+                val notificationManager =
+                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
-                Log.e("Destroy", "Activity go in main activity");
+                Log.e("Destroy", "Activity go in main activity")
             }
         }
     }
 
+    companion object {
+        const val API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ"
+        const val VIDEO_ID = "y1rfRW6WX08"
+        const val RECOVERY_DIALOG_REQUEST = 1
+    }
 }

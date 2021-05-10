@@ -28,7 +28,6 @@
                     android:layout_marginRight="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
-                    android:text="4-5"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
 
@@ -38,6 +37,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:text="Hours"
+                    android:visibility="gone"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
             </LinearLayout>

@@ -106,11 +106,24 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginRight="@dimen/_50sdp"
+                        android:layout_marginBottom="@dimen/_46sdp"
+                        android:layout_toLeftOf="@id/llSeverse"
+                        android:rotation="294"
+                        android:visibility="visible"
+                        android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivSeventh"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginRight="@dimen/_48sdp"
                         android:layout_marginBottom="@dimen/_62sdp"
                         android:layout_toLeftOf="@id/llSeverse"
                         android:rotation="300"
-                        android:visibility="visible"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
@@ -119,10 +132,23 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginRight="@dimen/_24sdp"
-                        android:layout_marginBottom="@dimen/_96sdp"
+                        android:layout_marginRight="@dimen/_22sdp"
+                        android:layout_marginBottom="@dimen/_100sdp"
                         android:layout_toLeftOf="@id/llSeverse"
                         android:rotation="335"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivEighth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="@dimen/_33sdp"
+                        android:layout_marginBottom="@dimen/_86sdp"
+                        android:layout_toLeftOf="@id/llSeverse"
+                        android:rotation="326"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
 
@@ -131,12 +157,24 @@
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="-10dp"
+                        android:layout_marginLeft="-16dp"
                         android:layout_marginBottom="@dimen/_115sdp"
                         android:layout_toRightOf="@id/ivSecond"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow"
-                        android:rotation="360" />
+                        android:rotation="356" />
+
+                    <ImageView
+                        android:id="@+id/ivNineth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginBottom="@dimen/_118sdp"
+                        android:layout_toRightOf="@id/ivSecond"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow"
+                        android:rotation="366" />
 
                     <LinearLayout
                         android:id="@+id/llSeverse"
@@ -170,18 +208,30 @@
 
                     </LinearLayout>
 
-
                     <ImageView
                         android:id="@+id/ivForth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginRight="-5dp"
+                        android:layout_marginRight="-8dp"
                         android:layout_toLeftOf="@id/ivFifth"
                         android:rotation="38"
                         android:visibility="invisible"
-                        android:layout_marginBottom="@dimen/_115sdp"
+                        android:layout_marginBottom="113dp"
+                        android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivTenth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="15dp"
+                        android:layout_toLeftOf="@id/ivFifth"
+                        android:rotation="26"
+                        android:visibility="invisible"
+                        android:layout_marginBottom="@dimen/_118sdp"
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
@@ -190,12 +240,39 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="@dimen/_17sdp"
-                        android:layout_marginBottom="@dimen/_96sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginBottom="101dp"
                         android:layout_toRightOf="@id/llSeverse"
-                        android:rotation="60"
+                        android:rotation="56"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivEleventh"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/_26sdp"
+                        android:layout_marginBottom="82dp"
+                        android:layout_toRightOf="@id/llSeverse"
+                        android:rotation="64"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow" />
+
+                    <ImageView
+                        android:id="@+id/ivTwelveth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/_38sdp"
+                        android:layout_marginBottom="68dp"
+                        android:layout_toRightOf="@id/llSeverse"
+                        android:rotation="80"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow" />
+
                     <ImageView
                         android:id="@+id/ivSixth"
                         android:layout_width="@dimen/_20sdp"
@@ -208,6 +285,7 @@
                         android:rotation="88"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
+
                 </RelativeLayout>
 
                 <TextView

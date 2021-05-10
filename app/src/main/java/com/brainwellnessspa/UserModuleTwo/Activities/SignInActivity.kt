@@ -28,6 +28,8 @@ import com.google.firebase.installations.InstallationTokenResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
@@ -95,6 +97,15 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    fun isValidPassword(password: String?): Boolean {
+        val pattern: Pattern
+        val matcher: Matcher
+        val PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(PASSWORD_PATTERN)
+        matcher = pattern.matcher(password)
+        return matcher.matches()
+    }
+
     override fun onBackPressed() {
         val i = Intent(activity, GetStartedActivity::class.java)
         startActivity(i)
@@ -105,14 +116,16 @@ class SignInActivity : AppCompatActivity() {
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
         fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")!!
         if (TextUtils.isEmpty(fcm_id)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this, OnCompleteListener { task: Task<InstallationTokenResult> ->
-                val newToken = task.result!!.token
-                Log.e("newToken", newToken)
-                val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, newToken) //Friend
-                editor.apply()
-                editor.commit()
-            })
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
+                this,
+                OnCompleteListener { task: Task<InstallationTokenResult> ->
+                    val newToken = task.result!!.token
+                    Log.e("newToken", newToken)
+                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+                    editor.putString(CONSTANTS.Token, newToken) //Friend
+                    editor.apply()
+                    editor.commit()
+                })
             val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
         }
@@ -120,36 +133,85 @@ class SignInActivity : AppCompatActivity() {
             binding.flEmail.error = "Email address is required"
             binding.flPassword.error = ""
         } else if (!binding.etEmail.text.toString().equals("")
-                && !BWSApplication.isEmailValid(binding.etEmail.text.toString())) {
+            && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
+        ) {
             binding.flEmail.error = "Valid Email address is required"
             binding.flPassword.error = ""
         } else if (binding.etPassword.text.toString().equals("")) {
             binding.flEmail.error = ""
             binding.flPassword.error = "Password is required"
+        } else if (binding.etPassword.text.toString().length < 8
+            || !isValidPassword(binding.etPassword.text.toString())
+        ) {
+            binding.flEmail.error = ""
+            binding.flPassword.error = "Valid password is required"
         } else {
             binding.flEmail.error = ""
             binding.flPassword.error = ""
             if (BWSApplication.isNetworkConnected(this)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
-                val listCall: Call<SignInModel> = APINewClient.getClient().getSignIn(binding.etEmail.text.toString(), binding.etPassword.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), fcm_id)
+                BWSApplication.showProgressBar(
+                    binding.progressBar,
+                    binding.progressBarHolder,
+                    this@SignInActivity
+                )
+                val listCall: Call<SignInModel> = APINewClient.getClient().getSignIn(
+                    binding.etEmail.text.toString(),
+                    binding.etPassword.text.toString(),
+                    CONSTANTS.FLAG_ONE,
+                    Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
+                    fcm_id
+                )
                 listCall.enqueue(object : Callback<SignInModel> {
-                    override fun onResponse(call: Call<SignInModel>, response: Response<SignInModel>) {
+                    override fun onResponse(
+                        call: Call<SignInModel>,
+                        response: Response<SignInModel>
+                    ) {
                         try {
                             binding.flEmail.error = ""
                             binding.flPassword.error = ""
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                this@SignInActivity
+                            )
                             val listModel: SignInModel = response.body()!!
-                            if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                            if (listModel.getResponseCode().equals(
+                                    getString(R.string.ResponseCodesuccess),
+                                    ignoreCase = true
+                                )
+                            ) {
+                                val shared = getSharedPreferences(
+                                    CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                                    MODE_PRIVATE
+                                )
                                 val editor = shared.edit()
-                                editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.iD)
-                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
-                                editor.putString(CONSTANTS.PREFE_ACCESS_USEREMAIL, listModel.getResponseData()?.email)
-                                editor.putString(CONSTANTS.PREFE_ACCESS_DeviceType, CONSTANTS.FLAG_ONE)
-                                editor.putString(CONSTANTS.PREFE_ACCESS_DeviceID, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
+                                editor.putString(
+                                    CONSTANTS.PREFE_ACCESS_UserID,
+                                    listModel.getResponseData()?.iD
+                                )
+                                editor.putString(
+                                    CONSTANTS.PREFE_ACCESS_NAME,
+                                    listModel.getResponseData()?.name
+                                )
+                                editor.putString(
+                                    CONSTANTS.PREFE_ACCESS_USEREMAIL,
+                                    listModel.getResponseData()?.email
+                                )
+                                editor.putString(
+                                    CONSTANTS.PREFE_ACCESS_DeviceType,
+                                    CONSTANTS.FLAG_ONE
+                                )
+                                editor.putString(
+                                    CONSTANTS.PREFE_ACCESS_DeviceID,
+                                    Settings.Secure.getString(
+                                        contentResolver,
+                                        Settings.Secure.ANDROID_ID
+                                    )
+                                )
                                 editor.commit()
                                 val i = Intent(this@SignInActivity, UserListActivity::class.java)
                                 startActivity(i)
+                                finish()
                                 BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             } else {
                                 BWSApplication.showToast(listModel.getResponseMessage(), activity)
@@ -161,7 +223,11 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<SignInModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            this@SignInActivity
+                        )
                     }
                 })
             } else {

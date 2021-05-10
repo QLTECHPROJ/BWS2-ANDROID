@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -35,12 +36,12 @@ class ForgotPswdActivity : AppCompatActivity() {
             val Email: String = binding.etEmail.getText().toString().trim()
             if (Email.equals("", ignoreCase = true)) {
                 binding.btnResetPswd.setEnabled(false)
-                binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity,R.color.white))
+                binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnResetPswd.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
                 binding.btnResetPswd.setEnabled(true)
-                binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity,R.color.white))
-                binding.btnResetPswd.setBackgroundResource(R.drawable.extra_round_cornor)
+                binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnResetPswd.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
         }
 
@@ -65,43 +66,63 @@ class ForgotPswdActivity : AppCompatActivity() {
         if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
             binding.flEmail.error = "Email address is required"
         } else if (!binding.etEmail.text.toString().equals("")
-                && !BWSApplication.isEmailValid(binding.etEmail.text.toString())) {
+            && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
+        ) {
             binding.flEmail.error = "Valid Email address is required"
         } else {
             binding.flEmail.error = ""
             if (BWSApplication.isNetworkConnected(this)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ForgotPswdActivity)
-                val listCall: Call<ForgotPasswordModel> = APINewClient.getClient().getForgotPassword(binding.etEmail.text.toString())
+                BWSApplication.showProgressBar(
+                    binding.progressBar,
+                    binding.progressBarHolder,
+                    this@ForgotPswdActivity
+                )
+                val listCall: Call<ForgotPasswordModel> =
+                    APINewClient.getClient().getForgotPassword(binding.etEmail.text.toString())
                 listCall.enqueue(object : Callback<ForgotPasswordModel> {
-                    override fun onResponse(call: Call<ForgotPasswordModel>, response: Response<ForgotPasswordModel>) {
+                    override fun onResponse(
+                        call: Call<ForgotPasswordModel>,
+                        response: Response<ForgotPasswordModel>
+                    ) {
                         try {
                             binding.flEmail.error = ""
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ForgotPswdActivity)
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                this@ForgotPswdActivity
+                            )
                             val listModel: ForgotPasswordModel = response.body()!!
-                            if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            if (listModel.responseCode.equals(
+                                    getString(R.string.ResponseCodesuccess),
+                                    ignoreCase = true
+                                )
+                            ) {
                                 dialog = Dialog(this@ForgotPswdActivity)
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                 dialog.setContentView(R.layout.alert_popup_layout)
                                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                dialog.window!!.setLayout(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
 
                                 val tvGoBack: TextView = dialog.findViewById(R.id.tvGoBack)
+                                val tvSubTitle: TextView = dialog.findViewById(R.id.tvSubTitle)
                                 dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog.dismiss()
                                     }
                                     false
                                 }
-
+                                tvSubTitle.text = listModel.responseMessage
                                 tvGoBack.setOnClickListener {
                                     dialog.dismiss()
                                     finish()
                                 }
                                 dialog.show()
                                 dialog.setCancelable(false)
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             } else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             }
 
                         } catch (e: Exception) {
@@ -110,7 +131,11 @@ class ForgotPswdActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<ForgotPasswordModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ForgotPswdActivity)
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            this@ForgotPswdActivity
+                        )
                     }
                 })
             } else {

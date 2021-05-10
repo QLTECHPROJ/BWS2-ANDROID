@@ -37,6 +37,7 @@ class SplashActivity : AppCompatActivity() {
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
     var indexScore: String? = ""
+    var avgSleepTime: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
@@ -56,7 +57,11 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
-        } else if (!USERID.equals("", ignoreCase = true) && CoUserID.equals("", ignoreCase = true)) {
+        } else if (!USERID.equals("", ignoreCase = true) && CoUserID.equals(
+                "",
+                ignoreCase = true
+            )
+        ) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, UserListActivity::class.java)
                 startActivity(intent)
@@ -90,35 +95,54 @@ class SplashActivity : AppCompatActivity() {
     private fun checkAppVersion() {
         val appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa"
         if (BWSApplication.isNetworkConnected(this)) {
-            val listCall: Call<VersionModel> = APINewClient.getClient().getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE)
+            val listCall: Call<VersionModel> = APINewClient.getClient()
+                .getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE)
             listCall.enqueue(object : Callback<VersionModel> {
-                override fun onResponse(call: Call<VersionModel>, response: Response<VersionModel>) {
+                override fun onResponse(
+                    call: Call<VersionModel>,
+                    response: Response<VersionModel>
+                ) {
                     try {
                         val versionModel: VersionModel = response.body()!!
                         try {
-                            if (versionModel.getResponseData().getIsForce().equals("0", ignoreCase = true)) {
+                            if (versionModel.getResponseData().getIsForce()
+                                    .equals("0", ignoreCase = true)
+                            ) {
                                 val builder = AlertDialog.Builder(ctx)
                                 builder.setTitle("Update Brain Wellness Spa")
                                 builder.setCancelable(false)
                                 builder.setMessage("Brain Wellness Spa recommends that you update to the latest version")
-                                        .setPositiveButton("UPDATE") { dialog: DialogInterface, _: Int ->
-                                            ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
-                                            dialog.cancel()
-                                        }
-                                        .setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
-                                            askBattryParmition()
-                                            dialog.dismiss()
-                                        }
+                                    .setPositiveButton("UPDATE") { dialog: DialogInterface, _: Int ->
+                                        ctx.startActivity(
+                                            Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse(appURI)
+                                            )
+                                        )
+                                        dialog.cancel()
+                                    }
+                                    .setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
+                                        askBattryParmition()
+                                        dialog.dismiss()
+                                    }
                                 builder.create().show()
-                            } else if (versionModel.getResponseData().getIsForce().equals("1", ignoreCase = true)) {
+                            } else if (versionModel.getResponseData().getIsForce()
+                                    .equals("1", ignoreCase = true)
+                            ) {
                                 val builder = AlertDialog.Builder(ctx)
                                 builder.setTitle("Update Required")
                                 builder.setCancelable(false)
                                 builder.setMessage("To keep using Brain Wellness Spa, download the latest version")
-                                        .setCancelable(false)
-                                        .setPositiveButton("UPDATE") { _: DialogInterface?, _: Int -> ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI))) }
+                                    .setCancelable(false)
+                                    .setPositiveButton("UPDATE") { _: DialogInterface?, _: Int ->
+                                        ctx.startActivity(
+                                            Intent(Intent.ACTION_VIEW, Uri.parse(appURI))
+                                        )
+                                    }
                                 builder.create().show()
-                            } else if (versionModel.getResponseData().getIsForce().equals("", ignoreCase = true)) {
+                            } else if (versionModel.getResponseData().getIsForce()
+                                    .equals("", ignoreCase = true)
+                            ) {
                                 askBattryParmition()
                             }
                         } catch (e: java.lang.Exception) {
@@ -132,7 +156,7 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<VersionModel>, t: Throwable) {
                 }
             })
-        }else{
+        } else {
             setAnalytics()
             askBattryParmition()
             BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
@@ -141,21 +165,38 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkUserDetails() {
         if (BWSApplication.isNetworkConnected(this)) {
-            val listCall: Call<CoUserDetailsModel> = APINewClient.getClient().getCoUserDetails(USERID, CoUserID)
+            val listCall: Call<CoUserDetailsModel> =
+                APINewClient.getClient().getCoUserDetails(USERID, CoUserID)
             listCall.enqueue(object : Callback<CoUserDetailsModel> {
-                override fun onResponse(call: Call<CoUserDetailsModel>, response: Response<CoUserDetailsModel>) {
+                override fun onResponse(
+                    call: Call<CoUserDetailsModel>,
+                    response: Response<CoUserDetailsModel>
+                ) {
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
-                        isProfileCompleted = coUserDetailsModel.responseData!!.isProfileCompleted.toString()
-                        isAssessmentCompleted = coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
+                        isProfileCompleted =
+                            coUserDetailsModel.responseData!!.isProfileCompleted.toString()
+                        isAssessmentCompleted =
+                            coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
                         indexScore = coUserDetailsModel.responseData!!.indexScore.toString()
-                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                        avgSleepTime = coUserDetailsModel.responseData!!.avgSleepTime.toString()
+                        val shared = getSharedPreferences(
+                            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                            Context.MODE_PRIVATE
+                        )
                         val editor = shared.edit()
-                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, coUserDetailsModel.responseData!!.indexScore)
+                        editor.putString(
+                            CONSTANTS.PREFE_ACCESS_INDEXSCORE,
+                            coUserDetailsModel.responseData!!.indexScore
+                        )
                         editor.commit()
-                        val sharedd = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        val sharedd =
+                            getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                         val editord = sharedd.edit()
-                        editord.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, coUserDetailsModel.responseData!!.avgSleepTime)
+                        editord.putString(
+                            CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                            coUserDetailsModel.responseData!!.avgSleepTime
+                        )
                         editord.commit()
                         checkAppVersion()
                         setAnalytics()
@@ -167,7 +208,7 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<CoUserDetailsModel>, t: Throwable) {
                 }
             })
-        } else{
+        } else {
             askBattryParmition()
         }
     }
@@ -194,6 +235,7 @@ class SplashActivity : AppCompatActivity() {
         Log.e("isProfileCompleted", isProfileCompleted.toString())
         Log.e("isAssessmentCompleted", isAssessmentCompleted.toString())
         Log.e("indexScore", indexScore.toString())
+        Log.e("avgSleepTime", avgSleepTime.toString())
         /*if (USERID.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
@@ -209,28 +251,35 @@ class SplashActivity : AppCompatActivity() {
             }, (2 * 800).toLong())
 
         } else {*/
-            if (isProfileCompleted.equals("0", ignoreCase = true)) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
-                    intent.putExtra(CONSTANTS.ScreenView, "1")
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
-            } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
-                    intent.putExtra(CONSTANTS.ScreenView, "2")
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
-            } else if (isProfileCompleted.equals("1", ignoreCase = true) &&
-                    isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
-            }
+        if (isProfileCompleted.equals("0", ignoreCase = true)) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
+                intent.putExtra(CONSTANTS.ScreenView, "1")
+                startActivity(intent)
+                finish()
+            }, (2 * 800).toLong())
+        } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
+                intent.putExtra(CONSTANTS.ScreenView, "2")
+                startActivity(intent)
+                finish()
+            }, (2 * 800).toLong())
+        } else if (avgSleepTime.equals("", ignoreCase = true)) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this@SplashActivity, SleepTimeActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, (2 * 800).toLong())
+        } else if (isProfileCompleted.equals("1", ignoreCase = true) &&
+            isAssessmentCompleted.equals("1", ignoreCase = true)
+        ) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, (2 * 800).toLong())
+        }
 //        }
     }
 
@@ -238,7 +287,8 @@ class SplashActivity : AppCompatActivity() {
         try {
 //     TODO : Live segment key
 //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
-            analytics = Analytics.Builder(application, getString(R.string.segment_key_foram)) //foram
+            analytics =
+                Analytics.Builder(application, getString(R.string.segment_key_foram)) //foram
                     .trackApplicationLifecycleEvents()
                     .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
                     .trackAttributionInformation()

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.youtube.player.YouTubePlayerView
+            android:id="@+id/youtubeView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvHeadingTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/youtubeView"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:text="“I would pay it all over again. It was worth every penny. On a bad day I would be very agitated and very angry about everyday occurrences.”"
+            android:textColor="@color/dark_blue_gray"
+            android:textSize="@dimen/_16sdp" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvHeadingTwo"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="Tayla"
+            android:textColor="@color/dark_blue_gray"
+            android:textSize="@dimen/_16sdp" />
+    </RelativeLayout>
+</layout>

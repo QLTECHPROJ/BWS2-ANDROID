@@ -126,8 +126,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.13">
+                        android:layout_weight="0.13"
+                        android:gravity="center">
 
                         <ImageView
                             android:id="@+id/ivUser"
@@ -188,8 +188,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.13">
+                        android:layout_weight="0.13"
+                        android:gravity="center">
 
                         <ImageView
                             android:id="@+id/ivMobileNumber"
@@ -227,8 +227,8 @@
                                 android:hint="@string/Mobile_Number"
                                 android:imeOptions="actionNext"
                                 android:inputType="number"
-                                android:maxLines="1"
                                 android:maxLength="13"
+                                android:maxLines="1"
                                 android:singleLine="true"
                                 android:textColorHint="@color/black"
                                 android:textCursorDrawable="@null"
@@ -249,9 +249,9 @@
                             android:layout_width="@dimen/_22sdp"
                             android:layout_height="@dimen/_18sdp"
                             android:layout_gravity="center"
-                            android:visibility="gone"
                             android:layout_marginRight="@dimen/_10sdp"
-                            android:src="@drawable/ic_check_icon" />
+                            android:src="@drawable/ic_check_icon"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -271,8 +271,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.13">
+                        android:layout_weight="0.13"
+                        android:gravity="center">
 
                         <ImageView
                             android:id="@+id/ivEmail"
@@ -334,9 +334,9 @@
                             android:layout_width="@dimen/_22sdp"
                             android:layout_height="@dimen/_18sdp"
                             android:layout_gravity="center"
-                            android:visibility="gone"
                             android:layout_marginRight="@dimen/_10sdp"
-                            android:src="@drawable/ic_check_icon" />
+                            android:src="@drawable/ic_check_icon"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -350,10 +350,27 @@
             android:layout_marginHorizontal="@dimen/_40sdp"
             android:layout_marginBottom="@dimen/_25sdp"
             android:background="@drawable/gray_round_cornor"
+            android:enabled="false"
             android:fontFamily="@font/montserrat_bold"
             android:paddingVertical="@dimen/_4sdp"
-            android:enabled="false"
             android:text="Send PIN"
+            android:visibility="gone"
+            android:textAllCaps="true"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnSendNewPin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:background="@drawable/light_green_rounded_filled"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingVertical="@dimen/_4sdp"
+            android:text="Send New PIN"
+            android:visibility="gone"
+            android:textAllCaps="true"
             android:textColor="@color/white" />
 
         <LinearLayout
