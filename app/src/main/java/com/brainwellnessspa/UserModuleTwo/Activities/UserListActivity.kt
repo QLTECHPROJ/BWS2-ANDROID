@@ -400,7 +400,7 @@ class UserListActivity : AppCompatActivity() {
                                                             editord.commit()
 
                                                             val activity = SplashActivity()
-                                                            activity.setAnalytics()
+                                                            activity.setAnalytics(activity.getString(R.string.segment_key_real))
                                                         }
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()

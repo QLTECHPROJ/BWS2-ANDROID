@@ -161,7 +161,7 @@
                 android:clickable="true"
                 android:rotation="180"
                 android:src="@drawable/ic_back_black_icon"
-                app:tint="@color/gray" />
+                app:tint="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFirstList"
@@ -181,17 +181,17 @@
                 android:clickable="false"
                 android:src="@drawable/ic_back_black_icon"
                 app:tint="@color/gray" />
-            <!--            <Button-->
-            <!--                android:id="@+id/"-->
-            <!--                android:layout_width="@dimen/_100sdp"-->
-            <!--                android:layout_height="@dimen/_50sdp"-->
-            <!--                android:layout_alignParentRight="true"-->
-            <!--                android:layout_alignParentBottom="true"-->
-            <!--                android:background="@drawable/light_blue_rounded_filled"-->
-            <!--                android:fontFamily="@font/montserrat_medium"-->
-            <!--                android:text="Next"-->
-            <!--                android:textAllCaps="false"-->
-            <!--                android:textColor="@color/white" />-->
+            <Button
+                android:id="@+id/btnContinue"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/light_green_rounded_filled"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Continue"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
 
         </RelativeLayout>
 

@@ -929,17 +929,54 @@ public class AddAudioActivity extends AppCompatActivity {
                 int PlayerPosition  = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("SearchAudio")
                         && PlayFrom.equalsIgnoreCase("Recommended Search")) {
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            if (!player.getPlayWhenReady()) {
+                                player.setPlayWhenReady(true);
+                            }
+                        } else {
+                            audioClick = true;
+                        }
+                        callMyPlayer();
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
+                    } else {
+                        ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                        listModelList2.add(listModel.get(position));
+                        callPlayer(0, listModelList2);
+                    }
+                }else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                     listModelList2.add(listModel.get(position));
-                    callPlayer(0, listModelList2);
-                } else {
-                    ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                    SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                    String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                    SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setAudioDuration("00:48");
+                    if (isDisclaimer == 1) {
+                        if (player != null) {
+                            player.setPlayWhenReady(true);
+                            listModelList2.add(position, mainPlayModel);
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                listModelList2.add(position, mainPlayModel);
+                            }
+                        }
+                    } else {
+                        isDisclaimer = 0;
+                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                            listModelList2.add(position, mainPlayModel);
+                        }
+                    }
                     listModelList2.add(listModel.get(position));
                     callPlayer(0,listModelList2);
                 }
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.setMargins(0, 8, 0, 210);
-                binding.llSpace.setLayoutParams(params);
                 notifyDataSetChanged();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -343,7 +343,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             listModel.responseData!!.playlistName, activity as FragmentActivity?,
                                             listModel.responseData!!.reminderTime, listModel.responseData!!.reminderDay)
                                 }
-                                tvGoBack.setOnClickListener { v: View? ->
+                                tvGoBack.setOnClickListener {
                                     val listCall = APINewClient.getClient().getDeleteRemider(CoUserID,
                                             listModel.responseData!!.reminderId)
                                     listCall.enqueue(object : Callback<DeleteRemiderModel?> {

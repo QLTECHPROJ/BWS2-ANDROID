@@ -14,9 +14,9 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
-import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.SplashModule.Models.VersionModel
+import com.brainwellnessspa.SplashModule.SplashScreenActivity
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -47,7 +47,6 @@ class SplashActivity : AppCompatActivity() {
         EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         //        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);
 //        checkUserDetails()
-        setAnalytics()
     }
 
     override fun onResume() {
@@ -105,6 +104,8 @@ class SplashActivity : AppCompatActivity() {
                     try {
                         val versionModel: VersionModel = response.body()!!
                         try {
+                            setAnalytics(versionModel.responseData.segmentKey)
+
                             if (versionModel.getResponseData().getIsForce()
                                     .equals("0", ignoreCase = true)
                             ) {
@@ -156,8 +157,8 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<VersionModel>, t: Throwable) {
                 }
             })
-        } else {
-            setAnalytics()
+        }else{
+            setAnalytics(getString(R.string.segment_key_real))
             askBattryParmition()
             BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
         }
@@ -199,7 +200,6 @@ class SplashActivity : AppCompatActivity() {
                         )
                         editord.commit()
                         checkAppVersion()
-                        setAnalytics()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -283,12 +283,11 @@ class SplashActivity : AppCompatActivity() {
 //        }
     }
 
-    fun setAnalytics() {
+    fun setAnalytics(segmentKey: String) {
         try {
 //     TODO : Live segment key
 //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
-            analytics =
-                Analytics.Builder(application, getString(R.string.segment_key_foram)) //foram
+            analytics = Analytics.Builder(application, segmentKey) //foram
                     .trackApplicationLifecycleEvents()
                     .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
                     .trackAttributionInformation()

@@ -70,6 +70,10 @@ class DassAssSliderActivity : AppCompatActivity() {
                 myPos += 2
 //                binding.tvNumberOfQus.text = myPos.toString()
                 binding.lpIndicator.progress = myPos
+                if(myPos < listModel1.responseData!!.questions!!.size - 1) {
+                    binding.btnNext.visibility = View.GONE
+                    binding.btnContinue.visibility = View.VISIBLE
+                }
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
@@ -100,6 +104,11 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
         binding.btnPrev.setOnClickListener {
             callBack()
+        }
+        binding.btnContinue.setOnClickListener {
+            binding.lpIndicator.progress = listModel1.responseData!!.questions!!.size
+            sendAssessmentData()
+            Log.e("Ass Post Data", gson.toJson(assAns))
         }
         prepareData()
     }
@@ -282,7 +291,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             if (dass.assQus.contains(listModel.question)) {
                 for (i in 0 until dass.assQus.size) {
                     if (dass.assQus[i] == listModel.question) {
-                        posItem = Integer.parseInt(dass.assAns.get(i))
+                        posItem = Integer.parseInt(dass.assAns[i])
                         mSelectedItem = posItem
                         break
                     }
@@ -313,10 +322,18 @@ class DassAssSliderActivity : AppCompatActivity() {
         private fun visibleGoneNext() {
             if (dass.assQus.size >= pos + 1) {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnContinue.isClickable = true
+                binding.btnContinue.isEnabled = true
+                binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
+                binding.btnNext.isEnabled = false
                 binding.btnNext.isClickable = false
                 binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnContinue.isEnabled = false
+                binding.btnContinue.isClickable = false
+                binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
             }
         }
 

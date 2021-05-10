@@ -33,6 +33,9 @@ class HomeScreenModel {
         @Expose
         var scoreIncDec: String? = null
 
+        @SerializedName("shouldPlayDisclaimer")
+        @Expose
+        var shouldPlayDisclaimer: String? = null
         @SerializedName("IndexScoreDiff")
         @Expose
         var indexScoreDiff: String? = null

@@ -53,7 +53,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
@@ -72,7 +71,6 @@ import com.brainwellnessspa.DashboardTwoModule.Model.AudioDetailModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
-import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.MainPlaylistFragment;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
@@ -105,6 +103,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
@@ -408,7 +407,7 @@ public class BWSApplication extends Application {
             ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
             llDownload.setClickable(false);
             llDownload.setEnabled(false);
-            callDownload(comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx, ivDownloads, tvDownloads,act, llDownload);
+            callDownload(comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx, ivDownloads,act, llDownload);
         });
         if (comeFrom.equalsIgnoreCase("downloadList")) {
 
@@ -1347,13 +1346,13 @@ public class BWSApplication extends Application {
             xl.setLabelCount(7);
             xl.setLabelRotationAngle(0);
             xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xl.setValueFormatter(new ValueFormatter() {
+            xl.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
+            /*xl.setValueFormatter(new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+                public String getFormattedValue(float value) {
                     return String.valueOf(xAxisValues.get((int) value));
                 }
-            });
-
+            });*/
             YAxis yl = barChart.getAxisLeft();
             yl.setDrawAxisLine(true);
             yl.setDrawGridLines(false);
@@ -1394,9 +1393,9 @@ public class BWSApplication extends Application {
                                      List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
                                      List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
                                      List<MainPlayModel> mDataPlayer, int position, Context ctx,
-                                     ImageView ivDownloads, TextView tvDownloads, Activity act,LinearLayout llDownload) {
+                                     ImageView ivDownloads, Activity act,LinearLayout llDownload) {
         List<String> fileNameList = new ArrayList<>();
-        List<String> audioFile1 = new ArrayList<>();
+        List<String> audioFile1;
         List<String> playlistDownloadId = new ArrayList<>();
 
         try {
@@ -1440,7 +1439,7 @@ public class BWSApplication extends Application {
                 ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
-                SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx);
+                SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
             } else {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -1496,7 +1495,7 @@ public class BWSApplication extends Application {
                     ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
-                    SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx);
+                    SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
                 }
             }
         } catch (Exception e) {
@@ -1508,7 +1507,7 @@ public class BWSApplication extends Application {
                                   List<DownloadAudioDetails> mDataDownload,
                                   List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
                                   List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                  List<MainPlayModel> mDataPlayer, int position, Context ctx) {
+                                  List<MainPlayModel> mDataPlayer, Context ctx) {
         AudioDatabase DB;
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
