@@ -70,15 +70,15 @@ class DassAssSliderActivity : AppCompatActivity() {
                 myPos += 2
 //                binding.tvNumberOfQus.text = myPos.toString()
                 binding.lpIndicator.progress = myPos
-                if(myPos < listModel1.responseData!!.questions!!.size - 1) {
+                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     binding.btnNext.visibility = View.GONE
                     binding.btnContinue.visibility = View.VISIBLE
                 }
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
+                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
                 } else {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
+                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
                 }
             } else {
@@ -124,12 +124,14 @@ class DassAssSliderActivity : AppCompatActivity() {
             binding.lpIndicator.progress = myPos
 //            binding.tvNumberOfQus.text = myPos.toString()
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, ctx, binding, activity)
+                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
                 binding.rvFirstList.adapter = firstListAdapter
             } else {
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
+                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
                 binding.rvFirstList.adapter = firstListAdapter
             }
+        } else {
+            finish()
         }
     }
 
@@ -162,13 +164,13 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 condition += listModel.responseData!!.content!![i].condition + "\n"
                             }
                             binding.tvText.text = condition
-                            binding.lpIndicator.max =listModel.responseData!!.questions!!.size
-                            binding.lpIndicator.progress =0
+                            binding.lpIndicator.max = listModel.responseData!!.questions!!.size
+                            binding.lpIndicator.progress = 0
 //                            binding.tvNumberOfQus.text = myPos.toString()
 //                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString()
                             if (myPos < listModel.responseData!!.questions!!.size) {
 //                                if(myPos ==)
-                                firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, ctx, binding, activity)
+                                firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
                                 binding.rvFirstList.adapter = firstListAdapter
                             }
                             BWSApplication.showToast(listModel.responseMessage, activity)
@@ -192,7 +194,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
 
-    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, val myPos: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, val myPos: Int, val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var dass = DassAssSliderActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -212,9 +214,9 @@ class DassAssSliderActivity : AppCompatActivity() {
                 holder.bindingAdapter.tvSecond.text = listModel[position].question
                 holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
                 if (position == 0) {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, ctx, binding, activity)
+                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, activity)
                 } else {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, ctx, binding, activity)
+                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, mypos2, ctx, binding, activity)
                 }
                 holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
             }
@@ -225,7 +227,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
     }
 
-    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
@@ -320,7 +322,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
 
         private fun visibleGoneNext() {
-            if (dass.assQus.size >= pos + 1) {
+            if (dass.assQus.size >= mmypos2) {
                 binding.btnNext.isClickable = true
                 binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)

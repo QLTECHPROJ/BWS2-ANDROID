@@ -191,6 +191,7 @@
                 android:fontFamily="@font/montserrat_medium"
                 android:text="Continue"
                 android:textAllCaps="false"
+                android:visibility="gone"
                 android:textColor="@color/white" />
 
         </RelativeLayout>
