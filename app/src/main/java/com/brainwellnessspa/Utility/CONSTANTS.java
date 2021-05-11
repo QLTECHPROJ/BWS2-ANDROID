@@ -58,6 +58,7 @@ public class CONSTANTS {
     public static String ScreenView = "ScreenView";
     public static String ASSPROCESS = "ASSPROCESS";
     public static String IndexScore = "IndexScore";
+    public static String ScoreLevel = "ScoreLevel";
     public static String PopUp = "PopUp";
     public static String ScreenVisible = "ScreenVisible";
     public static String Tnc = "Tnc";

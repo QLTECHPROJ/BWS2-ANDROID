@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.LoginModule.Models.CountryListModel
 import com.brainwellnessspa.LoginModule.Models.LoginModel
+import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.NewSignUpModel
 import com.brainwellnessspa.Utility.APINewClient
@@ -38,6 +39,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,7 +55,9 @@ class CreateAccountActivity : AppCompatActivity() {
     lateinit var ctx: Context
     lateinit var activity: Activity
     var fcm_id: String = ""
+    var countryFullName: String = ""
     lateinit var searchEditText: EditText
+
 
     var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -81,7 +85,7 @@ class CreateAccountActivity : AppCompatActivity() {
             } else {
                 binding.btnCreateAc.setEnabled(true)
                 binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnCreateAc.setBackgroundResource(R.drawable.extra_round_cornor)
+                binding.btnCreateAc.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
         }
 
@@ -103,6 +107,8 @@ class CreateAccountActivity : AppCompatActivity() {
         binding.etNumber.addTextChangedListener(userTextWatcher)
         binding.etEmail.addTextChangedListener(userTextWatcher)
         binding.etPassword.addTextChangedListener(userTextWatcher)
+        val p = Properties()
+        BWSApplication.addToSegment("Sign up Screen Viewed", p, CONSTANTS.screen)
 
         binding.btnCreateAc.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
@@ -142,7 +148,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.flUser.error = ""
                 binding.flNumber.error = ""
                 binding.flEmail.error = ""
-                binding.flPassword.error = "Valid password is required"
+                binding.flPassword.error = "Password length must be atleast 8 character"
             } else {
                 SignUpUser()
             }
@@ -210,6 +216,8 @@ class CreateAccountActivity : AppCompatActivity() {
                 }
                 false
             }
+            val p = Properties()
+            BWSApplication.addToSegment("Country List Viewed", p, CONSTANTS.screen)
 
             searchView.onActionViewExpanded()
             searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -333,6 +341,7 @@ class CreateAccountActivity : AppCompatActivity() {
 
             val countryCode: String = binding.tvCountry.getText().toString().replace("+", "")
             Log.e("countryCode", countryCode);
+            Log.e("countryFullName", countryFullName);
             val listCall: Call<NewSignUpModel> = APINewClient.getClient().getSignUp(
                 binding.etUser.text.toString(),
                 binding.etEmail.text.toString(),
@@ -359,6 +368,15 @@ class CreateAccountActivity : AppCompatActivity() {
                             val i = Intent(ctx, SignInActivity::class.java)
                             startActivity(i)
                             finish()
+                            val p = Properties()
+                            p.putValue("userId", listModel.getResponseData()!!.id)
+                            p.putValue("name", listModel.getResponseData()!!.name)
+                            p.putValue("mobileNo", listModel.getResponseData()!!.mobileNo)
+                            p.putValue("countryCode", countryCode)
+                            p.putValue("countryName", countryFullName)
+                            p.putValue("countryShortName", binding.tvCountryShortName.text.toString())
+                            p.putValue("email", listModel.getResponseData()!!.email)
+                            BWSApplication.addToSegment("User Sign up", p, CONSTANTS.track)
                             /*  val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                               val editor = shared.edit()
                               editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.id)
@@ -399,6 +417,7 @@ class CreateAccountActivity : AppCompatActivity() {
         private var binding: ActivityCreateAccountBinding
         private var searchFilter: String
         private var dialog: Dialog
+        var catList = CreateAccountActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -427,6 +446,8 @@ class CreateAccountActivity : AppCompatActivity() {
             holder.bindingAdapter.llMainLayout.setOnClickListener { _ ->
                 binding.tvCountryShortName.text = mData.shortName
                 binding.tvCountry.text = "+" + mData.code
+                catList.countryFullName = mData.name
+
                 dialog.dismiss()
             }
         }

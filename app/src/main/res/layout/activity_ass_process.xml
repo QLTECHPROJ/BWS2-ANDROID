@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -106,7 +106,7 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginRight="@dimen/_50sdp"
+                        android:layout_marginRight="@dimen/_54sdp"
                         android:layout_marginBottom="@dimen/_46sdp"
                         android:layout_toLeftOf="@id/llSeverse"
                         android:rotation="294"
@@ -186,13 +186,14 @@
 
                         <TextView
                             android:id="@+id/tvIndexScore"
-                            android:layout_width="wrap_content"
+                            android:layout_width="@dimen/_52sdp"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/_12sdp"
+                            android:layout_marginRight="@dimen/_4sdp"
                             android:fontFamily="@font/montserrat_bold"
-                            android:text="46"
+                            android:layout_gravity="center"
+                            android:gravity="center"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_40sdp" />
+                            android:textSize="@dimen/_36sdp" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -202,7 +203,7 @@
                             android:gravity="center"
                             android:text="Severe"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_11sdp" />
 
                     </LinearLayout>
 
@@ -231,7 +232,6 @@
                         android:visibility="invisible"
                         android:layout_marginBottom="@dimen/_118sdp"
                         android:src="@drawable/ic_score_arrow" />
-
                     <ImageView
                         android:id="@+id/ivNineth"
                         android:layout_width="@dimen/_20sdp"

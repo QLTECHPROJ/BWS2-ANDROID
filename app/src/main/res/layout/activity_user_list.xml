@@ -25,8 +25,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_left_icon_two"
-                    app:tint="@color/black"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"
+                    app:tint="@color/black" />
 
             </LinearLayout>
 
@@ -42,7 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_30sdp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -80,7 +81,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_14sdp"
-                    android:layout_marginBottom="@dimen/_30sdp"
                     android:background="@drawable/account_gray_bg"
                     android:elevation="@dimen/_110sdp"
                     android:orientation="horizontal"
@@ -151,10 +151,10 @@
                 android:layout_marginHorizontal="@dimen/_33sdp"
                 android:layout_marginBottom="@dimen/_16sdp"
                 android:background="@drawable/gray_round_cornor"
+                android:enabled="false"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingVertical="@dimen/_2sdp"
                 android:text="Log in"
-                android:enabled="false"
                 android:textColor="@color/white" />
 
             <TextView
@@ -162,11 +162,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
                 android:layout_marginBottom="@dimen/_18sdp"
                 android:background="@color/white"
                 android:enabled="false"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
                 android:text="I forgot my Pin"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/_13sdp" />

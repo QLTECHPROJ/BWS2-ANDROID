@@ -20,7 +20,9 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel
 import com.brainwellnessspa.Utility.APINewClient
+import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityForgotPswdBinding
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,6 +57,9 @@ class ForgotPswdActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             finish()
         }
+        val p = Properties()
+        BWSApplication.addToSegment("Forgot Password Screen Viewed", p, CONSTANTS.screen)
+
         binding.etEmail.addTextChangedListener(userTextWatcher)
 
         binding.btnResetPswd.setOnClickListener {
@@ -119,8 +124,12 @@ class ForgotPswdActivity : AppCompatActivity() {
                                     dialog.dismiss()
                                     finish()
                                 }
+                                val p = Properties()
+                                p.putValue("email", binding.etEmail.text.toString())
+                                BWSApplication.addToSegment("Forgot Password Clicked", p, CONSTANTS.track)
                                 dialog.show()
                                 dialog.setCancelable(false)
+
                             } else {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             }

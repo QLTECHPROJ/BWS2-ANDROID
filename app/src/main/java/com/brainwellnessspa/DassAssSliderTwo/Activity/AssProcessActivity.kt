@@ -1,23 +1,33 @@
 package com.brainwellnessspa.DassAssSliderTwo.Activity
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Activities.WalkScreenActivity
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
+import com.segment.analytics.Properties
 
 class AssProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAssProcessBinding
     var ASSPROCESS: String = ""
+    var CoUSERID: String? = null
+    var USERID: String? = null
     var IndexScore: Int = 0
+    var ScoreLevel: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ass_process)
+        val shared1 =
+            getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
 
         if (intent.extras != null) {
             ASSPROCESS = intent.getStringExtra(CONSTANTS.ASSPROCESS).toString()
@@ -28,9 +38,17 @@ class AssProcessActivity : AppCompatActivity() {
             binding.rlDoneAss.visibility = View.GONE
         } else if (ASSPROCESS.equals("1", ignoreCase = true)) {
             IndexScore = Integer.parseInt(intent.getStringExtra(CONSTANTS.IndexScore).toString())
+            ScoreLevel = intent.getStringExtra(CONSTANTS.ScoreLevel)
             binding.rlDoAss.visibility = View.GONE
             binding.rlDoneAss.visibility = View.VISIBLE
             binding.tvIndexScore.text = IndexScore.toString()
+
+            val p = Properties()
+            p.putValue("userId", USERID)
+            p.putValue("coUserId", CoUSERID)
+            p.putValue("indexScore", IndexScore)
+            p.putValue("scoreLevel", ScoreLevel)
+            BWSApplication.addToSegment("Index Score Screen Viewed", p, CONSTANTS.screen)
 
             if (IndexScore == 0) {
                 binding.ivFirst.visibility = View.VISIBLE

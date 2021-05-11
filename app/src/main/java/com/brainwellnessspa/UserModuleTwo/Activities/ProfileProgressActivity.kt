@@ -17,6 +17,7 @@ import com.brainwellnessspa.UserModuleTwo.Models.ProfileSaveDataModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityProfileProgressBinding
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,6 +44,10 @@ class ProfileProgressActivity : AppCompatActivity() {
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         activity = this@ProfileProgressActivity
+         val p = Properties()
+         ̥p.putValue("userId", USERID)
+         p.putValue("coUserId", CoUserID)
+         BWSApplication.addToSegment("Profile Form Screen Viewed", p, CONSTANTS.screen)
         callSecondPrev()
         binding.btnMySelf.setOnClickListener {
             profileType = "Myself"
@@ -474,6 +479,16 @@ class ProfileProgressActivity : AppCompatActivity() {
                         if (listModel.getResponseCode()
                                 .equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)
                         ) {
+                            val p = Properties()
+                            p.putValue("userId", USERID)
+                            p.putValue("coUserId", CoUserID)
+                            p.putValue("profileType", profileType)
+                            p.putValue("gender", gender)
+                            p.putValue("genderX", genderX)
+                            p.putValue("age", age)
+                            p.putValue("prevDrugUse", prevDrugUse)
+                            p.putValue("medication", medication)
+                            BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)
                             val i =
                                 Intent(this@ProfileProgressActivity, WalkScreenActivity::class.java)
                             i.putExtra(CONSTANTS.ScreenView, "2")

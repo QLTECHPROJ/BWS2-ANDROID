@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_10sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_6sdp"
+                android:background="@drawable/light_gray_round_cornors"
+                android:orientation="horizontal"
+                android:paddingVertical="@dimen/_30sdp"
+                android:paddingLeft="@dimen/_16sdp"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.75"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTilte"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:text="Six-Monthly"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <TextView
+                        android:id="@+id/tvContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_14sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:text="Lorem ipsum dolor sit"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/_14sdp"
+                    android:layout_weight="0.25"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:textColor="@color/dark_blue_gray"
+                    android:textSize="@dimen/_18sdp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlMostPopular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"
+                android:layout_marginLeft="-10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_popular_tag_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Most Popular"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_8sdp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</layout>

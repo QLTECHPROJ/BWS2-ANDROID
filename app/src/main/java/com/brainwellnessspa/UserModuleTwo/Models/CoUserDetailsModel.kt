@@ -86,7 +86,13 @@ class CoUserDetailsModel {
         }
 
         class AreaOfFocus {
+            @SerializedName("MainCat")
+            @Expose
+            var mainCat: String? = null
 
+            @SerializedName("RecommendedCat")
+            @Expose
+            var recommendedCat: String? = null
         }
     }
 }

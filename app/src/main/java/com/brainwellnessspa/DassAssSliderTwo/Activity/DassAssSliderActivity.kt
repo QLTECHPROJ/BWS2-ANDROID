@@ -29,6 +29,7 @@ import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -366,11 +367,21 @@ class DassAssSliderActivity : AppCompatActivity() {
                             edited1.remove(CONSTANTS.AssSort)
                             edited1.clear()
                             edited1.apply()
+
+                            val p = Properties()
+                            p.putValue("userId", USERID)
+                            p.putValue("coUserId", CoUserID)
+                            p.putValue("ans", "")
+                            p.putValue("indexScore", listModel.getResponseData()?.indexScore)
+                            p.putValue("scoreLevel", listModel.getResponseData()?.scoreLevel)
+                            BWSApplication.addToSegment("Assessment Form Submitted", p, CONSTANTS.track)
                             val i = Intent(activity, AssProcessActivity::class.java)
                             i.putExtra(CONSTANTS.ASSPROCESS, "1")
                             i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)
+                            i.putExtra(CONSTANTS.ScoreLevel, listModel.getResponseData()?.scoreLevel)
                             startActivity(i)
                             finish()
+
                         } else {
                             BWSApplication.showToast(listModel.getResponseMessage(), activity)
                         }

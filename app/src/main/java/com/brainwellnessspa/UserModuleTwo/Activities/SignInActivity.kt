@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.SignInModel
 import com.brainwellnessspa.Utility.APINewClient
@@ -25,6 +26,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.segment.analytics.Properties
+import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,7 +73,8 @@ class SignInActivity : AppCompatActivity() {
             startActivity(i)
             finish()
         }
-
+        val p = Properties()
+        BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen)
         binding.etEmail.addTextChangedListener(userTextWatcher)
         binding.etPassword.addTextChangedListener(userTextWatcher)
 
@@ -144,7 +148,7 @@ class SignInActivity : AppCompatActivity() {
             || !isValidPassword(binding.etPassword.text.toString())
         ) {
             binding.flEmail.error = ""
-            binding.flPassword.error = "Valid password is required"
+            binding.flPassword.error = "Password length must be atleast 8 character"
         } else {
             binding.flEmail.error = ""
             binding.flPassword.error = ""
@@ -213,6 +217,13 @@ class SignInActivity : AppCompatActivity() {
                                 startActivity(i)
                                 finish()
                                 BWSApplication.showToast(listModel.getResponseMessage(), activity)
+
+                                val p = Properties()
+                                p.putValue("userId", listModel.getResponseData()!!.iD)
+                                p.putValue("name", listModel.getResponseData()!!.name)
+                                p.putValue("mobileNo", listModel.getResponseData()!!.mobileNo)
+                                p.putValue("email", listModel.getResponseData()!!.email)
+                                BWSApplication.addToSegment("User Login", p, CONSTANTS.track)
                             } else {
                                 BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             }

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -20,6 +21,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
@@ -33,6 +35,7 @@ import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -159,7 +162,10 @@ class UserListActivity : AppCompatActivity() {
                 userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 userList.dialog.setContentView(R.layout.comfirm_pin_layout)
                 userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                userList.dialog.window!!.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
 
                 val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
                 val txtError: TextView = userList.dialog.findViewById(R.id.txtError)
@@ -400,7 +406,85 @@ class UserListActivity : AppCompatActivity() {
                                                             editord.commit()
 
                                                             val activity = SplashActivity()
-                                                            activity.setAnalytics(activity.getString(R.string.segment_key_real))
+                                                            activity.setAnalytics(
+                                                                activity.getString(
+                                                                    R.string.segment_key_real
+                                                                )
+                                                            )
+
+                                                            analytics.identify(
+                                                                Traits()
+                                                                    .putEmail(listModel.responseData!!.email)
+                                                                    .putName(listModel.responseData!!.name)
+                                                                    .putPhone(listModel.responseData!!.mobile)
+                                                                    .putValue(
+                                                                        "coUserId",
+                                                                        listModel.responseData!!.coUserId
+                                                                    )
+                                                                    .putValue(
+                                                                        "userId",
+                                                                        listModel.responseData!!.userID
+                                                                    )
+                                                                    .putValue(
+                                                                        "deviceId",
+                                                                        Settings.Secure.getString(
+                                                                            activity.contentResolver,
+                                                                            Settings.Secure.ANDROID_ID
+                                                                        )
+                                                                    )
+                                                                    .putValue(
+                                                                        "deviceType",
+                                                                        "Android"
+                                                                    )
+                                                                    .putValue(
+                                                                        "name",
+                                                                        listModel.responseData!!.name
+                                                                    )
+                                                                    .putValue("countryCode", "")
+                                                                    .putValue("countryName", "")
+                                                                    .putValue(
+                                                                        "phone",
+                                                                        listModel.responseData!!.mobile
+                                                                    )
+                                                                    .putValue(
+                                                                        "email",
+                                                                        listModel.responseData!!.email
+                                                                    )
+                                                                    .putValue(
+                                                                        "DOB",
+                                                                        listModel.responseData!!.dob
+                                                                    )
+                                                                    .putValue(
+                                                                        "profileImage",
+                                                                        listModel.responseData!!.image
+                                                                    )
+                                                                    .putValue("plan", "")
+                                                                    .putValue("planStatus", "")
+                                                                    .putValue("planStartDt", "")
+                                                                    .putValue("planExpiryDt", "")
+                                                                    .putValue("clinikoId", "")
+                                                                    .putValue(
+                                                                        "isProfileCompleted",
+                                                                        listModel.responseData!!.isProfileCompleted
+                                                                    )
+                                                                    .putValue(
+                                                                        "isAssessmentCompleted",
+                                                                        listModel.responseData!!.isAssessmentCompleted
+                                                                    )
+                                                                    .putValue(
+                                                                        "indexScore",
+                                                                        listModel.responseData!!.indexScore
+                                                                    )
+                                                                    .putValue("scoreLevel", listModel.responseData!!.scoreLevel)
+                                                                    .putValue(
+                                                                        "areaOfFocus",
+                                                                        listModel.responseData!!.areaOfFocus
+                                                                    )
+                                                                    .putValue(
+                                                                        "avgSleepTime",
+                                                                        listModel.responseData!!.avgSleepTime
+                                                                    )
+                                                            )
                                                         }
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()
@@ -497,7 +581,6 @@ class UserListActivity : AppCompatActivity() {
                 btnDone.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
             }
-
         }
 
         override fun afterTextChanged(s: Editable) {
@@ -603,9 +686,11 @@ class UserListActivity : AppCompatActivity() {
                             )
                             binding.rvUserList.adapter = adapter
 
-                            /*if (listModel.responseData.maxuseradd){
-
-                            }*/
+                            if (listModel.responseData!!.coUserList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {
+                                binding.llAddNewUser.visibility = View.GONE
+                            } else {
+                                binding.llAddNewUser.visibility = View.VISIBLE
+                            }
                         } else {
 //                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                         }

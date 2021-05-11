@@ -57,7 +57,7 @@
                 android:gravity="left"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:paddingTop="@dimen/_12sdp"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
+                android:text="@string/forgot_quotes"
                 android:textColor="@color/light_gray"
                 android:textSize="@dimen/_12sdp" />
 

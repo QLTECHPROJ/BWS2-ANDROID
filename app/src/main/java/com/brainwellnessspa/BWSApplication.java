@@ -111,6 +111,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
 import java.io.File;
@@ -150,6 +151,7 @@ public class BWSApplication extends Application {
     };
     public static String BatteryStatus = "";
     public static String PlayerAudioId = "";
+    public static Analytics analytics;
     public static List<String> downloadAudioDetailsList = new ArrayList<>();
     public static List<DownloadAudioDetails> playlistDownloadAudioDetailsList = new ArrayList<>();
     static List<String> remiderDays = new ArrayList<>();

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.DatePicker
@@ -16,11 +15,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.UserModuleTwo.Models.EditProfileModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityEditProfileBinding
+import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -141,6 +142,19 @@ class EditProfileActivity : AppCompatActivity() {
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
                         editor.commit()
+
+                        analytics.identify(
+                            Traits()
+                                .putEmail(viewModel.responseData!!.email)
+                                .putName(viewModel.responseData!!.name)
+                                .putPhone(viewModel.responseData!!.phoneNumber)
+                                .putValue("coUserId", CoUserID)
+                                .putValue("userId", USERID)
+                                .putValue("name", viewModel.responseData!!.name)
+                                .putValue("phone", viewModel.responseData!!.phoneNumber)
+                                .putValue("email", viewModel.responseData!!.email)
+                        )
+
                         finish()
                     } else {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)

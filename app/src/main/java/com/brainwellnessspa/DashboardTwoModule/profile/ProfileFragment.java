@@ -80,6 +80,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_CANCELED;
+import static com.brainwellnessspa.BWSApplication.analytics;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 
@@ -702,9 +703,8 @@ public class ProfileFragment extends Fragment {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
                     dialog.hide();
-//                    SplashActivity activity = new SplashActivity();
-//                    activity.analytics.flush();
-//                    activity.analytics.reset();
+                    analytics.flush();
+                    analytics.reset();
                     Intent i = new Intent(getActivity(), GetStartedActivity.class);
                     startActivity(i);
                     getActivity().finish();

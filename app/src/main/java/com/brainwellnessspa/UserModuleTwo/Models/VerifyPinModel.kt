@@ -57,6 +57,10 @@ class VerifyPinModel {
         @Expose
         var isAssessmentCompleted: String? = null
 
+        @SerializedName("ScoreLevel")
+        @Expose
+        var scoreLevel: String? = null
+
         @SerializedName("indexScore")
         @Expose
         var indexScore: String? = null
@@ -82,7 +86,13 @@ class VerifyPinModel {
         }
 
         class AreaOfFocus {
+            @SerializedName("MainCat")
+            @Expose
+            var mainCat: String? = null
 
+            @SerializedName("RecommendedCat")
+            @Expose
+            var recommendedCat: String? = null
         }
     }
 }

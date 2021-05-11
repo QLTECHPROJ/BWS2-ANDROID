@@ -35,16 +35,19 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="@string/Membership"
+                android:text="@string/Manage"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 
         </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/rlLayout"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:overScrollMode="never">
 
             <LinearLayout
@@ -228,8 +231,7 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.9"
-                                android:max="19"
-                                android:progress="8"
+                                android:max="4"
                                 android:progressDrawable="@drawable/seekbar_style"
                                 android:thumb="@drawable/custom_thumb" />
 
@@ -238,10 +240,11 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.1"
+                                android:layout_marginLeft="@dimen/_10sdp"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:text="2"
                                 android:textColor="@color/step_one_bg"
-                                android:textSize="@dimen/_40sdp" />
+                                android:textSize="@dimen/_36sdp" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -259,249 +262,14 @@
                         android:textSize="@dimen/_16sdp" />
 
 
-                    <LinearLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvPlanList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
-                        android:background="@drawable/light_gray_round_cornors"
-                        android:orientation="horizontal"
-                        android:paddingVertical="@dimen/_30sdp"
-                        android:paddingLeft="@dimen/_16sdp"
-                        android:weightSum="1">
+                        android:nestedScrollingEnabled="true"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:overScrollMode="never" />
 
-                        <LinearLayout
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.75"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="start"
-                                android:text="Weekly"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_16sdp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_14sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:lineSpacingExtra="@dimen/_4sdp"
-                                android:text="Lorem ipsum dolor sit"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="@dimen/_14sdp"
-                            android:layout_weight="0.25"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:gravity="center"
-                            android:text="$9.99"
-                            android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_18sdp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
-                        android:background="@drawable/light_gray_round_cornors"
-                        android:orientation="horizontal"
-                        android:paddingVertical="@dimen/_30sdp"
-                        android:paddingLeft="@dimen/_16sdp"
-                        android:weightSum="1">
-
-                        <LinearLayout
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.75"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="start"
-                                android:text="Monthly"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_16sdp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_14sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:lineSpacingExtra="@dimen/_4sdp"
-                                android:text="Lorem ipsum dolor sit"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="@dimen/_14sdp"
-                            android:layout_weight="0.25"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:gravity="center"
-                            android:text="$29.99"
-                            android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_18sdp" />
-
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
-                        android:layout_marginRight="@dimen/_10sdp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/_6sdp"
-                            android:background="@drawable/light_gray_round_cornors"
-                            android:orientation="horizontal"
-                            android:paddingVertical="@dimen/_30sdp"
-                            android:paddingLeft="@dimen/_16sdp"
-                            android:weightSum="1">
-
-                            <LinearLayout
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.75"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="start"
-                                    android:text="Six-Monthly"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_16sdp" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/_14sdp"
-                                    android:fontFamily="@font/montserrat_medium"
-                                    android:gravity="start"
-                                    android:lineSpacingExtra="@dimen/_4sdp"
-                                    android:text="Lorem ipsum dolor sit"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="@dimen/_14sdp"
-                                android:layout_weight="0.25"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="center"
-                                android:text="$149.99"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_18sdp" />
-
-                        </LinearLayout>
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginLeft="-10dp">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/ic_popular_tag_icon" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginTop="@dimen/_6sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:text="Most Popular"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_8sdp" />
-
-                        </RelativeLayout>
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
-                        android:background="@drawable/light_gray_round_cornors"
-                        android:orientation="horizontal"
-                        android:paddingVertical="@dimen/_30sdp"
-                        android:paddingLeft="@dimen/_16sdp"
-                        android:weightSum="1">
-
-                        <LinearLayout
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.75"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="start"
-                                android:text="Annual"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_16sdp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_14sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:lineSpacingExtra="@dimen/_4sdp"
-                                android:text="Lorem ipsum dolor sit"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="@dimen/_14sdp"
-                            android:layout_weight="0.25"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:gravity="center"
-                            android:text="$249.99"
-                            android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_18sdp" />
-
-                    </LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -542,11 +310,11 @@
                                 android:src="@drawable/ic_red_rounded_icon" />
 
                             <TextView
+                                android:id="@+id/tvFreeTrial"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:fontFamily="@font/montserrat_medium"
-                                android:text="TRY 14 DAYS FOR FREE"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_8sdp" />
 
