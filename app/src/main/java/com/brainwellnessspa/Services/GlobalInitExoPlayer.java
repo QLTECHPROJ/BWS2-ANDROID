@@ -51,6 +51,7 @@ import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
@@ -221,8 +222,9 @@ public class GlobalInitExoPlayer extends Service {
     }
 
     public static void relesePlayer(Context context) {
-        SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        String UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserID = (shared2.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
+        String CoUserID = (shared2.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("Screen", "Dashboard");
@@ -351,8 +353,9 @@ Appointment Audios dddd*/
                                  ArrayList<MainPlayModel> mainPlayModelList, String playerType) {
 //        relesePlayer();
 
-        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
+        String CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -458,6 +461,104 @@ Appointment Audios dddd*/
                 }
             }
 
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                String intruptMethod = "";
+               Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("audioId", mainPlayModelList.get(position).getID());
+                p.putValue("audioName", mainPlayModelList.get(position).getName());
+                p.putValue("audioDescription", "");
+                p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+                p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+                p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+                p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+                p.putValue("position", GetCurrentAudioPosition());
+                String AudioType = "";
+                if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+                    p.putValue("audioType", "Downloaded");
+                    AudioType = "Downloaded";
+                } else {
+                    p.putValue("audioType", "Streaming");
+                    AudioType = "Streaming";
+                }
+                p.putValue("source", GetSourceName(ctx));
+                p.putValue("playerType", "Main");
+                p.putValue("audioService", appStatus(ctx));
+                p.putValue("bitRate", "");
+                p.putValue("sound", String.valueOf(hundredVolume));
+                if (error.type == ExoPlaybackException.TYPE_SOURCE) {
+                    p.putValue("interruptionMethod", error.getMessage() + " " + error.getSourceException().getMessage());
+                    intruptMethod = error.getMessage() + " " + error.getSourceException().getMessage();
+                    Log.e("onPlaybackError", error.getMessage() + " " + error.getSourceException().getMessage());
+                } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                    p.putValue("interruptionMethod", error.getMessage() + " " + error.getRendererException().getMessage());
+                    intruptMethod = error.getMessage() + " " + error.getRendererException().getMessage();
+                    Log.e("onPlaybackError", error.getMessage() + " " + error.getRendererException().getMessage());
+                } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                    p.putValue("interruptionMethod", error.getMessage() + " " + error.getUnexpectedException().getMessage());
+                    intruptMethod = error.getMessage() + " " + error.getUnexpectedException().getMessage();
+                    Log.e("onPlaybackError", error.getMessage() + " " + error.getUnexpectedException().getMessage());
+                } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                    p.putValue("interruptionMethod", error.getMessage());
+                    intruptMethod = error.getMessage();
+                    Log.e("onPlaybackError", error.getMessage());
+                } else {
+                    p.putValue("interruptionMethod", error.getMessage());
+                    intruptMethod = error.getMessage();
+                    Log.e("onPlaybackError", error.getMessage());
+                }
+                AudioInterrupted = true;
+                BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                //should check null because in airplane mode it will be null
+                NetworkCapabilities nc;
+                float downSpeed = 0;
+                int batLevel = 0;
+                float upSpeed = 0;
+
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                        downSpeed = (float) nc.getLinkDownstreamBandwidthKbps() / 1000;
+                        upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
+                    }
+                }
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
+                    batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+                }
+                try {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        Call<AudioInterruptionModel> listCall = APINewClient.getClient().getAudioInterruption(CoUserID,UserID,
+                                mainPlayModelList.get(position).getID(), mainPlayModelList.get(position).getName(),
+                                "", mainPlayModelList.get(position).getAudioDirection()
+                                , mainPlayModelList.get(position).getAudiomastercat(),
+                                mainPlayModelList.get(position).getAudioSubCategory(),
+                                mainPlayModelList.get(position).getAudioDuration()
+                                , "", AudioType, "Main", String.valueOf(hundredVolume)
+                                , appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "",
+                                intruptMethod, String.valueOf(batLevel), BatteryStatus,  String.valueOf(downSpeed), String.valueOf(upSpeed),"Android");
+                        listCall.enqueue(new Callback<AudioInterruptionModel>() {
+                            @Override
+                            public void onResponse(Call<AudioInterruptionModel> call, Response<AudioInterruptionModel> response) {
+                                AudioInterruptionModel listModel = response.body();
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<AudioInterruptionModel> call, Throwable t) {
+                            }
+                        });
+
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
             @Override
             public void onPlaybackStateChanged(int state) {
                 if (state == ExoPlayer.STATE_READY) {
@@ -987,7 +1088,7 @@ Appointment Audios dddd*/
 
     public String UpdateMiniPlayer(Context ctx, Activity activity) {
         String AudioFlag = "0";
-        SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String expDate = (shared1x.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
 //            expDate = "2020-09-29 06:34:10";
         Log.e("Exp Date !!!!", expDate);
@@ -1026,7 +1127,7 @@ Appointment Audios dddd*/
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
 
-            SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
             String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
             Gson gson1 = new Gson();
             Type type1 = new TypeToken<List<String>>() {

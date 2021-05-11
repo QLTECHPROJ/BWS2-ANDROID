@@ -231,10 +231,12 @@ public class AudioDownloadsFragment extends Fragment {
         int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
         ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
-        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-        }.getType();
-        mainPlayModelList = gson.fromJson(json, type);
         if(!AudioPlayerFlagx.equals("0")) {
+            if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                mainPlayModelList = gson.fromJson(json, type);
+            }
             PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
         }
         callObserverMethod();

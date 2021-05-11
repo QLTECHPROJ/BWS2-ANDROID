@@ -1,5 +1,6 @@
 package com.brainwellnessspa.Utility;
 
+import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
@@ -318,4 +319,30 @@ public interface APINewInterface {
     @FormUrlEncoded
     Call<NotificationlistModel> getNotificationlist(@Field("UserID") String UserID,
                                                     @Field("CoUserId") String CoUserId);
+
+    @POST("audiointerruption")
+    @FormUrlEncoded
+    Call<AudioInterruptionModel> getAudioInterruption(@Field("CoUserId") String CoUserId,
+                                                      @Field("userId") String userId,
+                                                      @Field("audioId") String audioId,
+                                                      @Field("audioName") String audioName,
+                                                      @Field("audioDescription") String audioDescription,
+                                                      @Field("directions") String directions,
+                                                      @Field("masterCategory") String masterCategory,
+                                                      @Field("subCategory") String subCategory,
+                                                      @Field("audioDuration") String audioDuration,
+                                                      @Field("bitRate") String bitRate,
+                                                      @Field("audioType") String audioType,
+                                                      @Field("playerType") String playerType,
+                                                      @Field("sound") String sound,
+                                                      @Field("audioService") String audioService,
+                                                      @Field("source") String source,
+                                                      @Field("position") String position,
+                                                      @Field("seekPosition") String seekPosition,
+                                                      @Field("interruptionMethod") String interruptionMethod,
+                                                      @Field("batteryLevel") String batteryLevel,
+                                                      @Field("batteryState") String batteryState,
+                                                      @Field("internetDownSpeed") String internetDownSpeed,
+                                                      @Field("internetUpSpeed") String internetUpSpeed,
+                                                      @Field("appType") String  appType);
 }

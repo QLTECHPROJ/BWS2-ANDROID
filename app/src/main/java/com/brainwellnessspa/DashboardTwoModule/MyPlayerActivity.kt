@@ -22,6 +22,7 @@ import com.brainwellnessspa.BWSApplication.PlayerAudioId
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity
 import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
+import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId
@@ -70,7 +71,7 @@ class   MyPlayerActivity :AppCompatActivity(){
     var id: String? = ""
     var name: String? = ""
     var url: String? = ""
-    var USERID: String? = ""
+    var UserID: String? = ""
     lateinit var exoBinding:AudioPlayerNewLayoutBinding
     var gson = Gson()
     var playerControlView: PlayerControlView? = null
@@ -111,7 +112,7 @@ class   MyPlayerActivity :AppCompatActivity(){
                 .addMigrations(BWSApplication.MIGRATION_1_2)
                 .build()
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        this.UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         playerControlView = Assertions.checkNotNull(binding.playerControlView)
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.audio_player_new_layout, binding.playerControlView, false)
@@ -797,23 +798,54 @@ class   MyPlayerActivity :AppCompatActivity(){
 
                     override fun onPlayerError(error: ExoPlaybackException) {
                         var intruptMethod: String? = ""
+                        val p = Properties()
+                        p.putValue("userId",UserID)
+                        p.putValue("CoUserId",CoUserID)
+                        p.putValue("audioId", mainPlayModelList[position].id)
+                        p.putValue("audioName", mainPlayModelList[position].name)
+                        p.putValue("audioDescription", "")
+                        p.putValue("directions", mainPlayModelList[position].audioDirection)
+                        p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
+                        p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
+                        p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
+                        p.putValue("position", GetCurrentAudioPosition())
+                        var AudioType = ""
+                        AudioType = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
+                            p.putValue("audioType", "Downloaded")
+                            "Downloaded"
+                        } else {
+                            p.putValue("audioType", "Streaming")
+                            "Streaming"
+                        }
+                        p.putValue("source", GetSourceName(ctx))
+                        p.putValue("playerType", "Main")
+                        p.putValue("audioService", BWSApplication.appStatus(ctx))
+                        p.putValue("bitRate", "")
+                        p.putValue("appType","Android")
+                        p.putValue("sound", hundredVolume.toString())
                         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
+                            p.putValue("interruptionMethod", error.message + " " + error.sourceException.message)
                             intruptMethod = error.message + " " + error.sourceException.message
                             Log.e("onPlaybackError", error.message + " " + error.sourceException.message)
                         } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                            p.putValue("interruptionMethod", error.message + " " + error.rendererException.message)
                             intruptMethod = error.message + " " + error.rendererException.message
                             Log.e("onPlaybackError", error.message + " " + error.rendererException.message)
                         } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                            p.putValue("interruptionMethod", error.message + " " + error.unexpectedException.message)
                             intruptMethod = error.message + " " + error.unexpectedException.message
                             Log.e("onPlaybackError", error.message + " " + error.unexpectedException.message)
                         } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                            p.putValue("interruptionMethod", error.message)
                             intruptMethod = error.message
                             Log.e("onPlaybackError", error.message!!)
                         } else {
+                            p.putValue("interruptionMethod", error.message)
                             intruptMethod = error.message
                             Log.e("onPlaybackError", error.message!!)
                         }
                         AudioInterrupted = true
+                        BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track)
                         val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
                         //should check null because in airplane mode it will be null
                         val nc: NetworkCapabilities?
@@ -824,12 +856,32 @@ class   MyPlayerActivity :AppCompatActivity(){
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 nc = cm.getNetworkCapabilities(cm.activeNetwork)
                                 downSpeed = nc!!.linkDownstreamBandwidthKbps.toFloat() / 1000
-                                upSpeed = (nc.linkUpstreamBandwidthKbps / 1000).toFloat()
+                                upSpeed = (nc!!.linkUpstreamBandwidthKbps / 1000).toFloat()
                             }
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             val bm = getSystemService(BATTERY_SERVICE) as BatteryManager
                             batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                        }
+                        try {
+                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                val listCall = APINewClient.getClient().getAudioInterruption(CoUserID, this@MyPlayerActivity.UserID,
+                                        mainPlayModelList[position].id, mainPlayModelList[position].name,
+                                        "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat,
+                                        mainPlayModelList[position].audioSubCategory,
+                                        mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), BWSApplication.appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "",
+                                        intruptMethod, batLevel.toString(), BWSApplication.BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
+                                listCall.enqueue(object : Callback<AudioInterruptionModel?> {
+                                    override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
+                                        val listModel = response.body()
+                                    }
+
+                                    override fun onFailure(call: Call<AudioInterruptionModel?>, t: Throwable) {}
+                                })
+                            } else {
+                            }
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
                         }
                     }
                 })

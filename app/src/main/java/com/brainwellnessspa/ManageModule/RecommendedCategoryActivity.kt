@@ -233,9 +233,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     } else {
                         val filteredList = ArrayList<RecommendedCategoryModel.ResponseData>()
                         for (row in listModel) {
-                            if (row.view!!.toLowerCase(Locale.ROOT)
-                                    .contains(charString.toLowerCase(Locale.ROOT))
-                            ) {
+                            if (row.details!!.contains(charString.toLowerCase(Locale.ROOT))) {
                                 filteredList.add(row)
                             }
                         }

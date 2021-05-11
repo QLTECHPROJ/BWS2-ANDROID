@@ -198,8 +198,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val type1 = object : com.google.common.reflect.TypeToken<java.util.ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
-
-
         binding.rvAreaOfFocusCategory.layoutManager = GridLayoutManager(ctx, 3)
         val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
@@ -207,7 +205,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
         binding.ivEditCategory.setOnClickListener {
             val i = Intent(activity, RecommendedCategoryActivity::class.java)
-            i.putExtra("BackClick","1")
+            i.putExtra("BackClick", "1")
             startActivity(i)
         }
         DB = Room.databaseBuilder(ctx,
@@ -262,10 +260,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
-        var mainPlayModelList: ArrayList<MainPlayModel>
-        val type = object : TypeToken<ArrayList<MainPlayModel>>() {}.type
-        mainPlayModelList = gson.fromJson(json, type)
+        var mainPlayModelList: ArrayList<MainPlayModel> = arrayListOf()
         if(!AudioPlayerFlagx.equals("0")) {
+            if (!json.equals(gson.toString(), ignoreCase = true)) {
+                val type = object : TypeToken<ArrayList<MainPlayModel>>() {}.type
+                mainPlayModelList = gson.fromJson(json, type)
+            }
             PlayerAudioId = mainPlayModelList[PlayerPositionx].id
         }
         if (BWSApplication.isNetworkConnected(this)) {
