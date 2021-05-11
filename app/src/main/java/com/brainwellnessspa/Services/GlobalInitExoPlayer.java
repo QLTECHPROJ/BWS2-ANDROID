@@ -625,8 +625,10 @@ Appointment Audios dddd*/
 
     public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
         callNewPlayerRelease();
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        int position = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
-        MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
+        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(position).getAudioFile());
         player.setMediaItem(mediaItem1);
         InitNotificationAudioPLayerD(ctx);
         player.prepare();

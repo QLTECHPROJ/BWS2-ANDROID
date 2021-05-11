@@ -3,9 +3,7 @@ package com.brainwellnessspa.DashboardTwoModule.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -23,13 +21,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.comeReminder
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment
@@ -97,6 +95,20 @@ class HomeFragment : Fragment() {
     var mBottomSheetDialog: BottomSheetDialog? = null
     lateinit var dialog: Dialog
     var score = "Increase"
+    private val listener: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.hasExtra("MyData")) {
+                setPlayPauseIcon()
+            }
+        }
+    }
+    private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.hasExtra("MyReminder")) {
+                prepareHomeData()
+            }
+        }
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -200,13 +212,14 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
-        if (comeReminder.equals("1")) {
-            prepareHomeData()
-        }
         prepareHomeData()
         super.onResume()
     }
-
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener)
+        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener1)
+        super.onDestroy()
+    }
     fun prepareUserData(rvUserList: RecyclerView, progressBar: ProgressBar) {
         if (BWSApplication.isNetworkConnected(activity)) {
             progressBar.visibility = View.VISIBLE
@@ -291,7 +304,10 @@ class HomeFragment : Fragment() {
                                     ContextCompat.getColor(act, R.color.green_dark_s))
                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
                         }
-
+                        LocalBroadcastManager.getInstance(ctx)
+                                .registerReceiver(listener, IntentFilter("play_pause_Action"))
+                        LocalBroadcastManager.getInstance(ctx)
+                                .registerReceiver(listener1, IntentFilter("Reminder"))
                         binding.tvPercent.text =
                                 listModel.responseData!!.indexScoreDiff!!.split(".")[0] + "%"
                         binding.tvSevere.text = listModel.responseData!!.indexScore.toString()
@@ -381,59 +397,8 @@ class HomeFragment : Fragment() {
 
                         BWSApplication.getPastIndexScore(homelistModel.responseData!!, binding.barChart, activity)
 
+                        setPlayPauseIcon()
 
-                        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
-                        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
-                        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                        if (MyDownloads.equals("1", ignoreCase = true)) {
-                            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
-                                if (GlobalInitExoPlayer.player != null) {
-                                    if (GlobalInitExoPlayer.player.playWhenReady) {
-                                        MyPlaylistsFragment.isPlayPlaylist = 1
-                                        //                    handler3.postDelayed(UpdateSongTime3, 500);
-                                        binding.llPause.visibility = View.VISIBLE
-                                        binding.llPlay.visibility = View.GONE
-                                    } else {
-                                        MyPlaylistsFragment.isPlayPlaylist = 2
-                                        //                    handler3.postDelayed(UpdateSongTime3, 500);
-                                        binding.llPause.visibility = View.GONE
-                                        binding.llPlay.visibility = View.VISIBLE
-                                    }
-                                } else {
-                                    MyPlaylistsFragment.isPlayPlaylist = 0
-                                    binding.llPause.visibility = View.GONE
-                                    binding.llPlay.visibility = View.VISIBLE
-                                }
-                            } else {
-                                MyPlaylistsFragment.isPlayPlaylist = 0
-                                binding.llPause.visibility = View.GONE
-                                binding.llPlay.visibility = View.VISIBLE
-                            }
-                        } else {
-                            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
-                                if (GlobalInitExoPlayer.player != null) {
-                                    if (GlobalInitExoPlayer.player.playWhenReady) {
-                                        MyPlaylistsFragment.isPlayPlaylist = 1
-                                        binding.llPause.visibility = View.VISIBLE
-                                        binding.llPlay.visibility = View.GONE
-                                    } else {
-                                        MyPlaylistsFragment.isPlayPlaylist = 2
-                                        binding.llPause.visibility = View.GONE
-                                        binding.llPlay.visibility = View.VISIBLE
-                                    }
-                                } else {
-                                    MyPlaylistsFragment.isPlayPlaylist = 0
-                                    binding.llPause.visibility = View.GONE
-                                    binding.llPlay.visibility = View.VISIBLE
-                                }
-                            } else {
-                                MyPlaylistsFragment.isPlayPlaylist = 0
-                                binding.llPause.visibility = View.GONE
-                                binding.llPlay.visibility = View.VISIBLE
-                            }
-                        }
                         val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
@@ -455,6 +420,11 @@ class HomeFragment : Fragment() {
                         }
 
                         binding.llPlayPause.setOnClickListener {
+                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+                            val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                            val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                            val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                             if (MyPlaylistsFragment.isPlayPlaylist == 1) {
                                 GlobalInitExoPlayer.player.playWhenReady = false
                                 MyPlaylistsFragment.isPlayPlaylist = 2
@@ -516,6 +486,62 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setPlayPauseIcon() {
+
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        if (MyDownloads.equals("1", ignoreCase = true)) {
+            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                if (GlobalInitExoPlayer.player != null) {
+                    if (GlobalInitExoPlayer.player.playWhenReady) {
+                        MyPlaylistsFragment.isPlayPlaylist = 1
+                        //                    handler3.postDelayed(UpdateSongTime3, 500);
+                        binding.llPause.visibility = View.VISIBLE
+                        binding.llPlay.visibility = View.GONE
+                    } else {
+                        MyPlaylistsFragment.isPlayPlaylist = 2
+                        //                    handler3.postDelayed(UpdateSongTime3, 500);
+                        binding.llPause.visibility = View.GONE
+                        binding.llPlay.visibility = View.VISIBLE
+                    }
+                } else {
+                    MyPlaylistsFragment.isPlayPlaylist = 0
+                    binding.llPause.visibility = View.GONE
+                    binding.llPlay.visibility = View.VISIBLE
+                }
+            } else {
+                MyPlaylistsFragment.isPlayPlaylist = 0
+                binding.llPause.visibility = View.GONE
+                binding.llPlay.visibility = View.VISIBLE
+            }
+        } else {
+            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                if (GlobalInitExoPlayer.player != null) {
+                    if (GlobalInitExoPlayer.player.playWhenReady) {
+                        MyPlaylistsFragment.isPlayPlaylist = 1
+                        binding.llPause.visibility = View.VISIBLE
+                        binding.llPlay.visibility = View.GONE
+                    } else {
+                        MyPlaylistsFragment.isPlayPlaylist = 2
+                        binding.llPause.visibility = View.GONE
+                        binding.llPlay.visibility = View.VISIBLE
+                    }
+                } else {
+                    MyPlaylistsFragment.isPlayPlaylist = 0
+                    binding.llPause.visibility = View.GONE
+                    binding.llPlay.visibility = View.VISIBLE
+                }
+            } else {
+                MyPlaylistsFragment.isPlayPlaylist = 0
+                binding.llPause.visibility = View.GONE
+                binding.llPlay.visibility = View.VISIBLE
+            }
+        }
+    }
+
     private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, activity: FragmentActivity?, playlistID: String) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -554,15 +580,18 @@ class HomeFragment : Fragment() {
             } else {
                 val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 listModelList2.addAll(listModel)
+                val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
                 val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
-                mainPlayModel.id = "0"
-                mainPlayModel.name = "Disclaimer"
-                mainPlayModel.audioFile = ""
-                mainPlayModel.audioDirection = "The audio shall start playing after the disclaimer"
-                mainPlayModel.audiomastercat = ""
-                mainPlayModel.audioSubCategory = ""
-                mainPlayModel.imageFile = ""
-                mainPlayModel.audioDuration = "00:48"
+                mainPlayModel.id =arrayList.id
+                mainPlayModel.name =arrayList.name
+                mainPlayModel.audioFile =arrayList.audioFile
+                mainPlayModel.audioDirection =arrayList.audioDirection
+                mainPlayModel.audiomastercat = arrayList.audiomastercat
+                mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                mainPlayModel.imageFile = arrayList.imageFile
+                mainPlayModel.audioDuration = arrayList.audioDuration
                 var audioc = true
                 if (MiniPlayerFragment.isDisclaimer == 1) {
                     if (GlobalInitExoPlayer.player != null) {
@@ -615,15 +644,18 @@ class HomeFragment : Fragment() {
             } else {
                 val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 listModelList2.addAll(listModel)
+                val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
                 val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
-                mainPlayModel.id = "0"
-                mainPlayModel.name = "Disclaimer"
-                mainPlayModel.audioFile = ""
-                mainPlayModel.audioDirection = "The audio shall start playing after the disclaimer"
-                mainPlayModel.audiomastercat = ""
-                mainPlayModel.audioSubCategory = ""
-                mainPlayModel.imageFile = ""
-                mainPlayModel.audioDuration = "00:48"
+                mainPlayModel.id =arrayList.id
+                mainPlayModel.name =arrayList.name
+                mainPlayModel.audioFile =arrayList.audioFile
+                mainPlayModel.audioDirection =arrayList.audioDirection
+                mainPlayModel.audiomastercat = arrayList.audiomastercat
+                mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                mainPlayModel.imageFile = arrayList.imageFile
+                mainPlayModel.audioDuration = arrayList.audioDuration
                 var audioc = true
                 if (MiniPlayerFragment.isDisclaimer == 1) {
                     if (GlobalInitExoPlayer.player != null) {

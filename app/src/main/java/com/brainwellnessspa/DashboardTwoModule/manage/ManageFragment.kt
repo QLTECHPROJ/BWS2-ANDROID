@@ -2,10 +2,8 @@ package com.brainwellnessspa.DashboardTwoModule.manage;
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
+import android.content.*
 import android.content.Context.MODE_PRIVATE
-import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -17,19 +15,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.comeReminder
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
 import com.brainwellnessspa.DashboardTwoModule.Model.PlaylistDetailsModel
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity
 import com.brainwellnessspa.DashboardTwoModule.fragmentAudio.ViewAllAudioFragment
@@ -49,6 +46,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,6 +65,21 @@ public class ManageFragment : Fragment() {
     var SLEEPTIME: String? = null
     var DB: AudioDatabase? = null
     var homelistModel: HomeDataModel = HomeDataModel()
+    private val listener: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.hasExtra("MyData")) {
+                setPlayPauseIcon()
+            }
+        }
+    }
+    private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.hasExtra("MyReminder")) {
+                prepareData()
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_manage, container, false)
@@ -184,13 +197,15 @@ public class ManageFragment : Fragment() {
     }
 
     override fun onResume() {
-        if(comeReminder.equals("1")){
-            prepareData()
-        }
         prepareData()
         super.onResume()
     }
 
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener)
+        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener1)
+        super.onDestroy()
+    }
     private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>) {
         DatabaseClient
                 .getInstance(activity)
@@ -268,15 +283,19 @@ public class ManageFragment : Fragment() {
         } else {
             val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
             listModelList2.addAll(listModel)
+            val gson = Gson()
+            val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+            val type = object : TypeToken<HomeDataModel.ResponseData.Audio.Detail?>() {}.type
+            val arrayList = gson.fromJson<HomeDataModel.ResponseData.Audio.Detail>(DisclimerJson, type)
             val mainPlayModel = HomeDataModel.ResponseData.Audio.Detail()
-            mainPlayModel.id = "0"
-            mainPlayModel.name = "Disclaimer"
-            mainPlayModel.audioFile = ""
-            mainPlayModel.audioDirection = "The audio shall start playing after the disclaimer"
-            mainPlayModel.audiomastercat = ""
-            mainPlayModel.audioSubCategory = ""
-            mainPlayModel.imageFile = ""
-            mainPlayModel.audioDuration = "00:48"
+            mainPlayModel.id =arrayList.id
+            mainPlayModel.name =arrayList.name
+            mainPlayModel.audioFile =arrayList.audioFile
+            mainPlayModel.audioDirection =arrayList.audioDirection
+            mainPlayModel.audiomastercat = arrayList.audiomastercat
+            mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+            mainPlayModel.imageFile = arrayList.imageFile
+            mainPlayModel.audioDuration = arrayList.audioDuration
             var audioc = true
             if (isDisclaimer == 1) {
                 if (player != null) {
@@ -372,59 +391,8 @@ public class ManageFragment : Fragment() {
                         binding.tvViewAll.visibility = View.GONE
                     }
                     GetPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!)
-                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
-                    val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                    val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
-                    val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                    val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                    if (MyDownloads.equals("1", ignoreCase = true)) {
-                        if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
-                            if (player != null) {
-                                if (player.playWhenReady) {
-                                    isPlayPlaylist = 1
-                                    //                    handler3.postDelayed(UpdateSongTime3, 500);
-                                    binding.llPause.visibility = View.VISIBLE
-                                    binding.llPlay.visibility = View.GONE
-                                } else {
-                                    isPlayPlaylist = 2
-                                    //                    handler3.postDelayed(UpdateSongTime3, 500);
-                                    binding.llPause.visibility = View.GONE
-                                    binding.llPlay.visibility = View.VISIBLE
-                                }
-                            } else {
-                                isPlayPlaylist = 0
-                                binding.llPause.visibility = View.GONE
-                                binding.llPlay.visibility = View.VISIBLE
-                            }
-                        } else {
-                            isPlayPlaylist = 0
-                            binding.llPause.visibility = View.GONE
-                            binding.llPlay.visibility = View.VISIBLE
-                        }
-                    } else {
-                        if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(listModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
-                            if (player != null) {
-                                if (player.playWhenReady) {
-                                    isPlayPlaylist = 1
-                                    binding.llPause.visibility = View.VISIBLE
-                                    binding.llPlay.visibility = View.GONE
-                                } else {
-                                    isPlayPlaylist = 2
-                                    binding.llPause.visibility = View.GONE
-                                    binding.llPlay.visibility = View.VISIBLE
-                                }
-                            } else {
-                                isPlayPlaylist = 0
-                                binding.llPause.visibility = View.GONE
-                                binding.llPlay.visibility = View.VISIBLE
-                            }
-                        } else {
-                            isPlayPlaylist = 0
-                            binding.llPause.visibility = View.GONE
-                            binding.llPlay.visibility = View.VISIBLE
-                        }
-                    }
-
+                    LocalBroadcastManager.getInstance(ctx)
+                            .registerReceiver(listener1, IntentFilter("Reminder"))
                     binding.llPlayerView1.setOnClickListener { v: View? ->
                         callPlaylistDetails()
                     }
@@ -500,7 +468,16 @@ public class ManageFragment : Fragment() {
                         }
                     }
 
+                    setPlayPauseIcon()
+
+                    LocalBroadcastManager.getInstance(ctx)
+                            .registerReceiver(listener, IntentFilter("play_pause_Action"))
                     binding.llPlayPause.setOnClickListener {
+                        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+                        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+                        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                         if (isPlayPlaylist == 1) {
                             player.playWhenReady = false
                             isPlayPlaylist = 2
@@ -533,7 +510,6 @@ public class ManageFragment : Fragment() {
                         }
                     }
 
-                    val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
                     binding.tvViewAll.setOnClickListener {
                         val audioFragment: Fragment = MainPlaylistFragment()
                         val fragmentManager1 = activity!!.supportFragmentManager
@@ -594,6 +570,61 @@ public class ManageFragment : Fragment() {
         }
     }
 
+    private fun setPlayPauseIcon() {
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        if (MyDownloads.equals("1", ignoreCase = true)) {
+            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                if (player != null) {
+                    if (player.playWhenReady) {
+                        isPlayPlaylist = 1
+                        //                    handler3.postDelayed(UpdateSongTime3, 500);
+                        binding.llPause.visibility = View.VISIBLE
+                        binding.llPlay.visibility = View.GONE
+                    } else {
+                        isPlayPlaylist = 2
+                        //                    handler3.postDelayed(UpdateSongTime3, 500);
+                        binding.llPause.visibility = View.GONE
+                        binding.llPlay.visibility = View.VISIBLE
+                    }
+                } else {
+                    isPlayPlaylist = 0
+                    binding.llPause.visibility = View.GONE
+                    binding.llPlay.visibility = View.VISIBLE
+                }
+            } else {
+                isPlayPlaylist = 0
+                binding.llPause.visibility = View.GONE
+                binding.llPlay.visibility = View.VISIBLE
+            }
+        } else {
+            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+                if (player != null) {
+                    if (player.playWhenReady) {
+                        isPlayPlaylist = 1
+                        binding.llPause.visibility = View.VISIBLE
+                        binding.llPlay.visibility = View.GONE
+                    } else {
+                        isPlayPlaylist = 2
+                        binding.llPause.visibility = View.GONE
+                        binding.llPlay.visibility = View.VISIBLE
+                    }
+                } else {
+                    isPlayPlaylist = 0
+                    binding.llPause.visibility = View.GONE
+                    binding.llPlay.visibility = View.VISIBLE
+                }
+            } else {
+                isPlayPlaylist = 0
+                binding.llPause.visibility = View.GONE
+                binding.llPlay.visibility = View.VISIBLE
+            }
+        }
+    }
+
     private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, activity: FragmentActivity?, playlistID: String) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -632,15 +663,19 @@ public class ManageFragment : Fragment() {
             }else {
                 val listModelList2 = arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 listModelList2.addAll(listModel)
+                val gson = Gson()
+                val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
                 val mainPlayModel = HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
-                mainPlayModel.id = "0"
-                mainPlayModel.name = "Disclaimer"
-                mainPlayModel.audioFile = ""
-                mainPlayModel.audioDirection = "The audio shall start playing after the disclaimer"
-                mainPlayModel.audiomastercat = ""
-                mainPlayModel.audioSubCategory = ""
-                mainPlayModel.imageFile = ""
-                mainPlayModel.audioDuration = "00:48"
+                mainPlayModel.id =arrayList.id
+                mainPlayModel.name =arrayList.name
+                mainPlayModel.audioFile =arrayList.audioFile
+                mainPlayModel.audioDirection =arrayList.audioDirection
+                mainPlayModel.audiomastercat = arrayList.audiomastercat
+                mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                mainPlayModel.imageFile = arrayList.imageFile
+                mainPlayModel.audioDuration = arrayList.audioDuration
                 var audioc = true
                 if (isDisclaimer == 1) {
                     if (player != null) {
@@ -693,15 +728,19 @@ public class ManageFragment : Fragment() {
             } else {
                 val listModelList2 = arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 listModelList2.addAll(listModel)
+                val gson=Gson()
+                val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
                 val mainPlayModel = HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
-                mainPlayModel.id = "0"
-                mainPlayModel.name = "Disclaimer"
-                mainPlayModel.audioFile = ""
-                mainPlayModel.audioDirection = "The audio shall start playing after the disclaimer"
-                mainPlayModel.audiomastercat = ""
-                mainPlayModel.audioSubCategory = ""
-                mainPlayModel.imageFile = ""
-                mainPlayModel.audioDuration = "00:48"
+                mainPlayModel.id =arrayList.id
+                mainPlayModel.name =arrayList.name
+                mainPlayModel.audioFile =arrayList.audioFile
+                mainPlayModel.audioDirection =arrayList.audioDirection
+                mainPlayModel.audiomastercat = arrayList.audiomastercat
+                mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                mainPlayModel.imageFile = arrayList.imageFile
+                mainPlayModel.audioDuration = arrayList.audioDuration
                 var audioc = true
                 if (isDisclaimer == 1) {
                     if (player != null) {

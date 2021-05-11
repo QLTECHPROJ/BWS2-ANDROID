@@ -84,20 +84,6 @@ class DassAssSliderActivity : AppCompatActivity() {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
                 }
-            } else {
-                /*    for(i in listModel1.responseData!!.questions!!.indices){
-                        val ps = PostAssAns()
-                        ps.qus = assQus[i]
-                        ps.ans = assAns[i]
-                        ps.qusOrder = assSort[i]
-                        postAssAns.add(ps)
-                    }
-                    Log.e("Ass Post Data", gson.toJson(postAssAns))*/
-
-//                binding.tvNumberOfQus.text =listModel1.responseData!!.questions!!.size.toString()
-                binding.lpIndicator.progress = listModel1.responseData!!.questions!!.size
-                sendAssessmentData()
-                Log.e("Ass Post Data", gson.toJson(assAns))
             }
             if (myPos > 2) {
                 binding.btnPrev.visibility = View.VISIBLE
@@ -354,6 +340,16 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
     private fun sendAssessmentData() {
+        val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+        val json2 = shared.getString(CONSTANTS.AssQus, gson.toString())
+        val json3 = shared.getString(CONSTANTS.AssAns, gson.toString())
+        val json4 = shared.getString(CONSTANTS.AssSort, gson.toString())
+        if (!json2.equals(gson.toString(), ignoreCase = true)) {
+            val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
+            assQus = gson.fromJson(json2, type1)
+            assAns = gson.fromJson(json3, type1)
+            assSort = gson.fromJson(json4, type1)
+        }
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient().getAssessmentSaveData(USERID, CoUserID, gson.toJson(assAns).toString())
@@ -363,6 +359,13 @@ class DassAssSliderActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AssessmentSaveDataModel = response.body()!!
                         if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+                            val edited1 = preferencesd1.edit()
+                            edited1.remove(CONSTANTS.AssQus)
+                            edited1.remove(CONSTANTS.AssAns)
+                            edited1.remove(CONSTANTS.AssSort)
+                            edited1.clear()
+                            edited1.apply()
                             val i = Intent(activity, AssProcessActivity::class.java)
                             i.putExtra(CONSTANTS.ASSPROCESS, "1")
                             i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)

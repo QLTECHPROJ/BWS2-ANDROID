@@ -108,7 +108,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         binding.btnContinue.setOnClickListener {
             var array = arrayListOf<sendRecommndedData>()
             for (i in 0 until selectedCategoriesTitle.size) {
-                var sendR: sendRecommndedData = sendRecommndedData()
+                var sendR = sendRecommndedData()
 
                 sendR.View = (selectedCategoriesTitle[i])
                 sendR.ProblemName = (selectedCategoriesName[i])
@@ -634,6 +634,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
             val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, catList.gson.toString())
             val json5 = shared.getString(CONSTANTS.selectedCategoriesName, catList.gson.toString())
+            catList.SleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
             if (!json2.equals(catList.gson.toString(), ignoreCase = true)) {
                 val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
                 catList.selectedCategoriesTitle = catList.gson.fromJson(json2, type1)
@@ -659,6 +660,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         val shared = ctx!!.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, gson.toString())
         val json5 = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
+        SleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         if (!json2.equals(gson.toString(), ignoreCase = true)) {
             val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
             selectedCategoriesTitle = gson.fromJson(json2, type1)
@@ -796,6 +798,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             startActivity(i)
             finish()
         } else if (BackClick.equals("1", ignoreCase = true)) {
+            finish()
+        }else{
             finish()
         }
     }

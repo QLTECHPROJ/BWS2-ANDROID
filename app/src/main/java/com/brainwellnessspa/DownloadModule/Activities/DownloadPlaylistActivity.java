@@ -39,6 +39,8 @@ import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
@@ -525,16 +527,21 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
     private void addDisclaimer() {
         addDisclaimer = new DownloadAudioDetails();
-        addDisclaimer.setID("0");
-        addDisclaimer.setName("Disclaimer");
-        addDisclaimer.setAudioFile("");
-        addDisclaimer.setAudioDirection("The audio shall start playing after the disclaimer");
-        addDisclaimer.setAudiomastercat("");
-        addDisclaimer.setAudioSubCategory("");
-        addDisclaimer.setImageFile("");
-        addDisclaimer.setLike("");
-        addDisclaimer.setDownload("");
-        addDisclaimer.setAudioDuration("00:48");
+        Gson gson = new Gson();
+        SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+        String  DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+        Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+        }.getType();
+        HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+        addDisclaimer.setID(arrayList.getId());
+        addDisclaimer.setName(arrayList.getName());
+        addDisclaimer.setAudioFile(arrayList.getAudioFile());
+        addDisclaimer.setAudioDirection(arrayList.getAudioDirection());
+        addDisclaimer.setAudiomastercat(arrayList.getAudiomastercat());
+        addDisclaimer.setAudioSubCategory(arrayList.getAudioSubCategory());
+        addDisclaimer.setImageFile(arrayList.getImageFile());
+        addDisclaimer.setAudioDuration(arrayList.getAudioDuration());
     }
 
     private void callTransparentFrag(int position, Context ctx, List<DownloadAudioDetails> listModelList, String s, String playlistID, boolean audioc) {

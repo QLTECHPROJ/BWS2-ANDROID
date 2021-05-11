@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,8 +15,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -75,8 +78,15 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private int numStarted = 0;
     int stackStatus = 0;
     boolean myBackPress = false;
-    boolean notificationStatus = false;
-
+    boolean notificationStatus = false; 
+    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) { 
+            if (intent.hasExtra("MyReminder")) {
+                prepareData();
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +143,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     public void onBackPressed() {
         myBackPress = true;
         ComeScreenAccount = 1;
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1);
         finish();
     }
 
@@ -152,6 +163,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             binding.rvReminderDetails.setAdapter(adapter);
                             binding.btnAddReminder.setVisibility(View.GONE);
                             showTooltips();
+                            LocalBroadcastManager.getInstance(ctx)
+                                    .registerReceiver(listener1,new IntentFilter("Reminder"));
                             p = new Properties();
                             p.putValue("userId", USERID);
                             p.putValue("coUserId", CoUSERID);

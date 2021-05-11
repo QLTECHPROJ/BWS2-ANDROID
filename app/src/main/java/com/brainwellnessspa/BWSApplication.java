@@ -56,6 +56,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -159,6 +160,8 @@ public class BWSApplication extends Application {
     static TextView tvTime;
     public static int comeReminder = 0;
 
+    public static LocalBroadcastManager localBroadcastManager;
+    public static Intent localIntent;
     public static Context getContext() {
         return mContext;
     }
@@ -1640,7 +1643,8 @@ public class BWSApplication extends Application {
                 new ReminderSelectionModel("Thursday"),
                 new ReminderSelectionModel("Friday"),
                 new ReminderSelectionModel("Saturday"),};
-
+        localIntent = new Intent("Reminder");
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.select_days_layout);
@@ -2150,13 +2154,13 @@ public class BWSApplication extends Application {
 
             Log.e("Reminder Day", RDay);
 
-            if (RDay.contains(selectionModels[position].getDay())) {
+            if (RDay.contains(selectionModels[position].toString())) {
                 remiderDays.add(String.valueOf(position));
                 holder.binding.cbChecked.setSelected(true);
             }
             holder.binding.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (holder.binding.cbChecked.isChecked()) {
-                    if (!remiderDays.contains(selectionModels[position].getDay())) {
+                    if (!remiderDays.contains(selectionModels[position].toString())) {
                         remiderDays.add(String.valueOf(position));
                     }
                 } else {
@@ -2193,7 +2197,7 @@ public class BWSApplication extends Application {
                 notifyDataSetChanged();
             });
 
-            if (remiderDays.contains(String.valueOf(position))) {
+            if (RDay.contains(String.valueOf(position))) {
                 holder.binding.cbChecked.setChecked(true);
             } else {
                 holder.binding.cbChecked.setChecked(false);
@@ -2223,7 +2227,8 @@ public class BWSApplication extends Application {
                                         Time = tvTime.getText().toString();
                                         hideProgressBar(progressBar, progressBarHolder, act);
                                         showToast(listModel.getResponseMessage(), act);
-                                        comeReminder = 1;
+                                        localIntent.putExtra("MyReminder", "update");
+                                        localBroadcastManager.sendBroadcast(localIntent);
                                     }
 
                                 } catch (Exception e) {

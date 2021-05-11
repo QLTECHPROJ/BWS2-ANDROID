@@ -60,32 +60,32 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-class   MyPlayerActivity :AppCompatActivity(){
+class MyPlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityViewPlayerBinding
     var AudioPlayerFlag: String? = ""
     var mainPlayModelList = arrayListOf<MainPlayModel>()
     var position = 0
-    var listSize:Int = 0
+    var listSize: Int = 0
     var CoUserID: String? = ""
     lateinit var act: Activity;
     var id: String? = ""
     var name: String? = ""
     var url: String? = ""
     var UserID: String? = ""
-    lateinit var exoBinding:AudioPlayerNewLayoutBinding
+    lateinit var exoBinding: AudioPlayerNewLayoutBinding
     var gson = Gson()
     var playerControlView: PlayerControlView? = null
     var ctx: Context? = null
     var oldSeekPosition: Long = 0
     var downloadClick = false
-    var downloadAudioDetailsList= arrayListOf<String>()
-    var downloadAudioDetailsListGloble= arrayListOf<String>()
+    var downloadAudioDetailsList = arrayListOf<String>()
+    var downloadAudioDetailsListGloble = arrayListOf<String>()
     var filesDownloaded: List<File>? = null
 
     var DB: AudioDatabase? = null
-    var fileNameList= arrayListOf<String>()
-    var audioFile1= arrayListOf<String>()
-    var playlistDownloadId= arrayListOf<String>()
+    var fileNameList = arrayListOf<String>()
+    var audioFile1 = arrayListOf<String>()
+    var playlistDownloadId = arrayListOf<String>()
 
     private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -99,6 +99,15 @@ class   MyPlayerActivity :AppCompatActivity(){
     override fun onResume() {
         LocalBroadcastManager.getInstance(act).registerReceiver(listener1, IntentFilter("DownloadProgress"))
         super.onResume()
+    }
+
+    override fun onBackPressed() {
+        callBack()
+        super.onBackPressed()
+    }
+
+    private fun callBack() {
+         finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,13 +127,16 @@ class   MyPlayerActivity :AppCompatActivity(){
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.audio_player_new_layout, binding.playerControlView, false)
         binding.playerControlView.addView(exoBinding.getRoot())
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        binding.llInfo.setOnClickListener { v ->
+        binding.llInfo.setOnClickListener {
             BWSApplication.callAudioDetails(mainPlayModelList[position].id, ctx, act, CoUserID, "audioPlayer",
                     arrayListOf<DownloadAudioDetails>(),
                     arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(),
                     arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
                     mainPlayModelList, position)
-         }
+        }
+        binding.llBack.setOnClickListener {
+            callBack()
+        }
         if (audioClick) {
 //            audioClick = false;
             exoBinding.llPlay.visibility = View.GONE
@@ -174,7 +186,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val editor = sharedz.edit()
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>(json, type)
             listSize = arrayList.size
@@ -195,7 +207,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val editor = sharedz.edit()
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals(getString(R.string.top_categories), ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals(getString(R.string.top_categories), ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>(json, type)
             listSize = arrayList.size
@@ -216,7 +228,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val editor = sharedz.edit()
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("SearchModelAudio", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("SearchModelAudio", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<SearchBothModel.ResponseData?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<SearchBothModel.ResponseData?>>(json, type)
             listSize = arrayList.size
@@ -237,7 +249,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val editor = sharedz.edit()
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("SearchAudio", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("SearchAudio", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<SuggestedModel.ResponseData?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<SuggestedModel.ResponseData?>>(json, type)
             listSize = arrayList.size
@@ -258,7 +270,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val editor = sharedz.edit()
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<DownloadAudioDetails?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<DownloadAudioDetails?>>(json, type)
             listSize = arrayList.size
@@ -279,7 +291,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val editor = sharedz.edit()
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<DownloadAudioDetails?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<DownloadAudioDetails?>>(json, type)
             listSize = arrayList.size
@@ -300,7 +312,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val editor = sharedz.edit()
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("playlist", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("playlist", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>(json, type)
             listSize = arrayList.size
@@ -330,11 +342,12 @@ class   MyPlayerActivity :AppCompatActivity(){
 //            initializePlayer();
 //        }
         getDownloadData()
-        if(!audioClick)
+        if (!audioClick)
             getPrepareShowData()
         else
             callButtonText(position)
     }
+
     private fun initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         try {
@@ -519,7 +532,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             val type1 = object : TypeToken<ArrayList<MainPlayModel>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -528,13 +541,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>(json, type)
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -543,13 +556,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals(getString(R.string.top_categories), ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals(getString(R.string.top_categories), ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>>(json, type)
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -558,13 +571,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("SearchModelAudio", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("SearchModelAudio", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<SearchBothModel.ResponseData?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<SearchBothModel.ResponseData?>>(json, type)
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.iD.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -573,13 +586,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("SearchAudio", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("SearchAudio", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<SuggestedModel.ResponseData?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<SuggestedModel.ResponseData?>>(json, type)
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.iD.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -588,13 +601,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<DownloadAudioDetails?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<DownloadAudioDetails?>>(json, type)
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -603,13 +616,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<DownloadAudioDetails?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<DownloadAudioDetails?>>(json, type)
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -618,13 +631,13 @@ class   MyPlayerActivity :AppCompatActivity(){
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
             editor.apply()
-        }else if (AudioPlayerFlag.equals("playlist", ignoreCase = true)) {
+        } else if (AudioPlayerFlag.equals("playlist", ignoreCase = true)) {
             val type = object : TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>() {}.type
             val arrayList = gson.fromJson<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>(json, type)
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
             listSize = arrayList.size
-            if (arrayList[position]!!.audioFile.equals("", ignoreCase = true)) {
+            if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
                 arrayList.removeAt(position)
                 mainPlayModelList.removeAt(position)
             }
@@ -648,7 +661,7 @@ class   MyPlayerActivity :AppCompatActivity(){
 
     private fun getPrepareShowData() {
         callButtonText(position)
-        if (mainPlayModelList[position].imageFile.equals("", ignoreCase = true)) {
+        if (mainPlayModelList[position].id.equals("0", ignoreCase = true)) {
 //            localIntent1 = Intent("descIssue")
 //            localBroadcastManager1 = LocalBroadcastManager.getInstance(ctx!!)
 //            LocalBroadcastManager.getInstance(ctx!!)
@@ -661,7 +674,7 @@ class   MyPlayerActivity :AppCompatActivity(){
         }
         setPlayerCtrView()
     }
-    
+
     private fun setPlayerCtrView() {
         playerControlView = Assertions.checkNotNull(binding.playerControlView)
         playerControlView!!.player = player
@@ -697,248 +710,248 @@ class   MyPlayerActivity :AppCompatActivity(){
             e.printStackTrace()
         }
 //        try {
-            if (player != null) {
-                player.setWakeMode(C.WAKE_MODE_NONE)
-                player.setHandleWakeLock(true)
-                player.setHandleAudioBecomingNoisy(true)
-                player.addListener(object : Player.EventListener {
-                    override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-                        Log.e("TAG", "Listener-onTracksChanged... Main Activity")
-                        AudioPlayerActivity.oldSongPos = 0
-                        val sharedsa = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                        val gson = Gson()
-                        val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
-                        if (!json.equals(gson.toString(), ignoreCase = true)) {
-                            val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
-                            mainPlayModelList = gson.fromJson(json, type)
-                        }
-                        position = player.currentWindowIndex
-                        val globalInitExoPlayer = GlobalInitExoPlayer()
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
-                        val shared = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                        val editor = shared.edit()
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-                        editor.apply()
-                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
-                                || AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        }
-                        val uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
-                        if (uiModeManager.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
-                            uiModeManager.nightMode = UiModeManager.MODE_NIGHT_NO
-                        }
-                        getDownloadData()
-                        setPlayerCtrView()
-                        GetMediaPer()
-                        callButtonText(position)
+        if (player != null) {
+            player.setWakeMode(C.WAKE_MODE_NONE)
+            player.setHandleWakeLock(true)
+            player.setHandleAudioBecomingNoisy(true)
+            player.addListener(object : Player.EventListener {
+                override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
+                    Log.e("TAG", "Listener-onTracksChanged... Main Activity")
+                    AudioPlayerActivity.oldSongPos = 0
+                    val sharedsa = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val gson = Gson()
+                    val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
+                    if (!json.equals(gson.toString(), ignoreCase = true)) {
+                        val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
+                        mainPlayModelList = gson.fromJson(json, type)
                     }
+                    position = player.currentWindowIndex
+                    val globalInitExoPlayer = GlobalInitExoPlayer()
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
+                    val shared = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val editor = shared.edit()
+                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
+                    editor.apply()
+                    if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+                            || AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    }
+                    val uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
+                    if (uiModeManager.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
+                        uiModeManager.nightMode = UiModeManager.MODE_NIGHT_NO
+                    }
+                    getDownloadData()
+                    setPlayerCtrView()
+                    GetMediaPer()
+                    callButtonText(position)
+                }
 
-                    override fun onIsPlayingChanged(isPlaying: Boolean) {
-                        if (player.playbackState == ExoPlayer.STATE_BUFFERING) {
-                            exoBinding.llPlay.visibility = View.GONE
-                            exoBinding.llPause.visibility = View.GONE
-                            exoBinding.progressBar.visibility = View.VISIBLE
-                        } else if (isPlaying) {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    if (player.playbackState == ExoPlayer.STATE_BUFFERING) {
+                        exoBinding.llPlay.visibility = View.GONE
+                        exoBinding.llPause.visibility = View.GONE
+                        exoBinding.progressBar.visibility = View.VISIBLE
+                    } else if (isPlaying) {
+                        exoBinding.llPlay.visibility = View.GONE
+                        exoBinding.llPause.visibility = View.VISIBLE
+                        exoBinding.progressBar.visibility = View.GONE
+                    } else if (!isPlaying) {
+                        exoBinding.llPlay.visibility = View.VISIBLE
+                        exoBinding.llPause.visibility = View.GONE
+                        exoBinding.progressBar.visibility = View.GONE
+                    }
+                    exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
+                    exoBinding.exoProgress.setPosition(player.currentPosition)
+                    val globalInitExoPlayer = GlobalInitExoPlayer()
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
+                    exoBinding.exoProgress.setDuration(player.duration)
+                    exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.currentPosition),
+                            TimeUnit.MILLISECONDS.toSeconds(player.currentPosition) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.currentPosition))))
+                }
+
+                override fun onPlaybackStateChanged(state: Int) {
+//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
+                    if (state == ExoPlayer.STATE_READY) {
+                        if (player.playWhenReady) {
                             exoBinding.llPlay.visibility = View.GONE
                             exoBinding.llPause.visibility = View.VISIBLE
                             exoBinding.progressBar.visibility = View.GONE
-                        } else if (!isPlaying) {
+                        } else if (!player.playWhenReady) {
                             exoBinding.llPlay.visibility = View.VISIBLE
                             exoBinding.llPause.visibility = View.GONE
                             exoBinding.progressBar.visibility = View.GONE
                         }
-                        exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
-                        exoBinding.exoProgress.setPosition(player.currentPosition)
-                        val globalInitExoPlayer = GlobalInitExoPlayer()
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
-                        exoBinding.exoProgress.setDuration(player.duration)
-                        exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.currentPosition),
-                                TimeUnit.MILLISECONDS.toSeconds(player.currentPosition) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.currentPosition))))
-                    }
 
-                    override fun onPlaybackStateChanged(state: Int) {
-//                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
-                        if (state == ExoPlayer.STATE_READY) {
-                            if (player.playWhenReady) {
-                                exoBinding.llPlay.visibility = View.GONE
-                                exoBinding.llPause.visibility = View.VISIBLE
-                                exoBinding.progressBar.visibility = View.GONE
-                            } else if (!player.playWhenReady) {
+//                        isprogressbar = false;
+                    } else if (state == ExoPlayer.STATE_BUFFERING) {
+                        exoBinding.llPlay.visibility = View.GONE
+                        exoBinding.llPause.visibility = View.GONE
+                        exoBinding.progressBar.visibility = View.VISIBLE
+                    } else if (state == ExoPlayer.STATE_ENDED) {
+                        try {
+                            if (mainPlayModelList[player.currentWindowIndex].id.equals(mainPlayModelList[mainPlayModelList.size - 1].id, ignoreCase = true)) {
                                 exoBinding.llPlay.visibility = View.VISIBLE
                                 exoBinding.llPause.visibility = View.GONE
                                 exoBinding.progressBar.visibility = View.GONE
-                            }
+                                player.playWhenReady = false
 
-//                        isprogressbar = false;
-                        } else if (state == ExoPlayer.STATE_BUFFERING) {
-                            exoBinding.llPlay.visibility = View.GONE
-                            exoBinding.llPause.visibility = View.GONE
-                            exoBinding.progressBar.visibility = View.VISIBLE
-                        } else if (state == ExoPlayer.STATE_ENDED) {
-                            try {
-                                if (mainPlayModelList[player.currentWindowIndex].id.equals(mainPlayModelList[mainPlayModelList.size - 1].id, ignoreCase = true)) {
-                                    exoBinding.llPlay.visibility = View.VISIBLE
-                                    exoBinding.llPause.visibility = View.GONE
-                                    exoBinding.progressBar.visibility = View.GONE
-                                    player.playWhenReady = false
-
-                                } else {
-                                    Log.e("Curr audio End", mainPlayModelList[position].name)
-                                }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                Log.e("End State: ", e.message!!)
-                            }
-                        } else if (state == ExoPlayer.STATE_IDLE) {
-                            if (AudioPlayerActivity.AudioInterrupted) {
-                                Log.e("Exo Player state", "ExoPlayer.STATE_IDLE")
-                            }
-                        }
-                    }
-
-                    override fun onPlayerError(error: ExoPlaybackException) {
-                        var intruptMethod: String? = ""
-                        val p = Properties()
-                        p.putValue("userId",UserID)
-                        p.putValue("CoUserId",CoUserID)
-                        p.putValue("audioId", mainPlayModelList[position].id)
-                        p.putValue("audioName", mainPlayModelList[position].name)
-                        p.putValue("audioDescription", "")
-                        p.putValue("directions", mainPlayModelList[position].audioDirection)
-                        p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                        p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                        p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                        p.putValue("position", GetCurrentAudioPosition())
-                        var AudioType = ""
-                        AudioType = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                            p.putValue("audioType", "Downloaded")
-                            "Downloaded"
-                        } else {
-                            p.putValue("audioType", "Streaming")
-                            "Streaming"
-                        }
-                        p.putValue("source", GetSourceName(ctx))
-                        p.putValue("playerType", "Main")
-                        p.putValue("audioService", BWSApplication.appStatus(ctx))
-                        p.putValue("bitRate", "")
-                        p.putValue("appType","Android")
-                        p.putValue("sound", hundredVolume.toString())
-                        if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                            p.putValue("interruptionMethod", error.message + " " + error.sourceException.message)
-                            intruptMethod = error.message + " " + error.sourceException.message
-                            Log.e("onPlaybackError", error.message + " " + error.sourceException.message)
-                        } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-                            p.putValue("interruptionMethod", error.message + " " + error.rendererException.message)
-                            intruptMethod = error.message + " " + error.rendererException.message
-                            Log.e("onPlaybackError", error.message + " " + error.rendererException.message)
-                        } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-                            p.putValue("interruptionMethod", error.message + " " + error.unexpectedException.message)
-                            intruptMethod = error.message + " " + error.unexpectedException.message
-                            Log.e("onPlaybackError", error.message + " " + error.unexpectedException.message)
-                        } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
-                            p.putValue("interruptionMethod", error.message)
-                            intruptMethod = error.message
-                            Log.e("onPlaybackError", error.message!!)
-                        } else {
-                            p.putValue("interruptionMethod", error.message)
-                            intruptMethod = error.message
-                            Log.e("onPlaybackError", error.message!!)
-                        }
-                        AudioInterrupted = true
-                        BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track)
-                        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-                        //should check null because in airplane mode it will be null
-                        val nc: NetworkCapabilities?
-                        var downSpeed = 0f
-                        var batLevel = 0
-                        var upSpeed = 0f
-                        if (BWSApplication.isNetworkConnected(ctx)) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                nc = cm.getNetworkCapabilities(cm.activeNetwork)
-                                downSpeed = nc!!.linkDownstreamBandwidthKbps.toFloat() / 1000
-                                upSpeed = (nc!!.linkUpstreamBandwidthKbps / 1000).toFloat()
-                            }
-                        }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            val bm = getSystemService(BATTERY_SERVICE) as BatteryManager
-                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-                        }
-                        try {
-                            if (BWSApplication.isNetworkConnected(ctx)) {
-                                val listCall = APINewClient.getClient().getAudioInterruption(CoUserID, this@MyPlayerActivity.UserID,
-                                        mainPlayModelList[position].id, mainPlayModelList[position].name,
-                                        "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat,
-                                        mainPlayModelList[position].audioSubCategory,
-                                        mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), BWSApplication.appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "",
-                                        intruptMethod, batLevel.toString(), BWSApplication.BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
-                                listCall.enqueue(object : Callback<AudioInterruptionModel?> {
-                                    override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
-                                        val listModel = response.body()
-                                    }
-
-                                    override fun onFailure(call: Call<AudioInterruptionModel?>, t: Throwable) {}
-                                })
                             } else {
+                                Log.e("Curr audio End", mainPlayModelList[position].name)
                             }
-                        } catch (e: java.lang.Exception) {
+                        } catch (e: Exception) {
                             e.printStackTrace()
+                            Log.e("End State: ", e.message!!)
+                        }
+                    } else if (state == ExoPlayer.STATE_IDLE) {
+                        if (AudioPlayerActivity.AudioInterrupted) {
+                            Log.e("Exo Player state", "ExoPlayer.STATE_IDLE")
                         }
                     }
-                })
-                exoBinding.exoProgress.addListener(object : OnScrubListener {
-                    override fun onScrubStart(timeBar: TimeBar, pos: Long) {
-                        exoBinding.exoProgress.setPosition(pos)
-                        exoBinding.exoProgress.setDuration(player.duration)
-                        oldSeekPosition = pos
-                        val globalInitExoPlayer = GlobalInitExoPlayer()
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
-                        globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
-                    }
+                }
 
-                    override fun onScrubMove(timeBar: TimeBar, position: Long) {}
-                    override fun onScrubStop(timeBar: TimeBar, pos: Long, canceled: Boolean) {
-                        player.seekTo(position, pos)
-                        exoBinding.exoProgress.setPosition(pos)
-                        exoBinding.exoProgress.setDuration(player.duration)
-                        exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
-                                TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos))))
-                        val globalInitExoPlayer = GlobalInitExoPlayer()
-                        globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
-                        globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
+                override fun onPlayerError(error: ExoPlaybackException) {
+                    var intruptMethod: String? = ""
+                    val p = Properties()
+                    p.putValue("userId", UserID)
+                    p.putValue("CoUserId", CoUserID)
+                    p.putValue("audioId", mainPlayModelList[position].id)
+                    p.putValue("audioName", mainPlayModelList[position].name)
+                    p.putValue("audioDescription", "")
+                    p.putValue("directions", mainPlayModelList[position].audioDirection)
+                    p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
+                    p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
+                    p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
+                    p.putValue("position", GetCurrentAudioPosition())
+                    var AudioType = ""
+                    AudioType = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
+                        p.putValue("audioType", "Downloaded")
+                        "Downloaded"
+                    } else {
+                        p.putValue("audioType", "Streaming")
+                        "Streaming"
                     }
-                })
-                if (player.playbackState == ExoPlayer.STATE_BUFFERING) {
-                    exoBinding.llPlay.visibility = View.GONE
-                    exoBinding.llPause.visibility= View.GONE
-                    exoBinding.progressBar.visibility = View.VISIBLE
-                } else if (player.playWhenReady) {
-                    exoBinding.llPlay.visibility = View.GONE
-                    exoBinding.llPause.visibility = View.VISIBLE
-                    exoBinding.progressBar.visibility = View.GONE
-                } else if (!player.playWhenReady) {
-                    exoBinding.llPlay.visibility = View.VISIBLE
-                    exoBinding.llPause.visibility= View.GONE
-                    exoBinding.progressBar.visibility = View.GONE
+                    p.putValue("source", GetSourceName(ctx))
+                    p.putValue("playerType", "Main")
+                    p.putValue("audioService", BWSApplication.appStatus(ctx))
+                    p.putValue("bitRate", "")
+                    p.putValue("appType", "Android")
+                    p.putValue("sound", hundredVolume.toString())
+                    if (error.type == ExoPlaybackException.TYPE_SOURCE) {
+                        p.putValue("interruptionMethod", error.message + " " + error.sourceException.message)
+                        intruptMethod = error.message + " " + error.sourceException.message
+                        Log.e("onPlaybackError", error.message + " " + error.sourceException.message)
+                    } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+                        p.putValue("interruptionMethod", error.message + " " + error.rendererException.message)
+                        intruptMethod = error.message + " " + error.rendererException.message
+                        Log.e("onPlaybackError", error.message + " " + error.rendererException.message)
+                    } else if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+                        p.putValue("interruptionMethod", error.message + " " + error.unexpectedException.message)
+                        intruptMethod = error.message + " " + error.unexpectedException.message
+                        Log.e("onPlaybackError", error.message + " " + error.unexpectedException.message)
+                    } else if (error.type == ExoPlaybackException.TYPE_REMOTE) {
+                        p.putValue("interruptionMethod", error.message)
+                        intruptMethod = error.message
+                        Log.e("onPlaybackError", error.message!!)
+                    } else {
+                        p.putValue("interruptionMethod", error.message)
+                        intruptMethod = error.message
+                        Log.e("onPlaybackError", error.message!!)
+                    }
+                    AudioInterrupted = true
+                    BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track)
+                    val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+                    //should check null because in airplane mode it will be null
+                    val nc: NetworkCapabilities?
+                    var downSpeed = 0f
+                    var batLevel = 0
+                    var upSpeed = 0f
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            nc = cm.getNetworkCapabilities(cm.activeNetwork)
+                            downSpeed = nc!!.linkDownstreamBandwidthKbps.toFloat() / 1000
+                            upSpeed = (nc!!.linkUpstreamBandwidthKbps / 1000).toFloat()
+                        }
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        val bm = getSystemService(BATTERY_SERVICE) as BatteryManager
+                        batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                    }
+                    try {
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            val listCall = APINewClient.getClient().getAudioInterruption(CoUserID, this@MyPlayerActivity.UserID,
+                                    mainPlayModelList[position].id, mainPlayModelList[position].name,
+                                    "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat,
+                                    mainPlayModelList[position].audioSubCategory,
+                                    mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), BWSApplication.appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "",
+                                    intruptMethod, batLevel.toString(), BWSApplication.BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
+                            listCall.enqueue(object : Callback<AudioInterruptionModel?> {
+                                override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
+                                    val listModel = response.body()
+                                }
+
+                                override fun onFailure(call: Call<AudioInterruptionModel?>, t: Throwable) {}
+                            })
+                        } else {
+                        }
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
+                    }
                 }
-                val globalInitExoPlayer = GlobalInitExoPlayer()
-                globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
-                exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
-                exoBinding.exoProgress.setPosition(player.currentPosition)
-                exoBinding.exoProgress.setDuration(player.duration)
-                setPlayerCtrView()
-            } else {
-                if (audioClick) {
-                    exoBinding.progressBar.visibility = View.GONE
-                    exoBinding.llPlay.visibility = View.GONE
-                    exoBinding.llPause.visibility = View.VISIBLE
-                } else if (PlayerINIT) {
-                    exoBinding.progressBar.visibility = View.GONE
-                    exoBinding.llPlay.visibility = View.GONE
-                    exoBinding.llPause.visibility = View.VISIBLE
+            })
+            exoBinding.exoProgress.addListener(object : OnScrubListener {
+                override fun onScrubStart(timeBar: TimeBar, pos: Long) {
+                    exoBinding.exoProgress.setPosition(pos)
+                    exoBinding.exoProgress.setDuration(player.duration)
+                    oldSeekPosition = pos
+                    val globalInitExoPlayer = GlobalInitExoPlayer()
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
+                    globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
                 }
+
+                override fun onScrubMove(timeBar: TimeBar, position: Long) {}
+                override fun onScrubStop(timeBar: TimeBar, pos: Long, canceled: Boolean) {
+                    player.seekTo(position, pos)
+                    exoBinding.exoProgress.setPosition(pos)
+                    exoBinding.exoProgress.setDuration(player.duration)
+                    exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
+                            TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos))))
+                    val globalInitExoPlayer = GlobalInitExoPlayer()
+                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
+                    globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
+                }
+            })
+            if (player.playbackState == ExoPlayer.STATE_BUFFERING) {
+                exoBinding.llPlay.visibility = View.GONE
+                exoBinding.llPause.visibility = View.GONE
+                exoBinding.progressBar.visibility = View.VISIBLE
+            } else if (player.playWhenReady) {
+                exoBinding.llPlay.visibility = View.GONE
+                exoBinding.llPause.visibility = View.VISIBLE
+                exoBinding.progressBar.visibility = View.GONE
+            } else if (!player.playWhenReady) {
+                exoBinding.llPlay.visibility = View.VISIBLE
+                exoBinding.llPause.visibility = View.GONE
+                exoBinding.progressBar.visibility = View.GONE
             }
-            callAllDisable(true)
-            epAllClicks()
+            val globalInitExoPlayer = GlobalInitExoPlayer()
+            globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
+            exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
+            exoBinding.exoProgress.setPosition(player.currentPosition)
+            exoBinding.exoProgress.setDuration(player.duration)
+            setPlayerCtrView()
+        } else {
+            if (audioClick) {
+                exoBinding.progressBar.visibility = View.GONE
+                exoBinding.llPlay.visibility = View.GONE
+                exoBinding.llPause.visibility = View.VISIBLE
+            } else if (PlayerINIT) {
+                exoBinding.progressBar.visibility = View.GONE
+                exoBinding.llPlay.visibility = View.GONE
+                exoBinding.llPause.visibility = View.VISIBLE
+            }
+        }
+        callAllDisable(true)
+        epAllClicks()
 //        } catch (e: Exception) {
 //            e.printStackTrace()
 //            //            Log.e("init player State: ", e.getMessage());
@@ -1104,7 +1117,7 @@ class   MyPlayerActivity :AppCompatActivity(){
         GetMedia2()
         exoBinding.llPlay.setOnClickListener {
             if (player != null) {
-                if (!mainPlayModelList[position].audioFile.equals("", ignoreCase = true)) {
+                if (!mainPlayModelList[position].id.equals("0", ignoreCase = true)) {
                     if (mainPlayModelList[player.currentWindowIndex].id.equals(mainPlayModelList[mainPlayModelList.size - 1].id, ignoreCase = true)
                             && player.duration - player.currentPosition <= 20) {
                         player.seekTo(position, 0)
@@ -1129,12 +1142,12 @@ class   MyPlayerActivity :AppCompatActivity(){
         if (mainPlayModelList[ps].playlistID == null) {
             mainPlayModelList[ps].playlistID = ""
         }
-        binding.tvAudioName.text=(name)
+        binding.tvAudioName.text = (name)
         if (player == null) {
             exoBinding.tvStartTime.text = "00:00"
         }
         exoBinding.tvSongTime.text = mainPlayModelList[ps].audioDuration
-        if (!url.equals("", ignoreCase = true)) {
+        if (!id .equals("0", ignoreCase = true)) {
             if (addToRecentPlayId.equals("", ignoreCase = true)) {
                 addToRecentPlay()
             } else if (!id.equals(addToRecentPlayId, ignoreCase = true)) {
@@ -1324,7 +1337,7 @@ class   MyPlayerActivity :AppCompatActivity(){
             println(e.message)
         }
     }
-    
+
     private fun GetMediaPer() {
         if (fileNameList.size != 0) {
             for (i in fileNameList.indices) {

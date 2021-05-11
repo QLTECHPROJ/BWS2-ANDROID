@@ -35,6 +35,8 @@ import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
 import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
@@ -490,16 +492,21 @@ public class AudioDownloadsFragment extends Fragment {
                             List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                             listModelList2.addAll(listModelList);
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                            mainPlayModel.setID("0");
-                            mainPlayModel.setName("Disclaimer");
-                            mainPlayModel.setAudioFile("");
-                            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                            mainPlayModel.setAudiomastercat("");
-                            mainPlayModel.setAudioSubCategory("");
-                            mainPlayModel.setImageFile("");
-                            mainPlayModel.setLike("");
-                            mainPlayModel.setDownload("");
-                            mainPlayModel.setAudioDuration("00:48");
+                            Gson gson = new Gson();
+                            SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                            String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                            String  DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                            Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                            }.getType();
+                            HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+                            mainPlayModel.setID(arrayList.getId());
+                            mainPlayModel.setName(arrayList.getName());
+                            mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                            mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                            mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                            mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                            mainPlayModel.setImageFile(arrayList.getImageFile());
+                            mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                             boolean audioc = true;
                             if (isDisclaimer == 1) {
                                 if (player != null) {

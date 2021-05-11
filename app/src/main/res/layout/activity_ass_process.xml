@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -114,33 +114,20 @@
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
-                        android:id="@+id/ivSeventh"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginRight="@dimen/_48sdp"
-                        android:layout_marginBottom="@dimen/_62sdp"
-                        android:layout_toLeftOf="@id/llSeverse"
-                        android:rotation="300"
-                        android:visibility="invisible"
-                        android:src="@drawable/ic_score_arrow" />
-
-                    <ImageView
                         android:id="@+id/ivSecond"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginRight="@dimen/_22sdp"
-                        android:layout_marginBottom="@dimen/_100sdp"
+                        android:layout_marginRight="@dimen/_46sdp"
+                        android:layout_marginBottom="@dimen/_64sdp"
                         android:layout_toLeftOf="@id/llSeverse"
-                        android:rotation="335"
-                        android:visibility="invisible"
-                        android:src="@drawable/ic_score_arrow" />
+                        android:rotation="300"
+                        android:src="@drawable/ic_score_arrow"
+                        android:visibility="invisible" />
 
                     <ImageView
-                        android:id="@+id/ivEighth"
+                        android:id="@+id/ivThird"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
@@ -151,27 +138,38 @@
                         android:rotation="326"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
-
                     <ImageView
-                        android:id="@+id/ivThird"
+                        android:id="@+id/ivForth"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="@dimen/_22sdp"
+                        android:layout_marginBottom="@dimen/_100sdp"
+                        android:layout_toLeftOf="@id/llSeverse"
+                        android:rotation="335"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_score_arrow" />
+                    <ImageView
+                        android:id="@+id/ivFifth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="-16dp"
                         android:layout_marginBottom="@dimen/_115sdp"
-                        android:layout_toRightOf="@id/ivSecond"
+                        android:layout_toRightOf="@id/ivForth"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow"
                         android:rotation="356" />
 
                     <ImageView
-                        android:id="@+id/ivNineth"
+                        android:id="@+id/ivSixth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="8dp"
                         android:layout_marginBottom="@dimen/_118sdp"
-                        android:layout_toRightOf="@id/ivSecond"
+                        android:layout_toRightOf="@id/ivFifth"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow"
                         android:rotation="366" />
@@ -209,33 +207,33 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/ivForth"
+                        android:id="@+id/ivSeventh"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginRight="-8dp"
-                        android:layout_toLeftOf="@id/ivFifth"
+                        android:layout_toLeftOf="@id/ivNineth"
                         android:rotation="38"
                         android:visibility="invisible"
                         android:layout_marginBottom="113dp"
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
-                        android:id="@+id/ivTenth"
+                        android:id="@+id/ivEighth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginRight="15dp"
-                        android:layout_toLeftOf="@id/ivFifth"
+                        android:layout_toLeftOf="@id/ivNineth"
                         android:rotation="26"
                         android:visibility="invisible"
                         android:layout_marginBottom="@dimen/_118sdp"
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
-                        android:id="@+id/ivFifth"
+                        android:id="@+id/ivNineth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
@@ -248,20 +246,20 @@
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
-                        android:id="@+id/ivEleventh"
+                        android:id="@+id/ivTenth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginLeft="@dimen/_26sdp"
-                        android:layout_marginBottom="82dp"
+                        android:layout_marginBottom="85dp"
                         android:layout_toRightOf="@id/llSeverse"
                         android:rotation="64"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
-                        android:id="@+id/ivTwelveth"
+                        android:id="@+id/ivEleventh"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
@@ -274,15 +272,15 @@
                         android:src="@drawable/ic_score_arrow" />
 
                     <ImageView
-                        android:id="@+id/ivSixth"
+                        android:id="@+id/ivTwelveth"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="@dimen/_40sdp"
-                        android:layout_marginBottom="@dimen/_62sdp"
+                        android:layout_marginLeft="@dimen/_43sdp"
+                        android:layout_marginBottom="@dimen/_50sdp"
                         android:layout_toRightOf="@id/llSeverse"
-                        android:rotation="88"
+                        android:rotation="91"
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow" />
 

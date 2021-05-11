@@ -23,6 +23,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.ForgotPasswordModel
 import com.brainwellnessspa.UserModuleTwo.Models.UserListModel
 import com.brainwellnessspa.Utility.APINewClient
+import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySleepTimeBinding
 import com.brainwellnessspa.databinding.SleepTimeRawBinding
 import retrofit2.Call
@@ -86,6 +87,10 @@ class SleepTimeActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvhours.text = listModel.get(position).name
             holder.bindingAdapter.llHourSlots.setOnClickListener {
+                val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                val editor = shared.edit()
+                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.get(position).name)
+                editor.commit()
                 val i = Intent(ctx, RecommendedCategoryActivity::class.java)
                 i.putExtra("SleepTime", listModel.get(position).name)
                 i.putExtra("BackClick","0")
