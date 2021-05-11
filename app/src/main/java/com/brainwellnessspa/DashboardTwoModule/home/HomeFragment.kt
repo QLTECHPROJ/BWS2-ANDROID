@@ -272,10 +272,12 @@ class HomeFragment : Fragment() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel = response.body()!!
+                        val gson = Gson()
                         homelistModel = response.body()!!
                         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, listModel.responseData!!.shouldPlayDisclaimer)
+                        editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(listModel.responseData!!.disclaimerAudio))
                         editor.commit()
                         if (listModel.responseData!!.scoreIncDec.equals("", ignoreCase = true)) {
                             binding.llCheckPercent.visibility = View.INVISIBLE
@@ -302,7 +304,7 @@ class HomeFragment : Fragment() {
 
 
                         if (listModel.responseData!!.shouldCheckIndexScore.equals("0", true)) {
-                            binding.llCheckIndexSocre.visibility = View.GONE
+                            binding.llCheckIndexSocre.visibility = View.VISIBLE
                         } else if (listModel.responseData!!.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
                             binding.llCheckIndexSocre.visibility = View.VISIBLE
                         }

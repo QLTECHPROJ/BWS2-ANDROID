@@ -631,7 +631,7 @@ public class ProfileFragment extends Fragment {
         edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType);
         edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID);
         edit.clear();
-        edit.commit();
+        edit.apply();
 
         SharedPreferences preferencesd = getActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited = preferencesd.edit();
@@ -639,7 +639,27 @@ public class ProfileFragment extends Fragment {
         edited.remove(CONSTANTS.selectedCategoriesName);
         edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME);
         edited.clear();
-        edited.commit();
+        edited.apply();
+
+        SharedPreferences preferencesd1 = getActivity().getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edited1 = preferencesd1.edit();
+        edited1.remove(CONSTANTS.AssQus);
+        edited1.remove(CONSTANTS.AssAns);
+        edited1.remove(CONSTANTS.AssSort);
+        edited1.clear();
+        edited1.apply();
+
+        SharedPreferences preferencesd2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edited2 = preferencesd2.edit();
+        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList);
+        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList);
+        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag);
+        edited2.remove(CONSTANTS.PREF_KEY_PayerPlaylistId);
+        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition);
+        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name);
+        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom);
+        edited2.clear();
+        edited2.apply();
 
         deleteCache(getActivity());
         callLogoutApi(dialog, progressBar, progressBarHolder);

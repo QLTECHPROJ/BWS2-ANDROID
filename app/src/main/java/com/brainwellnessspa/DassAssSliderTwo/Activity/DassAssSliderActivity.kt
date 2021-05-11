@@ -73,6 +73,9 @@ class DassAssSliderActivity : AppCompatActivity() {
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     binding.btnNext.visibility = View.GONE
                     binding.btnContinue.visibility = View.VISIBLE
+                }else{
+                    binding.btnNext.visibility = View.VISIBLE
+                    binding.btnContinue.visibility = View.GONE
                 }
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
@@ -124,9 +127,13 @@ class DassAssSliderActivity : AppCompatActivity() {
             binding.lpIndicator.progress = myPos
 //            binding.tvNumberOfQus.text = myPos.toString()
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+                binding.btnNext.visibility = View.GONE
+                binding.btnContinue.visibility = View.VISIBLE
                 firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
                 binding.rvFirstList.adapter = firstListAdapter
             } else {
+                binding.btnNext.visibility = View.VISIBLE
+                binding.btnContinue.visibility = View.GONE
                 firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
                 binding.rvFirstList.adapter = firstListAdapter
             }

@@ -468,14 +468,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val measureRatio = BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
      binding.ivBanner.layoutParams.height = (measureRatio.getHeight() * measureRatio.getRatio()).toInt()
         binding.ivBanner.layoutParams.width = (measureRatio.getWidthImg() * measureRatio.getRatio()).toInt()
-        binding.ivBanner.scaleType = ImageView.ScaleType.FIT_XY
         if (listModel.playlistName.equals("", ignoreCase = true) ||
                 listModel.playlistName == null) {
             binding.tvPlayListName.text = R.string.My_Playlist.toString()
         } else {
             binding.tvPlayListName.text = listModel.playlistName
         }
-        /*try {
+        try {
 //            if(!MyDownloads.equals("1")) {
                 if (!listModel.created.equals("2"))
                     if (!listModel.playlistImageDetail.equals("")) {
@@ -487,7 +486,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 //            }
         } catch (e:Exception) {
             e.printStackTrace();
-        }*/
+        }
 //        binding.tvPlaylist.setText("Playlist")
 
 //        if (listModel.totalAudio.equals("", ignoreCase = true) ||

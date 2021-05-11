@@ -29,6 +29,10 @@ class HomeScreenModel {
         @Expose
         var shouldCheckIndexScore: String? = null
 
+        @SerializedName("disclaimerAudio")
+        @Expose
+        var disclaimerAudio: DisclaimerAudio? = null
+
         @SerializedName("ScoreIncDec")
         @Expose
         var scoreIncDec: String? = null
@@ -172,6 +176,43 @@ class HomeScreenModel {
             }
         }
 
+        class DisclaimerAudio {
+            @SerializedName("ID")
+            @Expose
+            var id: String? = null
+
+            @SerializedName("Name")
+            @Expose
+            var name: String? = null
+
+            @SerializedName("ImageFile")
+            @Expose
+            var imageFile: String? = null
+
+            @SerializedName("AudioFile")
+            @Expose
+            var audioFile: String? = null
+
+            @SerializedName("Audiomastercat")
+            @Expose
+            var audiomastercat: String? = null
+
+            @SerializedName("AudioSubCategory")
+            @Expose
+            var audioSubCategory: String? = null
+
+            @SerializedName("AudioDuration")
+            @Expose
+            var audioDuration: String? = null
+
+            @SerializedName("AudioDirection")
+            @Expose
+            var audioDirection: String? = null
+
+            @SerializedName("Bitrate")
+            @Expose
+            var bitrate: String? = null
+        }
         class SessionScore {
 
         }
