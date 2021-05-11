@@ -12,7 +12,6 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -126,7 +125,11 @@ class ForgotPswdActivity : AppCompatActivity() {
                                 }
                                 val p = Properties()
                                 p.putValue("email", binding.etEmail.text.toString())
-                                BWSApplication.addToSegment("Forgot Password Clicked", p, CONSTANTS.track)
+                                BWSApplication.addToSegment(
+                                    "Forgot Password Clicked",
+                                    p,
+                                    CONSTANTS.track
+                                )
                                 dialog.show()
                                 dialog.setCancelable(false)
 
@@ -150,7 +153,6 @@ class ForgotPswdActivity : AppCompatActivity() {
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), this)
             }
-
         }
     }
 

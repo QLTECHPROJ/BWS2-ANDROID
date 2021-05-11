@@ -47,6 +47,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -92,6 +93,10 @@ public class ManageFragment : Fragment() {
             binding.rvMainPlayList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMainAudioList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 
+        val p = Properties()
+        p.putValue("coUserId", CoUserID)
+        p.putValue("sections", "")
+        BWSApplication.addToSegment("Manage Screen Viewed", p, CONSTANTS.screen)
         val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 

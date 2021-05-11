@@ -35,6 +35,7 @@ import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.segment.analytics.Properties
 import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
@@ -63,6 +64,9 @@ class UserListActivity : AppCompatActivity() {
         /* binding.llBack.setOnClickListener {
              finish()
          }*/
+
+        val p = Properties()
+        BWSApplication.addToSegment("Add Couser Screen Viewed", p, CONSTANTS.screen)
 
         binding.llAddNewUser.setOnClickListener {
             val i = Intent(applicationContext, AddProfileActivity::class.java)
@@ -485,6 +489,30 @@ class UserListActivity : AppCompatActivity() {
                                                                         listModel.responseData!!.avgSleepTime
                                                                     )
                                                             )
+                                                            val p1 = Properties()
+                                                            p1.putValue("CoUserID", listModel.responseData!!.coUserId)
+                                                            p1.putValue("userID", listModel.responseData!!.userID)
+                                                            p1.putValue("deviceId", Settings.Secure.getString(
+                                                                activity.contentResolver,
+                                                                Settings.Secure.ANDROID_ID
+                                                            ))
+                                                            p1.putValue("deviceType", "Android")
+                                                            p1.putValue("name", listModel.responseData!!.name)
+                                                            p1.putValue("countryCode", "")
+                                                            p1.putValue("countryName", "")
+                                                            p1.putValue("phone", listModel.responseData!!.mobile)
+                                                            p1.putValue("email", listModel.responseData!!.email)
+                                                            p1.putValue("plan", "")
+                                                            p1.putValue("planStatus", "")
+                                                            p1.putValue("planStartDt", "")
+                                                            p1.putValue("planExpiryDt", "")
+                                                            p1.putValue("clinikoId", "")
+                                                            p1.putValue("isProfileCompleted", listModel.responseData!!.isProfileCompleted)
+                                                            p1.putValue("isAssessmentCompleted", listModel.responseData!!.isAssessmentCompleted)
+                                                            p1.putValue("indexScore", listModel.responseData!!.indexScore)
+                                                            p1.putValue("areaOfFocus",  listModel.responseData!!.areaOfFocus)
+                                                            p1.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
+                                                            BWSApplication.addToSegment("CoUser Login", p1, CONSTANTS.track)
                                                         }
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()
@@ -691,6 +719,10 @@ class UserListActivity : AppCompatActivity() {
                             } else {
                                 binding.llAddNewUser.visibility = View.VISIBLE
                             }
+                            val p = Properties()
+                            p.putValue("userID", USERID)
+                            p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
+                            BWSApplication.addToSegment("Couser List Viewed", p, CONSTANTS.screen)
                         } else {
 //                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                         }

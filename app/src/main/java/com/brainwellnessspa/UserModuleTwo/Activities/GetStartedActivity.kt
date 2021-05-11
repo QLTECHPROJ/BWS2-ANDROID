@@ -12,7 +12,6 @@ import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityGetStartedBinding
 import com.segment.analytics.Properties
 
-
 class GetStartedActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGetStartedBinding
     var ScreenVisible: String = ""
@@ -22,7 +21,6 @@ class GetStartedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_get_started)
-
         activity = this@GetStartedActivity
         ctx = this@GetStartedActivity
 
@@ -39,12 +37,6 @@ class GetStartedActivity : AppCompatActivity() {
             startActivity(i)
             finish()
         }
-
-        prepareData()
-    }
-
-    fun prepareData() {
-
     }
 
     override fun onBackPressed() {

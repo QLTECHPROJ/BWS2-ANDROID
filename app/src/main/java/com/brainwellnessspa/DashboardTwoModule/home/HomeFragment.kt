@@ -62,6 +62,7 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.segment.analytics.Properties
 import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
@@ -135,6 +136,10 @@ class HomeFragment : Fragment() {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
+
+        val p = Properties()
+        p.putValue("coUserId", CoUSERID)
+        BWSApplication.addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
 
         if (SLEEPTIME.equals("", true)) {
             binding.llSleepTime.visibility = View.GONE
@@ -253,6 +258,10 @@ class HomeFragment : Fragment() {
                         } else {
                             llAddNewUser.visibility = View.VISIBLE
                         }
+                        val p = Properties()
+                        p.putValue("userID", USERID)
+                        p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
+                        BWSApplication.addToSegment("User List Popup Viewed", p, CONSTANTS.screen)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

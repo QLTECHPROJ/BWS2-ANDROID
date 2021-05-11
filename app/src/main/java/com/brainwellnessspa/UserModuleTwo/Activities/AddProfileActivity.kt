@@ -20,6 +20,7 @@ import com.brainwellnessspa.databinding.ActivityAddProfileBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -179,7 +180,6 @@ class AddProfileActivity : AppCompatActivity() {
         binding.etMobileNumber.addTextChangedListener(userTextWatcher)
         binding.etEmail.addTextChangedListener(userTextWatcher)
 
-//        TODO MANSI Gentle reminder Send New PIN Btn name changes when user send new pin
         binding.btnSendPin.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
                 binding.flUser.error = "Name is required"
@@ -233,6 +233,13 @@ class AddProfileActivity : AppCompatActivity() {
                                     )
                                 ) {
                                     BWSApplication.showToast(listModel.responseMessage, activity)
+                                    val p = Properties()
+                                    p.putValue("userId", UserID)
+                                    p.putValue("coUserId", listModel.responseData!!.coUserId)
+                                    p.putValue("name", listModel.responseData!!.name)
+                                    p.putValue("mobileNo", binding.etMobileNumber.text.toString())
+                                    p.putValue("email", listModel.responseData!!.email)
+                                    BWSApplication.addToSegment("Couser Added", p, CONSTANTS.track)
                                     finish()
                                 } else {
                                     BWSApplication.showToast(listModel.responseMessage, activity)
@@ -278,24 +285,31 @@ class AddProfileActivity : AppCompatActivity() {
                                 activity
                             )
                             val listModel: ForgotPinModel = response.body()!!
-                            if (listModel.getResponseCode().equals(
+                            if (listModel.responseCode.equals(
                                     activity.getString(R.string.ResponseCodesuccess),
                                     ignoreCase = true
                                 )
                             ) {
                                 BWSApplication.showToast(
-                                    listModel.getResponseMessage(),
+                                    listModel.responseMessage,
                                     activity
                                 )
+                                val p = Properties()
+                                p.putValue("userId", UserID)
+                                p.putValue("coUserId", CoUserID)
+                                p.putValue("name", CoName)
+                                p.putValue("mobileNo", CoNumber)
+                                p.putValue("email", CoEMAIL)
+                                BWSApplication.addToSegment("Send New Pin Clicked", p, CONSTANTS.track)
                                 finish()
-                            } else if (listModel.getResponseCode().equals(
+                            } else if (listModel.responseCode.equals(
                                     activity.getString(R.string.ResponseCodefail),
                                     ignoreCase = true
                                 )
                             ) {
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()

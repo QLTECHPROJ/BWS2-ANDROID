@@ -16,18 +16,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.SignInModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySignInBinding
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
 import com.segment.analytics.Properties
-import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -121,15 +118,15 @@ class SignInActivity : AppCompatActivity() {
         fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")!!
         if (TextUtils.isEmpty(fcm_id)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
-                this,
-                OnCompleteListener { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result!!.token
-                    Log.e("newToken", newToken)
-                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, newToken) //Friend
-                    editor.apply()
-                    editor.commit()
-                })
+                this
+            ) { task: Task<InstallationTokenResult> ->
+                val newToken = task.result!!.token
+                Log.e("newToken", newToken)
+                val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, newToken) //Friend
+                editor.apply()
+                editor.commit()
+            }
             val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
         }

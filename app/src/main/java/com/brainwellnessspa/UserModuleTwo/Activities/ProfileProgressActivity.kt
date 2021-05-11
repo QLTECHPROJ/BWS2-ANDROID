@@ -44,10 +44,10 @@ class ProfileProgressActivity : AppCompatActivity() {
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         activity = this@ProfileProgressActivity
-         val p = Properties()
-         ̥p.putValue("userId", USERID)
-         p.putValue("coUserId", CoUserID)
-         BWSApplication.addToSegment("Profile Form Screen Viewed", p, CONSTANTS.screen)
+        val p = Properties()
+        ̥p.putValue("userId", USERID)
+        p.putValue("coUserId", CoUserID)
+        BWSApplication.addToSegment("Profile Form Screen Viewed", p, CONSTANTS.screen)
         callSecondPrev()
         binding.btnMySelf.setOnClickListener {
             profileType = "Myself"
@@ -488,7 +488,11 @@ class ProfileProgressActivity : AppCompatActivity() {
                             p.putValue("age", age)
                             p.putValue("prevDrugUse", prevDrugUse)
                             p.putValue("medication", medication)
-                            BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)
+                            BWSApplication.addToSegment(
+                                "Profile Form Submitted",
+                                p,
+                                CONSTANTS.track
+                            )
                             val i =
                                 Intent(this@ProfileProgressActivity, WalkScreenActivity::class.java)
                             i.putExtra(CONSTANTS.ScreenView, "2")

@@ -58,7 +58,6 @@ class CreateAccountActivity : AppCompatActivity() {
     var countryFullName: String = ""
     lateinit var searchEditText: EditText
 
-
     var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -374,7 +373,10 @@ class CreateAccountActivity : AppCompatActivity() {
                             p.putValue("mobileNo", listModel.getResponseData()!!.mobileNo)
                             p.putValue("countryCode", countryCode)
                             p.putValue("countryName", countryFullName)
-                            p.putValue("countryShortName", binding.tvCountryShortName.text.toString())
+                            p.putValue(
+                                "countryShortName",
+                                binding.tvCountryShortName.text.toString()
+                            )
                             p.putValue("email", listModel.getResponseData()!!.email)
                             BWSApplication.addToSegment("User Sign up", p, CONSTANTS.track)
                             /*  val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)

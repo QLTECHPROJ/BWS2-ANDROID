@@ -23,6 +23,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,6 +47,9 @@ class NotificationListActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             finish()
         }
+        val p = Properties()
+        p.putValue("coUserId", CoUserID)
+        BWSApplication.addToSegment("Notification List Viewed", p, CONSTANTS.screen)
         binding.llError.visibility = View.GONE
         binding.tvFound.text = "No result found"
         prepareNotiData()

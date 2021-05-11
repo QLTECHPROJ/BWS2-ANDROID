@@ -65,6 +65,11 @@ class DassAssSliderActivity : AppCompatActivity() {
         getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
 
+        val p = Properties()
+        p.putValue("userId", USERID)
+        p.putValue("coUserId", CoUserID)
+        BWSApplication.addToSegment("Assessment Screen Viewed", p, CONSTANTS.screen)
+
         binding.btnNext.setOnClickListener {
             getAssSaveData()
             if (myPos < listModel1.responseData!!.questions!!.size - 1) {
