@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardModule.Account.AccountFragment
-import com.brainwellnessspa.DashboardModule.Search.SearchFragment
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.MainPlaylistLibraryModel
 import com.brainwellnessspa.DashboardTwoModule.manage.ManageFragment
@@ -73,7 +71,6 @@ class MainPlaylistFragment : Fragment() {
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE)
         AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0")
-        AccountFragment.ComeScreenAccount = 0
         AudioDownloadsFragment.comefromDownload = "0"
         if (arguments != null) {
             Check = requireArguments().getString("Check")
@@ -106,7 +103,6 @@ class MainPlaylistFragment : Fragment() {
 
     private fun callMyPlaylistsFragment(s: String, id: String, name: String, playlistImage: String, MyDownloads: String, ScreenView: String, act: Activity, ctx: Context) {
 //        try {
-            SearchFragment.comefrom_search = 0
             val i = Intent(ctx, MyPlaylistListingActivity::class.java)
             i.putExtra("New", s)
             i.putExtra("PlaylistID", id)

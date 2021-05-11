@@ -27,7 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.room.Room;
 
-import com.brainwellnessspa.AddPayment.AddPaymentActivity;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
@@ -59,7 +58,7 @@ import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planFlag;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planId;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.price;
-import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
+import static com.brainwellnessspa.BWSApplication.analytics;
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
@@ -179,8 +178,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             showYearDialog();
         });
 
-        AddPaymentActivity.CreditCardFormatTextWatcher tv = new AddPaymentActivity.CreditCardFormatTextWatcher(binding.etNumber);
-        binding.etNumber.addTextChangedListener(tv);
+//        AddPaymentActivity.CreditCardFormatTextWatcher tv = new AddPaymentActivity.CreditCardFormatTextWatcher(binding.etNumber);
+//        binding.etNumber.addTextChangedListener(tv);
         binding.etName.addTextChangedListener(addCardTextWatcher);
         binding.etNumber.addTextChangedListener(addCardTextWatcher);
         binding.etCvv.addTextChangedListener(addCardTextWatcher);
@@ -435,7 +434,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         public static void formatCardNumber(@NonNull Editable ccNumber, int paddingPx, int maxLength) {
             int textLength = ccNumber.length();
             // first remove any previous span
-            AddPaymentActivity.CreditCardFormatTextWatcher.PaddingRightSpan[] spans = ccNumber.getSpans(0, ccNumber.length(), AddPaymentActivity.CreditCardFormatTextWatcher.PaddingRightSpan.class);
+         /*   AddPaymentActivity.CreditCardFormatTextWatcher.PaddingRightSpan[] spans = ccNumber.getSpans(0, ccNumber.length(), AddPaymentActivity.CreditCardFormatTextWatcher.PaddingRightSpan.class);
             for (int i = 0; i < spans.length; i++) {
                 ccNumber.removeSpan(spans[i]);
             }
@@ -449,7 +448,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 int start = end - 1;
                 AddPaymentActivity.CreditCardFormatTextWatcher.PaddingRightSpan marginSPan = new AddPaymentActivity.CreditCardFormatTextWatcher.PaddingRightSpan(paddingPx);
                 ccNumber.setSpan(marginSPan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+            }*/
         }
 
 

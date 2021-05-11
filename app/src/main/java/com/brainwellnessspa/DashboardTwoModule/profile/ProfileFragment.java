@@ -48,13 +48,11 @@ import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 import com.brainwellnessspa.ResourceModule.Activities.ResourceActivity;
-import com.brainwellnessspa.SplashModule.SplashScreenActivity;
-import com.brainwellnessspa.UserModule.Activities.FileUtil;
-import com.brainwellnessspa.UserModule.Activities.RequestPermissionHandler;
-import com.brainwellnessspa.UserModule.Models.AddProfileModel;
-import com.brainwellnessspa.UserModule.Models.RemoveProfileModel;
+import com.brainwellnessspa.Utility.FileUtil;
+import com.brainwellnessspa.Utility.RequestPermissionHandler;
+import com.brainwellnessspa.DashboardTwoModule.Model.AddProfileModel;
+import com.brainwellnessspa.UserModuleTwo.Models.RemoveProfileModel;
 import com.brainwellnessspa.UserModuleTwo.Activities.GetStartedActivity;
-import com.brainwellnessspa.UserModuleTwo.Activities.SplashActivity;
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel;
 import com.brainwellnessspa.Utility.APIClientProfile;
 import com.brainwellnessspa.Utility.APINewClient;
@@ -81,6 +79,7 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static com.brainwellnessspa.BWSApplication.analytics;
+import static com.brainwellnessspa.BWSApplication.logout;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 
@@ -662,6 +661,7 @@ public class ProfileFragment extends Fragment {
         edited2.clear();
         edited2.apply();
 
+        logout = true;
         deleteCache(getActivity());
         callLogoutApi(dialog, progressBar, progressBarHolder);
     }

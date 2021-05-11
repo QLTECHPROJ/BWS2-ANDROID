@@ -59,7 +59,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -105,14 +104,13 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
-            ComeScreenAccount = 1;
             finish();
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
-        binding.btnAddReminder.setOnClickListener(view -> {
+     /*   binding.btnAddReminder.setOnClickListener(view -> {
             notificationStatus = true;
             myBackPress = false;
             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -130,7 +128,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             } else {
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
             }
-        });
+        });*/
     }
 
     @Override
@@ -142,7 +140,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         myBackPress = true;
-        ComeScreenAccount = 1;
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1);
         finish();
     }

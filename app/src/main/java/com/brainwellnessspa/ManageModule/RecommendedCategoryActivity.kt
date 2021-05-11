@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,18 +15,15 @@ import android.widget.Filterable
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.RecommendedCategoryModel
 import com.brainwellnessspa.DashboardTwoModule.Model.SaveRecommendedCatModel
 import com.brainwellnessspa.DashboardTwoModule.Model.sendRecommndedData
-import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
-import com.brainwellnessspa.PlaylistTwoModule.PreparePlaylistActivity
+import com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist.PreparePlaylistActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS

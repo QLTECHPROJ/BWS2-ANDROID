@@ -64,7 +64,6 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
@@ -452,7 +451,6 @@ public class AudioDownloadsFragment extends Fragment {
             }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                ComeScreenAccount = 0;
                 comefromDownload = "1";
 //                if (IsLock.equalsIgnoreCase("1")) {
 //                    holder.binding.ivLock.setVisibility(View.VISIBLE);

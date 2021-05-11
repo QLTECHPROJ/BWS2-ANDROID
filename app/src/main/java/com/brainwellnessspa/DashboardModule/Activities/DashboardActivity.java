@@ -29,10 +29,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Account.AccountFragment;
-import com.brainwellnessspa.DashboardModule.Audio.AudioFragment;
-import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
-import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyBatteryReceiver;
@@ -44,11 +40,7 @@ import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.ComeBackPlaylist;
-import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
-import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -136,7 +128,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
                 BWSApplication.addToSegment("Push Notification Tapped",p, CONSTANTS.track);
             }
         }
-        if (Goplaylist.equalsIgnoreCase("1")) {
+ /*       if (Goplaylist.equalsIgnoreCase("1")) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
             Bundle bundle = new Bundle();
@@ -147,19 +139,19 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
             bundle.putString("PlaylistType", PlaylistType);
             bundle.putString("MyDownloads", "0");
 
-/*            Properties p = new Properties();
+*//*            Properties p = new Properties();
             p.putValue("PlaylistID", PlaylistID);
             p.putValue("PlaylistName", PlaylistName);
             p.putValue("PlaylistImage", PlaylistImage);
             p.putValue("PlaylistType", PlaylistType);
-            BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);*/
+            BWSApplication.addToSegment("Push Notification Tapped", p, CONSTANTS.track);*//*
             myPlaylistsFragment.setArguments(bundle);
             FragmentManager fragmentManager1 = getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, myPlaylistsFragment)
                     .commit();
-        }
-
+        }*/
+/*
         if (invoiceToRecepit == 1) {
             binding.navView.setSelectedItemId(R.id.navigation_account);
             Fragment fragment = new AccountFragment();
@@ -167,9 +159,9 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
             fragmentManager.beginTransaction()
                     .replace(R.id.flContainer, fragment)
                     .commit();
-        }
+        }*/
 
-        if (ComeBackPlaylist) {
+      /*  if (ComeBackPlaylist) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             Fragment fragment = new PlaylistFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -194,7 +186,7 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
             ComeScreenAccount = 1;
             comefromDownload = "0";
         }
-
+*/
 //
 //        ConnectivityManager connMgr = (ConnectivityManager)
 //                getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -257,11 +249,11 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
 
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
-            Fragment fragment = new AudioFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.flContainer, fragment)
-                    .commit();
+//            Fragment fragment = new AudioFragment();
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.flContainer, fragment)
+//                    .commit();
             if (doubleBackToExitPressedOnce) {
                 finish();
                 backpressed = true;
@@ -324,31 +316,4 @@ public class DashboardActivity extends AppCompatActivity implements NetworkChang
         return null;
     }
 
-  /*  @Override
-    public void onAudioFocusChange(int i) {
-        switch (i) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                // Resume your media player here
-//                if (audioPause)
-//                    resumeMedia();
-//                audioPause = false;
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-//                if(!isPause) {
-//                    if (mediaPlayer != null) {
-//                        if (isMediaStart && !audioPause) {
-//                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
-//                            pauseMedia();
-//                            audioPause = true;
-////                    binding.ivPlay.setVisibility(View.VISIBLE);
-////                    binding.ivPause.setVisibility(View.GONE);
-//                        }
-//                    }
-//                }
-//                MusicService.pauseMedia();// Pause your media player here
-                break;
-        }
-    }*/
 }

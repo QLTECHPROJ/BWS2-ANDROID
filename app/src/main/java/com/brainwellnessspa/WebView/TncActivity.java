@@ -7,9 +7,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,12 +15,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.AppUtils;
 import com.brainwellnessspa.databinding.ActivityTncBinding;
-
-import java.util.List;
 
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;

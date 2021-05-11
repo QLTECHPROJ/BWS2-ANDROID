@@ -48,7 +48,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 
 public class AppointmentFragment extends Fragment {
@@ -82,7 +81,6 @@ public class AppointmentFragment extends Fragment {
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
-        ComeScreenAccount = 0;
         comefromDownload = "0";
         binding.cvSetSession.setOnClickListener(view1 -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -98,7 +96,6 @@ public class AppointmentFragment extends Fragment {
 
     @Override
     public void onResume() {
-        ComeScreenAccount = 0;
         comefromDownload = "0";
         preparePreviousAppointmentsData();
         super.onResume();

@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
-import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
 import com.brainwellnessspa.ResourceModule.Models.SegmentResource;
 import com.brainwellnessspa.Utility.APINewClient;
@@ -59,7 +58,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -94,7 +92,6 @@ public class ResourceActivity extends AppCompatActivity {
         ctx = ResourceActivity.this;
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
-            ComeScreenAccount = 1;
             comefromDownload = "0";
             finish();
         });
@@ -250,7 +247,6 @@ public class ResourceActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         myBackPress = true;
-        ComeScreenAccount = 1;
         comefromDownload = "0";
         finish();
     }

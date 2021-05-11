@@ -24,7 +24,6 @@ import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
-import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -39,7 +38,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -97,7 +95,6 @@ public class MembershipChangeActivity extends AppCompatActivity {
 
     private void callback() {
         myBackPress = true;
-        ComeScreenAccount = 1;
         if (ComeFrom.equalsIgnoreCase("Plan")) {
             finish();
         } else if (ComeFrom.equalsIgnoreCase("")) {

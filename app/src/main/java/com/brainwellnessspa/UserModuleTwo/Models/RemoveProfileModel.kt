@@ -1,9 +1,10 @@
-package com.brainwellnessspa.UserModule.Models
+package com.brainwellnessspa.UserModuleTwo.Models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class RemoveProfileModel {
+
     @SerializedName("ResponseData")
     @Expose
     var responseData: List<Any>? = null

@@ -37,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
@@ -85,7 +84,6 @@ public class InvoiceActivity extends AppCompatActivity {
 
     private void callBack() {
         myBackPress = true;
-        ComeScreenAccount = 1;
         if (invoiceToRecepit == 0) {
             invoiceToRecepit = 1;
             tutorial = false;
@@ -99,7 +97,6 @@ public class InvoiceActivity extends AppCompatActivity {
                 Intent i = new Intent(context, DashboardActivity.class);
                 startActivity(i);
             } else {
-                ComeScreenAccount = 1;
                 comefromDownload = "0";
                 finish();
             }
@@ -108,7 +105,6 @@ public class InvoiceActivity extends AppCompatActivity {
                 invoiceToDashboard = 0;
                 finish();
             } else {
-                ComeScreenAccount = 1;
                 comefromDownload = "0";
                 invoiceToRecepit = 1;
                 Intent i = new Intent(context, DashboardActivity.class);

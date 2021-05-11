@@ -15,7 +15,6 @@ import android.view.View;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.BillingOrderModule.Activities.PaymentActivity;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.R;
@@ -155,14 +154,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
                         p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                         p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
                         p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                        Intent i = new Intent(ctx, PaymentActivity.class);
+                      /*  Intent i = new Intent(ctx, PaymentActivity.class);
                         i.putExtra("ComesTrue", ComesTrue);
                         i.putExtra("comeFrom", "membership");
                         i.putParcelableArrayListExtra("PlanData", listModelList2);
                         i.putExtra("TrialPeriod", "");
                         i.putExtra("position", position);
                         startActivity(i);
-                        finish();
+                        finish();*/
                     } else {
                         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                             return;
@@ -215,14 +214,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                                 p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                                                 p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
                                                 p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                                                Intent i = new Intent(ctx, PaymentActivity.class);
+                                             /*   Intent i = new Intent(ctx, PaymentActivity.class);
                                                 i.putExtra("ComesTrue", ComesTrue);
                                                 i.putExtra("comeFrom", "membership");
                                                 i.putParcelableArrayListExtra("PlanData", listModelList2);
                                                 i.putExtra("TrialPeriod", "");
                                                 i.putExtra("position", position);
                                                 startActivity(i);
-                                                finish();
+                                                finish();*/
                                             } else {
                                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                                     return;

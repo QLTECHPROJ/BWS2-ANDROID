@@ -25,7 +25,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.PlayerAudioId
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel
-import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
+import com.brainwellnessspa.BWSApplication.isPlayPlaylist
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.DashboardTwoModule.AddAudioActivity

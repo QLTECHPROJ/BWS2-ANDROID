@@ -72,7 +72,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".UserModuleTwo.Activities.DoingGoodActivity"></activity>
-        <activity android:name=".ReminderModule.Activities.TimeViewActivity" />
         <activity
             android:name=".ProfileTwoModule.ChangePinActivity"
             android:configChanges="orientation|screenSize"
@@ -140,12 +139,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".PlaylistTwoModule.PlaylistDoneActivity"
+            android:name=".DashboardTwoModule.fragmentPlaylist.PlaylistDoneActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".PlaylistTwoModule.PreparePlaylistActivity"
+            android:name=".DashboardTwoModule.fragmentPlaylist.PreparePlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -240,16 +239,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.AudioPlayerActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".LikeModule.Activities.LikeActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".DownloadModule.Activities.DownloadPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
@@ -277,11 +266,6 @@
               android:windowSoftInputMode="adjustPan" />
         -->
         <activity
-            android:name=".BillingOrderModule.Activities.PaymentActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".ReminderModule.Activities.ReminderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
@@ -302,11 +286,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.MyPlaylistActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".DashboardTwoModule.AddPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
@@ -320,16 +299,6 @@
         -->
         <activity
             android:name=".DashboardTwoModule.AddAudioActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".DashboardModule.Activities.ViewQueueActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".DashboardModule.Activities.AudioDetailActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -348,27 +317,12 @@
             android:theme="@style/AppTheme.NoTitle"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.CheckoutOtpActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".MembershipModule.Activities.CheckoutGetCodeActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".MembershipModule.Activities.OrderSummaryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".MembershipModule.Activities.MembershipActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ReminderModule.Activities.ReminderActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -380,12 +334,6 @@
         <activity
             android:name=".FaqModule.Activities.FaqActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".AddPayment.AddPaymentActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -410,18 +358,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".SplashModule.SplashScreenActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoTitle"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".UserModule.Activities.UserProfileActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".MembershipModule.Activities.ThankYouMpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
@@ -434,22 +370,7 @@
             android:theme="@style/AppTheme.NoTitle"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".LoginModule.Activities.OtpActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".ManageModule.RecommendedCategoryActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".LoginModule.Activities.CountrySelectActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".LoginModule.Activities.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -537,7 +458,6 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".Services.NotificationActionService" />
 
         <service
             android:name=".Utility.MyFirebaseMessagingService"

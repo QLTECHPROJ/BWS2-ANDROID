@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.FaqModule.Models.FaqListModel;
-import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
 import com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter;
 import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
@@ -60,9 +59,9 @@ public class MembershipActivity extends AppCompatActivity {
         activity = MembershipActivity.this;
 
         binding.llBack.setOnClickListener(view -> {
-            Intent i = new Intent(ctx, LoginActivity.class);
-            startActivity(i);
-            finish();
+//            Intent i = new Intent(ctx, LoginActivity.class);
+//            startActivity(i);
+//            finish();
         });
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
@@ -117,9 +116,9 @@ public class MembershipActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(ctx, LoginActivity.class);
-        startActivity(i);
-        finish();
+//        Intent i = new Intent(ctx, LoginActivity.class);
+//        startActivity(i);
+//        finish();
     }
 
     private void prepareMembershipData() {

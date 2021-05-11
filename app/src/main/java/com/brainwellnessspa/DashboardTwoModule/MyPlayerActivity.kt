@@ -18,9 +18,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.PlayerAudioId
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel
@@ -151,6 +149,29 @@ class MyPlayerActivity : AppCompatActivity() {
             GetAllMedia1()
             makePlayerArray()
         }
+        /* binding.llDisclaimer.setOnClickListener(v -> {
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.full_desc_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+            final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+            final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+            tvTitle.setText(R.string.Disclaimer);
+            tvDesc.setText(R.string.Disclaimer_text);
+            dialog.setOnKeyListener((view, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+
+            tvClose.setOnClickListener(view1 -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
+        });*/
     }
 
     override fun onDestroy() {
@@ -717,7 +738,7 @@ class MyPlayerActivity : AppCompatActivity() {
             player.addListener(object : Player.EventListener {
                 override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
                     Log.e("TAG", "Listener-onTracksChanged... Main Activity")
-                    AudioPlayerActivity.oldSongPos = 0
+                    oldSongPos = 0
                     val sharedsa = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                     val gson = Gson()
                     val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
@@ -803,7 +824,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             Log.e("End State: ", e.message!!)
                         }
                     } else if (state == ExoPlayer.STATE_IDLE) {
-                        if (AudioPlayerActivity.AudioInterrupted) {
+                        if (AudioInterrupted) {
                             Log.e("Exo Player state", "ExoPlayer.STATE_IDLE")
                         }
                     }

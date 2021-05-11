@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,17 +24,14 @@ import android.os.StatFs;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
@@ -43,14 +39,13 @@ import com.brainwellnessspa.DashboardTwoModule.Model.SearchBothModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
-import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.exoplayer2.C;
@@ -66,7 +61,6 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
-import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -95,10 +89,10 @@ import retrofit2.Response;
 import static com.brainwellnessspa.BWSApplication.BatteryStatus;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
-import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.oldSongPos;
+import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
+import static com.brainwellnessspa.BWSApplication.oldSongPos;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
 public class GlobalInitExoPlayer extends Service {
@@ -739,7 +733,7 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player1) {
-                        intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent = new Intent(ctx, MyPlayerActivity.class);
                         intent.putExtra("notification","yes");
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
@@ -933,7 +927,7 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
-                        intent = new Intent(ctx, AudioPlayerActivity.class);
+                        intent = new Intent(ctx, MyPlayerActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                 Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1137,7 +1131,6 @@ Appointment Audios dddd*/
             List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList")
-                    || AudioFlag.equalsIgnoreCase("LikeAudioList")
                     || AudioFlag.equalsIgnoreCase("SearchAudio")
                     || AudioFlag.equalsIgnoreCase("SearchModelAudio")
                     || AudioFlag.equalsIgnoreCase("AppointmentDetailList"))) {
@@ -1240,55 +1233,7 @@ Appointment Audios dddd*/
                         editor.apply();
                         editor.commit();
                     }
-                } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                    Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-                    }.getType();
-                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();
-
-                    int size = arrayList.size();
-                    for (int i = 0; i < size; i++) {
-                        if (UnlockAudioList.contains(arrayList.get(i).getID())) {
-                            arrayList2.add(arrayList.get(i));
-                        }
-                    }
-                    if (arrayList2.size() != 0) {
-                        for (int i = 0; i < arrayList2.size(); i++) {
-                            MainPlayModel mainPlayModel = new MainPlayModel();
-                            mainPlayModel.setID(arrayList.get(i).getID());
-                            mainPlayModel.setName(arrayList.get(i).getName());
-                            mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                            mainPlayModel.setPlaylistID("");
-                            mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                            mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                            mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                            mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                            mainPlayModel.setLike(arrayList.get(i).getLike());
-                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                            mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                            arrayList1.add(mainPlayModel);
-                        }
-                    }
-                    if (arrayList2.size() < arrayList.size()) {
-                        if (player != null) {
-                            callNewPlayerRelease();
-                            audioClick = true;
-                        } else {
-                            audioClick = true;
-                        }
-                        String jsonx = gson.toJson(arrayList1);
-                        String json11 = gson.toJson(arrayList2);
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx);
-                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                        
-                        
-                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
-                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
-                        editor.apply();
-                        editor.commit();
-                    }
-                } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                }  else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
                     Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
                     }.getType();
                     ArrayList<SearchBothModel.ResponseData> arrayList = gson.fromJson(json, type), arrayList2 = new ArrayList<>();

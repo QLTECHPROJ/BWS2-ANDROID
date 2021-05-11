@@ -33,7 +33,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
-import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity;
 import com.brainwellnessspa.DashboardTwoModule.Model.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -41,7 +40,6 @@ import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.CreatePlaylistingModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -64,8 +62,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
-import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -111,7 +107,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         }
 
         binding.llBack.setOnClickListener(view -> {
-            comefrom_search = 0;
+     /*       comefrom_search = 0;
             myBackPress = true;
             if (comeAddPlaylist == 1) {
                 Intent i = new Intent(ctx, MyPlaylistActivity.class);
@@ -125,7 +121,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 finish();
             } else {
                 finish();
-            }
+            }*/
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
@@ -242,7 +238,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        comefrom_search = 0;
+     /*   comefrom_search = 0;
         myBackPress = true;
         if (comeAddPlaylist == 1) {
             Intent i = new Intent(ctx, MyPlaylistActivity.class);
@@ -256,7 +252,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
             finish();
         } else {
             finish();
-        }
+        }*/
         super.onBackPressed();
     }
 
@@ -407,7 +403,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            if (comeAddPlaylist == 1) {
+                          /*  if (comeAddPlaylist == 1) {
                                 final Dialog dialog = new Dialog(ctx);
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 dialog.setContentView(R.layout.go_to_playlist);
@@ -456,7 +452,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 });
 
                                 rlCreate.setOnClickListener(view2 -> {
-                                    comefrom_search = 0;
+
                                     addToPlayList = true;
                                     MyPlaylistId = PlaylistID;
                                     Intent intent = new Intent(ctx, DashboardActivity.class);
@@ -478,7 +474,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 });
                                 dialog.show();
                                 dialog.setCancelable(false);
-                            }
+                            }*/
                         } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
 
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);

@@ -25,10 +25,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.LoginModule.Models.CountryListModel
-import com.brainwellnessspa.LoginModule.Models.LoginModel
 import com.brainwellnessspa.ManageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.R
+import com.brainwellnessspa.UserModuleTwo.Models.CountryListModel
 import com.brainwellnessspa.UserModuleTwo.Models.NewSignUpModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -300,7 +299,7 @@ class CreateAccountActivity : AppCompatActivity() {
                         val listModel: CountryListModel = response.body()!!
                         rvCountryList.layoutManager = LinearLayoutManager(ctx)
                         adapter = CountrySelectAdapter(
-                            dialog, searchFilter, binding, listModel.responseData, rvCountryList,
+                            dialog, searchFilter, binding, listModel.responseData!!, rvCountryList,
                             tvFound
                         )
                         rvCountryList.adapter = adapter
@@ -448,7 +447,7 @@ class CreateAccountActivity : AppCompatActivity() {
             holder.bindingAdapter.llMainLayout.setOnClickListener { _ ->
                 binding.tvCountryShortName.text = mData.shortName
                 binding.tvCountry.text = "+" + mData.code
-                catList.countryFullName = mData.name
+                catList.countryFullName = mData.name!!
 
                 dialog.dismiss()
             }
@@ -469,7 +468,7 @@ class CreateAccountActivity : AppCompatActivity() {
                         val filteredList: MutableList<CountryListModel.ResponseData> =
                             ArrayList<CountryListModel.ResponseData>()
                         for (row in modelList) {
-                            if (row.name.toLowerCase().contains(charString.toLowerCase())) {
+                            if (row.name!!.toLowerCase().contains(charString.toLowerCase())) {
                                 filteredList.add(row)
                             }
                         }

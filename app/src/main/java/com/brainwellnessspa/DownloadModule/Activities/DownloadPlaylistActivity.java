@@ -71,10 +71,9 @@ import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
+import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
@@ -168,7 +167,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
-        ComeScreenAccount = 0;
         if (getIntent() != null) {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");

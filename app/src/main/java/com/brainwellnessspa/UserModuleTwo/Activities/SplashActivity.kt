@@ -17,7 +17,7 @@ import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.SplashModule.Models.VersionModel
+import com.brainwellnessspa.UserModuleTwo.Models.VersionModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -104,9 +104,9 @@ class SplashActivity : AppCompatActivity() {
                     try {
                         val versionModel: VersionModel = response.body()!!
                         try {
-                            setAnalytics(versionModel.responseData.segmentKey)
+                            setAnalytics(versionModel.responseData!!.segmentKey!!)
 
-                            if (versionModel.getResponseData().getIsForce()
+                            if (versionModel.responseData!!.isForce
                                     .equals("0", ignoreCase = true)
                             ) {
                                 val builder = AlertDialog.Builder(ctx)
@@ -127,7 +127,7 @@ class SplashActivity : AppCompatActivity() {
                                         dialog.dismiss()
                                     }
                                 builder.create().show()
-                            } else if (versionModel.getResponseData().getIsForce()
+                            } else if (versionModel.responseData!!.isForce
                                     .equals("1", ignoreCase = true)
                             ) {
                                 val builder = AlertDialog.Builder(ctx)
@@ -141,7 +141,7 @@ class SplashActivity : AppCompatActivity() {
                                         )
                                     }
                                 builder.create().show()
-                            } else if (versionModel.getResponseData().getIsForce()
+                            } else if (versionModel.responseData!!.isForce
                                     .equals("", ignoreCase = true)
                             ) {
                                 askBattryParmition()

@@ -11,7 +11,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardModule.Account.AccountFragment
 import com.brainwellnessspa.FaqModule.Models.FaqListModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
@@ -51,7 +50,6 @@ class FaqActivity : AppCompatActivity() {
         PrepareData()
         binding.llBack.setOnClickListener { view: View? ->
             myBackPress = true
-            AccountFragment.ComeScreenAccount = 1
             finish()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -85,7 +83,6 @@ class FaqActivity : AppCompatActivity() {
         }
         binding.llHelp.setOnClickListener { view: View? ->
             myBackPress = true
-            AccountFragment.ComeScreenAccount = 1
             try {
                 modelList!!.clear()
                 modelList = ArrayList()
@@ -105,7 +102,6 @@ class FaqActivity : AppCompatActivity() {
         }
         binding.llPlaylists.setOnClickListener { view: View? ->
             myBackPress = true
-            AccountFragment.ComeScreenAccount = 1
             try {
                 modelList!!.clear()
                 modelList = ArrayList()
@@ -153,7 +149,6 @@ class FaqActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         myBackPress = true
-        AccountFragment.ComeScreenAccount = 1
         finish()
     }
 

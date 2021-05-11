@@ -19,7 +19,6 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity
 import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel
-import com.brainwellnessspa.DashboardModule.Account.AccountFragment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
 import com.brainwellnessspa.Utility.APIClient
@@ -52,7 +51,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         binding.llBack.setOnClickListener { view: View? ->
             myBackPress = true
-            AccountFragment.ComeScreenAccount = 1
             if (audioPause) {
                 GlobalInitExoPlayer.player.playWhenReady = true
             } else {
@@ -234,7 +232,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
 
     override fun onBackPressed() {
         myBackPress = true
-        AccountFragment.ComeScreenAccount = 1
         if (audioPause) {
             GlobalInitExoPlayer.player.playWhenReady = true
         } else {

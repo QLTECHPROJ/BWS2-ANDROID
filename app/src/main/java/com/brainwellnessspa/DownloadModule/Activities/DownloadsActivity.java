@@ -46,9 +46,8 @@ import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
+import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
@@ -73,7 +72,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloads);
         ctx = DownloadsActivity.this;
-        ComeScreenAccount = 0;
         comefromDownload = "1";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
@@ -89,7 +87,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         p = new Properties();
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
-            ComeScreenAccount = 1;
             comefromDownload = "0";
             finish();
         });
@@ -99,13 +96,11 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
     @Override
     public void onBackPressed() {
         myBackPress = true;
-        ComeScreenAccount = 1;
         comefromDownload = "0";
         finish();
     }
 
     public void prepareData() {
-        ComeScreenAccount = 0;
         comefromDownload = "1";
         callMembershipMediaPlayer();
         audioDownloadList = new ArrayList<>();
@@ -192,7 +187,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
     }
 
     public void prepareData1() {
-        ComeScreenAccount = 0;
         comefromDownload = "1";
         callMembershipMediaPlayer();
     }

@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,25 +12,19 @@ import android.app.Application;
 import android.app.NotificationManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.Appointment.SessionsFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -42,9 +34,7 @@ import com.brainwellnessspa.databinding.ActivityReferFriendBinding;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
@@ -88,7 +78,6 @@ public class ReferFriendActivity extends AppCompatActivity {
         binding.tvCodeCopy.setText(UserPromocode);
         binding.llBack.setOnClickListener(v -> {
 
-            ComeScreenAccount = 1;
             myBackPress = true;
             finish();
         });
@@ -204,8 +193,6 @@ public class ReferFriendActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        ComeScreenAccount = 1;
         myBackPress = true;
         super.onBackPressed();
     }

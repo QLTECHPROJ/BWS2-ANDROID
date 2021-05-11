@@ -29,8 +29,6 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
-import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
@@ -40,7 +38,6 @@ import com.brainwellnessspa.DashboardTwoModule.Model.SucessModel;
 import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
@@ -77,9 +74,8 @@ import retrofit2.Response;
 
 import static android.content.Context.BATTERY_SERVICE;
 import static com.brainwellnessspa.BWSApplication.BatteryStatus;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.AudioInterrupted;
-import static com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity.oldSongPos;
+import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
+import static com.brainwellnessspa.BWSApplication.oldSongPos;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -109,7 +105,6 @@ public class MiniPlayerFragment extends Fragment {
     List<String> downloadAudioDetailsListGloble;
     List<File> filesDownloaded;
     ArrayList<MainPlayModel> mainPlayModelList, mainPlayModelList2;
-    ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, AudioFlag = "", id = "", url = "", playFrom = "";
     int position, listSize;
     Boolean queuePlay, audioPlay;
@@ -156,7 +151,6 @@ public class MiniPlayerFragment extends Fragment {
         ctx = getActivity();
         activity = getActivity();
         PlayerStatus = "Mini";
-        addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mainPlayModelList2 = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
@@ -225,20 +219,8 @@ public class MiniPlayerFragment extends Fragment {
             Gson gson = new Gson();
             String json = gson.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
-            String json1 = gson.toJson(addToQueueModelList);
-            try {
-                if (queuePlay) {
-                    editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
-            Intent i = new Intent(ctx, AudioPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            ctx.startActivity(i);
-            activity.overridePendingTransition(0, 0);
         });
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -253,11 +235,7 @@ public class MiniPlayerFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getActivity().registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
-        if (ComeScreenAccount == 1) {
-            binding.llLayout.setVisibility(View.GONE);
-        } else if (ComeScreenAccount == 0) {
-            binding.llLayout.setVisibility(View.VISIBLE);
-        }
+
         super.onResume();
     }
 
@@ -1260,15 +1238,10 @@ public class MiniPlayerFragment extends Fragment {
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         MainPlayModel mainPlayModel;
-        addToQueueModelList = new ArrayList<>();
-        mainPlayModelList = new ArrayList<>();
+       mainPlayModelList = new ArrayList<>();
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         String json2 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-        if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-            }.getType();
-            addToQueueModelList = gson.fromJson(json2, type1);
-        }
+
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         if (queuePlay) {
@@ -1389,34 +1362,6 @@ public class MiniPlayerFragment extends Fragment {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
-                mainPlayModel.setName(arrayList.get(i).getName());
-                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-
-        } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-            Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-            }.getType();
-            ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
 
@@ -1568,15 +1513,8 @@ public class MiniPlayerFragment extends Fragment {
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         MainPlayModel mainPlayModel;
-        addToQueueModelList = new ArrayList<>();
-        mainPlayModelList = new ArrayList<>();
+         mainPlayModelList = new ArrayList<>();
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        String json2 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-        if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-            }.getType();
-            addToQueueModelList = gson.fromJson(json2, type1);
-        }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         if (queuePlay) {
@@ -1699,34 +1637,6 @@ public class MiniPlayerFragment extends Fragment {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
-                mainPlayModel.setName(arrayList.get(i).getName());
-                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-
-        } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-            Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-            }.getType();
-            ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
 
@@ -2043,38 +1953,7 @@ public class MiniPlayerFragment extends Fragment {
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-            Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-            }.getType();
-            ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json1, type);
-            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(position);
-            }
-            for (int i = 0; i < arrayList.size(); i++) {
-
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
-                mainPlayModel.setName(arrayList.get(i).getName());
-                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String json = gson.toJson(arrayList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-        } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+        }else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);

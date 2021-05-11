@@ -1,4 +1,4 @@
-package com.brainwellnessspa.UserModule.Activities;
+package com.brainwellnessspa.Utility;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;

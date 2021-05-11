@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardModule.Account.AccountFragment
 import com.brainwellnessspa.FaqModule.Models.FaqListModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
@@ -58,7 +57,6 @@ class AudioFaqActivity : AppCompatActivity() {
         }
         binding.llBack.setOnClickListener { view: View? ->
             myBackPress = true
-            AccountFragment.ComeScreenAccount = 1
             finish()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -90,7 +88,6 @@ class AudioFaqActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         myBackPress = true
-        AccountFragment.ComeScreenAccount = 1
         finish()
     }
 

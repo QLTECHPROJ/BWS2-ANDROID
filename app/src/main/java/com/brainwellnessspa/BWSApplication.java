@@ -140,7 +140,6 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloadi
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.hundredVolume;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -149,8 +148,10 @@ public class BWSApplication extends Application {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
         }
     };
-    public static String BatteryStatus = "";
+    public static String BatteryStatus = "",IsLock;
+    public static long oldSongPos = 0;
     public static String PlayerAudioId = "";
+    public static boolean AudioInterrupted =false,logout = false;
     public static Analytics analytics;
     public static List<String> downloadAudioDetailsList = new ArrayList<>();
     public static List<DownloadAudioDetails> playlistDownloadAudioDetailsList = new ArrayList<>();
@@ -160,7 +161,7 @@ public class BWSApplication extends Application {
     static String currantTime = "", am_pm, hourString, minuteSting;
     static int Chour, Cminute;
     static TextView tvTime;
-    public static int comeReminder = 0;
+    public static int comeReminder = 0,isPlayPlaylist= 0;
 
     public static LocalBroadcastManager localBroadcastManager;
     public static Intent localIntent;

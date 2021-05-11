@@ -38,7 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity.myBackPressbill;
-import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.BWSApplication.IsLock;
 
 /*Active => Cancel button
 remaining 10 days =>cancelled status=> pay now button => => Direct payment

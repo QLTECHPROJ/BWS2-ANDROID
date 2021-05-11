@@ -1,4 +1,4 @@
-package com.brainwellnessspa.UserModule.Activities;
+package com.brainwellnessspa.Utility;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;

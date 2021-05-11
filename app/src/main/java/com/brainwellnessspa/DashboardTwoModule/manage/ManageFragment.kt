@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist
+import com.brainwellnessspa.BWSApplication.isPlayPlaylist
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DashboardTwoModule.Model.CreateNewPlaylistModel
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeDataModel

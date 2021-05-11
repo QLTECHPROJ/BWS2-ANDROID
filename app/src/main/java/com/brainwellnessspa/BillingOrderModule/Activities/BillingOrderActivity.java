@@ -20,12 +20,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Fragments.BillingAddressFragment;
 import com.brainwellnessspa.BillingOrderModule.Fragments.CurrentPlanFragment;
-import com.brainwellnessspa.BillingOrderModule.Fragments.PaymentFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding;
 import com.segment.analytics.Properties;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
@@ -46,7 +44,6 @@ public class BillingOrderActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
             myBackPressbill = true;
-            ComeScreenAccount = 1;
             comefromDownload = "0";
             finish();
         });
@@ -106,7 +103,6 @@ public class BillingOrderActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         myBackPressbill = true;
-        ComeScreenAccount = 1;
         comefromDownload = "0";
         finish();
     }
@@ -130,12 +126,12 @@ public class BillingOrderActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     currentPlanFragment.setArguments(bundle);
                     return currentPlanFragment;
+//                case 1:
+//                    PaymentFragment paymentFragment = new PaymentFragment();
+//                    bundle = new Bundle();
+//                    paymentFragment.setArguments(bundle);
+//                    return paymentFragment;
                 case 1:
-                    PaymentFragment paymentFragment = new PaymentFragment();
-                    bundle = new Bundle();
-                    paymentFragment.setArguments(bundle);
-                    return paymentFragment;
-                case 2:
                     BillingAddressFragment billingAddressFragment = new BillingAddressFragment();
                     bundle = new Bundle();
                     billingAddressFragment.setArguments(bundle);

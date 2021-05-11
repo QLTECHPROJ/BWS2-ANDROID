@@ -1,9 +1,9 @@
-package com.brainwellnessspa.LoginModule.Models;
+package com.brainwellnessspa.DashboardTwoModule.Model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginModel {
+public class AddProfileModel {
     @SerializedName("ResponseData")
     @Expose
     private ResponseData responseData;
@@ -50,27 +50,27 @@ public class LoginModel {
     }
 
     public class ResponseData {
-        @SerializedName("MobileNo")
+        @SerializedName("UserID")
         @Expose
-        private String mobileNo;
-        @SerializedName("OTP")
+        private String userID;
+        @SerializedName("ProfileImage")
         @Expose
-        private String oTP;
+        private String profileImage;
 
-        public String getMobileNo() {
-            return mobileNo;
+        public String getUserID() {
+            return userID;
         }
 
-        public void setMobileNo(String mobileNo) {
-            this.mobileNo = mobileNo;
+        public void setUserID(String userID) {
+            this.userID = userID;
         }
 
-        public String getOTP() {
-            return oTP;
+        public String getProfileImage() {
+            return profileImage;
         }
 
-        public void setOTP(String oTP) {
-            this.oTP = oTP;
+        public void setProfileImage(String profileImage) {
+            this.profileImage = profileImage;
         }
     }
 }

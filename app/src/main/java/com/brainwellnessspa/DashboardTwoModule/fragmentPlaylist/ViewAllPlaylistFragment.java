@@ -19,8 +19,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
-import com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment;
 import com.brainwellnessspa.DashboardModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DashboardTwoModule.AddPlaylistActivity;
@@ -46,7 +44,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 
 public class ViewAllPlaylistFragment extends Fragment {
     public static String GetPlaylistLibraryID = "";
@@ -63,8 +60,8 @@ public class ViewAllPlaylistFragment extends Fragment {
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
 
         if (getArguments() != null) {
             GetLibraryID = getArguments().getString("GetLibraryID");
@@ -390,8 +387,6 @@ public class ViewAllPlaylistFragment extends Fragment {
                         i.putExtra("MyDownloads", "1");
                         getActivity().startActivity(i);
                     } else {
-                        Bundle bundle = new Bundle();
-                        comefrom_search = 2;
                         GetPlaylistLibraryID = GetLibraryID;
                         Intent i = new Intent(getActivity(),MyPlaylistListingActivity.class);
                         i.putExtra("New", "0");

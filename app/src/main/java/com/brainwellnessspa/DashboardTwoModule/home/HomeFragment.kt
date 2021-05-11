@@ -28,9 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.analytics
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity
-import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel
@@ -44,6 +43,8 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
+import com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease
+import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
 import com.brainwellnessspa.UserModuleTwo.Activities.AddProfileActivity
 import com.brainwellnessspa.UserModuleTwo.Activities.WalkScreenActivity
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
@@ -557,41 +558,41 @@ class HomeFragment : Fragment() {
                             val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                             val PlayerPosition =
                                 shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                            if (MyPlaylistsFragment.isPlayPlaylist == 1) {
-                                GlobalInitExoPlayer.player.playWhenReady = false
-                                MyPlaylistsFragment.isPlayPlaylist = 2
+                            if (isPlayPlaylist == 1) {
+                                player.playWhenReady = false
+                                isPlayPlaylist = 2
                                 binding.llPlay.visibility = View.VISIBLE
                                 binding.llPause.visibility = View.GONE
-                            } else if (MyPlaylistsFragment.isPlayPlaylist == 2) {
-                                if (GlobalInitExoPlayer.player != null) {
+                            } else if (isPlayPlaylist == 2) {
+                                if (player != null) {
                                     val lastIndexID =
                                         listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
                                     if (BWSApplication.PlayerAudioId.equals(
                                             lastIndexID,
                                             ignoreCase = true
                                         )
-                                        && GlobalInitExoPlayer.player.duration - GlobalInitExoPlayer.player.currentPosition <= 20
+                                        && player.duration - player.currentPosition <= 20
                                     ) {
                                         val shared = ctx.getSharedPreferences(
-                                            CONSTANTS.PREF_KEY_AUDIO,
+                                            CONSTANTS.PREF_KEY_PLAYER,
                                             Context.MODE_PRIVATE
                                         )
                                         val editor = shared.edit()
-                                        editor.putInt(CONSTANTS.PREF_KEY_position, 0)
+                                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                         editor.apply()
-                                        GlobalInitExoPlayer.player.seekTo(0, 0)
-                                        BWSApplication.PlayerAudioId =
+                                        player.seekTo(0, 0)
+                                       PlayerAudioId =
                                             listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
-                                        GlobalInitExoPlayer.player.playWhenReady = true
+                                        player.playWhenReady = true
                                     } else {
-                                        GlobalInitExoPlayer.player.playWhenReady = true
+                                        player.playWhenReady = true
                                     }
                                 }
-                                MyPlaylistsFragment.isPlayPlaylist = 1
+                                isPlayPlaylist = 1
                                 binding.llPlay.visibility = View.GONE
                                 binding.llPause.visibility = View.VISIBLE
                             } else {
-                                BWSApplication.PlayerAudioId =
+                               PlayerAudioId =
                                     listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
                                 callMainPlayerSuggested(
                                     0,
@@ -662,25 +663,25 @@ class HomeFragment : Fragment() {
                     ignoreCase = true
                 )
             ) {
-                if (GlobalInitExoPlayer.player != null) {
-                    if (GlobalInitExoPlayer.player.playWhenReady) {
-                        MyPlaylistsFragment.isPlayPlaylist = 1
+                if (player != null) {
+                    if (player.playWhenReady) {
+                        isPlayPlaylist = 1
                         //                    handler3.postDelayed(UpdateSongTime3, 500);
                         binding.llPause.visibility = View.VISIBLE
                         binding.llPlay.visibility = View.GONE
                     } else {
-                        MyPlaylistsFragment.isPlayPlaylist = 2
+                        isPlayPlaylist = 2
                         //                    handler3.postDelayed(UpdateSongTime3, 500);
                         binding.llPause.visibility = View.GONE
                         binding.llPlay.visibility = View.VISIBLE
                     }
                 } else {
-                    MyPlaylistsFragment.isPlayPlaylist = 0
+                    isPlayPlaylist = 0
                     binding.llPause.visibility = View.GONE
                     binding.llPlay.visibility = View.VISIBLE
                 }
             } else {
-                MyPlaylistsFragment.isPlayPlaylist = 0
+                isPlayPlaylist = 0
                 binding.llPause.visibility = View.GONE
                 binding.llPlay.visibility = View.VISIBLE
             }
@@ -690,23 +691,23 @@ class HomeFragment : Fragment() {
                     ignoreCase = true
                 )
             ) {
-                if (GlobalInitExoPlayer.player != null) {
-                    if (GlobalInitExoPlayer.player.playWhenReady) {
-                        MyPlaylistsFragment.isPlayPlaylist = 1
+                if (player != null) {
+                    if (player.playWhenReady) {
+                        isPlayPlaylist = 1
                         binding.llPause.visibility = View.VISIBLE
                         binding.llPlay.visibility = View.GONE
                     } else {
-                        MyPlaylistsFragment.isPlayPlaylist = 2
+                        isPlayPlaylist = 2
                         binding.llPause.visibility = View.GONE
                         binding.llPlay.visibility = View.VISIBLE
                     }
                 } else {
-                    MyPlaylistsFragment.isPlayPlaylist = 0
+                    isPlayPlaylist = 0
                     binding.llPause.visibility = View.GONE
                     binding.llPlay.visibility = View.VISIBLE
                 }
             } else {
-                MyPlaylistsFragment.isPlayPlaylist = 0
+                isPlayPlaylist = 0
                 binding.llPause.visibility = View.GONE
                 binding.llPlay.visibility = View.VISIBLE
             }
@@ -735,9 +736,9 @@ class HomeFragment : Fragment() {
                 )
             ) {
                 if (MiniPlayerFragment.isDisclaimer == 1) {
-                    if (GlobalInitExoPlayer.player != null) {
-                        if (!GlobalInitExoPlayer.player.playWhenReady) {
-                            GlobalInitExoPlayer.player.playWhenReady = true
+                    if (player != null) {
+                        if (!player.playWhenReady) {
+                            player.playWhenReady = true
                         }
                     } else {
                         DashboardActivity.audioClick = true
@@ -748,10 +749,10 @@ class HomeFragment : Fragment() {
                         activity
                     )
                 } else {
-                    if (GlobalInitExoPlayer.player != null) {
+                    if (player != null) {
                         if (position != PlayerPosition) {
-                            GlobalInitExoPlayer.player.seekTo(position, 0)
-                            GlobalInitExoPlayer.player.playWhenReady = true
+                            player.seekTo(position, 0)
+                            player.playWhenReady = true
                             val sharedxx = ctx.getSharedPreferences(
                                 CONSTANTS.PREF_KEY_PLAYER,
                                 Context.MODE_PRIVATE
@@ -786,8 +787,8 @@ class HomeFragment : Fragment() {
                 mainPlayModel.audioDuration = arrayList.audioDuration
                 var audioc = true
                 if (MiniPlayerFragment.isDisclaimer == 1) {
-                    if (GlobalInitExoPlayer.player != null) {
-                        GlobalInitExoPlayer.player.playWhenReady = true
+                    if (player != null) {
+                        player.playWhenReady = true
                         audioc = false
                         listModelList2.add(position, mainPlayModel)
                     } else {
@@ -813,9 +814,9 @@ class HomeFragment : Fragment() {
                 )
             ) {
                 if (MiniPlayerFragment.isDisclaimer == 1) {
-                    if (GlobalInitExoPlayer.player != null) {
-                        if (!GlobalInitExoPlayer.player.playWhenReady) {
-                            GlobalInitExoPlayer.player.playWhenReady = true
+                    if (player != null) {
+                        if (!player.playWhenReady) {
+                            player.playWhenReady = true
                         }
                     } else {
                         DashboardActivity.audioClick = true
@@ -826,10 +827,10 @@ class HomeFragment : Fragment() {
                         activity
                     )
                 } else {
-                    if (GlobalInitExoPlayer.player != null) {
+                    if (player != null) {
                         if (position != PlayerPosition) {
-                            GlobalInitExoPlayer.player.seekTo(position, 0)
-                            GlobalInitExoPlayer.player.playWhenReady = true
+                            player.seekTo(position, 0)
+                            player.playWhenReady = true
                             val sharedxx = ctx.getSharedPreferences(
                                 CONSTANTS.PREF_KEY_PLAYER,
                                 Context.MODE_PRIVATE
@@ -864,8 +865,8 @@ class HomeFragment : Fragment() {
                 mainPlayModel.audioDuration = arrayList.audioDuration
                 var audioc = true
                 if (MiniPlayerFragment.isDisclaimer == 1) {
-                    if (GlobalInitExoPlayer.player != null) {
-                        GlobalInitExoPlayer.player.playWhenReady = true
+                    if (player != null) {
+                        player.playWhenReady = true
                         audioc = false
                         listModelList2.add(position, mainPlayModel)
                     } else {
@@ -910,7 +911,7 @@ class HomeFragment : Fragment() {
         act: Activity,
         playlistID: String
     ) {
-        GlobalInitExoPlayer.callNewPlayerRelease()
+        callNewPlayerRelease()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()

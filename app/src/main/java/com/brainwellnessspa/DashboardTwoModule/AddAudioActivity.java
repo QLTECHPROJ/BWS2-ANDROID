@@ -65,7 +65,6 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeRename;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -212,7 +211,6 @@ public class AddAudioActivity extends AppCompatActivity {
     private void callback() {
         myBackPress = true;
         comefromDownload = "0";
-        comeRename = 1;
         finish();
     }
 

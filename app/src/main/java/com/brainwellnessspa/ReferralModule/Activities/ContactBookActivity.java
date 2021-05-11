@@ -55,7 +55,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
@@ -98,7 +97,6 @@ public class ContactBookActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(v -> {
             myBackPress = true;
-            ComeScreenAccount = 1;
             finish();
         });
         p = new Properties();
@@ -155,7 +153,6 @@ public class ContactBookActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ComeScreenAccount = 1;
         myBackPress = true;
         super.onBackPressed();
     }

@@ -33,7 +33,7 @@ import java.util.List;
 
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
+import static com.brainwellnessspa.BWSApplication.logout;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;

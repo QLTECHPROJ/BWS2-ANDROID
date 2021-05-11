@@ -1,9 +1,8 @@
-package com.brainwellnessspa.PlaylistTwoModule
+package com.brainwellnessspa.DashboardTwoModule.fragmentPlaylist
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.R
