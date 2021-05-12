@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
@@ -30,7 +29,7 @@ class FaqActivity : AppCompatActivity() {
     var faqListModel: FaqListModel? = null
     private var modelList: ArrayList<FaqListModel.ResponseData>? = null
     lateinit var activity: Activity
-    var UserID: String? = null
+    var userID: String? = null
     var section: ArrayList<String>? = null
     var gsonBuilder: GsonBuilder? = null
     var p: Properties? = null
@@ -42,13 +41,13 @@ class FaqActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_faq)
         activity = this@FaqActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         modelList = ArrayList()
         section = ArrayList()
         gsonBuilder = GsonBuilder()
-        var gson: Gson = gsonBuilder!!.create()
-        PrepareData()
-        binding.llBack.setOnClickListener { view: View? ->
+        val gson: Gson = gsonBuilder!!.create()
+        prepareData()
+        binding.llBack.setOnClickListener {
             myBackPress = true
             finish()
         }
@@ -56,13 +55,13 @@ class FaqActivity : AppCompatActivity() {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
         p = Properties()
-        p!!.putValue("userId", UserID)
+        p!!.putValue("userId", userID)
         section!!.add("Audio")
         section!!.add("Playlist")
         section!!.add("General")
         p!!.putValue("faqCategories", gson.toJson(section))
         BWSApplication.addToSegment("FAQ Viewed", p, CONSTANTS.screen)
-        binding.llAudio.setOnClickListener { view: View? ->
+        binding.llAudio.setOnClickListener {
             myBackPress = true
             try {
                 modelList!!.clear()
@@ -81,7 +80,7 @@ class FaqActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
-        binding.llHelp.setOnClickListener { view: View? ->
+        binding.llHelp.setOnClickListener {
             myBackPress = true
             try {
                 modelList!!.clear()
@@ -100,7 +99,7 @@ class FaqActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
-        binding.llPlaylists.setOnClickListener { view: View? ->
+        binding.llPlaylists.setOnClickListener {
             myBackPress = true
             try {
                 modelList!!.clear()
@@ -121,16 +120,27 @@ class FaqActivity : AppCompatActivity() {
         }
     }
 
-    fun PrepareData() {
+    private fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().faqLists
             listCall.enqueue(object : Callback<FaqListModel?> {
-                override fun onResponse(call: Call<FaqListModel?>, response: Response<FaqListModel?>) {
+                override fun onResponse(
+                    call: Call<FaqListModel?>,
+                    response: Response<FaqListModel?>
+                ) {
                     try {
                         val listModel = response.body()
-                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        if (listModel!!.responseCode.equals(
+                                getString(R.string.ResponseCodesuccess),
+                                ignoreCase = true
+                            )
+                        ) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
                             faqListModel = listModel
                         }
                     } catch (e: Exception) {
@@ -139,7 +149,11 @@ class FaqActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<FaqListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
             })
         } else {
@@ -184,8 +198,9 @@ class FaqActivity : AppCompatActivity() {
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed")
-                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                Log.e("Destroy", "Activity Restored")
+                val notificationManager =
+                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

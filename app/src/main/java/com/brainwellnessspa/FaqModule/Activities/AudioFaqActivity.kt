@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,13 +35,13 @@ class AudioFaqActivity : AppCompatActivity() {
     lateinit var binding: ActivityAudioFaqBinding
     lateinit var ctx: Context
     var adapter: AudioFaqAdapter? = null
-    var faqListModel: ArrayList<FaqListModel.ResponseData>? = null
-    var Flag: String? = null
-    var UserID: String? = null
+    private var faqListModel: ArrayList<FaqListModel.ResponseData>? = null
+    var flag: String? = null
+    var userID: String? = null
     var section: ArrayList<String>? = null
     var gsonBuilder: GsonBuilder? = null
     var gson: Gson? = null
-    var p: Properties? = null
+    lateinit var p: Properties
     private var numStarted = 0
     var stackStatus = 0
     var myBackPress = false
@@ -50,30 +51,36 @@ class AudioFaqActivity : AppCompatActivity() {
         ctx = this@AudioFaqActivity
         faqListModel = ArrayList()
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         if (intent != null) {
             faqListModel = intent.getParcelableArrayListExtra("faqListModel")
-            Flag = intent.getStringExtra("Flag")
+            flag = intent.getStringExtra("Flag")
         }
-        binding.llBack.setOnClickListener { view: View? ->
+        binding.llBack.setOnClickListener {
             myBackPress = true
             finish()
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
         section = ArrayList()
         gsonBuilder = GsonBuilder()
         gson = gsonBuilder!!.create()
-        if (Flag.equals("Audio", ignoreCase = true)) {
-            binding.tvTitle.setText(R.string.Audio)
-        } else if (Flag.equals("General", ignoreCase = true)) {
-            binding.tvTitle.text = "General"
-        } else if (Flag.equals("Playlist", ignoreCase = true)) {
-            binding.tvTitle.setText(R.string.Playlist)
+        when {
+            flag.equals("Audio", ignoreCase = true) -> {
+                binding.tvTitle.setText(R.string.Audio)
+            }
+            flag.equals("General", ignoreCase = true) -> {
+                binding.tvTitle.setText(R.string.General)
+            }
+            flag.equals("Playlist", ignoreCase = true) -> {
+                binding.tvTitle.setText(R.string.Playlist)
+            }
         }
-        val serachList: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
-        binding.rvFaqList.layoutManager = serachList
+        val searchList: RecyclerView.LayoutManager =
+            LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        binding.rvFaqList.layoutManager = searchList
         binding.rvFaqList.itemAnimator = DefaultItemAnimator()
         if (faqListModel!!.size == 0) {
             binding.tvFound.visibility = View.VISIBLE
@@ -91,34 +98,53 @@ class AudioFaqActivity : AppCompatActivity() {
         finish()
     }
 
-    inner class AudioFaqAdapter(private val modelList: List<FaqListModel.ResponseData>?, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<AudioFaqAdapter.MyViewHolder>() {
+    inner class AudioFaqAdapter(
+        private val modelList: List<FaqListModel.ResponseData>?,
+        var ctx: Context,
+        var rvFaqList: RecyclerView,
+        var tvFound: TextView
+    ) : RecyclerView.Adapter<AudioFaqAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: AudioFaqLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.audio_faq_layout, parent, false)
+            val v: AudioFaqLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.audio_faq_layout,
+                parent,
+                false
+            )
             return MyViewHolder(v)
         }
 
         @SuppressLint("ResourceType")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             p = Properties()
-            p!!.putValue("userId", UserID)
-            if (Flag.equals("Audio", ignoreCase = true)) {
-                p!!.putValue("faqCategory", "Audio")
-            } else if (Flag.equals("General", ignoreCase = true)) {
-                p!!.putValue("faqCategory", "General")
-            } else if (Flag.equals("Playlist", ignoreCase = true)) {
-                p!!.putValue("faqCategory", "Playlist")
+            p.putValue("userId", userID)
+            when {
+                flag.equals("Audio", ignoreCase = true) -> {
+                    p.putValue("faqCategory", "Audio")
+                }
+                flag.equals("General", ignoreCase = true) -> {
+                    p.putValue("faqCategory", "General")
+                }
+                flag.equals("Playlist", ignoreCase = true) -> {
+                    p.putValue("faqCategory", "Playlist")
+                }
             }
             for (i in modelList!!.indices) {
                 section!!.add(modelList[position].title.toString())
                 section!!.add(modelList[position].title.toString())
             }
-            p!!.putValue("faqDescription", modelList[position].desc)
+            p.putValue("faqDescription", modelList[position].desc)
             BWSApplication.addToSegment("FAQ Clicked", p, CONSTANTS.screen)
             holder.binding.tvTitle.text = modelList[position].title
             holder.binding.tvDesc.text = modelList[position].desc
-            holder.binding.ivClickRight.setOnClickListener { view: View? ->
+            holder.binding.ivClickRight.setOnClickListener {
                 myBackPress = true
-                holder.binding.tvTitle.setTextColor(resources.getColor(R.color.white))
+                holder.binding.tvTitle.setTextColor(
+                    ContextCompat.getColor(
+                        ctx,
+                        R.color.white
+                    )
+                )
                 holder.binding.tvDesc.isFocusable = true
                 holder.binding.tvDesc.requestFocus()
                 holder.binding.tvDesc.visibility = View.VISIBLE
@@ -128,17 +154,22 @@ class AudioFaqActivity : AppCompatActivity() {
                 holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_clicked)
                 holder.binding.ivClickDown.setImageResource(R.drawable.ic_white_arrow_down_icon)
             }
-            holder.binding.ivClickDown.setOnClickListener { view: View? ->
+            holder.binding.ivClickDown.setOnClickListener {
                 myBackPress = true
                 holder.binding.llBgChange.setBackgroundResource(Color.TRANSPARENT)
                 holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_not_clicked)
-                holder.binding.tvTitle.setTextColor(resources.getColor(R.color.light_black))
+                holder.binding.tvTitle.setTextColor(
+                    ContextCompat.getColor(
+                        ctx,
+                        R.color.light_black
+                    )
+                )
                 holder.binding.tvDesc.visibility = View.GONE
                 holder.binding.ivClickRight.visibility = View.VISIBLE
                 holder.binding.ivClickDown.visibility = View.GONE
                 holder.binding.ivClickDown.setImageResource(R.drawable.ic_right_gray_arrow_icon)
             }
-            if (modelList.size == 0) {
+            if (modelList.isEmpty()) {
                 tvFound.visibility = View.VISIBLE
                 rvFaqList.visibility = View.GONE
             } else {
@@ -151,7 +182,8 @@ class AudioFaqActivity : AppCompatActivity() {
             return modelList!!.size
         }
 
-        inner class MyViewHolder(var binding: AudioFaqLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: AudioFaqLayoutBinding) :
+            RecyclerView.ViewHolder(binding.root)
     }
 
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
@@ -186,8 +218,9 @@ class AudioFaqActivity : AppCompatActivity() {
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed")
-                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                Log.e("Destroy", "Activity Restored")
+                val notificationManager =
+                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

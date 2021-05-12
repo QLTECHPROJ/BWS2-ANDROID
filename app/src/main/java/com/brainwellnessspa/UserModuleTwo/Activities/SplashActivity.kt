@@ -1,5 +1,6 @@
 package com.brainwellnessspa.UserModuleTwo.Activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -77,8 +78,7 @@ class SplashActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
                 val pm = getSystemService(POWER_SERVICE) as PowerManager
-                var isIgnoringBatteryOptimizations: Boolean = false
-                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
+                val isIgnoringBatteryOptimizations: Boolean = pm.isIgnoringBatteryOptimizations(packageName)
                 if (isIgnoringBatteryOptimizations) {
                     // Ignoring battery optimization
                     callDashboard()
@@ -123,7 +123,7 @@ class SplashActivity : AppCompatActivity() {
                                         dialog.cancel()
                                     }
                                     .setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
-                                        askBattryParmition()
+                                        askBattyPermission()
                                         dialog.dismiss()
                                     }
                                 builder.create().show()
@@ -144,7 +144,7 @@ class SplashActivity : AppCompatActivity() {
                             } else if (versionModel.responseData!!.isForce
                                     .equals("", ignoreCase = true)
                             ) {
-                                askBattryParmition()
+                                askBattyPermission()
                             }
                         } catch (e: java.lang.Exception) {
                             e.printStackTrace()
@@ -157,9 +157,9 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<VersionModel>, t: Throwable) {
                 }
             })
-        }else{
+        } else {
             setAnalytics(getString(R.string.segment_key_real))
-            askBattryParmition()
+            askBattyPermission()
             BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
         }
     }
@@ -209,11 +209,12 @@ class SplashActivity : AppCompatActivity() {
                 }
             })
         } else {
-            askBattryParmition()
+            askBattyPermission()
         }
     }
 
-    private fun askBattryParmition() {
+    @SuppressLint("BatteryLife")
+    private fun askBattyPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val packageName = packageName
             val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -288,12 +289,12 @@ class SplashActivity : AppCompatActivity() {
 //     TODO : Live segment key
 //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
             analytics = Analytics.Builder(application, segmentKey) //foram
-                    .trackApplicationLifecycleEvents()
-                    .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
-                    .trackAttributionInformation()
-                    .trackDeepLinks()
-                    .collectDeviceId(true)
-                    .build()
+                .trackApplicationLifecycleEvents()
+                .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
+                .trackAttributionInformation()
+                .trackDeepLinks()
+                .collectDeviceId(true)
+                .build()
             /*.use(FirebaseIntegration.FACTORY) */Analytics.setSingletonInstance(analytics)
         } catch (e: java.lang.Exception) {
 //            incatch = true;

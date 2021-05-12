@@ -114,6 +114,8 @@ import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -1382,7 +1384,7 @@ public class BWSApplication extends Application {
     }
 
     public static class MyValueFormatter extends ValueFormatter implements IValueFormatter {
-        private DecimalFormat mFormat;
+        private final DecimalFormat mFormat;
 
         public MyValueFormatter() {
             mFormat = new DecimalFormat("###,###,##0.00");
@@ -2117,7 +2119,7 @@ public class BWSApplication extends Application {
         ProgressBar progressBar;
         FrameLayout progressBarHolder;
         LinearLayout llSelectTime;
-        private ReminderSelectionModel[] selectionModels;
+        private final ReminderSelectionModel[] selectionModels;
 
         public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
                                             TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID,
@@ -2240,7 +2242,7 @@ public class BWSApplication extends Application {
                             }
 
                             @Override
-                            public void onFailure(Call<SetReminderOldModel> call, Throwable t) {
+                            public void onFailure(@NotNull Call<SetReminderOldModel> call, @NotNull Throwable t) {
                                 hideProgressBar(progressBar, progressBarHolder, act);
                             }
                         });
@@ -2256,7 +2258,7 @@ public class BWSApplication extends Application {
             return selectionModels.length;
         }
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
+        public static class MyViewHolder extends RecyclerView.ViewHolder {
             ReminderSelectionlistLayoutBinding binding;
 
             public MyViewHolder(ReminderSelectionlistLayoutBinding binding) {
@@ -2310,21 +2312,15 @@ public class BWSApplication extends Application {
     private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
         Activity act;
         Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
         String CoUSERID, PlaylistID, PlaylistName;
         Dialog dialogOld;
-        int mselectedItem = -1;
-        private ReminderMinutesListModel[] minutesListModels;
+        private final ReminderMinutesListModel[] minutesListModels;
 
         public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
                 , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
             this.minutesListModels = minutesListModels;
             this.act = act;
             this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
             this.CoUSERID = CoUSERID;
             this.PlaylistID = PlaylistID;
             this.PlaylistName = PlaylistName;
@@ -2341,9 +2337,7 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*if (mselectedItem == position) {
-                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }*/
+
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
 
@@ -2362,7 +2356,7 @@ public class BWSApplication extends Application {
             return position;
         }
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
+        public static class MyViewHolder extends RecyclerView.ViewHolder {
             ReminderTimelistLayoutBinding binding;
 
             public MyViewHolder(ReminderTimelistLayoutBinding binding) {
@@ -2389,21 +2383,15 @@ public class BWSApplication extends Application {
     private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
         Activity act;
         Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
-        Button btnNext;
         String CoUSERID, PlaylistID, PlaylistName;
         Dialog dialogOld;
-        int mselectedItem = -1;
-        private ReminderMinutesListModel[] minutesListModels;
+        private final ReminderMinutesListModel[] minutesListModels;
 
         public ReminderMinutesListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
                 , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
             this.minutesListModels = minutesListModels;
             this.act = act;
             this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
-            this.btnNext = btnNext;
             this.CoUSERID = CoUSERID;
             this.PlaylistID = PlaylistID;
             this.PlaylistName = PlaylistName;
@@ -2420,9 +2408,6 @@ public class BWSApplication extends Application {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*if (mselectedItem == position) {
-                holder.binding.tvDay.setBackgroundResource(R.drawable.light_gray_rounded_unfilled);
-            }*/
             holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
         }
 
@@ -2441,7 +2426,7 @@ public class BWSApplication extends Application {
             return position;
         }
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
+        public static class MyViewHolder extends RecyclerView.ViewHolder {
             ReminderTimelistLayoutBinding binding;
 
             public MyViewHolder(ReminderTimelistLayoutBinding binding) {

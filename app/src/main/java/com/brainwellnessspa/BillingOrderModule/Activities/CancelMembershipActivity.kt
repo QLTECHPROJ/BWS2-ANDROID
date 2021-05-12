@@ -1,5 +1,6 @@
 package com.brainwellnessspa.BillingOrderModule.Activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.app.Dialog
@@ -15,9 +16,9 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity
 import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
@@ -35,25 +36,25 @@ import retrofit2.Response
 class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
     lateinit var binding: ActivityCancelMembershipBinding
     lateinit var ctx: Context
-    var UserID: String? = null
-    var CancelId = ""
+    var userID: String? = null
+    var cancelId = ""
     lateinit var activity: Activity
     var audioPause = false
     private var numStarted = 0
     var stackStatus = 0
     var myBackPress = false
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership)
         ctx = this@CancelMembershipActivity
         activity = this@CancelMembershipActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
-        binding.llBack.setOnClickListener { view: View? ->
+        userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        binding.llBack.setOnClickListener {
             myBackPress = true
             if (audioPause) {
                 GlobalInitExoPlayer.player.playWhenReady = true
-            } else {
             }
             finish()
         }
@@ -62,7 +63,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         }
         binding.youtubeView.initialize(API_KEY, this)
         val p = Properties()
-        p.putValue("userId", UserID)
+        p.putValue("userId", userID)
         p.putValue("plan", "")
         p.putValue("planStatus", "")
         p.putValue("planStartDt", "")
@@ -75,42 +76,47 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 audioPause = true
             }
         }
-        binding.cbOne.setOnClickListener { view: View? ->
+
+        binding.cbOne.setOnClickListener {
             binding.cbOne.isChecked = true
             binding.cbTwo.isChecked = false
             binding.cbThree.isChecked = false
             binding.cbFour.isChecked = false
-            CancelId = "1"
+            cancelId = "1"
             binding.edtCancelBox.visibility = View.GONE
             binding.edtCancelBox.setText("")
         }
-        binding.cbTwo.setOnClickListener { view: View? ->
+
+        binding.cbTwo.setOnClickListener {
             binding.cbOne.isChecked = false
             binding.cbTwo.isChecked = true
             binding.cbThree.isChecked = false
             binding.cbFour.isChecked = false
-            CancelId = "2"
+            cancelId = "2"
             binding.edtCancelBox.visibility = View.GONE
             binding.edtCancelBox.setText("")
         }
-        binding.cbThree.setOnClickListener { view: View? ->
+
+        binding.cbThree.setOnClickListener {
             binding.cbOne.isChecked = false
             binding.cbTwo.isChecked = false
             binding.cbThree.isChecked = true
             binding.cbFour.isChecked = false
-            CancelId = "3"
+            cancelId = "3"
             binding.edtCancelBox.visibility = View.GONE
             binding.edtCancelBox.setText("")
         }
-        binding.cbFour.setOnClickListener { view: View? ->
+
+        binding.cbFour.setOnClickListener {
             binding.cbOne.isChecked = false
             binding.cbTwo.isChecked = false
             binding.cbThree.isChecked = false
             binding.cbFour.isChecked = true
-            CancelId = "4"
+            cancelId = "4"
             binding.edtCancelBox.visibility = View.VISIBLE
         }
-        binding.btnCancelSubscrible.setOnClickListener { view: View? ->
+
+        binding.btnCancelSubscrible.setOnClickListener {
             myBackPress = true
             if (GlobalInitExoPlayer.player != null) {
                 if (GlobalInitExoPlayer.player.playWhenReady) {
@@ -118,7 +124,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     audioPause = true
                 }
             }
-            if (CancelId.equals("4", ignoreCase = true) &&
+            if (cancelId.equals("4", ignoreCase = true) &&
                 binding.edtCancelBox.text.toString().equals("", ignoreCase = true)
             ) {
                 BWSApplication.showToast("Cancellation reason is required", activity)
@@ -126,14 +132,18 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 val dialog = Dialog(ctx)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.cancel_membership)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.dark_blue_gray)))
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(
+                    ContextCompat.getColor(
+                    ctx,
+                    R.color.dark_blue_gray
+                )))
                 dialog.window!!.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
                 val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                val Btn = dialog.findViewById<Button>(R.id.Btn)
-                dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                val btn = dialog.findViewById<Button>(R.id.Btn)
+                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss()
                         if (GlobalInitExoPlayer.player != null) {
@@ -146,7 +156,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     }
                     false
                 }
-                Btn.setOnTouchListener { view1: View, event: MotionEvent ->
+                btn.setOnTouchListener { view1: View, event: MotionEvent ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             val views = view1 as Button
@@ -156,8 +166,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                         MotionEvent.ACTION_UP -> {
                             if (BWSApplication.isNetworkConnected(ctx)) {
                                 val listCall = APIClient.getClient().getCancelPlan(
-                                    UserID,
-                                    CancelId,
+                                    userID,
+                                    cancelId,
                                     binding.edtCancelBox.text.toString()
                                 )
                                 listCall.enqueue(object : Callback<CancelPlanModel?> {
@@ -172,10 +182,9 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                 activity
                                             )
                                             dialog.dismiss()
-                                            val CancelReason = binding.edtCancelBox.text.toString()
                                             /*Properties p = new Properties();
-                                            p.putValue("userId", UserID);
-                                            p.putValue("cancelId", CancelId);
+                                            p.putValue("userId", userID);
+                                            p.putValue("cancelId", cancelId);
                                             p.putValue("cancelReason", CancelReason);
                                             BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);*/if (GlobalInitExoPlayer.player != null) {
                                                 if (GlobalInitExoPlayer.player.playWhenReady) {
@@ -215,7 +224,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     }
                     true
                 }
-                tvGoBack.setOnClickListener { v: View? ->
+                tvGoBack.setOnClickListener {
                     dialog.dismiss()
                     if (GlobalInitExoPlayer.player != null) {
                         if (GlobalInitExoPlayer.player.playWhenReady) {
@@ -234,11 +243,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         myBackPress = true
         if (audioPause) {
             GlobalInitExoPlayer.player.playWhenReady = true
-        } else {
         }
         finish()
-        //        resumeMedia();
-//        isPause = false;
     }
 
     override fun onInitializationSuccess(
@@ -273,7 +279,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     }
 
     private val youTubePlayerProvider: YouTubePlayer.Provider
-        private get() = binding.youtubeView
+        get() = binding.youtubeView
 
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
@@ -305,9 +311,10 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         }
 
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed")
+                Log.e("Destroy", "Activity Restored")
                 val notificationManager =
                     getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
