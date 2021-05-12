@@ -550,7 +550,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.rvPlayLists2.adapter = adpater2
                     binding.rvPlayLists1.visibility = View.GONE
                     binding.rvPlayLists2.visibility = View.VISIBLE
-                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon)
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
                     binding.ivDownloads.setColorFilter(activity.resources.getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN)
                     enableDisableDownload(false, "orange")
 //                    binding.ivReminder.setColorFilter(activity.resources.getColor(R.color.gray), PorterDuff.Mode.SRC_IN)
