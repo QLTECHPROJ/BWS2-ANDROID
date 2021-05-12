@@ -102,10 +102,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         })
 
         binding.btnContinue.setOnClickListener {
+            getCatSaveData()
             var array = arrayListOf<sendRecommndedData>()
             for (i in 0 until selectedCategoriesTitle.size) {
                 var sendR = sendRecommndedData()
-
                 sendR.View = (selectedCategoriesTitle[i])
                 sendR.ProblemName = (selectedCategoriesName[i])
                 array.add(sendR)
@@ -359,153 +359,72 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }
 
                 bindingAdapter.llCategoryPink.setOnClickListener {
-                    setData()
-                    if (catList.selectedCategoriesTitle.contains(listModel!![pos].view)) {
-                        for (i in 0 until catList.selectedCategoriesTitle.size) {
-                            if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
-                                if (catList.selectedCategoriesName[i] == listModel[pos].details!![position].problemName) {
-                                    catList.selectedCategoriesTitle.removeAt(i)
-                                    catList.selectedCategoriesName.removeAt(i)
-                                    catList.editor = ctx.getSharedPreferences(
-                                        CONSTANTS.RecommendedCatMain,
-                                        MODE_PRIVATE
-                                    ).edit()
-                                    catList.editor.putString(
-                                        CONSTANTS.selectedCategoriesTitle,
-                                        catList.gson.toJson(catList.selectedCategoriesTitle)
-                                    ) //Friend
-                                    catList.editor.putString(
-                                        CONSTANTS.selectedCategoriesName,
-                                        catList.gson.toJson(catList.selectedCategoriesName)
-                                    ) //Friend
-                                    catList.editor.apply()
-                                    catList.editor.commit()
-                                    Log.e(
-                                        "selectedCategoriesTitle",
-                                        catList.selectedCategoriesTitle.toString()
-                                    )
-                                    Log.e(
-                                        "selectedCategoriesName",
-                                        catList.selectedCategoriesName.toString()
-                                    )
-                                    Log.e("posItem", posItem.toString())
-
-                                    binding.rvSelectedCategory.layoutManager =
-                                        GridLayoutManager(ctx, 3)
-                                    catList.catListadapter = SelectedCategory(
-                                        binding,
-                                        ctx,
-                                        catList.selectedCategoriesName
-                                    )
-                                    binding.rvSelectedCategory.adapter = catList.catListadapter
-
-                                    catList.adapter1 =
-                                        AllCategory(binding, listModel, ctx, activity)
-                                    binding.rvPerantCat.adapter = catList.adapter1
-                                    break
-                                }
-                            }
-                        }
-                    }
+                    deleteData()
                 }
 
                 bindingAdapter.llCategoryGreen.setOnClickListener {
-                    setData()
-                    if (catList.selectedCategoriesTitle.contains(listModel!![pos].view)) {
-                        for (i in 0 until catList.selectedCategoriesTitle.size) {
-                            if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
-                                if (catList.selectedCategoriesName[i] == listModel[pos].details!![position].problemName) {
-                                    catList.selectedCategoriesTitle.removeAt(i)
-                                    catList.selectedCategoriesName.removeAt(i)
-                                    catList.editor = ctx.getSharedPreferences(
-                                        CONSTANTS.RecommendedCatMain,
-                                        MODE_PRIVATE
-                                    ).edit()
-                                    catList.editor.putString(
-                                        CONSTANTS.selectedCategoriesTitle,
-                                        catList.gson.toJson(catList.selectedCategoriesTitle)
-                                    ) //Friend
-                                    catList.editor.putString(
-                                        CONSTANTS.selectedCategoriesName,
-                                        catList.gson.toJson(catList.selectedCategoriesName)
-                                    ) //Friend
-                                    catList.editor.apply()
-                                    catList.editor.commit()
-                                    Log.e(
-                                        "selectedCategoriesTitle",
-                                        catList.selectedCategoriesTitle.toString()
-                                    )
-                                    Log.e(
-                                        "selectedCategoriesName",
-                                        catList.selectedCategoriesName.toString()
-                                    )
-                                    Log.e("posItem", posItem.toString())
-
-                                    binding.rvSelectedCategory.layoutManager =
-                                        GridLayoutManager(ctx, 3)
-                                    catList.catListadapter = SelectedCategory(
-                                        binding,
-                                        ctx,
-                                        catList.selectedCategoriesName
-                                    )
-                                    binding.rvSelectedCategory.adapter = catList.catListadapter
-
-                                    catList.adapter1 =
-                                        AllCategory(binding, listModel, ctx, activity)
-                                    binding.rvPerantCat.adapter = catList.adapter1
-                                    break
-                                }
-                            }
-                        }
-                    }
+                    deleteData()
                 }
 
                 bindingAdapter.llCategoryBlue.setOnClickListener {
-                    setData()
-                    if (catList.selectedCategoriesTitle.contains(listModel!![pos].view)) {
-                        for (i in 0 until catList.selectedCategoriesTitle.size) {
-                            if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
-                                if (catList.selectedCategoriesName[i] == listModel[pos].details!![position].problemName) {
-                                    catList.selectedCategoriesTitle.removeAt(i)
-                                    catList.selectedCategoriesName.removeAt(i)
-                                    catList.editor = ctx.getSharedPreferences(
+                    deleteData()
+                }
+            }
+
+            private fun deleteData() {
+                setData()
+                if (catList.selectedCategoriesTitle.contains(listModel!![pos].view)) {
+                    for (i in 0 until catList.selectedCategoriesTitle.size) {
+                        if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
+                            if (catList.selectedCategoriesName[i] == listModel[pos].details!![position].problemName) {
+                                catList.selectedCategoriesTitle.removeAt(i)
+                                catList.selectedCategoriesName.removeAt(i)
+                                catList.editor = ctx.getSharedPreferences(
                                         CONSTANTS.RecommendedCatMain,
                                         MODE_PRIVATE
-                                    ).edit()
-                                    catList.editor.putString(
+                                ).edit()
+                                catList.editor.putString(
                                         CONSTANTS.selectedCategoriesTitle,
                                         catList.gson.toJson(catList.selectedCategoriesTitle)
-                                    ) //Friend
-                                    catList.editor.putString(
+                                ) //Friend
+                                catList.editor.putString(
                                         CONSTANTS.selectedCategoriesName,
                                         catList.gson.toJson(catList.selectedCategoriesName)
-                                    ) //Friend
-                                    catList.editor.apply()
-                                    catList.editor.commit()
-                                    Log.e(
+                                ) //Friend
+                                catList.editor.apply()
+                                catList.editor.commit()
+                                Log.e(
                                         "selectedCategoriesTitle",
                                         catList.selectedCategoriesTitle.toString()
-                                    )
-                                    Log.e(
+                                )
+                                Log.e(
                                         "selectedCategoriesName",
                                         catList.selectedCategoriesName.toString()
-                                    )
-                                    Log.e("posItem", posItem.toString())
+                                )
+                                Log.e("posItem", posItem.toString())
 
-                                    binding.rvSelectedCategory.layoutManager =
+                                binding.rvSelectedCategory.layoutManager =
                                         GridLayoutManager(ctx, 3)
-                                    catList.catListadapter = SelectedCategory(
+                                catList.catListadapter = SelectedCategory(
                                         binding,
                                         ctx,
                                         catList.selectedCategoriesName
-                                    )
-                                    binding.rvSelectedCategory.adapter = catList.catListadapter
+                                )
+                                binding.rvSelectedCategory.adapter = catList.catListadapter
 
-                                    catList.adapter1 =
+                                catList.adapter1 =
                                         AllCategory(binding, listModel, ctx, activity)
-                                    binding.rvPerantCat.adapter = catList.adapter1
-                                    break
+                                binding.rvPerantCat.adapter = catList.adapter1
+                                if(catList.selectedCategoriesTitle.size>0) {
+                                    binding.btnContinue.isEnabled = true
+                                    binding.btnContinue.isClickable = true
+                                    binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                                }else {
+                                    binding.btnContinue.isEnabled = false
+                                    binding.btnContinue.isClickable = false
+                                    binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
                                 }
+                                break
                             }
                         }
                     }
