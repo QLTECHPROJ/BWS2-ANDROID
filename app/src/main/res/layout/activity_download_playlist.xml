@@ -13,7 +13,7 @@
         <RelativeLayout
             android:id="@+id/rlMainLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_18sdp"
             android:background="@color/white">
 
@@ -24,70 +24,83 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_340sdp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/rounded_light_gray"
-                    android:backgroundTint="#36C2D6"
                     android:orientation="vertical"
                     android:visibility="visible">
 
-                    <RelativeLayout
+                    <ImageView
+                        android:id="@+id/ivBanner"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scaleType="fitXY" />
+
+                    <ImageView
+                        android:id="@+id/ivTransBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/rounded_dark_app_theme"
+                        android:scaleType="fitXY" />
+
+                    <LinearLayout
+                        android:id="@+id/llToolBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <LinearLayout
+                                android:id="@+id/llBack"
+                                android:layout_width="42dp"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_left_arrow_icon"
+                                    app:tint="@color/white" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/llDelete"
+                                android:layout_width="42dp"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true"
+                                android:gravity="center"
+                                android:layout_marginRight="@dimen/_10sdp"
+                                android:layout_alignParentRight="true"
+                                android:visibility="visible">
+
+                                <ImageView
+                                    android:id="@+id/ivDelete"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_delete_icon"
+                                    app:tint="@color/white" />
+
+                            </LinearLayout>
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/llToolBar"
                         android:background="@drawable/ic_cloud_bg"
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/ivBanner"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:weightSum="10">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1.8">
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
-
-                                    <LinearLayout
-                                        android:id="@+id/llBack"
-                                        android:layout_width="42dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_centerVertical="true"
-                                        android:gravity="center">
-
-                                        <ImageView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:src="@drawable/ic_left_arrow_icon"
-                                            app:tint="@color/white" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:id="@+id/llDelete"
-                                        android:layout_width="42dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_centerVertical="true"
-                                        android:gravity="center"
-                                        android:layout_alignParentRight="true"
-                                        android:visibility="visible">
-
-                                        <ImageView
-                                            android:id="@+id/ivDelete"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:src="@drawable/ic_delete_icon"
-                                            app:tint="@color/white" />
-
-                                    </LinearLayout>
-                                </RelativeLayout>
-                            </LinearLayout>
+                            android:weightSum="8">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -95,7 +108,7 @@
                                 android:layout_gravity="center"
                                 android:layout_marginTop="@dimen/_30sdp"
                                 android:layout_marginBottom="@dimen/_20sdp"
-                                android:layout_weight="3.5"
+                                android:layout_weight="3.4"
                                 android:gravity="center">
 
                                 <LinearLayout
@@ -142,7 +155,7 @@
                                 android:layout_height="0dp"
                                 android:layout_gravity="center"
                                 android:layout_marginBottom="@dimen/_40sdp"
-                                android:layout_weight="4.7"
+                                android:layout_weight="4.6"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -196,7 +209,7 @@
 
                     </RelativeLayout>
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/llSuggested"
@@ -284,43 +297,6 @@
                             tools:listitem="@layout/selected_category_raw" />
                     </LinearLayout>
                 </LinearLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/llAddAudio"
-                android:layout_width="match_parent"
-                android:layout_height="310dp"
-                android:layout_below="@id/llPlayer"
-                android:layout_marginTop="@dimen/_51sdp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="center"
-                    android:text="Let's find some Audios for your playlist."
-                    android:textColor="@color/dark_blue_gray"
-                    android:textSize="@dimen/_15sdp" />
-
-                <Button
-                    android:id="@+id/btnAddAudio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_55sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
-                    android:layout_marginBottom="@dimen/_25sdp"
-                    android:background="@drawable/extra_round_cornor"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:paddingVertical="@dimen/_2sdp"
-                    android:text="@string/Add_Audio"
-                    android:textColor="@color/white" />
 
             </LinearLayout>
 

@@ -40,7 +40,7 @@
                 android:paddingRight="@dimen/_13sdp"
                 android:paddingBottom="@dimen/_8sdp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_12sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
 

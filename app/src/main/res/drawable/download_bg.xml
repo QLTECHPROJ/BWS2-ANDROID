@@ -3,6 +3,6 @@
     android:shape="oval">
 
     <!-- you can use any color you want I used here gray color-->
-    <solid android:color="#3EBDCC" />
+    <solid android:color="#E2B8E1F7" />
 
 </shape>

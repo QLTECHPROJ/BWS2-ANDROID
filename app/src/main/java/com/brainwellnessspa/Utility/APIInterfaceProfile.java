@@ -1,6 +1,6 @@
 package com.brainwellnessspa.Utility;
 
-import com.brainwellnessspa.DashboardTwoModule.Model.AddProfileModel;
+import com.brainwellnessspa.dashboardModule.models.AddProfileModel;
 
 import retrofit.Callback;
 import retrofit.http.Multipart;

@@ -365,7 +365,6 @@ public class ResourceActivity extends AppCompatActivity {
                     AudioBooksFragment audioBooksFragment = new AudioBooksFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("audio_books", "audio_books");
-                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     audioBooksFragment.setArguments(bundle);
                     return audioBooksFragment;
@@ -373,7 +372,6 @@ public class ResourceActivity extends AppCompatActivity {
                     PodcastsFragment podcastsFragment = new PodcastsFragment();
                     bundle = new Bundle();
                     bundle.putString("podcasts", "podcasts");
-                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     podcastsFragment.setArguments(bundle);
                     return podcastsFragment;
@@ -381,7 +379,6 @@ public class ResourceActivity extends AppCompatActivity {
                     AppsFragment appsFragment = new AppsFragment();
                     bundle = new Bundle();
                     bundle.putString("apps", "apps");
-                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     appsFragment.setArguments(bundle);
                     return appsFragment;
@@ -389,7 +386,6 @@ public class ResourceActivity extends AppCompatActivity {
                     WebsiteFragment websiteFragment = new WebsiteFragment();
                     bundle = new Bundle();
                     bundle.putString("website", "website");
-                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     websiteFragment.setArguments(bundle);
                     return websiteFragment;
@@ -397,7 +393,6 @@ public class ResourceActivity extends AppCompatActivity {
                     DocumentariesFragment documentariesFragment = new DocumentariesFragment();
                     bundle = new Bundle();
                     bundle.putString("documentaries", "documentaries");
-                    bundle.putString("CoUserID", CoUserID);
                     bundle.putString("Category", Category);
                     documentariesFragment.setArguments(bundle);
                     return documentariesFragment;

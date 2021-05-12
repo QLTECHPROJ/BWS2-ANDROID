@@ -71,65 +71,69 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".UserModuleTwo.Activities.DoingGoodActivity"></activity>
+
+        <activity android:name=".userModuleTwo.activities.DoingGoodActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"  />
         <activity
-            android:name=".ProfileTwoModule.ChangePinActivity"
+            android:name=".profileModule.ChangePinActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ManageModule.ViewAllManageAudio" />
+        <activity android:name=".manageModule.ViewAllManageAudio" />
         <activity
-            android:name=".ManageModule.SessionExpActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ManageModule.SessionStatusActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".DashboardTwoModule.MyPlayerActivity"
+            android:name=".manageModule.SessionExpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ManageModule.ManageAudioPlaylistActivity"
+            android:name=".manageModule.SessionStatusActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardTwoModule.fragmentPlaylist.MyPlaylistListingActivity"
+            android:name=".dashboardModule.activities.MyPlayerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ManageModule.ManageDashboardActivity"
+            android:name=".manageModule.ManageAudioPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ProfileTwoModule.ChangePasswordActivity"
+            android:name=".dashboardModule.fragmentPlaylist.MyPlaylistListingActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ProfileTwoModule.EditProfileActivity"
+            android:name=".manageModule.ManageDashboardActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ProfileTwoModule.AccountInfoActivity"
+            android:name=".profileModule.ChangePasswordActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ManageModule.SleepTimeActivity"
+            android:name=".profileModule.EditProfileActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardTwoModule.BottomNavigationActivity"
+            android:name=".profileModule.AccountInfoActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".manageModule.SleepTimeActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".dashboardModule.activities.BottomNavigationActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -139,32 +143,32 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardTwoModule.fragmentPlaylist.PlaylistDoneActivity"
+            android:name=".dashboardModule.fragmentPlaylist.PlaylistDoneActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardTwoModule.fragmentPlaylist.PreparePlaylistActivity"
+            android:name=".dashboardModule.fragmentPlaylist.PreparePlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ManageModule.ManageDoneActivity"
+            android:name=".manageModule.ManageDoneActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ManageModule.SummaryActivity"
+            android:name=".manageModule.SummaryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ManageModule.ManageActivity"
+            android:name=".manageModule.ManageActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".UserModuleTwo.Activities.SplashActivity"
+            android:name=".userModuleTwo.activities.SplashActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -175,7 +179,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserModuleTwo.Activities.ProfileProgressActivity"
+            android:name=".userModuleTwo.activities.ProfileProgressActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -190,41 +194,41 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".UserModuleTwo.Activities.WalkScreenActivity"
+            android:name=".userModuleTwo.activities.WalkScreenActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".UserModuleTwo.Activities.AddProfileActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".UserModuleTwo.Activities.ForgotPswdActivity"
+            android:name=".userModuleTwo.activities.AddProfileActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".UserModuleTwo.Activities.SignInActivity"
+            android:name=".userModuleTwo.activities.ForgotPswdActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".UserModuleTwo.Activities.UserListActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".UserModuleTwo.Activities.CreateAccountActivity"
+            android:name=".userModuleTwo.activities.SignInActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".UserModuleTwo.Activities.GetStartedActivity"
+            android:name=".userModuleTwo.activities.UserListActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".userModuleTwo.activities.CreateAccountActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".userModuleTwo.activities.GetStartedActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -244,7 +248,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardTwoModule.ViewSuggestedActivity"
+            android:name=".dashboardModule.activities.ViewSuggestedActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -286,7 +290,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardTwoModule.AddPlaylistActivity"
+            android:name=".dashboardModule.activities.AddPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -298,7 +302,7 @@
         </receiver>
         -->
         <activity
-            android:name=".DashboardTwoModule.AddAudioActivity"
+            android:name=".dashboardModule.activities.AddAudioActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -327,12 +331,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".FaqModule.Activities.AudioFaqActivity"
+            android:name=".faqModule.activities.AudioFaqActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".FaqModule.Activities.FaqActivity"
+            android:name=".faqModule.activities.FaqActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -363,14 +367,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.DashboardActivity"
+            android:name=".DashboardOldModule.Activities.DashboardActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_dashboard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ManageModule.RecommendedCategoryActivity"
+            android:name=".manageModule.RecommendedCategoryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

@@ -7,10 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".DashboardTwoModule.manage.ManageFragment">
+        tools:context=".dashboardModule.manage.ManageFragment">
 
-        <RelativeLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -70,6 +69,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/llSearch"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
@@ -168,30 +168,33 @@
                                             android:layout_gravity="left"
                                             android:layout_weight="1.2"
                                             android:orientation="horizontal" />
+
                                         <LinearLayout
                                             android:id="@+id/llPlayPause"
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
                                             android:layout_gravity="center"
-                                            android:gravity="center"
-                                            android:layout_weight="0.6">
-                                        <LinearLayout
-                                            android:id="@+id/llPlay"
-                                            android:layout_width="@dimen/_60sdp"
-                                            android:layout_height="@dimen/_60sdp"
-                                            android:layout_gravity="center"
-                                            android:background="@drawable/ic_light_blue_play_icon"
-                                            android:orientation="horizontal" />
+                                            android:layout_weight="0.6"
+                                            android:gravity="center">
 
-                                        <LinearLayout
-                                            android:id="@+id/llPause"
-                                            android:layout_width="@dimen/_60sdp"
-                                            android:layout_height="@dimen/_60sdp"
-                                            android:layout_gravity="center"
-                                            android:background="@drawable/ic_pause_light_blue_icon"
-                                            android:orientation="horizontal"
-                                            android:visibility="gone" />
+                                            <LinearLayout
+                                                android:id="@+id/llPlay"
+                                                android:layout_width="@dimen/_60sdp"
+                                                android:layout_height="@dimen/_60sdp"
+                                                android:layout_gravity="center"
+                                                android:background="@drawable/ic_light_blue_play_icon"
+                                                android:orientation="horizontal" />
+
+                                            <LinearLayout
+                                                android:id="@+id/llPause"
+                                                android:layout_width="@dimen/_60sdp"
+                                                android:layout_height="@dimen/_60sdp"
+                                                android:layout_gravity="center"
+                                                android:background="@drawable/ic_pause_light_blue_icon"
+                                                android:orientation="horizontal"
+                                                android:visibility="gone" />
                                         </LinearLayout>
+
                                         <LinearLayout
                                             android:id="@+id/llPlayerView2"
                                             android:layout_width="0dp"
@@ -354,60 +357,77 @@
                             android:layout_marginLeft="@dimen/_8sdp"
                             android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:id="@+id/rlCreatePlaylist"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_8sdp"
-                                android:gravity="center_horizontal"
-                                android:orientation="vertical"
-                                android:visibility="visible">
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
-
-                                    <ImageView
-                                        android:id="@+id/ivCreatePlaylist"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@drawable/ic_create_playlist" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentBottom="true"
-                                        android:layout_marginLeft="@dimen/_5sdp"
-                                        android:fontFamily="@font/montserrat_semi_bold"
-                                        android:gravity="left|bottom"
-                                        android:paddingBottom="@dimen/_8sdp"
-                                        android:text="Create \n New Playlist"
-                                        android:textColor="@color/white"
-                                        android:textSize="@dimen/_13sdp" />
-                                    <!-- <ImageView
-                                         android:id="@+id/ivLock"
-                                         android:layout_width="@dimen/_24sdp"
-                                         android:layout_height="@dimen/_24sdp"
-                                         android:layout_marginStart="@dimen/_8sdp"
-                                         android:layout_marginLeft="@dimen/_8sdp"
-                                         android:layout_marginTop="@dimen/_10sdp"
-                                         android:contentDescription="TODO"
-                                         android:src="@drawable/ic_lock_icon"
-                                         android:visibility="gone"
-                                         app:layout_constraintLeft_toLeftOf="parent"
-                                         app:layout_constraintTop_toTopOf="parent" />-->
-
-                                </RelativeLayout>
-                            </LinearLayout>
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rvMainPlayList"
+                            <HorizontalScrollView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal"
                                 android:overScrollMode="never"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                tools:listitem="@layout/playlist_custom_layout" />
+                                android:scrollbars="none">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:id="@+id/rlCreatePlaylist"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:gravity="center_horizontal"
+                                        android:orientation="vertical"
+                                        android:visibility="visible">
+
+                                        <RelativeLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content">
+
+                                            <ImageView
+                                                android:id="@+id/ivCreatePlaylist"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:src="@drawable/ic_create_playlist" />
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentBottom="true"
+                                                android:layout_marginLeft="@dimen/_13sdp"
+                                                android:fontFamily="@font/montserrat_semi_bold"
+                                                android:gravity="left|bottom"
+                                                android:paddingBottom="@dimen/_8sdp"
+                                                android:text="Create \nNew Playlist"
+                                                android:textColor="@color/white"
+                                                android:textSize="@dimen/_12sdp" />
+                                            <!-- <ImageView
+                                                 android:id="@+id/ivLock"
+                                                 android:layout_width="@dimen/_24sdp"
+                                                 android:layout_height="@dimen/_24sdp"
+                                                 android:layout_marginStart="@dimen/_8sdp"
+                                                 android:layout_marginLeft="@dimen/_8sdp"
+                                                 android:layout_marginTop="@dimen/_10sdp"
+                                                 android:contentDescription="TODO"
+                                                 android:src="@drawable/ic_lock_icon"
+                                                 android:visibility="gone"
+                                                 app:layout_constraintLeft_toLeftOf="parent"
+                                                 app:layout_constraintTop_toTopOf="parent" />-->
+
+                                        </RelativeLayout>
+                                    </LinearLayout>
+
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/rvMainPlayList"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:overScrollMode="never"
+                                        android:nestedScrollingEnabled="true"
+                                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                        tools:listitem="@layout/playlist_custom_layout" />
+
+                                </LinearLayout>
+
+
+                            </HorizontalScrollView>
 
                         </LinearLayout>
 

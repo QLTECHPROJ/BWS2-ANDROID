@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".DashboardTwoModule.fragmentPlaylist.PreparePlaylistActivity">
+        tools:context=".dashboardModule.fragmentPlaylist.PreparePlaylistActivity">
 
         <RelativeLayout
             android:id="@+id/rlWelcome"
@@ -43,13 +43,12 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_18sdp" />
 
-                <ImageView
+                <pl.droidsonroids.gif.GifImageView
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_30sdp"
-                    android:src="@drawable/ic_loading_icon"
-                    app:tint="@color/white" />
+                    android:src="@drawable/playlist_progress_bar" />
             </LinearLayout>
 
         </RelativeLayout>

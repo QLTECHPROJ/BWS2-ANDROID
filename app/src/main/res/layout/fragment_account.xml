@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:clickable="true"
-        tools:context="com.brainwellnessspa.DashboardModule.Account.AccountFragment">
+        tools:context="com.brainwellnessspa.DashboardOldModule.Account.AccountFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"

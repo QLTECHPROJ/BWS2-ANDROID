@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#DC3EBDCC"
-        tools:context=".DashboardTwoModule.MyPlayerActivity">
+        tools:context=".dashboardModule.activities.MyPlayerActivity">
 
         <ImageView
             android:id="@+id/ivBgChange"

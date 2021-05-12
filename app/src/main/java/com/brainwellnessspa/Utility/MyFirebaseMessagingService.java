@@ -23,9 +23,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
 import com.brainwellnessspa.R;
-import com.segment.analytics.AnalyticsContext;
 import com.segment.analytics.Properties;
 
 import java.util.Random;

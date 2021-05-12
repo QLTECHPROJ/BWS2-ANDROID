@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistInappModel;
+import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;

@@ -7,9 +7,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DashboardTwoModule.BottomNavigationActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.UserModuleTwo.Activities.WalkScreenActivity
+import com.brainwellnessspa.userModuleTwo.activities.WalkScreenActivity
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.segment.analytics.Properties

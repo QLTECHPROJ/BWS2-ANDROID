@@ -61,11 +61,11 @@
                         android:id="@+id/rlCreatePlaylist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:layout_marginBottom="@dimen/_5sdp"
                         android:layout_marginLeft="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
                         android:visibility="visible">
 
                         <RelativeLayout
@@ -77,17 +77,18 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_create_playlist" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="@dimen/_13sdp"
                                 android:fontFamily="@font/montserrat_semi_bold"
                                 android:gravity="left|bottom"
-                                android:text="Create \n New Playlist"
                                 android:paddingBottom="@dimen/_8sdp"
+                                android:text="Create \nNew Playlist"
                                 android:textColor="@color/white"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:textSize="@dimen/_13sdp" />
+                                android:textSize="@dimen/_12sdp" />
                             <!-- <ImageView
                                  android:id="@+id/ivLock"
                                  android:layout_width="@dimen/_24sdp"

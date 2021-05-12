@@ -15,12 +15,11 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
 import com.brainwellnessspa.InvoiceModule.Fragments.AppointmentInvoiceFragment;
 import com.brainwellnessspa.InvoiceModule.Fragments.MembershipInvoiceFragment;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
@@ -37,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.tutorial;
+import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.tutorial;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;

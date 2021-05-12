@@ -38,10 +38,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.DashboardTwoModule.Model.HomeScreenModel;
-import com.brainwellnessspa.DashboardTwoModule.Model.SuggestedModel;
-import com.brainwellnessspa.DashboardTwoModule.MyPlayerActivity;
+import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
+import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
@@ -71,11 +70,11 @@ import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.miniPlayer;
+import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
+import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -294,11 +293,22 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             binding.llPlay.setVisibility(View.VISIBLE);
         }
         binding.tvPlayListName.setText(PlaylistName);
-        /*MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                5, 3, 1f, 0);
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                5, 4.1f, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);*/
+        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        MeasureRatio measureRatio1 = BWSApplication.measureRatio(ctx, 0,
+                5, 4.1f, 1f, 0);
+        binding.ivTransBanner.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
+        binding.ivTransBanner.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
+        binding.ivTransBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        MeasureRatio measureRatio2 = BWSApplication.measureRatio(ctx, 0,
+                5, 4.1f, 1f, 0);
+        binding.llPlayer.getLayoutParams().height = (int) (measureRatio2.getHeight() * measureRatio2.getRatio());
+        binding.llPlayer.getLayoutParams().width = (int) (measureRatio2.getWidthImg() * measureRatio2.getRatio());
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (!PlaylistImageDetails.equalsIgnoreCase("")) {
                 try {
@@ -307,14 +317,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 //                            .error(R.drawable.audio_bg)
 //                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
 //
+                    binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+                    binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
-                binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.audio_bg));
+                binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+                binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
             }
         } else {
-            binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.audio_bg));
+            binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+            binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
         }
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);

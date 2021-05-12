@@ -584,7 +584,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-            final int position = viewHolder.getAdapterPosition();
+            final int position = viewHolder.getAbsoluteAdapterPosition();
             if (direction == ItemTouchHelper.LEFT) {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -645,7 +645,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder) {
-            final int position = viewHolder.getAdapterPosition();
+            final int position = viewHolder.getAbsoluteAdapterPosition();
             return super.getSwipeDirs(recyclerView, viewHolder);
         }
     };

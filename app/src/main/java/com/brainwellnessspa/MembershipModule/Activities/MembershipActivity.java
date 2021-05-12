@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.FaqModule.Models.FaqListModel;
+import com.brainwellnessspa.faqModule.models.FaqListModel;
 import com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter;
 import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;

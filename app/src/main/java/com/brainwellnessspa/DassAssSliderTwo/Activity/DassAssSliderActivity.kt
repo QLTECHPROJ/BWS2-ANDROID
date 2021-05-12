@@ -20,8 +20,8 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel
 import com.brainwellnessspa.DassAssSliderTwo.Model.PostAssAns
 import com.brainwellnessspa.R
-import com.brainwellnessspa.UserModuleTwo.Models.AssessmentSaveDataModel
-import com.brainwellnessspa.UserModuleTwo.Models.OptionsDataListModel
+import com.brainwellnessspa.userModuleTwo.models.AssessmentSaveDataModel
+import com.brainwellnessspa.userModuleTwo.models.OptionsDataListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
@@ -376,7 +376,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                             val p = Properties()
                             p.putValue("userId", USERID)
                             p.putValue("coUserId", CoUserID)
-                            p.putValue("ans", "")
+                            p.putValue("ans", gson.toJson(assAns).toString())
                             p.putValue("indexScore", listModel.getResponseData()?.indexScore)
                             p.putValue("scoreLevel", listModel.getResponseData()?.scoreLevel)
                             BWSApplication.addToSegment("Assessment Form Submitted", p, CONSTANTS.track)

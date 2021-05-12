@@ -2,6 +2,7 @@ package com.brainwellnessspa.ResourceModule.Fragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -33,19 +34,23 @@ import retrofit2.Response
 class PodcastsFragment : Fragment() {
     lateinit var binding: FragmentPodcastsBinding
     var podcasts: String? = null
+    var USERID: String? = null
     var CoUserID: String? = null
     var Category: String? = null
     private var mLastClickTime: Long = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_podcasts, container, false)
-        val view = binding.getRoot()
+        val view = binding.root
         val bundle = this.arguments
         if (bundle != null) {
             podcasts = bundle.getString("podcasts")
-            CoUserID = bundle.getString("UserID")
             Category = bundle.getString("Category")
         }
+        val shared1: SharedPreferences =
+            requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
         binding.rvPodcastsList.layoutManager = mLayoutManager
         binding.rvPodcastsList.itemAnimator = DefaultItemAnimator()
@@ -68,13 +73,15 @@ class PodcastsFragment : Fragment() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val adapter = PodcastsAdapter(listModel.responseData, activity, podcasts)
                         binding.rvPodcastsList.adapter = adapter
-                        if (listModel.responseData!!.size != 0) {
+                        if (listModel.responseData!!.isNotEmpty()) {
                             binding.llError.visibility = View.GONE
                             binding.rvPodcastsList.visibility = View.VISIBLE
                         } else {
                             binding.llError.visibility = View.VISIBLE
                             binding.rvPodcastsList.visibility = View.GONE
                         }
+                    }else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)){
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -102,7 +109,7 @@ class PodcastsFragment : Fragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.binding.rlMainLayout.elevation = 10f
             }
-            holder.binding.rlMainLayout.setOnClickListener { view: View? ->
+            holder.binding.rlMainLayout.setOnClickListener {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return@setOnClickListener
                 }

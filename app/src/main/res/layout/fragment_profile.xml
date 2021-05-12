@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:clickable="true"
-        tools:context=".DashboardTwoModule.profile.ProfileFragment">
+        tools:context=".dashboardModule.profile.ProfileFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"

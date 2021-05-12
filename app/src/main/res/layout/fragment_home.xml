@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".DashboardTwoModule.home.HomeFragment">
+        tools:context=".dashboardModule.home.HomeFragment">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -381,9 +381,6 @@
                             android:layout_marginTop="@dimen/_10sdp"
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                            app:spanCount="3"
-                            tools:itemCount="3"
                             tools:listitem="@layout/selected_category_raw" />
                     </LinearLayout>
 
