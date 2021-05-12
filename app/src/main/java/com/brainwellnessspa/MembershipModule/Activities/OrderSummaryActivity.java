@@ -104,8 +104,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
             binding.tvPromoCode.setVisibility(View.GONE);
             binding.llPromoCode.setVisibility(View.GONE);
         } else {
-            binding.tvPromoCode.setVisibility(View.VISIBLE);
-            binding.llPromoCode.setVisibility(View.VISIBLE);
+            binding.tvPromoCode.setVisibility(View.GONE);
+            binding.llPromoCode.setVisibility(View.GONE);
         }
 
         try {
