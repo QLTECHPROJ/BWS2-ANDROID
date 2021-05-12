@@ -127,14 +127,14 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 .build();
 
         binding.llBack.setOnClickListener(view -> {
-            Intent i = new Intent(context, OrderSummaryActivity.class);
-            i.putParcelableArrayListExtra("PlanData", listModelList);
-            i.putExtra("TrialPeriod", TrialPeriod);
-            i.putExtra("Name", Name);
-            i.putExtra("position", position);
-            i.putExtra("Promocode", Promocode);
-            startActivity(i);
-            finish();
+//            Intent i = new Intent(context, OrderSummaryActivity.class);
+//            i.putParcelableArrayListExtra("PlanData", listModelList);
+//            i.putExtra("TrialPeriod", TrialPeriod);
+//            i.putExtra("Name", Name);
+//            i.putExtra("position", position);
+//            i.putExtra("Promocode", Promocode);
+//            startActivity(i);
+//            finish();
         });
 
         year = Calendar.getInstance().get(Calendar.YEAR);

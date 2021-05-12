@@ -479,7 +479,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     private fun setData(listModel: PlaylistDetailsModel.ResponseData?) {
         MyCreated = listModel!!.created
         val measureRatio = BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
-     binding.ivBanner.layoutParams.height = (measureRatio.getHeight() * measureRatio.getRatio()).toInt()
+        binding.ivBanner.layoutParams.height = (measureRatio.getHeight() * measureRatio.getRatio()).toInt()
         binding.ivBanner.layoutParams.width = (measureRatio.getWidthImg() * measureRatio.getRatio()).toInt()
         if (listModel.playlistName.equals("", ignoreCase = true) ||
                 listModel.playlistName == null) {

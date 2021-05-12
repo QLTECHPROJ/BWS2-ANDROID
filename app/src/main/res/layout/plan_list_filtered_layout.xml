@@ -15,6 +15,7 @@
             android:layout_marginRight="@dimen/_10sdp">
 
             <LinearLayout
+                android:id="@+id/llPlanMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/_6sdp"

@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
+//import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.MembershipPlanBinding;
@@ -113,11 +113,11 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
         planFlag = listModel.getPlanFlag();
         price = listModel.getPlanAmount();
         planId = listModel.getPlanID();
-        i = new Intent(ctx, OrderSummaryActivity.class);
-        i.putParcelableArrayListExtra("PlanData", listModelList);
-        i.putExtra("TrialPeriod", TrialPeriod);
-        i.putExtra("position", position);
-        i.putExtra("Promocode", "");
+//        i = new Intent(ctx, OrderSummaryActivity.class);
+//        i.putParcelableArrayListExtra("PlanData", listModelList);
+//        i.putExtra("TrialPeriod", TrialPeriod);
+//        i.putExtra("position", position);
+//        i.putExtra("Promocode", "");
     }
 
     @Override

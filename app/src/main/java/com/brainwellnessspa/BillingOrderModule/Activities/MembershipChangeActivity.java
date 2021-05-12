@@ -24,7 +24,7 @@ import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
-import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
+//import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -235,13 +235,13 @@ public class MembershipChangeActivity extends AppCompatActivity {
             renewPlanFlag = listModel.getPlanFlag();
             renewPlanId = listModel.getPlanID();
             notificationStatus = true;
-            i = new Intent(ctx, OrderSummaryActivity.class);
+      /*      i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
             i.putExtra("ComesTrue", ComeFrom);
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);
-            i.putExtra("Promocode", "");
+            i.putExtra("Promocode", "");*/
         }
 
         @Override

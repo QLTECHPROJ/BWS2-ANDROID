@@ -375,7 +375,7 @@ class HomeFragment : Fragment() {
 
 
                         if (listModel.responseData!!.shouldCheckIndexScore.equals("0", true)) {
-                            binding.llCheckIndexSocre.visibility = View.VISIBLE
+                            binding.llCheckIndexSocre.visibility = View.GONE
                         } else if (listModel.responseData!!.shouldCheckIndexScore.equals(
                                 "1",
                                 ignoreCase = true

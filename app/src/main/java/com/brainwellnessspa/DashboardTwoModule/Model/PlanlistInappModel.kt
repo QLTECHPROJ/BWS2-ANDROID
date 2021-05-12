@@ -1,10 +1,11 @@
 package com.brainwellnessspa.DashboardTwoModule.Model
 
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-class PlanlistInappModel {
+class PlanlistInappModel{
     @SerializedName("ResponseData")
     @Expose
     var responseData: ResponseData? = null

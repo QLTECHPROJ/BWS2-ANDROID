@@ -16,6 +16,9 @@ import android.view.View;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.DashboardTwoModule.Model.PlanlistInappModel;
+import com.brainwellnessspa.ManageModule.ManageActivity;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel;
@@ -24,8 +27,10 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -36,11 +41,13 @@ public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
     String TrialPeriod, comeFrom = "", UserId,/* renewPlanFlag, renewPlanId, */
             ComesTrue, Promocode = "", OldPromocode = "";
-    private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    private ArrayList<PlanlistInappModel.ResponseData.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
     private long mLastClickTime = 0;
     Context ctx;
+    String json = "";
+    Gson gson = new Gson();
     Activity activity;
 
     @Override
@@ -60,7 +67,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 comeFrom = getIntent().getStringExtra("comeFrom");
                 listModelList2 = getIntent().getParcelableArrayListExtra("PlanData");
             } else {
-                listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+                json = getIntent().getStringExtra("PlanData");
+                Type type = new TypeToken<ArrayList<PlanlistInappModel.ResponseData.Plan>>() {
+                }.getType();
+                listModelList = gson.fromJson(json, type);
             }
         }
 
@@ -105,7 +115,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
                 binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
                 binding.tvSubName.setText(listModelList2.get(position).getSubName());
+                binding.tvSubName1.setText(listModelList2.get(position).getSubName());
                 binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+                binding.tvPlanAmount1.setText("$" + listModelList2.get(position).getPlanAmount());
                 binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
             } else {
                 binding.tvTrialPeriod.setVisibility(View.VISIBLE);
@@ -113,8 +125,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
                 binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
                 binding.tvSubName.setText(listModelList.get(position).getSubName());
+                binding.tvSubName1.setText(listModelList.get(position).getSubName());
                 binding.tvTrialPeriod.setText(TrialPeriod);
                 binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
+                binding.tvPlanAmount1.setText("$" + listModelList.get(position).getPlanAmount());
                 binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
             }
         } catch (Exception e) {
@@ -179,7 +193,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                         i.putExtra("Name", "");
                         i.putExtra("Code", "");
                         i.putExtra("MobileNo", "");
-                        i.putParcelableArrayListExtra("PlanData", listModelList);
+                        i.putExtra("PlanData", gson.toJson(listModelList));
                         i.putExtra("TrialPeriod", TrialPeriod);
                         i.putExtra("position", position);
                         i.putExtra("Promocode", Promocode);
@@ -239,7 +253,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                                 i.putExtra("Name", "");
                                                 i.putExtra("Code", "");
                                                 i.putExtra("MobileNo", "");
-                                                i.putParcelableArrayListExtra("PlanData", listModelList);
+                                                i.putExtra("PlanData", gson.toJson(listModelList));
                                                 i.putExtra("TrialPeriod", TrialPeriod);
                                                 i.putExtra("position", position);
                                                 i.putExtra("Promocode", Promocode);
@@ -277,8 +291,6 @@ public class OrderSummaryActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         } else {
-            Intent i = new Intent(ctx, MembershipActivity.class);
-            startActivity(i);
             finish();
         }
     }
