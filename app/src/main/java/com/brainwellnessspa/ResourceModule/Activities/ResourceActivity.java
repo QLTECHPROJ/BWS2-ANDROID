@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
 import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
 import com.brainwellnessspa.ResourceModule.Models.SegmentResource;
 import com.brainwellnessspa.Utility.APINewClient;
@@ -43,7 +42,6 @@ import com.brainwellnessspa.ResourceModule.Fragments.DocumentariesFragment;
 import com.brainwellnessspa.ResourceModule.Fragments.PodcastsFragment;
 import com.brainwellnessspa.ResourceModule.Fragments.WebsiteFragment;
 import com.brainwellnessspa.ResourceModule.Models.ResourceFilterModel;
-import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityResourceBinding;
 import com.brainwellnessspa.databinding.FilterListLayoutBinding;

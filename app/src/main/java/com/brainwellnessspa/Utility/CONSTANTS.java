@@ -106,6 +106,7 @@ public class CONSTANTS {
     public static final String PREFE_ACCESS_DeviceID = "DeviceID";
     public static final String PREFE_ACCESS_SLEEPTIME = "Sleeptime";
     public static final String PREFE_ACCESS_INDEXSCORE = "indexScore";
+    public static final String PREFE_ACCESS_SCORELEVEL = "scoreLevel";
     public static final String PREFE_ACCESS_EMAIL = "Email";
     public static final String PREFE_ACCESS_CoUserID = "CoUserID";
     public static final String PREF_KEY_LOGIN = "Login";

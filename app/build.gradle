@@ -90,7 +90,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.32"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
-// TODO  Constraintlayout Dependency
+// TODO  Constraint's Dependency
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 // TODO  Bottom Menu and Fragment
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
@@ -126,7 +126,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.0'
 // TODO Glide Dependency
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-//  TODO Fancyshowcaseview Dependency
+//  TODO Fancywork's Dependency
     implementation 'me.toptas.fancyshowcase:fancyshowcaseview:1.3.3'
 //  TODO GIF Drawable Dependency
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.20'

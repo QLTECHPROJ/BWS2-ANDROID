@@ -26,82 +26,82 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AddProfileActivity : AppCompatActivity() {
-    var UserID: String? = null
-    var CoUserID: String? = null
-    var CoEMAIL: String? = null
-    var CoName: String? = null
-    var CoNumber: String? = null
-    var AddProfile: String? = null
+    var userID: String? = null
+    var coUserID: String? = null
+    var coEMAIL: String? = null
+    var coName: String? = null
+    var coNumber: String? = null
+    var addProfile: String? = null
     private lateinit var binding: ActivityAddProfileBinding
     lateinit var activity: Activity
 
 
-    var userTextWatcher: TextWatcher = object : TextWatcher {
+    private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val User: String = binding.etUser.getText().toString().trim()
-            val MobileNumber: String = binding.etMobileNumber.getText().toString().trim()
-            val Email: String = binding.etEmail.getText().toString().trim()
-            if (User.equals("", ignoreCase = true) && MobileNumber.equals("", ignoreCase = true)
-                && Email.equals("", ignoreCase = true)
+            val user: String = binding.etUser.text.toString().trim()
+            val mobileNumber: String = binding.etMobileNumber.text.toString().trim()
+            val email: String = binding.etEmail.text.toString().trim()
+            if (user.equals("", ignoreCase = true) && mobileNumber.equals("", ignoreCase = true)
+                && email.equals("", ignoreCase = true)
             ) {
-                binding.btnSendPin.setEnabled(false)
+                binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
                 binding.ivCheckNumber.visibility = View.GONE
                 binding.ivCheckEmail.visibility = View.GONE
-            } else if (!User.equals("", ignoreCase = true) && !MobileNumber.equals(
+            } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals(
                     "",
                     ignoreCase = true
                 )
-                && Email.equals("", ignoreCase = true)
+                && email.equals("", ignoreCase = true)
             ) {
-                binding.btnSendPin.setEnabled(false)
+                binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (!User.equals("", ignoreCase = true) && MobileNumber.equals(
+            } else if (!user.equals("", ignoreCase = true) && mobileNumber.equals(
                     "",
                     ignoreCase = true
                 )
-                && !Email.equals("", ignoreCase = true)
+                && !email.equals("", ignoreCase = true)
             ) {
-                binding.btnSendPin.setEnabled(false)
+                binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (User.equals("", ignoreCase = true) && !MobileNumber.equals(
+            } else if (user.equals("", ignoreCase = true) && !mobileNumber.equals(
                     "",
                     ignoreCase = true
                 )
-                && !Email.equals("", ignoreCase = true)
+                && !email.equals("", ignoreCase = true)
             ) {
-                binding.btnSendPin.setEnabled(false)
+                binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (!User.equals("", ignoreCase = true) && !MobileNumber.equals(
+            } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals(
                     "",
                     ignoreCase = true
                 )
-                && !Email.equals("", ignoreCase = true)
+                && !email.equals("", ignoreCase = true)
             ) {
-                binding.btnSendPin.setEnabled(true)
+                binding.btnSendPin.isEnabled = true
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
 
-            if (MobileNumber.equals("", ignoreCase = true)) {
+            if (mobileNumber.equals("", ignoreCase = true)) {
                 binding.ivCheckNumber.visibility = View.GONE
-            } else if (binding.etMobileNumber.getText().toString().length == 1
-                || binding.etMobileNumber.getText().toString().length < 8
-                || binding.etMobileNumber.getText().toString().length > 10
+            } else if (binding.etMobileNumber.text.toString().length == 1
+                || binding.etMobileNumber.text.toString().length < 8
+                || binding.etMobileNumber.text.toString().length > 10
             ) {
                 binding.ivCheckNumber.visibility = View.GONE
             } else {
                 binding.ivCheckNumber.visibility = View.VISIBLE
             }
 
-            if (Email.equals("", ignoreCase = true)) {
+            if (email.equals("", ignoreCase = true)) {
                 binding.ivCheckEmail.visibility = View.GONE
-            } else if (!Email.equals("", ignoreCase = true) && !Email.toString().isEmailValid()) {
+            } else if (!email.equals("", ignoreCase = true) && !email.isEmailValid()) {
                 binding.ivCheckEmail.visibility = View.GONE
             } else {
                 binding.ivCheckEmail.visibility = View.VISIBLE
@@ -115,18 +115,18 @@ class AddProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_profile)
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        userID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         activity = this@AddProfileActivity
 
         if (intent.extras != null) {
-            AddProfile = intent.getStringExtra("AddProfile")
-            CoUserID = intent.getStringExtra("CoUserID")
-            CoEMAIL = intent.getStringExtra("CoEMAIL")
-            CoName = intent.getStringExtra("CoName")
-            CoNumber = intent.getStringExtra("CoNumber")
+            addProfile = intent.getStringExtra("AddProfile")
+            coUserID = intent.getStringExtra("CoUserID")
+            coEMAIL = intent.getStringExtra("CoEMAIL")
+            coName = intent.getStringExtra("CoName")
+            coNumber = intent.getStringExtra("CoNumber")
         }
 
-        if (AddProfile.equals("Add", ignoreCase = true)) {
+        if (addProfile.equals("Add", ignoreCase = true)) {
             binding.btnSendPin.visibility = View.VISIBLE
             binding.btnSendNewPin.visibility = View.GONE
             binding.ivCheckNumber.visibility = View.GONE
@@ -137,14 +137,17 @@ class AddProfileActivity : AppCompatActivity() {
             binding.etMobileNumber.isEnabled = true
             binding.etEmail.isClickable = true
             binding.etEmail.isEnabled = true
-        } else if (AddProfile.equals("Forgot", ignoreCase = true)) {
+
+            val p = Properties()
+            BWSApplication.addToSegment("Add Couser Screen Viewed", p, CONSTANTS.screen)
+        } else if (addProfile.equals("Forgot", ignoreCase = true)) {
             binding.btnSendPin.visibility = View.GONE
             binding.btnSendNewPin.visibility = View.VISIBLE
             binding.ivCheckNumber.visibility = View.VISIBLE
             binding.ivCheckEmail.visibility = View.VISIBLE
-            binding.etUser.setText(CoName)
-            binding.etMobileNumber.setText(CoNumber)
-            binding.etEmail.setText(CoEMAIL)
+            binding.etUser.setText(coName)
+            binding.etMobileNumber.setText(coNumber)
+            binding.etEmail.setText(coEMAIL)
             binding.etUser.isClickable = false
             binding.etUser.isEnabled = false
             binding.etMobileNumber.isClickable = false
@@ -152,12 +155,16 @@ class AddProfileActivity : AppCompatActivity() {
             binding.etEmail.isClickable = false
             binding.etEmail.isEnabled = false
 
+            val p = Properties()
+            p.putValue("userId", userID)
+            p.putValue("coUserId", coUserID)
+            p.putValue("name", coName)
+            p.putValue("mobileNo", coNumber)
+            p.putValue("email", coEMAIL)
+            BWSApplication.addToSegment("Forgot Pin Screen Viewed", p, CONSTANTS.screen)
         }
 
         binding.llBack.setOnClickListener {
-            /*  val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
-              i.putExtra(CONSTANTS.PopUp, "0")
-              startActivity(i)*/
             finish()
         }
         val measureRatio = BWSApplication.measureRatio(this, 0f, 1f, 1f, 0.32f, 0f)
@@ -211,7 +218,7 @@ class AddProfileActivity : AppCompatActivity() {
                         activity
                     )
                     val listCall: Call<AddUserModel> = APINewClient.getClient().getAddUser(
-                        UserID, binding.etUser.text.toString(),
+                        userID, binding.etUser.text.toString(),
                         binding.etEmail.text.toString(), binding.etMobileNumber.text.toString()
                     )
                     listCall.enqueue(object : Callback<AddUserModel> {
@@ -234,7 +241,7 @@ class AddProfileActivity : AppCompatActivity() {
                                 ) {
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                     val p = Properties()
-                                    p.putValue("userId", UserID)
+                                    p.putValue("userId", userID)
                                     p.putValue("coUserId", listModel.responseData!!.coUserId)
                                     p.putValue("name", listModel.responseData!!.name)
                                     p.putValue("mobileNo", binding.etMobileNumber.text.toString())
@@ -272,7 +279,7 @@ class AddProfileActivity : AppCompatActivity() {
                     activity
                 )
                 val listCall: Call<ForgotPinModel> =
-                    APINewClient.getClient().getForgotPin(UserID, CoUserID, CoEMAIL)
+                    APINewClient.getClient().getForgotPin(userID, coUserID, coEMAIL)
                 listCall.enqueue(object : Callback<ForgotPinModel> {
                     override fun onResponse(
                         call: Call<ForgotPinModel>,
@@ -285,31 +292,33 @@ class AddProfileActivity : AppCompatActivity() {
                                 activity
                             )
                             val listModel: ForgotPinModel = response.body()!!
-                            if (listModel.responseCode.equals(
+                            when {
+                                listModel.responseCode.equals(
                                     activity.getString(R.string.ResponseCodesuccess),
                                     ignoreCase = true
-                                )
-                            ) {
-                                BWSApplication.showToast(
-                                    listModel.responseMessage,
-                                    activity
-                                )
-                                val p = Properties()
-                                p.putValue("userId", UserID)
-                                p.putValue("coUserId", CoUserID)
-                                p.putValue("name", CoName)
-                                p.putValue("mobileNo", CoNumber)
-                                p.putValue("email", CoEMAIL)
-                                BWSApplication.addToSegment("Send New Pin Clicked", p, CONSTANTS.track)
-                                finish()
-                            } else if (listModel.responseCode.equals(
+                                ) -> {
+                                    BWSApplication.showToast(
+                                        listModel.responseMessage,
+                                        activity
+                                    )
+                                    val p = Properties()
+                                    p.putValue("userId", userID)
+                                    p.putValue("coUserId", coUserID)
+                                    p.putValue("name", coName)
+                                    p.putValue("mobileNo", coNumber)
+                                    p.putValue("email", coEMAIL)
+                                    BWSApplication.addToSegment("Send New Pin Clicked", p, CONSTANTS.track)
+                                    finish()
+                                }
+                                listModel.responseCode.equals(
                                     activity.getString(R.string.ResponseCodefail),
                                     ignoreCase = true
-                                )
-                            ) {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                            } else {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                ) -> {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
+                                else -> {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -336,9 +345,6 @@ class AddProfileActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        /* val i = Intent(this@AddProfileActivity, UserListActivity::class.java)
-         i.putExtra(CONSTANTS.PopUp, "0")
-         startActivity(i)*/
         finish()
     }
 }

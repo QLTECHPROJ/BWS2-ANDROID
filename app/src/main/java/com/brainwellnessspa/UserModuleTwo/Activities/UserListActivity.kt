@@ -27,6 +27,7 @@ import com.brainwellnessspa.ManageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.UserModuleTwo.Models.AddedUserListModel
 import com.brainwellnessspa.UserModuleTwo.Models.CoUserDetailsModel
+import com.brainwellnessspa.UserModuleTwo.Models.SegmentUserList
 import com.brainwellnessspa.UserModuleTwo.Models.VerifyPinModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -35,6 +36,7 @@ import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.gson.Gson
 import com.segment.analytics.Properties
 import com.segment.analytics.Traits
 import retrofit2.Call
@@ -65,8 +67,6 @@ class UserListActivity : AppCompatActivity() {
              finish()
          }*/
 
-        val p = Properties()
-        BWSApplication.addToSegment("Add Couser Screen Viewed", p, CONSTANTS.screen)
 
         binding.llAddNewUser.setOnClickListener {
             val i = Intent(applicationContext, AddProfileActivity::class.java)
@@ -393,6 +393,10 @@ class UserListActivity : AppCompatActivity() {
                                                                 responseData.indexScore
                                                             )
                                                             editor.putString(
+                                                                CONSTANTS.PREFE_ACCESS_SCORELEVEL,
+                                                                responseData.scoreLevel
+                                                            )
+                                                            editor.putString(
                                                                 CONSTANTS.PREFE_ACCESS_IMAGE,
                                                                 responseData.image
                                                             )
@@ -510,6 +514,7 @@ class UserListActivity : AppCompatActivity() {
                                                             p1.putValue("isProfileCompleted", listModel.responseData!!.isProfileCompleted)
                                                             p1.putValue("isAssessmentCompleted", listModel.responseData!!.isAssessmentCompleted)
                                                             p1.putValue("indexScore", listModel.responseData!!.indexScore)
+                                                            p1.putValue("scoreLevel", listModel.responseData!!.scoreLevel)
                                                             p1.putValue("areaOfFocus",  listModel.responseData!!.areaOfFocus)
                                                             p1.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
                                                             BWSApplication.addToSegment("CoUser Login", p1, CONSTANTS.track)
@@ -719,9 +724,22 @@ class UserListActivity : AppCompatActivity() {
                             } else {
                                 binding.llAddNewUser.visibility = View.VISIBLE
                             }
+                            val section = ArrayList<SegmentUserList>()
+                            for (i in listModel.responseData!!.coUserList!!.indices) {
+                                val e = SegmentUserList()
+                                e.coUserId = listModel.responseData!!.coUserList!![i].coUserId
+                                e.name = listModel.responseData!!.coUserList!![i].name
+                                e.mobile = listModel.responseData!!.coUserList!![i].mobile
+                                e.email = listModel.responseData!!.coUserList!![i].email
+                                e.image = listModel.responseData!!.coUserList!![i].image
+                                e.dob = listModel.responseData!!.coUserList!![i].dob
+                                section.add(e)
+                            }
                             val p = Properties()
+                            val gson = Gson()
                             p.putValue("userID", USERID)
                             p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
+                            p.putValue("coUserList", gson.toJson(section))
                             BWSApplication.addToSegment("Couser List Viewed", p, CONSTANTS.screen)
                         } else {
 //                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
