@@ -369,7 +369,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         ) {
                             binding.tvReminder.setText("Update Reminder")
                         }
-                        binding.tvReminder.setOnClickListener {
+                        binding.llReminder.setOnClickListener {
                             if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                                 || listModel.responseData!!.isReminder.equals("", ignoreCase = true)
                             ) {
@@ -666,6 +666,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         if (listModel.playlistSongs != null) {
             if (listModel.playlistSongs!!.isEmpty()) {
                 binding.llAddAudio.visibility = View.VISIBLE
+                binding.tvReminder.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_gray
+                    )
+                )
+                binding.llReminder.isEnabled = false
+                binding.llReminder.isClickable = false
+                binding.rlSearch.visibility = View.GONE
+                binding.tvTag.visibility = View.GONE
                 binding.llDownloads.visibility = View.VISIBLE
                 binding.llReminder.visibility = View.VISIBLE
 //                binding.llPlayPause.setVisibility(View.INVISIBLE)
@@ -674,6 +684,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 binding.llPlayPause.visibility = View.INVISIBLE
             } else {
                 binding.llAddAudio.visibility = View.GONE
+                binding.rlSearch.visibility = View.VISIBLE
+                binding.tvReminder.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.white
+                    )
+                )
+                binding.llReminder.isEnabled = true
+                binding.llReminder.isClickable = true
+                binding.tvTag.visibility = View.VISIBLE
                 binding.llDownloads.visibility = View.VISIBLE
                 binding.llReminder.visibility = View.VISIBLE
                 if (MyDownloads.equals("1", ignoreCase = true)) {
@@ -1556,6 +1576,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.llError.visibility = View.VISIBLE
                         binding.tvTag.visibility = View.GONE
                         binding.rvPlayLists2.visibility = View.GONE
+//                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
                         binding.tvFound.setText("No result found")
 //                        Log.e("search", SearchFlag)
                     } else {

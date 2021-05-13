@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
+import android.text.Selection
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
@@ -162,11 +163,13 @@ class CreateAccountActivity : AppCompatActivity() {
             binding.etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
             binding.ivVisible.visibility = View.GONE
             binding.ivInVisible.visibility = View.VISIBLE
+            binding.etPassword.setSelection(binding.etPassword.text.toString().length)
         }
         binding.ivInVisible.setOnClickListener {
             binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
             binding.ivVisible.visibility = View.VISIBLE
             binding.ivInVisible.visibility = View.GONE
+            binding.etPassword.setSelection(binding.etPassword.text.toString().length)
         }
         binding.tvtncs.setOnClickListener {
             val i = Intent(this, TncActivity::class.java)

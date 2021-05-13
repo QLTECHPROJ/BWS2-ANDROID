@@ -779,6 +779,29 @@ public class BWSApplication extends Application {
                                 tvReadMore.setVisibility(View.GONE);
                             }
 
+                            tvReadMore.setOnClickListener(v12 -> {
+                                final Dialog dialog1 = new Dialog(ctx);
+                                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog1.setContentView(R.layout.full_desc_layout);
+                                dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                final TextView tvDesc = dialog1.findViewById(R.id.tvDesc);
+                                final RelativeLayout tvClose = dialog1.findViewById(R.id.tvClose);
+                                tvDesc.setText(model.getResponseData().getPlaylistDesc());
+
+                                dialog1.setOnKeyListener((v3, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog1.dismiss();
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                tvClose.setOnClickListener(v14 -> dialog1.dismiss());
+                                dialog1.show();
+                                dialog1.setCancelable(false);
+                            });
+
 //                                if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
 //                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
 //                                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);

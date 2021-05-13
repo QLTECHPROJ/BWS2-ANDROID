@@ -207,7 +207,7 @@
     <string name="Other_reason">Other reason</string>
     <string name="Appointment_Header">There are no upcoming appointments scheduled. Would you like to <b>Book a new appointment?</b></string>
     <string name="Rename_your_playlist">Rename your playlist .</string>
-    <string name="no_data_found">Try searching again using a diffrent spelling or keyword.</string>
+    <string name="no_data_found">Try searching again using a different spelling or keyword.</string>
     <string name="f_A_Q">Frequently Asked Questions</string>
     <string name="Find_in_playlist">Find in playlist</string>
     <string name="Remove_from_this_playlist">Remove from this playlist</string>
@@ -226,7 +226,7 @@
     <string name="default_notification_channel_id">10001</string>
     <string name="Delete_payment_card">Delete payment card</string>
     <string name="delete_payment_quotes">Are you sure you want to delete the payment card ?</string>
-    <string name="sucess_playlist">Sucessfully added to playlist</string>
+    <string name="sucess_playlist">Successfully added to playlist</string>
     <string name="Guest">Guest</string>
     <string name="membership_title">Access More Than 75 Audio Programs.</string>
     <string name="t_n_cs"><u>T&amp;Cs</u></string>
@@ -236,7 +236,7 @@
     <string name="privacy_policys">, <u>Privacy Policy</u> </string>
     <string name="disclaimersm">Disclaimer</string>
     <string name="disclaimers"><u>Disclaimer</u></string>
-    <string name="playlist_or_audio_search">Add or search for audio, playlist</string>
+    <string name="playlist_or_audio_search">Add or search for audio</string>
     <string name="and">and</string>
     <string name="Disclaimer_text">The Brain Wellness Spa offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness Spa Method).\n\nThe Brain Wellness Spa Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
     <string name="General">General</string>
@@ -258,7 +258,7 @@
     <string name="Refer_friend">Refer a friend</string>
     <string name="Refer_Friend">Refer a Friend</string>
     <string name="Invite">Invite</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="Settings">Settings</string>
     <string name="not_now">Not Now</string>
     <string name="Support">Support</string>
@@ -273,7 +273,7 @@
     <string name="Email_address">Email address</string>
     <string name="Create_a_strong_password">Create a strong password</string>
     <string name="Choose_your_country">Choose your country</string>
-    <string name="welcome_back_quotes">Welcome back...</string>
+    <string name="welcome_back_quotes">Welcome back…</string>
     <string name="Forgot_paswd">I forgot my password</string>
     <string name="Log_in">Log in</string>
     <string name="Forgot_paswd_quotes">Forgot your password</string>
@@ -325,4 +325,9 @@
     <string name="get_started_subtitle_quotes">Your one-stop solution for mental &amp; emotional health challenges></string>
     <string name="forgot_quotes">Give us your registered email ID and we\'ll send you everything that you\'ll need to change your password</string>
     <string name="Manage">Manage</string>
+    <string name="log_out">Log Out</string>
+    <string name="account_info">Account Info</string>
+    <string name="upgrade_plan">Upgrade Plan</string>
+    <string name="resources">Resources</string>
+    <string name="faqs">FAQ</string>
 </resources>

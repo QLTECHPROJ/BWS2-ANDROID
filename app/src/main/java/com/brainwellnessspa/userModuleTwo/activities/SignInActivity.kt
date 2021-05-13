@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
+import android.text.Selection
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
@@ -17,10 +18,10 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModuleTwo.models.SignInModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySignInBinding
+import com.brainwellnessspa.userModuleTwo.models.SignInModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
@@ -86,11 +87,13 @@ class SignInActivity : AppCompatActivity() {
             binding.etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
             binding.ivVisible.visibility = View.GONE
             binding.ivInVisible.visibility = View.VISIBLE
+            binding.etPassword.setSelection(binding.etPassword.text.toString().length)
         }
         binding.ivInVisible.setOnClickListener {
             binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
             binding.ivVisible.visibility = View.VISIBLE
             binding.ivInVisible.visibility = View.GONE
+            binding.etPassword.setSelection(binding.etPassword.text.toString().length)
         }
 
         binding.btnLoginAc.setOnClickListener {

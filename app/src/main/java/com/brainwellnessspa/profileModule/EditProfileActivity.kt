@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -44,50 +45,40 @@ class EditProfileActivity : AppCompatActivity() {
     private var mYear: Int = 0
     private var mMonth: Int = 0
     private var mDay: Int = 0
-    var BirthYear = 0
+    private var birthYear = 0
     var ageYear: Int = 0
     var ageMonth: Int = 0
     var ageDate: Int = 0
 
-    var userTextWatcher: TextWatcher = object : TextWatcher {
+    private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val User = binding.etUser.text.toString().trim()
-            val Calendar = binding.etCalendar.text.toString().trim()
+            val user = binding.etUser.text.toString().trim()
+            val calendar = binding.etCalendar.text.toString().trim()
             val MobileNumber = binding.etMobileNumber.text.toString().trim()
             val Email = binding.etEmail.text.toString().trim()
-            if (User.equals(UserName, ignoreCase = true) && Calendar.equals(
-                    UserCalendar,
-                    ignoreCase = true
-                )
-                && MobileNumber.equals(UserMobileNumber, ignoreCase = true) && Email.equals(
-                    UserEmail,
-                    ignoreCase = true
-                )
+            if (user.equals(UserName, ignoreCase = true) &&
+                calendar.equals(UserCalendar, ignoreCase = true)
             ) {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (!User.equals(UserName, ignoreCase = true)) {
+            } else if (user.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
+                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (!user.equals(UserName, ignoreCase = true)) {
                 binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor)
-            } else if (!Calendar.equals(UserCalendar, ignoreCase = true)) {
+                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            } else if (!calendar.equals(UserCalendar, ignoreCase = true)) {
                 binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor)
-            } else if (!MobileNumber.equals(UserMobileNumber, ignoreCase = true)) {
-                binding.btnSave.isEnabled = true
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor)
-            } else if (!Email.equals(UserEmail, ignoreCase = true)) {
-                binding.btnSave.isEnabled = true
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor)
+                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
                 binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor)
+                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
         }
 
@@ -103,6 +94,8 @@ class EditProfileActivity : AppCompatActivity() {
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         ctx = this@EditProfileActivity
         activity = this@EditProfileActivity
+        binding.ivCheckNumber.visibility = View.VISIBLE
+        binding.ivCheckEmail.visibility = View.VISIBLE
         binding.etUser.addTextChangedListener(userTextWatcher)
         binding.etCalendar.addTextChangedListener(userTextWatcher)
         binding.etMobileNumber.addTextChangedListener(userTextWatcher)
@@ -127,7 +120,7 @@ class EditProfileActivity : AppCompatActivity() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             var dob = ""
-            if (!binding.etCalendar.text.toString().isEmpty()) {
+            if (binding.etCalendar.text.toString().isNotEmpty()) {
                 dob = binding.etCalendar.text.toString()
                 var spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
                 var newDate: Date? = Date()
@@ -257,6 +250,14 @@ class EditProfileActivity : AppCompatActivity() {
                                 binding.etMobileNumber.isEnabled = true
                                 binding.etMobileNumber.isClickable = true
                             }
+
+                            if (!viewModel.responseData!!.dob.equals("", ignoreCase = true)) {
+                                binding.etCalendar.isEnabled = false
+                                binding.etCalendar.isClickable = false
+                            } else {
+                                binding.etCalendar.isEnabled = true
+                                binding.etCalendar.isClickable = true
+                            }
                         } else {
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,
@@ -299,8 +300,8 @@ class EditProfileActivity : AppCompatActivity() {
                 ageYear = year
                 ageMonth = monthOfYear
                 ageDate = dayOfMonth
-                BirthYear = getAge(ageYear, ageMonth, ageDate)
-                if (BirthYear < 18) {
+                birthYear = getAge(ageYear, ageMonth, ageDate)
+                if (birthYear < 18) {
                     binding.tlCalendar.error = "You must be 18 years of age to register"
                     binding.btnSave.isEnabled = false
                     binding.btnSave.isClickable = false

@@ -78,7 +78,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     int stackStatus = 0;
     boolean myBackPress = false;
     boolean notificationStatus = false; 
-    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+    private final BroadcastReceiver listener1 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) { 
             if (intent.hasExtra("MyReminder")) {
@@ -327,7 +327,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     }
 
     public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
-        private List<ReminderListModel.ResponseData> model;
+        private final List<ReminderListModel.ResponseData> model;
 
         public RemiderDetailsAdapter(List<ReminderListModel.ResponseData> model) {
             this.model = model;

@@ -199,7 +199,7 @@
                 <LinearLayout
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.86">
+                    android:layout_weight="0.76">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tlMobileNumber"
@@ -232,6 +232,24 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.1"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/ivCheckNumber"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:src="@drawable/ic_check_icon" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -312,6 +330,7 @@
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
+                        android:visibility="gone"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:src="@drawable/ic_check_icon" />
                 </LinearLayout>

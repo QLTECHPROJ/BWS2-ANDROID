@@ -112,19 +112,6 @@ public class ProfileFragment extends Fragment {
         binding.llImageUpload.setOnClickListener(view15 -> {
             selectImage();
         });
-        binding.tvName.setOnClickListener(view15 -> {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            if (BWSApplication.isNetworkConnected(getActivity())) {
-                Intent i = new Intent(getActivity(), MyPlayerActivity.class);
-                startActivity(i);
-                getActivity().overridePendingTransition(0, 0);
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-            }
-        });
 
         binding.llAcInfo.setOnClickListener(view15 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {

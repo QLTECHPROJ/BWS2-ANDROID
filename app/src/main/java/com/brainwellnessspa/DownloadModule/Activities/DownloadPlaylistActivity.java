@@ -336,7 +336,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();
-        searchEditText.setHint("Search for audios");
+        searchEditText.setHint("Search for audio");
         closeButton.setOnClickListener(v -> {
             binding.searchView.clearFocus();
             searchEditText.setText("");
@@ -1047,7 +1047,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     if (listFilterData.size() == 0) {
                         binding.llError.setVisibility(View.VISIBLE);
                         binding.rvPlayLists.setVisibility(View.GONE);
-                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
+//                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
+                        binding.tvFound.setText("No result found");
                         Log.e("search", SearchFlag);
                         binding.tvTag.setVisibility(View.GONE);
                     } else {
