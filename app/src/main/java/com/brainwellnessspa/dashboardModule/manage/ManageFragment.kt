@@ -117,6 +117,7 @@ class ManageFragment : Fragment() {
 
         binding.llSearch.setOnClickListener {
             val i = Intent(ctx, AddAudioActivity::class.java)
+            i.putExtra("PlaylistID", "")
             startActivity(i)
         }
 

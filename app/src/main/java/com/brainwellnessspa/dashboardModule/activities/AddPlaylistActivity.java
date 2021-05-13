@@ -30,16 +30,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
 import com.brainwellnessspa.DashboardOldModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel;
-import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
+import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel;
+import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel;
 import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding;
 import com.brainwellnessspa.databinding.AddPlayListLayoutBinding;
 import com.bumptech.glide.Glide;
@@ -71,9 +71,9 @@ public class AddPlaylistActivity extends AppCompatActivity {
     Context ctx;
     Activity activity;
     Properties p;
-    private int numStarted = 0;
     int stackStatus = 0;
     boolean myBackPress = false;
+    private int numStarted = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,17 +89,9 @@ public class AddPlaylistActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra("AudioId");
             FromPlaylistID = getIntent().getStringExtra("PlaylistID");
-        }
-        if (getIntent().getExtras() != null) {
             PlaylistName = getIntent().getStringExtra("PlaylistName");
-        }
-        if (getIntent().getExtras() != null) {
             PlaylistImage = getIntent().getStringExtra("PlaylistImage");
-        }
-        if (getIntent().getExtras() != null) {
             PlaylistType = getIntent().getStringExtra("PlaylistType");
-        }
-        if (getIntent().getExtras() != null) {
             ScreenView = getIntent().getStringExtra("ScreenView");
         }
 
@@ -274,7 +266,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvPlayLists.setVisibility(View.GONE);
                             } else {
-                            binding.rvPlayLists.setVisibility(View.VISIBLE);
+                                binding.rvPlayLists.setVisibility(View.VISIBLE);
 
 //                            p = new Properties();
 //                            p.putValue("userId", UserID);
@@ -292,8 +284,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
 //                            Gson gson = new Gson();
 //                            p.putValue("playlists", gson.toJson(section));
 //                            BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
-                            AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
-                            binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+                                AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
+                                binding.rvPlayLists.setAdapter(addPlaylistAdapter);
                             }
                         }
                     } catch (Exception e) {
