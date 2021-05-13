@@ -10,6 +10,7 @@ import com.brainwellnessspa.databinding.ActivityPlaylistDoneBinding
 
 class PlaylistDoneActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlaylistDoneBinding
+    var BackClick : String?=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_playlist_done)
@@ -18,9 +19,17 @@ class PlaylistDoneActivity : AppCompatActivity() {
         binding.tvSubTitle.text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"
 
         binding.btnContinue.setOnClickListener {
-            val intent = Intent(this@PlaylistDoneActivity, BottomNavigationActivity::class.java)
-            startActivity(intent)
-            finish()
+            if (intent.extras != null) {
+                BackClick = intent.getStringExtra("BackClick")
+            }
+            if(BackClick.equals("0",true)){
+                val intent = Intent(this@PlaylistDoneActivity, BottomNavigationActivity::class.java)
+                startActivity(intent)
+                finish()
+            }else if(BackClick.equals("1",true)){
+                finish()
+            }
+
         }
     }
 }

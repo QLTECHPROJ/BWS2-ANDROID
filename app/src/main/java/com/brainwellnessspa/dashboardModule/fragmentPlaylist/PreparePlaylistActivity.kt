@@ -16,8 +16,9 @@ class PreparePlaylistActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_prepare_playlist)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this@PreparePlaylistActivity, PlaylistDoneActivity::class.java)
-            startActivity(intent)
+            val i = Intent(this@PreparePlaylistActivity, PlaylistDoneActivity::class.java)
+            i.putExtra("BackClick",intent.getStringExtra("BackClick"))
+            startActivity(i)
             finish()
         }, (2*1000).toLong())
     }

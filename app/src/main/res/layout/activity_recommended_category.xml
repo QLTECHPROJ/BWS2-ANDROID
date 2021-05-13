@@ -72,16 +72,15 @@
                             android:text="Area of focus"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_18sdp" />
-
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvSelectedCategory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never"
-                            app:spanCount="3"
                             tools:itemCount="3"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:listitem="@layout/selected_category_raw" />
 
                         <RelativeLayout

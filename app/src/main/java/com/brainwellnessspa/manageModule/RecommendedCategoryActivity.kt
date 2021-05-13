@@ -28,6 +28,7 @@ import com.brainwellnessspa.dashboardModule.fragmentPlaylist.PreparePlaylistActi
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.home.HomeFragment
 import com.brainwellnessspa.databinding.*
 import com.google.android.flexbox.*
 import com.google.gson.Gson
@@ -69,7 +70,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         CoEMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
+        val layoutManager = FlexboxLayoutManager(ctx)
+        layoutManager.flexWrap = FlexWrap.WRAP
+        layoutManager.alignItems = AlignItems.STRETCH
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.FLEX_START
+        binding.rvSelectedCategory.layoutManager = layoutManager
         getCatSaveData()
         prepareRecommnedData()
         binding.searchView.onActionViewExpanded()
@@ -688,6 +694,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             editor.commit()
 
                             val i = Intent(activity, PreparePlaylistActivity::class.java)
+                            i.putExtra("BackClick", BackClick)
                             startActivity(i)
                             finish()
                         } else {
