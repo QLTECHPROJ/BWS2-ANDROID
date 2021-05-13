@@ -29,7 +29,27 @@
                     android:id="@+id/ivProfileImage"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:src="@drawable/ic_user_default_icon" />
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/rlLetter"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/profile_small_drawable"
+                    android:padding="@dimen/_4sdp"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tvLetter"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_16sdp"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 

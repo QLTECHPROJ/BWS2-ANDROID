@@ -72,7 +72,7 @@
                 android:singleLine="true"
                 android:theme="@style/WallSearchView"
                 app:queryBackground="@null"
-                app:queryHint="Add or search for audio, playlist"
+                app:queryHint="Add or search for audio"
                 app:searchHintIcon="@null"
                 app:searchIcon="@null" />
 

@@ -7,7 +7,7 @@
         xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_59sdp"
+        android:layout_height="@dimen/_64sdp"
         android:orientation="horizontal"
         android:weightSum="1">
 
@@ -94,7 +94,7 @@
 
         <LinearLayout
             android:layout_width="@dimen/_0sdp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.26">
 
             <RelativeLayout

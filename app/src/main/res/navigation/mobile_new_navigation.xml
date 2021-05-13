@@ -17,6 +17,7 @@
         android:label="@string/title_manage"
         tools:layout="@layout/fragment_manage" />
 
+<!--
     <fragment
         android:id="@+id/navigation_Wellness"
         android:name="com.brainwellnessspa.dashboardModule.wellness.WellnessFragment"
@@ -28,6 +29,7 @@
         android:name="com.brainwellnessspa.dashboardModule.elevate.ElevateFragment"
         android:label="@string/title_Elevate"
         tools:layout="@layout/fragment_elevate" />
+-->
 
     <fragment
         android:id="@+id/navigation_Profile"

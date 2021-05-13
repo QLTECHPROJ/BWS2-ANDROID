@@ -22,15 +22,17 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
-import com.brainwellnessspa.dashboardModule.models.MainPlaylistLibraryModel
-import com.brainwellnessspa.dashboardModule.manage.ManageFragment
+import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.RoomDataBase.DatabaseClient
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetailsUnique
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
+import com.brainwellnessspa.dashboardModule.manage.ManageFragment
+import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
+import com.brainwellnessspa.dashboardModule.models.MainPlaylistLibraryModel
 import com.brainwellnessspa.databinding.FragmentPlaylistBinding
 import com.brainwellnessspa.databinding.MainPlaylistLayoutBinding
 import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding
@@ -61,12 +63,17 @@ class MainPlaylistFragment : Fragment() {
     lateinit var ctx: Context
     lateinit var act: Activity
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
         val view = binding.root
         ctx = requireActivity()
         act = requireActivity()
-        val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared =
+            ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE)
@@ -88,35 +95,47 @@ class MainPlaylistFragment : Fragment() {
 
         binding.llBack.setOnClickListener { view1 -> callBack() }
         val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
-        binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-        binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+        binding.ivCreatePlaylist.layoutParams.height =
+            (measureRatio.height * measureRatio.ratio).toInt()
+        binding.ivCreatePlaylist.layoutParams.width =
+            (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
-        Glide.with(activity!!).load(R.drawable.ic_create_playlist)
+        Glide.with(requireActivity()).load(R.drawable.ic_create_playlist)
             .thumbnail(0.05f)
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(32)))
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
             .priority(Priority.HIGH)
             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
             .into(binding.ivCreatePlaylist)
-        val manager: RecyclerView.LayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val manager: RecyclerView.LayoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.rvMainPlayList.setLayoutManager(manager)
         binding.rvMainPlayList.setItemAnimator(DefaultItemAnimator())
         prepareData("onCreateView")
         return view
     }
 
-    private fun callMyPlaylistsFragment(s: String, id: String, name: String, playlistImage: String, MyDownloads: String, ScreenView: String, act: Activity, ctx: Context) {
+    private fun callMyPlaylistsFragment(
+        s: String,
+        id: String,
+        name: String,
+        playlistImage: String,
+        MyDownloads: String,
+        ScreenView: String,
+        act: Activity,
+        ctx: Context
+    ) {
 //        try {
-            val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-            i.putExtra("New", s)
-            i.putExtra("PlaylistID", id)
-            i.putExtra("PlaylistName", name)
-            i.putExtra("PlaylistImage", playlistImage)
-            i.putExtra("PlaylistSource", PlaylistSource)
-            i.putExtra("MyDownloads", MyDownloads)
-            i.putExtra("ScreenView", ScreenView)
-            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-            ctx.startActivity(i)
-            act.overridePendingTransition(0, 0)
+        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+        i.putExtra("New", s)
+        i.putExtra("PlaylistID", id)
+        i.putExtra("PlaylistName", name)
+        i.putExtra("PlaylistImage", playlistImage)
+        i.putExtra("PlaylistSource", PlaylistSource)
+        i.putExtra("MyDownloads", MyDownloads)
+        i.putExtra("ScreenView", ScreenView)
+        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+        ctx.startActivity(i)
+        act.overridePendingTransition(0, 0)
 //        } catch (e: Exception) {
 //            e.printStackTrace()
 //        }
@@ -124,13 +143,24 @@ class MainPlaylistFragment : Fragment() {
 
     private fun prepareData(comeFrom: String) {
         if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+            BWSApplication.showProgressBar(
+                binding!!.progressBar,
+                binding!!.progressBarHolder,
+                activity
+            )
             val listCall = APINewClient.getClient().getMainPlayLists(CoUserID)
             listCall.enqueue(object : Callback<MainPlaylistLibraryModel?> {
-                override fun onResponse(call: Call<MainPlaylistLibraryModel?>, response: Response<MainPlaylistLibraryModel?>) {
+                override fun onResponse(
+                    call: Call<MainPlaylistLibraryModel?>,
+                    response: Response<MainPlaylistLibraryModel?>
+                ) {
                     try {
                         if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+                            BWSApplication.hideProgressBar(
+                                binding!!.progressBar,
+                                binding!!.progressBarHolder,
+                                activity
+                            )
                             val listModel = response.body()
                             binding!!.rlCreatePlaylist.visibility = View.VISIBLE
                             listModelGloble = listModel!!.responseData
@@ -152,7 +182,11 @@ class MainPlaylistFragment : Fragment() {
                                 val gsonBuilder = GsonBuilder()
                                 gson = gsonBuilder.create()
                                 p.putValue("sections", gson.toJson(section))
-                                BWSApplication.addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen)
+                                BWSApplication.addToSegment(
+                                    "Playlist Screen Viewed",
+                                    p,
+                                    CONSTANTS.screen
+                                )
                             }
                         }
                     } catch (e: java.lang.Exception) {
@@ -161,7 +195,11 @@ class MainPlaylistFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<MainPlaylistLibraryModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(
+                        binding!!.progressBar,
+                        binding!!.progressBarHolder,
+                        activity
+                    )
                 }
             })
         } else {
@@ -177,12 +215,15 @@ class MainPlaylistFragment : Fragment() {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
+
     private fun GetPlaylistDetail(responseData: ArrayList<MainPlaylistLibraryModel.ResponseData>) {
         DatabaseClient
-                .getInstance(activity)
-                .getaudioDatabase()
-                .taskDao()
-                .allPlaylist1.observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
+            .getInstance(activity)
+            .getaudioDatabase()
+            .taskDao()
+            .allPlaylist1.observe(
+                requireActivity(),
+                { audioList: List<DownloadPlaylistDetailsUnique> ->
                     val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
                     if (audioList.isNotEmpty()) {
                         for (i in audioList.indices) {
@@ -206,11 +247,25 @@ class MainPlaylistFragment : Fragment() {
                                 responseData[i].details = details
                             }
                         }
-                        adapter = MainPlayListAdapter(ctx, binding, act, responseData, CoUserID, playlistAdapter)
+                        adapter = MainPlayListAdapter(
+                            ctx,
+                            binding,
+                            act,
+                            responseData,
+                            CoUserID,
+                            playlistAdapter
+                        )
                         binding.rvMainPlayList.adapter = adapter
                     } else {
                         if (BWSApplication.isNetworkConnected(activity)) {
-                            adapter = MainPlayListAdapter(ctx, binding, act, responseData, CoUserID, playlistAdapter)
+                            adapter = MainPlayListAdapter(
+                                ctx,
+                                binding,
+                                act,
+                                responseData,
+                                CoUserID,
+                                playlistAdapter
+                            )
                             binding.rvMainPlayList.adapter = adapter
                         }
                     }
@@ -221,8 +276,8 @@ class MainPlaylistFragment : Fragment() {
         val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
         val audioFragment: Fragment = ManageFragment()
         fragmentManager1.beginTransaction()
-                .replace(R.id.flContainer, audioFragment)
-                .commit()
+            .replace(R.id.flContainer, audioFragment)
+            .commit()
     }
 
     override fun onResume() {
@@ -230,25 +285,39 @@ class MainPlaylistFragment : Fragment() {
         super.onResume()
     }
 
-    class MainPlayListAdapter(var ctx: Context, var binding: FragmentPlaylistBinding, var act: Activity, var listModel: ArrayList<MainPlaylistLibraryModel.ResponseData>, var CoUserID: String?, var playlistAdapter: PlaylistAdapter?) : RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder>() {
+    class MainPlayListAdapter(
+        var ctx: Context,
+        var binding: FragmentPlaylistBinding,
+        var act: Activity,
+        var listModel: ArrayList<MainPlaylistLibraryModel.ResponseData>,
+        var CoUserID: String?,
+        var playlistAdapter: PlaylistAdapter?
+    ) : RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: MainPlaylistLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.main_playlist_layout, parent, false)
+            val v: MainPlaylistLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.main_playlist_layout,
+                parent,
+                false
+            )
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             if (listModel[position].details != null &&
-                    listModel[position].details!!.size > 6) {
+                listModel[position].details!!.size > 6
+            ) {
                 holder.binding.tvViewAll.visibility = (View.VISIBLE)
             } else {
                 holder.binding.tvViewAll.visibility = (View.GONE)
             }
             holder.binding.tvViewAll.setOnClickListener { view ->
                 val viewAllPlaylistFragment: Fragment = ViewAllPlaylistFragment()
-                val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
+                val fragmentManager1: FragmentManager =
+                    (ctx as FragmentActivity).supportFragmentManager
                 fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, viewAllPlaylistFragment)
-                        .commit()
+                    .replace(R.id.flContainer, viewAllPlaylistFragment)
+                    .commit()
                 val bundle = Bundle()
                 if (listModel[position].view.equals("My Downloads", ignoreCase = true)) {
                     bundle.putString("MyDownloads", "1")
@@ -264,14 +333,29 @@ class MainPlaylistFragment : Fragment() {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.create_palylist)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.blue_transparent)))
-                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                dialog.window!!.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
                 val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
                 val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
                 val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
                 edtCreate.requestFocus()
                 val popupTextWatcher: TextWatcher = object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    override fun beforeTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
                         val number = edtCreate.text.toString().trim { it <= ' ' }
                         if (!number.isEmpty()) {
                             btnSendCode.isEnabled = true
@@ -296,20 +380,52 @@ class MainPlaylistFragment : Fragment() {
                 }
                 btnSendCode.setOnClickListener { view1: View? ->
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        val listCall = APINewClient.getClient().getCreatePlaylist(CoUserID, edtCreate.text.toString())
+                        BWSApplication.showProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            act
+                        )
+                        val listCall = APINewClient.getClient()
+                            .getCreatePlaylist(CoUserID, edtCreate.text.toString())
                         listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
-                            override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
+                            override fun onResponse(
+                                call: Call<CreateNewPlaylistModel?>,
+                                response: Response<CreateNewPlaylistModel?>
+                            ) {
                                 try {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    BWSApplication.hideProgressBar(
+                                        binding.progressBar,
+                                        binding.progressBarHolder,
+                                        act
+                                    )
                                     if (response.isSuccessful) {
                                         val listModel = response.body()
-                                        if (listModel!!.responseData!!.iscreate.equals("0", ignoreCase = true)) {
+                                        if (listModel!!.responseData!!.iscreate.equals(
+                                                "0",
+                                                ignoreCase = true
+                                            )
+                                        ) {
                                             BWSApplication.showToast(listModel.responseMessage, act)
                                             dialog.dismiss()
-                                        } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) ||
-                                                listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
-                                            MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
+                                        } else if (listModel.responseData!!.iscreate.equals(
+                                                "1",
+                                                ignoreCase = true
+                                            ) ||
+                                            listModel.responseData!!.iscreate.equals(
+                                                "",
+                                                ignoreCase = true
+                                            )
+                                        ) {
+                                            MainPlaylistFragment().callMyPlaylistsFragment(
+                                                "1",
+                                                listModel.responseData!!.playlistID.toString(),
+                                                listModel.responseData!!.playlistName.toString(),
+                                                "",
+                                                "0",
+                                                "Your Created",
+                                                act,
+                                                ctx
+                                            )
                                             dialog.dismiss()
                                         }
                                     }
@@ -318,8 +434,15 @@ class MainPlaylistFragment : Fragment() {
                                 }
                             }
 
-                            override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                            override fun onFailure(
+                                call: Call<CreateNewPlaylistModel?>,
+                                t: Throwable
+                            ) {
+                                BWSApplication.hideProgressBar(
+                                    binding.progressBar,
+                                    binding.progressBarHolder,
+                                    act
+                                )
                             }
                         })
                     } else {
@@ -330,7 +453,8 @@ class MainPlaylistFragment : Fragment() {
                 dialog.show()
                 dialog.setCancelable(false)
             }
-            val manager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+            val manager: RecyclerView.LayoutManager =
+                LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
             holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
             holder.binding.rvMainAudio.layoutManager = manager
             if (listModel[position].details!!.size == 0) {
@@ -338,19 +462,47 @@ class MainPlaylistFragment : Fragment() {
             } else {
                 holder.binding.llMainLayout.visibility = View.VISIBLE
                 holder.binding.tvTitle.text = listModel[position].view
-                if (listModel[position].view.equals(ctx.getString(R.string.your_created), ignoreCase = true)) {
-                    playlistAdapter = PlaylistAdapter(listModel[position].details!!, ctx, act, "0", listModel[position].view!!)
+                if (listModel[position].view.equals(
+                        ctx.getString(R.string.your_created),
+                        ignoreCase = true
+                    )
+                ) {
+                    playlistAdapter = PlaylistAdapter(
+                        listModel[position].details!!,
+                        ctx,
+                        act,
+                        "0",
+                        listModel[position].view!!
+                    )
                     holder.binding.rvMainAudio.adapter = playlistAdapter
                 } else if (listModel[position].view.equals("My Downloads", ignoreCase = true)) {
-                    playlistAdapter = PlaylistAdapter(listModel[position].details!!, ctx, act, "1", listModel[position].view!!)
+                    playlistAdapter = PlaylistAdapter(
+                        listModel[position].details!!,
+                        ctx,
+                        act,
+                        "1",
+                        listModel[position].view!!
+                    )
                     holder.binding.rvMainAudio.adapter = playlistAdapter
-                } else if (listModel[position].view.equals(ctx.getString(R.string.Recommended_Playlist), ignoreCase = true)) {
-                    playlistAdapter = PlaylistAdapter(listModel[position].details!!, ctx,
-                            act, "0", listModel[position].view!!)
+                } else if (listModel[position].view.equals(
+                        ctx.getString(R.string.Recommended_Playlist),
+                        ignoreCase = true
+                    )
+                ) {
+                    playlistAdapter = PlaylistAdapter(
+                        listModel[position].details!!, ctx,
+                        act, "0", listModel[position].view!!
+                    )
                     holder.binding.rvMainAudio.adapter = playlistAdapter
-                } else if (listModel[position].view.equals(ctx.getString(R.string.populars), ignoreCase = true)) {
-                    playlistAdapter = PlaylistAdapter(listModel[position].details!!, ctx,
-                            act, "0", listModel[position].view!!)
+                } else if (listModel[position].view.equals(
+                        ctx.getString(R.string.populars),
+                        ignoreCase = true
+                    )
+                ) {
+                    playlistAdapter = PlaylistAdapter(
+                        listModel[position].details!!, ctx,
+                        act, "0", listModel[position].view!!
+                    )
                     holder.binding.rvMainAudio.adapter = playlistAdapter
                 }
             }
@@ -360,41 +512,90 @@ class MainPlaylistFragment : Fragment() {
             return listModel.size
         }
 
-        inner class MyViewHolder(var binding: MainPlaylistLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+        inner class MyViewHolder(var binding: MainPlaylistLayoutBinding) :
+            RecyclerView.ViewHolder(binding.root) {
         }
     }
 
-    class PlaylistAdapter(private val listModel: ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>, var ctx: Context, var act: Activity, var MyDownloads: String, var screenView: String) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
+    class PlaylistAdapter(
+        private val listModel: ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>,
+        var ctx: Context,
+        var act: Activity,
+        var MyDownloads: String,
+        var screenView: String
+    ) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
         var index = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: PlaylistCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.playlist_custom_layout, parent, false)
+            val v: PlaylistCustomLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.playlist_custom_layout, parent, false
+            )
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
-            holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.height =
+                (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width =
+                (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            holder.binding.tvAddToPlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.height =
+                (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.width =
+                (measureRatio.widthImg * measureRatio.ratio).toInt()
             val measureRatio1 = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
-            holder.binding.rlMainLayout.layoutParams.height = (measureRatio1.height * measureRatio1.ratio).toInt()
-            holder.binding.rlMainLayout.layoutParams.width = (measureRatio1.widthImg * measureRatio1.ratio).toInt()
+            holder.binding.rlMainLayout.layoutParams.height =
+                (measureRatio1.height * measureRatio1.ratio).toInt()
+            holder.binding.rlMainLayout.layoutParams.width =
+                (measureRatio1.widthImg * measureRatio1.ratio).toInt()
             holder.binding.tvPlaylistName.setText(listModel[position].playlistName)
             Glide.with(ctx).load(listModel[position].playlistImage).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
+                .into(holder.binding.ivRestaurantImage)
 
-            holder.binding.tvAddToPlaylist.visibility = (View.GONE)
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+            } else holder.binding.tvAddToPlaylist.visibility = View.GONE
+
+            holder.binding.tvAddToPlaylist.text = "Add To Playlist"
+            holder.binding.rlMainLayout.setOnLongClickListener {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                index = position
+                notifyDataSetChanged()
+                true
+            }
+
+            holder.binding.tvAddToPlaylist.setOnClickListener {
+                val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.putExtra("AudioId", "")
+                i.putExtra("ScreenView", "Playlist View All Screen")
+                i.putExtra("PlaylistID", listModel[position].playlistID)
+                i.putExtra("PlaylistName", "")
+                i.putExtra("PlaylistImage", "")
+                i.putExtra("PlaylistType", "")
+                i.putExtra("Liked", "0")
+                ctx.startActivity(i)
+            }
+
             holder.binding.rlMainLayout.setOnClickListener {
-
                 if (MyDownloads.equals("1", ignoreCase = true)) {
-                    MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!,
-                            listModel[position].playlistImage!!, MyDownloads, "Downloaded Playlists", act, ctx)
+                    MainPlaylistFragment().callMyPlaylistsFragment(
+                        "0",
+                        listModel[position].playlistID!!,
+                        listModel[position].playlistName!!,
+                        listModel[position].playlistImage!!,
+                        MyDownloads,
+                        "Downloaded Playlists",
+                        act,
+                        ctx
+                    )
                 } else {
-                    MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!,
-                            listModel[position].playlistImage!!, MyDownloads, screenView, act, ctx)
+                    MainPlaylistFragment().callMyPlaylistsFragment(
+                        "0", listModel[position].playlistID!!, listModel[position].playlistName!!,
+                        listModel[position].playlistImage!!, MyDownloads, screenView, act, ctx
+                    )
                 }
             }
         }
@@ -407,7 +608,8 @@ class MainPlaylistFragment : Fragment() {
             }
         }
 
-        inner class MyViewHolder(var binding: PlaylistCustomLayoutBinding) : RecyclerView.ViewHolder(binding.getRoot()) {
+        inner class MyViewHolder(var binding: PlaylistCustomLayoutBinding) :
+            RecyclerView.ViewHolder(binding.getRoot()) {
 
         }
     }

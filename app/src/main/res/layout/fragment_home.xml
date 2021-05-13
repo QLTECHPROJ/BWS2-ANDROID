@@ -44,11 +44,32 @@
                             android:layout_weight="0.15"
                             android:orientation="horizontal">
 
-                            <ImageView
+                            <RelativeLayout
+                                android:id="@+id/rlLetter"
+                                android:layout_width="@dimen/_34sdp"
+                                android:layout_height="@dimen/_34sdp"
+                                android:background="@drawable/profile_small_drawable"
+                                android:padding="@dimen/_4sdp"
+                                android:visibility="visible">
+
+                                <TextView
+                                    android:id="@+id/tvLetter"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/montserrat_semi_bold"
+                                    android:gravity="center"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_16sdp"/>
+
+                            </RelativeLayout>
+
+                            <com.brainwellnessspa.RoundedImageView
                                 android:id="@+id/ivUser"
                                 android:layout_width="@dimen/_34sdp"
                                 android:layout_height="@dimen/_34sdp"
                                 android:layout_gravity="center"
+                                android:visibility="gone"
                                 android:background="@drawable/ic_gray_user" />
                         </LinearLayout>
 
@@ -58,7 +79,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:layout_weight="0.75"
-                            android:gravity="left">
+                            android:gravity="start">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -75,7 +96,7 @@
                                     android:gravity="start"
                                     android:paddingLeft="@dimen/_12sdp"
                                     android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_13sdp" />
 
                                 <ImageView
                                     android:id="@+id/ivClickDown"
@@ -118,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginTop="90dp"
+                    android:layout_marginTop="@dimen/_64sdp"
                     android:layout_marginRight="@dimen/_20sdp"
                     android:background="@drawable/round_gray_border"
                     android:backgroundTint="#1597AA"
@@ -347,9 +368,11 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/llAreaOfFocus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:layout_width="match_parent"

@@ -29,27 +29,27 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
-import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
-import com.brainwellnessspa.dashboardModule.fragmentPlaylist.MyPlaylistListingActivity
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
-import com.brainwellnessspa.manageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
+import com.brainwellnessspa.Utility.APINewClient
+import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
+import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
+import com.brainwellnessspa.dashboardModule.fragmentPlaylist.MyPlaylistListingActivity
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
+import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
+import com.brainwellnessspa.databinding.*
+import com.brainwellnessspa.manageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.userModuleTwo.activities.AddProfileActivity
 import com.brainwellnessspa.userModuleTwo.activities.WalkScreenActivity
 import com.brainwellnessspa.userModuleTwo.models.AddedUserListModel
 import com.brainwellnessspa.userModuleTwo.models.SegmentUserList
 import com.brainwellnessspa.userModuleTwo.models.VerifyPinModel
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
-import com.brainwellnessspa.databinding.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -155,21 +155,34 @@ class HomeFragment : Fragment() {
             .build()
 
         binding.tvName.text = UserName
-        if (UserIMAGE.equals("", true)) {
-            binding.ivUser.setImageResource(R.drawable.ic_gray_user)
+        val name: String?
+        if (UserIMAGE.equals("", ignoreCase = true)) {
+            binding.ivUser.setVisibility(View.GONE)
+            if (UserName.equals("", ignoreCase = true)) {
+                name = "Guest"
+            } else {
+                name = UserName.toString()
+            }
+            val Letter = name.substring(0, 1)
+            binding.rlLetter.visibility = View.VISIBLE
+            binding.tvLetter.text = Letter
         } else {
+            binding.ivUser.setVisibility(View.VISIBLE)
+            binding.rlLetter.visibility = View.GONE
             Glide.with(requireActivity()).load(UserIMAGE)
                 .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
                 .into(binding.ivUser)
         }
-        val layoutManager = FlexboxLayoutManager(ctx)
-        layoutManager.flexWrap = FlexWrap.WRAP
-        layoutManager.alignItems = AlignItems.STRETCH
-        layoutManager.flexDirection = FlexDirection.ROW
-        layoutManager.justifyContent = JustifyContent.FLEX_START
-        binding.rvAreaOfFocusCategory.layoutManager = layoutManager
-        val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
-        binding.rvAreaOfFocusCategory.adapter = adapter
+
+            binding.llAreaOfFocus.visibility = View.VISIBLE
+            val layoutManager = FlexboxLayoutManager(ctx)
+            layoutManager.flexWrap = FlexWrap.WRAP
+            layoutManager.alignItems = AlignItems.STRETCH
+            layoutManager.flexDirection = FlexDirection.ROW
+            layoutManager.justifyContent = JustifyContent.FLEX_START
+            binding.rvAreaOfFocusCategory.layoutManager = layoutManager
+            val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
+            binding.rvAreaOfFocusCategory.adapter = adapter
 
         binding.llCheckIndexSocre.setOnClickListener {
             val intent = Intent(ctx, WalkScreenActivity::class.java)
@@ -327,7 +340,7 @@ class HomeFragment : Fragment() {
                     response: Response<HomeScreenModel?>
                 ) {
                     try {
-                        BWSApplication.hideProgressBar(
+                        hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
                             activity
@@ -446,87 +459,16 @@ class HomeFragment : Fragment() {
                                 )
                             ) {
                                 binding.tvReminder.setText("Update Reminder")
-                                val dialog = Dialog(ctx)
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                dialog.setContentView(R.layout.delete_reminder)
-                                dialog.window!!.setBackgroundDrawable(
-                                    ColorDrawable(
-                                        ContextCompat.getColor(
-                                            ctx,
-                                            R.color.dark_blue_gray
-                                        )
-                                    )
+                                getReminderDay(
+                                    ctx,
+                                    act,
+                                    CoUSERID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                    activity,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
                                 )
-                                dialog.window!!.setLayout(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT
-                                )
-                                val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
-                                val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
-                                val tvText = dialog.findViewById<TextView>(R.id.tvText)
-                                val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                                val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
-                                tvTitle.text = "Update Reminder"
-                                tvSubTitle.text = "You can update or delete your reminder"
-                                tvText.text = "Update"
-                                tvGoBack.text = "Delete"
-                                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.hide()
-                                        return@setOnKeyListener true
-                                    }
-                                    false
-                                }
-                                tvconfirm.setOnClickListener {
-                                    dialog.hide()
-                                    getReminderDay(
-                                        ctx,
-                                        act,
-                                        CoUSERID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                        activity,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderDay
-                                    )
-                                }
-                                tvGoBack.setOnClickListener { v: View? ->
-                                    val listCall = APINewClient.getClient().getDeleteRemider(
-                                        CoUSERID,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderId
-                                    )
-                                    listCall.enqueue(object : Callback<DeleteRemiderModel?> {
-                                        override fun onResponse(
-                                            call: Call<DeleteRemiderModel?>,
-                                            response: Response<DeleteRemiderModel?>
-                                        ) {
-                                            try {
-                                                val model = response.body()
-                                                if (model!!.responseCode.equals(
-                                                        ctx.getString(R.string.ResponseCodesuccess),
-                                                        ignoreCase = true
-                                                    )
-                                                ) {
-                                                    BWSApplication.showToast(
-                                                        model.responseMessage,
-                                                        activity
-                                                    )
-                                                    dialog.dismiss()
-                                                }
-                                            } catch (e: java.lang.Exception) {
-                                                e.printStackTrace()
-                                            }
-                                        }
-
-                                        override fun onFailure(
-                                            call: Call<DeleteRemiderModel?>,
-                                            t: Throwable
-                                        ) {
-                                        }
-                                    })
-                                }
-                                dialog.show()
-                                dialog.setCancelable(false)
                             }
                         }
 
@@ -660,7 +602,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
+                    hideProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
                         activity
@@ -1046,13 +988,26 @@ class HomeFragment : Fragment() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val modelList = model.coUserList
             holder.bind.tvName.text = modelList!![position].name
-            if (modelList[position].image.equals("", true)) {
-                holder.bind.ivProfileImage.setImageResource(R.drawable.ic_user_default_icon)
+
+            val name: String?
+            if (modelList[position].image.equals("", ignoreCase = true)) {
+                holder.bind.ivProfileImage.setVisibility(View.GONE)
+                if (modelList[position].name.equals("", ignoreCase = true)) {
+                    name = "Guest"
+                } else {
+                    name = modelList[position].name.toString()
+                }
+                val Letter = name.substring(0, 1)
+                holder.bind.rlLetter.visibility = View.VISIBLE
+                holder.bind.tvLetter.text = Letter
             } else {
+                holder.bind.ivProfileImage.setVisibility(View.VISIBLE)
+                holder.bind.rlLetter.visibility = View.GONE
                 Glide.with(activity!!).load(modelList[position].image)
                     .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
                     .into(holder.bind.ivProfileImage)
             }
+
             holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
             holder.bind.ivCheck.visibility = View.INVISIBLE
             if (selectedItem == position) {
@@ -1175,8 +1130,14 @@ class HomeFragment : Fragment() {
                                                     )
                                                 ) {
                                                     val intent =
-                                                        Intent(activity, WalkScreenActivity::class.java)
-                                                    intent.putExtra(CONSTANTS.ScreenView, "ProfileView")
+                                                        Intent(
+                                                            activity,
+                                                            WalkScreenActivity::class.java
+                                                        )
+                                                    intent.putExtra(
+                                                        CONSTANTS.ScreenView,
+                                                        "ProfileView"
+                                                    )
                                                     act.startActivity(intent)
                                                     act.finish()
                                                 } else if (responseData.isAssessmentCompleted.equals(
@@ -1185,7 +1146,10 @@ class HomeFragment : Fragment() {
                                                     )
                                                 ) {
                                                     val intent =
-                                                        Intent(activity, AssProcessActivity::class.java)
+                                                        Intent(
+                                                            activity,
+                                                            AssProcessActivity::class.java
+                                                        )
                                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                     act.startActivity(intent)
                                                     act.finish()
@@ -1267,7 +1231,10 @@ class HomeFragment : Fragment() {
                                                             )
                                                         )
                                                         .putValue("deviceType", "Android")
-                                                        .putValue("name", listModel.responseData!!.name)
+                                                        .putValue(
+                                                            "name",
+                                                            listModel.responseData!!.name
+                                                        )
                                                         .putValue("countryCode", "")
                                                         .putValue("countryName", "")
                                                         .putValue(
@@ -1278,7 +1245,10 @@ class HomeFragment : Fragment() {
                                                             "email",
                                                             listModel.responseData!!.email
                                                         )
-                                                        .putValue("DOB", listModel.responseData!!.dob)
+                                                        .putValue(
+                                                            "DOB",
+                                                            listModel.responseData!!.dob
+                                                        )
                                                         .putValue(
                                                             "profileImage",
                                                             listModel.responseData!!.image

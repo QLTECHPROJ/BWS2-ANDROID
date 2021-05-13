@@ -19,6 +19,7 @@
     <color name="red">#F44336</color>
     <color name="desc">#080808</color>
     <color name="blue_transparent">#CC2A3042</color>
+    <color name="blue_transparent_extra">#812A3042</color>
     <color name="extra_light_blue">#A6B0CF</color>
     <color name="transparent_white">#0000000F</color>
     <color name="dim_light_gray">#dddddd</color>

@@ -100,8 +100,8 @@ class ChangePasswordActivity : AppCompatActivity() {
         } else if (binding.etNewPswd.text.toString().length < 8
             || !isValidPassword(binding.etNewPswd.text.toString())
         ) {
-            binding.flCurrentPswd.error = "Valid new Login Password is required"
-            binding.flNewPswd.error = ""
+            binding.flCurrentPswd.error = ""
+            binding.flNewPswd.error = "Valid new Login Password is required"
             binding.flConfirmPswd.error = ""
         } else if (binding.etConfirmPswd.text.toString().equals("")) {
             binding.flCurrentPswd.error = ""
@@ -110,9 +110,9 @@ class ChangePasswordActivity : AppCompatActivity() {
         } else if (binding.etConfirmPswd.text.toString().length < 8
             || !isValidPassword(binding.etConfirmPswd.text.toString())
         ) {
-            binding.flCurrentPswd.error = "Valid confirm new Login Password is required"
+            binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = ""
-            binding.flConfirmPswd.error = ""
+            binding.flConfirmPswd.error = "Valid confirm new Login Password is required"
         }  else if (!binding.etConfirmPswd.text.toString()
                 .equals(binding.etNewPswd.text.toString())
         ) {

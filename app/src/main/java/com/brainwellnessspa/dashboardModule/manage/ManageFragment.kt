@@ -515,7 +515,7 @@ class ManageFragment : Fragment() {
                     binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
                     Glide.with(activity!!).load(R.drawable.ic_create_playlist)
                         .thumbnail(0.05f)
-                        .apply(RequestOptions.bitmapTransform(RoundedCorners(32)))
+                        .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
                         .priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                         .into(binding.ivCreatePlaylist)
@@ -585,86 +585,16 @@ class ManageFragment : Fragment() {
                             )
                         ) {
                             binding.tvReminder.text = "Update Reminder"
-                            val dialog = Dialog(ctx)
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                            dialog.setContentView(R.layout.delete_reminder)
-                            dialog.window!!.setBackgroundDrawable(
-                                ColorDrawable(
-                                    ctx.resources.getColor(
-                                        R.color.dark_blue_gray
-                                    )
-                                )
+                            BWSApplication.getReminderDay(
+                                ctx,
+                                act,
+                                CoUserID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                activity,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderDay
                             )
-                            dialog.window!!.setLayout(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                            )
-                            val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
-                            val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
-                            val tvText = dialog.findViewById<TextView>(R.id.tvText)
-                            val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
-                            tvTitle.text = "Update Reminder"
-                            tvSubTitle.text = "You can update or delete your reminder"
-                            tvText.text = "Update"
-                            tvGoBack.text = "Delete"
-                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    dialog.hide()
-                                    return@setOnKeyListener true
-                                }
-                                false
-                            }
-                            tvconfirm.setOnClickListener {
-                                dialog.hide()
-                                BWSApplication.getReminderDay(
-                                    ctx,
-                                    act,
-                                    CoUserID,
-                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                    activity,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
-                                )
-                            }
-                            tvGoBack.setOnClickListener {
-                                val listCall = APINewClient.getClient().getDeleteRemider(
-                                    CoUserID,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderId
-                                )
-                                listCall.enqueue(object : Callback<DeleteRemiderModel?> {
-                                    override fun onResponse(
-                                        call: Call<DeleteRemiderModel?>,
-                                        response: Response<DeleteRemiderModel?>
-                                    ) {
-                                        try {
-                                            val model = response.body()
-                                            if (model!!.responseCode.equals(
-                                                    ctx.getString(R.string.ResponseCodesuccess),
-                                                    ignoreCase = true
-                                                )
-                                            ) {
-                                                BWSApplication.showToast(
-                                                    model.responseMessage,
-                                                    activity
-                                                )
-                                                dialog.dismiss()
-                                            }
-                                        } catch (e: java.lang.Exception) {
-                                            e.printStackTrace()
-                                        }
-                                    }
-
-                                    override fun onFailure(
-                                        call: Call<DeleteRemiderModel?>,
-                                        t: Throwable
-                                    ) {
-                                    }
-                                })
-                            }
-                            dialog.show()
-                            dialog.setCancelable(false)
                         }
                     }
 
@@ -1452,7 +1382,7 @@ class ManageFragment : Fragment() {
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
@@ -1499,7 +1429,7 @@ class ManageFragment : Fragment() {
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
@@ -1546,7 +1476,7 @@ class ManageFragment : Fragment() {
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
@@ -1593,7 +1523,7 @@ class ManageFragment : Fragment() {
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
@@ -1640,7 +1570,7 @@ class ManageFragment : Fragment() {
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {

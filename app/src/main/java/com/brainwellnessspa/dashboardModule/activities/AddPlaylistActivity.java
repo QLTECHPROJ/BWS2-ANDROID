@@ -464,6 +464,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 dialog.show();
                                 dialog.setCancelable(false);
                             }*/
+                            finish();
                         } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
 
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);

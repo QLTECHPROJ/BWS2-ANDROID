@@ -330,4 +330,6 @@
     <string name="upgrade_plan">Upgrade Plan</string>
     <string name="resources">Resources</string>
     <string name="faqs">FAQ</string>
+    <string name="read_more_detail">Read More...</string>
+    <string name="desc_image">Resturant image</string>
 </resources>

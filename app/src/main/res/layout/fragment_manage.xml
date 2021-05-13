@@ -95,7 +95,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_20sdp"
-                        android:layout_marginTop="90dp"
+                        android:layout_marginTop="@dimen/_64sdp"
                         android:layout_marginRight="@dimen/_20sdp"
                         android:background="@drawable/round_gray_border"
                         android:backgroundTint="#1597AA"

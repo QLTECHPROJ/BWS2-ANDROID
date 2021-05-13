@@ -337,29 +337,16 @@ public class ViewAllPlaylistFragment extends Fragment {
             });
 
             holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
-//                if (IsLock.equalsIgnoreCase("1")) {
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-//                    i.putExtra("ComeFrom", "Plan");
-//                    startActivity(i);
-//                } else if (IsLock.equalsIgnoreCase("2")) {
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-//                    i.putExtra("ComeFrom", "Plan");
-//                    startActivity(i);
-//                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                 i.putExtra("AudioId", "");
                 i.putExtra("ScreenView", "Playlist View All Screen");
-                i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                 i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
                 i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
                 i.putExtra("PlaylistType", listModelList.get(position).getCreated());
                 i.putExtra("Liked", "0");
                 startActivity(i);
-//                }
             });
 
             holder.binding.rlMainLayout.setOnClickListener(view -> {

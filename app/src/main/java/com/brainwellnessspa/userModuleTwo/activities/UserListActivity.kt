@@ -128,10 +128,21 @@ class UserListActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvName.text = coUserlistModel!![position].name
+            val name: String?
 
             if (coUserlistModel!![position].image.equals("", true)) {
-                holder.bindingAdapter.ivProfileImage.setImageResource(R.drawable.ic_user_default_icon)
+                holder.bindingAdapter.ivProfileImage.setVisibility(View.GONE)
+                if (coUserlistModel!![position].name.equals("", ignoreCase = true)) {
+                    name = "Guest"
+                } else {
+                    name = coUserlistModel!![position].name.toString()
+                }
+                val Letter = name.substring(0, 1)
+                holder.bindingAdapter.rlLetter.visibility = View.VISIBLE
+                holder.bindingAdapter.tvLetter.text = Letter
             } else {
+                holder.bindingAdapter.ivProfileImage.setVisibility(View.VISIBLE)
+                holder.bindingAdapter.rlLetter.visibility = View.GONE
                 Glide.with(activity).load(coUserlistModel!![position].image)
                     .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
                     .into(holder.bindingAdapter.ivProfileImage)
