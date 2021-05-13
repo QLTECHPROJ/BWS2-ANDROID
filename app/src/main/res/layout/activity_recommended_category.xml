@@ -78,9 +78,6 @@
                             android:layout_height="wrap_content"
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never"
-                            tools:itemCount="3"
-                            android:orientation="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:listitem="@layout/selected_category_raw" />
 
                         <RelativeLayout

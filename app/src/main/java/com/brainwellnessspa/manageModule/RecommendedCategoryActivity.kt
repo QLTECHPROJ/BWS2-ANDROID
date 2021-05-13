@@ -359,7 +359,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     Log.e("selectedCategoriesName", catList.selectedCategoriesName.toString())
                     Log.e("posItem", posItem.toString())
 
-                    binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
+                    val layoutManager = FlexboxLayoutManager(ctx)
+                    layoutManager.flexWrap = FlexWrap.WRAP
+                    layoutManager.alignItems = AlignItems.STRETCH
+                    layoutManager.flexDirection = FlexDirection.ROW
+                    layoutManager.justifyContent = JustifyContent.FLEX_START
+                    binding.rvSelectedCategory.layoutManager = layoutManager
                     catList.catListadapter =
                         SelectedCategory(binding, ctx, catList.selectedCategoriesName)
                     binding.rvSelectedCategory.adapter = catList.catListadapter
@@ -410,8 +415,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 )
                                 Log.e("posItem", posItem.toString())
 
-                                binding.rvSelectedCategory.layoutManager =
-                                        GridLayoutManager(ctx, 3)
+                                val layoutManager = FlexboxLayoutManager(ctx)
+                                layoutManager.flexWrap = FlexWrap.WRAP
+                                layoutManager.alignItems = AlignItems.STRETCH
+                                layoutManager.flexDirection = FlexDirection.ROW
+                                layoutManager.justifyContent = JustifyContent.FLEX_START
+                                binding.rvSelectedCategory.layoutManager = layoutManager
                                 catList.catListadapter = SelectedCategory(
                                         binding,
                                         ctx,
@@ -589,7 +598,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             selectedCategoriesName = gson.fromJson(json5, type1)
         }
         if (selectedCategoriesTitle.size > 0) {
-            binding.rvSelectedCategory.layoutManager = GridLayoutManager(ctx, 3)
+            val layoutManager = FlexboxLayoutManager(ctx)
+            layoutManager.flexWrap = FlexWrap.WRAP
+            layoutManager.alignItems = AlignItems.STRETCH
+            layoutManager.flexDirection = FlexDirection.ROW
+            layoutManager.justifyContent = JustifyContent.FLEX_START
+            binding.rvSelectedCategory.layoutManager = layoutManager
             catListadapter = SelectedCategory(binding, ctx!!, selectedCategoriesName)
             binding.rvSelectedCategory.adapter = catListadapter
             binding.btnContinue.isEnabled=true
