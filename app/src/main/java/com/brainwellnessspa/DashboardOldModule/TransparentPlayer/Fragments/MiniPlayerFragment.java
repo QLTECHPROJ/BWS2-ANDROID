@@ -789,7 +789,7 @@ public class MiniPlayerFragment extends Fragment {
 //        player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
             if (audioClick) {
                 GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-                globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList);
+                globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList,position);
                 setPlayerCtrView();
             }
         } catch (Exception e) {

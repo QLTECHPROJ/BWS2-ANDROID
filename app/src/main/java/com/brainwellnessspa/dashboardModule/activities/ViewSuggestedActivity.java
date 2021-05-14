@@ -534,12 +534,11 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             }
                             callMyPlayer();
                         } else {
-                            callPlayer(0, listModelList2);
+                            callPlayer(0, listModelList2,true);
                         }
                     }
                 } else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                    listModelList2.add(listModel.get(position));
                     Gson gson = new Gson();
                     SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                     String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
@@ -556,23 +555,28 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
                     mainPlayModel.setImageFile(arrayList.getImageFile());
                     mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                    boolean audioc = false;
                     if (isDisclaimer == 1) {
                         if (player != null) {
                             player.setPlayWhenReady(true);
-                            listModelList2.add(position, mainPlayModel);
+                            audioc = false;
+                            listModelList2.add(mainPlayModel);
                         } else {
                             isDisclaimer = 0;
                             if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                listModelList2.add(position, mainPlayModel);
+                                audioc = true;
+                                listModelList2.add(mainPlayModel);
                             }
                         }
                     } else {
                         isDisclaimer = 0;
                         if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                            listModelList2.add(position, mainPlayModel);
+                            audioc = true;
+                            listModelList2.add(mainPlayModel);
                         }
                     }
-                    callPlayer(0, listModelList2);
+                    listModelList2.add(listModel.get(position));
+                    callPlayer(0, listModelList2,audioc);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -586,8 +590,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             activity.overridePendingTransition(0, 0);
         }
 
-        private void callPlayer(int position, ArrayList<SuggestedModel.ResponseData> listModel) {
-            callNewPlayerRelease();
+        private void callPlayer(int position, ArrayList<SuggestedModel.ResponseData> listModel,boolean audioc) {
+            if(audioc) {
+                callNewPlayerRelease();
+            }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -598,7 +604,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Recommended Search");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchAudio");
             editor.apply();
-            audioClick = true;
+            audioClick = audioc;
             callMyPlayer();
         }
 

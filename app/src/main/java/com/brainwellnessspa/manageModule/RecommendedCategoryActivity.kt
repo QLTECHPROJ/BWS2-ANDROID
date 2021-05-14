@@ -177,7 +177,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
     class AllCategory(
         var binding: ActivityRecommendedCategoryBinding,
-        private val listModel: List<RecommendedCategoryModel.ResponseData>,
+        var listModel: List<RecommendedCategoryModel.ResponseData>,
         var ctx: Context,
         var activity: Activity
     ) : RecyclerView.Adapter<AllCategory.MyViewHolder>(), Filterable {
@@ -231,14 +231,24 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 override fun performFiltering(charSequence: CharSequence): FilterResults {
                     val filterResults = FilterResults()
                     val charString = charSequence.toString()
-                    if (charString.isEmpty()) {
+                    if (charString.isEmpty() || charString == "") {
                         listFilterData = listModel
                     } else {
                         val filteredList = ArrayList<RecommendedCategoryModel.ResponseData>()
-                        for (row in listModel) {
-                           /* if (row.details!!.contains(charString.toLowerCase(Locale.ROOT))) {
-                                filteredList.add(row)
-                            }*/
+                        var filteredListnew = ArrayList<RecommendedCategoryModel.ResponseData>()
+                         filteredListnew.addAll(listModel)
+                        for (i1 in filteredListnew.indices) {
+                            val r = arrayListOf<RecommendedCategoryModel.ResponseData.Detail>()
+                            for (i in filteredListnew[i1].details!!.indices) {
+                                if ( filteredListnew[i1].details!![i].problemName!!.toLowerCase(Locale.ROOT).contains(charString.toLowerCase(Locale.ROOT))) {
+                                    r.add( filteredListnew[i1].details!![i])
+                                } else {
+                                    filteredListnew[i1].details!!.drop(i)
+                                }
+                            }
+                            filteredListnew[i1].details=null
+                            filteredListnew[i1].details=r
+                            filteredList.add(filteredListnew[i1])
                         }
                         listFilterData = filteredList
                     }

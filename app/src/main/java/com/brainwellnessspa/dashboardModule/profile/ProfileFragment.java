@@ -39,7 +39,6 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
-import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.manageModule.ManageActivity;
 import com.brainwellnessspa.profileModule.AccountInfoActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;

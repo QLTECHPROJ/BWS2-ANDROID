@@ -28,6 +28,7 @@ import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity
+import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
 import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
@@ -726,7 +727,7 @@ class HomeFragment : Fragment() {
                         }
                         callMyPlayer(ctx, act)
                     } else {
-                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID,true)
                     }
                 }
             } else {
@@ -768,7 +769,7 @@ class HomeFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID)
+                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID,audioc)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
@@ -804,7 +805,7 @@ class HomeFragment : Fragment() {
                         }
                         callMyPlayer(ctx, act)
                     } else {
-                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID)
+                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID,true)
                     }
                 }
             } else {
@@ -846,7 +847,7 @@ class HomeFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID)
+                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID,audioc)
             }
         }
     }
@@ -872,9 +873,12 @@ class HomeFragment : Fragment() {
         listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
         ctx: Context,
         act: Activity,
-        playlistID: String
+        playlistID: String,
+        audioc:Boolean
     ) {
-        callNewPlayerRelease()
+        if(audioc) {
+            callNewPlayerRelease()
+        }
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
@@ -902,7 +906,7 @@ class HomeFragment : Fragment() {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
         }
         editor.apply()
-        DashboardActivity.audioClick = true
+        audioClick = audioc
         callMyPlayer(ctx, act)
     }
 

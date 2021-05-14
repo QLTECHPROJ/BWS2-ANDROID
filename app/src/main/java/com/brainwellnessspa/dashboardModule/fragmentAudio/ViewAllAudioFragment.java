@@ -24,6 +24,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Models.SegmentAudio;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.dashboardModule.manage.ManageFragment;
@@ -33,6 +34,7 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.dashboardModule.models.SuggestedModel;
 import com.brainwellnessspa.databinding.AudiolistCustomLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding;
 import com.bumptech.glide.Glide;
@@ -41,8 +43,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +56,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
 
@@ -393,59 +398,210 @@ public class ViewAllAudioFragment extends Fragment {
                 Integer PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (Name.equalsIgnoreCase("My Downloads")) {
                     if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
-                        if (player != null) {
-                            if (position != PlayerPosition) {
-                                player.seekTo(position, 0);
-                                player.setPlayWhenReady(true);
-                                SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-                                editor.apply();
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                if (!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
+                                }
+                            } else {
+                                audioClick = true;
                             }
                             callMyPlayer();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                         } else {
-                            callPlayer(position, listModelList);
+                            if (player != null) {
+                                if (position != PlayerPosition) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+                                    editor.apply();
+                                }
+                                callMyPlayer();
+                            } else {
+                                callPlayer(position, listModelList, true);
+                            }
                         }
                     }else{
-                        callPlayer(position, listModelList);
+                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                        listModelList2.addAll(listModelList);
+                        Gson gson = new Gson();
+                        SharedPreferences shared12 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                        String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                        Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                        }.getType();
+                        HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+                        ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+                        mainPlayModel.setID(arrayList.getId());
+                        mainPlayModel.setName(arrayList.getName());
+                        mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                        mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                        mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                        mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                        mainPlayModel.setImageFile(arrayList.getImageFile());
+                        mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                        boolean audioc = false;
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(mainPlayModel);
+                            } else {
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(mainPlayModel);
+                                }
+                            }
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(mainPlayModel);
+                            }
+                        }
+                        callPlayer(position, listModelList2,audioc);
                     }
                 }else if(Name.equalsIgnoreCase(getString(R.string.top_categories))){
                     String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
                     if(catName.equalsIgnoreCase(Category)) {
-                        if (player != null) {
-                            if (position != PlayerPosition) {
-                                player.seekTo(position, 0);
-                                player.setPlayWhenReady(true);
-                                SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-                                editor.apply();
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                if (!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
+                                }
+                            } else {
+                                audioClick = true;
                             }
                             callMyPlayer();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                         } else {
-                            callPlayer(position, listModelList);
+                            if (player != null) {
+                                if (position != PlayerPosition) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+                                    editor.apply();
+                                }
+                                callMyPlayer();
+                            } else {
+                                callPlayer(position, listModelList, true);
+                            }
                         }
                     }else{
-                        callPlayer(position, listModelList);
+                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                        listModelList2.addAll(listModelList);
+                        Gson gson = new Gson();
+                        SharedPreferences shared12 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                        String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                        Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                        }.getType();
+                        HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+                        ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+                        mainPlayModel.setID(arrayList.getId());
+                        mainPlayModel.setName(arrayList.getName());
+                        mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                        mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                        mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                        mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                        mainPlayModel.setImageFile(arrayList.getImageFile());
+                        mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                        boolean audioc = false;
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(mainPlayModel);
+                            } else {
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(mainPlayModel);
+                                }
+                            }
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(mainPlayModel);
+                            }
+                        }
+                        callPlayer(position, listModelList2,audioc);
                     }
                 }else{
                     if((AudioPlayerFlag.equalsIgnoreCase("MainAudioList")
                             || AudioPlayerFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)){
-                        if (player != null) {
-                            if (position != PlayerPosition) {
-                                player.seekTo(position, 0);
-                                player.setPlayWhenReady(true);
-                                SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedxx.edit();
-                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-                                editor.apply();
+
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                if (!player.getPlayWhenReady()) {
+                                    player.setPlayWhenReady(true);
+                                }
+                            } else {
+                                audioClick = true;
                             }
                             callMyPlayer();
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                         } else {
-                            callPlayer(0, listModelList);
+                            if (player != null) {
+                                if (position != PlayerPosition) {
+                                    player.seekTo(position, 0);
+                                    player.setPlayWhenReady(true);
+                                    SharedPreferences sharedxx = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedxx.edit();
+                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+                                    editor.apply();
+                                }
+                                callMyPlayer();
+                            } else {
+                                callPlayer(0, listModelList, true);
+                            }
                         }
                     }else{
-                        callPlayer(position, listModelList);
+                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+                        listModelList2.addAll(listModelList);
+                        Gson gson = new Gson();
+                        SharedPreferences shared12 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                        String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                        Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                        }.getType();
+                        HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+                        ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+                        mainPlayModel.setID(arrayList.getId());
+                        mainPlayModel.setName(arrayList.getName());
+                        mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                        mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                        mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                        mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                        mainPlayModel.setImageFile(arrayList.getImageFile());
+                        mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                        boolean audioc = false;
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(mainPlayModel);
+                            } else {
+                                isDisclaimer = 0;
+                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                    audioc = true;
+                                    listModelList2.add(mainPlayModel);
+                                }
+                            }
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(mainPlayModel);
+                            }
+                        }
+                        callPlayer(position, listModelList2,audioc);
                     }
                 }
             } catch (Exception e) {
@@ -459,8 +615,10 @@ public class ViewAllAudioFragment extends Fragment {
             activity.overridePendingTransition(0, 0);
         }
 
-        private void callPlayer(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModel) {
-            callNewPlayerRelease();
+        private void callPlayer(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModel,boolean audioc) {
+            if(audioc) {
+                callNewPlayerRelease();
+            }
             SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -494,7 +652,7 @@ public class ViewAllAudioFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom,Name);
             editor.apply();
-            audioClick = true;
+            audioClick = audioc;
             callMyPlayer();
         }
         @Override

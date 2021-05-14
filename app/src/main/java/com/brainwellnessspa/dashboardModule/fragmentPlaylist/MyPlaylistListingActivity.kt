@@ -1614,7 +1614,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         }
                         callMyPlayer(ctx, act)
                     } else {
-                        callPlayer(position, view, listModel, ctx, act, playlistID, created)
+                        callPlayer(position, view, listModel, ctx, act, playlistID, created,true)
                     }
                 }
             } else {
@@ -1656,7 +1656,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayer(position, view, listModelList2, ctx, act, playlistID, created)
+                callPlayer(position, view, listModelList2, ctx, act, playlistID, created,audioc)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
@@ -1690,7 +1690,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         }
                         callMyPlayer(ctx, act)
                     } else {
-                        callPlayer(position, view, listModel, ctx, act, playlistID, created)
+                        callPlayer(position, view, listModel, ctx, act, playlistID, created,true)
                     }
                 }
             } else {
@@ -1732,7 +1732,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayer(position, view, listModelList2, ctx, act, playlistID, created)
+                callPlayer(position, view, listModelList2, ctx, act, playlistID, created,audioc)
             }
         }
     }
@@ -1751,9 +1751,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         ctx: Context,
         act: Activity,
         playlistID: String,
-        created: String?
+        created: String?,
+        audoc:Boolean
     ) {
-        callNewPlayerRelease()
+        if(audoc) {
+            callNewPlayerRelease()
+        }
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
@@ -1785,7 +1788,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         editor.apply()
-        audioClick = true
+        audioClick = audioc
         callMyPlayer(ctx, act)
     }
 

@@ -13,6 +13,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
@@ -29,6 +34,7 @@ import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -148,7 +154,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
         });
 
         binding.btnCheckout.setOnClickListener(view -> {
-            try {
+          /*  try {
                 if (binding.edtCode.getText().toString().equalsIgnoreCase("")) {
                     Promocode = "";
                     Properties p1 = new Properties();
@@ -165,14 +171,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
                         p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                         p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
                         p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                      /*  Intent i = new Intent(ctx, PaymentActivity.class);
+                      *//*  Intent i = new Intent(ctx, PaymentActivity.class);
                         i.putExtra("ComesTrue", ComesTrue);
                         i.putExtra("comeFrom", "membership");
                         i.putParcelableArrayListExtra("PlanData", listModelList2);
                         i.putExtra("TrialPeriod", "");
                         i.putExtra("position", position);
                         startActivity(i);
-                        finish();*/
+                        finish();*//*
                     } else {
                         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                             return;
@@ -225,14 +231,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                                 p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
                                                 p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
                                                 p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                                             /*   Intent i = new Intent(ctx, PaymentActivity.class);
+                                             *//*   Intent i = new Intent(ctx, PaymentActivity.class);
                                                 i.putExtra("ComesTrue", ComesTrue);
                                                 i.putExtra("comeFrom", "membership");
                                                 i.putParcelableArrayListExtra("PlanData", listModelList2);
                                                 i.putExtra("TrialPeriod", "");
                                                 i.putExtra("position", position);
                                                 startActivity(i);
-                                                finish();*/
+                                                finish();*//*
                                             } else {
                                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                                     return;
@@ -276,7 +282,31 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
+            PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
+                @Override
+                public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
+                    // To be implemented in a later section.
+                }
+            };
+
+            BillingClient billingClient = BillingClient.newBuilder(activity)
+                    .setListener(purchasesUpdatedListener)
+                    .enablePendingPurchases()
+                    .build();
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(BillingResult billingResult) {
+                    if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
+                        // The BillingClient is ready. You can query purchases here.
+                    }
+                }
+                @Override
+                public void onBillingServiceDisconnected() {
+                    // Try to restart the connection on the next request to
+                    // Google Play by calling the startConnection() method.
+                }
+            });
         });
     }
 

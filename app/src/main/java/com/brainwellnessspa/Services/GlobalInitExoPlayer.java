@@ -61,6 +61,7 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
+import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -504,7 +505,7 @@ Appointment Audios dddd*/
                 }
                 AudioInterrupted = true;
                 BWSApplication.addToSegment("Audio Interrupted", p, CONSTANTS.track);
-                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
                 //should check null because in airplane mode it will be null
                 NetworkCapabilities nc;
                 float downSpeed = 0;
@@ -519,7 +520,7 @@ Appointment Audios dddd*/
                     }
                 }
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
+                    BatteryManager bm = (BatteryManager) ctx.getSystemService(BATTERY_SERVICE);
                     batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
                 }
@@ -617,12 +618,15 @@ Appointment Audios dddd*/
     }
 
 
-    public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList) {
+    public void GlobleInItDisclaimer(Context ctx, ArrayList<MainPlayModel> mainPlayModelList,int pos) {
         callNewPlayerRelease();
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
-        int position = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         player = new SimpleExoPlayer.Builder(ctx.getApplicationContext()).build();
-        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(position).getAudioFile());
+        MediaItem mediaItem1;
+        if(BWSApplication.isNetworkConnected(ctx)) {
+            mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(pos).getAudioFile());
+        }else{
+            mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
+        }
         player.setMediaItem(mediaItem1);
         InitNotificationAudioPLayerD(ctx);
         player.prepare();
