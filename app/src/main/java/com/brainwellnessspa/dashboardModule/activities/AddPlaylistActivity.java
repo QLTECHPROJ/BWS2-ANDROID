@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +39,7 @@ import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.dashboardModule.fragmentPlaylist.MyPlaylistListingActivity;
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel;
@@ -426,46 +429,43 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 if (d.equalsIgnoreCase("0")) {
                                     dialog.dismiss();
                                 }
-                                final Dialog dialog = new Dialog(ctx);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.go_to_playlist);
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-                                dialog.setOnKeyListener((v, keyCode, event) -> {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss();
-                                        return true;
-                                    }
-                                    return false;
-                                });
 
-                                rlCreate.setOnClickListener(view2 -> {
-
-                                    addToPlayList = true;
-                                    MyPlaylistId = PlaylistID;
-                                    Intent intent = new Intent(ctx, DashboardActivity.class);
-                                    intent.putExtra("Goplaylist", "1");
-                                    intent.putExtra("New", New);
-                                    intent.putExtra("PlaylistID", PlaylistID);
-                                    intent.putExtra("PlaylistName", name);
-                                    intent.putExtra("PlaylistImage", "");
-                                    intent.putExtra("PlaylistType", Created);
-                                    startActivity(intent);
-                                    finish();
-                                    overridePendingTransition(0, 0);
-                                    dialog.dismiss();
-                                });
-
-                                tvCancel.setOnClickListener(v -> {
-                                    dialog.dismiss();
-                                    finish();
-                                });
-                                dialog.show();
-                                dialog.setCancelable(false);
                             }*/
-                            finish();
+                            final Dialog dialog = new Dialog(ctx);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.setContentView(R.layout.go_to_playlist);
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                            dialog.setOnKeyListener((v, keyCode, event) -> {
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialog.dismiss();
+                                    return true;
+                                }
+                                return false;
+                            });
+
+                            rlCreate.setOnClickListener(view2 -> {
+//                                addToPlayList = true;
+//                                MyPlaylistId = PlaylistID;
+                                Intent intent = new Intent(ctx, MyPlaylistListingActivity.class);
+                                intent.putExtra("New", New);
+                                intent.putExtra("PlaylistID", PlaylistID);
+                                intent.putExtra("PlaylistName", name);
+                                intent.putExtra("MyDownloads", "0");
+                                startActivity(intent);
+                                finish();
+                                overridePendingTransition(0, 0);
+                                dialog.dismiss();
+                            });
+
+                            tvCancel.setOnClickListener(v -> {
+                                dialog.dismiss();
+                                finish();
+                            });
+                            dialog.show();
+                            dialog.setCancelable(false);
                         } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
 
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);

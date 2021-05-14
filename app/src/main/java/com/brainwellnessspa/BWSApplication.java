@@ -966,7 +966,7 @@ public class BWSApplication extends Application {
                                 tvHeading.setText(R.string.Rename_your_playlist);
                                 btnSendCode.setText(R.string.Save);
                                 edtCreate.requestFocus();
-                                edtCreate.setText(PlaylistName);
+                                edtCreate.setText(model.getResponseData().getPlaylistName());
                                 int position1 = edtCreate.getText().length();
                                 Editable editObj = edtCreate.getText();
                                 Selection.setSelection(editObj, position1);
@@ -982,25 +982,27 @@ public class BWSApplication extends Application {
                                 TextWatcher popupTextWatcher = new TextWatcher() {
                                     @Override
                                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                        String number = edtCreate.getText().toString();
-                                         if (number.equalsIgnoreCase("")) {
-                                            btnSendCode.setEnabled(false);
-                                            btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
-                                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
-                                        } else if (!number.equalsIgnoreCase(PlaylistName)) {
-                                             btnSendCode.setEnabled(true);
-                                             btnSendCode.setTextColor(ctx.getResources().getColor(R.color.light_black));
-                                             btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
-                                        } else {
-                                            btnSendCode.setEnabled(true);
-                                            btnSendCode.setTextColor(ctx.getResources().getColor(R.color.light_black));
-                                            btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
-                                        }
+
                                     }
 
                                     @Override
                                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                                        String number = edtCreate.getText().toString();
+                                        if (!number.equalsIgnoreCase("")) {
+                                            if (number.equalsIgnoreCase(model.getResponseData().getPlaylistName())) {
+                                                btnSendCode.setEnabled(false);
+                                                btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
+                                                btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                                            }else {
+                                                btnSendCode.setEnabled(true);
+                                                btnSendCode.setTextColor(ctx.getResources().getColor(R.color.light_black));
+                                                btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
+                                            }
+                                        } else {
+                                            btnSendCode.setEnabled(false);
+                                            btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
+                                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                                        }
                                     }
 
                                     @Override
