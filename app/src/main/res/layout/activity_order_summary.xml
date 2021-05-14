@@ -84,7 +84,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.56"
+                        android:layout_weight="0.50"
                         android:orientation="vertical">
 
                         <TextView
@@ -102,7 +102,7 @@
                             android:layout_marginTop="@dimen/_2sdp"
                             android:fontFamily="@font/montserrat_light"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_10sdp" />
 
                     </LinearLayout>
 
@@ -145,7 +145,7 @@
                     <TextView
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.75"
+                        android:layout_weight="0.60"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Manage Program"
                         android:textColor="@color/light_gray"
@@ -154,7 +154,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.24"
+                        android:layout_weight="0.40"
                         android:gravity="right"
                         android:layout_gravity="right"
                         android:orientation="vertical">
@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semi_bold"
                             android:gravity="right"
-                            android:textColor="@color/white"
+                            android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_17sdp" />
 
                         <TextView
@@ -175,7 +175,7 @@
                             android:fontFamily="@font/montserrat_light"
                             android:gravity="right"
                             android:text="Per Month"
-                            android:textColor="@color/white"
+                            android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_12sdp" />
 
                     </LinearLayout>
