@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        tools:context="com.brainwellnessspa.InvoiceModule.Fragments.AppointmentInvoiceFragment">
+        tools:context="com.brainwellnessspa.invoicemodule.fragments.AppointmentInvoiceFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"

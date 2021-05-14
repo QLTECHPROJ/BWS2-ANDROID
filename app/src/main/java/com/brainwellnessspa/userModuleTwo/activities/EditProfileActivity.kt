@@ -1,4 +1,4 @@
-package com.brainwellnessspa.profileModule
+package com.brainwellnessspa.userModuleTwo.activities
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -157,7 +157,7 @@ class EditProfileActivity : AppCompatActivity() {
                             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
-                        editor.commit()
+                        editor.apply()
 
                         analytics.identify(
                             Traits()

@@ -24,6 +24,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Models.SegmentAudio;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
@@ -168,6 +169,7 @@ public class ViewAllAudioFragment extends Fragment {
             binding.rvMainAudio.setAdapter(adapter);
         });
     }
+
     private void prepareData() {
 //        refreshData();
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -278,9 +280,8 @@ public class ViewAllAudioFragment extends Fragment {
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-//            holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-//            holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.llPlaylistName.setVisibility(View.GONE);
+            holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.tvAudioName.setText(listModelList.get(position).getName());
             Glide.with(getActivity()).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
@@ -288,9 +289,9 @@ public class ViewAllAudioFragment extends Fragment {
 
             holder.binding.llMore.setVisibility(View.VISIBLE);
             holder.binding.llMore.setOnClickListener(v ->
-                BWSApplication.callAudioDetails(listModelList.get(position).getID(),context,getActivity(),CoUSERID,"viewAllAudioList",
-                        new ArrayList<DownloadAudioDetails>(),listModelList,new ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
-                        new ArrayList<MainPlayModel>(),position)
+                    BWSApplication.callAudioDetails(listModelList.get(position).getID(), context, getActivity(), CoUSERID, "viewAllAudioList",
+                            new ArrayList<DownloadAudioDetails>(), listModelList, new ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
+                            new ArrayList<MainPlayModel>(), position)
             );
 /*            if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -309,85 +310,35 @@ public class ViewAllAudioFragment extends Fragment {
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+            */
             if (index == position) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-            } else*/
-         /*   holder.binding.tvAddToPlaylist.setText("Add To Playlist");
-            holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                    index = position;
-                    notifyDataSetChanged();
-                    return true;
-                }
-            });*/
-          /*  holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (IsLock.equalsIgnoreCase("1")) {
-                        Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        startActivity(i);
-                    } else if (IsLock.equalsIgnoreCase("2")) {
-                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
-                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                        Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
-                        i.putExtra("AudioId", listModelList.get(position).getID());
-                        i.putExtra("ScreenView", "Audio View All Screen");
-                        i.putExtra("PlaylistID", "");
-                        i.putExtra("PlaylistName", "");
-                        i.putExtra("PlaylistImage", "");
-                        i.putExtra("PlaylistType", "");
-                        i.putExtra("Liked", "0");
-                        startActivity(i);
-                    }
-                }
+            } else
+                holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+            holder.binding.rlMainLayout.setOnLongClickListener(v -> {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                index = position;
+                notifyDataSetChanged();
+                return true;
             });
-*/
+
+            holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
+                Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
+                i.putExtra("AudioId", listModelList.get(position).getID());
+                i.putExtra("ScreenView", "Audio View All Screen");
+                i.putExtra("PlaylistID", "");
+                i.putExtra("PlaylistName", "");
+                i.putExtra("PlaylistImage", "");
+                i.putExtra("PlaylistType", "");
+                i.putExtra("Liked", "0");
+                startActivity(i);
+
+            });
             holder.binding.rlMainLayout.setOnClickListener(view -> {
-              /*  if (IsLock.equalsIgnoreCase("1")) {
-                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(4, 6, 4, 280);
-                        binding.llSpace.setLayoutParams(params);
-                        if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-                            callnewTrans(position, listModelList);
-                        } else {
-                            callTransFrag(position, listModelList, true);
-                        }
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        startActivity(i);
-                    }
-                } else if (IsLock.equalsIgnoreCase("2")) {
-                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(4, 6, 4, 280);
-                        binding.llSpace.setLayoutParams(params);
-                        if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-                            callnewTrans(position, listModelList);
-                        } else {
-                            callTransFrag(position, listModelList, true);
-                        }
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast(getString(R.string.reactive_plan), getActivity());
-                    }
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {*/
                 callMainTransFrag(position);
-//                    if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-//                        callnewTrans(position, listModelList);
-//                    } else {
-//                        callTransFrag(position, listModelList, true);
-//                    }
-//                }
             });
         }
-
-
 
         public void callMainTransFrag(int position) {
             try {
@@ -423,7 +374,7 @@ public class ViewAllAudioFragment extends Fragment {
                                 callPlayer(position, listModelList, true);
                             }
                         }
-                    }else{
+                    } else {
                         ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
                         Gson gson = new Gson();
@@ -462,11 +413,11 @@ public class ViewAllAudioFragment extends Fragment {
                                 listModelList2.add(mainPlayModel);
                             }
                         }
-                        callPlayer(position, listModelList2,audioc);
+                        callPlayer(position, listModelList2, audioc);
                     }
-                }else if(Name.equalsIgnoreCase(getString(R.string.top_categories))){
+                } else if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                     String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
-                    if(catName.equalsIgnoreCase(Category)) {
+                    if (catName.equalsIgnoreCase(Category)) {
                         if (isDisclaimer == 1) {
                             if (player != null) {
                                 if (!player.getPlayWhenReady()) {
@@ -492,7 +443,7 @@ public class ViewAllAudioFragment extends Fragment {
                                 callPlayer(position, listModelList, true);
                             }
                         }
-                    }else{
+                    } else {
                         ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
                         Gson gson = new Gson();
@@ -531,11 +482,11 @@ public class ViewAllAudioFragment extends Fragment {
                                 listModelList2.add(mainPlayModel);
                             }
                         }
-                        callPlayer(position, listModelList2,audioc);
+                        callPlayer(position, listModelList2, audioc);
                     }
-                }else{
-                    if((AudioPlayerFlag.equalsIgnoreCase("MainAudioList")
-                            || AudioPlayerFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)){
+                } else {
+                    if ((AudioPlayerFlag.equalsIgnoreCase("MainAudioList")
+                            || AudioPlayerFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)) {
 
                         if (isDisclaimer == 1) {
                             if (player != null) {
@@ -562,7 +513,7 @@ public class ViewAllAudioFragment extends Fragment {
                                 callPlayer(0, listModelList, true);
                             }
                         }
-                    }else{
+                    } else {
                         ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
                         Gson gson = new Gson();
@@ -601,29 +552,30 @@ public class ViewAllAudioFragment extends Fragment {
                                 listModelList2.add(mainPlayModel);
                             }
                         }
-                        callPlayer(position, listModelList2,audioc);
+                        callPlayer(position, listModelList2, audioc);
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
         private void callMyPlayer() {
-            Intent i =new Intent(context, MyPlayerActivity.class);
+            Intent i = new Intent(context, MyPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             context.startActivity(i);
             activity.overridePendingTransition(0, 0);
         }
 
-        private void callPlayer(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModel,boolean audioc) {
-            if(audioc) {
+        private void callPlayer(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModel, boolean audioc) {
+            if (audioc) {
                 callNewPlayerRelease();
             }
             SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            String json="";
-            if(Name.equalsIgnoreCase("My Downloads")) {
+            String json = "";
+            if (Name.equalsIgnoreCase("My Downloads")) {
                 ArrayList<DownloadAudioDetails> downloadAudioDetails = new ArrayList<>();
                 for (int i = 0; i < listModelList.size(); i++) {
                     DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
@@ -639,22 +591,23 @@ public class ViewAllAudioFragment extends Fragment {
                 }
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
                 json = gson.toJson(downloadAudioDetails);
-            } else if(Name.equalsIgnoreCase(getString(R.string.top_categories))){
+            } else if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, getString(R.string.top_categories));
-                editor.putString(CONSTANTS.PREF_KEY_Cat_Name,Category);
+                editor.putString(CONSTANTS.PREF_KEY_Cat_Name, Category);
                 json = gson.toJson(listModel);
-            }else{
+            } else {
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "ViewAllAudioList");
                 json = gson.toJson(listModel);
             }
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
             editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
-            editor.putString(CONSTANTS.PREF_KEY_PlayFrom,Name);
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, Name);
             editor.apply();
             audioClick = audioc;
             callMyPlayer();
         }
+
         @Override
         public int getItemCount() {
             return listModelList.size();

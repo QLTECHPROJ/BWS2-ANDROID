@@ -1,5 +1,6 @@
 package com.brainwellnessspa.userModuleTwo.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -53,7 +54,7 @@ class UserListActivity : AppCompatActivity() {
     var CoEMAIL: String? = null
     lateinit var adapter: UserListAdapter
     private lateinit var editTexts: Array<EditText>
-    var tvSendOTPbool: Boolean = true
+    var tvSendOTPool: Boolean = true
     lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +101,7 @@ class UserListActivity : AppCompatActivity() {
     }
 
     class UserListAdapter(
-        private val listModel: AddedUserListModel.ResponseData,
+        listModel: AddedUserListModel.ResponseData,
         private var activity: Activity,
         var binding: ActivityUserListBinding,
         var USERID: String,
@@ -109,7 +110,7 @@ class UserListActivity : AppCompatActivity() {
     ) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var userList = UserListActivity()
         private var selectedItem = -1
-        private var coUserlistModel: List<AddedUserListModel.ResponseData.CoUser>? =
+        private var coUsersModel: List<AddedUserListModel.ResponseData.CoUser>? =
             listModel.coUserList
         lateinit var txtError: TextView
 
@@ -127,23 +128,23 @@ class UserListActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bindingAdapter.tvName.text = coUserlistModel!![position].name
+            holder.bindingAdapter.tvName.text = coUsersModel!![position].name
             val name: String?
 
-            if (coUserlistModel!![position].image.equals("", true)) {
-                holder.bindingAdapter.ivProfileImage.setVisibility(View.GONE)
-                if (coUserlistModel!![position].name.equals("", ignoreCase = true)) {
-                    name = "Guest"
+            if (coUsersModel!![position].image.equals("", true)) {
+                holder.bindingAdapter.ivProfileImage.visibility = View.GONE
+                name = if (coUsersModel!![position].name.equals("", ignoreCase = true)) {
+                    "Guest"
                 } else {
-                    name = coUserlistModel!![position].name.toString()
+                    coUsersModel!![position].name.toString()
                 }
                 val Letter = name.substring(0, 1)
                 holder.bindingAdapter.rlLetter.visibility = View.VISIBLE
                 holder.bindingAdapter.tvLetter.text = Letter
             } else {
-                holder.bindingAdapter.ivProfileImage.setVisibility(View.VISIBLE)
+                holder.bindingAdapter.ivProfileImage.visibility = View.VISIBLE
                 holder.bindingAdapter.rlLetter.visibility = View.GONE
-                Glide.with(activity).load(coUserlistModel!![position].image)
+                Glide.with(activity).load(coUsersModel!![position].image)
                     .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
                     .into(holder.bindingAdapter.ivProfileImage)
             }
@@ -153,7 +154,7 @@ class UserListActivity : AppCompatActivity() {
                 holder.bindingAdapter.ivCheck.visibility = View.VISIBLE
             }
 
-            holder.bindingAdapter.rlAddNewCard.setOnClickListener { _ ->
+            holder.bindingAdapter.rlAddNewCard.setOnClickListener {
                 val previousItem = selectedItem
                 selectedItem = position
                 notifyItemChanged(previousItem)
@@ -167,9 +168,9 @@ class UserListActivity : AppCompatActivity() {
                         R.color.app_theme_color
                     )
                 )
-                USERID = coUserlistModel!![position].userID.toString()
-                CoUserID = coUserlistModel!![position].coUserId.toString()
-                CoEMAIL = coUserlistModel!![position].email.toString()
+                USERID = coUsersModel!![position].userID.toString()
+                CoUserID = coUsersModel!![position].coUserId.toString()
+                CoEMAIL = coUsersModel!![position].email.toString()
 
             }
 
@@ -191,7 +192,7 @@ class UserListActivity : AppCompatActivity() {
                 val edtOTP3: EditText = userList.dialog.findViewById(R.id.edtOTP3)
                 val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
                 tvTitle.text = "Unlock the app"
-                userList.editTexts = arrayOf<EditText>(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                userList.editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
                 edtOTP1.addTextChangedListener(
                     PinTextWatcher(
                         activity,
@@ -202,7 +203,7 @@ class UserListActivity : AppCompatActivity() {
                         edtOTP2,
                         edtOTP3,
                         edtOTP4,
-                        userList.tvSendOTPbool
+                        userList.tvSendOTPool
                     )
                 )
                 edtOTP2.addTextChangedListener(
@@ -215,7 +216,7 @@ class UserListActivity : AppCompatActivity() {
                         edtOTP2,
                         edtOTP3,
                         edtOTP4,
-                        userList.tvSendOTPbool
+                        userList.tvSendOTPool
                     )
                 )
                 edtOTP3.addTextChangedListener(
@@ -228,7 +229,7 @@ class UserListActivity : AppCompatActivity() {
                         edtOTP2,
                         edtOTP3,
                         edtOTP4,
-                        userList.tvSendOTPbool
+                        userList.tvSendOTPool
                     )
                 )
                 edtOTP4.addTextChangedListener(
@@ -241,7 +242,7 @@ class UserListActivity : AppCompatActivity() {
                         edtOTP2,
                         edtOTP3,
                         edtOTP4,
-                        userList.tvSendOTPbool
+                        userList.tvSendOTPool
                     )
                 )
                 edtOTP1.setOnKeyListener(PinOnKeyListener(0, userList.editTexts))
@@ -277,10 +278,10 @@ class UserListActivity : AppCompatActivity() {
                             val listCall: Call<VerifyPinModel> =
                                 APINewClient.getClient().getVerifyPin(
                                     CoUserID,
-                                    edtOTP1.getText().toString() + "" +
-                                            edtOTP2.getText().toString() + "" +
-                                            edtOTP3.getText().toString() + "" +
-                                            edtOTP4.getText().toString()
+                                    edtOTP1.text.toString() + "" +
+                                            edtOTP2.text.toString() + "" +
+                                            edtOTP3.text.toString() + "" +
+                                            edtOTP4.text.toString()
                                 )
                             listCall.enqueue(object : Callback<VerifyPinModel> {
                                 override fun onResponse(
@@ -308,6 +309,7 @@ class UserListActivity : AppCompatActivity() {
                                                 APINewClient.getClient()
                                                     .getCoUserDetails(UserID, CoUserId)
                                             listCall.enqueue(object : Callback<CoUserDetailsModel> {
+                                                @SuppressLint("HardwareIds")
                                                 override fun onResponse(
                                                     call: Call<CoUserDetailsModel>,
                                                     response: Response<CoUserDetailsModel>
@@ -413,32 +415,32 @@ class UserListActivity : AppCompatActivity() {
                                                                     responseData.image
                                                             )
                                                             editor.apply()
-                                                            val sharedd =
+                                                            val sharded =
                                                                     activity.getSharedPreferences(
                                                                             CONSTANTS.RecommendedCatMain,
                                                                             Context.MODE_PRIVATE
                                                                     )
-                                                            val editord = sharedd.edit()
-                                                            editord.putString(
+                                                            val edited = sharded.edit()
+                                                            edited.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                                                                     responseData.avgSleepTime
                                                             )
-                                                            var selectedCategoriesTitle = arrayListOf<String>()
-                                                            var selectedCategoriesName = arrayListOf<String>()
-                                                            var gson = Gson()
+                                                            val selectedCategoriesTitle = arrayListOf<String>()
+                                                            val selectedCategoriesName = arrayListOf<String>()
+                                                            val gson = Gson()
                                                             for (i in listModel.responseData!!.areaOfFocus!!) {
                                                                 selectedCategoriesTitle.add(i.mainCat!!)
                                                                 selectedCategoriesName.add(i.recommendedCat!!)
                                                             }
-                                                            editord.putString(
+                                                            edited.putString(
                                                                     CONSTANTS.selectedCategoriesTitle,
                                                                     gson.toJson(selectedCategoriesTitle)
                                                             ) //Friend
-                                                            editord.putString(
+                                                            edited.putString(
                                                                     CONSTANTS.selectedCategoriesName,
                                                                     gson.toJson(selectedCategoriesName)
                                                             ) //Friend
-                                                            editord.apply()
+                                                            edited.apply()
 
                                                             val activity = SplashActivity()
                                                             activity.setAnalytics(
@@ -602,16 +604,16 @@ class UserListActivity : AppCompatActivity() {
             binding.tvForgotPin.setOnClickListener {
                 val i = Intent(activity, AddProfileActivity::class.java)
                 i.putExtra("AddProfile", "Forgot")
-                i.putExtra("CoUserID", coUserlistModel!![position].coUserId.toString())
-                i.putExtra("CoEMAIL", coUserlistModel!![position].email.toString())
-                i.putExtra("CoName", coUserlistModel!![position].name.toString())
-                i.putExtra("CoNumber", coUserlistModel!![position].mobile.toString())
+                i.putExtra("CoUserID", coUsersModel!![position].coUserId.toString())
+                i.putExtra("CoEMAIL", coUsersModel!![position].email.toString())
+                i.putExtra("CoName", coUsersModel!![position].name.toString())
+                i.putExtra("CoNumber", coUsersModel!![position].mobile.toString())
                 activity.startActivity(i)
             }
         }
 
         override fun getItemCount(): Int {
-            return coUserlistModel!!.size
+            return coUsersModel!!.size
         }
     }
 
@@ -620,7 +622,7 @@ class UserListActivity : AppCompatActivity() {
         var editTexts: Array<EditText>, val btnDone: Button,
         val edtOTP1: EditText, val edtOTP2: EditText,
         val edtOTP3: EditText, val edtOTP4: EditText,
-        var tvSendOTPbool: Boolean
+        private var tvSendOTPbool: Boolean
     ) : TextWatcher {
         private var isFirst = false
         private var isLast = false
@@ -628,16 +630,16 @@ class UserListActivity : AppCompatActivity() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             newTypedString = s.subSequence(start, start + count).toString().trim { it <= ' ' }
-            val OTP1: String = edtOTP1.getText().toString().trim()
-            val OTP2: String = edtOTP2.getText().toString().trim()
-            val OTP3: String = edtOTP3.getText().toString().trim()
-            val OTP4: String = edtOTP4.getText().toString().trim()
-            if (!OTP1.isEmpty() && !OTP2.isEmpty() && !OTP3.isEmpty() && !OTP4.isEmpty()) {
-                btnDone.setEnabled(true)
+            val OTP1: String = edtOTP1.text.toString().trim()
+            val OTP2: String = edtOTP2.text.toString().trim()
+            val OTP3: String = edtOTP3.text.toString().trim()
+            val OTP4: String = edtOTP4.text.toString().trim()
+            if (OTP1.isNotEmpty() && OTP2.isNotEmpty() && OTP3.isNotEmpty() && OTP4.isNotEmpty()) {
+                btnDone.isEnabled = true
                 btnDone.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
-                btnDone.setEnabled(false)
+                btnDone.isEnabled = false
                 btnDone.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
             }
@@ -649,15 +651,15 @@ class UserListActivity : AppCompatActivity() {
 
             /* Detect paste event and set first char */if (text.length > 1) text =
                 text[0].toString() // TODO: We can fill out other EditTexts
-            editTexts.get(currentIndex).removeTextChangedListener(this)
-            editTexts.get(currentIndex).setText(text)
-            editTexts.get(currentIndex).setSelection(text.length)
-            editTexts.get(currentIndex).addTextChangedListener(this)
+            editTexts[currentIndex].removeTextChangedListener(this)
+            editTexts[currentIndex].setText(text)
+            editTexts[currentIndex].setSelection(text.length)
+            editTexts[currentIndex].addTextChangedListener(this)
             if (text.length == 1) {
                 moveToNext()
-            } else if (text.length == 0) {
+            } else if (text.isEmpty()) {
                 if (!tvSendOTPbool) {
-                    editTexts.get(0).requestFocus()
+                    editTexts[0].requestFocus()
                 } else {
                     moveToPrevious()
                 }
@@ -665,21 +667,21 @@ class UserListActivity : AppCompatActivity() {
         }
 
         private fun moveToNext() {
-            if (!isLast) editTexts.get(currentIndex + 1).requestFocus()
+            if (!isLast) editTexts[currentIndex + 1].requestFocus()
             if (isAllEditTextsFilled && isLast) { // isLast is optional
-                editTexts.get(currentIndex).clearFocus()
+                editTexts[currentIndex].clearFocus()
                 hideKeyboard()
             }
         }
 
         private fun moveToPrevious() {
-            if (!isFirst) editTexts.get(currentIndex - 1).requestFocus()
+            if (!isFirst) editTexts[currentIndex - 1].requestFocus()
         }
 
         private val isAllEditTextsFilled: Boolean
             private get() {
                 for (editText in editTexts) if (editText.text.toString()
-                        .trim { it <= ' ' }.length == 0
+                        .trim { it <= ' ' }.isEmpty()
                 ) return false
                 return true
             }
@@ -689,7 +691,7 @@ class UserListActivity : AppCompatActivity() {
                 val inputMethodManager =
                     activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(
-                    activity.getCurrentFocus()!!.getWindowToken(), 0
+                    activity.currentFocus!!.windowToken, 0
                 )
             }
         }
@@ -701,14 +703,14 @@ class UserListActivity : AppCompatActivity() {
     }
 
     class PinOnKeyListener internal constructor(
-        val currentIndex: Int,
+        private val currentIndex: Int,
         var editTexts: Array<EditText>
     ) : View.OnKeyListener {
         override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
             if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
-                if (editTexts.get(currentIndex).getText().toString()
+                if (editTexts[currentIndex].text.toString()
                         .isEmpty() && currentIndex != 0
-                ) editTexts.get(currentIndex - 1).requestFocus()
+                ) editTexts[currentIndex - 1].requestFocus()
             }
             return false
         }

@@ -1,5 +1,6 @@
 package com.brainwellnessspa.dashboardModule.manage
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.*
@@ -32,6 +33,7 @@ import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.activities.AddAudioActivity
+import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.fragmentAudio.ViewAllAudioFragment
 import com.brainwellnessspa.dashboardModule.fragmentPlaylist.MainPlaylistFragment
@@ -184,7 +186,7 @@ class ManageFragment : Fragment() {
                 override fun afterTextChanged(s: Editable) {}
             }
             edtCreate.addTextChangedListener(popupTextWatcher)
-            dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss()
                     return@setOnKeyListener true
@@ -459,7 +461,7 @@ class ManageFragment : Fragment() {
                 val listModelList2= arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
                 for (i in listModelList.indices) {
                     if (downloadAudioDetailsList.contains(listModelList[i].name)) {
-                        listModelList2.add(listModelList.get(i))
+                        listModelList2.add(listModelList[i])
                     }
                 }
                 if (downloadAudioDetailsList.contains(listModelList[position].id)) {
@@ -596,6 +598,7 @@ class ManageFragment : Fragment() {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall = APINewClient.getClient().getHomeData(CoUserID)
             listCall.enqueue(object : Callback<HomeDataModel?> {
+                @SuppressLint("SetTextI18n")
                 override fun onResponse(
                         call: Call<HomeDataModel?>,
                         response: Response<HomeDataModel?>
@@ -1487,6 +1490,7 @@ class ManageFragment : Fragment() {
             var binding: FragmentManageBinding,
             val act: Activity
     ) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
+        var index = -1
 
         inner class MyViewHolder(var binding: PlaylistCustomLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
@@ -1522,48 +1526,33 @@ class ManageFragment : Fragment() {
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
-//                if (IsLock.equals("1", ignoreCase = true)) {
-//                    holder.binding.ivLock.visibility = View.VISIBLE
-//                } else if (IsLock.equals("2", ignoreCase = true)) {
-//                    holder.binding.ivLock.visibility = View.VISIBLE
-//                } else if (IsLock.equals("0", ignoreCase = true) || IsLock.equals("", ignoreCase = true)) {
-//                    holder.binding.ivLock.visibility = View.GONE
-//                }
-//            if (index == position) {
-//                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-//            } else
-            holder.binding.tvAddToPlaylist.visibility = View.GONE
+
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+            } else holder.binding.tvAddToPlaylist.visibility = View.GONE
+
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
-//            holder.binding.rlMainLayout.setOnLongClickListener { v ->
-//                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-//                index = position
-//                notifyDataSetChanged()
-//                true
-//            }
-            holder.binding.tvAddToPlaylist.setOnClickListener {
-//                    if (IsLock.equals("1", ignoreCase = true)) {
-//                        holder.binding.ivLock.visibility = View.VISIBLE
-//                        val i = Intent(ctx, MembershipChangeActivity::class.java)
-//                        i.putExtra("ComeFrom", "Plan")
-//                        ctx.startActivity(i)
-//                    } else if (IsLock.equals("2", ignoreCase = true)) {
-//                        holder.binding.ivLock.visibility = View.VISIBLE
-//                        val i = Intent(ctx, MembershipChangeActivity::class.java)
-//                        i.putExtra("ComeFrom", "Plan")
-//                        ctx.startActivity(i)
-//                    } else if (IsLock.equals("0", ignoreCase = true) || IsLock.equals("", ignoreCase = true)) {
-//                holder.binding.ivLock.visibility = View.GONE
-//                val i = Intent(ctx, AddPlaylistActivity::class.java)
-//                i.putExtra("AudioId", "")
-//                i.putExtra("ScreenView", "Playlist Main Screen")
-//                i.putExtra("PlaylistID", listModel.details!![position].playlistID)
-//                i.putExtra("PlaylistName", listModel.details!![position].playlistName)
-//                i.putExtra("PlaylistImage", listModel.details!![position].playlistImage)
-//                i.putExtra("PlaylistType", listModel.details!![position].created)
-//                i.putExtra("Liked", "0")
-//                ctx.startActivity(i)
-//                    }
+
+            holder.binding.rlMainLayout.setOnLongClickListener {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                index = position
+                notifyDataSetChanged()
+                true
             }
+
+            holder.binding.tvAddToPlaylist.setOnClickListener {
+                val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.putExtra("AudioId", "")
+                i.putExtra("ScreenView", "Playlist View All Screen")
+                i.putExtra("PlaylistID", listModel.details!![position].playlistID)
+                i.putExtra("PlaylistName", "")
+                i.putExtra("PlaylistImage", "")
+                i.putExtra("PlaylistType", "")
+                i.putExtra("Liked", "0")
+                ctx.startActivity(i)
+            }
+
+
             holder.binding.rlMainLayout.setOnClickListener {
                 try {
                     val i = Intent(ctx, MyPlaylistListingActivity::class.java)
@@ -1597,6 +1586,7 @@ class ManageFragment : Fragment() {
             val act: Activity,
             var view: String?
     ) : RecyclerView.Adapter<RecommendedAdapter.MyViewHolder>() {
+        var index = -1
 
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
@@ -1618,11 +1608,42 @@ class ManageFragment : Fragment() {
                 (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width =
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.height =
+                (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.width =
+                (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
+
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+            } else holder.binding.tvAddToPlaylist.visibility = View.GONE
+
+            holder.binding.tvAddToPlaylist.text = "Add To Playlist"
+
+            holder.binding.llMainLayout.setOnLongClickListener {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                index = position
+                notifyDataSetChanged()
+                true
+            }
+
+            holder.binding.tvAddToPlaylist.setOnClickListener {
+                val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.putExtra("AudioId", listModel[position].id)
+                i.putExtra("ScreenView", "Audio View All Screen")
+                i.putExtra("PlaylistID", "")
+                i.putExtra("PlaylistName", "")
+                i.putExtra("PlaylistImage", "")
+                i.putExtra("PlaylistType", "")
+                i.putExtra("Liked", "0")
+                ctx.startActivity(i)
+            }
+
             holder.binding.llMainLayout.setOnClickListener {
                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
@@ -1645,6 +1666,7 @@ class ManageFragment : Fragment() {
             var view: String?
     ) : RecyclerView.Adapter<LibraryAdapter.MyViewHolder>() {
 
+        var index = -1
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
 
@@ -1665,14 +1687,46 @@ class ManageFragment : Fragment() {
                 (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width =
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.height =
+                (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.width =
+                (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+            } else holder.binding.tvAddToPlaylist.visibility = View.GONE
+
+            holder.binding.tvAddToPlaylist.text = "Add To Playlist"
+
+            holder.binding.llMainLayout.setOnLongClickListener {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                index = position
+                notifyDataSetChanged()
+                true
+            }
+
+            holder.binding.tvAddToPlaylist.setOnClickListener {
+                val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.putExtra("AudioId", listModel[position].id)
+                i.putExtra("ScreenView", "Audio View All Screen")
+                i.putExtra("PlaylistID", "")
+                i.putExtra("PlaylistName", "")
+                i.putExtra("PlaylistImage", "")
+                i.putExtra("PlaylistType", "")
+                i.putExtra("Liked", "0")
+                ctx.startActivity(i)
+            }
+
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
+
             holder.binding.llMainLayout.setOnClickListener {
                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
+
         }
 
         override fun getItemCount(): Int {
@@ -1738,6 +1792,7 @@ class ManageFragment : Fragment() {
             val act: Activity,
             var view: String?
     ) : RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder>() {
+        var index = -1
 
         inner class MyViewHolder(var binding: SmallBoxLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
@@ -1759,11 +1814,41 @@ class ManageFragment : Fragment() {
                 (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width =
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.height =
+                (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.width =
+                (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
+
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+            } else holder.binding.tvAddToPlaylist.visibility = View.GONE
+
+            holder.binding.tvAddToPlaylist.text = "Add To Playlist"
+
+            holder.binding.llMainLayout.setOnLongClickListener {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                index = position
+                notifyDataSetChanged()
+                true
+            }
+
+            holder.binding.tvAddToPlaylist.setOnClickListener {
+                val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.putExtra("AudioId", listModel[position].id)
+                i.putExtra("ScreenView", "Audio View All Screen")
+                i.putExtra("PlaylistID", "")
+                i.putExtra("PlaylistName", "")
+                i.putExtra("PlaylistImage", "")
+                i.putExtra("PlaylistType", "")
+                i.putExtra("Liked", "0")
+                ctx.startActivity(i)
+            }
+
             holder.binding.llMainLayout.setOnClickListener {
                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
@@ -1785,6 +1870,7 @@ class ManageFragment : Fragment() {
             val act: Activity,
             var view: String?
     ) : RecyclerView.Adapter<PopularPlayedAdapter.MyViewHolder>() {
+        var index = -1
 
         inner class MyViewHolder(var binding: SmallBoxLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
@@ -1807,10 +1893,41 @@ class ManageFragment : Fragment() {
             holder.binding.ivRestaurantImage.layoutParams.width =
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+            holder.binding.tvAddToPlaylist.layoutParams.height =
+                (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.width =
+                (measureRatio.widthImg * measureRatio.ratio).toInt()
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
+
+
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+            } else holder.binding.tvAddToPlaylist.visibility = View.GONE
+
+            holder.binding.tvAddToPlaylist.text = "Add To Playlist"
+
+            holder.binding.llMainLayout.setOnLongClickListener {
+                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                index = position
+                notifyDataSetChanged()
+                true
+            }
+
+            holder.binding.tvAddToPlaylist.setOnClickListener {
+                val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.putExtra("AudioId", listModel[position].id)
+                i.putExtra("ScreenView", "Audio View All Screen")
+                i.putExtra("PlaylistID", "")
+                i.putExtra("PlaylistName", "")
+                i.putExtra("PlaylistImage", "")
+                i.putExtra("PlaylistType", "")
+                i.putExtra("Liked", "0")
+                ctx.startActivity(i)
+            }
+
             holder.binding.llMainLayout.setOnClickListener {
                 ManageFragment().callMainPlayer(position, view, listModel, ctx, act)
             }
@@ -1850,12 +1967,6 @@ class ManageFragment : Fragment() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModel[position].name
-            /* MeasureRatio measureRatio = measureRatio(ctx, 16,
-                1, 1, 0.52f, 10);
-        holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
-*/
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].catImage).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(124))).priority(Priority.HIGH)

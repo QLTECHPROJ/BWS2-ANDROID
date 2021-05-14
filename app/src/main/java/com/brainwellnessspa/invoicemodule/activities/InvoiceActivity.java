@@ -1,4 +1,4 @@
-package com.brainwellnessspa.InvoiceModule.Activities;
+package com.brainwellnessspa.invoicemodule.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -16,13 +16,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.brainwellnessspa.InvoiceModule.Models.SegmentMembership;
+import com.brainwellnessspa.invoicemodule.models.SegmentMembership;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
-import com.brainwellnessspa.InvoiceModule.Fragments.AppointmentInvoiceFragment;
-import com.brainwellnessspa.InvoiceModule.Fragments.MembershipInvoiceFragment;
-import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
+import com.brainwellnessspa.invoicemodule.fragments.AppointmentInvoiceFragment;
+import com.brainwellnessspa.invoicemodule.fragments.MembershipInvoiceFragment;
+import com.brainwellnessspa.invoicemodule.models.InvoiceListModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -40,6 +40,7 @@ import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivi
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+
 public class InvoiceActivity extends AppCompatActivity {
     ActivityInvoiceBinding binding;
     ArrayList<InvoiceListModel.Appointment> appointmentList;

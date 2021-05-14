@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -46,7 +46,8 @@
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:targetApi="lollipop" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -58,7 +59,6 @@
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:scaleType="fitXY"
-                    android:elevation="@dimen/_80sdp"
                     android:visibility="gone" />
 
                 <io.gresse.hugo.vumeterlibrary.VuMeterView
@@ -114,7 +114,7 @@
                 android:layout_marginTop="@dimen/_6sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
-                android:textColor="@color/extra_light_gray"
+                android:textColor="@color/app_theme_color"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
 
@@ -128,13 +128,13 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
                 android:background="@drawable/circular_shapem"
                 android:indeterminate="false"
                 android:indeterminateTint="@color/dark_yellow"
                 android:max="100"
                 android:progressDrawable="@drawable/circular_progress_barm"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

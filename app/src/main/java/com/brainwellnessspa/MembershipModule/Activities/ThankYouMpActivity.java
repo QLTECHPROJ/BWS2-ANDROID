@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.widget.ImageView;
 
-import com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity;
+import com.brainwellnessspa.invoicemodule.activities.InvoiceActivity;
 import com.brainwellnessspa.manageModule.SleepTimeActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
@@ -19,8 +19,8 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityThankYouMembershipBinding;
 import com.segment.analytics.Properties;
 
-import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
-import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToRecepit;
+import static com.brainwellnessspa.invoicemodule.activities.InvoiceActivity.invoiceToDashboard;
+import static com.brainwellnessspa.invoicemodule.activities.InvoiceActivity.invoiceToRecepit;
 
 public class ThankYouMpActivity extends AppCompatActivity {
     ActivityThankYouMembershipBinding binding;

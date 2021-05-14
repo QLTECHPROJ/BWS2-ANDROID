@@ -1,10 +1,8 @@
-package com.brainwellnessspa.InvoiceModule.Fragments;
+package com.brainwellnessspa.invoicemodule.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,32 +13,18 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.InvoiceModule.Models.InvoiceDetailModel;
-import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
+import com.brainwellnessspa.invoicemodule.models.InvoiceListModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentInvoiceBinding;
 import com.brainwellnessspa.databinding.InvoiceListLayoutBinding;
-import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AppointmentInvoiceFragment extends Fragment {
     FragmentInvoiceBinding binding;

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.InvoiceModule.Models;
+package com.brainwellnessspa.invoicemodule.models;
 
 public class SegmentMembership {
     String invoiceId,

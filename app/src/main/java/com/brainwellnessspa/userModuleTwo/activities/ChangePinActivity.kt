@@ -1,4 +1,4 @@
-package com.brainwellnessspa.profileModule
+package com.brainwellnessspa.userModuleTwo.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -20,35 +20,35 @@ import retrofit2.Response
 
 class ChangePinActivity : AppCompatActivity() {
     lateinit var binding: ActivityChangePinBinding
-    var USERID: String? = null
-    var CoUserID: String? = null
+    var userID: String? = null
+    private var coUserID: String? = null
     lateinit var activity: Activity
 
-    var userTextWatcher: TextWatcher = object : TextWatcher {
+    private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val CurrentPIN: String = binding.etCurrentPIN.getText().toString().trim()
-            val NewPIN: String = binding.etNewPIN.getText().toString().trim()
-            val ConfirmPIN: String = binding.etConfirmPIN.getText().toString().trim()
-            if (CurrentPIN.equals("", ignoreCase = true) &&
-                    NewPIN.equals("", ignoreCase = true) && ConfirmPIN.equals("", ignoreCase = true)) {
-                binding.btnSave.setEnabled(false)
+            val currentPIN: String = binding.etCurrentPIN.text.toString().trim()
+            val newPIN: String = binding.etNewPIN.text.toString().trim()
+            val confirmPIN: String = binding.etConfirmPIN.text.toString().trim()
+            if (currentPIN.equals("", ignoreCase = true) &&
+                newPIN.equals("", ignoreCase = true) && confirmPIN.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (CurrentPIN.equals("", ignoreCase = true)) {
-                binding.btnSave.setEnabled(false)
+            } else if (currentPIN.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (NewPIN.equals("", ignoreCase = true)) {
-                binding.btnSave.setEnabled(false)
+            } else if (newPIN.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (ConfirmPIN.equals("", ignoreCase = true)) {
-                binding.btnSave.setEnabled(false)
+            } else if (confirmPIN.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
-                binding.btnSave.setEnabled(true)
+                binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
@@ -62,8 +62,8 @@ class ChangePinActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_pin)
         activity = this@ChangePinActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
 
         binding.etCurrentPIN.addTextChangedListener(userTextWatcher)
         binding.etNewPIN.addTextChangedListener(userTextWatcher)
@@ -81,31 +81,31 @@ class ChangePinActivity : AppCompatActivity() {
     }
 
     private fun changePin() {
-        if (binding.etCurrentPIN.text.toString().equals("")) {
+        if (binding.etCurrentPIN.text.toString() == "") {
             binding.flCurrentPIN.error = "Current Login PIN is required"
             binding.flNewPIN.error = ""
             binding.flConfirmPIN.error = ""
-        } else if (!binding.etCurrentPIN.text.toString().equals("") && binding.etCurrentPIN.text.toString().length != 4) {
+        } else if (binding.etCurrentPIN.text.toString() != "" && binding.etCurrentPIN.text.toString().length != 4) {
             binding.flCurrentPIN.error = "Please enter valid Current Login PIN"
             binding.flNewPIN.error = ""
             binding.flConfirmPIN.error = ""
-        } else if (binding.etNewPIN.text.toString().equals("")) {
+        } else if (binding.etNewPIN.text.toString() == "") {
             binding.flCurrentPIN.error = ""
             binding.flNewPIN.error = "New Login PIN is required"
             binding.flConfirmPIN.error = ""
-        } else if (!binding.etNewPIN.text.toString().equals("") && binding.etNewPIN.text.toString().length != 4) {
+        } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length != 4) {
             binding.flCurrentPIN.error = ""
             binding.flNewPIN.error = "Please enter valid New Login PIN"
             binding.flConfirmPIN.error = ""
-        } else if (binding.etConfirmPIN.text.toString().equals("")) {
+        } else if (binding.etConfirmPIN.text.toString() == "") {
             binding.flCurrentPIN.error = ""
             binding.flNewPIN.error = ""
             binding.flConfirmPIN.error = "Confirm new Login PIN is required"
-        } else if (!binding.etConfirmPIN.text.toString().equals("") && binding.etConfirmPIN.text.toString().length != 4) {
+        } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length != 4) {
             binding.flCurrentPIN.error = ""
             binding.flNewPIN.error = ""
             binding.flConfirmPIN.error = "Please enter valid Confirm new Login PIN"
-        } else if (!binding.etConfirmPIN.text.toString().equals(binding.etNewPIN.text.toString())) {
+        } else if (binding.etConfirmPIN.text.toString() != binding.etNewPIN.text.toString()) {
             binding.flCurrentPIN.error = ""
             binding.flNewPIN.error = ""
             binding.flConfirmPIN.error = "New & Confirm Login PIN not match"
@@ -115,8 +115,8 @@ class ChangePinActivity : AppCompatActivity() {
             binding.flConfirmPIN.error = ""
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
-                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(USERID,
-                        CoUserID, binding.etCurrentPIN.text.toString(),
+                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(userID,
+                        coUserID, binding.etCurrentPIN.text.toString(),
                         binding.etConfirmPIN.text.toString())
                 listCall.enqueue(object : Callback<ChangePinModel> {
                     override fun onResponse(call: Call<ChangePinModel>, response: Response<ChangePinModel>) {

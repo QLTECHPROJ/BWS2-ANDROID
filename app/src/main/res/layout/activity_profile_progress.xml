@@ -49,7 +49,7 @@
             android:layout_alignParentBottom="true"
             android:rotation="180"
             android:clickable="true"
-            app:tint="@color/gray"
+            app:tint="@color/black"
             android:src="@drawable/ic_back_black_icon" />
 
 

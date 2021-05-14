@@ -1,4 +1,4 @@
-package com.brainwellnessspa.NotificationTwoModule
+package com.brainwellnessspa.dashboardModule.activities
 
 import android.app.Activity
 import android.content.Context

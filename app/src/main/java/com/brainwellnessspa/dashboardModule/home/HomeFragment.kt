@@ -29,12 +29,10 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
-import com.brainwellnessspa.NotificationTwoModule.NotificationListActivity
+import com.brainwellnessspa.dashboardModule.activities.NotificationListActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
@@ -1327,7 +1325,30 @@ class HomeFragment : Fragment() {
                                                     CONSTANTS.PREFE_ACCESS_IMAGE,
                                                     responseData.image
                                                 )
-                                                editor.commit()
+                                                editor.apply()
+                                                val sharedd =
+                                                    act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                val editord = sharedd.edit()
+                                                editord.putString(
+                                                    CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                                                    listModel.responseData!!.avgSleepTime
+                                                )
+                                                val selectedCategoriesTitle = arrayListOf<String>()
+                                                val selectedCategoriesName = arrayListOf<String>()
+                                                val gson = Gson()
+                                                for (i in listModel.responseData!!.areaOfFocus!!) {
+                                                    selectedCategoriesTitle.add(i.mainCat!!)
+                                                    selectedCategoriesName.add(i.recommendedCat!!)
+                                                }
+                                                editord.putString(
+                                                    CONSTANTS.selectedCategoriesTitle,
+                                                    gson.toJson(selectedCategoriesTitle)
+                                                ) //Friend
+                                                editord.putString(
+                                                    CONSTANTS.selectedCategoriesName,
+                                                    gson.toJson(selectedCategoriesName)
+                                                ) //Friend
+                                                editord.apply()
                                                 prepareHomeData()
                                                 showToast(
                                                     listModel.responseMessage,

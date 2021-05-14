@@ -258,6 +258,7 @@ public class BWSApplication extends Application {
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         final TextView tvTitleDec = dialog.findViewById(R.id.tvTitleDec);
+        final TextView tvName = dialog.findViewById(R.id.tvName);
         final TextView tvSubDec = dialog.findViewById(R.id.tvSubDec);
         final TextView tvReadMore = dialog.findViewById(R.id.tvReadMore);
         final TextView tvSubDire = dialog.findViewById(R.id.tvSubDire);
@@ -336,6 +337,7 @@ public class BWSApplication extends Application {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        tvName.setText(listModel.getResponseData().get(0).getName());
                         if (listModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
                             tvTitleDec.setVisibility(View.GONE);
                             tvSubDec.setVisibility(View.GONE);
@@ -608,7 +610,9 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
-    public static void callPlaylistDetails(Context ctx, Activity act, String CoUSERID, String PlaylistId, String PlaylistName, FragmentManager fragmentManager1) {
+    public static void callPlaylistDetails(Context ctx, Activity act, String CoUSERID,
+                                           String PlaylistId, String PlaylistName,
+                                           FragmentManager fragmentManager1) {
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.open_playlist_detail_layout);
@@ -640,8 +644,7 @@ public class BWSApplication extends Application {
             }
             return false;
         });
-        localIntent = new Intent("PlaylistRefresh");
-        localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
+        localIntent = new Intent("Reminder");
         localIntent = new Intent("FindAudio");
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
 
@@ -696,7 +699,7 @@ public class BWSApplication extends Application {
                                 dialog.dismiss();
                             });
                             llFind.setOnClickListener(view -> {
-                                localIntent.putExtra("FindAudio", "update");
+                                localIntent.putExtra("MyFindAudio", "update");
                                 localBroadcastManager.sendBroadcast(localIntent);
                                 dialog.dismiss();
                             });
@@ -1024,7 +1027,8 @@ public class BWSApplication extends Application {
                                                     if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
                                                         showToast(listModel.getResponseMessage(), act);
                                                         tvName.setText(edtCreate.getText().toString());
-                                                        localIntent.putExtra("PlaylistRefresh", "update");
+                                                        dialogs.dismiss();
+                                                        localIntent.putExtra("MyReminder", "update");
                                                         localBroadcastManager.sendBroadcast(localIntent);
 //                                        Properties p = new Properties();
 //                                        p.putValue("userId", UserID);
@@ -1046,7 +1050,6 @@ public class BWSApplication extends Application {
 //                                        p.putValue("audioCount", TotalAudio);
 //                                        p.putValue("source", ScreenView);
 //                                        addToSegment("Playlist Rename Clicked", p, CONSTANTS.track);
-                                                        dialogs.dismiss();
 //                                        ctx.finish();
                                                     }
                                                 } catch (Exception e) {

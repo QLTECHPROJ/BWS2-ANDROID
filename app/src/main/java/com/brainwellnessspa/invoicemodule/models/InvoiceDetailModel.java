@@ -1,4 +1,4 @@
-package com.brainwellnessspa.InvoiceModule.Models;
+package com.brainwellnessspa.invoicemodule.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

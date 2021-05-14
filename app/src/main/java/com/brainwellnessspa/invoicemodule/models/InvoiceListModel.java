@@ -1,4 +1,4 @@
-package com.brainwellnessspa.InvoiceModule.Models;
+package com.brainwellnessspa.invoicemodule.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

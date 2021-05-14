@@ -190,7 +190,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="#838383"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="SpUsage" />
 
@@ -203,7 +203,7 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
-                    android:textColor="#838383"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="SpUsage" />
 

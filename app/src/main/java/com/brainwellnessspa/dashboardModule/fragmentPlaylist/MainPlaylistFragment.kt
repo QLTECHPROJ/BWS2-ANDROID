@@ -560,6 +560,7 @@ class MainPlaylistFragment : Fragment() {
             } else holder.binding.tvAddToPlaylist.visibility = View.GONE
 
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
+
             holder.binding.rlMainLayout.setOnLongClickListener {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                 index = position

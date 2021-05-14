@@ -1,4 +1,4 @@
-package com.brainwellnessspa.profileModule
+package com.brainwellnessspa.userModuleTwo.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
@@ -22,36 +25,36 @@ import java.util.regex.Pattern
 
 class ChangePasswordActivity : AppCompatActivity() {
     lateinit var binding: ActivityChangePasswordBinding
-    var USERID: String? = null
-    var CoUserID: String? = null
+    var userID: String? = null
+    private var coUserID: String? = null
     lateinit var activity: Activity
 
-    var userTextWatcher: TextWatcher = object : TextWatcher {
+    private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val CurrentPswd: String = binding.etCurrentPswd.getText().toString().trim()
-            val NewPswd: String = binding.etNewPswd.getText().toString().trim()
-            val ConfirmPswd: String = binding.etConfirmPswd.getText().toString().trim()
-            if (CurrentPswd.equals("", ignoreCase = true) &&
-                NewPswd.equals("", ignoreCase = true) && ConfirmPswd.equals("", ignoreCase = true)
+            val currentPaswd: String = binding.etCurrentPswd.text.toString().trim()
+            val newPswd: String = binding.etNewPswd.text.toString().trim()
+            val confirmPswd: String = binding.etConfirmPswd.text.toString().trim()
+            if (currentPaswd.equals("", ignoreCase = true) &&
+                newPswd.equals("", ignoreCase = true) && confirmPswd.equals("", ignoreCase = true)
             ) {
-                binding.btnSave.setEnabled(false)
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (CurrentPswd.equals("", ignoreCase = true)) {
-                binding.btnSave.setEnabled(false)
+            } else if (currentPaswd.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (NewPswd.equals("", ignoreCase = true)) {
-                binding.btnSave.setEnabled(false)
+            } else if (newPswd.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (ConfirmPswd.equals("", ignoreCase = true)) {
-                binding.btnSave.setEnabled(false)
+            } else if (confirmPswd.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
-                binding.btnSave.setEnabled(true)
+                binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
@@ -65,9 +68,17 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_password)
         activity = this@ChangePasswordActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-
+        userID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        binding.etCurrentPswd.transformationMethod = PasswordTransformationMethod.getInstance()
+        binding.etNewPswd.transformationMethod = PasswordTransformationMethod.getInstance()
+        binding.etConfirmPswd.transformationMethod = PasswordTransformationMethod.getInstance()
+        binding.ivCurrentPswdVisible.visibility = View.VISIBLE
+        binding.ivCurrentPswdInVisible.visibility = View.GONE
+        binding.ivNewPswdVisible.visibility = View.VISIBLE
+        binding.ivNewPswdInVisible.visibility = View.GONE
+        binding.ivConfirmPswdVisible.visibility = View.VISIBLE
+        binding.ivConfirmPswdInVisible.visibility = View.GONE
         binding.etCurrentPswd.addTextChangedListener(userTextWatcher)
         binding.etNewPswd.addTextChangedListener(userTextWatcher)
         binding.etConfirmPswd.addTextChangedListener(userTextWatcher)
@@ -80,10 +91,50 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding.btnSave.setOnClickListener {
             changePassword()
         }
+
+        binding.ivCurrentPswdVisible.setOnClickListener {
+            binding.etCurrentPswd.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            binding.ivCurrentPswdVisible.visibility = View.GONE
+            binding.ivCurrentPswdInVisible.visibility = View.VISIBLE
+            binding.etCurrentPswd.setSelection(binding.etCurrentPswd.text.toString().length)
+        }
+        binding.ivCurrentPswdInVisible.setOnClickListener {
+            binding.etCurrentPswd.transformationMethod = PasswordTransformationMethod.getInstance()
+            binding.ivCurrentPswdVisible.visibility = View.VISIBLE
+            binding.ivCurrentPswdInVisible.visibility = View.GONE
+            binding.etCurrentPswd.setSelection(binding.etCurrentPswd.text.toString().length)
+        }
+
+        binding.ivNewPswdVisible.setOnClickListener {
+            binding.etNewPswd.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            binding.ivNewPswdVisible.visibility = View.GONE
+            binding.ivNewPswdInVisible.visibility = View.VISIBLE
+            binding.etNewPswd.setSelection(binding.etNewPswd.text.toString().length)
+        }
+        binding.ivNewPswdInVisible.setOnClickListener {
+            binding.etNewPswd.transformationMethod = PasswordTransformationMethod.getInstance()
+            binding.ivNewPswdVisible.visibility = View.VISIBLE
+            binding.ivNewPswdInVisible.visibility = View.GONE
+            binding.etNewPswd.setSelection(binding.etNewPswd.text.toString().length)
+        }
+
+        binding.ivConfirmPswdVisible.setOnClickListener {
+            binding.etConfirmPswd.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            binding.ivConfirmPswdVisible.visibility = View.GONE
+            binding.ivConfirmPswdInVisible.visibility = View.VISIBLE
+            binding.etConfirmPswd.setSelection(binding.etConfirmPswd.text.toString().length)
+        }
+        binding.ivConfirmPswdInVisible.setOnClickListener {
+            binding.etConfirmPswd.transformationMethod = PasswordTransformationMethod.getInstance()
+            binding.ivConfirmPswdVisible.visibility = View.VISIBLE
+            binding.ivConfirmPswdInVisible.visibility = View.GONE
+            binding.etConfirmPswd.setSelection(binding.etConfirmPswd.text.toString().length)
+        }
+
     }
 
     private fun changePassword() {
-        if (binding.etCurrentPswd.text.toString().equals("")) {
+        if (binding.etCurrentPswd.text.toString() == "") {
             binding.flCurrentPswd.error = "Current Login Password is required"
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = ""
@@ -93,7 +144,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.flCurrentPswd.error = "Valid current Login Password is required"
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = ""
-        } else if (binding.etNewPswd.text.toString().equals("")) {
+        } else if (binding.etNewPswd.text.toString() == "") {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = "New Login Password is required"
             binding.flConfirmPswd.error = ""
@@ -103,7 +154,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = "Valid new Login Password is required"
             binding.flConfirmPswd.error = ""
-        } else if (binding.etConfirmPswd.text.toString().equals("")) {
+        } else if (binding.etConfirmPswd.text.toString() == "") {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = "Confirm new Login Password is required"
@@ -113,8 +164,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = ""
             binding.flConfirmPswd.error = "Valid confirm new Login Password is required"
-        }  else if (!binding.etConfirmPswd.text.toString()
-                .equals(binding.etNewPswd.text.toString())
+        }  else if (binding.etConfirmPswd.text.toString() != binding.etNewPswd.text.toString()
         ) {
             binding.flCurrentPswd.error = ""
             binding.flNewPswd.error = ""
@@ -131,7 +181,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 )
                 val listCall: Call<ChangePasswordModel> =
                     APINewClient.getClient().getChangePassword(
-                        USERID, CoUserID,
+                        userID, coUserID,
                         binding.etCurrentPswd.text.toString(),
                         binding.etConfirmPswd.text.toString()
                     )
@@ -180,7 +230,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         }
     }
 
-    fun isValidPassword(password: String?): Boolean {
+    private fun isValidPassword(password: String?): Boolean {
         val pattern: Pattern
         val matcher: Matcher
         val PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"

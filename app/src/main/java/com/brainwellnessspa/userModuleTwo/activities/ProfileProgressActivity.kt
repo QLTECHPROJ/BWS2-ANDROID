@@ -47,6 +47,7 @@ class ProfileProgressActivity : AppCompatActivity() {
          p.putValue("coUserId", CoUserID)
          BWSApplication.addToSegment("Profile Form Screen Viewed", p, CONSTANTS.screen)
         callSecondPrev()
+
         binding.btnMySelf.setOnClickListener {
             profileType = "Myself"
             binding.btnNext.isClickable = true

@@ -113,7 +113,6 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/ic_cloud_bg"
                                 android:orientation="vertical"
                                 android:weightSum="1">
 
@@ -137,16 +136,18 @@
                                             android:layout_marginTop="@dimen/_13sdp"
                                             android:layout_marginRight="@dimen/_13sdp"
                                             android:background="@drawable/rounded_extra_gray_corner"
-                                            android:backgroundTint="@color/lighit_new_blue1"
-                                            android:orientation="horizontal">
+                                            android:backgroundTint="#66B8E1F7"
+                                            android:orientation="horizontal"
+                                            android:padding="@dimen/_7sdp">
 
                                             <TextView
                                                 android:id="@+id/tvReminder"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:fontFamily="@font/montserrat_light"
+                                                android:fontFamily="@font/montserrat_regular"
                                                 android:gravity="start"
-                                                android:paddingLeft="@dimen/_9sdp"
+                                                android:paddingLeft="@dimen/_5sdp"
+                                                android:paddingRight="@dimen/_5sdp"
                                                 android:textColor="@color/white"
                                                 android:textSize="@dimen/_12sdp" />
                                         </LinearLayout>
@@ -418,9 +419,9 @@
                                         android:id="@+id/rvMainPlayList"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:nestedScrollingEnabled="true"
                                         android:orientation="horizontal"
                                         android:overScrollMode="never"
-                                        android:nestedScrollingEnabled="true"
                                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                         tools:listitem="@layout/playlist_custom_layout" />
 

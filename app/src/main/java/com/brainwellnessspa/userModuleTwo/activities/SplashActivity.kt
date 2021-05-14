@@ -23,6 +23,7 @@ import com.brainwellnessspa.userModuleTwo.models.CoUserDetailsModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySplashBinding
+import com.google.gson.Gson
 import com.segment.analytics.Analytics
 import retrofit2.Call
 import retrofit2.Callback
@@ -190,7 +191,7 @@ class SplashActivity : AppCompatActivity() {
                             CONSTANTS.PREFE_ACCESS_INDEXSCORE,
                             coUserDetailsModel.responseData!!.indexScore
                         )
-                        editor.commit()
+                        editor.apply()
                         val sharedd =
                             getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                         val editord = sharedd.edit()
@@ -198,7 +199,22 @@ class SplashActivity : AppCompatActivity() {
                             CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                             coUserDetailsModel.responseData!!.avgSleepTime
                         )
-                        editord.commit()
+                        val selectedCategoriesTitle = arrayListOf<String>()
+                        val selectedCategoriesName = arrayListOf<String>()
+                        val gson = Gson()
+                        for (i in coUserDetailsModel.responseData!!.areaOfFocus!!) {
+                            selectedCategoriesTitle.add(i.mainCat!!)
+                            selectedCategoriesName.add(i.recommendedCat!!)
+                        }
+                        editord.putString(
+                            CONSTANTS.selectedCategoriesTitle,
+                            gson.toJson(selectedCategoriesTitle)
+                        ) //Friend
+                        editord.putString(
+                            CONSTANTS.selectedCategoriesName,
+                            gson.toJson(selectedCategoriesName)
+                        ) //Friend
+                        editord.apply()
                         checkAppVersion()
                     } catch (e: Exception) {
                         e.printStackTrace()

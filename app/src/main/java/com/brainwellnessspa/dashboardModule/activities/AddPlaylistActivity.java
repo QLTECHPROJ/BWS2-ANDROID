@@ -96,6 +96,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         }
 
         binding.llBack.setOnClickListener(view -> {
+            finish();
      /*       comefrom_search = 0;
             myBackPress = true;
             if (comeAddPlaylist == 1) {
@@ -242,7 +243,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         } else {
             finish();
         }*/
-        super.onBackPressed();
+        finish();
     }
 
     @Override

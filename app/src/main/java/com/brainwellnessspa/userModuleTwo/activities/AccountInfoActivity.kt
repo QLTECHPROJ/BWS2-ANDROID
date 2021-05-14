@@ -1,4 +1,4 @@
-package com.brainwellnessspa.profileModule
+package com.brainwellnessspa.userModuleTwo.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
