@@ -319,111 +319,126 @@ class UserListActivity : AppCompatActivity() {
                                                             coUserDetailsModel.responseData
                                                         if (responseData != null) {
                                                             if (responseData.isProfileCompleted.equals(
-                                                                    "0",
-                                                                    ignoreCase = true
-                                                                )
+                                                                            "0",
+                                                                            ignoreCase = true
+                                                                    )
                                                             ) {
                                                                 val intent = Intent(
-                                                                    activity,
-                                                                    WalkScreenActivity::class.java
+                                                                        activity,
+                                                                        WalkScreenActivity::class.java
                                                                 )
                                                                 intent.putExtra(
-                                                                    CONSTANTS.ScreenView,
-                                                                    "ProfileView"
+                                                                        CONSTANTS.ScreenView,
+                                                                        "ProfileView"
                                                                 )
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             } else if (responseData.isAssessmentCompleted.equals(
-                                                                    "0",
-                                                                    ignoreCase = true
-                                                                )
+                                                                            "0",
+                                                                            ignoreCase = true
+                                                                    )
                                                             ) {
                                                                 val intent = Intent(
-                                                                    activity,
-                                                                    AssProcessActivity::class.java
+                                                                        activity,
+                                                                        AssProcessActivity::class.java
                                                                 )
                                                                 intent.putExtra(
-                                                                    CONSTANTS.ASSPROCESS,
-                                                                    "0"
+                                                                        CONSTANTS.ASSPROCESS,
+                                                                        "0"
                                                                 )
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             } else if (responseData.avgSleepTime.equals(
-                                                                    "", ignoreCase = true
-                                                                )
+                                                                            "", ignoreCase = true
+                                                                    )
                                                             ) {
                                                                 val intent = Intent(
-                                                                    activity,
-                                                                    SleepTimeActivity::class.java
+                                                                        activity,
+                                                                        SleepTimeActivity::class.java
                                                                 )
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             } else if (responseData.isProfileCompleted.equals(
-                                                                    "1",
-                                                                    ignoreCase = true
-                                                                ) &&
-                                                                responseData.isAssessmentCompleted.equals(
-                                                                    "1",
-                                                                    ignoreCase = true
-                                                                )
+                                                                            "1",
+                                                                            ignoreCase = true
+                                                                    ) &&
+                                                                    responseData.isAssessmentCompleted.equals(
+                                                                            "1",
+                                                                            ignoreCase = true
+                                                                    )
                                                             ) {
                                                                 val intent = Intent(
-                                                                    activity,
-                                                                    BottomNavigationActivity::class.java
+                                                                        activity,
+                                                                        BottomNavigationActivity::class.java
                                                                 )
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             }
                                                             val shared =
-                                                                activity.getSharedPreferences(
-                                                                    CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-                                                                    MODE_PRIVATE
-                                                                )
+                                                                    activity.getSharedPreferences(
+                                                                            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                                                                            MODE_PRIVATE
+                                                                    )
                                                             val editor = shared.edit()
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_UserID,
-                                                                listModel.responseData!!.userID
+                                                                    CONSTANTS.PREFE_ACCESS_UserID,
+                                                                    listModel.responseData!!.userID
                                                             )
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_CoUserID,
-                                                                listModel.responseData!!.coUserId
+                                                                    CONSTANTS.PREFE_ACCESS_CoUserID,
+                                                                    listModel.responseData!!.coUserId
                                                             )
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_EMAIL,
-                                                                listModel.responseData!!.email
+                                                                    CONSTANTS.PREFE_ACCESS_EMAIL,
+                                                                    listModel.responseData!!.email
                                                             )
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_NAME,
-                                                                listModel.responseData!!.name
+                                                                    CONSTANTS.PREFE_ACCESS_NAME,
+                                                                    listModel.responseData!!.name
                                                             )
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                                responseData.avgSleepTime
+                                                                    CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                                                                    responseData.avgSleepTime
                                                             )
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_INDEXSCORE,
-                                                                responseData.indexScore
+                                                                    CONSTANTS.PREFE_ACCESS_INDEXSCORE,
+                                                                    responseData.indexScore
                                                             )
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_SCORELEVEL,
-                                                                responseData.scoreLevel
+                                                                    CONSTANTS.PREFE_ACCESS_SCORELEVEL,
+                                                                    responseData.scoreLevel
                                                             )
                                                             editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_IMAGE,
-                                                                responseData.image
+                                                                    CONSTANTS.PREFE_ACCESS_IMAGE,
+                                                                    responseData.image
                                                             )
-                                                            editor.commit()
+                                                            editor.apply()
                                                             val sharedd =
-                                                                activity.getSharedPreferences(
-                                                                    CONSTANTS.RecommendedCatMain,
-                                                                    Context.MODE_PRIVATE
-                                                                )
+                                                                    activity.getSharedPreferences(
+                                                                            CONSTANTS.RecommendedCatMain,
+                                                                            Context.MODE_PRIVATE
+                                                                    )
                                                             val editord = sharedd.edit()
                                                             editord.putString(
-                                                                CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                                responseData.avgSleepTime
+                                                                    CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                                                                    responseData.avgSleepTime
                                                             )
-                                                            editord.commit()
+                                                            var selectedCategoriesTitle = arrayListOf<String>()
+                                                            var selectedCategoriesName = arrayListOf<String>()
+                                                            var gson = Gson()
+                                                            for (i in listModel.responseData!!.areaOfFocus!!) {
+                                                                selectedCategoriesTitle.add(i.mainCat!!)
+                                                                selectedCategoriesName.add(i.recommendedCat!!)
+                                                            }
+                                                            editord.putString(
+                                                                    CONSTANTS.selectedCategoriesTitle,
+                                                                    gson.toJson(selectedCategoriesTitle)
+                                                            ) //Friend
+                                                            editord.putString(
+                                                                    CONSTANTS.selectedCategoriesName,
+                                                                    gson.toJson(selectedCategoriesName)
+                                                            ) //Friend
+                                                            editord.apply()
 
                                                             val activity = SplashActivity()
                                                             activity.setAnalytics(
