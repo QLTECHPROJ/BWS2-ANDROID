@@ -134,8 +134,8 @@ class AssProcessActivity : AppCompatActivity() {
                 binding.ivForth.visibility = View.INVISIBLE
                 binding.ivFifth.visibility = View.INVISIBLE
                 binding.ivSixth.visibility = View.INVISIBLE
-                binding.ivSeventh.visibility = View.VISIBLE
-                binding.ivEighth.visibility = View.INVISIBLE
+                binding.ivSeventh.visibility = View.INVISIBLE
+                binding.ivEighth.visibility = View.VISIBLE
                 binding.ivNineth.visibility = View.INVISIBLE
                 binding.ivTenth.visibility = View.INVISIBLE
                 binding.ivEleventh.visibility = View.INVISIBLE
@@ -147,8 +147,8 @@ class AssProcessActivity : AppCompatActivity() {
                 binding.ivForth.visibility = View.INVISIBLE
                 binding.ivFifth.visibility = View.INVISIBLE
                 binding.ivSixth.visibility = View.INVISIBLE
-                binding.ivSeventh.visibility = View.INVISIBLE
-                binding.ivEighth.visibility = View.VISIBLE
+                binding.ivSeventh.visibility = View.VISIBLE
+                binding.ivEighth.visibility = View.INVISIBLE
                 binding.ivNineth.visibility = View.INVISIBLE
                 binding.ivTenth.visibility = View.INVISIBLE
                 binding.ivEleventh.visibility = View.INVISIBLE

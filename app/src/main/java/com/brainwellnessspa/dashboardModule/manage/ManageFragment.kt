@@ -1966,7 +1966,7 @@ class ManageFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.binding.tvTitle.text = listModel[position].name
+            holder.binding.tvTitle.text = listModel[position].categoryName
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].catImage).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(124))).priority(Priority.HIGH)

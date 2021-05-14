@@ -115,10 +115,10 @@
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_4sdp"
             app:buffered_color="@color/dim_light_white"
-            app:played_color="@color/gray"
-            app:scrubber_color="@color/dim_light_white"
+            app:played_color="#FFFFFF"
+            app:scrubber_color="#95F9F9F9"
             app:scrubber_drawable="@drawable/ic_white_dot_icon"
-            app:unplayed_color="@color/dim_light_white" />
+            app:unplayed_color="#95F9F9F9" />
 
         <TextView
             android:id="@+id/tvStartTime"

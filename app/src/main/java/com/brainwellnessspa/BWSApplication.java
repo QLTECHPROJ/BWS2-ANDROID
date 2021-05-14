@@ -967,9 +967,6 @@ public class BWSApplication extends Application {
                                 btnSendCode.setText(R.string.Save);
                                 edtCreate.requestFocus();
                                 edtCreate.setText(PlaylistName);
-                                btnSendCode.setEnabled(false);
-                                btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
-                                btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
                                 int position1 = edtCreate.getText().length();
                                 Editable editObj = edtCreate.getText();
                                 Selection.setSelection(editObj, position1);
@@ -986,14 +983,14 @@ public class BWSApplication extends Application {
                                     @Override
                                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                                         String number = edtCreate.getText().toString();
-                                        if (number.equalsIgnoreCase(PlaylistName)) {
+                                         if (number.equalsIgnoreCase("")) {
                                             btnSendCode.setEnabled(false);
                                             btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
                                             btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
-                                        } else if (number.equalsIgnoreCase("")) {
-                                            btnSendCode.setEnabled(false);
-                                            btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
-                                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                                        } else if (!number.equalsIgnoreCase(PlaylistName)) {
+                                             btnSendCode.setEnabled(true);
+                                             btnSendCode.setTextColor(ctx.getResources().getColor(R.color.light_black));
+                                             btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
                                         } else {
                                             btnSendCode.setEnabled(true);
                                             btnSendCode.setTextColor(ctx.getResources().getColor(R.color.light_black));
