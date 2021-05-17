@@ -65,7 +65,7 @@
                     android:layout_height="@dimen/_42sdp"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:background="@drawable/blue_extra_round_cornor"
+                    android:background="@drawable/light_green_rounded_filled"
                     android:paddingHorizontal="@dimen/_18sdp">
 
                     <TextView
