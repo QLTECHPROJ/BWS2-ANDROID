@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ResourceModule.Models
+package com.brainwellnessspa.resourceModule.Models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

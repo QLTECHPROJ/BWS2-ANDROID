@@ -1,5 +1,6 @@
-package com.brainwellnessspa.ResourceModule.Activities;
+package com.brainwellnessspa.resourceModule.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
@@ -30,24 +31,26 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.ResourceModule.Models.ResourceListModel;
-import com.brainwellnessspa.ResourceModule.Models.SegmentResource;
+import com.brainwellnessspa.resourceModule.Models.ResourceListModel;
+import com.brainwellnessspa.resourceModule.Models.SegmentResource;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ResourceModule.Fragments.AppsFragment;
-import com.brainwellnessspa.ResourceModule.Fragments.AudioBooksFragment;
-import com.brainwellnessspa.ResourceModule.Fragments.DocumentariesFragment;
-import com.brainwellnessspa.ResourceModule.Fragments.PodcastsFragment;
-import com.brainwellnessspa.ResourceModule.Fragments.WebsiteFragment;
-import com.brainwellnessspa.ResourceModule.Models.ResourceFilterModel;
+import com.brainwellnessspa.resourceModule.Fragments.AppsFragment;
+import com.brainwellnessspa.resourceModule.Fragments.AudioBooksFragment;
+import com.brainwellnessspa.resourceModule.Fragments.DocumentariesFragment;
+import com.brainwellnessspa.resourceModule.Fragments.PodcastsFragment;
+import com.brainwellnessspa.resourceModule.Fragments.WebsiteFragment;
+import com.brainwellnessspa.resourceModule.Models.ResourceFilterModel;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityResourceBinding;
 import com.brainwellnessspa.databinding.FilterListLayoutBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.segment.analytics.Properties;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +85,7 @@ public class ResourceActivity extends AppCompatActivity {
     int stackStatus = 0;
     boolean myBackPress = false;
 
+    @SuppressLint("InflateParams")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +104,7 @@ public class ResourceActivity extends AppCompatActivity {
         USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
         CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
         p4 = new Properties();
-        p4.putValue("userId", USERID);
+        p4.putValue("coUserId", CoUserID);
         section = new ArrayList<>();
         gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
@@ -117,7 +121,6 @@ public class ResourceActivity extends AppCompatActivity {
                 binding.viewPager.setCurrentItem(tab.getPosition());
                 CurruntTab = tab.getPosition();
                 p = new Properties();
-                p.putValue("userId", USERID);
                 p.putValue("coUserId", CoUserID);
                 if (tab.getPosition() == 0) {
                     tabFlag = CONSTANTS.FLAG_ONE;
@@ -144,9 +147,10 @@ public class ResourceActivity extends AppCompatActivity {
                 Call<ResourceListModel> listCalls = APINewClient.getClient().getResourceList(CoUserID, tabFlag, Category);
                 listCalls.enqueue(new Callback<ResourceListModel>() {
                     @Override
-                    public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                    public void onResponse(@NotNull Call<ResourceListModel> call, @NotNull Response<ResourceListModel> response) {
                         try {
                             ResourceListModel listModel = response.body();
+                            assert listModel != null;
                             if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 resourceListModel = listModel;
                                 ArrayList<String> allResourceType = new ArrayList<>();
@@ -176,7 +180,7 @@ public class ResourceActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    public void onFailure(@NotNull Call<ResourceListModel> call, @NotNull Throwable t) {
                     }
                 });
 
@@ -266,7 +270,7 @@ public class ResourceActivity extends AppCompatActivity {
                 Call<ResourceFilterModel> listCall = APINewClient.getClient().getResourceCatList(CoUserID);
                 listCall.enqueue(new Callback<ResourceFilterModel>() {
                     @Override
-                    public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
+                    public void onResponse(@NotNull Call<ResourceFilterModel> call, @NotNull Response<ResourceFilterModel> response) {
                         ResourceFilterModel listModel = response.body();
                         if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), dialogBox, tvAll, ivFilter);
@@ -291,8 +295,8 @@ public class ResourceActivity extends AppCompatActivity {
 
     public class ResourceFilterAdapter extends RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder> {
         Dialog dialogBox;
-        private List<ResourceFilterModel.ResponseData> listModel;
-        private TextView tvAll;
+        private final List<ResourceFilterModel.ResponseData> listModel;
+        private final TextView tvAll;
         ImageView ivFilter;
 
         public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Dialog dialogBox, TextView tvAll,

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.DassAssSliderTwo.Model
+package com.brainwellnessspa.dassAssSlider.models
 
 class PostAssAns {
     var qus:String?=""

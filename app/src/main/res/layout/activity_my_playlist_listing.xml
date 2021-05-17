@@ -248,7 +248,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_gravity="center"
-                                    android:layout_marginBottom="@dimen/_26sdp"
+                                    android:layout_marginBottom="@dimen/_20sdp"
                                     android:layout_weight="4.6"
                                     android:gravity="center"
                                     android:orientation="vertical">
@@ -262,7 +262,6 @@
                                             android:id="@+id/tvPlayListName"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
                                             android:layout_marginLeft="@dimen/_22sdp"
                                             android:layout_marginRight="@dimen/_22sdp"
                                             android:fontFamily="@font/montserrat_bold"
@@ -276,7 +275,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:layout_marginLeft="@dimen/_25sdp"
-                                        android:layout_marginTop="@dimen/_10sdp"
+                                        android:layout_marginTop="@dimen/_8sdp"
                                         android:layout_marginRight="@dimen/_25sdp"
                                         android:orientation="horizontal">
 
@@ -292,7 +291,7 @@
                                             android:paddingRight="@dimen/_10sdp"
                                             android:ellipsize="end"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_11sdp" />
+                                            android:textSize="@dimen/_10sdp" />
                                     </LinearLayout>
 
                                 </LinearLayout>
@@ -557,7 +556,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="310dp"
                         android:layout_below="@id/llSearch"
-                        android:layout_marginTop="@dimen/_36sdp"
+                        android:layout_marginTop="@dimen/_28sdp"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:visibility="gone">

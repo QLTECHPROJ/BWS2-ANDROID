@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ResourceModule.Activities
+package com.brainwellnessspa.resourceModule.activities
 
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
@@ -36,12 +36,13 @@ class ResourceDetailsActivity : AppCompatActivity() {
     var image: String? = null
     var description: String? = null
     var resourceType: String? = null
-    var UserID: String? = null
+    var userID: String? = null
+    private var coUserID: String? = null
     var mastercat: String? = null
     var subcat: String? = null
     var ctx: Context? = null
-    var p: Properties? = null
-    var p1: Properties? = null
+    lateinit var p: Properties
+    private lateinit var p1: Properties
     private var numStarted = 0
     var stackStatus = 0
     var myBackPress = false
@@ -51,7 +52,8 @@ class ResourceDetailsActivity : AppCompatActivity() {
         ctx = this@ResourceDetailsActivity
         act = this@ResourceDetailsActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        coUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         if (intent.extras != null) {
             id = intent.getStringExtra("id")
             title = intent.getStringExtra(CONSTANTS.title)
@@ -64,24 +66,24 @@ class ResourceDetailsActivity : AppCompatActivity() {
             subcat = intent.getStringExtra(CONSTANTS.subcat)
             p = Properties()
             p1 = Properties()
-            p!!.putValue("userId", UserID)
-            p!!.putValue("resourceId", id)
-            p!!.putValue("resourceName", title)
+            p.putValue("coUserId", coUserID)
+            p.putValue("resourceId", id)
+            p.putValue("resourceName", title)
             if (intent.getStringExtra("audio_books") != null) {
                 binding.tvScreenName.setText(R.string.Audio_Book)
                 binding.btnComplete.visibility = View.VISIBLE
                 binding.llPlatfroms.visibility = View.GONE
                 resourceType = getString(R.string.Audio_Book)
-                p!!.putValue("author", author)
-                p1!!.putValue("author", author)
+                p.putValue("author", author)
+                p1.putValue("author", author)
             }
             if (intent.getStringExtra("podcasts") != null) {
                 binding.tvScreenName.setText(R.string.Podcasts)
                 binding.btnComplete.visibility = View.VISIBLE
                 binding.llPlatfroms.visibility = View.GONE
                 resourceType = getString(R.string.Podcasts)
-                p!!.putValue("author", author)
-                p1!!.putValue("author", author)
+                p.putValue("author", author)
+                p1.putValue("author", author)
             }
             if (intent.getStringExtra("apps") != null) {
                 binding.tvScreenName.setText(R.string.Apps)
@@ -89,8 +91,8 @@ class ResourceDetailsActivity : AppCompatActivity() {
                 binding.llPlatfroms.visibility = View.VISIBLE
                 binding.tvCreator.visibility = View.GONE
                 resourceType = getString(R.string.Apps)
-                p!!.putValue("author", "")
-                p1!!.putValue("author", "")
+                p.putValue("author", "")
+                p1.putValue("author", "")
             }
             if (intent.getStringExtra("website") != null) {
                 binding.tvScreenName.setText(R.string.Websites)
@@ -98,27 +100,26 @@ class ResourceDetailsActivity : AppCompatActivity() {
                 binding.llPlatfroms.visibility = View.GONE
                 binding.tvCreator.visibility = View.GONE
                 resourceType = getString(R.string.Websites)
-                p!!.putValue("author", "")
-                p1!!.putValue("author", "")
+                p.putValue("author", "")
+                p1.putValue("author", "")
             }
             if (intent.getStringExtra("documentaries") != null) {
                 binding.tvScreenName.setText(R.string.Documentaries)
                 binding.btnComplete.visibility = View.VISIBLE
                 binding.llPlatfroms.visibility = View.GONE
                 resourceType = getString(R.string.Documentaries)
-                p!!.putValue("author", author)
-                p1!!.putValue("author", author)
+                p.putValue("author", author)
+                p1.putValue("author", author)
             }
             try {
-                p!!.putValue("resourceType", resourceType)
-                p!!.putValue("resourceDesc", description)
-                p!!.putValue("masterCategory", mastercat)
-                p!!.putValue("subCategory", subcat)
+                p.putValue("resourceType", resourceType)
+                p.putValue("resourceDesc", description)
+                p.putValue("masterCategory", mastercat)
+                p.putValue("subCategory", subcat)
                 if (linkOne.equals("", ignoreCase = true)) {
-                    p!!.putValue("resourceLink", linkTwo)
+                    p.putValue("resourceLink", linkTwo)
                 } else if (linkTwo.equals("", ignoreCase = true)) {
-                    p!!.putValue("resourceLink", linkOne)
-                } else {
+                    p.putValue("resourceLink", linkOne)
                 }
                 BWSApplication.addToSegment("Resource Details Viewed", p, CONSTANTS.screen)
             } catch (e: Exception) {
@@ -134,62 +135,62 @@ class ResourceDetailsActivity : AppCompatActivity() {
             Glide.with(this).load(image).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL)
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH)
                     .skipMemoryCache(false).into(binding.ivRestaurantImage)
-            binding.btnComplete.setOnClickListener { _ ->
+            binding.btnComplete.setOnClickListener {
                 if (linkOne.equals("", ignoreCase = true)) {
                     BWSApplication.showToast("Not Available", act)
                 } else {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(linkOne)
                     startActivity(i)
-                    p1!!.putValue("userId", UserID)
-                    p1!!.putValue("resourceId", id)
-                    p1!!.putValue("resourceName", title)
-                    p1!!.putValue("resourceType", resourceType)
-                    p1!!.putValue("resourceDesc", description)
-                    p1!!.putValue("resourceLink", linkOne)
-                    p1!!.putValue("masterCategory", mastercat)
-                    p1!!.putValue("subCategory", subcat)
+                    p1.putValue("coUserId", coUserID)
+                    p1.putValue("resourceId", id)
+                    p1.putValue("resourceName", title)
+                    p1.putValue("resourceType", resourceType)
+                    p1.putValue("resourceDesc", description)
+                    p1.putValue("resourceLink", linkOne)
+                    p1.putValue("masterCategory", mastercat)
+                    p1.putValue("subCategory", subcat)
                     BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track)
                 }
             }
-            binding.ivAndroid.setOnClickListener { _ ->
+            binding.ivAndroid.setOnClickListener {
                 if (linkOne.equals("", ignoreCase = true)) {
                     BWSApplication.showToast("Not Available", act)
                 } else {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(linkOne)
                     startActivity(i)
-                    p1!!.putValue("userId", UserID)
-                    p1!!.putValue("resourceId", id)
-                    p1!!.putValue("resourceName", title)
-                    p1!!.putValue("resourceType", resourceType)
-                    p1!!.putValue("resourceDesc", description)
-                    p1!!.putValue("resourceLink", linkOne)
-                    p1!!.putValue("masterCategory", mastercat)
-                    p1!!.putValue("subCategory", subcat)
+                    p1.putValue("coUserId", coUserID)
+                    p1.putValue("resourceId", id)
+                    p1.putValue("resourceName", title)
+                    p1.putValue("resourceType", resourceType)
+                    p1.putValue("resourceDesc", description)
+                    p1.putValue("resourceLink", linkOne)
+                    p1.putValue("masterCategory", mastercat)
+                    p1.putValue("subCategory", subcat)
                     BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track)
                 }
             }
-            binding.ivIos.setOnClickListener { _ ->
+            binding.ivIos.setOnClickListener {
                 if (linkTwo.equals("", ignoreCase = true)) {
                     BWSApplication.showToast("Not Available", act)
                 } else {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(linkTwo)
                     startActivity(i)
-                    p1!!.putValue("userId", UserID)
-                    p1!!.putValue("resourceId", id)
-                    p1!!.putValue("resourceName", title)
-                    p1!!.putValue("resourceType", resourceType)
-                    p1!!.putValue("resourceDesc", description)
-                    p1!!.putValue("resourceLink", linkTwo)
-                    p1!!.putValue("masterCategory", mastercat)
-                    p1!!.putValue("subCategory", subcat)
+                    p1.putValue("coUserId", coUserID)
+                    p1.putValue("resourceId", id)
+                    p1.putValue("resourceName", title)
+                    p1.putValue("resourceType", resourceType)
+                    p1.putValue("resourceDesc", description)
+                    p1.putValue("resourceLink", linkTwo)
+                    p1.putValue("masterCategory", mastercat)
+                    p1.putValue("subCategory", subcat)
                     BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track)
                 }
             }
         }
-        binding.llBack.setOnClickListener { _ ->
+        binding.llBack.setOnClickListener {
             myBackPress = true
             finish()
         }

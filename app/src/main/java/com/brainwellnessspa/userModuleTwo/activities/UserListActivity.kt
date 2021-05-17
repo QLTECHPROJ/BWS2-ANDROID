@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
-import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
+import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.manageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.userModuleTwo.models.AddedUserListModel

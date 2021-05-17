@@ -1,4 +1,4 @@
-package com.brainwellnessspa.DassAssSliderTwo.Model
+package com.brainwellnessspa.dassAssSlider.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

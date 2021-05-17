@@ -37,7 +37,8 @@
                 android:gravity="center"
                 android:text="@string/Manage"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -75,7 +76,8 @@
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_18sdp" />
+                        android:textSize="@dimen/_18sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvDesc"
@@ -87,13 +89,13 @@
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_15sdp" />
+                        android:textSize="@dimen/_15sdp"
+                        tools:ignore="SpUsage" />
 
                     <LinearLayout
                         android:id="@+id/llFeatures"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/llPlanSub"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -113,11 +115,12 @@
                                 android:id="@+id/tvPlanFeatures01"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
+                                android:layout_marginStart="@dimen/_13sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_15sdp"
+                                tools:ignore="SpUsage" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -136,11 +139,12 @@
                                 android:id="@+id/tvPlanFeatures02"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
+                                android:layout_marginStart="@dimen/_13sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_15sdp"
+                                tools:ignore="SpUsage" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -159,11 +163,12 @@
                                 android:id="@+id/tvPlanFeatures03"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
+                                android:layout_marginStart="@dimen/_13sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_15sdp"
+                                tools:ignore="SpUsage" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -182,11 +187,12 @@
                                 android:id="@+id/tvPlanFeatures04"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
+                                android:layout_marginStart="@dimen/_13sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_15sdp"
+                                tools:ignore="SpUsage" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -197,10 +203,11 @@
                         android:layout_marginHorizontal="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/montserrat_bold"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:text="Profile"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -214,11 +221,12 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_13sdp"
+                            android:layout_marginStart="@dimen/_13sdp"
                             android:fontFamily="@font/montserrat_medium"
                             android:text="Select Number of Profile"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_10sdp"
+                            tools:ignore="SpUsage" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -240,11 +248,12 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.1"
-                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:layout_marginStart="@dimen/_10sdp"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:text="2"
                                 android:textColor="@color/step_one_bg"
-                                android:textSize="@dimen/_36sdp" />
+                                android:textSize="@dimen/_36sdp"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -259,7 +268,8 @@
                         android:gravity="start"
                         android:text="Payment plan"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -267,8 +277,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="true"
-                        android:layout_marginTop="@dimen/_20sdp"
-                        android:overScrollMode="never" />
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:overScrollMode="never"
+                        tools:targetApi="lollipop" />
 
 
                     <RelativeLayout
@@ -294,7 +305,8 @@
                                 android:text="START AT $9.99 / Week"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_13sdp"
-                                android:visibility="visible" />
+                                android:visibility="visible"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
 
@@ -316,7 +328,8 @@
                                 android:layout_centerInParent="true"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/_8sdp" />
+                                android:textSize="@dimen/_8sdp"
+                                tools:ignore="SpUsage" />
 
                         </RelativeLayout>
                     </RelativeLayout>
@@ -332,7 +345,8 @@
                         android:visibility="gone"
                         android:text="Payment plan"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -348,7 +362,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:paddingVertical="@dimen/_30sdp"
-                            android:paddingLeft="@dimen/_16sdp"
+                            android:paddingStart="@dimen/_16sdp"
                             android:weightSum="1">
 
                             <LinearLayout
@@ -364,7 +378,8 @@
                                     android:gravity="start"
                                     android:text="Weekly"
                                     android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_16sdp" />
+                                    android:textSize="@dimen/_16sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -375,7 +390,8 @@
                                     android:lineSpacingExtra="@dimen/_4sdp"
                                     android:text="Lorem ipsum dolor sit"
                                     android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
 
                             </LinearLayout>
 
@@ -383,13 +399,14 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginRight="@dimen/_16sdp"
+                                android:layout_marginEnd="@dimen/_16sdp"
                                 android:layout_weight="0.25"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
                                 android:text="$99.99"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_18sdp" />
+                                android:textSize="@dimen/_18sdp"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
 
@@ -403,7 +420,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:paddingVertical="@dimen/_30sdp"
-                            android:paddingLeft="@dimen/_16sdp"
+                            android:paddingStart="@dimen/_16sdp"
                             android:weightSum="1">
 
                             <LinearLayout
@@ -419,7 +436,8 @@
                                     android:gravity="start"
                                     android:text="Monthly"
                                     android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_16sdp" />
+                                    android:textSize="@dimen/_16sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -430,7 +448,8 @@
                                     android:lineSpacingExtra="@dimen/_4sdp"
                                     android:text="Lorem ipsum dolor sit"
                                     android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
 
                             </LinearLayout>
 
@@ -438,13 +457,14 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginRight="@dimen/_16sdp"
+                                android:layout_marginEnd="@dimen/_16sdp"
                                 android:layout_weight="0.25"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
                                 android:text="$299.99"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_18sdp" />
+                                android:textSize="@dimen/_18sdp"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
 
@@ -458,7 +478,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:paddingVertical="@dimen/_30sdp"
-                            android:paddingLeft="@dimen/_16sdp"
+                            android:paddingStart="@dimen/_16sdp"
                             android:weightSum="1">
 
                             <LinearLayout
@@ -474,7 +494,8 @@
                                     android:gravity="start"
                                     android:text="One-Time"
                                     android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_16sdp" />
+                                    android:textSize="@dimen/_16sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -485,7 +506,8 @@
                                     android:lineSpacingExtra="@dimen/_4sdp"
                                     android:text="Lorem ipsum dolor sit"
                                     android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
 
                             </LinearLayout>
 
@@ -493,7 +515,7 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginRight="@dimen/_16sdp"
+                                android:layout_marginEnd="@dimen/_16sdp"
                                 android:layout_weight="0.25"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
@@ -563,7 +585,8 @@
                         android:gravity="center"
                         android:text="SEE REAL TESTIMONIALS \nFROM REAL CUSTOMERS"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_24sdp" />
+                        android:textSize="@dimen/_24sdp"
+                        tools:ignore="SpUsage" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvVideoList"
@@ -593,7 +616,6 @@
                             android:id="@+id/rvFaqList"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/rlLayout"
                             android:layout_marginTop="@dimen/_16sdp"
                             android:overScrollMode="never"
                             android:paddingBottom="@dimen/_8sdp" />
@@ -602,13 +624,13 @@
                             android:id="@+id/tvFound"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
                             android:layout_marginHorizontal="@dimen/_16sdp"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center"
                             android:text="No Result Found"
                             android:textSize="@dimen/_16sdp"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            tools:ignore="SpUsage" />
 
                         <TextView
                             android:id="@+id/tvText"
@@ -620,7 +642,8 @@
                             android:gravity="center"
                             android:text="@string/privacy_policy_t_n_c"
                             android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -639,31 +662,34 @@
                                 android:paddingTop="@dimen/_2sdp"
                                 android:text="@string/t_n_csm"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
 
                             <TextView
                                 android:id="@+id/tvPrivacyPolicys"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_3sdp"
+                                android:layout_marginStart="@dimen/_3sdp"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
                                 android:paddingTop="@dimen/_2sdp"
                                 android:text="@string/privacy_policysm"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
 
                             <TextView
                                 android:id="@+id/tvAnd"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_3sdp"
+                                android:layout_marginStart="@dimen/_3sdp"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
                                 android:paddingTop="@dimen/_2sdp"
                                 android:text="@string/and"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
 
                             <TextView
                                 android:id="@+id/tvDisclaimers"
@@ -675,7 +701,8 @@
                                 android:paddingTop="@dimen/_2sdp"
                                 android:text="@string/disclaimersm"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
 
@@ -696,7 +723,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

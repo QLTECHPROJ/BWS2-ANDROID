@@ -52,6 +52,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
@@ -90,6 +91,8 @@ public class AddAudioActivity extends AppCompatActivity {
     boolean myBackPress = false;
     boolean notificationStatus = false;
     private int numStarted = 0;
+    GsonBuilder gsonBuilder;
+    ArrayList<String> section;
     //    private Runnable UpdateSongTime3;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -130,17 +133,17 @@ public class AddAudioActivity extends AppCompatActivity {
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
 
         notificationStatus = false;
-        /*ArrayList<String> section = new ArrayList<>();
-        section.add("Recommended Audios");
-        section.add("Recommended Playlists");
-        Gson gson;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
+
         p = new Properties();
-        p.putValue("userId", CoUSERID);
-        p.putValue("source", "Search Screen");
-        p.putValue("sections", gson.toJson(section));
-        BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);*/
+        p.putValue("userId", USERID);
+        p.putValue("coUserId", CoUSERID);
+        if (PlaylistID.equalsIgnoreCase("")){
+            p.putValue("source", "Manage Search Screen");
+        }else {
+            p.putValue("source", "Add Audio Screen");
+        }
+
+        BWSApplication.addToSegment("Search Screen Viewed", p, CONSTANTS.screen);
 
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
@@ -170,11 +173,17 @@ public class AddAudioActivity extends AppCompatActivity {
                 } else {
                     prepareSearchData(search, searchEditText);
                 }
-               /* p = new Properties();
-                p.putValue("userId", CoUSERID);
-                p.putValue("source", "Add Audio Screen");
+
+                p = new Properties();
+                p.putValue("userId", USERID);
+                p.putValue("coUserId", CoUSERID);
+                if (PlaylistID.equalsIgnoreCase("")){
+                    p.putValue("source", "Manage Search Screen");
+                }else {
+                    p.putValue("source", "Add Audio Screen");
+                }
                 p.putValue("searchKeyword", search);
-                BWSApplication.addToSegment("Audio/Playlist Searched", p, CONSTANTS.track);*/
+                BWSApplication.addToSegment("Audio Searched", p, CONSTANTS.track);
                 return false;
             }
         });
@@ -303,7 +312,27 @@ public class AddAudioActivity extends AppCompatActivity {
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
                             suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
                             binding.rvSuggestedList.setAdapter(suggestedAdpater);
+                            p = new Properties();
+                            p.putValue("userId", USERID);
+                            p.putValue("coUserId", CoUSERID);
+                            if (PlaylistID.equalsIgnoreCase("")){
+                                p.putValue("source", "Manage Search Screen");
+                            }else {
+                                p.putValue("source", "Add Audio Screen");
+                            }
 
+                            section = new ArrayList<>();
+                            gsonBuilder = new GsonBuilder();
+                            Gson gson = gsonBuilder.create();
+                            for (int i = 0; i < listModel.getResponseData().size(); i++) {
+                                section.add(listModel.getResponseData().get(i).getID());
+                                section.add(listModel.getResponseData().get(i).getName());
+                                section.add(listModel.getResponseData().get(i).getAudiomastercat());
+                                section.add(listModel.getResponseData().get(i).getAudioSubCategory());
+                                section.add(listModel.getResponseData().get(i).getAudioDuration());
+                            }
+                            p.putValue("audios", gson.toJson(section));
+                            BWSApplication.addToSegment("Suggested Audios List Viewed", p, CONSTANTS.screen);
                             LocalBroadcastManager.getInstance(ctx)
                                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
                             binding.tvSAViewAll.setOnClickListener(view -> {

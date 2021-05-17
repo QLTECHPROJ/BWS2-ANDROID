@@ -34,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal"
+                android:background="@drawable/playlist_gradient"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:paddingTop="@dimen/_7sdp"

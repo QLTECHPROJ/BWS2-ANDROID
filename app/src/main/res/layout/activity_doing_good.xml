@@ -6,8 +6,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".userModuleTwo.activities.DoingGoodActivity">
+        android:clickable="true"
+        android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/llContinue"
@@ -71,26 +71,24 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sdp" />
 
-                    <Button
-                        android:id="@+id/btnContinue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginHorizontal="@dimen/_33sdp"
-                        android:layout_marginBottom="@dimen/_30sdp"
-                        android:background="@drawable/light_green_rounded_filled"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:paddingVertical="@dimen/_2sdp"
-                        android:text="Continue"
-                        android:textColor="@color/white" />
-
                 </RelativeLayout>
-
-
             </LinearLayout>
-
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/_33sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:background="@drawable/light_green_rounded_filled"
+            android:fontFamily="@font/montserrat_medium"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="Continue"
+            android:textColor="@color/white" />
+
 
     </RelativeLayout>
 </layout>

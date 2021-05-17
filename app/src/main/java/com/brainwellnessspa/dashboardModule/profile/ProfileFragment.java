@@ -46,7 +46,7 @@ import com.brainwellnessspa.faqModule.activities.FaqActivity;
 import com.brainwellnessspa.invoicemodule.activities.InvoiceActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
-import com.brainwellnessspa.ResourceModule.Activities.ResourceActivity;
+import com.brainwellnessspa.resourceModule.activities.ResourceActivity;
 import com.brainwellnessspa.Utility.FileUtil;
 import com.brainwellnessspa.Utility.RequestPermissionHandler;
 import com.brainwellnessspa.dashboardModule.models.AddProfileModel;
@@ -112,6 +112,9 @@ public class ProfileFragment extends Fragment {
             selectImage();
         });
 
+        Properties p = new Properties();
+        p.putValue("coUserId", CoUserID);
+        BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);
         binding.llAcInfo.setOnClickListener(view15 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -683,9 +686,9 @@ public class ProfileFragment extends Fragment {
                     p1.putValue("coUserId", CoUserID);
                     p1.putValue("deviceId", DeviceID);
                     p1.putValue("deviceType", "Android");
-                    p1.putValue("userName", UserName);
-                    p1.putValue("userEmail", UserEmail);
-                    BWSApplication.addToSegment("Signed Out", p1, CONSTANTS.track);
+                    p1.putValue("name", UserName);
+                    p1.putValue("email", UserEmail);
+                    BWSApplication.addToSegment("CoUser Logout", p1, CONSTANTS.track);
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
                     dialog.hide();

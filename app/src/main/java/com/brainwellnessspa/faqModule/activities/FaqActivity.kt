@@ -30,6 +30,7 @@ class FaqActivity : AppCompatActivity() {
     private var modelList: ArrayList<FaqListModel.ResponseData>? = null
     lateinit var activity: Activity
     var userID: String? = null
+    var coUserId: String? = null
     var section: ArrayList<String>? = null
     var gsonBuilder: GsonBuilder? = null
     var p: Properties? = null
@@ -42,6 +43,7 @@ class FaqActivity : AppCompatActivity() {
         activity = this@FaqActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         modelList = ArrayList()
         section = ArrayList()
         gsonBuilder = GsonBuilder()
@@ -55,7 +57,7 @@ class FaqActivity : AppCompatActivity() {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
         p = Properties()
-        p!!.putValue("userId", userID)
+        p!!.putValue("coUserId", coUserId)
         section!!.add("Audio")
         section!!.add("Playlist")
         section!!.add("General")

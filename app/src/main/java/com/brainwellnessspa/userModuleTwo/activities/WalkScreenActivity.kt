@@ -1,55 +1,61 @@
 package com.brainwellnessspa.userModuleTwo.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
+import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
 
 class WalkScreenActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWalkScreenBinding
-    var USERID: String? = ""
-    var CoUserID: String? = ""
-    var EMAIL: String? = ""
-    var NAME: String? = ""
-    var ScreenView: String? = ""
+    var userId: String? = ""
+    var coUserId: String? = ""
+    var email: String? = ""
+    var name: String? = ""
+    var screenView: String? = ""
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_walk_screen)
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-        EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        NAME = shared.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        email = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+        name = shared.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
 
         if (intent.extras != null) {
-            ScreenView = intent.getStringExtra(CONSTANTS.ScreenView)
+            screenView = intent.getStringExtra(CONSTANTS.ScreenView)
         }
 
-        binding.tvName.text = "Hi, $NAME"
+        binding.tvName.text = "Hi, $name"
         binding.rlWelcome.visibility = View.VISIBLE
         binding.rlStepOne.visibility = View.GONE
         binding.rlStepTwo.visibility = View.GONE
         binding.rlStepThree.visibility = View.GONE
-        if (ScreenView.equals("1")) {
-            binding.rlWelcome.visibility = View.VISIBLE
-            binding.rlStepOne.visibility = View.GONE
-            binding.rlStepTwo.visibility = View.GONE
-            binding.rlStepThree.visibility = View.GONE
-        } else if (ScreenView.equals("2")) {
-            binding.rlWelcome.visibility = View.GONE
-            binding.rlStepOne.visibility = View.GONE
-            binding.rlStepTwo.visibility = View.VISIBLE
-            binding.rlStepThree.visibility = View.GONE
-        } else if (ScreenView.equals("3")) {
-            binding.rlWelcome.visibility = View.GONE
-            binding.rlStepOne.visibility = View.GONE
-            binding.rlStepTwo.visibility = View.GONE
-            binding.rlStepThree.visibility = View.VISIBLE
+        when {
+            screenView.equals("1") -> {
+                binding.rlWelcome.visibility = View.VISIBLE
+                binding.rlStepOne.visibility = View.GONE
+                binding.rlStepTwo.visibility = View.GONE
+                binding.rlStepThree.visibility = View.GONE
+            }
+            screenView.equals("2") -> {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.GONE
+                binding.rlStepTwo.visibility = View.VISIBLE
+                binding.rlStepThree.visibility = View.GONE
+            }
+            screenView.equals("3") -> {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.GONE
+                binding.rlStepTwo.visibility = View.GONE
+                binding.rlStepThree.visibility = View.VISIBLE
+            }
         }
 
         binding.btnContinue.setOnClickListener {

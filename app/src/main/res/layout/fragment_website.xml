@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:clickable="true"
-        tools:context="com.brainwellnessspa.ResourceModule.Fragments.WebsiteFragment">
+        tools:context="com.brainwellnessspa.resourceModule.Fragments.WebsiteFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"

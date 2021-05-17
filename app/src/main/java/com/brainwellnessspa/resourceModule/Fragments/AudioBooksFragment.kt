@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ResourceModule.Fragments
+package com.brainwellnessspa.resourceModule.Fragments
 
 import android.content.Context
 import android.content.Intent
@@ -12,16 +12,16 @@ import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.ResourceModule.Activities.ResourceDetailsActivity
-import com.brainwellnessspa.ResourceModule.Models.ResourceListModel
+import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
+import com.brainwellnessspa.resourceModule.Models.ResourceListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
-import com.brainwellnessspa.databinding.DocumentariesListLayoutBinding
-import com.brainwellnessspa.databinding.FragmentDocumentariesBinding
+import com.brainwellnessspa.databinding.AudioBooksLayoutBinding
+import com.brainwellnessspa.databinding.FragmentAudioBooksBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -31,9 +31,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DocumentariesFragment : Fragment() {
-    lateinit var binding: FragmentDocumentariesBinding
-    var documentaries: String? = null
+class AudioBooksFragment : Fragment() {
+    lateinit var binding: FragmentAudioBooksBinding
+    var audio_books: String? = null
     var USERID: String? = null
     var CoUserID: String? = null
     var Category: String? = null
@@ -42,21 +42,20 @@ class DocumentariesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_documentaries, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_audio_books, container, false)
         val view = binding.root
         val bundle = this.arguments
         if (bundle != null) {
-            documentaries = bundle.getString("documentaries")
+            audio_books = bundle.getString("audio_books")
             Category = bundle.getString("Category")
         }
         val shared1: SharedPreferences =
             requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-        val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
-        binding.rvDocumentariesList.layoutManager = mLayoutManager
-        binding.rvDocumentariesList.itemAnimator = DefaultItemAnimator()
+        val manager = GridLayoutManager(activity, 2)
+        binding.rvAudioBooksList.layoutManager = manager
+        binding.rvAudioBooksList.itemAnimator = DefaultItemAnimator()
         return view
     }
 
@@ -68,7 +67,7 @@ class DocumentariesFragment : Fragment() {
     fun prepareData() {
         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
         val listCall =
-            APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_TWO, Category)
+            APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_ONE, Category)
         listCall.enqueue(object : Callback<ResourceListModel?> {
             override fun onResponse(
                 call: Call<ResourceListModel?>,
@@ -87,14 +86,14 @@ class DocumentariesFragment : Fragment() {
                             activity
                         )
                         val adapter =
-                            DocumentariesAdapter(listModel.responseData, activity, documentaries)
-                        binding.rvDocumentariesList.adapter = adapter
+                            AudioBooksAdapter(listModel.responseData, activity, audio_books)
+                        binding.rvAudioBooksList.adapter = adapter
                         if (listModel.responseData!!.isNotEmpty()) {
                             binding.llError.visibility = View.GONE
-                            binding.rvDocumentariesList.visibility = View.VISIBLE
+                            binding.rvAudioBooksList.visibility = View.VISIBLE
                         } else {
                             binding.llError.visibility = View.VISIBLE
-                            binding.rvDocumentariesList.visibility = View.GONE
+                            binding.rvAudioBooksList.visibility = View.GONE
                         }
                     } else if (listModel.responseCode.equals(
                             getString(R.string.ResponseCodefail),
@@ -122,15 +121,15 @@ class DocumentariesFragment : Fragment() {
         })
     }
 
-    inner class DocumentariesAdapter(
-        private val listModelList: List<ResourceListModel.ResponseData>?,
+    inner class AudioBooksAdapter(
+        var listModelList: List<ResourceListModel.ResponseData>?,
         var ctx: Context?,
-        private var documentaries: String?
-    ) : RecyclerView.Adapter<DocumentariesAdapter.MyViewHolder>() {
+        var audio_books: String?
+    ) : RecyclerView.Adapter<AudioBooksAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: DocumentariesListLayoutBinding = DataBindingUtil.inflate(
+            val v: AudioBooksLayoutBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.documentaries_list_layout,
+                R.layout.audio_books_layout,
                 parent,
                 false
             )
@@ -138,16 +137,16 @@ class DocumentariesFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.binding.tvTitle.text = listModelList!![position].title
-            holder.binding.tvCreator.text = listModelList[position].author
-            val measureRatio = BWSApplication.measureRatio(ctx, 0f, 25f, 11f, 0.80f, 0f)
+            val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.42f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height =
                 (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width =
                 (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            Glide.with(ctx!!).load(listModelList[position].image).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(30))).priority(Priority.HIGH)
+            holder.binding.tvTitle.text = listModelList!![position].title
+            holder.binding.tvCreator.text = listModelList!![position].author
+            Glide.with(ctx!!).load(listModelList!![position].image).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
             holder.binding.rlMainLayout.setOnClickListener {
@@ -156,16 +155,16 @@ class DocumentariesFragment : Fragment() {
                 }
                 mLastClickTime = SystemClock.elapsedRealtime()
                 val i = Intent(activity, ResourceDetailsActivity::class.java)
-                i.putExtra("documentaries", documentaries)
-                i.putExtra("id", listModelList[position].iD)
-                i.putExtra("title", listModelList[position].title)
-                i.putExtra("author", listModelList[position].author)
-                i.putExtra("linkOne", listModelList[position].resourceLink1)
-                i.putExtra("linkTwo", listModelList[position].resourceLink2)
-                i.putExtra("image", listModelList[position].detailimage)
-                i.putExtra("description", listModelList[position].description)
-                i.putExtra("mastercat", listModelList[position].masterCategory)
-                i.putExtra("subcat", listModelList[position].subCategory)
+                i.putExtra("audio_books", audio_books)
+                i.putExtra("id", listModelList!![position].iD)
+                i.putExtra("title", listModelList!![position].title)
+                i.putExtra("author", listModelList!![position].author)
+                i.putExtra("linkOne", listModelList!![position].resourceLink1)
+                i.putExtra("linkTwo", listModelList!![position].resourceLink2)
+                i.putExtra("image", listModelList!![position].detailimage)
+                i.putExtra("description", listModelList!![position].description)
+                i.putExtra("mastercat", listModelList!![position].masterCategory)
+                i.putExtra("subcat", listModelList!![position].subCategory)
                 startActivity(i)
                 activity!!.overridePendingTransition(0, 0)
             }
@@ -175,7 +174,7 @@ class DocumentariesFragment : Fragment() {
             return listModelList!!.size
         }
 
-        inner class MyViewHolder(var binding: DocumentariesListLayoutBinding) :
+        inner class MyViewHolder(var binding: AudioBooksLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
     }
 }

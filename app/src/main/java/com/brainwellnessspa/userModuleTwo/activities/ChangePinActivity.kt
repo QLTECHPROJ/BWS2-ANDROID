@@ -14,6 +14,7 @@ import com.brainwellnessspa.userModuleTwo.models.ChangePinModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityChangePinBinding
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,7 +65,9 @@ class ChangePinActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-
+        val p = Properties()
+        p.putValue("coUserId", coUserID)
+        BWSApplication.addToSegment("Change Pin Screen Viewed", p, CONSTANTS.screen)
         binding.etCurrentPIN.addTextChangedListener(userTextWatcher)
         binding.etNewPIN.addTextChangedListener(userTextWatcher)
         binding.etConfirmPIN.addTextChangedListener(userTextWatcher)
@@ -127,6 +130,9 @@ class ChangePinActivity : AppCompatActivity() {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
                             val listModel: ChangePinModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                val p = Properties()
+                                p.putValue("coUserId", coUserID)
+                                BWSApplication.addToSegment("Login Pin Changed", p, CONSTANTS.track)
                                 finish()
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {

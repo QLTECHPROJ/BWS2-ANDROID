@@ -14,7 +14,6 @@ class DoingGoodActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_doing_good)
-        setContentView(R.layout.activity_doing_good)
 
         binding.btnContinue.setOnClickListener {
             val i = Intent(this@DoingGoodActivity, ManageActivity::class.java)

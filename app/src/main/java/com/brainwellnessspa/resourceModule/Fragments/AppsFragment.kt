@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ResourceModule.Fragments
+package com.brainwellnessspa.resourceModule.Fragments
 
 import android.content.Context
 import android.content.Intent
@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.ResourceModule.Activities.ResourceDetailsActivity
-import com.brainwellnessspa.ResourceModule.Models.ResourceListModel
+import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
+import com.brainwellnessspa.resourceModule.Models.ResourceListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.AppsListLayoutBinding
