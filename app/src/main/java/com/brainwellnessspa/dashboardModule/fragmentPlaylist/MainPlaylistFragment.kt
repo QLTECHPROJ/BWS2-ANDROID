@@ -1,5 +1,6 @@
 package com.brainwellnessspa.dashboardModule.fragmentPlaylist
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -14,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -22,7 +24,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.RoomDataBase.DatabaseClient
@@ -67,7 +68,7 @@ class MainPlaylistFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
         val view = binding.root
         ctx = requireActivity()
@@ -85,7 +86,7 @@ class MainPlaylistFragment : Fragment() {
 
         view.isFocusableInTouchMode = true
         view.requestFocus()
-        view.setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
+        view.setOnKeyListener { _: View?, keyCode: Int, event: KeyEvent ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack()
                 return@setOnKeyListener true
@@ -93,7 +94,7 @@ class MainPlaylistFragment : Fragment() {
             false
         }
 
-        binding.llBack.setOnClickListener { view1 -> callBack() }
+        binding.llBack.setOnClickListener { callBack() }
         val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
         binding.ivCreatePlaylist.layoutParams.height =
             (measureRatio.height * measureRatio.ratio).toInt()
@@ -108,8 +109,8 @@ class MainPlaylistFragment : Fragment() {
             .into(binding.ivCreatePlaylist)
         val manager: RecyclerView.LayoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        binding.rvMainPlayList.setLayoutManager(manager)
-        binding.rvMainPlayList.setItemAnimator(DefaultItemAnimator())
+        binding.rvMainPlayList.layoutManager = manager
+        binding.rvMainPlayList.itemAnimator = DefaultItemAnimator()
         prepareData("onCreateView")
         return view
     }
@@ -144,8 +145,8 @@ class MainPlaylistFragment : Fragment() {
     private fun prepareData(comeFrom: String) {
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(
-                binding!!.progressBar,
-                binding!!.progressBarHolder,
+                binding.progressBar,
+                binding.progressBarHolder,
                 activity
             )
             val listCall = APINewClient.getClient().getMainPlayLists(CoUserID)
@@ -157,12 +158,12 @@ class MainPlaylistFragment : Fragment() {
                     try {
                         if (response.isSuccessful) {
                             BWSApplication.hideProgressBar(
-                                binding!!.progressBar,
-                                binding!!.progressBarHolder,
+                                binding.progressBar,
+                                binding.progressBarHolder,
                                 activity
                             )
                             val listModel = response.body()
-                            binding!!.rlCreatePlaylist.visibility = View.VISIBLE
+                            binding.rlCreatePlaylist.visibility = View.VISIBLE
                             listModelGloble = listModel!!.responseData
                             //                            adapter = new MainPlayListAdapter();
 //                            binding.rvMainPlayList.setAdapter(adapter);
@@ -196,8 +197,8 @@ class MainPlaylistFragment : Fragment() {
 
                 override fun onFailure(call: Call<MainPlaylistLibraryModel?>, t: Throwable) {
                     BWSApplication.hideProgressBar(
-                        binding!!.progressBar,
-                        binding!!.progressBarHolder,
+                        binding.progressBar,
+                        binding.progressBarHolder,
                         activity
                     )
                 }
@@ -311,7 +312,7 @@ class MainPlaylistFragment : Fragment() {
             } else {
                 holder.binding.tvViewAll.visibility = (View.GONE)
             }
-            holder.binding.tvViewAll.setOnClickListener { view ->
+            holder.binding.tvViewAll.setOnClickListener {
                 val viewAllPlaylistFragment: Fragment = ViewAllPlaylistFragment()
                 val fragmentManager1: FragmentManager =
                     (ctx as FragmentActivity).supportFragmentManager
@@ -328,11 +329,18 @@ class MainPlaylistFragment : Fragment() {
                 bundle.putString("Name", listModel[position].view)
                 viewAllPlaylistFragment.arguments = bundle
             }
-            binding.rlCreatePlaylist.setOnClickListener { view ->
+            binding.rlCreatePlaylist.setOnClickListener {
                 val dialog = Dialog(ctx)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.create_palylist)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.blue_transparent)))
+                dialog.window!!.setBackgroundDrawable(
+                    ColorDrawable(
+                        ContextCompat.getColor(
+                            ctx,
+                            R.color.blue_transparent
+                        )
+                    )
+                )
                 dialog.window!!.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -357,13 +365,13 @@ class MainPlaylistFragment : Fragment() {
                         count: Int
                     ) {
                         val number = edtCreate.text.toString().trim { it <= ' ' }
-                        if (!number.isEmpty()) {
+                        if (number.isNotEmpty()) {
                             btnSendCode.isEnabled = true
-                            btnSendCode.setTextColor(ctx.resources.getColor(R.color.black))
+                            btnSendCode.setTextColor(ContextCompat.getColor(ctx,R.color.black))
                             btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
                         } else {
                             btnSendCode.isEnabled = false
-                            btnSendCode.setTextColor(ctx.resources.getColor(R.color.white))
+                            btnSendCode.setTextColor(ContextCompat.getColor(ctx,R.color.white))
                             btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
                         }
                     }
@@ -371,14 +379,14 @@ class MainPlaylistFragment : Fragment() {
                     override fun afterTextChanged(s: Editable) {}
                 }
                 edtCreate.addTextChangedListener(popupTextWatcher)
-                dialog.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss()
                         return@setOnKeyListener true
                     }
                     false
                 }
-                btnSendCode.setOnClickListener { view1: View? ->
+                btnSendCode.setOnClickListener {
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         BWSApplication.showProgressBar(
                             binding.progressBar,
@@ -449,7 +457,7 @@ class MainPlaylistFragment : Fragment() {
                         BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 }
-                tvCancel.setOnClickListener { v: View? -> dialog.dismiss() }
+                tvCancel.setOnClickListener { dialog.dismiss() }
                 dialog.show()
                 dialog.setCancelable(false)
             }
@@ -462,48 +470,50 @@ class MainPlaylistFragment : Fragment() {
             } else {
                 holder.binding.llMainLayout.visibility = View.VISIBLE
                 holder.binding.tvTitle.text = listModel[position].view
-                if (listModel[position].view.equals(
+                when {
+                    listModel[position].view.equals(
                         ctx.getString(R.string.your_created),
                         ignoreCase = true
-                    )
-                ) {
-                    playlistAdapter = PlaylistAdapter(
-                        listModel[position].details!!,
-                        ctx,
-                        act,
-                        "0",
-                        listModel[position].view!!
-                    )
-                    holder.binding.rvMainAudio.adapter = playlistAdapter
-                } else if (listModel[position].view.equals("My Downloads", ignoreCase = true)) {
-                    playlistAdapter = PlaylistAdapter(
-                        listModel[position].details!!,
-                        ctx,
-                        act,
-                        "1",
-                        listModel[position].view!!
-                    )
-                    holder.binding.rvMainAudio.adapter = playlistAdapter
-                } else if (listModel[position].view.equals(
+                    ) -> {
+                        playlistAdapter = PlaylistAdapter(
+                            listModel[position].details!!,
+                            ctx,
+                            act,
+                            "0",
+                            listModel[position].view!!
+                        )
+                        holder.binding.rvMainAudio.adapter = playlistAdapter
+                    }
+                    listModel[position].view.equals("My Downloads", ignoreCase = true) -> {
+                        playlistAdapter = PlaylistAdapter(
+                            listModel[position].details!!,
+                            ctx,
+                            act,
+                            "1",
+                            listModel[position].view!!
+                        )
+                        holder.binding.rvMainAudio.adapter = playlistAdapter
+                    }
+                    listModel[position].view.equals(
                         ctx.getString(R.string.Recommended_Playlist),
                         ignoreCase = true
-                    )
-                ) {
-                    playlistAdapter = PlaylistAdapter(
-                        listModel[position].details!!, ctx,
-                        act, "0", listModel[position].view!!
-                    )
-                    holder.binding.rvMainAudio.adapter = playlistAdapter
-                } else if (listModel[position].view.equals(
+                    ) -> {
+                        playlistAdapter = PlaylistAdapter(
+                            listModel[position].details!!, ctx,
+                            act, "0", listModel[position].view!!
+                        )
+                        holder.binding.rvMainAudio.adapter = playlistAdapter
+                    }
+                    listModel[position].view.equals(
                         ctx.getString(R.string.populars),
                         ignoreCase = true
-                    )
-                ) {
-                    playlistAdapter = PlaylistAdapter(
-                        listModel[position].details!!, ctx,
-                        act, "0", listModel[position].view!!
-                    )
-                    holder.binding.rvMainAudio.adapter = playlistAdapter
+                    ) -> {
+                        playlistAdapter = PlaylistAdapter(
+                            listModel[position].details!!, ctx,
+                            act, "0", listModel[position].view!!
+                        )
+                        holder.binding.rvMainAudio.adapter = playlistAdapter
+                    }
                 }
             }
         }
@@ -513,8 +523,7 @@ class MainPlaylistFragment : Fragment() {
         }
 
         inner class MyViewHolder(var binding: MainPlaylistLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root) {
-        }
+            RecyclerView.ViewHolder(binding.root)
     }
 
     class PlaylistAdapter(
@@ -533,6 +542,7 @@ class MainPlaylistFragment : Fragment() {
             return MyViewHolder(v)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height =
@@ -549,7 +559,7 @@ class MainPlaylistFragment : Fragment() {
                 (measureRatio1.height * measureRatio1.ratio).toInt()
             holder.binding.rlMainLayout.layoutParams.width =
                 (measureRatio1.widthImg * measureRatio1.ratio).toInt()
-            holder.binding.tvPlaylistName.setText(listModel[position].playlistName)
+            holder.binding.tvPlaylistName.text = listModel[position].playlistName
             Glide.with(ctx).load(listModel[position].playlistImage).thumbnail(0.05f)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
@@ -610,8 +620,6 @@ class MainPlaylistFragment : Fragment() {
         }
 
         inner class MyViewHolder(var binding: PlaylistCustomLayoutBinding) :
-            RecyclerView.ViewHolder(binding.getRoot()) {
-
-        }
+            RecyclerView.ViewHolder(binding.root)
     }
 }
