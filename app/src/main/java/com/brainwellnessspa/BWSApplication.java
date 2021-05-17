@@ -532,6 +532,9 @@ public class BWSApplication extends Application {
                                                     dialog.dismiss();
                                                 }
                                             }
+
+                                            localIntent.putExtra("MyReminder", "update");
+                                            localBroadcastManager.sendBroadcast(localIntent);
                                             dialog.dismiss();
                                         } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
                                             mDataPlayer.remove(pos);
@@ -640,15 +643,20 @@ public class BWSApplication extends Application {
         dialog.setOnKeyListener((v1, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 dialog.dismiss();
+                localIntent.putExtra("MyReminder", "update");
+                localBroadcastManager.sendBroadcast(localIntent);
                 return true;
             }
             return false;
         });
         localIntent = new Intent("Reminder");
-        localIntent = new Intent("FindAudio");
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
 
-        llBack.setOnClickListener(v -> dialog.dismiss());
+        llBack.setOnClickListener(v -> {
+            dialog.dismiss();
+            localIntent.putExtra("MyReminder", "update");
+            localBroadcastManager.sendBroadcast(localIntent);
+        });
 
         CallObserverMethodGetAllMedia(ctx);
         if (isNetworkConnected(ctx)) {
@@ -973,6 +981,8 @@ public class BWSApplication extends Application {
                                 dialog.setOnKeyListener((v23, keyCode, event) -> {
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         playlistDetailRefresh = 1;
+                                        localIntent.putExtra("MyReminder", "update");
+                                        localBroadcastManager.sendBroadcast(localIntent);
                                         dialog.dismiss();
                                         return true;
                                     }
@@ -1834,6 +1844,8 @@ public class BWSApplication extends Application {
         tvPlaylistName.setText(playlistName);
         llBack.setOnClickListener(view12 -> {
             dialogOld.dismiss();
+            localIntent.putExtra("MyReminder", "update");
+            localBroadcastManager.sendBroadcast(localIntent);
             dialog.dismiss();
         });
 
@@ -1878,6 +1890,8 @@ public class BWSApplication extends Application {
         dialog.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 dialogOld.dismiss();
+                localIntent.putExtra("MyReminder", "update");
+                localBroadcastManager.sendBroadcast(localIntent);
                 dialog.dismiss();
                 return true;
             }

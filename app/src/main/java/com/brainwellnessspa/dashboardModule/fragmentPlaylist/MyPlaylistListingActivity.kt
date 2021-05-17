@@ -185,13 +185,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.hasExtra("MyReminder")) {
                 prepareData()
-            }
-        }
-    }
-
-    private val findAudioPlaylistListener: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.hasExtra("MyFindAudio")) {
+            }else if (intent.hasExtra("MyFindAudio")) {
                 prepareData()
                 binding.searchView.requestFocus()
                 searchEditText.setText("")
@@ -296,7 +290,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener)
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1)
-        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(findAudioPlaylistListener)
         super.onDestroy()
     }
 
@@ -1172,10 +1165,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             localIntent = Intent("Reminder")
                             localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
                             localIntent.putExtra("MyReminder", "update")
-                            localBroadcastManager.sendBroadcast(localIntent)
-                            localIntent = Intent("FindAudio")
-                            localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
-                            localIntent.putExtra("MyFindAudio", "update")
                             localBroadcastManager.sendBroadcast(localIntent)
                             showToast(listModel1.responseMessage, activity)
                         }
