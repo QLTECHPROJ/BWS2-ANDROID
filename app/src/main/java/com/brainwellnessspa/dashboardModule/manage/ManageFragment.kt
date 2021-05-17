@@ -669,13 +669,13 @@ class ManageFragment : Fragment() {
                                     ignoreCase = true
                             )
                     ) {
-                        binding.tvReminder.text = "Set Reminder"
+                        binding.tvReminder.text = "Set reminder"
                     } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
                                     "1",
                                     ignoreCase = true
                             )
                     ) {
-                        binding.tvReminder.text = "Update Reminder"
+                        binding.tvReminder.text = "Update reminder"
                     }
                     binding.tvReminder.setOnClickListener {
                         if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
@@ -687,7 +687,7 @@ class ManageFragment : Fragment() {
                                         ignoreCase = true
                                 )
                         ) {
-                            binding.tvReminder.text = "Set Reminder"
+                            binding.tvReminder.text = "Set reminder"
                             BWSApplication.getReminderDay(
                                     ctx,
                                     act,
@@ -703,7 +703,7 @@ class ManageFragment : Fragment() {
                                         ignoreCase = true
                                 )
                         ) {
-                            binding.tvReminder.text = "Update Reminder"
+                            binding.tvReminder.text = "Update reminder"
                             BWSApplication.getReminderDay(
                                     ctx,
                                     act,

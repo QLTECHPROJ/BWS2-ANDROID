@@ -329,11 +329,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         var listModel = PlaylistDetailsModel()
                         LocalBroadcastManager.getInstance(ctx)
                             .registerReceiver(listener1, IntentFilter("Reminder"))
-                        LocalBroadcastManager.getInstance(ctx)
-                            .registerReceiver(
-                                findAudioPlaylistListener,
-                                IntentFilter("FindAudio")
-                            )
                         try {
                             listModel = response.body()!!
                             listMOdelGloble = response.body()!!
@@ -375,19 +370,19 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                             || listModel.responseData!!.isReminder.equals("", ignoreCase = true)
                         ) {
-                            binding.tvReminder.setText("Set Reminder")
+                            binding.tvReminder.setText("Set reminder")
                         } else if (listModel.responseData!!.isReminder.equals(
                                 "1",
                                 ignoreCase = true
                             )
                         ) {
-                            binding.tvReminder.setText("Update Reminder")
+                            binding.tvReminder.setText("Update reminder")
                         }
                         binding.llReminder.setOnClickListener {
                             if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                                 || listModel.responseData!!.isReminder.equals("", ignoreCase = true)
                             ) {
-                                binding.tvReminder.setText("Set Reminder")
+                                binding.tvReminder.setText("Set reminder")
                                 BWSApplication.getReminderDay(
                                     ctx,
                                     activity,
@@ -403,7 +398,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     ignoreCase = true
                                 )
                             ) {
-                                binding.tvReminder.setText("Update Reminder")
+                                binding.tvReminder.setText("Update reminder")
                                 BWSApplication.getReminderDay(
                                     ctx,
                                     activity,

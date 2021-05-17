@@ -706,11 +706,13 @@ public class BWSApplication extends Application {
                                 ctx.startActivity(i);
                                 dialog.dismiss();
                             });
+
                             llFind.setOnClickListener(view -> {
                                 localIntent.putExtra("MyFindAudio", "update");
                                 localBroadcastManager.sendBroadcast(localIntent);
                                 dialog.dismiss();
                             });
+
                             if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
                                 tvDesc.setVisibility(View.GONE);
                             } else {

@@ -423,13 +423,13 @@ class HomeFragment : Fragment() {
                                 ignoreCase = true
                             )
                         ) {
-                            binding.tvReminder.setText("Set Reminder")
+                            binding.tvReminder.setText("Set reminder")
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
                                 "1",
                                 ignoreCase = true
                             )
                         ) {
-                            binding.tvReminder.setText("Update Reminder")
+                            binding.tvReminder.setText("Update reminder")
                         }
 
                         binding.tvReminder.setOnClickListener {
@@ -442,7 +442,7 @@ class HomeFragment : Fragment() {
                                     ignoreCase = true
                                 )
                             ) {
-                                binding.tvReminder.setText("Set Reminder")
+                                binding.tvReminder.setText("Set reminder")
                                 getReminderDay(
                                     ctx,
                                     act,
@@ -458,7 +458,7 @@ class HomeFragment : Fragment() {
                                     ignoreCase = true
                                 )
                             ) {
-                                binding.tvReminder.setText("Update Reminder")
+                                binding.tvReminder.setText("Update reminder")
                                 getReminderDay(
                                     ctx,
                                     act,
