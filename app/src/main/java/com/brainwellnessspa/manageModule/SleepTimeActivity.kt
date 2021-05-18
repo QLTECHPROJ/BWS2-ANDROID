@@ -17,6 +17,9 @@ import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySleepTimeBinding
 import com.brainwellnessspa.databinding.SleepTimeRawBinding
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,14 +30,25 @@ class SleepTimeActivity : AppCompatActivity() {
     lateinit var ctx: Context
     var SleepTime: String? = null
     lateinit var activity: Activity
+    var CoUserID: String? = ""
+    var USERID: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sleep_time)
         ctx = this@SleepTimeActivity
         activity = this@SleepTimeActivity
+        val shared = ctx.getSharedPreferences(
+            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+            AppCompatActivity.MODE_PRIVATE
+        )
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         if (intent.extras != null) {
             SleepTime = intent.getStringExtra("SleepTime")
         }
+        val p = Properties()
+        p.putValue("coUserId", CoUserID)
+        BWSApplication.addToSegment("Sleep Time Screen Viewed", p, CONSTANTS.screen)
         prepareUserData()
     }
 

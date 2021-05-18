@@ -17,22 +17,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
-import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
-import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
-import com.brainwellnessspa.dashboardModule.fragmentPlaylist.PreparePlaylistActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
-import com.brainwellnessspa.dashboardModule.home.HomeFragment
+import com.brainwellnessspa.dashboardModule.fragmentPlaylist.PreparePlaylistActivity
+import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
+import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
+import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
 import com.brainwellnessspa.databinding.*
 import com.google.android.flexbox.*
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,6 +45,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     var ctx: Context? = null
     var USERID: String? = null
     var BackClick: String? = null
+    lateinit var gsonBuilder: GsonBuilder
+    lateinit var section: java.util.ArrayList<String>
     var SleepTime: String? = null
     var CoUserID: String? = null
     var CoEMAIL: String? = null
@@ -70,6 +72,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         CoEMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+
+        val p = Properties()
+        p.putValue("coUserId", CoUserID)
+        BWSApplication.addToSegment("Recommeded Category Screen Viewed", p, CONSTANTS.screen)
+
         val layoutManager = FlexboxLayoutManager(ctx)
         layoutManager.flexWrap = FlexWrap.WRAP
         layoutManager.alignItems = AlignItems.STRETCH
@@ -720,6 +727,18 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             val i = Intent(activity, PreparePlaylistActivity::class.java)
                             i.putExtra("BackClick", BackClick)
                             startActivity(i)
+                            section = java.util.ArrayList<String>()
+                            gsonBuilder = GsonBuilder()
+                            val gson: Gson = gsonBuilder.create()
+                            for (i in listModel.responseData!!.categoryData!!.indices) {
+                                section.add(listModel.responseData!!.categoryData!!.get(i).mainCat.toString())
+                                section.add(listModel.responseData!!.categoryData!!.get(i).recommendedCat.toString())
+                            }
+                            val p = Properties()
+                            p.putValue("coUserId", CoUserID)
+                            p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
+                            p.putValue("areaOfFocus", gson.toJson(section))
+                            BWSApplication.addToSegment("Area of Focus Savedd", p, CONSTANTS.track)
                             finish()
                         } else {
                             BWSApplication.showToast(listModel.responseMessage, activity)

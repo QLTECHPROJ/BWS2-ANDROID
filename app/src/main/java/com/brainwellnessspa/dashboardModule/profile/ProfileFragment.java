@@ -1,6 +1,7 @@
 package com.brainwellnessspa.dashboardModule.profile;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -36,7 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
+import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.manageModule.ManageActivity;
@@ -63,12 +64,15 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.segment.analytics.Properties;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.mime.TypedFile;
@@ -93,11 +97,12 @@ public class ProfileFragment extends Fragment {
     CharSequence[] options;
     String USERID, CoUserID, UserEmail, DeviceID, DeviceType, UserName, profilePicPath = "";
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         View view = binding.getRoot();
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
         CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
         UserName = (shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, ""));
@@ -108,9 +113,7 @@ public class ProfileFragment extends Fragment {
         mRequestPermissionHandler = new RequestPermissionHandler();
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
         profileViewData(getActivity());
-        binding.llImageUpload.setOnClickListener(view15 -> {
-            selectImage();
-        });
+        binding.llImageUpload.setOnClickListener(view15 -> selectImage());
 
         Properties p = new Properties();
         p.putValue("coUserId", CoUserID);
@@ -123,7 +126,7 @@ public class ProfileFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), AccountInfoActivity.class);
                 startActivity(i);
-                getActivity().overridePendingTransition(0, 0);
+                requireActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -136,7 +139,7 @@ public class ProfileFragment extends Fragment {
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(getActivity(), DownloadsActivity.class);
             startActivity(i);
-            getActivity().overridePendingTransition(0, 0);
+            requireActivity().overridePendingTransition(0, 0);
         });
 
         binding.llInvoices.setOnClickListener(view14 -> {
@@ -149,7 +152,7 @@ public class ProfileFragment extends Fragment {
                 Intent i = new Intent(getActivity(), InvoiceActivity.class);
                 i.putExtra("ComeFrom", "");
                 startActivity(i);
-                getActivity().overridePendingTransition(0, 0);
+                requireActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -163,7 +166,7 @@ public class ProfileFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), BillingOrderActivity.class);
                 startActivity(i);
-                getActivity().overridePendingTransition(0, 0);
+                requireActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -178,7 +181,7 @@ public class ProfileFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
                 startActivity(i);
-                getActivity().overridePendingTransition(0, 0);
+                requireActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -187,7 +190,7 @@ public class ProfileFragment extends Fragment {
         binding.llPlan.setOnClickListener(v -> {
             Intent i = new Intent(getActivity(), ManageActivity.class);
             startActivity(i);
-            getActivity().overridePendingTransition(0, 0);
+            requireActivity().overridePendingTransition(0, 0);
         });
 
         binding.llResources.setOnClickListener(view17 -> {
@@ -198,7 +201,7 @@ public class ProfileFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), ResourceActivity.class);
                 startActivity(i);
-                getActivity().overridePendingTransition(0, 0);
+                requireActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -212,7 +215,7 @@ public class ProfileFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), FaqActivity.class);
                 startActivity(i);
-                getActivity().overridePendingTransition(0, 0);
+                requireActivity().overridePendingTransition(0, 0);
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
@@ -262,15 +265,15 @@ public class ProfileFragment extends Fragment {
 
     private void selectImage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(getActivity(),
+            if (ContextCompat.checkSelfPermission(requireActivity(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(getActivity(),
+                    && ContextCompat.checkSelfPermission(requireActivity(),
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(getActivity(),
+                    && ContextCompat.checkSelfPermission(requireActivity(),
                     Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 callProfilePathSet();
             } else {
-                mRequestPermissionHandler.requestPermission(getActivity(), new String[]{
+                mRequestPermissionHandler.requestPermission(requireActivity(), new String[]{
                         Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA
                 }, 123, new RequestPermissionHandler.RequestPermissionListener() {
@@ -285,13 +288,13 @@ public class ProfileFragment extends Fragment {
                 });
             }
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 callProfilePathSet();
             } else {
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    mRequestPermissionHandler.requestPermission(getActivity(), new String[]{
+                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    mRequestPermissionHandler.requestPermission(requireActivity(), new String[]{
                             Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
                     }, 123, new RequestPermissionHandler.RequestPermissionListener() {
                         @Override
@@ -303,9 +306,9 @@ public class ProfileFragment extends Fragment {
                         public void onFailed() {
                         }
                     });
-                } else if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
                     callCamaraPermission();
-                } else if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                     callReadPermission();
                 }
             }
@@ -315,25 +318,23 @@ public class ProfileFragment extends Fragment {
     }
 
     private void callCamaraPermission() {
-        AlertDialog.Builder buildermain = new AlertDialog.Builder(getActivity());
-        buildermain.setMessage("To camera allow " + getString(R.string.app_name) + " access to your camera. " +
+        AlertDialog.Builder building = new AlertDialog.Builder(requireActivity());
+        building.setMessage("To camera allow " + getString(R.string.app_name) + " access to your camera. " +
                 "\nTap Setting > permission, and turn Camera on.");
-        buildermain.setCancelable(true);
-        buildermain.setPositiveButton(
+        building.setCancelable(true);
+        building.setPositiveButton(
                 getString(R.string.Settings),
-                (dialogmain, id1) -> {
+                (dialogs, id1) -> {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                    Uri uri = Uri.fromParts("package", requireActivity().getPackageName(), null);
                     intent.setData(uri);
                     startActivity(intent);
-                    dialogmain.dismiss();
+                    dialogs.dismiss();
                 });
-        buildermain.setNegativeButton(
+        building.setNegativeButton(
                 getString(R.string.not_now),
-                (dialogmain, id1) -> {
-                    dialogmain.dismiss();
-                });
-        AlertDialog alert11 = buildermain.create();
+                (dialogs, id1) -> dialogs.dismiss());
+        AlertDialog alert11 = building.create();
         alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
         alert11.show();
         alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
@@ -341,25 +342,23 @@ public class ProfileFragment extends Fragment {
     }
 
     private void callReadPermission() {
-        AlertDialog.Builder buildermain = new AlertDialog.Builder(getActivity());
-        buildermain.setMessage("To upload image allow " + getString(R.string.app_name) + " access to your device's files. " +
+        AlertDialog.Builder buildable = new AlertDialog.Builder(requireActivity());
+        buildable.setMessage("To upload image allow " + getString(R.string.app_name) + " access to your device's files. " +
                 "\nTap Setting > permission, and turn \"Files and media\" on.");
-        buildermain.setCancelable(true);
-        buildermain.setPositiveButton(
+        buildable.setCancelable(true);
+        buildable.setPositiveButton(
                 getString(R.string.Settings),
-                (dialogmain, id1) -> {
+                (dialogs, id1) -> {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                    Uri uri = Uri.fromParts("package", requireActivity().getPackageName(), null);
                     intent.setData(uri);
                     startActivity(intent);
-                    dialogmain.dismiss();
+                    dialogs.dismiss();
                 });
-        buildermain.setNegativeButton(
+        buildable.setNegativeButton(
                 getString(R.string.not_now),
-                (dialogmain, id1) -> {
-                    dialogmain.dismiss();
-                });
-        AlertDialog alert11 = buildermain.create();
+                (dialogue, id1) -> dialogue.dismiss());
+        AlertDialog alert11 = buildable.create();
         alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
         alert11.show();
         alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.blue));
@@ -372,20 +371,21 @@ public class ProfileFragment extends Fragment {
         } else {
             options = new String[]{getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.removeProfilePicture), getString(R.string.cancel)};
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(R.string.addPhoto);
         builder.setItems(options, (dialog, item) -> {
             if (options[item].equals(getString(R.string.takePhoto))) {
                 Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (pictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                if (pictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
                     File photoFile = null;
                     try {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
 
                     if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        Uri photoURI = FileProvider.getUriForFile(requireActivity(),
                                 BuildConfig.APPLICATION_ID + ".provider", photoFile);
                         pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                         startActivityForResult(pictureIntent,
@@ -401,17 +401,19 @@ public class ProfileFragment extends Fragment {
                     Call<RemoveProfileModel> listCall = APINewClient.getClient().getRemoveProfile(CoUserID);
                     listCall.enqueue(new Callback<RemoveProfileModel>() {
                         @Override
-                        public void onResponse(Call<RemoveProfileModel> call, Response<RemoveProfileModel> response) {
+                        public void onResponse(@NotNull Call<RemoveProfileModel> call, @NotNull Response<RemoveProfileModel> response) {
                             try {
                                 RemoveProfileModel viewModel = response.body();
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    BWSApplication.showToast(viewModel.getResponseMessage(), getActivity());
-                                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shared.edit();
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, "");
-                                    editor.commit();
-                                    profileViewData(getActivity());
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
+                                if (viewModel != null) {
+                                    if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        BWSApplication.showToast(viewModel.getResponseMessage(), requireActivity());
+                                        SharedPreferences shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, "");
+                                        editor.apply();
+                                        profileViewData(requireActivity());
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -419,8 +421,8 @@ public class ProfileFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Call<RemoveProfileModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        public void onFailure(@NotNull Call<RemoveProfileModel> call, @NotNull Throwable t) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
                         }
                     });
                 }
@@ -442,7 +444,7 @@ public class ProfileFragment extends Fragment {
                 new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir =
-                getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         image = File.createTempFile(
                 imageFileName,
                 ".jpg",
@@ -454,42 +456,45 @@ public class ProfileFragment extends Fragment {
 
     void profileViewData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
             Call<CoUserDetailsModel> listCall = APINewClient.getClient().getCoUserDetails(USERID, CoUserID);
             listCall.enqueue(new Callback<CoUserDetailsModel>() {
                 @Override
-                public void onResponse(Call<CoUserDetailsModel> call, Response<CoUserDetailsModel> response) {
+                public void onResponse(@NotNull Call<CoUserDetailsModel> call, @NotNull Response<CoUserDetailsModel> response) {
                     try {
                         CoUserDetailsModel viewModel = response.body();
-                        if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
-                                    viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-                                    viewModel.getResponseData().getName() == null) {
-                                binding.tvName.setText(R.string.Guest);
-                            } else {
-                                binding.tvName.setText(viewModel.getResponseData().getName());
-                            }
+                        if (viewModel != null) {
+                            if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
 
-                            String Name;
-                            profilePicPath = viewModel.getResponseData().getImage();
-                            if (profilePicPath.equalsIgnoreCase("")) {
-                                binding.civProfile.setVisibility(View.GONE);
-                                if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
-                                    Name = "Guest";
+                                if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                        viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                        viewModel.getResponseData().getName() == null) {
+                                    binding.tvName.setText(R.string.Guest);
                                 } else {
-                                    Name = viewModel.getResponseData().getName();
+                                    binding.tvName.setText(viewModel.getResponseData().getName());
                                 }
-                                String Letter = Name.substring(0, 1);
-                                binding.rlLetter.setVisibility(View.VISIBLE);
-                                binding.tvLetter.setText(Letter);
+
+                                String Name;
+                                profilePicPath = viewModel.getResponseData().getImage();
+                                if (profilePicPath.equalsIgnoreCase("")) {
+                                    binding.civProfile.setVisibility(View.GONE);
+                                    if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
+                                        Name = "Guest";
+                                    } else {
+                                        Name = viewModel.getResponseData().getName();
+                                    }
+                                    String Letter = Name.substring(0, 1);
+                                    binding.rlLetter.setVisibility(View.VISIBLE);
+                                    binding.tvLetter.setText(Letter);
+                                } else {
+                                    binding.civProfile.setVisibility(View.VISIBLE);
+                                    binding.rlLetter.setVisibility(View.GONE);
+                                    setProfilePic(profilePicPath);
+                                }
                             } else {
-                                binding.civProfile.setVisibility(View.VISIBLE);
-                                binding.rlLetter.setVisibility(View.GONE);
-                                setProfilePic(profilePicPath);
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                             }
-                        } else {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -497,7 +502,7 @@ public class ProfileFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<CoUserDetailsModel> call, Throwable t) {
+                public void onFailure(@NotNull Call<CoUserDetailsModel> call, @NotNull Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
@@ -510,8 +515,8 @@ public class ProfileFragment extends Fragment {
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 setProfilePic(profilePicPath);
-                if (BWSApplication.isNetworkConnected(getActivity())) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                if (BWSApplication.isNetworkConnected(requireActivity())) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
                     HashMap<String, String> map = new HashMap<>();
                     map.put(CONSTANTS.PREF_KEY_UserID, CoUserID);
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
@@ -520,18 +525,18 @@ public class ProfileFragment extends Fragment {
                                 @Override
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
                                         Properties p = new Properties();
                                         p.putValue("userId", USERID);
                                         p.putValue("coUserId", CoUserID);
                                         BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         setProfilePic(profilePicPath);
-                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), getActivity());
-                                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), requireActivity());
+                                        SharedPreferences shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.getResponseData().getProfileImage());
-                                        editor.commit();
+                                        editor.apply();
                                         profileViewData(getActivity());
                                     }
                                 }
@@ -560,7 +565,7 @@ public class ProfileFragment extends Fragment {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     HashMap<String, String> map = new HashMap<>();
                     map.put(CONSTANTS.PREF_KEY_UserID, CoUserID);
-                    File file = new File(FileUtil.getPath(selectedImageUri, getActivity()));
+                    File file = new File(Objects.requireNonNull(FileUtil.getPath(selectedImageUri, requireActivity())));
 
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
                     APIClientProfile.getApiService().getAddProfiles(CoUserID, typedFile,
@@ -576,10 +581,10 @@ public class ProfileFragment extends Fragment {
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         setProfilePic(profilePicPath);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), getActivity());
-                                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                                        SharedPreferences shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.getResponseData().getProfileImage());
-                                        editor.commit();
+                                        editor.apply();
                                         profileViewData(getActivity());
                                     }
                                 }
@@ -599,18 +604,18 @@ public class ProfileFragment extends Fragment {
             p.putValue("userId", USERID);
             p.putValue("coUserId", CoUserID);
             BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track);
-            getActivity().finish();
+            requireActivity().finish();
         }
     }
 
     private void setProfilePic(String profilePicPath) {
-        Glide.with(getActivity()).load(profilePicPath)
+        Glide.with(requireActivity()).load(profilePicPath)
                 .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
                 .into(binding.civProfile);
     }
 
     void DeleteCall(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREFE_ACCESS_UserID);
         edit.remove(CONSTANTS.PREFE_ACCESS_CoUserID);
@@ -622,24 +627,24 @@ public class ProfileFragment extends Fragment {
         edit.clear();
         edit.apply();
 
-        SharedPreferences preferencesd = getActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
-        SharedPreferences.Editor edited = preferencesd.edit();
+        SharedPreferences preferred = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edited = preferred.edit();
         edited.remove(CONSTANTS.selectedCategoriesTitle);
         edited.remove(CONSTANTS.selectedCategoriesName);
         edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME);
         edited.clear();
         edited.apply();
 
-        SharedPreferences preferencesd1 = getActivity().getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE);
-        SharedPreferences.Editor edited1 = preferencesd1.edit();
+        SharedPreferences preferred1 = requireActivity().getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edited1 = preferred1.edit();
         edited1.remove(CONSTANTS.AssQus);
         edited1.remove(CONSTANTS.AssAns);
         edited1.remove(CONSTANTS.AssSort);
         edited1.clear();
         edited1.apply();
 
-        SharedPreferences preferencesd2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-        SharedPreferences.Editor edited2 = preferencesd2.edit();
+        SharedPreferences preferred2 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edited2 = preferred2.edit();
         edited2.remove(CONSTANTS.PREF_KEY_MainAudioList);
         edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList);
         edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag);
@@ -656,13 +661,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void callLogoutApi(Dialog dialog, ProgressBar progressBar, FrameLayout progressBarHolder) {
-        SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences2 = requireActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
         String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
         if (TextUtils.isEmpty(fcm_id)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(getActivity(), task -> {
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(requireActivity(), task -> {
                 String newToken = task.getResult().getToken();
                 Log.e("newToken", newToken);
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = requireActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                 editor.putString(CONSTANTS.Token, newToken); //Friend
                 editor.apply();
                 editor.commit();
@@ -673,7 +678,7 @@ public class ProfileFragment extends Fragment {
         Call<SucessModel> listCall = APINewClient.getClient().getLogout(USERID, fcm_id, CONSTANTS.FLAG_ONE);
         listCall.enqueue(new Callback<SucessModel>() {
             @Override
-            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+            public void onResponse(@NotNull Call<SucessModel> call, @NotNull Response<SucessModel> response) {
                 SucessModel sucessModel = response.body();
 //                try {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -696,7 +701,7 @@ public class ProfileFragment extends Fragment {
                     analytics.reset();
                     Intent i = new Intent(getActivity(), GetStartedActivity.class);
                     startActivity(i);
-                    getActivity().finish();
+                    requireActivity().finish();
                 }
 //                } catch (Exception e) {
 //                    e.printStackTrace();
@@ -704,7 +709,7 @@ public class ProfileFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<SucessModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<SucessModel> call, @NotNull Throwable t) {
                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             }
         });

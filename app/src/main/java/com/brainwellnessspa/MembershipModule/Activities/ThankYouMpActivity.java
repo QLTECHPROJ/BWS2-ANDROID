@@ -25,7 +25,8 @@ import static com.brainwellnessspa.invoicemodule.activities.InvoiceActivity.invo
 public class ThankYouMpActivity extends AppCompatActivity {
     ActivityThankYouMembershipBinding binding;
     private long mLastClickTime = 0;
-    String UserID;
+    String userId, coUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +38,13 @@ public class ThankYouMpActivity extends AppCompatActivity {
         binding.ivLogo.setScaleType(ImageView.ScaleType.FIT_XY);
         binding.ivLogo.setImageResource(R.drawable.ic_mp_thanku);
 
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        userId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        coUserId = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
 
+        Properties p = new Properties();
+        p.putValue("coUserId", coUserId);
+        BWSApplication.addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen);
         binding.btnExplore.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -51,9 +56,6 @@ public class ThankYouMpActivity extends AppCompatActivity {
             finish();
         });
 
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen);
         binding.tvViewInvoice.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

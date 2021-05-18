@@ -1,4 +1,4 @@
-package com.brainwellnessspa.BillingOrderModule.Fragments;
+package com.brainwellnessspa.billingOrderModule.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Models.BillingAddressSaveModel;
-import com.brainwellnessspa.BillingOrderModule.Models.BillingAddressViewModel;
+import com.brainwellnessspa.billingOrderModule.models.BillingAddressSaveModel;
+import com.brainwellnessspa.billingOrderModule.models.BillingAddressViewModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -27,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity.myBackPressbill;
+import static com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity.myBackPressbill;
 
 public class BillingAddressFragment extends Fragment {
     FragmentBillingAddressBinding binding;

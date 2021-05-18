@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.android.billingclient.api.*
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity
-import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel
+import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
+import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.MembershipModule.Activities.ThankYouMpActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel
@@ -30,7 +30,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import com.android.billingclient.api.BillingClient.SkuType
 
 import com.android.billingclient.api.BillingFlowParams
 
@@ -107,7 +106,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
             gson = gsonBuilder.create()
             p.putValue("plan", gson.toJson(listModelList))
         }
-        BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen)
+        BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.track)
         if (!OldPromocode.equals("", ignoreCase = true)) {
             binding!!.edtCode.setText(OldPromocode)
         }
@@ -440,6 +439,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
             i.putExtra("Promocode", Promocode)
             startActivity(i)
             finish()
+
 
         }
     }

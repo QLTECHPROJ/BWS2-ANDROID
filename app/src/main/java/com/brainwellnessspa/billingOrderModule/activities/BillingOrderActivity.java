@@ -1,4 +1,4 @@
-package com.brainwellnessspa.BillingOrderModule.Activities;
+package com.brainwellnessspa.billingOrderModule.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -18,8 +18,8 @@ import android.util.Log;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Fragments.BillingAddressFragment;
-import com.brainwellnessspa.BillingOrderModule.Fragments.CurrentPlanFragment;
+import com.brainwellnessspa.billingOrderModule.fragments.BillingAddressFragment;
+import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding;
 import com.segment.analytics.Properties;

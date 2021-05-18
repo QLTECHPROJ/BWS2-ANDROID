@@ -86,17 +86,18 @@ class ManageFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_manage, container, false)
         val view: View = binding.root
         ctx = requireActivity()
         act = requireActivity()
         val shared = ctx.getSharedPreferences(
-                CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-                AppCompatActivity.MODE_PRIVATE
+            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+            AppCompatActivity.MODE_PRIVATE
         )
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
@@ -127,13 +128,13 @@ class ManageFragment : Fragment() {
             val audioFragment: Fragment = MainPlaylistFragment()
             val fragmentManager1 = requireActivity().supportFragmentManager
             fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, audioFragment)
-                    .commit()
+                .replace(R.id.flContainer, audioFragment)
+                .commit()
         }
         DB = Room.databaseBuilder(
-                ctx,
-                AudioDatabase::class.java,
-                "Audio_database"
+            ctx,
+            AudioDatabase::class.java,
+            "Audio_database"
         )
             .addMigrations(BWSApplication.MIGRATION_1_2)
             .build()
@@ -143,16 +144,16 @@ class ManageFragment : Fragment() {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.create_palylist)
             dialog.window!!.setBackgroundDrawable(
-                    ColorDrawable(
-                            ContextCompat.getColor(
-                                    act,
-                                    R.color.blue_transparent
-                            )
+                ColorDrawable(
+                    ContextCompat.getColor(
+                        act,
+                        R.color.blue_transparent
                     )
+                )
             )
             dialog.window!!.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
             )
             val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
             val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
@@ -160,10 +161,10 @@ class ManageFragment : Fragment() {
             edtCreate.requestFocus()
             val popupTextWatcher: TextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(
-                        s: CharSequence,
-                        start: Int,
-                        count: Int,
-                        after: Int
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
                 ) {
                 }
 
@@ -172,19 +173,19 @@ class ManageFragment : Fragment() {
                     if (number.isNotEmpty()) {
                         btnSendCode.isEnabled = true
                         btnSendCode.setTextColor(
-                                ContextCompat.getColor(
-                                        act,
-                                        R.color.black
-                                )
+                            ContextCompat.getColor(
+                                act,
+                                R.color.black
+                            )
                         )
                         btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
                     } else {
                         btnSendCode.isEnabled = false
                         btnSendCode.setTextColor(
-                                ContextCompat.getColor(
-                                        act,
-                                        R.color.white
-                                )
+                            ContextCompat.getColor(
+                                act,
+                                R.color.white
+                            )
                         )
                         btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
                     }
@@ -203,54 +204,54 @@ class ManageFragment : Fragment() {
             btnSendCode.setOnClickListener {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            act
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        act
                     )
                     val listCall = APINewClient.getClient()
                         .getCreatePlaylist(CoUserID, edtCreate.text.toString())
                     listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
                         override fun onResponse(
-                                call: Call<CreateNewPlaylistModel?>,
-                                response: Response<CreateNewPlaylistModel?>
+                            call: Call<CreateNewPlaylistModel?>,
+                            response: Response<CreateNewPlaylistModel?>
                         ) {
                             try {
                                 BWSApplication.hideProgressBar(
-                                        binding.progressBar,
-                                        binding.progressBarHolder,
-                                        act
+                                    binding.progressBar,
+                                    binding.progressBarHolder,
+                                    act
                                 )
                                 if (response.isSuccessful) {
                                     val listModel = response.body()
                                     if (listModel!!.responseData!!.iscreate.equals(
-                                                    "0",
-                                                    ignoreCase = true
-                                            )
+                                            "0",
+                                            ignoreCase = true
+                                        )
                                     ) {
                                         BWSApplication.showToast(
-                                                listModel.responseMessage,
-                                                act
+                                            listModel.responseMessage,
+                                            act
                                         )
                                         dialog.dismiss()
                                     } else if (listModel.responseData!!.iscreate.equals(
-                                                    "1",
-                                                    ignoreCase = true
-                                            ) ||
-                                            listModel.responseData!!.iscreate.equals(
-                                                    "",
-                                                    ignoreCase = true
-                                            )
+                                            "1",
+                                            ignoreCase = true
+                                        ) ||
+                                        listModel.responseData!!.iscreate.equals(
+                                            "",
+                                            ignoreCase = true
+                                        )
                                     ) {
 //                                        try {
                                         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
                                         i.putExtra("New", "1")
                                         i.putExtra(
-                                                "PlaylistID",
-                                                listModel.responseData!!.playlistID
+                                            "PlaylistID",
+                                            listModel.responseData!!.playlistID
                                         )
                                         i.putExtra(
-                                                "PlaylistName",
-                                                listModel.responseData!!.playlistName
+                                            "PlaylistName",
+                                            listModel.responseData!!.playlistName
                                         )
                                         i.putExtra("PlaylistImage", "")
                                         i.putExtra("MyDownloads", "0")
@@ -271,9 +272,9 @@ class ManageFragment : Fragment() {
 
                         override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
                             BWSApplication.hideProgressBar(
-                                    binding.progressBar,
-                                    binding.progressBarHolder,
-                                    act
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                act
                             )
                         }
                     })
@@ -327,14 +328,14 @@ class ManageFragment : Fragment() {
                         }
                     }
                     val fragmentManager1: FragmentManager =
-                            (ctx as FragmentActivity).supportFragmentManager
+                        (ctx as FragmentActivity).supportFragmentManager
 
                     audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1)
                     binding.rvMainAudioList.adapter = audioAdapter
                 } else {
                     if (BWSApplication.isNetworkConnected(act)) {
                         val fragmentManager1: FragmentManager =
-                                (ctx as FragmentActivity).supportFragmentManager
+                            (ctx as FragmentActivity).supportFragmentManager
                         audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1)
                         binding.rvMainAudioList.adapter = audioAdapter
                     }
@@ -343,11 +344,11 @@ class ManageFragment : Fragment() {
     }
 
     fun callMainPlayer(
-            position: Int,
-            views: String?,
-            listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            ctx: Context,
-            act: Activity
+        position: Int,
+        views: String?,
+        listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        ctx: Context,
+        act: Activity
     ) {
         val shared1 =
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
@@ -359,11 +360,11 @@ class ManageFragment : Fragment() {
         var IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if ((AudioPlayerFlag.equals("MainAudioList", ignoreCase = true) ||
                     AudioPlayerFlag.equals(
-                            "ViewAllAudioList",
-                            ignoreCase = true
+                        "ViewAllAudioList",
+                        ignoreCase = true
                     )) && PlayFrom.equals(views, ignoreCase = true)
         ) {
-            if(BWSApplication.isNetworkConnected(ctx)) {
+            if (BWSApplication.isNetworkConnected(ctx)) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
                         if (!player.playWhenReady) {
@@ -374,8 +375,8 @@ class ManageFragment : Fragment() {
                     }
                     callMyPlayer(ctx, act)
                     BWSApplication.showToast(
-                            "The audio shall start playing after the disclaimer",
-                            act
+                        "The audio shall start playing after the disclaimer",
+                        act
                     )
                 } else {
                     if (player != null) {
@@ -383,8 +384,8 @@ class ManageFragment : Fragment() {
                             player.seekTo(position, 0)
                             player.playWhenReady = true
                             val sharedxx = ctx.getSharedPreferences(
-                                    CONSTANTS.PREF_KEY_PLAYER,
-                                    AppCompatActivity.MODE_PRIVATE
+                                CONSTANTS.PREF_KEY_PLAYER,
+                                AppCompatActivity.MODE_PRIVATE
                             )
                             val editor = sharedxx.edit()
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -395,9 +396,9 @@ class ManageFragment : Fragment() {
                         callPlayer(position, views, listModel, ctx, act, true)
                     }
                 }
-            }else{
-                if(views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
-                    getMedia(views!!,AudioPlayerFlag!!,position,listModel,ctx,act)
+            } else {
+                if (views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
+                    getMedia(views!!, AudioPlayerFlag!!, position, listModel, ctx, act)
                 }
             }
         } else {
@@ -407,7 +408,7 @@ class ManageFragment : Fragment() {
             val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
             val type = object : TypeToken<HomeDataModel.ResponseData.Audio.Detail?>() {}.type
             val arrayList =
-                    gson.fromJson<HomeDataModel.ResponseData.Audio.Detail>(disclimerJson, type)
+                gson.fromJson<HomeDataModel.ResponseData.Audio.Detail>(disclimerJson, type)
             val mainPlayModel = HomeDataModel.ResponseData.Audio.Detail()
             mainPlayModel.id = arrayList.id
             mainPlayModel.name = arrayList.name
@@ -438,23 +439,34 @@ class ManageFragment : Fragment() {
                     listModelList2.add(position, mainPlayModel)
                 }
             }
-            if(BWSApplication.isNetworkConnected(ctx)) {
+            if (BWSApplication.isNetworkConnected(ctx)) {
                 callPlayer(position, views, listModelList2, ctx, act, audioc)
-            }else {
+            } else {
                 if (views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
                     getMedia(views!!, AudioPlayerFlag!!, position, listModel, ctx, act)
                 }
             }
         }
     }
-    private fun getMedia(views: String?, AudioFlag: String, position: Int, listModelList: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity) {
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase::class.java,
-                "Audio_database")
-                .addMigrations(BWSApplication.MIGRATION_1_2)
-                .build()
+
+    private fun getMedia(
+        views: String?,
+        AudioFlag: String,
+        position: Int,
+        listModelList: List<HomeDataModel.ResponseData.Audio.Detail>,
+        ctx: Context,
+        act: Activity
+    ) {
+        DB = Room.databaseBuilder(
+            ctx,
+            AudioDatabase::class.java,
+            "Audio_database"
+        )
+            .addMigrations(BWSApplication.MIGRATION_1_2)
+            .build()
         AudioDatabase.databaseWriteExecutor.execute {
-            downloadAudioDetailsList = DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
+            downloadAudioDetailsList =
+                DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
         }
         var pos = 0
         if (AudioFlag.equals("DownloadListAudio", ignoreCase = true)) {
@@ -469,7 +481,7 @@ class ManageFragment : Fragment() {
                 callMyPlayer(ctx, act)
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", act)
             } else {
-                val listModelList2= arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
+                val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
                 for (i in listModelList.indices) {
                     if (downloadAudioDetailsList.contains(listModelList[i].name)) {
                         listModelList2.add(listModelList[i])
@@ -481,7 +493,7 @@ class ManageFragment : Fragment() {
                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                 }
                 if (listModelList2.size != 0) {
-                    callPlayer(pos,views!!, listModelList2, ctx,act, true)
+                    callPlayer(pos, views!!, listModelList2, ctx, act, true)
                 } else {
                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                 }
@@ -489,7 +501,7 @@ class ManageFragment : Fragment() {
         } else {
             val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
             val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
-            val listModelList2= arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
+            val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
             for (i in listModelList.indices) {
                 if (downloadAudioDetailsList.contains(listModelList[i].name)) {
                     listModelList2.add(listModelList.get(i))
@@ -499,11 +511,11 @@ class ManageFragment : Fragment() {
                 pos = position
                 val gson = Gson()
                 val DisclimerJson =
-                        shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                    shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                 val type =
-                        object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                    object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                 val arrayList =
-                        gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
+                    gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
                 val mainPlayModel = HomeDataModel.ResponseData.Audio.Detail()
                 mainPlayModel.id = arrayList.id
                 mainPlayModel.name = arrayList.name
@@ -536,12 +548,12 @@ class ManageFragment : Fragment() {
                 if (listModelList2.size != 0) {
                     if (!listModelList2[pos].id.equals("0")) {
                         if (listModelList2.size != 0) {
-                            callPlayer(pos,views!!, listModelList2, ctx, act, audioc)
+                            callPlayer(pos, views!!, listModelList2, ctx, act, audioc)
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
-                        callPlayer(pos,views!!, listModelList2, ctx, act, audioc)
+                        callPlayer(pos, views!!, listModelList2, ctx, act, audioc)
                     } else {
                         BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                     }
@@ -552,7 +564,8 @@ class ManageFragment : Fragment() {
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
-     }
+    }
+
     private fun callMyPlayer(ctx: Context, act: Activity) {
         val i = Intent(ctx, MyPlayerActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -561,13 +574,13 @@ class ManageFragment : Fragment() {
     }
 
     private fun callPlayer(
-            position: Int,
-            view: String?,
-            listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            ctx: Context,
-            act: Activity, audioc: Boolean
+        position: Int,
+        view: String?,
+        listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        ctx: Context,
+        act: Activity, audioc: Boolean
     ) {
-        if(audioc) {
+        if (audioc) {
             callNewPlayerRelease()
         }
         val shared =
@@ -611,21 +624,25 @@ class ManageFragment : Fragment() {
             listCall.enqueue(object : Callback<HomeDataModel?> {
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(
-                        call: Call<HomeDataModel?>,
-                        response: Response<HomeDataModel?>
+                    call: Call<HomeDataModel?>,
+                    response: Response<HomeDataModel?>
                 ) {
                     BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            act
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        act
                     )
 
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
+                    binding.llMainLayout.visibility = View.VISIBLE
+                    binding.llSpace.visibility = View.VISIBLE
+                    binding.llPlayer.visibility = View.VISIBLE
+                    binding.llUser.visibility = View.VISIBLE
                     binding.tvPlaylistName.text =
-                            listModel.responseData!!.suggestedPlaylist!!.playlistName
+                        listModel.responseData!!.suggestedPlaylist!!.playlistName
                     binding.tvTime.text =
-                            listModel.responseData!!.suggestedPlaylist!!.totalhour + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute
+                        listModel.responseData!!.suggestedPlaylist!!.totalhour + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute
                     val section = java.util.ArrayList<String>()
                     for (i in listModel.responseData!!.audio.indices) {
                         section.add(listModel.responseData!!.audio[i].view!!)
@@ -639,19 +656,19 @@ class ManageFragment : Fragment() {
                     BWSApplication.addToSegment("Manage Screen Viewed", p, CONSTANTS.screen)
                     val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
                     binding.ivCreatePlaylist.layoutParams.height =
-                            (measureRatio.height * measureRatio.ratio).toInt()
+                        (measureRatio.height * measureRatio.ratio).toInt()
                     binding.ivCreatePlaylist.layoutParams.width =
-                            (measureRatio.widthImg * measureRatio.ratio).toInt()
+                        (measureRatio.widthImg * measureRatio.ratio).toInt()
                     binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
                     Glide.with(act).load(R.drawable.ic_create_playlist)
-                            .thumbnail(0.05f)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
-                            .priority(Priority.HIGH)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
-                            .into(binding.ivCreatePlaylist)
+                        .thumbnail(0.05f)
+                        .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
+                        .priority(Priority.HIGH)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
+                        .into(binding.ivCreatePlaylist)
 
                     playlistAdapter =
-                            PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act)
+                        PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act)
                     binding.rvMainPlayList.adapter = playlistAdapter
 
                     if (listModel.responseData!!.playlist[0].details!!.size > 4) {
@@ -661,7 +678,7 @@ class ManageFragment : Fragment() {
                     }
                     getPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!)
                     LocalBroadcastManager.getInstance(ctx)
-                            .registerReceiver(listener1, IntentFilter("Reminder"))
+                        .registerReceiver(listener1, IntentFilter("Reminder"))
                     binding.llPlayerView1.setOnClickListener {
                         callPlaylistDetails()
                     }
@@ -672,58 +689,87 @@ class ManageFragment : Fragment() {
                         callPlaylistDetails()
                     }
                     if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                    "0",
-                                    ignoreCase = true
-                            )
-                            || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                    "",
-                                    ignoreCase = true
-                            )
+                            "0",
+                            ignoreCase = true
+                        )
+                        || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                            "",
+                            ignoreCase = true
+                        )
                     ) {
                         binding.tvReminder.text = "Set reminder"
+                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                     } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                    "1",
-                                    ignoreCase = true
-                            )
+                            "1",
+                            ignoreCase = true
+                        )
                     ) {
                         binding.tvReminder.text = "Update reminder"
+                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                    } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                            "2",
+                            ignoreCase = true
+                        )
+                    ) {
+                        binding.tvReminder.text = "Update reminder"
+                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                     }
+
                     binding.tvReminder.setOnClickListener {
                         if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                        "0",
-                                        ignoreCase = true
-                                )
-                                || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                        "",
-                                        ignoreCase = true
-                                )
+                                "0",
+                                ignoreCase = true
+                            )
+                            || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                "",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.tvReminder.text = "Set reminder"
+                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                             BWSApplication.getReminderDay(
-                                    ctx,
-                                    act,
-                                    CoUserID,
-                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                    activity,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                                ctx,
+                                act,
+                                CoUserID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                activity,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderDay
                             )
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                        "1",
-                                        ignoreCase = true
-                                )
+                                "1",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.tvReminder.text = "Update reminder"
+                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                             BWSApplication.getReminderDay(
-                                    ctx,
-                                    act,
-                                    CoUserID,
-                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                    activity,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                                ctx,
+                                act,
+                                CoUserID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                activity,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                            )
+                        } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                "2",
+                                ignoreCase = true
+                            )
+                        ) {
+                            binding.tvReminder.text = "Update reminder"
+                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                            BWSApplication.getReminderDay(
+                                ctx,
+                                act,
+                                CoUserID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                activity,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderDay
                             )
                         }
                     }
@@ -731,14 +777,14 @@ class ManageFragment : Fragment() {
                     setPlayPauseIcon()
 
                     LocalBroadcastManager.getInstance(ctx)
-                            .registerReceiver(listener, IntentFilter("play_pause_Action"))
+                        .registerReceiver(listener, IntentFilter("play_pause_Action"))
                     binding.llPlayPause.setOnClickListener {
                         val shared1 = ctx.getSharedPreferences(
-                                CONSTANTS.PREF_KEY_PLAYER,
-                                AppCompatActivity.MODE_PRIVATE
+                            CONSTANTS.PREF_KEY_PLAYER,
+                            AppCompatActivity.MODE_PRIVATE
                         )
                         val AudioPlayerFlag =
-                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                            shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
                         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                         val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -752,23 +798,23 @@ class ManageFragment : Fragment() {
                             2 -> {
                                 if (player != null) {
                                     val lastIndexID =
-                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
                                     if (BWSApplication.PlayerAudioId.equals(
-                                                    lastIndexID,
-                                                    ignoreCase = true
-                                            )
-                                            && player.duration - player.currentPosition <= 20
+                                            lastIndexID,
+                                            ignoreCase = true
+                                        )
+                                        && player.duration - player.currentPosition <= 20
                                     ) {
                                         val shared = ctx.getSharedPreferences(
-                                                CONSTANTS.PREF_KEY_AUDIO,
-                                                MODE_PRIVATE
+                                            CONSTANTS.PREF_KEY_AUDIO,
+                                            MODE_PRIVATE
                                         )
                                         val editor = shared.edit()
                                         editor.putInt(CONSTANTS.PREF_KEY_position, 0)
                                         editor.apply()
                                         player.seekTo(0, 0)
                                         BWSApplication.PlayerAudioId =
-                                                listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
                                         player.playWhenReady = true
                                     } else {
                                         player.playWhenReady = true
@@ -780,14 +826,14 @@ class ManageFragment : Fragment() {
                             }
                             else -> {
                                 BWSApplication.PlayerAudioId =
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
                                 callMainPlayerSuggested(
-                                        0,
-                                        "",
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
-                                        ctx,
-                                        act,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!
+                                    0,
+                                    "",
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
+                                    ctx,
+                                    act,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!
                                 )
                                 binding.llPlay.visibility = View.GONE
                                 binding.llPause.visibility = View.VISIBLE
@@ -803,16 +849,16 @@ class ManageFragment : Fragment() {
                         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
                         i.putExtra("New", "0")
                         i.putExtra(
-                                "PlaylistID",
-                                homelistModel.responseData!!.suggestedPlaylist!!.playlistID
+                            "PlaylistID",
+                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID
                         )
                         i.putExtra(
-                                "PlaylistName",
-                                homelistModel.responseData!!.suggestedPlaylist!!.playlistName
+                            "PlaylistName",
+                            homelistModel.responseData!!.suggestedPlaylist!!.playlistName
                         )
                         i.putExtra(
-                                "PlaylistImage",
-                                homelistModel.responseData!!.suggestedPlaylist!!.playlistImage
+                            "PlaylistImage",
+                            homelistModel.responseData!!.suggestedPlaylist!!.playlistImage
                         )
                         i.putExtra("PlaylistSource", "")
                         i.putExtra("MyDownloads", "0")
@@ -827,9 +873,9 @@ class ManageFragment : Fragment() {
 
                 override fun onFailure(call: Call<HomeDataModel?>, t: Throwable) {
                     BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            act
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        act
                     )
                 }
             })
@@ -857,9 +903,9 @@ class ManageFragment : Fragment() {
         val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         if (MyDownloads.equals("1", ignoreCase = true)) {
             if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
-                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
-                            ignoreCase = true
-                    )
+                    homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
+                    ignoreCase = true
+                )
             ) {
                 if (player != null) {
                     if (player.playWhenReady) {
@@ -885,9 +931,9 @@ class ManageFragment : Fragment() {
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
-                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
-                            ignoreCase = true
-                    )
+                    homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
+                    ignoreCase = true
+                )
             ) {
                 if (player != null) {
                     if (player.playWhenReady) {
@@ -911,34 +957,51 @@ class ManageFragment : Fragment() {
             }
         }
     }
-    private fun getAllCompletedMedia(AudioFlag: String?, pID: String, position: Int, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,ctx: Context,act: Activity) {
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase::class.java,
-                "Audio_database")
-                .addMigrations(BWSApplication.MIGRATION_1_2)
-                .build()
+
+    private fun getAllCompletedMedia(
+        AudioFlag: String?,
+        pID: String,
+        position: Int,
+        listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity
+    ) {
+        DB = Room.databaseBuilder(
+            ctx,
+            AudioDatabase::class.java,
+            "Audio_database"
+        )
+            .addMigrations(BWSApplication.MIGRATION_1_2)
+            .build()
         AudioDatabase.databaseWriteExecutor.execute {
-            downloadAudioDetailsList = DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
+            downloadAudioDetailsList =
+                DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
         }
         var pos = 0
-        val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared: SharedPreferences =
+            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
-        if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(pID, ignoreCase = true)) {
+        if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
+                pID,
+                ignoreCase = true
+            )
+        ) {
             if (isDisclaimer == 1) {
                 if (player != null) {
                     if (!player.playWhenReady) {
                         player.playWhenReady = true
-                    }     else player.playWhenReady = true
+                    } else player.playWhenReady = true
                 } else {
                     audioClick = true
                 }
                 callMyPlayer(ctx, act)
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", act)
             } else {
-                val listModelList2 =arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                val listModelList2 =
+                    arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 var view = ""
                 for (i in listModel.indices) {
                     if (downloadAudioDetailsList.contains(listModel[i].name)) {
@@ -948,9 +1011,9 @@ class ManageFragment : Fragment() {
                 if (position != positionSaved) {
                     if (downloadAudioDetailsList.contains(listModel[position].name)) {
                         positionSaved = position
-                        BWSApplication.PlayerAudioId =listModel[position].id
+                        BWSApplication.PlayerAudioId = listModel[position].id
                         if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, act,  pID, true)
+                            callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, true)
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                         }
@@ -962,7 +1025,8 @@ class ManageFragment : Fragment() {
 //                SegmentTag()
             }
         } else {
-            val listModelList2 = arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+            val listModelList2 =
+                arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
             for (i in listModel.indices) {
                 if (downloadAudioDetailsList.contains(listModel[i].name)) {
                     listModelList2.add(listModel[i])
@@ -972,11 +1036,11 @@ class ManageFragment : Fragment() {
                 pos = position
                 val gson = Gson()
                 val DisclimerJson =
-                        shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                    shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                 val type =
-                        object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                    object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                 val arrayList =
-                        gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
+                    gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
                 val mainPlayModel = HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                 mainPlayModel.id = arrayList.id
                 mainPlayModel.name = arrayList.name
@@ -1009,12 +1073,12 @@ class ManageFragment : Fragment() {
                 if (listModelList2.size != 0) {
                     if (!listModelList2[pos].id.equals("0")) {
                         if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, act,pID, audioc)
+                            callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
-                        callPlayerSuggested(pos, "", listModelList2, ctx, act,pID, audioc)
+                        callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
                     } else {
                         BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                     }
@@ -1027,13 +1091,14 @@ class ManageFragment : Fragment() {
 //            SegmentTag()
         }
     }
+
     private fun callMainPlayerSuggested(
-            position: Int,
-            view: String?,
-            listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
-            ctx: Context,
-            act: Activity,
-            playlistID: String
+        position: Int,
+        view: String?,
+        listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity,
+        playlistID: String
     ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -1043,11 +1108,11 @@ class ManageFragment : Fragment() {
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (MyDownloads.equals("1", true)) {
-            if(BWSApplication.isNetworkConnected(ctx)) {
+            if (BWSApplication.isNetworkConnected(ctx)) {
                 if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
-                                playlistID,
-                                ignoreCase = true
-                        )
+                        playlistID,
+                        ignoreCase = true
+                    )
                 ) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -1059,8 +1124,8 @@ class ManageFragment : Fragment() {
                         }
                         callMyPlayer(ctx, act)
                         BWSApplication.showToast(
-                                "The audio shall start playing after the disclaimer",
-                                act
+                            "The audio shall start playing after the disclaimer",
+                            act
                         )
                     } else {
                         if (player != null) {
@@ -1068,27 +1133,41 @@ class ManageFragment : Fragment() {
                                 player.seekTo(position, 0)
                                 player.playWhenReady = true
                                 val sharedxx =
-                                        ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                    ctx.getSharedPreferences(
+                                        CONSTANTS.PREF_KEY_PLAYER,
+                                        MODE_PRIVATE
+                                    )
                                 val editor = sharedxx.edit()
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                                 editor.apply()
                             }
                             callMyPlayer(ctx, act)
                         } else {
-                            callPlayerSuggested(position, view, listModel, ctx, act, playlistID, true)
+                            callPlayerSuggested(
+                                position,
+                                view,
+                                listModel,
+                                ctx,
+                                act,
+                                playlistID,
+                                true
+                            )
                         }
                     }
                 } else {
                     val listModelList2 =
-                            arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                        arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                     listModelList2.addAll(listModel)
                     val gson = Gson()
                     val disclimerJson =
-                            shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                        shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type =
-                            object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                        object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                     val arrayList =
-                            gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
+                        gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(
+                            disclimerJson,
+                            type
+                        )
                     val mainPlayModel = HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                     mainPlayModel.id = arrayList.id
                     mainPlayModel.name = arrayList.name
@@ -1118,16 +1197,24 @@ class ManageFragment : Fragment() {
                             listModelList2.add(position, mainPlayModel)
                         }
                     }
-                    callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID, audioc)
+                    callPlayerSuggested(
+                        position,
+                        view,
+                        listModelList2,
+                        ctx,
+                        act,
+                        playlistID,
+                        audioc
+                    )
                 }
-            }else{
-                getAllCompletedMedia(AudioPlayerFlag,playlistID,position,listModel,ctx,act)
+            } else {
+                getAllCompletedMedia(AudioPlayerFlag, playlistID, position, listModel, ctx, act)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
-                            playlistID,
-                            ignoreCase = true
-                    )
+                    playlistID,
+                    ignoreCase = true
+                )
             ) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
@@ -1139,8 +1226,8 @@ class ManageFragment : Fragment() {
                     }
                     callMyPlayer(ctx, act)
                     BWSApplication.showToast(
-                            "The audio shall start playing after the disclaimer",
-                            act
+                        "The audio shall start playing after the disclaimer",
+                        act
                     )
                 } else {
                     if (player != null) {
@@ -1220,15 +1307,15 @@ class ManageFragment : Fragment() {
     }
 
     private fun callPlayerSuggested(
-            position: Int,
-            view: String?,
-            listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
-            ctx: Context,
-            act: Activity,
-            playlistID: String,
-            audioc: Boolean
+        position: Int,
+        view: String?,
+        listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity,
+        playlistID: String,
+        audioc: Boolean
     ) {
-        if(audioc) {
+        if (audioc) {
             callNewPlayerRelease()
         }
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -1264,11 +1351,11 @@ class ManageFragment : Fragment() {
     }
 
     class AudioAdapter(
-            private val listModel: List<HomeDataModel.ResponseData.Audio>,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity,
-            var fragmentManager1: FragmentManager
+        private val listModel: List<HomeDataModel.ResponseData.Audio>,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity,
+        var fragmentManager1: FragmentManager
     ) : RecyclerView.Adapter<AudioAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: MainAudioLayoutBinding) :
@@ -1276,10 +1363,10 @@ class ManageFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: MainAudioLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.main_audio_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.main_audio_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1308,11 +1395,11 @@ class ManageFragment : Fragment() {
                     holder.binding.rvMainAudio.layoutManager = myDownloads
                     holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
                     val myDownloadsAdapter = DownloadAdapter(
-                            listModel[position].details!!,
-                            ctx,
-                            binding,
-                            act,
-                            listModel[position].view
+                        listModel[position].details!!,
+                        ctx,
+                        binding,
+                        act,
+                        listModel[position].view
                     )
                     holder.binding.rvMainAudio.adapter = myDownloadsAdapter
                     if (listModel[position].details != null &&
@@ -1323,16 +1410,16 @@ class ManageFragment : Fragment() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(
-                                ctx.getString(R.string.Library),
-                                ignoreCase = true
-                        )
+                        ctx.getString(R.string.Library),
+                        ignoreCase = true
+                    )
                 ) {
                     val recommendedAdapter = LibraryAdapter(
-                            listModel[position].details!!,
-                            ctx,
-                            binding,
-                            act,
-                            listModel[position].view
+                        listModel[position].details!!,
+                        ctx,
+                        binding,
+                        act,
+                        listModel[position].view
                     )
                     val recommended: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1347,9 +1434,9 @@ class ManageFragment : Fragment() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(
-                                ctx.getString(R.string.my_like),
-                                ignoreCase = true
-                        )
+                        ctx.getString(R.string.my_like),
+                        ignoreCase = true
+                    )
                 ) {
                     holder.binding.llMainLayout.visibility = View.GONE
                     /*RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModel.details!!, ctx);
@@ -1358,16 +1445,16 @@ class ManageFragment : Fragment() {
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);*/
                 } else if (listModel[position].view.equals(
-                                ctx.getString(R.string.recently_played),
-                                ignoreCase = true
-                        )
+                        ctx.getString(R.string.recently_played),
+                        ignoreCase = true
+                    )
                 ) {
                     val recentlyPlayedAdapter = RecentlyPlayedAdapter(
-                            listModel[position].details!!,
-                            ctx,
-                            binding,
-                            act,
-                            listModel[position].view
+                        listModel[position].details!!,
+                        ctx,
+                        binding,
+                        act,
+                        listModel[position].view
                     )
                     val recentlyPlayed: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1380,16 +1467,16 @@ class ManageFragment : Fragment() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(
-                                ctx.getString(R.string.get_inspired),
-                                ignoreCase = true
-                        )
+                        ctx.getString(R.string.get_inspired),
+                        ignoreCase = true
+                    )
                 ) {
                     val recommendedAdapter = RecommendedAdapter(
-                            listModel[position].details!!,
-                            ctx,
-                            binding,
-                            act,
-                            listModel[position].view
+                        listModel[position].details!!,
+                        ctx,
+                        binding,
+                        act,
+                        listModel[position].view
                     )
                     val inspired: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1402,16 +1489,16 @@ class ManageFragment : Fragment() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(
-                                ctx.getString(R.string.recommended_audio),
-                                ignoreCase = true
-                        )
+                        ctx.getString(R.string.recommended_audio),
+                        ignoreCase = true
+                    )
                 ) {
                     val recommendedAdapter = RecommendedAdapter(
-                            listModel[position].details!!,
-                            ctx,
-                            binding,
-                            act,
-                            listModel[position].view
+                        listModel[position].details!!,
+                        ctx,
+                        binding,
+                        act,
+                        listModel[position].view
                     )
                     val inspired: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1424,16 +1511,16 @@ class ManageFragment : Fragment() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(
-                                ctx.getString(R.string.popular_audio),
-                                ignoreCase = true
-                        )
+                        ctx.getString(R.string.popular_audio),
+                        ignoreCase = true
+                    )
                 ) {
                     val popularPlayedAdapter = PopularPlayedAdapter(
-                            listModel[position].details!!,
-                            ctx,
-                            binding,
-                            act,
-                            listModel[position].view
+                        listModel[position].details!!,
+                        ctx,
+                        binding,
+                        act,
+                        listModel[position].view
                     )
                     val recentlyPlayed: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1447,19 +1534,19 @@ class ManageFragment : Fragment() {
                         holder.binding.tvViewAll.visibility = View.GONE
                     }
                 } else if (listModel[position].view.equals(
-                                ctx.getString(R.string.top_categories),
-                                ignoreCase = true
-                        )
+                        ctx.getString(R.string.top_categories),
+                        ignoreCase = true
+                    )
                 ) {
                     holder.binding.tvViewAll.visibility = View.GONE
                     val topCategoriesAdapter = TopCategoriesAdapter(
-                            listModel[position].details!!,
-                            ctx,
-                            binding,
-                            act,
-                            listModel[position].homeAudioID.toString(),
-                            listModel[position].view,
-                            fragmentManager1
+                        listModel[position].details!!,
+                        ctx,
+                        binding,
+                        act,
+                        listModel[position].homeAudioID.toString(),
+                        listModel[position].view,
+                        fragmentManager1
                     )
                     val topCategories: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1476,10 +1563,10 @@ class ManageFragment : Fragment() {
     }
 
     class PlaylistAdapter(
-            private val listModel: HomeDataModel.ResponseData.Play,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity
+        private val listModel: HomeDataModel.ResponseData.Play,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity
     ) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
         var index = -1
 
@@ -1488,10 +1575,10 @@ class ManageFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: PlaylistCustomLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.playlist_custom_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.playlist_custom_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1571,11 +1658,11 @@ class ManageFragment : Fragment() {
     }
 
     class RecommendedAdapter(
-            private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity,
-            var view: String?
+        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity,
+        var view: String?
     ) : RecyclerView.Adapter<RecommendedAdapter.MyViewHolder>() {
         var index = -1
 
@@ -1584,10 +1671,10 @@ class ManageFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: BigBoxLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.big_box_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.big_box_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1650,23 +1737,24 @@ class ManageFragment : Fragment() {
     }
 
     class LibraryAdapter(
-            private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity,
-            var view: String?
+        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity,
+        var view: String?
     ) : RecyclerView.Adapter<LibraryAdapter.MyViewHolder>() {
 
         var index = -1
+
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: BigBoxLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.big_box_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.big_box_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1730,11 +1818,11 @@ class ManageFragment : Fragment() {
     }
 
     class DownloadAdapter(
-            private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity,
-            var view: String?
+        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity,
+        var view: String?
     ) : RecyclerView.Adapter<DownloadAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) :
@@ -1742,10 +1830,10 @@ class ManageFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: BigBoxLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.big_box_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.big_box_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1777,11 +1865,11 @@ class ManageFragment : Fragment() {
     }
 
     class RecentlyPlayedAdapter(
-            private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity,
-            var view: String?
+        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity,
+        var view: String?
     ) : RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder>() {
         var index = -1
 
@@ -1790,10 +1878,10 @@ class ManageFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: SmallBoxLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.small_box_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.small_box_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1855,11 +1943,11 @@ class ManageFragment : Fragment() {
     }
 
     class PopularPlayedAdapter(
-            private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity,
-            var view: String?
+        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity,
+        var view: String?
     ) : RecyclerView.Adapter<PopularPlayedAdapter.MyViewHolder>() {
         var index = -1
 
@@ -1868,10 +1956,10 @@ class ManageFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: SmallBoxLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.small_box_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.small_box_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1934,13 +2022,13 @@ class ManageFragment : Fragment() {
     }
 
     class TopCategoriesAdapter(
-            private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-            private val ctx: Context,
-            var binding: FragmentManageBinding,
-            val act: Activity,
-            private var homeView: String,
-            private var viewString: String?,
-            var fragmentManager1: FragmentManager
+        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        private val ctx: Context,
+        var binding: FragmentManageBinding,
+        val act: Activity,
+        private var homeView: String,
+        private var viewString: String?,
+        var fragmentManager1: FragmentManager
     ) : RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: RoundBoxLayoutBinding) :
@@ -1948,10 +2036,10 @@ class ManageFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: RoundBoxLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.round_box_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.round_box_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }

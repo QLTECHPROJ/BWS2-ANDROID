@@ -47,8 +47,10 @@ class SplashActivity : AppCompatActivity() {
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        //        BWSApplication.turnOffDozeMode(SplashScreenActivity.this);
-//        checkUserDetails()
+        isProfileCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
+        isAssessmentCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
+        val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
     }
 
     override fun onResume() {
@@ -176,12 +178,12 @@ class SplashActivity : AppCompatActivity() {
                 ) {
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
-                        isProfileCompleted =
-                            coUserDetailsModel.responseData!!.isProfileCompleted.toString()
-                        isAssessmentCompleted =
-                            coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
+//                        isProfileCompleted =
+//                            coUserDetailsModel.responseData!!.isProfileCompleted.toString()
+//                        isAssessmentCompleted =
+//                            coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
                         indexScore = coUserDetailsModel.responseData!!.indexScore.toString()
-                        avgSleepTime = coUserDetailsModel.responseData!!.avgSleepTime.toString()
+//                        avgSleepTime = coUserDetailsModel.responseData!!.avgSleepTime.toString()
                         val shared = getSharedPreferences(
                             CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
                             Context.MODE_PRIVATE
@@ -190,6 +192,14 @@ class SplashActivity : AppCompatActivity() {
                         editor.putString(
                             CONSTANTS.PREFE_ACCESS_INDEXSCORE,
                             coUserDetailsModel.responseData!!.indexScore
+                        )
+                        editor.putString(
+                            CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
+                            coUserDetailsModel.responseData!!.isProfileCompleted
+                        )
+                        editor.putString(
+                            CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
+                            coUserDetailsModel.responseData!!.isAssessmentCompleted
                         )
                         editor.apply()
                         val sharedd =
@@ -275,6 +285,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
+            Log.e("Splash", "0")
         } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
@@ -282,12 +293,14 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
+            Log.e("Splash", "1")
         } else if (avgSleepTime.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, SleepTimeActivity::class.java)
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
+            Log.e("Splash", "2")
         } else if (isProfileCompleted.equals("1", ignoreCase = true) &&
             isAssessmentCompleted.equals("1", ignoreCase = true)
         ) {
@@ -296,6 +309,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
+            Log.e("Splash", "3")
         }
 //        }
     }

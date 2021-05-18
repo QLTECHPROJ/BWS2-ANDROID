@@ -19,7 +19,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity
+import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
 import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient

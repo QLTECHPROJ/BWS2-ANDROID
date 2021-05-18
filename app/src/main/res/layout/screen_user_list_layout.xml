@@ -27,15 +27,15 @@
 
                 <ImageView
                     android:id="@+id/ivProfileImage"
-                    android:layout_width="@dimen/_48sdp"
-                    android:layout_height="@dimen/_48sdp"
+                    android:layout_width="@dimen/_46sdp"
+                    android:layout_height="@dimen/_46sdp"
                     android:visibility="gone"
                     android:src="@drawable/ic_user_default_icon" />
 
                 <RelativeLayout
                     android:id="@+id/rlLetter"
-                    android:layout_width="@dimen/_48sdp"
-                    android:layout_height="@dimen/_48sdp"
+                    android:layout_width="@dimen/_46sdp"
+                    android:layout_height="@dimen/_46sdp"
                     android:background="@drawable/profile_small_drawable"
                     android:padding="@dimen/_4sdp"
                     android:visibility="visible">

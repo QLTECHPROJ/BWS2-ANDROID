@@ -1,17 +1,16 @@
 package com.brainwellnessspa.userModuleTwo.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
-import android.text.Selection
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
-import android.util.Patterns
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -34,26 +33,30 @@ import java.util.regex.Pattern
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
-    var fcm_id: String = ""
+    var fcmId: String = ""
     lateinit var activity: Activity
 
-    var userTextWatcher: TextWatcher = object : TextWatcher {
+    private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val Email: String = binding.etEmail.getText().toString().trim()
-            val Pass: String = binding.etPassword.getText().toString().trim()
-            if (Email.equals("", ignoreCase = true)) {
-                binding.btnLoginAc.setEnabled(false)
-                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnLoginAc.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (Pass.equals("", ignoreCase = true)) {
-                binding.btnLoginAc.setEnabled(false)
-                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnLoginAc.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else {
-                binding.btnLoginAc.setEnabled(true)
-                binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnLoginAc.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            val email: String = binding.etEmail.text.toString().trim()
+            val pass: String = binding.etPassword.text.toString().trim()
+            when {
+                email.equals("", ignoreCase = true) -> {
+                    binding.btnLoginAc.isEnabled = false
+                    binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnLoginAc.setBackgroundResource(R.drawable.gray_round_cornor)
+                }
+                pass.equals("", ignoreCase = true) -> {
+                    binding.btnLoginAc.isEnabled = false
+                    binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnLoginAc.setBackgroundResource(R.drawable.gray_round_cornor)
+                }
+                else -> {
+                    binding.btnLoginAc.isEnabled = true
+                    binding.btnLoginAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnLoginAc.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                }
             }
         }
 
@@ -101,12 +104,11 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun isValidPassword(password: String?): Boolean {
+    private fun isValidPassword(password: String): Boolean {
         val pattern: Pattern
-        val matcher: Matcher
-        val PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(PASSWORD_PATTERN)
-        matcher = pattern.matcher(password)
+        val passwordPatterned = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(passwordPatterned)
+        val matcher: Matcher = pattern.matcher(password)
         return matcher.matches()
     }
 
@@ -116,10 +118,11 @@ class SignInActivity : AppCompatActivity() {
         finish()
     }
 
+    @SuppressLint("HardwareIds")
     fun prepareData() {
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-        fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")!!
-        if (TextUtils.isEmpty(fcm_id)) {
+        fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
+        if (TextUtils.isEmpty(fcmId)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
                 this
             ) { task: Task<InstallationTokenResult> ->
@@ -131,17 +134,17 @@ class SignInActivity : AppCompatActivity() {
                 editor.commit()
             }
             val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-            fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
+            fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
         }
-        if (binding.etEmail.text.toString().equals("")) {
+        if (binding.etEmail.text.toString() == "") {
             binding.flEmail.error = "Email address is required"
             binding.flPassword.error = ""
-        } else if (!binding.etEmail.text.toString().equals("")
+        } else if (binding.etEmail.text.toString() != ""
             && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
         ) {
             binding.flEmail.error = "Valid Email address is required"
             binding.flPassword.error = ""
-        } else if (binding.etPassword.text.toString().equals("")) {
+        } else if (binding.etPassword.text.toString() == "") {
             binding.flEmail.error = ""
             binding.flPassword.error = "Password is required"
         } else if (binding.etPassword.text.toString().length < 8
@@ -163,7 +166,7 @@ class SignInActivity : AppCompatActivity() {
                     binding.etPassword.text.toString(),
                     CONSTANTS.FLAG_ONE,
                     Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
-                    fcm_id
+                    fcmId
                 )
                 listCall.enqueue(object : Callback<SignInModel> {
                     override fun onResponse(
@@ -212,7 +215,7 @@ class SignInActivity : AppCompatActivity() {
                                         Settings.Secure.ANDROID_ID
                                     )
                                 )
-                                editor.commit()
+                                editor.apply()
                                 val i = Intent(this@SignInActivity, UserListActivity::class.java)
                                 startActivity(i)
                                 finish()
@@ -245,9 +248,5 @@ class SignInActivity : AppCompatActivity() {
                 BWSApplication.showToast(getString(R.string.no_server_found), this)
             }
         }
-    }
-
-    private fun isValidEmail(email: String): Boolean {
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }

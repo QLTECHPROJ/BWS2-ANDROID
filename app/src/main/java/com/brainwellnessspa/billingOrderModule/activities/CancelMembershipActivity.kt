@@ -1,4 +1,4 @@
-package com.brainwellnessspa.BillingOrderModule.Activities
+package com.brainwellnessspa.billingOrderModule.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -19,7 +19,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel
+import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
 import com.brainwellnessspa.Utility.APIClient

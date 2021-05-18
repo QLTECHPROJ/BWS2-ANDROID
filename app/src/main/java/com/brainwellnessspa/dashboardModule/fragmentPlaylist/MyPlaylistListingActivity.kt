@@ -185,7 +185,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.hasExtra("MyReminder")) {
                 prepareData()
-            }else if (intent.hasExtra("MyFindAudio")) {
+            } else if (intent.hasExtra("MyFindAudio")) {
                 prepareData()
                 binding.searchView.requestFocus()
                 searchEditText.setText("")
@@ -294,7 +294,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun prepareData() {
-        var gson = Gson()
+        val gson = Gson()
         val shared1x = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -365,26 +365,37 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 0,
                                 binding.llDownloads,
                                 binding.ivDownloads,
-                                        ctx,activity
+                                ctx, activity
                             )
                         }
                         if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                             || listModel.responseData!!.isReminder.equals("", ignoreCase = true)
                         ) {
-                            binding.tvReminder.setText("Set reminder")
+                            binding.tvReminder.text = "Set reminder"
+                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                         } else if (listModel.responseData!!.isReminder.equals(
                                 "1",
                                 ignoreCase = true
                             )
                         ) {
-                            binding.tvReminder.setText("Update reminder")
+                            binding.tvReminder.text = "Update reminder"
+                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                        } else if (listModel.responseData!!.isReminder.equals(
+                                "2",
+                                ignoreCase = true
+                            )
+                        ) {
+                            binding.tvReminder.text = "Update reminder"
+                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                         }
+
                         binding.llReminder.setOnClickListener {
                             if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                                 || listModel.responseData!!.isReminder.equals("", ignoreCase = true)
                             ) {
-                                binding.tvReminder.setText("Set reminder")
-                                BWSApplication.getReminderDay(
+                                binding.tvReminder.text = "Set reminder"
+                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                getReminderDay(
                                     ctx,
                                     activity,
                                     CoUserID,
@@ -399,8 +410,26 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     ignoreCase = true
                                 )
                             ) {
-                                binding.tvReminder.setText("Update reminder")
-                                BWSApplication.getReminderDay(
+                                binding.tvReminder.text = "Update reminder"
+                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                getReminderDay(
+                                    ctx,
+                                    activity,
+                                    CoUserID,
+                                    listModel.responseData!!.playlistID,
+                                    listModel.responseData!!.playlistName,
+                                    activity as FragmentActivity?,
+                                    listModel.responseData!!.reminderTime,
+                                    listModel.responseData!!.reminderDay
+                                )
+                            } else if (listModel.responseData!!.isReminder.equals(
+                                    "2",
+                                    ignoreCase = true
+                                )
+                            ) {
+                                binding.tvReminder.text = "Update reminder"
+                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                getReminderDay(
                                     ctx,
                                     activity,
                                     CoUserID,
@@ -423,7 +452,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             val fragmentManager1: FragmentManager =
                                 (ctx as FragmentActivity).supportFragmentManager
 
-                            BWSApplication.callPlaylistDetails(
+                            callPlaylistDetails(
                                 ctx,
                                 activity,
                                 CoUserID,
@@ -682,7 +711,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.rvPlayLists2.visibility = View.VISIBLE
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
                     binding.ivDownloads.setColorFilter(
-                        activity.resources.getColor(R.color.dark_yellow),
+                        ContextCompat.getColor(activity, R.color.dark_yellow),
                         PorterDuff.Mode.SRC_IN
                     )
                     enableDisableDownload(false, "orange")
@@ -945,7 +974,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putInt(CONSTANTS.PREF_KEY_position, 0)
-                            editor.commit()
+                            editor.apply()
                             player.seekTo(0, 0)
                             player.playWhenReady = true
                         } else {
@@ -1299,6 +1328,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             return MyViewHolder(v)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 //            searchEditText.setHint("Search for audio")
 //            binding.tvSearch.setHint("Search for audio")
@@ -1783,7 +1813,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val editor = shared.edit()
         val gson = Gson()
         val downloadAudioDetails = java.util.ArrayList<DownloadAudioDetails>()
-        var json: String
+        val json: String
         PlayerAudioId = listModel[position].id
         if (MyDownloads.equals("1", ignoreCase = true)) {
             for (i in listModel.indices) {
@@ -1989,7 +2019,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         position: Int,
         llDownload: RelativeLayout,
         ivDownloads: ImageView,
-        ctx:Context,
+        ctx: Context,
         act: Activity
     ) {
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
@@ -2063,7 +2093,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson)
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
-                editor.commit()
+                editor.apply()
                 SongListSize = playlistSongs.size
             }
             saveAllMedia(playlistSongs)
@@ -2128,7 +2158,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson)
                     editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
-                    editor.commit()
+                    editor.apply()
                     fileNameList = name
                     playlistDownloadId = downloadPlaylistId
                 }
@@ -2423,7 +2453,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 if (audioList.size != 0) {
                     GetSingleMedia(
                         audioList[0].audioFile,
-                            applicationContext,
+                        applicationContext,
                         playlistID,
                         audioList,
                         0

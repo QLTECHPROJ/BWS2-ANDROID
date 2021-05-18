@@ -414,6 +414,14 @@ class UserListActivity : AppCompatActivity() {
                                                                     CONSTANTS.PREFE_ACCESS_IMAGE,
                                                                     responseData.image
                                                             )
+                                                            editor.putString(
+                                                                CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
+                                                                coUserDetailsModel.responseData!!.isProfileCompleted
+                                                            )
+                                                            editor.putString(
+                                                                CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
+                                                                coUserDetailsModel.responseData!!.isAssessmentCompleted
+                                                            )
                                                             editor.apply()
                                                             val sharded =
                                                                     activity.getSharedPreferences(

@@ -1,11 +1,11 @@
-package com.brainwellnessspa.BillingOrderModule.Models;
+package com.brainwellnessspa.billingOrderModule.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CancelPlanModel {
+public class BillingAddressSaveModel {
     @SerializedName("ResponseData")
     @Expose
     private List<Object> responseData = null;

@@ -96,8 +96,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginLeft="@dimen/_20sdp"
                                             android:layout_marginRight="@dimen/_13sdp"
-                                            android:background="@drawable/rounded_extra_gray_corner"
-                                            android:backgroundTint="#66B8E1F7"
+                                            android:background="@drawable/rounded_extra_theme_corner"
                                             android:orientation="horizontal"
                                             android:padding="@dimen/_7sdp">
 

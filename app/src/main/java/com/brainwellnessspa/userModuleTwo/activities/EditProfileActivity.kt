@@ -56,8 +56,6 @@ class EditProfileActivity : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             val user = binding.etUser.text.toString().trim()
             val calendar = binding.etCalendar.text.toString().trim()
-            val MobileNumber = binding.etMobileNumber.text.toString().trim()
-            val Email = binding.etEmail.text.toString().trim()
             if (user.equals(UserName, ignoreCase = true) &&
                 calendar.equals(UserCalendar, ignoreCase = true)
             ) {
@@ -129,7 +127,7 @@ class EditProfileActivity : AppCompatActivity() {
             if (binding.etCalendar.text.toString().isNotEmpty()) {
                 dob = binding.etCalendar.text.toString()
                 var spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
-                var newDate: Date? = Date()
+                var newDate = Date()
                 try {
                     newDate = spf.parse(dob)
                 } catch (e: ParseException) {

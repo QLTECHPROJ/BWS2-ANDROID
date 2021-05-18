@@ -1,4 +1,4 @@
-package com.brainwellnessspa.BillingOrderModule.Fragments;
+package com.brainwellnessspa.billingOrderModule.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,11 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity;
-import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity;
-import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
-import com.brainwellnessspa.BillingOrderModule.Models.CurrentPlanVieViewModel;
-import com.brainwellnessspa.BillingOrderModule.Models.PayNowDetailsModel;
+import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity;
+import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity;
+import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity;
+import com.brainwellnessspa.billingOrderModule.models.CurrentPlanVieViewModel;
+import com.brainwellnessspa.billingOrderModule.models.PayNowDetailsModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.Utility.APIClient;
@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity.myBackPressbill;
+import static com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity.myBackPressbill;
 import static com.brainwellnessspa.BWSApplication.IsLock;
 
 /*Active => Cancel button

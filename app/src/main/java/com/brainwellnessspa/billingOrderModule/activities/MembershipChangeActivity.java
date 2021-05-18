@@ -1,4 +1,4 @@
-package com.brainwellnessspa.BillingOrderModule.Activities;
+package com.brainwellnessspa.billingOrderModule.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
+import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel;
 //import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;

@@ -1,12 +1,12 @@
 package com.brainwellnessspa.Utility;
 
-import com.brainwellnessspa.BillingOrderModule.Models.BillingAddressSaveModel;
-import com.brainwellnessspa.BillingOrderModule.Models.BillingAddressViewModel;
-import com.brainwellnessspa.BillingOrderModule.Models.CancelPlanModel;
-import com.brainwellnessspa.BillingOrderModule.Models.CardModel;
-import com.brainwellnessspa.BillingOrderModule.Models.CurrentPlanVieViewModel;
-import com.brainwellnessspa.BillingOrderModule.Models.PayNowDetailsModel;
-import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
+import com.brainwellnessspa.billingOrderModule.models.BillingAddressSaveModel;
+import com.brainwellnessspa.billingOrderModule.models.BillingAddressViewModel;
+import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel;
+import com.brainwellnessspa.billingOrderModule.models.CardModel;
+import com.brainwellnessspa.billingOrderModule.models.CurrentPlanVieViewModel;
+import com.brainwellnessspa.billingOrderModule.models.PayNowDetailsModel;
+import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel;
 import com.brainwellnessspa.DashboardOldModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardOldModule.Models.AudioInterruptionModel;
 import com.brainwellnessspa.DashboardOldModule.Models.AudioLikeModel;

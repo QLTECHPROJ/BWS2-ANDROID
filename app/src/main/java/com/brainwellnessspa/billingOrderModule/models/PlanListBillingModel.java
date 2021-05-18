@@ -1,4 +1,4 @@
-package com.brainwellnessspa.BillingOrderModule.Models;
+package com.brainwellnessspa.billingOrderModule.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

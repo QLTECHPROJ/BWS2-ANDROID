@@ -14,7 +14,8 @@
             android:id="@+id/ivBgChange"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_conflower_blue_bg" />
+            android:background="@drawable/ic_conflower_blue_bg"
+            android:contentDescription="@string/todo" />
 
         <LinearLayout
             android:id="@+id/rlLayout"
@@ -27,13 +28,13 @@
                 android:id="@+id/llBack"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_centerVertical="true"
                 android:layout_weight="0.1"
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/ic_close_white_icon"
                     app:tint="@color/white" />
 
@@ -42,29 +43,27 @@
             <TextView
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_centerVertical="true"
                 android:layout_weight="0.7"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Ultimate anger relief"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
             <RelativeLayout
                 android:id="@+id/llDownload"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_centerVertical="true"
                 android:layout_weight="0.1"
                 android:gravity="center">
-
 
                 <ImageView
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_centerInParent="true"
                     android:layout_margin="@dimen/_4sdp"
-                    android:background="@drawable/download_bg" />
+                    android:background="@drawable/download_bg"
+                    android:contentDescription="@string/todo" />
 
                 <ProgressBar
                     android:id="@+id/pbProgress"
@@ -77,13 +76,15 @@
                     android:indeterminateTint="@color/dark_yellow"
                     android:max="100"
                     android:progressDrawable="@drawable/circular_progress_barsm"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:targetApi="lollipop" />
 
                 <ImageView
                     android:id="@+id/ivDownloads"
                     android:layout_width="@dimen/_31sdp"
                     android:layout_height="@dimen/_31sdp"
                     android:layout_centerInParent="true"
+                    android:contentDescription="@string/todo"
                     android:padding="@dimen/_9sdp"
                     android:src="@drawable/ic_white_download_icon"
                     app:tint="@color/white" />
@@ -100,11 +101,13 @@
                 <ImageView
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
-                    android:background="@drawable/download_bg" />
+                    android:background="@drawable/download_bg"
+                    android:contentDescription="@string/todo" />
 
                 <ImageView
                     android:layout_width="@dimen/_31sdp"
                     android:layout_height="@dimen/_31sdp"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/ic_white_info_icon"
                     app:tint="@color/white" />
 
@@ -123,24 +126,25 @@
             android:gravity="center"
             android:text=""
             android:textColor="@color/white"
-            android:textSize="@dimen/_25sdp" />
+            android:textSize="@dimen/_25sdp"
+            tools:ignore="SpUsage" />
 
-    <com.google.android.exoplayer2.ui.PlayerControlView
-        android:id="@+id/player_control_view"
-        android:layout_below="@+id/tvAudioName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:controller_layout_id="@layout/audio_player_new_layout"
-        app:fastforward_increment="30000"
-        app:rewind_increment="30000"
-        app:show_fastforward_button="true"
-        app:show_rewind_button="true"
-        android:layout_marginBottom="@dimen/_40sdp"
-        app:show_next_button="false"
-        app:show_previous_button="false"
-        app:show_timeout="0"
-        app:bar_gravity="center"
-        app:use_controller="true" />
+        <com.google.android.exoplayer2.ui.PlayerControlView
+            android:id="@+id/player_control_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAudioName"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/_40sdp"
+            app:bar_gravity="center"
+            app:controller_layout_id="@layout/audio_player_new_layout"
+            app:fastforward_increment="30000"
+            app:rewind_increment="30000"
+            app:show_fastforward_button="true"
+            app:show_next_button="false"
+            app:show_previous_button="false"
+            app:show_rewind_button="true"
+            app:show_timeout="0"
+            app:use_controller="true" />
     </RelativeLayout>
 </layout>
