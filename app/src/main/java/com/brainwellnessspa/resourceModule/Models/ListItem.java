@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ResourceModule.Models;
+package com.brainwellnessspa.resourceModule.Models;
 
 public abstract class ListItem {
     public static final int TYPE_BANNER = 0;

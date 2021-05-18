@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical"
-        tools:context=".DassAssSliderTwo.Activity.DassAssSliderActivity">
+        tools:context=".dassAssSlider.activities.DassAssSliderActivity">
 
 
 <!--        <LinearLayout-->
@@ -190,7 +190,7 @@
                 android:background="@drawable/light_green_rounded_filled"
                 android:fontFamily="@font/montserrat_medium"
                 android:text="Continue"
-                android:textAllCaps="false"
+                android:textAllCaps="true"
                 android:visibility="gone"
                 android:textColor="@color/white" />
 

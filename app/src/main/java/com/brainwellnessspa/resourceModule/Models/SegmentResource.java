@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ResourceModule.Models;
+package com.brainwellnessspa.resourceModule.Models;
 
 public class SegmentResource {
     String resourceId,

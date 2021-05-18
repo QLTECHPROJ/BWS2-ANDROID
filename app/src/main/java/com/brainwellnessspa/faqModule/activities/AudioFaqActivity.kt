@@ -38,7 +38,8 @@ class AudioFaqActivity : AppCompatActivity() {
     private var faqListModel: ArrayList<FaqListModel.ResponseData>? = null
     var flag: String? = null
     var userID: String? = null
-    var section: ArrayList<String>? = null
+    var coUserId: String? = null
+    lateinit var section: ArrayList<String>
     var gsonBuilder: GsonBuilder? = null
     var gson: Gson? = null
     lateinit var p: Properties
@@ -52,6 +53,7 @@ class AudioFaqActivity : AppCompatActivity() {
         faqListModel = ArrayList()
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         if (intent != null) {
             faqListModel = intent.getParcelableArrayListExtra("faqListModel")
             flag = intent.getStringExtra("Flag")
@@ -117,7 +119,7 @@ class AudioFaqActivity : AppCompatActivity() {
         @SuppressLint("ResourceType")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             p = Properties()
-            p.putValue("userId", userID)
+            p.putValue("coUserId", coUserId)
             when {
                 flag.equals("Audio", ignoreCase = true) -> {
                     p.putValue("faqCategory", "Audio")
@@ -130,10 +132,10 @@ class AudioFaqActivity : AppCompatActivity() {
                 }
             }
             for (i in modelList!!.indices) {
-                section!!.add(modelList[position].title.toString())
-                section!!.add(modelList[position].title.toString())
+                section.add(modelList[position].title.toString())
+                section.add(modelList[position].desc.toString())
             }
-            p.putValue("faqDescription", modelList[position].desc)
+            p.putValue("FAQs ", gson!!.toJson(section))
             BWSApplication.addToSegment("FAQ Clicked", p, CONSTANTS.screen)
             holder.binding.tvTitle.text = modelList[position].title
             holder.binding.tvDesc.text = modelList[position].desc

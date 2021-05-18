@@ -6,7 +6,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:focusable="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -59,7 +60,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:overScrollMode="never"
-                        android:paddingBottom="@dimen/_39sdp" />
+                        android:paddingBottom="@dimen/_62sdp" />
                 </LinearLayout>
             </LinearLayout>
 

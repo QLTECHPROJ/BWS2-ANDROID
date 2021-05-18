@@ -1,4 +1,4 @@
-package com.brainwellnessspa.DassAssSliderTwo.Activity
+package com.brainwellnessspa.dassAssSlider.activities
 
 import android.app.Activity
 import android.content.Context
@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DassAssSliderTwo.Model.AssessmentQusModel
-import com.brainwellnessspa.DassAssSliderTwo.Model.PostAssAns
+import com.brainwellnessspa.dassAssSlider.models.AssessmentQusModel
+import com.brainwellnessspa.dassAssSlider.models.PostAssAns
 import com.brainwellnessspa.R
 import com.brainwellnessspa.userModuleTwo.models.AssessmentSaveDataModel
 import com.brainwellnessspa.userModuleTwo.models.OptionsDataListModel

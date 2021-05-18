@@ -1,9 +1,8 @@
-package com.brainwellnessspa.ResourceModule.Fragments
+package com.brainwellnessspa.resourceModule.Fragments
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -16,12 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.ResourceModule.Activities.ResourceDetailsActivity
-import com.brainwellnessspa.ResourceModule.Models.ResourceListModel
+import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
+import com.brainwellnessspa.resourceModule.Models.ResourceListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
-import com.brainwellnessspa.databinding.FragmentPodcastsBinding
-import com.brainwellnessspa.databinding.PodcastsListLayoutBinding
+import com.brainwellnessspa.databinding.FragmentWebsiteBinding
+import com.brainwellnessspa.databinding.WebsiteListLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -31,20 +30,20 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PodcastsFragment : Fragment() {
-    lateinit var binding: FragmentPodcastsBinding
-    var podcasts: String? = null
+class WebsiteFragment : Fragment() {
+    lateinit var binding: FragmentWebsiteBinding
+    var website: String? = null
     var USERID: String? = null
     var CoUserID: String? = null
     var Category: String? = null
     private var mLastClickTime: Long = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_podcasts, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_website, container, false)
         val view = binding.root
         val bundle = this.arguments
         if (bundle != null) {
-            podcasts = bundle.getString("podcasts")
+            website = bundle.getString("website")
             Category = bundle.getString("Category")
         }
         val shared1: SharedPreferences =
@@ -52,8 +51,8 @@ class PodcastsFragment : Fragment() {
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
-        binding.rvPodcastsList.layoutManager = mLayoutManager
-        binding.rvPodcastsList.itemAnimator = DefaultItemAnimator()
+        binding.rvWebsiteList.layoutManager = mLayoutManager
+        binding.rvWebsiteList.itemAnimator = DefaultItemAnimator()
         return view
     }
 
@@ -64,21 +63,21 @@ class PodcastsFragment : Fragment() {
 
     fun prepareData() {
         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-        val listCall = APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_THREE, Category)
+        val listCall = APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_FOUR, Category)
         listCall.enqueue(object : Callback<ResourceListModel?> {
             override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                 try {
                     val listModel = response.body()
                     if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        val adapter = PodcastsAdapter(listModel.responseData, activity, podcasts)
-                        binding.rvPodcastsList.adapter = adapter
+                        val adapter = WebsiteAdapter(listModel.responseData, activity, website)
+                        binding.rvWebsiteList.adapter = adapter
                         if (listModel.responseData!!.isNotEmpty()) {
                             binding.llError.visibility = View.GONE
-                            binding.rvPodcastsList.visibility = View.VISIBLE
+                            binding.rvWebsiteList.visibility = View.VISIBLE
                         } else {
                             binding.llError.visibility = View.VISIBLE
-                            binding.rvPodcastsList.visibility = View.GONE
+                            binding.rvWebsiteList.visibility = View.GONE
                         }
                     }else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)){
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -94,31 +93,32 @@ class PodcastsFragment : Fragment() {
         })
     }
 
-    inner class PodcastsAdapter(private val listModelList: List<ResourceListModel.ResponseData>?, var ctx: Context?, var podcasts: String?) : RecyclerView.Adapter<PodcastsAdapter.MyViewHolder>() {
+    inner class WebsiteAdapter(private val listModelList: List<ResourceListModel.ResponseData>?, var ctx: Context?, var podcasts: String?) : RecyclerView.Adapter<WebsiteAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: PodcastsListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.podcasts_list_layout, parent, false)
+            val v: WebsiteListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.website_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModelList!![position].title
-            holder.binding.tvCreator.text = listModelList[position].author
+            if (!listModelList[position].description.equals("", ignoreCase = true)) {
+                holder.binding.tvCreator.visibility = View.VISIBLE
+                holder.binding.tvCreator.text = listModelList[position].description
+            } else {
+                holder.binding.tvCreator.visibility = View.GONE
+            }
             Glide.with(ctx!!).load(listModelList[position].image).thumbnail(0.05f)
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(12))).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                holder.binding.rlMainLayout.elevation = 10f
-            }
             holder.binding.rlMainLayout.setOnClickListener {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return@setOnClickListener
                 }
                 mLastClickTime = SystemClock.elapsedRealtime()
                 val i = Intent(activity, ResourceDetailsActivity::class.java)
-                i.putExtra("podcasts", podcasts)
+                i.putExtra("website", website)
                 i.putExtra("id", listModelList[position].iD)
                 i.putExtra("title", listModelList[position].title)
-                i.putExtra("author", listModelList[position].author)
                 i.putExtra("linkOne", listModelList[position].resourceLink1)
                 i.putExtra("linkTwo", listModelList[position].resourceLink2)
                 i.putExtra("image", listModelList[position].detailimage)
@@ -134,6 +134,6 @@ class PodcastsFragment : Fragment() {
             return listModelList!!.size
         }
 
-        inner class MyViewHolder(var binding: PodcastsListLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: WebsiteListLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

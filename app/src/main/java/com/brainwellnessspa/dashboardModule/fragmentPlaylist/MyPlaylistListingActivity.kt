@@ -631,6 +631,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 )
                 binding.llReminder.isEnabled = false
                 binding.llReminder.isClickable = false
+                binding.llPlay.isEnabled = false
+                binding.llPlay.isClickable = false
+                binding.llPause.isEnabled = false
+                binding.llPause.isClickable = false
+                binding.llPlayPause.isEnabled = false
+                binding.llPlayPause.isClickable = false
                 binding.rlSearch.visibility = View.GONE
                 binding.tvTag.visibility = View.GONE
                 binding.llDownloads.visibility = View.VISIBLE
@@ -638,7 +644,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 //                binding.llPlayPause.setVisibility(View.INVISIBLE)
 //                binding.llListing.setVisibility(View.GONE)
 
-                binding.llPlayPause.visibility = View.INVISIBLE
+                binding.llPlayPause.visibility = View.VISIBLE
             } else {
                 binding.llAddAudio.visibility = View.GONE
                 binding.rlSearch.visibility = View.VISIBLE

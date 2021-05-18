@@ -23,6 +23,7 @@ import com.brainwellnessspa.userModuleTwo.models.EditProfileModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityEditProfileBinding
+import com.segment.analytics.Properties
 import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,8 +37,8 @@ class EditProfileActivity : AppCompatActivity() {
     lateinit var ctx: Context
     lateinit var activity: Activity
     lateinit var profileUpdate: String
-    var USERID: String? = null
-    var CoUserID: String? = null
+    var userId: String? = null
+    var coUserId: String? = null
     var UserName: String? = null
     var UserCalendar: String? = null
     var UserMobileNumber: String? = null
@@ -90,10 +91,15 @@ class EditProfileActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_profile)
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         ctx = this@EditProfileActivity
         activity = this@EditProfileActivity
+
+
+        val p = Properties()
+        p.putValue("coUserId", coUserId)
+        BWSApplication.addToSegment("Edit Profile Screen View", p, CONSTANTS.screen)
         binding.ivCheckNumber.visibility = View.VISIBLE
         binding.ivCheckEmail.visibility = View.VISIBLE
         binding.etUser.addTextChangedListener(userTextWatcher)
@@ -133,7 +139,7 @@ class EditProfileActivity : AppCompatActivity() {
                 dob = spf.format(newDate)
             }
             val listCall = APINewClient.getClient().getEditProfile(
-                CoUserID, binding.etUser.text.toString(), dob,
+                coUserId, binding.etUser.text.toString(), dob,
                 binding.etMobileNumber.text.toString(), binding.etEmail.text.toString()
             )
             listCall.enqueue(object : Callback<EditProfileModel> {
@@ -164,13 +170,19 @@ class EditProfileActivity : AppCompatActivity() {
                                 .putEmail(viewModel.responseData!!.email)
                                 .putName(viewModel.responseData!!.name)
                                 .putPhone(viewModel.responseData!!.phoneNumber)
-                                .putValue("coUserId", CoUserID)
-                                .putValue("userId", USERID)
+                                .putValue("coUserId", coUserId)
+                                .putValue("userId", userId)
                                 .putValue("name", viewModel.responseData!!.name)
                                 .putValue("phone", viewModel.responseData!!.phoneNumber)
                                 .putValue("email", viewModel.responseData!!.email)
                         )
-
+                        val p = Properties()
+                        p.putValue("coUserId", coUserId)
+                        p.putValue("name", viewModel.responseData!!.name)
+                        p.putValue("dob", viewModel.responseData!!.dob)
+                        p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
+                        p.putValue("email", viewModel.responseData!!.email)
+                        BWSApplication.addToSegment("Edit Profile Saved", p, CONSTANTS.track)
                         finish()
                     } else {
                         BWSApplication.hideProgressBar(
@@ -196,7 +208,7 @@ class EditProfileActivity : AppCompatActivity() {
     fun profileViewData(ctx: Context) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getCoUserDetails(USERID, CoUserID)
+            val listCall = APINewClient.getClient().getCoUserDetails(userId, coUserId)
             listCall.enqueue(object : Callback<CoUserDetailsModel> {
                 override fun onResponse(
                     call: Call<CoUserDetailsModel>,

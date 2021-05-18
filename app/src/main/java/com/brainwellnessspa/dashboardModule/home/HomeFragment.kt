@@ -30,7 +30,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
-import com.brainwellnessspa.DassAssSliderTwo.Activity.AssProcessActivity
+import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.NotificationListActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
@@ -233,11 +233,12 @@ class HomeFragment : Fragment() {
             val i = Intent(act, NotificationListActivity::class.java)
             startActivity(i)
         }
+        prepareHomeData()
+
         return view
     }
 
     override fun onResume() {
-        prepareHomeData()
         super.onResume()
     }
 
@@ -474,7 +475,7 @@ class HomeFragment : Fragment() {
 
                         GetPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!)
 
-                        BWSApplication.getPastIndexScore(
+                        getPastIndexScore(
                             homelistModel.responseData!!,
                             binding.barChart,
                             act

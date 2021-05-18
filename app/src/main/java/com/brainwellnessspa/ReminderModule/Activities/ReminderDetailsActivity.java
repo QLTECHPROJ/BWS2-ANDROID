@@ -163,7 +163,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             LocalBroadcastManager.getInstance(ctx)
                                     .registerReceiver(listener1,new IntentFilter("Reminder"));
                             p = new Properties();
-                            p.putValue("userId", USERID);
                             p.putValue("coUserId", CoUSERID);
                             if (listModel.getResponseData().size() == 0) {
                                 binding.llError.setVisibility(View.VISIBLE);

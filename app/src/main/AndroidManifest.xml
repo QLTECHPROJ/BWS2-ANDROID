@@ -180,12 +180,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DassAssSliderTwo.Activity.AssProcessActivity"
+            android:name=".dassAssSlider.activities.AssProcessActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DassAssSliderTwo.Activity.DassAssSliderActivity"
+            android:name=".dassAssSlider.activities.DassAssSliderActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -271,7 +271,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ResourceModule.Activities.ResourceDetailsActivity"
+            android:name=".resourceModule.activities.ResourceDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -281,7 +281,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ResourceModule.Activities.ResourceActivity"
+            android:name=".resourceModule.activities.ResourceActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

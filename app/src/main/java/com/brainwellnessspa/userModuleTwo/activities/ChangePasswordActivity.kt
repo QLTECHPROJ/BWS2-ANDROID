@@ -17,6 +17,7 @@ import com.brainwellnessspa.userModuleTwo.models.ChangePasswordModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityChangePasswordBinding
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,6 +71,10 @@ class ChangePasswordActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        val p = Properties()
+        p.putValue("userId", userID)
+        p.putValue("coUserId", coUserID)
+        BWSApplication.addToSegment("Change Password Screen Viewed", p, CONSTANTS.screen)
         binding.etCurrentPswd.transformationMethod = PasswordTransformationMethod.getInstance()
         binding.etNewPswd.transformationMethod = PasswordTransformationMethod.getInstance()
         binding.etConfirmPswd.transformationMethod = PasswordTransformationMethod.getInstance()
@@ -205,6 +210,10 @@ class ChangePasswordActivity : AppCompatActivity() {
                                     ignoreCase = true
                                 )
                             ) {
+                                val p = Properties()
+                                p.putValue("userId", userID)
+                                p.putValue("coUserId", coUserID)
+                                BWSApplication.addToSegment("Password Changed", p, CONSTANTS.track)
                                 finish()
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {

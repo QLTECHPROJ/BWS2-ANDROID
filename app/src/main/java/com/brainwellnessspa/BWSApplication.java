@@ -928,19 +928,21 @@ public class BWSApplication extends Application {
                                                 @Override
                                                 public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
                                                     try {
-                                                        if (response12.isSuccessful()) {
 //                                            MyPlaylistIds = "";
 //                                            deleteFrg = 1;
-                                                            hideProgressBar(progressBar, progressBarHolder, act);
-                                                            SucessModel listModel = response12.body();
-                                                            dialoged.dismiss();
+                                                        SucessModel listModel = response12.body();
+                                                        if (listModel != null) {
+                                                            showToast(listModel.getResponseMessage(), act);
+                                                        }
+                                                        hideProgressBar(progressBar, progressBarHolder, act);
+                                                        dialoged.dismiss();
 //                                                            Fragment audioFragment = new MainPlaylistFragment();
 //                                                            fragmentManager1.beginTransaction()
 //                                                                    .replace(R.id.flContainer, audioFragment)
 //                                                                    .commit();
-                                                            act.finish();
-                                                            dialog.dismiss();
-                                                        }
+                                                        act.finish();
+                                                        dialog.dismiss();
+
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
@@ -1005,7 +1007,7 @@ public class BWSApplication extends Application {
                                                 btnSendCode.setEnabled(false);
                                                 btnSendCode.setTextColor(ctx.getResources().getColor(R.color.white));
                                                 btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
-                                            }else {
+                                            } else {
                                                 btnSendCode.setEnabled(true);
                                                 btnSendCode.setTextColor(ctx.getResources().getColor(R.color.light_black));
                                                 btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
@@ -1443,10 +1445,6 @@ public class BWSApplication extends Application {
             barChart.setData(barData);
             barChart.notifyDataSetChanged();
             barChart.invalidate();
-
-            barChart.animateX(600);
-            barChart.animateY(600);
-            barChart.animateXY(600, 600);
 
             XAxis xl = barChart.getXAxis();
             xl.setGranularity(1f);

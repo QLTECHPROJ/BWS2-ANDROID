@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity
-import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityManageBinding
 import com.brainwellnessspa.databinding.MembershipFaqLayoutBinding
 import com.brainwellnessspa.databinding.PlanListFilteredLayoutBinding
@@ -38,11 +38,11 @@ import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.gson.Gson
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-
 
 class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
     lateinit var binding: ActivityManageBinding
@@ -52,9 +52,9 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
     lateinit var planListAdapter: PlanListAdapter
     lateinit var activity: Activity
     lateinit var i: Intent
-    var USERID: String? = null
-    var CoUserID: String? = null
-    var listModelGloble: PlanlistInappModel? = null
+    var userId: String? = null
+    var coUserId: String? = null
+    var listModelGlobal: PlanlistInappModel? = null
     var value: Int = 2
     var step = 1
     var min = 1
@@ -69,9 +69,12 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
         activity = this@ManageActivity
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         ctx = this@ManageActivity
+
+        val p = Properties()
+        BWSApplication.addToSegment("Manage Plan Screen Viewed", p, CONSTANTS.screen)
 
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
         i = Intent(ctx, OrderSummaryActivity::class.java)
@@ -91,9 +94,9 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
                     binding.tvNoOfPerson.text = value.toString()
                     Log.e("ValueOf", value.toString())
                     listModelList.clear()
-                    for (i1 in listModelGloble!!.responseData!!.plan!!.indices) {
-                        if (listModelGloble!!.responseData!!.plan!![i1].profileCount!! == value.toString()) {
-                            listModelList.add(listModelGloble!!.responseData!!.plan!![i1])
+                    for (i1 in listModelGlobal!!.responseData!!.plan!!.indices) {
+                        if (listModelGlobal!!.responseData!!.plan!![i1].profileCount!! == value.toString()) {
+                            listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                         }
                     }
                     planListAdapter = PlanListAdapter(
@@ -107,9 +110,9 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
                     binding.tvNoOfPerson.text = value.toString()
                     Log.e("ValueOf", value.toString())
                     listModelList.clear()
-                    for (i1 in listModelGloble!!.responseData!!.plan!!.indices) {
-                        if (listModelGloble!!.responseData!!.plan!![i1].profileCount!! == value.toString()) {
-                            listModelList.add(listModelGloble!!.responseData!!.plan!![i1])
+                    for (i1 in listModelGlobal!!.responseData!!.plan!!.indices) {
+                        if (listModelGlobal!!.responseData!!.plan!![i1].profileCount!! == value.toString()) {
+                            listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                         }
                     }
                     planListAdapter = PlanListAdapter(
@@ -133,7 +136,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<PlanlistInappModel> =
-                APINewClient.getClient().getPlanlistInapp(CoUserID)
+                APINewClient.getClient().getPlanlistInapp(coUserId)
             listCall.enqueue(object : Callback<PlanlistInappModel> {
                 override fun onResponse(
                     call: Call<PlanlistInappModel>,
@@ -146,7 +149,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
                             activity
                         )
                         val listModel: PlanlistInappModel = response.body()!!
-                        listModelGloble = response.body()!!
+                        listModelGlobal = response.body()!!
                         if (listModel.responseCode.equals(
                                 getString(R.string.ResponseCodesuccess),
                                 ignoreCase = true
@@ -165,10 +168,10 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                                 .into(binding.ivRestaurantImage)
                             listModelList.clear()
-                            for (i1 in listModelGloble!!.responseData!!.plan!!.indices) {
-                                if (listModelGloble!!.responseData!!.plan!![i1].profileCount!! == value.toString()
+                            for (i1 in listModelGlobal!!.responseData!!.plan!!.indices) {
+                                if (listModelGlobal!!.responseData!!.plan!![i1].profileCount!! == value.toString()
                                 ) {
-                                    listModelList.add(listModelGloble!!.responseData!!.plan!![i1])
+                                    listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                                 }
                             }
 
@@ -319,8 +322,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
         var i: Intent
     ) :
         RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()/*, Filterable */ {
-
-        var row_index: Int = -1
+        private var rowIndex: Int = -1
         private var pos: Int = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: PlanListFilteredLayoutBinding = DataBindingUtil.inflate(
@@ -340,7 +342,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
 
             holder.binding.tvTilte.text = listModelList[position].planInterval
             holder.binding.tvContent.text = listModelList[position].subName
-            holder.binding.tvAmount.text = listModelList[position].planAmount
+            holder.binding.tvAmount.text = "$" + listModelList[position].planAmount
 
             if (listModelList[position].recommendedFlag.equals("1", ignoreCase = true)) {
                 holder.binding.rlMostPopular.visibility = View.VISIBLE
@@ -348,12 +350,12 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
                 holder.binding.rlMostPopular.visibility = View.INVISIBLE
             }
             holder.binding.llPlanMain.setOnClickListener {
-                row_index = position
+                rowIndex = position
                 pos++
                 notifyDataSetChanged()
             }
-            if (row_index == position) {
-                ChangeFunction(holder, listModelList, position)
+            if (rowIndex == position) {
+                changeFunction(holder, listModelList, position)
             } else {
                 if (listModelList[position].recommendedFlag.equals(
                         "1",
@@ -361,7 +363,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
                     ) && pos == 0
                 ) {
                     holder.binding.rlMostPopular.visibility = View.VISIBLE
-                    ChangeFunction(holder, listModelList, position)
+                    changeFunction(holder, listModelList, position)
                 } else {
                     holder.binding.llPlanMain.background =
                         ContextCompat.getDrawable(ctx, R.drawable.light_gray_round_cornors)
@@ -378,7 +380,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
 
         }
 
-        private fun ChangeFunction(
+        private fun changeFunction(
             holder: PlanListAdapter.MyViewHolder,
             listModelList: List<PlanlistInappModel.ResponseData.Plan>,
             position: Int
