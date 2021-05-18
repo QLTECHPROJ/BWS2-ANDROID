@@ -192,7 +192,7 @@ class HomeFragment : Fragment() {
 
         binding.llBottomView.setOnClickListener { v: View? ->
             val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(activity),
+                LayoutInflater.from(act),
                 R.layout.user_list_custom_layout,
                 null,
                 false
@@ -203,7 +203,7 @@ class HomeFragment : Fragment() {
             mBottomSheetBehavior!!.isHideable = true
             mBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetDialog!!.show()
-            val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
+            val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(act)
             layoutBinding.rvUserList.layoutManager = mLayoutManager
             layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
             prepareUserData(
@@ -212,7 +212,7 @@ class HomeFragment : Fragment() {
                 layoutBinding.llAddNewUser
             )
             layoutBinding.llAddNewUser.setOnClickListener { v1: View? ->
-                val i = Intent(activity, AddProfileActivity::class.java)
+                val i = Intent(act, AddProfileActivity::class.java)
                 i.putExtra("AddProfile", "Add")
                 i.putExtra("CoUserID", "")
                 i.putExtra("CoEMAIL", "")
@@ -224,13 +224,13 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivEditCategory.setOnClickListener {
-            val i = Intent(activity, RecommendedCategoryActivity::class.java)
+            val i = Intent(act, RecommendedCategoryActivity::class.java)
             i.putExtra("BackClick", "1")
             startActivity(i)
         }
 
         binding.llClick.setOnClickListener {
-            val i = Intent(activity, NotificationListActivity::class.java)
+            val i = Intent(act, NotificationListActivity::class.java)
             startActivity(i)
         }
         return view
@@ -252,7 +252,7 @@ class HomeFragment : Fragment() {
         progressBar: ProgressBar,
         llAddNewUser: LinearLayout
     ) {
-        if (isNetworkConnected(activity)) {
+        if (isNetworkConnected(act)) {
             progressBar.visibility = View.VISIBLE
             progressBar.invalidate()
             val listCall = APINewClient.getClient().getUserList(USERID)
@@ -330,8 +330,8 @@ class HomeFragment : Fragment() {
             val sharedPreferences3 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
             fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")
         }
-        if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (BWSApplication.isNetworkConnected(act)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall = APINewClient.getClient().getHomeScreenData(CoUSERID)
             listCall.enqueue(object : Callback<HomeScreenModel?> {
                 @SuppressLint("ResourceAsColor")
@@ -343,7 +343,7 @@ class HomeFragment : Fragment() {
                         hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
-                            activity
+                            act
                         )
                         val listModel = response.body()!!
                         val gson = Gson()
@@ -449,7 +449,7 @@ class HomeFragment : Fragment() {
                                     CoUSERID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                    activity,
+                                    activity!!,
                                     listModel.responseData!!.suggestedPlaylist!!.reminderTime,
                                     listModel.responseData!!.suggestedPlaylist!!.reminderDay
                                 )
@@ -465,7 +465,7 @@ class HomeFragment : Fragment() {
                                     CoUSERID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                    activity,
+                                    activity!!,
                                     listModel.responseData!!.suggestedPlaylist!!.reminderTime,
                                     listModel.responseData!!.suggestedPlaylist!!.reminderDay
                                 )
@@ -477,7 +477,7 @@ class HomeFragment : Fragment() {
                         BWSApplication.getPastIndexScore(
                             homelistModel.responseData!!,
                             binding.barChart,
-                            activity
+                            act
                         )
 
                         setPlayPauseIcon()
@@ -561,7 +561,7 @@ class HomeFragment : Fragment() {
                                         "",
                                         listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
                                         ctx,
-                                        activity,
+                                        act,
                                         listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!
                                     )
                                     binding.llPlay.visibility = View.GONE
@@ -605,7 +605,7 @@ class HomeFragment : Fragment() {
                     hideProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
-                        activity
+                        act
                     )
                 }
             })
@@ -682,7 +682,7 @@ class HomeFragment : Fragment() {
         view: String?,
         listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
         ctx: Context,
-        activity: FragmentActivity?,
+        act: Activity?,
         playlistID: String
     ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
@@ -707,10 +707,10 @@ class HomeFragment : Fragment() {
                         } else {
                             DashboardActivity.audioClick = true
                         }
-                        callMyPlayer(ctx, act)
+                        callMyPlayer(ctx, act!!)
                         BWSApplication.showToast(
                                 "The audio shall start playing after the disclaimer",
-                                activity
+                                act
                         )
                     } else {
                         if (player != null) {
@@ -725,9 +725,9 @@ class HomeFragment : Fragment() {
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                                 editor.apply()
                             }
-                            callMyPlayer(ctx, act)
+                            callMyPlayer(ctx, act!!)
                         } else {
-                            callPlayerSuggested(position, view, listModel, ctx, act, playlistID, true)
+                            callPlayerSuggested(position, view, listModel, ctx, act!!, playlistID, true)
                         }
                     }
                 } else {
@@ -769,10 +769,10 @@ class HomeFragment : Fragment() {
                             listModelList2.add(position, mainPlayModel)
                         }
                     }
-                    callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID, audioc)
+                    callPlayerSuggested(position, view, listModelList2, ctx, act!!, playlistID, audioc)
                 }
             }else{
-                getAllCompletedMedia(AudioPlayerFlag,playlistID,position,listModel)
+                getAllCompletedMedia(AudioPlayerFlag,playlistID,position,listModel,ctx, act!!)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
@@ -788,10 +788,10 @@ class HomeFragment : Fragment() {
                     } else {
                         DashboardActivity.audioClick = true
                     }
-                    callMyPlayer(ctx, act)
+                    callMyPlayer(ctx, act!!)
                     BWSApplication.showToast(
                         "The audio shall start playing after the disclaimer",
-                        activity
+                        act
                     )
                 } else {
                     if (player != null) {
@@ -806,9 +806,9 @@ class HomeFragment : Fragment() {
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                             editor.apply()
                         }
-                        callMyPlayer(ctx, act)
+                        callMyPlayer(ctx, act!!)
                     } else {
-                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID,true)
+                        callPlayerSuggested(position, view, listModel, ctx, act!!, playlistID,true)
                     }
                 }
             } else {
@@ -850,11 +850,11 @@ class HomeFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID,audioc)
+                callPlayerSuggested(position, view, listModelList2, ctx, act!!, playlistID,audioc)
             }
         }
     }
- private fun getAllCompletedMedia(AudioFlag: String?, pID: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
+ private fun getAllCompletedMedia(AudioFlag: String?, pID: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,ctx:Context,act:Activity) {
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase::class.java,
                 "Audio_database")
@@ -879,7 +879,7 @@ class HomeFragment : Fragment() {
                     audioClick = true
                 }
                 callMyPlayer(ctx, act)
-                BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                BWSApplication.showToast("The audio shall start playing after the disclaimer", act)
             } else {
                 val listModelList2 =arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 var view = ""
@@ -895,11 +895,11 @@ class HomeFragment : Fragment() {
                         if (listModelList2.size != 0) {
                             callPlayerSuggested(pos, "", listModelList2, ctx, act,  pID, true)
                         } else {
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else {
 //                                pos = 0;
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 }
 //                SegmentTag()
@@ -954,18 +954,18 @@ class HomeFragment : Fragment() {
                         if (listModelList2.size != 0) {
                             callPlayerSuggested(pos, "", listModelList2, ctx, act,pID, audioc)
                         } else {
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
                         callPlayerSuggested(pos, "", listModelList2, ctx, act,pID, audioc)
                     } else {
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                 }
             } else {
-                BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
             }
 //            SegmentTag()
         }
@@ -1126,7 +1126,7 @@ class HomeFragment : Fragment() {
             } else {
                 holder.bind.ivProfileImage.setVisibility(View.VISIBLE)
                 holder.bind.rlLetter.visibility = View.GONE
-                Glide.with(activity!!).load(modelList[position].image)
+                Glide.with(act!!).load(modelList[position].image)
                     .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
                     .into(holder.bind.ivProfileImage)
             }
@@ -1141,7 +1141,7 @@ class HomeFragment : Fragment() {
                 selectedItem = position
                 notifyItemChanged(previousItem)
                 notifyItemChanged(position)
-                val dialog = Dialog(activity!!)
+                val dialog = Dialog(act!!)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.comfirm_pin_layout)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1219,7 +1219,7 @@ class HomeFragment : Fragment() {
                         txtError.visibility = View.VISIBLE
                         txtError.text = "Please enter OTP"
                     } else {
-                        if (BWSApplication.isNetworkConnected(activity)) {
+                        if (BWSApplication.isNetworkConnected(act)) {
                             txtError.visibility = View.GONE
                             txtError.text = ""
                             progressBar.visibility = View.VISIBLE
@@ -1254,7 +1254,7 @@ class HomeFragment : Fragment() {
                                                 ) {
                                                     val intent =
                                                         Intent(
-                                                            activity,
+                                                            act,
                                                             WalkScreenActivity::class.java
                                                         )
                                                     intent.putExtra(
@@ -1270,7 +1270,7 @@ class HomeFragment : Fragment() {
                                                 ) {
                                                     val intent =
                                                         Intent(
-                                                            activity,
+                                                            act,
                                                             AssProcessActivity::class.java
                                                         )
                                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
@@ -1286,7 +1286,7 @@ class HomeFragment : Fragment() {
                                                     )
                                                 ) {
                                                     val intent = Intent(
-                                                        activity,
+                                                        act,
                                                         BottomNavigationActivity::class.java
                                                     )
                                                     act.startActivity(intent)
@@ -1352,7 +1352,7 @@ class HomeFragment : Fragment() {
                                                 prepareHomeData()
                                                 showToast(
                                                     listModel.responseMessage,
-                                                    activity
+                                                    act
                                                 )
                                                 dialog.dismiss()
                                                 mBottomSheetDialog!!.hide()
@@ -1372,7 +1372,7 @@ class HomeFragment : Fragment() {
                                                         )
                                                         .putValue(
                                                             "deviceId", Settings.Secure.getString(
-                                                                activity!!.contentResolver,
+                                                                act!!.contentResolver,
                                                                 Settings.Secure.ANDROID_ID
                                                             )
                                                         )
@@ -1537,10 +1537,10 @@ class HomeFragment : Fragment() {
             }
 
         private fun hideKeyboard() {
-            if (activity!!.currentFocus != null) {
+            if (act!!.currentFocus != null) {
                 val inputMethodManager =
-                    activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(activity!!.currentFocus!!.windowToken, 0)
+                    act!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(act!!.currentFocus!!.windowToken, 0)
             }
         }
 

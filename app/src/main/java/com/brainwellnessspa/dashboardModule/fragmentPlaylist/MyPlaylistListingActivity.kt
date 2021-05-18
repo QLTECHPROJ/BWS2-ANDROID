@@ -244,7 +244,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             AudioDatabase::class.java,
             "Audio_database"
         )
-            .addMigrations(BWSApplication.MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2)
             .build()
         binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -364,7 +364,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 playlistSongsList,
                                 0,
                                 binding.llDownloads,
-                                binding.ivDownloads
+                                binding.ivDownloads,
+                                        ctx,activity
                             )
                         }
                         if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
@@ -1981,7 +1982,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         playlistSongs: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>,
         position: Int,
         llDownload: RelativeLayout,
-        ivDownloads: ImageView
+        ivDownloads: ImageView,
+        ctx:Context,
+        act: Activity
     ) {
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             val url = arrayListOf<String>()
@@ -2039,7 +2042,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 if (!DownloadMedia.isDownloading) {
                     DownloadMedia.isDownloading = true
                     val downloadMedia =
-                        DownloadMedia(applicationContext, this@MyPlaylistListingActivity)
+                        DownloadMedia(ctx, act)
                     downloadMedia.encrypt1(url, name, downloadPlaylistId)
                 }
                 val shared: SharedPreferences =
@@ -2106,7 +2109,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (!DownloadMedia.isDownloading) {
                         DownloadMedia.isDownloading = true
                         val downloadMedia =
-                            DownloadMedia(getApplicationContext(), this@MyPlaylistListingActivity)
+                            DownloadMedia(ctx, act)
                         downloadMedia.encrypt1(url, name, downloadPlaylistId /*, playlistSongs*/)
                     }
                     val shared: SharedPreferences =
@@ -2414,7 +2417,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 if (audioList.size != 0) {
                     GetSingleMedia(
                         audioList[0].audioFile,
-                        getApplicationContext(),
+                            applicationContext,
                         playlistID,
                         audioList,
                         0

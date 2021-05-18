@@ -765,7 +765,8 @@ class MyPlayerActivity : AppCompatActivity() {
 //                } else if (AudioFragment.IsLock.equals("2", ignoreCase = true)) {
 //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx)
 //                } else {
-                callDownload()
+                    if(!mainPlayModelList[position].id.equals("0"))
+                        callDownload()
 //                }
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), act)
