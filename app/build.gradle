@@ -89,6 +89,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.32"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
+    implementation 'com.google.apis:google-api-services-androidpublisher:v3-rev20210429-1.31.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
 // TODO  Constraint's Dependency
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

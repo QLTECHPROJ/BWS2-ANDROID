@@ -31,10 +31,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-import com.android.billingclient.api.BillingFlowParams
 
-
-class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
+class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,PurchaseHistoryResponseListener{
     var binding: ActivityOrderSummaryBinding? = null
     var TrialPeriod: String? = null
     var comeFrom:String? = ""
@@ -53,11 +51,22 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
     var sku=""
     lateinit var billingClient:BillingClient
     val gson = Gson()
+    //TODO : Oth Client ID
+    //861076939494-lg98i6qsqreefk9ftjslerikvtj0ot34.apps.googleusercontent.com
+//ids
+ /*   MD5: 4D:09:22:47:FD:AD:E3:8B:DD:61:4F:65:BA:66:99:37
+    SHA1: F5:37:43:D2:FC:73:4E:6C:51:8C:D7:E7:BE:88:D7:3A:4E:BC:37:4F
+    SHA-256: 2C:B7:55:77:AC:97:75:10:90:1A:F4:B4:84:33:89:A6:24:56:CF:47:61:F1:D1:46:F7:87:38:71:E4:94:21:23
+*/
     val skuList = listOf(
-            "weekly_2_profile", "weekly_3_profile",
-            "monthly_2_profile", "monthly_3_profile",
-            "six_monthly_2_profile", "six_monthly_3_profile",
-            "annual_2_profile", "annual_3_profile")
+            "weekly_2_profile",
+            "weekly_3_profile",
+            "monthly_2_profile",
+            "monthly_3_profile",
+            "six_monthly_2_profile",
+            "six_monthly_3_profile",
+            "annual_2_profile",
+            "annual_3_profile")
     var activity: Activity? = null
 
 
@@ -428,6 +437,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
                 acknowledgePurchase(purchase.purchaseToken)
+                Log.e("Purchase Token", purchase.purchaseToken)
 
             }
         } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
@@ -443,7 +453,8 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
                 .setPurchaseToken(purchaseToken)
                 .build()
         billingClient.acknowledgePurchase(params) { billingResult ->
-            val responseCode = billingResult.responseCode
+
+         /*   val responseCode = billingResult.responseCode
             val debugMessage = billingResult.debugMessage
             val i = Intent(ctx, ThankYouMpActivity::class.java)
             i.putExtra("Name", "")
@@ -454,7 +465,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
             i.putExtra("position", position)
             i.putExtra("Promocode", Promocode)
             startActivity(i)
-            finish()
+            finish()*/
 
             val p = Properties()
             p.putValue("coUserId",CoUserID)
@@ -471,5 +482,9 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
             }
             BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
         }
+    }
+
+    override fun onPurchaseHistoryResponse(p0: BillingResult, p1: MutableList<PurchaseHistoryRecord>?) {
+
     }
 }
