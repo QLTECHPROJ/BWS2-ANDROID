@@ -130,7 +130,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/circular_shapem"
                 android:indeterminate="false"
-                android:indeterminateTint="@color/dark_yellow"
+                android:indeterminateTint="@color/progressfilled"
                 android:max="100"
                 android:progressDrawable="@drawable/circular_progress_barm"
                 android:visibility="gone"

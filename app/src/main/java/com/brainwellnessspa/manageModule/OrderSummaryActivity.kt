@@ -95,6 +95,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
         }
         binding!!.edtCode.addTextChangedListener(promoCodeTextWatcher)
         val p = Properties()
+        p.putValue("coUserId",CoUserID)
         if (!comeFrom.equals("", ignoreCase = true)) {
             val gson: Gson
             val gsonBuilder = GsonBuilder()
@@ -166,7 +167,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
                 finish()
             }
         }
-        binding!!.btnApply.setOnClickListener { v -> prepareCheckReferCode(binding!!.edtCode.text.toString()) }
+        binding!!.btnApply.setOnClickListener { prepareCheckReferCode(binding!!.edtCode.text.toString()) }
         /*binding!!.btnCheckout.setOnClickListener { view ->
             try {
                   if (binding!!.edtCode.getText().toString().equalsIgnoreCase("")) {
@@ -343,6 +344,21 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
                                     .setSkuDetails(skuDetails)
                                     .build()
                             billingClient.launchBillingFlow(this, billingFlowParams)
+
+                        val p = Properties()
+                        p.putValue("coUserId",CoUserID)
+                        if (!comeFrom.equals("", ignoreCase = true)) {
+                            val gson: Gson
+                            val gsonBuilder = GsonBuilder()
+                            gson = gsonBuilder.create()
+                            p.putValue("plan", gson.toJson(listModelList2))
+                        } else {
+                            val gson: Gson
+                            val gsonBuilder = GsonBuilder()
+                            gson = gsonBuilder.create()
+                            p.putValue("plan", gson.toJson(listModelList))
+                        }
+                        BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
                         }
                 }
             }
@@ -440,7 +456,20 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener {
             startActivity(i)
             finish()
 
-
+            val p = Properties()
+            p.putValue("coUserId",CoUserID)
+            if (!comeFrom.equals("", ignoreCase = true)) {
+                val gson: Gson
+                val gsonBuilder = GsonBuilder()
+                gson = gsonBuilder.create()
+                p.putValue("plan", gson.toJson(listModelList2))
+            } else {
+                val gson: Gson
+                val gsonBuilder = GsonBuilder()
+                gson = gsonBuilder.create()
+                p.putValue("plan", gson.toJson(listModelList))
+            }
+            BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
         }
     }
 }

@@ -435,7 +435,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
                         GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                         Properties p = new Properties();
-                        p.putValue("userId", UserID);
+                        p.putValue("coUserId", CoUserID);
                         p.putValue("playlistId", listModelList.get(position).getPlaylistID());
                         p.putValue("playlistName", listModelList.get(position).getPlaylistName());
                         if (listModelList.get(position).getCreated().equalsIgnoreCase("1")) {

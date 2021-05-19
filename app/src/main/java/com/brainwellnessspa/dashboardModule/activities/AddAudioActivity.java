@@ -56,6 +56,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +96,7 @@ public class AddAudioActivity extends AppCompatActivity {
     GsonBuilder gsonBuilder;
     ArrayList<String> section;
     //    private Runnable UpdateSongTime3;
-    private BroadcastReceiver listener = new BroadcastReceiver() {
+    private final BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra("MyData")) {
@@ -188,9 +190,7 @@ public class AddAudioActivity extends AppCompatActivity {
             }
         });
 
-        binding.llBack.setOnClickListener(view -> {
-            callback();
-        });
+        binding.llBack.setOnClickListener(view -> callback());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
@@ -244,7 +244,7 @@ public class AddAudioActivity extends AppCompatActivity {
             Call<SearchBothModel> listCall = APINewClient.getClient().getSearchBoth(CoUSERID, search);
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
-                public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {
+                public void onResponse(@NotNull Call<SearchBothModel> call, @NotNull Response<SearchBothModel> response) {
                     try {
                         SearchBothModel listModel = response.body();
                         if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
@@ -274,7 +274,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<SearchBothModel> call, Throwable t) {
+                public void onFailure(@NotNull Call<SearchBothModel> call, @NotNull Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
@@ -303,7 +303,7 @@ public class AddAudioActivity extends AppCompatActivity {
             Call<SuggestedModel> listCall = APINewClient.getClient().getSuggestedLists(CoUSERID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
-                public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
+                public void onResponse(@NotNull Call<SuggestedModel> call, @NotNull Response<SuggestedModel> response) {
                     try {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -352,7 +352,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<SuggestedModel> call, Throwable t) {
+                public void onFailure(@NotNull Call<SuggestedModel> call, @NotNull Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
@@ -418,7 +418,7 @@ public class AddAudioActivity extends AppCompatActivity {
             Call<AddToPlaylistModel> listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(CoUSERID, AudioID, PlaylistID, FromPlaylistId);
             listCall.enqueue(new Callback<AddToPlaylistModel>() {
                 @Override
-                public void onResponse(Call<AddToPlaylistModel> call, Response<AddToPlaylistModel> response) {
+                public void onResponse(@NotNull Call<AddToPlaylistModel> call, @NotNull Response<AddToPlaylistModel> response) {
                     try {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -514,7 +514,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<AddToPlaylistModel> call, Throwable t) {
+                public void onFailure(@NotNull Call<AddToPlaylistModel> call, @NotNull Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
@@ -558,7 +558,7 @@ public class AddAudioActivity extends AppCompatActivity {
             holder.binding.tvTitle.setText(modelList.get(position).getName());
 
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
-                holder.binding.tvPart.setText(R.string.Audio);
+                holder.binding.tvPart.setText(modelList.get(position).getAudioDuration());
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.GONE);
                 SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);

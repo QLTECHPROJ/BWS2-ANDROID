@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.fragmentPlaylist
+package com.brainwellnessspa.dashboardModule.manage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

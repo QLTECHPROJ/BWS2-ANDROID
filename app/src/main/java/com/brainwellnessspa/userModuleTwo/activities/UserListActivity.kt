@@ -399,6 +399,10 @@ class UserListActivity : AppCompatActivity() {
                                                                     listModel.responseData!!.name
                                                             )
                                                             editor.putString(
+                                                                CONSTANTS.PREFE_ACCESS_MOBILE,
+                                                                listModel.responseData!!.mobile
+                                                            )
+                                                            editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                                                                     responseData.avgSleepTime
                                                             )

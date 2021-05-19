@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -78,6 +79,8 @@ public class AudioDownloadsFragment extends Fragment {
     String UserID,CoUserID, IsPlayDisclimer;
     AudioDownlaodsAdapter adapter;
     boolean isThreadStart = false;
+    public AudioManager audioManager;
+    public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
     //    Runnable UpdateSongTime1;
     View view;
@@ -108,7 +111,7 @@ public class AudioDownloadsFragment extends Fragment {
             }
         }
     };
-    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+    private final BroadcastReceiver listener1 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             getDownloadData();
@@ -133,7 +136,11 @@ public class AudioDownloadsFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE);
         UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
-
+        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        percent = 100;
+        hundredVolume = (int) (currentVolume * percent) / maxVolume;
 //        handler1 = new Handler();
 
         DB = Room.databaseBuilder(getActivity(),
@@ -193,7 +200,7 @@ public class AudioDownloadsFragment extends Fragment {
 
     private void getDownloadData() {
         try {
-            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedy = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
             Gson gson = new Gson();
             String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
             String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
@@ -774,7 +781,7 @@ public class AudioDownloadsFragment extends Fragment {
                     int pos = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     try {
                         Properties p = new Properties();
-                        p.putValue("userId", UserID);
+                        p.putValue("coUserId", CoUserID);
                         p.putValue("audioId", listModelList.get(position).getID());
                         p.putValue("audioName", listModelList.get(position).getName());
                         p.putValue("audioDescription", "");
@@ -785,6 +792,7 @@ public class AudioDownloadsFragment extends Fragment {
                         p.putValue("audioService", appStatus(getActivity()));
                         p.putValue("audioType", "Downloaded");
                         p.putValue("bitRate", "");
+                        p.putValue("sound", String.valueOf(hundredVolume));
                         BWSApplication.addToSegment("Downloaded Audio Removed", p, CONSTANTS.track);
                     } catch (Exception e) {
                         e.printStackTrace();

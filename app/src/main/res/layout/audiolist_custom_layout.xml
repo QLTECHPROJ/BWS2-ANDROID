@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rlMainLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,9 +39,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:paddingTop="@dimen/_7sdp"
-                android:paddingBottom="@dimen/_6sdp"
+                android:paddingBottom="@dimen/_2sdp"
                 android:paddingHorizontal="@dimen/_7sdp"
-                android:weightSum="1">
+                android:weightSum="1"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -59,13 +61,14 @@
                         android:ellipsize="end"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:gravity="start"
-                        android:maxLines="3"
+                        android:maxLines="2"
                         android:paddingLeft="@dimen/_2sdp"
                         android:paddingTop="@dimen/_8sdp"
                         android:paddingRight="@dimen/_2sdp"
                         android:paddingBottom="@dimen/_8sdp"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -85,7 +88,8 @@
                         android:layout_height="@dimen/_24sdp"
                         android:src="@drawable/ic_menu_icon"
                         app:tint="@color/white"
-                        android:layout_marginBottom="@dimen/_6sdp"/>
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:contentDescription="@string/todo" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -100,16 +104,16 @@
                 android:gravity="center|bottom"
                 android:paddingBottom="@dimen/_13sdp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="SpUsage" />
 
             <ImageView
                 android:id="@+id/ivLock"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:layout_marginLeft="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/todo"
                 android:src="@drawable/ic_lock_icon"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"

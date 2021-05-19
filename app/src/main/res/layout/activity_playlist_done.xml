@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".dashboardModule.fragmentPlaylist.PlaylistDoneActivity">
+        tools:context=".dashboardModule.manage.PlaylistDoneActivity">
 
         <LinearLayout
             android:id="@+id/llContinue"

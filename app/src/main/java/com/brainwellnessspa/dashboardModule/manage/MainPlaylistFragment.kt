@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.fragmentPlaylist
+package com.brainwellnessspa.dashboardModule.manage
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -31,7 +31,6 @@ import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetailsUnique
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
-import com.brainwellnessspa.dashboardModule.manage.ManageFragment
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.MainPlaylistLibraryModel
 import com.brainwellnessspa.databinding.FragmentPlaylistBinding
@@ -313,7 +312,8 @@ class MainPlaylistFragment : Fragment() {
                 holder.binding.tvViewAll.visibility = (View.GONE)
             }
             holder.binding.tvViewAll.setOnClickListener {
-                val viewAllPlaylistFragment: Fragment = ViewAllPlaylistFragment()
+                val viewAllPlaylistFragment: Fragment =
+                    ViewAllPlaylistFragment()
                 val fragmentManager1: FragmentManager =
                     (ctx as FragmentActivity).supportFragmentManager
                 fragmentManager1.beginTransaction()
@@ -561,7 +561,7 @@ class MainPlaylistFragment : Fragment() {
                 (measureRatio1.widthImg * measureRatio1.ratio).toInt()
             holder.binding.tvPlaylistName.text = listModel[position].playlistName
             Glide.with(ctx).load(listModel[position].playlistImage).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(38))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
 

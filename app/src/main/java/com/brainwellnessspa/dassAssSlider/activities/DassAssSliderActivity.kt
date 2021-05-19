@@ -1,15 +1,21 @@
 package com.brainwellnessspa.dassAssSlider.activities
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -17,16 +23,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dassAssSlider.models.AssessmentQusModel
-import com.brainwellnessspa.dassAssSlider.models.PostAssAns
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModuleTwo.models.AssessmentSaveDataModel
-import com.brainwellnessspa.userModuleTwo.models.OptionsDataListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dassAssSlider.models.AssessmentQusModel
+import com.brainwellnessspa.dassAssSlider.models.PostAssAns
 import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
 import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
+import com.brainwellnessspa.userModuleTwo.models.AssessmentSaveDataModel
+import com.brainwellnessspa.userModuleTwo.models.OptionsDataListModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
@@ -45,6 +51,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     private var postAssAns = arrayListOf<PostAssAns>()
     lateinit var listModel1: AssessmentQusModel
     lateinit var activity: Activity
+    lateinit var exitDialog: Dialog
     var myPos: Int = 0
     var USERID: String? = ""
     var CoUserID: String? = ""
@@ -79,15 +86,25 @@ class DassAssSliderActivity : AppCompatActivity() {
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     binding.btnNext.visibility = View.GONE
                     binding.btnContinue.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.btnNext.visibility = View.VISIBLE
                     binding.btnContinue.visibility = View.GONE
                 }
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
+                    firstListAdapter = OptionsFirstListAdapter(
+                        listModel1.responseData!!.questions!!.subList(
+                            myPos,
+                            myPos + 1
+                        ), myPos, myPos + 1, ctx, binding, activity
+                    )
                     binding.rvFirstList.adapter = firstListAdapter
                 } else {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
+                    firstListAdapter = OptionsFirstListAdapter(
+                        listModel1.responseData!!.questions!!.subList(
+                            myPos,
+                            myPos + 2
+                        ), myPos, myPos + 2, ctx, binding, activity
+                    )
                     binding.rvFirstList.adapter = firstListAdapter
                 }
             }
@@ -121,16 +138,52 @@ class DassAssSliderActivity : AppCompatActivity() {
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                 binding.btnNext.visibility = View.GONE
                 binding.btnContinue.visibility = View.VISIBLE
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
+                firstListAdapter = OptionsFirstListAdapter(
+                    listModel1.responseData!!.questions!!.subList(
+                        myPos,
+                        myPos + 1
+                    ), myPos, myPos + 1, ctx, binding, activity
+                )
                 binding.rvFirstList.adapter = firstListAdapter
             } else {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnContinue.visibility = View.GONE
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
+                firstListAdapter = OptionsFirstListAdapter(
+                    listModel1.responseData!!.questions!!.subList(
+                        myPos,
+                        myPos + 2
+                    ), myPos, myPos + 2, ctx, binding, activity
+                )
                 binding.rvFirstList.adapter = firstListAdapter
             }
         } else {
-            finish()
+            exitDialog = Dialog(activity)
+            exitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            exitDialog.setContentView(R.layout.logout_layout)
+            exitDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            exitDialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val tvGoBack: TextView = exitDialog.findViewById(R.id.tvGoBack)
+            val tvTitle: TextView = exitDialog.findViewById(R.id.tvTitle)
+            val tvHeader: TextView = exitDialog.findViewById(R.id.tvHeader)
+            val btn: Button = exitDialog.findViewById(R.id.Btn)
+            tvTitle.text ="Brain Wellness App"
+            tvHeader.text ="Are you sure you want to exit the app?"
+            exitDialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    exitDialog.hide()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+
+            btn.setOnClickListener { v: View? ->
+                exitDialog.hide()
+                finishAffinity()
+            }
+
+            tvGoBack.setOnClickListener { exitDialog.hide() }
+            exitDialog.show()
+            exitDialog.setCancelable(true)
         }
     }
 
@@ -152,12 +205,23 @@ class DassAssSliderActivity : AppCompatActivity() {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<AssessmentQusModel> = APINewClient.getClient().assessmentQus
             listCall.enqueue(object : Callback<AssessmentQusModel> {
-                override fun onResponse(call: Call<AssessmentQusModel>, response: Response<AssessmentQusModel>) {
+                override fun onResponse(
+                    call: Call<AssessmentQusModel>,
+                    response: Response<AssessmentQusModel>
+                ) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            activity
+                        )
                         val listModel: AssessmentQusModel = response.body()!!
                         listModel1 = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.responseCode.equals(
+                                getString(R.string.ResponseCodesuccess),
+                                ignoreCase = true
+                            )
+                        ) {
                             var condition: String? = ""
                             for (i in 0 until listModel.responseData!!.content?.size!!) {
                                 condition += listModel.responseData!!.content!![i].condition + "\n"
@@ -169,7 +233,12 @@ class DassAssSliderActivity : AppCompatActivity() {
 //                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString()
                             if (myPos < listModel.responseData!!.questions!!.size) {
 //                                if(myPos ==)
-                                firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
+                                firstListAdapter = OptionsFirstListAdapter(
+                                    listModel.responseData!!.questions!!.subList(
+                                        myPos,
+                                        myPos + 2
+                                    ), myPos, myPos + 2, ctx, binding, activity
+                                )
                                 binding.rvFirstList.adapter = firstListAdapter
                             }
                             BWSApplication.showToast(listModel.responseMessage, activity)
@@ -183,7 +252,11 @@ class DassAssSliderActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AssessmentQusModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
             })
         } else {
@@ -193,13 +266,26 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
 
-    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, val myPos: Int, val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(
+        private val listModel: List<AssessmentQusModel.ResponseData.Questions>?,
+        val myPos: Int,
+        val mypos2: Int,
+        private val ctx: Context,
+        var binding: ActivityDassAssSliderBinding,
+        val activity: Activity
+    ) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var dass = DassAssSliderActivity()
 
-        inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
+        inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) :
+            RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: FormFillSubBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.form_fill_sub, parent, false)
+            val v: FormFillSubBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.form_fill_sub,
+                parent,
+                false
+            )
             return MyViewHolder(v)
         }
 
@@ -213,9 +299,23 @@ class DassAssSliderActivity : AppCompatActivity() {
                 holder.bindingAdapter.tvSecond.text = listModel[position].question
                 holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
                 if (position == 0) {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, activity)
+                    dass.secondListAdapter = OptionsSecondListAdapter(
+                        listModel[position],
+                        myPos,
+                        mypos2,
+                        ctx,
+                        binding,
+                        activity
+                    )
                 } else {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, mypos2, ctx, binding, activity)
+                    dass.secondListAdapter = OptionsSecondListAdapter(
+                        listModel[position],
+                        myPos + 1,
+                        mypos2,
+                        ctx,
+                        binding,
+                        activity
+                    )
                 }
                 holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
             }
@@ -226,13 +326,21 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
     }
 
-    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(
+        val listModel: AssessmentQusModel.ResponseData.Questions,
+        val pos: Int,
+        val mmypos2: Int,
+        val ctx: Context,
+        var binding: ActivityDassAssSliderBinding,
+        val activity: Activity
+    ) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
         var dass = DassAssSliderActivity()
 
-        inner class MyViewHolder(var bindingAdapter: FormFillLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
+        inner class MyViewHolder(var bindingAdapter: FormFillLayoutBinding) :
+            RecyclerView.ViewHolder(bindingAdapter.root) {
             init {
                 bindingAdapter.cbChecked.setOnClickListener {
                     setData()
@@ -275,7 +383,10 @@ class DassAssSliderActivity : AppCompatActivity() {
                     dass.editor = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE).edit()
                     dass.editor.putString(CONSTANTS.AssQus, dass.gson.toJson(dass.assQus)) //Friend
                     dass.editor.putString(CONSTANTS.AssAns, dass.gson.toJson(dass.assAns)) //Friend
-                    dass.editor.putString(CONSTANTS.AssSort, dass.gson.toJson(dass.assSort)) //Friend
+                    dass.editor.putString(
+                        CONSTANTS.AssSort,
+                        dass.gson.toJson(dass.assSort)
+                    ) //Friend
                     dass.editor.apply()
                     dass.editor.commit()
                 }
@@ -283,7 +394,12 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: FormFillLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.form_fill_layout, parent, false)
+            val v: FormFillLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.form_fill_layout,
+                parent,
+                false
+            )
             return MyViewHolder(v)
         }
 
@@ -324,14 +440,20 @@ class DassAssSliderActivity : AppCompatActivity() {
             if (dass.assQus.size >= mmypos2) {
                 binding.btnNext.isClickable = true
                 binding.btnNext.isEnabled = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.black),
+                    PorterDuff.Mode.SRC_ATOP
+                )
                 binding.btnContinue.isClickable = true
                 binding.btnContinue.isEnabled = true
                 binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
                 binding.btnNext.isEnabled = false
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.gray),
+                    PorterDuff.Mode.SRC_ATOP
+                )
                 binding.btnContinue.isEnabled = false
                 binding.btnContinue.isClickable = false
                 binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -358,14 +480,25 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient().getAssessmentSaveData(USERID, CoUserID, gson.toJson(assAns).toString())
+            val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient()
+                .getAssessmentSaveData(USERID, CoUserID, gson.toJson(assAns).toString())
             listCall.enqueue(object : Callback<AssessmentSaveDataModel> {
-                override fun onResponse(call: Call<AssessmentSaveDataModel>, response: Response<AssessmentSaveDataModel>) {
+                override fun onResponse(
+                    call: Call<AssessmentSaveDataModel>,
+                    response: Response<AssessmentSaveDataModel>
+                ) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            activity
+                        )
                         val listModel: AssessmentSaveDataModel = response.body()!!
-                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+                        if (listModel.getResponseCode()
+                                .equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)
+                        ) {
+                            val preferencesd1: SharedPreferences =
+                                getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
                             val edited1 = preferencesd1.edit()
                             edited1.remove(CONSTANTS.AssQus)
                             edited1.remove(CONSTANTS.AssAns)
@@ -379,11 +512,21 @@ class DassAssSliderActivity : AppCompatActivity() {
                             p.putValue("ans", gson.toJson(assAns).toString())
                             p.putValue("indexScore", listModel.getResponseData()?.indexScore)
                             p.putValue("scoreLevel", listModel.getResponseData()?.scoreLevel)
-                            BWSApplication.addToSegment("Assessment Form Submitted", p, CONSTANTS.track)
+                            BWSApplication.addToSegment(
+                                "Assessment Form Submitted",
+                                p,
+                                CONSTANTS.track
+                            )
                             val i = Intent(activity, AssProcessActivity::class.java)
                             i.putExtra(CONSTANTS.ASSPROCESS, "1")
-                            i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)
-                            i.putExtra(CONSTANTS.ScoreLevel, listModel.getResponseData()?.scoreLevel)
+                            i.putExtra(
+                                CONSTANTS.IndexScore,
+                                listModel.getResponseData()?.indexScore
+                            )
+                            i.putExtra(
+                                CONSTANTS.ScoreLevel,
+                                listModel.getResponseData()?.scoreLevel
+                            )
                             startActivity(i)
                             finish()
 
@@ -396,7 +539,11 @@ class DassAssSliderActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AssessmentSaveDataModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
             })
         } else {

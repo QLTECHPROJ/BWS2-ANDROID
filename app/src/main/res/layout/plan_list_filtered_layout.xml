@@ -2,6 +2,7 @@
 <layout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
@@ -9,20 +10,20 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_18sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:layout_marginRight="@dimen/_10sdp">
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_2sdp">
 
             <LinearLayout
                 android:id="@+id/llPlanMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_6sdp"
+                android:layout_marginEnd="@dimen/_6sdp"
                 android:background="@drawable/light_gray_round_cornors"
                 android:orientation="horizontal"
-                android:paddingVertical="@dimen/_30sdp"
-                android:paddingLeft="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_20sdp"
+                android:paddingStart="@dimen/_16sdp"
                 android:weightSum="1">
 
                 <LinearLayout
@@ -38,7 +39,8 @@
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvContent"
@@ -49,7 +51,8 @@
                         android:gravity="start"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -71,14 +74,15 @@
                 android:id="@+id/rlMostPopular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:visibility="invisible"
-                android:layout_marginLeft="-10dp">
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="-10dp"
+                android:visibility="invisible">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/todo"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_popular_tag_icon" />
 
@@ -90,7 +94,8 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:text="Most Popular"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_8sdp" />
+                    android:textSize="@dimen/_8sdp"
+                    tools:ignore="SpUsage" />
 
             </RelativeLayout>
         </RelativeLayout>

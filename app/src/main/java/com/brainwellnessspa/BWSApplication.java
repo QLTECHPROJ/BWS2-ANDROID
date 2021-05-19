@@ -227,10 +227,10 @@ public class BWSApplication extends Application {
                 .getPlaylist1(PlaylistID).observe((LifecycleOwner) ctx, audioList -> {
 
             if (audioList.size() != 0) {
-                ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
-                ivDownloads.setColorFilter(act.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                ivDownloads.setColorFilter(act.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             } else if (songSize == 0) {
                 ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                 llDownload.setClickable(false);
@@ -425,8 +425,8 @@ public class BWSApplication extends Application {
             });
         }
         llDownload.setOnClickListener(view -> {
-            ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-            ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
+            ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             llDownload.setClickable(false);
             llDownload.setEnabled(false);
             callDownload(comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, position, ctx, ivDownloads, act, llDownload);
@@ -1223,10 +1223,10 @@ public class BWSApplication extends Application {
             url.add(playlistSongs2.get(x).getAudioFile());
             downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
         }
-        ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+        ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
         llDownload.setClickable(false);
         llDownload.setEnabled(false);
-        ivDownloads.setColorFilter(act.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+        ivDownloads.setColorFilter(act.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson1 = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
@@ -1372,8 +1372,8 @@ public class BWSApplication extends Application {
                 playlistDownloadId = gson1.fromJson(json2, type);
             }
             if (audioList.size() != 0) {
-                ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
+                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
             } else {
@@ -1395,8 +1395,8 @@ public class BWSApplication extends Application {
                 } else {
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
-                    ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                    ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                    ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
+                    ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                 }
             }
         });
@@ -1540,8 +1540,8 @@ public class BWSApplication extends Application {
                 }
             }
             if (downloadAudioDetailsList.contains(Name)) {
-                ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
+                ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
                 SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
@@ -1596,8 +1596,8 @@ public class BWSApplication extends Application {
                         DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext(), act);
                         downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
                     }
-                    ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                    ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                    ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
+                    ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
                     SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);

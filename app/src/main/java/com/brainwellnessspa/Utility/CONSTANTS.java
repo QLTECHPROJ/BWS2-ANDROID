@@ -110,6 +110,7 @@ public class CONSTANTS {
     public static final String PREFE_ACCESS_ISAssCOMPLETED = "isAssessmentCompleted";
     public static final String PREFE_ACCESS_SCORELEVEL = "scoreLevel";
     public static final String PREFE_ACCESS_EMAIL = "Email";
+    public static final String PREFE_ACCESS_MOBILE = "mobile";
     public static final String PREFE_ACCESS_CoUserID = "CoUserID";
     public static final String PREF_KEY_LOGIN = "Login";
     public static final String PREF_KEY_Splash = "Splash";

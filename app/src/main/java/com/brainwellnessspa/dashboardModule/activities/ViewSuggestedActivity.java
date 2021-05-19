@@ -71,7 +71,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;
     Activity activity;
     Context ctx;
-    String UserID, CoUserID, Name, PlaylistID;
+    String UserID, coUserId, Name, playlistId;
     ArrayList<SuggestedModel.ResponseData> listModel;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
     AudiosListAdpater adpater;
@@ -106,22 +106,14 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         activity = ViewSuggestedActivity.this;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
         UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
-
-        binding.llBack.setOnClickListener(view -> {
-            myBackPress = true;
-            Intent i = new Intent(ctx, AddAudioActivity.class);
-            i.putExtra("PlaylistID", PlaylistID);
-            startActivity(i);
-            finish();
-        });
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
         if (getIntent() != null) {
             Name = getIntent().getStringExtra("Name");
-            PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
+            playlistId = getIntent().getStringExtra(CONSTANTS.PlaylistID);
             if (getIntent().hasExtra("AudiolistModel")) {
                 listModel = getIntent().getParcelableArrayListExtra("AudiolistModel");
             }
@@ -129,6 +121,15 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 PlaylistModel = getIntent().getParcelableArrayListExtra("PlaylistModel");
             }
         }
+
+        binding.llBack.setOnClickListener(view -> {
+            myBackPress = true;
+            Intent i = new Intent(ctx, AddAudioActivity.class);
+            i.putExtra("PlaylistID", playlistId);
+            startActivity(i);
+            finish();
+        });
+
     }
 
     @Override
@@ -147,7 +148,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     public void onBackPressed() {
         myBackPress = true;
         Intent i = new Intent(ctx, AddAudioActivity.class);
-        i.putExtra("PlaylistID", PlaylistID);
+        i.putExtra("PlaylistID", playlistId);
         startActivity(i);
         finish();
     }
@@ -245,7 +246,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     private void callAddAudioToPlaylist(String AudioID, String FromPlaylistId, String s1) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AddToPlaylistModel> listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, FromPlaylistId);
+            Call<AddToPlaylistModel> listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(coUserId, AudioID, playlistId, FromPlaylistId);
             listCall.enqueue(new Callback<AddToPlaylistModel>() {
                 @Override
                 public void onResponse(Call<AddToPlaylistModel> call, Response<AddToPlaylistModel> response) {
@@ -258,7 +259,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                             String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                             int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                            if (AudioPlayerFlag.equalsIgnoreCase("playList") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
+                            if (AudioPlayerFlag.equalsIgnoreCase("playList") && MyPlaylist.equalsIgnoreCase(playlistId)) {
 
                                 Gson gsonx = new Gson();
                                 String json = shared1.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gsonx));
@@ -314,7 +315,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
                                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, PlayerPosition);
-                                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, PlaylistID);
+                                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistId);
                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                 editor.commit();
@@ -477,7 +478,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 //                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
 //                } else if (listModel.get(position).isLock().equalsIgnoreCase("0")
 //                        || listModel.get(position).isLock().equalsIgnoreCase("")) {
-                if (PlaylistID.equalsIgnoreCase("")) {
+                if (playlistId.equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", listModel.get(position).getID());
                     i.putExtra("ScreenView", "Audio Details Screen");
@@ -488,7 +489,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     i.putExtra("Liked", "0");
                     startActivity(i);
                 } else {
-                    if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
+                    if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(playlistId)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
                         } else {
@@ -505,7 +506,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             try {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+//                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("SearchAudio")

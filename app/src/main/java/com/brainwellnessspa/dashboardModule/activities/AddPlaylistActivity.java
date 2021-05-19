@@ -39,7 +39,7 @@ import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.dashboardModule.fragmentPlaylist.MyPlaylistListingActivity;
+import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity;
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel;

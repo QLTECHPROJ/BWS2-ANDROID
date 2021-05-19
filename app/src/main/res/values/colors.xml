@@ -44,4 +44,5 @@
     <color name="arrow_color">#E1B1B1B1</color>
     <color name="grayTheam">#B9EFEFEF</color>
     <color name="redtheme">#ce5060</color>
+    <color name="progressfilled">#F1646A</color>
 </resources>

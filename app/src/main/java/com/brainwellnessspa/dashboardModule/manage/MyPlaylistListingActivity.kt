@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.fragmentPlaylist
+package com.brainwellnessspa.dashboardModule.manage
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -309,7 +309,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         if (isNetworkConnected(this)) {
             if (!MyDownloads.equals("1", true)) {
-                BWSApplication.showProgressBar(
+                showProgressBar(
                     binding.progressBar,
                     binding.progressBarHolder,
                     activity
@@ -709,9 +709,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.rvPlayLists2.adapter = adpater2
                     binding.rvPlayLists1.visibility = View.GONE
                     binding.rvPlayLists2.visibility = View.VISIBLE
-                    binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_done_icon)
                     binding.ivDownloads.setColorFilter(
-                        ContextCompat.getColor(activity, R.color.dark_yellow),
+                        ContextCompat.getColor(activity, R.color.white),
                         PorterDuff.Mode.SRC_IN
                     )
                     enableDisableDownload(false, "orange")
@@ -1093,18 +1093,17 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             activity: Activity,
             PlaylistID: String
         ) {
-            val AudioId = id!!
             var CoUserID: String? = ""
             val shared =
                 this.ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
             CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
             if (isNetworkConnected(this.ctx)) {
-                BWSApplication.showProgressBar(
+                showProgressBar(
                     binding.progressBar,
                     binding.progressBarHolder,
                     this.activity
                 )
-                val listCall = APINewClient.getClient().RemoveAudio(CoUserID, AudioId, PlaylistID)
+                val listCall = APINewClient.getClient().RemoveAudio(CoUserID, id, PlaylistID)
                 listCall.enqueue(object : Callback<SucessModel?> {
                     override fun onResponse(
                         call: Call<SucessModel?>,
@@ -1988,23 +1987,25 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun enableDisableDownload(b: Boolean, color: String) {
         if (b) {
-            binding.llDownloads.setClickable(true)
-            binding.llDownloads.setEnabled(true)
+            binding.llDownloads.isClickable = true
+            binding.llDownloads.isEnabled = true
             binding.ivDownloads.setColorFilter(
                 activity.resources.getColor(R.color.white),
                 PorterDuff.Mode.SRC_IN
             )
         } else {
-            binding.llDownloads.setClickable(false)
-            binding.llDownloads.setEnabled(false)
+            binding.llDownloads.isClickable = false
+            binding.llDownloads.isEnabled = false
             if (color.equals("gray", ignoreCase = true)) {
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
                 binding.ivDownloads.setColorFilter(
                     activity.resources.getColor(R.color.light_gray),
                     PorterDuff.Mode.SRC_IN
                 )
             } else if (color.equals("orange", ignoreCase = true)) {
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_done_icon)
                 binding.ivDownloads.setColorFilter(
-                    activity.resources.getColor(R.color.dark_yellow),
+                    activity.resources.getColor(R.color.white),
                     PorterDuff.Mode.SRC_IN
                 )
             }
@@ -2024,7 +2025,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     ) {
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             val url = arrayListOf<String>()
-            val name = kotlin.collections.arrayListOf<String>()
+            val name = arrayListOf<String>()
             val downloadPlaylistId = arrayListOf<String>()
             val playlistSongs2 = ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>()
             playlistSongs2.addAll(playlistSongs)
@@ -2429,6 +2430,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun enableDownload(llDownload: RelativeLayout, ivDownloads: ImageView) {
+        binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
         llDownload.isClickable = true
         llDownload.isEnabled = true
         ivDownloads.setColorFilter(
@@ -2438,8 +2440,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun disableDownload(llDownload: RelativeLayout, ivDownloads: ImageView) {
+        binding.ivDownloads.setImageResource(R.drawable.ic_download_done_icon)
         ivDownloads.setColorFilter(
-            activity.resources.getColor(R.color.dark_yellow),
+            activity.resources.getColor(R.color.black),
             PorterDuff.Mode.SRC_IN
         )
         llDownload.isClickable = false

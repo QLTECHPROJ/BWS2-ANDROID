@@ -35,9 +35,6 @@ import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.activities.AddAudioActivity
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
-import com.brainwellnessspa.dashboardModule.fragmentAudio.ViewAllAudioFragment
-import com.brainwellnessspa.dashboardModule.fragmentPlaylist.MainPlaylistFragment
-import com.brainwellnessspa.dashboardModule.fragmentPlaylist.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
@@ -1377,7 +1374,8 @@ class ManageFragment : Fragment() {
                 bundle.putString("ID", listModel[position].homeAudioID)
                 bundle.putString("Name", listModel[position].view)
                 bundle.putString("Category", "")
-                val viewAllAudioFragment: Fragment = ViewAllAudioFragment()
+                val viewAllAudioFragment: Fragment =
+                    ViewAllAudioFragment()
                 viewAllAudioFragment.arguments = bundle
                 fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, viewAllAudioFragment)
@@ -1601,7 +1599,7 @@ class ManageFragment : Fragment() {
                 (measureRatio1.widthImg * measureRatio1.ratio).toInt()
             holder.binding.tvPlaylistName.text = listModel.details!![position].playlistName
             Glide.with(ctx).load(listModel.details!![position].playlistImage).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(34))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
 
@@ -2057,7 +2055,8 @@ class ManageFragment : Fragment() {
                 bundle.putString("ID", homeView)
                 bundle.putString("Name", viewString)
                 bundle.putString("Category", listModel[position].categoryName)
-                val viewAllAudioFragment: Fragment = ViewAllAudioFragment()
+                val viewAllAudioFragment: Fragment =
+                    ViewAllAudioFragment()
                 viewAllAudioFragment.arguments = bundle
                 fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, viewAllAudioFragment)

@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:textColor="@color/white"
@@ -54,14 +54,13 @@
                 android:id="@+id/llDownload"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.1"
+                android:layout_weight="0.15"
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
+                    android:layout_width="@dimen/_31sdp"
+                    android:layout_height="@dimen/_31sdp"
                     android:layout_centerInParent="true"
-                    android:layout_margin="@dimen/_4sdp"
                     android:background="@drawable/download_bg"
                     android:contentDescription="@string/todo" />
 
@@ -73,10 +72,10 @@
                     android:layout_centerInParent="true"
                     android:background="@drawable/circular_shapesm"
                     android:indeterminate="false"
-                    android:indeterminateTint="@color/dark_yellow"
+                    android:indeterminateTint="@color/progressfilled"
                     android:max="100"
                     android:progressDrawable="@drawable/circular_progress_barsm"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     tools:targetApi="lollipop" />
 
                 <ImageView
@@ -86,6 +85,7 @@
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/todo"
                     android:padding="@dimen/_9sdp"
+                    android:visibility="visible"
                     android:src="@drawable/ic_white_download_icon"
                     app:tint="@color/white" />
 
@@ -95,7 +95,7 @@
                 android:id="@+id/llInfo"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.1"
+                android:layout_weight="0.15"
                 android:gravity="center">
 
                 <ImageView
@@ -124,9 +124,10 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:fontFamily="@font/montserrat_bold"
             android:gravity="center"
-            android:text=""
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textColor="@color/white"
-            android:textSize="@dimen/_25sdp"
+            android:textSize="@dimen/_20sdp"
             tools:ignore="SpUsage" />
 
         <com.google.android.exoplayer2.ui.PlayerControlView

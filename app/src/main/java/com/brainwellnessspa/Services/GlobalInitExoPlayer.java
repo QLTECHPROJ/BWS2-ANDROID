@@ -401,7 +401,30 @@ Appointment Audios dddd*/
                 player.addMediaItem(mediaItem);
             }
         }
+
         InitNotificationAudioPLayer(ctx, mainPlayModelList);
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("coUserId", CoUserID);
+        p.putValue("audioId", mainPlayModelList.get(position).getID());
+        p.putValue("audioName", mainPlayModelList.get(position).getName());
+        p.putValue("audioDescription", "");
+        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("position", GetCurrentAudioPosition());
+        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+            p.putValue("audioType", "Downloaded");
+        } else {
+            p.putValue("audioType", "Streaming");
+        }
+        p.putValue("source", GetSourceName(ctx));
+        p.putValue("playerType", "Mini");
+        p.putValue("audioService", appStatus(ctx));
+        p.putValue("bitRate", "");
+        p.putValue("sound", String.valueOf(hundredVolume));
+        BWSApplication.addToSegment("Audio Playback Started", p, CONSTANTS.track);
         Log.e("Audio Volume", String.valueOf(hundredVolume));
         getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
         player.prepare();
