@@ -11,7 +11,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
-import android.text.Selection
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
@@ -272,8 +271,8 @@ class CreateAccountActivity : AppCompatActivity() {
 
     private fun isValidPassword(password: String?): Boolean {
         val pattern: Pattern
-        val PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(PASSWORD_PATTERN)
+        val passwordPattern = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(passwordPattern)
         val matcher: Matcher = pattern.matcher(password)
         return matcher.matches()
     }
@@ -484,6 +483,7 @@ class CreateAccountActivity : AppCompatActivity() {
                     return filterResults
                 }
 
+                @SuppressLint("SetTextI18n")
                 override fun publishResults(
                     charSequence: CharSequence,
                     filterResults: FilterResults

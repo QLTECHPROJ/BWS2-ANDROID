@@ -200,7 +200,6 @@ class EditProfileActivity : AppCompatActivity() {
                 }
             })
         }
-
     }
 
     fun profileViewData(ctx: Context) {

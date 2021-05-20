@@ -241,10 +241,9 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     private fun isValidPassword(password: String?): Boolean {
         val pattern: Pattern
-        val matcher: Matcher
-        val PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(PASSWORD_PATTERN)
-        matcher = pattern.matcher(password)
+        val passwordPattern = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(passwordPattern)
+        val matcher: Matcher = pattern.matcher(password)
         return matcher.matches()
     }
 

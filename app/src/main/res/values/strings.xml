@@ -4,7 +4,7 @@
 
     <string name="segment_key_foram">X3sYYbQtro7xHI31AJppjMQ20AZlPdlS</string>
     <string name="segment_key_SunnySir">2ClHzzCF1JFEDocqe0Az8KSV4ybDcUdm</string>//sunny sir id
-        <string name="segment_key_real">Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy</string>
+    <string name="segment_key_real">Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy</string>
     // terri@brainwellnessspa.com.au 0pybC!FH#z20
     <string name="mansi_segment_key">"Zvo5vSa1Ih8CdMVilkKqzNf9UHMVTFuO"</string>
     <string name="ResponseCodesuccess">200</string>
@@ -60,8 +60,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Invoice">Invoice</string>
     <string name="Billing_and_Order">Billing and Order</string>
-    <string name="Cancel_Subscription">Cancel Subscription</string>
+    <string name="cancel_plan">Cancel</string>
     <string name="Cancel">Cancel</string>
+    <string name="cancel_program_quotes">Are you sure you want to cancel your program?</string>
     <string name="cancel_quotes">Are you sure you want to cancel your subscription?</string>
     <string name="reminder_quotes">Are you sure you want to delete your reminder?</string>
     <string name="go_back">Go Back</string>
@@ -333,4 +334,9 @@
     <string name="read_more_detail">Read More...</string>
     <string name="desc_image">Resturant image</string>
     <string name="todo">TODO</string>
+    <string name="join_now">Join Now</string>
+    <string name="total_time">Total Time</string>
+    <string name="frequency">Frequency</string>
+    <string name="my_activities">My activities</string>
+    <string name="cancel_program">Cancel Program</string>
 </resources>

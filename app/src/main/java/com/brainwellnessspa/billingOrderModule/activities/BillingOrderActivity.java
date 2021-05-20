@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.billingOrderModule.fragments.PaymentFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.billingOrderModule.fragments.BillingAddressFragment;
@@ -126,12 +127,12 @@ public class BillingOrderActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     currentPlanFragment.setArguments(bundle);
                     return currentPlanFragment;
-//                case 1:
-//                    PaymentFragment paymentFragment = new PaymentFragment();
-//                    bundle = new Bundle();
-//                    paymentFragment.setArguments(bundle);
-//                    return paymentFragment;
                 case 1:
+                    PaymentFragment paymentFragment = new PaymentFragment();
+                    bundle = new Bundle();
+                    paymentFragment.setArguments(bundle);
+                    return paymentFragment;
+                case 2:
                     BillingAddressFragment billingAddressFragment = new BillingAddressFragment();
                     bundle = new Bundle();
                     billingAddressFragment.setArguments(bundle);

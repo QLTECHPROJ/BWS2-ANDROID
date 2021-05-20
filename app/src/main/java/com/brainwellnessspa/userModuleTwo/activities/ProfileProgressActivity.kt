@@ -357,7 +357,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnContinue.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
                 if (doubleBackToExitPressedOnce) {
-                    finish()
+                    finishAffinity()
                     return
                 }
                 this.doubleBackToExitPressedOnce = true

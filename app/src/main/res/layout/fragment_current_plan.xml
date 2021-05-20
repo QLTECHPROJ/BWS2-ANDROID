@@ -186,7 +186,7 @@
                     android:background="@drawable/extra_round_cornor"
                     android:fontFamily="@font/montserrat_bold"
                     android:paddingVertical="@dimen/_4sdp"
-                    android:text="@string/Cancel_Subscription"
+                    android:text="Cancel Subscription"
                     android:textColor="@color/white"
                     android:visibility="gone" />
 

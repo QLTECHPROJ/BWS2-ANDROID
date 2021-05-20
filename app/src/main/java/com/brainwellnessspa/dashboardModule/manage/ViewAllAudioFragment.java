@@ -285,7 +285,7 @@ public class ViewAllAudioFragment extends Fragment {
       Glide.with(requireActivity())
           .load(listModelList.get(position).getImageFile())
           .thumbnail(0.05f)
-          .apply(RequestOptions.bitmapTransform(new RoundedCorners(36)))
+          .apply(RequestOptions.bitmapTransform(new RoundedCorners(38)))
           .priority(Priority.HIGH)
           .diskCacheStrategy(DiskCacheStrategy.ALL)
           .skipMemoryCache(false)

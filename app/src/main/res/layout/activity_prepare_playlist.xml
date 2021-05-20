@@ -30,6 +30,8 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:text="Preparing your personalised playlist"
                     android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:textSize="@dimen/_18sdp" />
 
                 <TextView
@@ -37,8 +39,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_40sdp"
                     android:fontFamily="@font/montserrat_regular"
-                    android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_18sdp" />

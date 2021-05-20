@@ -561,7 +561,7 @@ class MainPlaylistFragment : Fragment() {
                 (measureRatio1.widthImg * measureRatio1.ratio).toInt()
             holder.binding.tvPlaylistName.text = listModel[position].playlistName
             Glide.with(ctx).load(listModel[position].playlistImage).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(38))).priority(Priority.HIGH)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
 

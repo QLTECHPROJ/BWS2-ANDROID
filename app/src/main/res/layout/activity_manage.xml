@@ -277,11 +277,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="true"
-                        android:layout_marginTop="@dimen/_12sdp"
                         android:overScrollMode="never"
                         tools:targetApi="lollipop" />
-
-
+                    
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

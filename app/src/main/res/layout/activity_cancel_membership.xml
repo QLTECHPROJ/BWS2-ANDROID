@@ -32,7 +32,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="@string/Cancel_Subscription"
+                android:text="@string/cancel_plan"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_20sdp"
-                        android:button="@drawable/radio_btn_background"
+                        android:button="@drawable/radio_btn_app_background"
                         android:checked="true"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center_vertical|start"
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_18sdp"
-                        android:button="@drawable/radio_btn_background"
+                        android:button="@drawable/radio_btn_app_background"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center_vertical|start"
                         android:paddingLeft="@dimen/_12sdp"
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_18sdp"
-                        android:button="@drawable/radio_btn_background"
+                        android:button="@drawable/radio_btn_app_background"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center_vertical|start"
                         android:paddingLeft="@dimen/_12sdp"
@@ -135,7 +135,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_18sdp"
-                        android:button="@drawable/radio_btn_background"
+                        android:button="@drawable/radio_btn_app_background"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center_vertical|start"
                         android:paddingLeft="@dimen/_12sdp"
@@ -182,10 +182,10 @@
             android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="@dimen/_40sdp"
             android:layout_marginBottom="@dimen/_25sdp"
-            android:background="@drawable/extra_round_cornor"
+            android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_bold"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="@string/Cancel_Subscription"
+            android:text="@string/cancel_program"
             android:textColor="@color/white" />
 
     </RelativeLayout>

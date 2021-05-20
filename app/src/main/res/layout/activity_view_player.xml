@@ -58,8 +58,8 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/_31sdp"
-                    android:layout_height="@dimen/_31sdp"
+                    android:layout_width="@dimen/_34sdp"
+                    android:layout_height="@dimen/_34sdp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/download_bg"
                     android:contentDescription="@string/todo" />
@@ -75,13 +75,13 @@
                     android:indeterminateTint="@color/progressfilled"
                     android:max="100"
                     android:progressDrawable="@drawable/circular_progress_barsm"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     tools:targetApi="lollipop" />
 
                 <ImageView
                     android:id="@+id/ivDownloads"
-                    android:layout_width="@dimen/_31sdp"
-                    android:layout_height="@dimen/_31sdp"
+                    android:layout_width="@dimen/_33sdp"
+                    android:layout_height="@dimen/_33sdp"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/todo"
                     android:padding="@dimen/_9sdp"
@@ -96,17 +96,18 @@
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.15"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
+                    android:layout_width="@dimen/_33sdp"
+                    android:layout_height="@dimen/_33sdp"
                     android:background="@drawable/download_bg"
                     android:contentDescription="@string/todo" />
 
                 <ImageView
-                    android:layout_width="@dimen/_31sdp"
-                    android:layout_height="@dimen/_31sdp"
+                    android:layout_width="@dimen/_33sdp"
+                    android:layout_height="@dimen/_33sdp"
                     android:contentDescription="@string/todo"
                     android:src="@drawable/ic_white_info_icon"
                     app:tint="@color/white" />

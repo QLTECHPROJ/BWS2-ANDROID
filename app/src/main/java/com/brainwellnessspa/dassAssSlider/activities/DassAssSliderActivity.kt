@@ -10,6 +10,8 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -51,8 +53,8 @@ class DassAssSliderActivity : AppCompatActivity() {
     private var postAssAns = arrayListOf<PostAssAns>()
     lateinit var listModel1: AssessmentQusModel
     lateinit var activity: Activity
-    lateinit var exitDialog: Dialog
     var myPos: Int = 0
+    var doubleBackToExitPressedOnce = false
     var USERID: String? = ""
     var CoUserID: String? = ""
     var EMAIL: String? = ""
@@ -157,33 +159,16 @@ class DassAssSliderActivity : AppCompatActivity() {
                 binding.rvFirstList.adapter = firstListAdapter
             }
         } else {
-            exitDialog = Dialog(activity)
-            exitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            exitDialog.setContentView(R.layout.logout_layout)
-            exitDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            exitDialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            val tvGoBack: TextView = exitDialog.findViewById(R.id.tvGoBack)
-            val tvTitle: TextView = exitDialog.findViewById(R.id.tvTitle)
-            val tvHeader: TextView = exitDialog.findViewById(R.id.tvHeader)
-            val btn: Button = exitDialog.findViewById(R.id.Btn)
-            tvTitle.text ="Brain Wellness App"
-            tvHeader.text ="Are you sure you want to exit the app?"
-            exitDialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    exitDialog.hide()
-                    return@setOnKeyListener true
-                }
-                false
-            }
-
-            btn.setOnClickListener { v: View? ->
-                exitDialog.hide()
+            if (doubleBackToExitPressedOnce) {
                 finishAffinity()
+                return
             }
+            this.doubleBackToExitPressedOnce = true
+            BWSApplication.showToast("Press again to exit", activity)
 
-            tvGoBack.setOnClickListener { exitDialog.hide() }
-            exitDialog.show()
-            exitDialog.setCancelable(true)
+            Handler(Looper.myLooper()!!).postDelayed({
+                doubleBackToExitPressedOnce = false
+            }, 2000)
         }
     }
 

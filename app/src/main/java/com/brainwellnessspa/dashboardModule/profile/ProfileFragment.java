@@ -139,7 +139,18 @@ public class ProfileFragment extends Fragment {
     mRequestPermissionHandler = new RequestPermissionHandler();
     binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
     profileViewData(getActivity());
-    binding.llImageUpload.setOnClickListener(view15 -> selectImage());
+    binding.llImageUpload.setOnClickListener(
+        view15 -> {
+          if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+            return;
+          }
+          mLastClickTime = SystemClock.elapsedRealtime();
+          if (BWSApplication.isNetworkConnected(getActivity())) {
+            selectImage();
+          } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+          }
+        });
 
     Properties p = new Properties();
     p.putValue("coUserId", CoUserID);
@@ -220,9 +231,17 @@ public class ProfileFragment extends Fragment {
 
     binding.llPlan.setOnClickListener(
         v -> {
-          Intent i = new Intent(getActivity(), ManageActivity.class);
-          startActivity(i);
-          requireActivity().overridePendingTransition(0, 0);
+          if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+            return;
+          }
+          mLastClickTime = SystemClock.elapsedRealtime();
+          if (BWSApplication.isNetworkConnected(getActivity())) {
+            Intent i = new Intent(getActivity(), ManageActivity.class);
+            startActivity(i);
+            requireActivity().overridePendingTransition(0, 0);
+          } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+          }
         });
 
     binding.llResources.setOnClickListener(
@@ -632,29 +651,33 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void success(
                         AddProfileModel addProfileModel, retrofit.client.Response response) {
-                      if (addProfileModel
-                          .getResponseCode()
-                          .equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar, binding.progressBarHolder, requireActivity());
-                        Properties p = new Properties();
-                        p.putValue("userId", USERID);
-                        p.putValue("coUserId", CoUserID);
-                        BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
-                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                        setProfilePic(profilePicPath);
-                        BWSApplication.showToast(
-                            addProfileModel.getResponseMessage(), requireActivity());
-                        SharedPreferences shared =
-                            requireActivity()
-                                .getSharedPreferences(
-                                    CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString(
-                            CONSTANTS.PREFE_ACCESS_IMAGE,
-                            addProfileModel.getResponseData().getProfileImage());
-                        editor.apply();
-                        profileViewData(getActivity());
+                      try {
+                        if (addProfileModel
+                            .getResponseCode()
+                            .equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                          BWSApplication.hideProgressBar(
+                              binding.progressBar, binding.progressBarHolder, requireActivity());
+                          Properties p = new Properties();
+                          p.putValue("userId", USERID);
+                          p.putValue("coUserId", CoUserID);
+                          BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
+                          profilePicPath = addProfileModel.getResponseData().getProfileImage();
+                          setProfilePic(profilePicPath);
+                          BWSApplication.showToast(
+                              addProfileModel.getResponseMessage(), requireActivity());
+                          SharedPreferences shared =
+                              requireActivity()
+                                  .getSharedPreferences(
+                                      CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                          SharedPreferences.Editor editor = shared.edit();
+                          editor.putString(
+                              CONSTANTS.PREFE_ACCESS_IMAGE,
+                              addProfileModel.getResponseData().getProfileImage());
+                          editor.apply();
+                          profileViewData(getActivity());
+                        }
+                      } catch (Exception e) {
+                        e.printStackTrace();
                       }
                     }
 

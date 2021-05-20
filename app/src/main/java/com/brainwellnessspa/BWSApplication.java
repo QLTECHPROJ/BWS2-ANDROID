@@ -1405,7 +1405,9 @@ public class BWSApplication extends Application {
     public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, Activity act) {
         if (indexData.getPastIndexScore().size() == 0) {
             barChart.clear();
+            barChart.setVisibility(View.GONE);
         } else {
+            barChart.setVisibility(View.VISIBLE);
             barChart.setDescription(null);
             barChart.setPinchZoom(false);
             barChart.setScaleEnabled(false);

@@ -691,7 +691,7 @@ class UserListActivity : AppCompatActivity() {
         }
 
         private val isAllEditTextsFilled: Boolean
-            private get() {
+            get() {
                 for (editText in editTexts) if (editText.text.toString()
                         .trim { it <= ' ' }.isEmpty()
                 ) return false

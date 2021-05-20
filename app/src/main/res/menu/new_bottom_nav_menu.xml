@@ -11,14 +11,14 @@
         android:icon="@drawable/ic_manage_icon"
         android:title="@string/title_manage" />
 
-   <!-- <item
+    <item
         android:id="@+id/navigation_Wellness"
         android:icon="@drawable/ic_wellness_icon"
         android:title="@string/title_Wellness" />
     <item
         android:id="@+id/navigation_Elevate"
         android:icon="@drawable/ic_elevate_icon"
-        android:title="@string/title_Elevate" />-->
+        android:title="@string/title_Elevate" />
     <item
         android:id="@+id/navigation_Profile"
         android:icon="@drawable/ic_profile_two_icon"

@@ -28,8 +28,6 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
-import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
-import com.brainwellnessspa.dashboardModule.activities.NotificationListActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.RoomDataBase.AudioDatabase
 import com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease
@@ -38,9 +36,11 @@ import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
+import com.brainwellnessspa.dashboardModule.activities.NotificationListActivity
 import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
+import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.manageModule.RecommendedCategoryActivity
 import com.brainwellnessspa.userModuleTwo.activities.AddProfileActivity
@@ -187,48 +187,66 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+        if (isNetworkConnected(activity)) {
+            binding.llsetReminder.visibility = View.VISIBLE
+        } else {
+            binding.llsetReminder.visibility = View.GONE
+            showToast(getString(R.string.no_server_found), activity)
+        }
         binding.llBottomView.setOnClickListener {
-            val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(act),
-                R.layout.user_list_custom_layout,
-                null,
-                false
-            )
-            mBottomSheetDialog = BottomSheetDialog(ctx, R.style.BaseBottomSheetDialog)
-            mBottomSheetDialog!!.setContentView(layoutBinding.root)
-            mBottomSheetBehavior = BottomSheetBehavior<View>()
-            mBottomSheetBehavior!!.isHideable = true
-            mBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
-            mBottomSheetDialog!!.show()
-            val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(act)
-            layoutBinding.rvUserList.layoutManager = mLayoutManager
-            layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
-            prepareUserData(
-                layoutBinding.rvUserList,
-                layoutBinding.progressBar,
-                layoutBinding.llAddNewUser
-            )
-            layoutBinding.llAddNewUser.setOnClickListener {
-                val i = Intent(act, AddProfileActivity::class.java)
-                i.putExtra("AddProfile", "Add")
-                i.putExtra("CoUserID", "")
-                i.putExtra("CoEMAIL", "")
-                i.putExtra("CoName", "")
-                i.putExtra("CoNumber", "")
-                startActivity(i)
-                mBottomSheetDialog!!.hide()
+            if (isNetworkConnected(activity)) {
+                val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(act),
+                    R.layout.user_list_custom_layout,
+                    null,
+                    false
+                )
+                mBottomSheetDialog = BottomSheetDialog(ctx, R.style.BaseBottomSheetDialog)
+                mBottomSheetDialog!!.setContentView(layoutBinding.root)
+                mBottomSheetBehavior = BottomSheetBehavior<View>()
+                mBottomSheetBehavior!!.isHideable = true
+                mBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
+                mBottomSheetDialog!!.show()
+                val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(act)
+                layoutBinding.rvUserList.layoutManager = mLayoutManager
+                layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
+                prepareUserData(
+                    layoutBinding.rvUserList,
+                    layoutBinding.progressBar,
+                    layoutBinding.llAddNewUser
+                )
+                layoutBinding.llAddNewUser.setOnClickListener {
+                    val i = Intent(act, AddProfileActivity::class.java)
+                    i.putExtra("AddProfile", "Add")
+                    i.putExtra("CoUserID", "")
+                    i.putExtra("CoEMAIL", "")
+                    i.putExtra("CoName", "")
+                    i.putExtra("CoNumber", "")
+                    startActivity(i)
+                    mBottomSheetDialog!!.hide()
+                }
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
 
         binding.ivEditCategory.setOnClickListener {
-            val i = Intent(act, RecommendedCategoryActivity::class.java)
-            i.putExtra("BackClick", "1")
-            startActivity(i)
+            if (isNetworkConnected(activity)) {
+                val i = Intent(act, RecommendedCategoryActivity::class.java)
+                i.putExtra("BackClick", "1")
+                startActivity(i)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
         }
 
         binding.llClick.setOnClickListener {
-            val i = Intent(act, NotificationListActivity::class.java)
-            startActivity(i)
+            if (isNetworkConnected(activity)) {
+                val i = Intent(act, NotificationListActivity::class.java)
+                startActivity(i)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
         }
         prepareHomeData()
 
@@ -531,67 +549,71 @@ class HomeFragment : Fragment() {
                         }
 
                         binding.llPlayPause.setOnClickListener {
-                            val shared1 = ctx.getSharedPreferences(
-                                CONSTANTS.PREF_KEY_PLAYER,
-                                AppCompatActivity.MODE_PRIVATE
-                            )
+                            if (isNetworkConnected(activity)) {
+                                val shared1 = ctx.getSharedPreferences(
+                                    CONSTANTS.PREF_KEY_PLAYER,
+                                    AppCompatActivity.MODE_PRIVATE
+                                )
 //                            val AudioPlayerFlag =
 //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
 //                            val MyPlaylist =
 //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
 //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                            val PlayerPosition =
-                                shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                            when (isPlayPlaylist) {
-                                1 -> {
-                                    player.playWhenReady = false
-                                    isPlayPlaylist = 2
-                                    binding.llPlay.visibility = View.VISIBLE
-                                    binding.llPause.visibility = View.GONE
-                                }
-                                2 -> {
-                                    if (player != null) {
-                                        val lastIndexID =
-                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
-                                        if (PlayerAudioId.equals(
-                                                lastIndexID,
-                                                ignoreCase = true
-                                            )
-                                            && player.duration - player.currentPosition <= 20
-                                        ) {
-                                            val shared = ctx.getSharedPreferences(
-                                                CONSTANTS.PREF_KEY_PLAYER,
-                                                Context.MODE_PRIVATE
-                                            )
-                                            val editor = shared.edit()
-                                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                            editor.apply()
-                                            player.seekTo(0, 0)
-                                            PlayerAudioId =
-                                                listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
-                                            player.playWhenReady = true
-                                        } else {
-                                            player.playWhenReady = true
-                                        }
+                                val PlayerPosition =
+                                    shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                when (isPlayPlaylist) {
+                                    1 -> {
+                                        player.playWhenReady = false
+                                        isPlayPlaylist = 2
+                                        binding.llPlay.visibility = View.VISIBLE
+                                        binding.llPause.visibility = View.GONE
                                     }
-                                    isPlayPlaylist = 1
-                                    binding.llPlay.visibility = View.GONE
-                                    binding.llPause.visibility = View.VISIBLE
+                                    2 -> {
+                                        if (player != null) {
+                                            val lastIndexID =
+                                                listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
+                                            if (PlayerAudioId.equals(
+                                                    lastIndexID,
+                                                    ignoreCase = true
+                                                )
+                                                && player.duration - player.currentPosition <= 20
+                                            ) {
+                                                val shared = ctx.getSharedPreferences(
+                                                    CONSTANTS.PREF_KEY_PLAYER,
+                                                    Context.MODE_PRIVATE
+                                                )
+                                                val editor = shared.edit()
+                                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                                editor.apply()
+                                                player.seekTo(0, 0)
+                                                PlayerAudioId =
+                                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
+                                                player.playWhenReady = true
+                                            } else {
+                                                player.playWhenReady = true
+                                            }
+                                        }
+                                        isPlayPlaylist = 1
+                                        binding.llPlay.visibility = View.GONE
+                                        binding.llPause.visibility = View.VISIBLE
+                                    }
+                                    else -> {
+                                        PlayerAudioId =
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
+                                        callMainPlayerSuggested(
+                                            0,
+                                            "",
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
+                                            ctx,
+                                            act,
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!
+                                        )
+                                        binding.llPlay.visibility = View.GONE
+                                        binding.llPause.visibility = View.VISIBLE
+                                    }
                                 }
-                                else -> {
-                                    PlayerAudioId =
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
-                                    callMainPlayerSuggested(
-                                        0,
-                                        "",
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
-                                        ctx,
-                                        act,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!
-                                    )
-                                    binding.llPlay.visibility = View.GONE
-                                    binding.llPause.visibility = View.VISIBLE
-                                }
+                            } else {
+                                showToast(getString(R.string.no_server_found), activity)
                             }
                         }
                     } catch (e: Exception) {
@@ -600,29 +622,33 @@ class HomeFragment : Fragment() {
                 }
 
                 private fun callPlaylistDetails() {
-                    try {
-                        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-                        i.putExtra("New", "0")
-                        i.putExtra(
-                            "PlaylistID",
-                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID
-                        )
-                        i.putExtra(
-                            "PlaylistName",
-                            homelistModel.responseData!!.suggestedPlaylist!!.playlistName
-                        )
-                        i.putExtra(
-                            "PlaylistImage",
-                            homelistModel.responseData!!.suggestedPlaylist!!.playlistImage
-                        )
-                        i.putExtra("PlaylistSource", "")
-                        i.putExtra("MyDownloads", "0")
-                        i.putExtra("ScreenView", "")
-                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        ctx.startActivity(i)
-                        act.overridePendingTransition(0, 0)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    if (isNetworkConnected(activity)) {
+                        try {
+                            val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                            i.putExtra("New", "0")
+                            i.putExtra(
+                                "PlaylistID",
+                                homelistModel.responseData!!.suggestedPlaylist!!.playlistID
+                            )
+                            i.putExtra(
+                                "PlaylistName",
+                                homelistModel.responseData!!.suggestedPlaylist!!.playlistName
+                            )
+                            i.putExtra(
+                                "PlaylistImage",
+                                homelistModel.responseData!!.suggestedPlaylist!!.playlistImage
+                            )
+                            i.putExtra("PlaylistSource", "")
+                            i.putExtra("MyDownloads", "0")
+                            i.putExtra("ScreenView", "")
+                            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            ctx.startActivity(i)
+                            act.overridePendingTransition(0, 0)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    } else {
+                        showToast(getString(R.string.no_server_found), activity)
                     }
                 }
 

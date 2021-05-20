@@ -136,8 +136,8 @@ public class InvoiceActivity extends AppCompatActivity {
                             appointmentList = listModel.getResponseData().getAppointment();
                             memberShipList = listModel.getResponseData().getMemberShip();
                             binding.viewPager.setOffscreenPageLimit(2);
-                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Membership"));
-                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Appointment"));
+                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Manage"));
+                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Wellness"));
                             binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                             TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), binding.tabLayout.getTabCount());

@@ -32,7 +32,7 @@
                 android:layout_marginTop="@dimen/_33sdp"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Cancel subscription"
+                android:text="Cancel Manage Program"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp" />
 
@@ -45,7 +45,7 @@
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
-                android:text="@string/cancel_quotes"
+                android:text="@string/cancel_program_quotes"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
 
@@ -64,7 +64,7 @@
                     android:id="@+id/Btn"
                     android:layout_width="120dp"
                     android:layout_height="@dimen/_35sdp"
-                    android:background="@drawable/extra_blue_corner"
+                    android:background="@drawable/light_green_rounded_filled"
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/montserrat_medium"
