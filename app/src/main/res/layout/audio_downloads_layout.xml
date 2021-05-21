@@ -132,7 +132,7 @@
                 android:indeterminate="false"
                 android:indeterminateTint="@color/progressfilled"
                 android:max="100"
-                android:progressDrawable="@drawable/circular_progress_barm"
+                android:progressDrawable="@drawable/progress_bar_download"
                 android:visibility="gone"
                 tools:targetApi="lollipop" />
 

@@ -286,6 +286,9 @@ public class BWSApplication extends Application {
         });
 
         llBack.setOnClickListener(v -> dialog.dismiss());
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        String PlayFrom = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+
 
         if (isNetworkConnected(ctx)) {
             progressBar.setVisibility(View.VISIBLE);
@@ -300,9 +303,6 @@ public class BWSApplication extends Application {
                         cvImage.setVisibility(View.VISIBLE);
                         llAddPlaylist.setVisibility(View.VISIBLE);
                         llDownload.setVisibility(View.VISIBLE);
-
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                        String PlayFrom = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
 
                         if (comeFrom.equalsIgnoreCase("audioPlayer")) {
                             if (PlayFrom.equalsIgnoreCase("Created")) {
@@ -442,11 +442,11 @@ public class BWSApplication extends Application {
         }
 
         llRemovePlaylist.setOnClickListener(v13 -> {
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-            String myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "0");
-            int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-            String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+            SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            String AudioFlag = sharedd.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String myPlaylist = sharedd.getString(CONSTANTS.PREF_KEY_PlayFrom, "0");
+            int pos = sharedd.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+            String pID = sharedd.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
             String PlaylistId = "";
 
             if (comeFrom.equalsIgnoreCase("playlist")) {

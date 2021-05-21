@@ -32,18 +32,18 @@
                         android:id="@+id/llImageUpload"
                         android:layout_width="@dimen/_150sdp"
                         android:layout_height="@dimen/_150sdp"
-                        android:paddingTop="@dimen/_20sdp"
-                        android:paddingStart="@dimen/_16sdp"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingStart="@dimen/_16sdp"
+                        android:paddingTop="@dimen/_20sdp">
 
                         <com.brainwellnessspa.RoundedImageView
                             android:id="@+id/civProfile"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"
-                            android:padding="@dimen/_2sdp"
                             android:layout_centerInParent="true"
+                            android:padding="@dimen/_2sdp"
                             android:src="@drawable/default_profile"
                             android:visibility="gone" />
 
@@ -51,9 +51,9 @@
                             android:id="@+id/rlLetter"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"
+                            android:layout_centerInParent="true"
                             android:background="@drawable/profile_small_drawable"
                             android:padding="@dimen/_4sdp"
-                            android:layout_centerInParent="true"
                             android:visibility="visible">
 
                             <TextView
@@ -113,50 +113,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
                     android:background="@drawable/account_gray_bg"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/llAcInfo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingVertical="@dimen/_16sdp"
-                        android:weightSum="1">
-
-                        <ImageView
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:layout_marginStart="@dimen/_6sdp"
-                            android:layout_weight="0.1"
-                            android:paddingVertical="@dimen/_2sdp"
-                            android:src="@drawable/ic_user_two_icon" />
-
-                        <TextView
-                            android:id="@+id/tvAcInfo"
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/_18sdp"
-                            android:layout_weight="0.8"
-                            android:fontFamily="@font/montserrat_medium"
-                            android:gravity="start"
-                            android:text="@string/account_info"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            tools:ignore="SpUsage" />
-
-                        <ImageView
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:layout_marginEnd="@dimen/_6sdp"
-                            android:layout_weight="0.1"
-                            android:src="@drawable/ic_right_arrow_ac_icon" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1.5dp"
-                        android:background="@color/dim_light_gray" />
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/llPlan"
@@ -201,6 +159,49 @@
                     android:layout_marginTop="@dimen/_26sdp"
                     android:background="@drawable/account_gray_bg"
                     android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/llAcInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="@dimen/_16sdp"
+                        android:weightSum="1">
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:paddingVertical="@dimen/_2sdp"
+                            android:src="@drawable/ic_user_two_icon" />
+
+                        <TextView
+                            android:id="@+id/tvAcInfo"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/_18sdp"
+                            android:layout_weight="0.8"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:text="@string/account_info"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/ic_right_arrow_ac_icon" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1.5dp"
+                        android:background="@color/dim_light_gray" />
 
                     <LinearLayout
                         android:id="@+id/llDownloads"
@@ -352,7 +353,7 @@
                             android:layout_weight="0.8"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:text="Billing and Order"
+                            android:text="@string/billing_and_order"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
 

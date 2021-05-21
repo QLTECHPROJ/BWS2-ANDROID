@@ -3,8 +3,8 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:vumeter="http://schemas.android.com/apk/res-auto"
         xmlns:custom="http://schemas.android.com/apk/res-auto"
+        xmlns:vumeter="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,8 +24,8 @@
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="0.2"
                 android:layout_marginLeft="@dimen/_2sdp"
+                android:layout_weight="0.2"
                 android:gravity="center"
                 android:padding="@dimen/_6sdp">
 
@@ -139,8 +139,8 @@
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="0.2"
             android:layout_marginRight="@dimen/_2sdp"
+            android:layout_weight="0.2"
             android:gravity="center"
             android:padding="@dimen/_8sdp">
 

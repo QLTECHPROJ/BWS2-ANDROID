@@ -328,7 +328,6 @@
     <string name="Manage">Manage</string>
     <string name="log_out">Log Out</string>
     <string name="account_info">Account Info</string>
-    <string name="upgrade_plan">Upgrade Plan</string>
     <string name="resources">Resources</string>
     <string name="faqs">FAQ</string>
     <string name="read_more_detail">Read More...</string>
@@ -339,4 +338,26 @@
     <string name="frequency">Frequency</string>
     <string name="my_activities">My activities</string>
     <string name="cancel_program">Cancel Program</string>
+    <string name="sleep_start_in_your_brain">Sleep start in your brain</string>
+    <string name="emotional_empowerment">Emotional Empowerment</string>
+    <string name="_60">60%</string>
+    <string name="_11_38_47">11:38:47</string>
+    <string name="year">Year</string>
+    <string name="index_score">Index Score</string>
+    <string name="area_of_focus">Area of focus</string>
+    <string name="lorem_ipsum">Lorem ipsum</string>
+    <string name="your_latest_index_score">Your latest index score</string>
+    <string name="check_you_index_score">Check you Index Score</string>
+    <string name="you_are_completely_on_track_keep_it_up">You are completely on track, keep it up!</string>
+    <string name="severe">Severe</string>
+    <string name="index_scores_would_not_improve_this_would_not_let_it_increase_the_problem">Index scores would not improve this would not let it increase the problem.</string>
+    <string name="today">Today</string>
+    <string name="_2">2</string>
+    <string name="month">Month</string>
+    <string name="regularity">Regularity</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consetetur">Lorem ipsum dolor sit amet, consetetur</string>
+    <string name="change_card">Change Card</string>
+    <string name="upgrade_plan">Upgrade Plan</string>
+    <string name="Upgrade_Plan">Upgrade Plan</string>
+    <string name="add_users_in_manage">Add Users in manage</string>
 </resources>

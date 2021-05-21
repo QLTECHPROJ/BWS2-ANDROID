@@ -657,14 +657,14 @@ public class ProfileFragment extends Fragment {
                             .equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                           BWSApplication.hideProgressBar(
                               binding.progressBar, binding.progressBarHolder, requireActivity());
+                            setProfilePic(profilePicPath);
+                            BWSApplication.showToast(
+                                    addProfileModel.getResponseMessage(), requireActivity());
                           Properties p = new Properties();
                           p.putValue("userId", USERID);
                           p.putValue("coUserId", CoUserID);
                           BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track);
                           profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                          setProfilePic(profilePicPath);
-                          BWSApplication.showToast(
-                              addProfileModel.getResponseMessage(), requireActivity());
                           SharedPreferences shared =
                               requireActivity()
                                   .getSharedPreferences(
@@ -725,12 +725,12 @@ public class ProfileFragment extends Fragment {
                           .equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(
                             binding.progressBar, binding.progressBarHolder, getActivity());
+                          profilePicPath = addProfileModel.getResponseData().getProfileImage();
+                          setProfilePic(profilePicPath);
                         Properties p = new Properties();
                         p.putValue("userId", USERID);
                         p.putValue("coUserId", CoUserID);
                         BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track);
-                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                        setProfilePic(profilePicPath);
                         BWSApplication.showToast(
                             addProfileModel.getResponseMessage(), getActivity());
                         SharedPreferences shared =

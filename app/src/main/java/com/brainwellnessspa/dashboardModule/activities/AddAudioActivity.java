@@ -139,9 +139,9 @@ public class AddAudioActivity extends AppCompatActivity {
         p = new Properties();
         p.putValue("userId", USERID);
         p.putValue("coUserId", CoUSERID);
-        if (PlaylistID.equalsIgnoreCase("")){
+        if (PlaylistID.equalsIgnoreCase("")) {
             p.putValue("source", "Manage Search Screen");
-        }else {
+        } else {
             p.putValue("source", "Add Audio Screen");
         }
 
@@ -179,9 +179,9 @@ public class AddAudioActivity extends AppCompatActivity {
                 p = new Properties();
                 p.putValue("userId", USERID);
                 p.putValue("coUserId", CoUSERID);
-                if (PlaylistID.equalsIgnoreCase("")){
+                if (PlaylistID.equalsIgnoreCase("")) {
                     p.putValue("source", "Manage Search Screen");
-                }else {
+                } else {
                     p.putValue("source", "Add Audio Screen");
                 }
                 p.putValue("searchKeyword", search);
@@ -315,9 +315,9 @@ public class AddAudioActivity extends AppCompatActivity {
                             p = new Properties();
                             p.putValue("userId", USERID);
                             p.putValue("coUserId", CoUSERID);
-                            if (PlaylistID.equalsIgnoreCase("")){
+                            if (PlaylistID.equalsIgnoreCase("")) {
                                 p.putValue("source", "Manage Search Screen");
-                            }else {
+                            } else {
                                 p.putValue("source", "Add Audio Screen");
                             }
 
@@ -746,7 +746,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     } else {
                         ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
                         listModelList2.add(modelList.get(position));
-                        callPlayer(0, listModelList2,true);
+                        callPlayer(0, listModelList2, true);
                     }
                 } else {
                     ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
@@ -787,7 +787,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         }
                     }
                     listModelList2.add(modelList.get(position));
-                    callPlayer(0,listModelList2,audioc);
+                    callPlayer(0, listModelList2, audioc);
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(0, 8, 0, 210);
@@ -805,8 +805,8 @@ public class AddAudioActivity extends AppCompatActivity {
             activity.overridePendingTransition(0, 0);
         }
 
-        private void callPlayer(int position, ArrayList<SearchBothModel.ResponseData> listModel,boolean audioc) {
-            if(audioc) {
+        private void callPlayer(int position, ArrayList<SearchBothModel.ResponseData> listModel, boolean audioc) {
+            if (audioc) {
                 callNewPlayerRelease();
             }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
@@ -1008,7 +1008,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     } else {
                         ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
                         listModelList2.add(listModel.get(position));
-                        callPlayer(0, listModelList2,true);
+                        callPlayer(0, listModelList2, true);
                     }
                 } else {
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
@@ -1049,7 +1049,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         }
                     }
                     listModelList2.add(listModel.get(position));
-                    callPlayer(0, listModelList2,audioc);
+                    callPlayer(0, listModelList2, audioc);
                 }
                 notifyDataSetChanged();
             } catch (Exception e) {
@@ -1064,8 +1064,8 @@ public class AddAudioActivity extends AppCompatActivity {
             activity.overridePendingTransition(0, 0);
         }
 
-        private void callPlayer(int position, ArrayList<SuggestedModel.ResponseData> listModel,boolean audioc) {
-            if(audioc) {
+        private void callPlayer(int position, ArrayList<SuggestedModel.ResponseData> listModel, boolean audioc) {
+            if (audioc) {
                 callNewPlayerRelease();
             }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);

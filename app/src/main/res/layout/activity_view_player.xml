@@ -100,8 +100,9 @@
                 android:layout_gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/_33sdp"
-                    android:layout_height="@dimen/_33sdp"
+                    android:layout_width="@dimen/_34sdp"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_centerInParent="true"
                     android:background="@drawable/download_bg"
                     android:contentDescription="@string/todo" />
 
@@ -109,6 +110,7 @@
                     android:layout_width="@dimen/_33sdp"
                     android:layout_height="@dimen/_33sdp"
                     android:contentDescription="@string/todo"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/ic_white_info_icon"
                     app:tint="@color/white" />
 

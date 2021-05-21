@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".billingOrderModule.activities.UpgradePlanActivity">
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_white_icon"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/Upgrade_Plan"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rlLayout"
+            android:paddingTop="@dimen/_16sdp"
+            android:paddingBottom="@dimen/_60sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:text="Lorem ipsum"
+                    android:textColor="@color/dark_blue_gray"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd"
+                    android:textColor="@color/dark_blue_gray"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvProfileTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:text="Profile"
+                    android:textColor="@color/dark_blue_gray"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:background="@drawable/progress_bg"
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/_10sdp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_13sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Select Number of Profile"
+                        android:textColor="@color/light_black"
+                        android:textSize="@dimen/_10sdp"
+                        tools:ignore="SpUsage" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_56sdp"
+                        android:layout_gravity="center_vertical"
+                        android:weightSum="1">
+
+                        <SeekBar
+                            android:id="@+id/simpleSeekbar"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.9"
+                            android:max="4"
+                            android:progressDrawable="@drawable/seekbar_style"
+                            android:thumb="@drawable/custom_thumb" />
+
+                        <TextView
+                            android:id="@+id/tvNoOfPerson"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_weight="0.1"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="3"
+                            android:textColor="@color/step_one_bg"
+                            android:textSize="@dimen/_36sdp"
+                            tools:ignore="SpUsage" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:text="@string/add_users_in_manage"
+                    android:textColor="@color/dark_blue_gray"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlanList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="true"
+                    android:overScrollMode="never"
+                    tools:targetApi="lollipop" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/btnUpgradePlan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_29sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:background="@drawable/light_green_rounded_filled"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingVertical="@dimen/_4sdp"
+            android:text="UPDATE PLAN"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13sdp"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+
+    </RelativeLayout>
+</layout>

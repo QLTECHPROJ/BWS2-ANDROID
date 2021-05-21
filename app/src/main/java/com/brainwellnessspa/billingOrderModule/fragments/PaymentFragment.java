@@ -10,12 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.databinding.FragmentPaymentBillingOrderBinding;
 import com.brainwellnessspa.databinding.FragmentPaymentBinding;
 
 import org.jetbrains.annotations.NotNull;
 
 public class PaymentFragment extends Fragment {
-  FragmentPaymentBinding binding;
+  FragmentPaymentBillingOrderBinding binding;
 
   @Override
   public View onCreateView(

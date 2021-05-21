@@ -153,7 +153,7 @@
                                             android:indeterminate="false"
                                             android:indeterminateTint="@color/progressfilled"
                                             android:max="100"
-                                            android:progressDrawable="@drawable/circular_progress_barsm"
+                                            android:progressDrawable="@drawable/circular_progress_baem"
                                             android:visibility="gone"
                                             tools:targetApi="lollipop" />
 

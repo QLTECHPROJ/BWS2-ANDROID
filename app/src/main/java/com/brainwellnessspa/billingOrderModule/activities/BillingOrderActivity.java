@@ -10,10 +10,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.billingOrderModule.fragments.PaymentFragment;
@@ -32,28 +34,41 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 public class BillingOrderActivity extends AppCompatActivity {
     ActivityBillingOrderBinding binding;
     int payment = 0;
-    String UserID;
+    String userId, coUserId;
     private int numStarted = 0;
     int stackStatus = 0;
+    Activity activity;
     public static boolean myBackPressbill = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order);
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        userId = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
+        coUserId = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
+        activity = BillingOrderActivity.this;
         binding.llBack.setOnClickListener(view -> {
             myBackPressbill = true;
             comefromDownload = "0";
             finish();
         });
 
+        binding.btnUpgradePlan.setOnClickListener(v -> {
+            Intent i = new Intent(activity, UpgradePlanActivity.class);
+            startActivity(i);
+        });
+
+        binding.tvCancel.setOnClickListener(v -> {
+            Intent i = new Intent(activity, CancelMembershipActivity.class);
+            startActivity(i);
+        });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
         Properties p = new Properties();
-        p.putValue("userId", UserID);
+        p.putValue("userId", userId);
         p.putValue("plan", "");
         p.putValue("planStatus", "");
         p.putValue("planStartDt", "");
@@ -61,9 +76,9 @@ public class BillingOrderActivity extends AppCompatActivity {
         p.putValue("planAmount", "");
         BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen);
 
-        binding.viewPager.setOffscreenPageLimit(3);
+        binding.viewPager.setOffscreenPageLimit(2);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
+//        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Billing Address"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -127,12 +142,12 @@ public class BillingOrderActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     currentPlanFragment.setArguments(bundle);
                     return currentPlanFragment;
+//                case 1:
+//                    PaymentFragment paymentFragment = new PaymentFragment();
+//                    bundle = new Bundle();
+//                    paymentFragment.setArguments(bundle);
+//                    return paymentFragment;
                 case 1:
-                    PaymentFragment paymentFragment = new PaymentFragment();
-                    bundle = new Bundle();
-                    paymentFragment.setArguments(bundle);
-                    return paymentFragment;
-                case 2:
                     BillingAddressFragment billingAddressFragment = new BillingAddressFragment();
                     bundle = new Bundle();
                     billingAddressFragment.setArguments(bundle);

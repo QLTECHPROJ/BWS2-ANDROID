@@ -9,20 +9,24 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.MyBatteryReceiver;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
+import com.brainwellnessspa.databinding.ActivityBottomNavigationBinding;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -39,7 +43,7 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 public class BottomNavigationActivity extends AppCompatActivity  implements NetworkChangeReceiver_navigator {
     public static int miniPlayer = 0;
     public static boolean audioClick = false, tutorial = false;
-    ActivityDashboardBinding binding;
+    ActivityBottomNavigationBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     boolean backpressed = false;
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
@@ -50,16 +54,14 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bottom_navigation);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_navigation);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_Home, R.id.navigation_Manage, R.id.navigation_Wellness, R.id.navigation_Elevate, R.id.navigation_Profile)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        NavigationUI.setupWithNavController(binding.navView, navController);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
@@ -148,4 +150,20 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
         return null;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (binding.navView.getSelectedItemId() == R.id.navigation_Home) {
+            binding.navView.setSelectedItemId(R.id.navigation_Home);
+            if (doubleBackToExitPressedOnce) {
+                finish();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            BWSApplication.showToast("Press again to exit", BottomNavigationActivity.this);
+
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

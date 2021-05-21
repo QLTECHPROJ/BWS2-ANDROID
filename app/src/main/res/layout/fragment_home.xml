@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -29,7 +29,9 @@
                 android:layout_marginLeft="@dimen/_26sdp"
                 android:layout_marginTop="@dimen/_9sdp"
                 android:layout_marginRight="@dimen/_26sdp"
-                android:orientation="horizontal">
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
                 <LinearLayout
                     android:id="@+id/llProfile"
@@ -83,7 +85,8 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
 
                         <TextView
                             android:id="@+id/tvName"
@@ -94,7 +97,7 @@
                             android:paddingStart="@dimen/_12sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_13sdp"
-                            tools:ignore="SpUsage" />
+                            tools:ignore="RtlSymmetry,SpUsage" />
 
                         <ImageView
                             android:id="@+id/ivClickDown"
@@ -102,6 +105,7 @@
                             android:layout_height="@dimen/_8sdp"
                             android:layout_gravity="center"
                             android:layout_marginStart="@dimen/_12sdp"
+                            android:contentDescription="@string/todo"
                             android:src="@drawable/ic_down_arrow"
                             app:tint="@color/gray" />
 
@@ -115,9 +119,10 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:orientation="horizontal"
-                    android:paddingRight="@dimen/_10sdp">
+                    android:paddingEnd="@dimen/_10sdp"
+                    tools:ignore="RtlSymmetry">
 
                     <ImageView
                         android:id="@+id/ivBall"
@@ -125,6 +130,7 @@
                         android:layout_height="@dimen/_21sdp"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/_12sdp"
+                        android:contentDescription="@string/todo"
                         android:src="@drawable/ic_notifications_black_24dp"
                         app:tint="@color/gray" />
                 </LinearLayout>
@@ -186,7 +192,7 @@
                                     android:layout_weight="0.2">
 
                                     <LinearLayout
-                                        android:id="@+id/llsetReminder"
+                                        android:id="@+id/llSetReminder"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/_20sdp"
@@ -194,7 +200,8 @@
                                         android:layout_marginEnd="@dimen/_13sdp"
                                         android:background="@drawable/rounded_extra_theme_corner"
                                         android:orientation="horizontal"
-                                        android:padding="@dimen/_7sdp">
+                                        android:padding="@dimen/_7sdp"
+                                        tools:ignore="TooDeepLayout,UselessParent">
 
                                         <TextView
                                             android:id="@+id/tvReminder"
@@ -217,6 +224,7 @@
                                     android:layout_height="0dp"
                                     android:layout_gravity="center"
                                     android:layout_weight="0.6"
+                                    android:baselineAligned="false"
                                     android:gravity="center"
                                     android:orientation="horizontal"
                                     android:weightSum="3">
@@ -225,9 +233,10 @@
                                         android:id="@+id/llPlayerView1"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_gravity="left"
+                                        android:layout_gravity="start"
                                         android:layout_weight="1.2"
-                                        android:orientation="horizontal" />
+                                        android:orientation="horizontal"
+                                        tools:ignore="NestedWeights" />
 
                                     <LinearLayout
                                         android:id="@+id/llPlayPause"
@@ -259,7 +268,7 @@
                                         android:id="@+id/llPlayerView2"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_gravity="right"
+                                        android:layout_gravity="end"
                                         android:layout_weight="1.2"
                                         android:orientation="horizontal" />
                                 </LinearLayout>
@@ -283,9 +292,10 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="@dimen/_25sdp"
                                             android:fontFamily="@font/montserrat_bold"
-                                            android:gravity="left"
+                                            android:gravity="start"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_14sdp" />
+                                            android:textSize="@dimen/_14sdp"
+                                            tools:ignore="SpUsage" />
                                     </LinearLayout>
 
                                     <LinearLayout
@@ -302,10 +312,11 @@
                                             android:layout_height="wrap_content"
                                             android:layout_weight="7"
                                             android:fontFamily="@font/montserrat_regular"
-                                            android:gravity="left"
-                                            android:text="Sleep start in your brain"
+                                            android:gravity="start"
+                                            android:text="@string/sleep_start_in_your_brain"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_13sdp" />
+                                            android:textSize="@dimen/_13sdp"
+                                            tools:ignore="SpUsage" />
 
                                         <TextView
                                             android:id="@+id/tvTime"
@@ -313,9 +324,10 @@
                                             android:layout_height="wrap_content"
                                             android:layout_weight="3"
                                             android:fontFamily="@font/montserrat_regular"
-                                            android:gravity="right"
+                                            android:gravity="end"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_13sdp" />
+                                            android:textSize="@dimen/_13sdp"
+                                            tools:ignore="SpUsage" />
                                     </LinearLayout>
 
                                     <LinearLayout
@@ -348,12 +360,14 @@
                         android:layout_marginLeft="@dimen/_17sdp"
                         android:layout_marginTop="@dimen/_4sdp"
                         android:layout_marginRight="@dimen/_17sdp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="@dimen/_50sdp"
                             android:layout_height="match_parent"
-                            android:background="@drawable/ic_moon_sleep" />
+                            android:background="@drawable/ic_moon_sleep"
+                            android:contentDescription="@string/todo" />
 
                         <TextView
                             android:id="@+id/tvSleepTime"
@@ -362,9 +376,10 @@
                             android:layout_gravity="center"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
-                            android:paddingLeft="@dimen/_9sdp"
+                            android:paddingStart="@dimen/_9sdp"
                             android:textColor="@color/text_new_light_blue"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_14sdp"
+                            tools:ignore="RtlSymmetry,SpUsage" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -393,7 +408,7 @@
                                 android:id="@+id/ivEditCategory"
                                 android:layout_width="@dimen/_20sdp"
                                 android:layout_height="@dimen/_20sdp"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:contentDescription="@string/todo"
                                 android:src="@drawable/ic_edit_number_icon"
                                 app:tint="@color/light_black" />
@@ -404,9 +419,10 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:text="Area of focus"
+                                android:text="@string/area_of_focus"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_18sdp" />
+                                android:textSize="@dimen/_18sdp"
+                                tools:ignore="RelativeOverlap,SpUsage" />
                         </RelativeLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -416,11 +432,12 @@
                             android:layout_marginTop="@dimen/_10sdp"
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never"
-                            tools:listitem="@layout/selected_category_raw" />
+                            tools:listitem="@layout/selected_category_raw"
+                            tools:targetApi="lollipop" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llCheckIndexSocre"
+                        android:id="@+id/llCheckIndexscore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -436,10 +453,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="left"
-                                android:text="Lorem ipsum"
+                                android:gravity="start"
+                                android:text="@string/lorem_ipsum"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_18sdp" />
+                                android:textSize="@dimen/_18sdp"
+                                tools:ignore="SpUsage" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -450,7 +468,8 @@
                             android:backgroundTint="#DC828E"
                             android:orientation="horizontal"
                             android:weightSum="10"
-                            tools:targetApi="lollipop">
+                            tools:targetApi="lollipop"
+                            android:baselineAligned="false">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -467,9 +486,10 @@
                                     android:layout_marginBottom="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
-                                    android:text="Check you Index Score"
+                                    android:text="@string/check_you_index_score"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_18sdp" />
+                                    android:textSize="@dimen/_18sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:layout_width="150dp"
@@ -477,7 +497,7 @@
                                     android:fontFamily="@font/montserrat_regular"
                                     android:gravity="start"
                                     android:maxLines="2"
-                                    android:text="You are completely on track, keep it up!"
+                                    android:text="@string/you_are_completely_on_track_keep_it_up"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_12sdp"
                                     tools:ignore="SpUsage" />
@@ -495,15 +515,17 @@
                                     android:layout_marginVertical="@dimen/_10sdp"
                                     android:layout_marginEnd="@dimen/_16sdp"
                                     android:contentDescription="@string/todo"
-                                    android:src="@drawable/inde_score_bg" />
+                                    android:src="@drawable/index_score_bg" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llIndexScore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -511,7 +533,7 @@
                             android:layout_marginTop="@dimen/_10sdp"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="start"
-                            android:text="Index Score"
+                            android:text="@string/index_score"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_18sdp"
                             tools:ignore="SpUsage" />
@@ -521,8 +543,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:fontFamily="@font/montserrat_regular"
-                            android:gravity="left"
-                            android:text="Your latest index score"
+                            android:gravity="start"
+                            android:text="@string/your_latest_index_score"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_13sdp"
                             tools:ignore="SpUsage" />
@@ -530,17 +552,20 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llSevere"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:orientation="horizontal"
-                            android:weightSum="10">
+                            android:weightSum="10"
+                            android:baselineAligned="false">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -564,7 +589,7 @@
                                     android:layout_marginStart="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
-                                    android:text="Severe"
+                                    android:text="@string/severe"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_18sdp"
                                     tools:ignore="SpUsage" />
@@ -574,12 +599,13 @@
                                 android:id="@+id/llCheckPercent"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:layout_marginEnd="@dimen/_5sdp"
                                 android:layout_weight="3"
-                                android:gravity="right"
-                                android:orientation="horizontal">
+                                android:gravity="end"
+                                android:orientation="horizontal"
+                                tools:ignore="UseCompoundDrawables">
 
                                 <ImageView
                                     android:id="@+id/ivIndexArrow"
@@ -618,7 +644,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="bottom"
                             android:maxLines="2"
-                            android:text="Index scores would not improve this would not let it increase the problem."
+                            android:text="@string/index_scores_would_not_improve_this_would_not_let_it_increase_the_problem"
                             android:textColor="@color/light_gray"
                             android:textSize="@dimen/_15sdp"
                             tools:ignore="SpUsage" />
@@ -632,12 +658,15 @@
                         android:layout_marginTop="@dimen/_20sdp"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:background="@color/white"
-                        android:minHeight="@dimen/_220sdp" />
+                        android:minHeight="@dimen/_220sdp"
+                        android:visibility="gone" />
 
                     <LinearLayout
+                        android:id="@+id/llActivities"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -658,7 +687,8 @@
                             android:layout_marginTop="@dimen/_20sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:background="@color/white"
-                            android:minHeight="@dimen/_220sdp" />
+                            android:minHeight="@dimen/_220sdp"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -670,7 +700,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_20sdp"
                                 android:gravity="center"
-                                android:weightSum="1">
+                                android:weightSum="1"
+                                android:baselineAligned="false">
 
 
                                 <LinearLayout
@@ -679,7 +710,8 @@
                                     android:layout_gravity="center"
                                     android:layout_weight="0.35"
                                     android:gravity="center"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    tools:ignore="UseCompoundDrawables">
 
                                     <TextView
                                         android:id="@+id/tvToday"
@@ -687,7 +719,7 @@
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/montserrat_regular"
                                         android:gravity="start"
-                                        android:text="Today"
+                                        android:text="@string/today"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/_13sdp"
                                         tools:ignore="SpUsage" />
@@ -699,7 +731,8 @@
                                         android:layout_marginTop="@dimen/_6sdp"
                                         android:rotation="90"
                                         android:src="@drawable/ic_arrow_blue_icon"
-                                        app:tint="@color/light_black" />
+                                        app:tint="@color/light_black"
+                                        android:contentDescription="@string/todo" />
 
                                 </LinearLayout>
 
@@ -709,7 +742,8 @@
                                     android:layout_gravity="center"
                                     android:layout_weight="0.3"
                                     android:gravity="center"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    tools:ignore="UseCompoundDrawables">
 
                                     <TextView
                                         android:id="@+id/tvMonth"
@@ -717,10 +751,10 @@
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/montserrat_regular"
                                         android:gravity="start"
-                                        android:text="Month"
+                                        android:text="@string/month"
                                         android:textColor="@color/light_gray"
                                         android:textSize="@dimen/_13sdp"
-                                        tools:ignore="SpUsage" />
+                                        tools:ignore="SpUsage,TooManyViews" />
 
                                     <ImageView
                                         android:id="@+id/ivMonth"
@@ -740,7 +774,8 @@
                                     android:layout_gravity="center"
                                     android:layout_weight="0.35"
                                     android:gravity="center"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    tools:ignore="UseCompoundDrawables">
 
                                     <TextView
                                         android:id="@+id/tvYear"
@@ -748,9 +783,10 @@
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/montserrat_regular"
                                         android:gravity="start"
-                                        android:text="Year"
+                                        android:text="@string/year"
                                         android:textColor="@color/light_gray"
-                                        android:textSize="@dimen/_13sdp" />
+                                        android:textSize="@dimen/_13sdp"
+                                        tools:ignore="SpUsage" />
 
                                     <ImageView
                                         android:id="@+id/ivYear"
@@ -771,6 +807,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_6sdp"
                                 android:background="@drawable/account_gray_bg"
+                                android:baselineAligned="false"
                                 android:gravity="center"
                                 android:paddingTop="@dimen/_20sdp"
                                 android:paddingBottom="@dimen/_20sdp"
@@ -812,7 +849,7 @@
                                         android:layout_marginTop="@dimen/_20sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="2"
+                                        android:text="@string/_2"
                                         android:textColor="@color/app_theme_color"
                                         android:textSize="@dimen/_22sdp"
                                         tools:ignore="SpUsage" />
@@ -854,7 +891,7 @@
                                         android:layout_marginTop="@dimen/_20sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="11:38:47"
+                                        android:text="@string/_11_38_47"
                                         android:textColor="@color/app_theme_color"
                                         android:textSize="@dimen/_22sdp"
                                         tools:ignore="SpUsage" />
@@ -884,7 +921,7 @@
                                         android:layout_marginTop="@dimen/_4sdp"
                                         android:fontFamily="@font/montserrat_regular"
                                         android:gravity="start"
-                                        android:text="Regularity"
+                                        android:text="@string/regularity"
                                         android:textColor="@color/light_gray"
                                         android:textSize="@dimen/_14sdp"
                                         tools:ignore="SpUsage" />
@@ -896,7 +933,7 @@
                                         android:layout_marginTop="@dimen/_20sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="60%"
+                                        android:text="@string/_60"
                                         android:textColor="@color/app_theme_color"
                                         android:textSize="@dimen/_12sdp"
                                         tools:ignore="SpUsage" />
@@ -918,9 +955,11 @@
                             android:layout_marginTop="@dimen/_15sdp"
                             android:background="@drawable/round_chip_gray"
                             android:backgroundTint="#9A86BB"
+                            android:baselineAligned="false"
                             android:orientation="horizontal"
                             android:weightSum="10"
-                            tools:targetApi="lollipop">
+                            tools:targetApi="lollipop"
+                            tools:ignore="UselessParent">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -937,7 +976,7 @@
                                     android:layout_marginBottom="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
-                                    android:text="Emotional Empowerment"
+                                    android:text="@string/emotional_empowerment"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_18sdp"
                                     tools:ignore="SpUsage" />
@@ -948,7 +987,7 @@
                                     android:fontFamily="@font/montserrat_regular"
                                     android:gravity="start"
                                     android:maxLines="2"
-                                    android:text="Lorem ipsum dolor sit amet, consetetur"
+                                    android:text="@string/lorem_ipsum_dolor_sit_amet_consetetur"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_12sdp"
                                     tools:ignore="SpUsage" />
@@ -972,7 +1011,7 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="3"
                                 android:gravity="center"
                                 android:orientation="vertical">

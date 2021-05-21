@@ -43,6 +43,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     private var numStarted = 0
     var stackStatus = 0
     var myBackPress = false
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,11 +133,14 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 val dialog = Dialog(ctx)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.cancel_membership)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(
-                    ContextCompat.getColor(
-                    ctx,
-                    R.color.dark_blue_gray
-                )))
+                dialog.window!!.setBackgroundDrawable(
+                    ColorDrawable(
+                        ContextCompat.getColor(
+                            ctx,
+                            R.color.dark_blue_gray
+                        )
+                    )
+                )
                 dialog.window!!.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -287,7 +291,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             if (numStarted == 0) {
                 stackStatus = 1
                 Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
             }
             numStarted++
         }
@@ -306,7 +309,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     Log.e("APPLICATION", "back press true ")
                 }
                 Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
             }
         }
 

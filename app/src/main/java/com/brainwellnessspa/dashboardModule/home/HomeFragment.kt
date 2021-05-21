@@ -171,7 +171,6 @@ class HomeFragment : Fragment() {
                 .into(binding.ivUser)
         }
 
-        binding.llAreaOfFocus.visibility = View.VISIBLE
         val layoutManager = FlexboxLayoutManager(ctx)
         layoutManager.flexWrap = FlexWrap.WRAP
         layoutManager.alignItems = AlignItems.STRETCH
@@ -181,16 +180,28 @@ class HomeFragment : Fragment() {
         val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
 
-        binding.llCheckIndexSocre.setOnClickListener {
+        binding.llCheckIndexscore.setOnClickListener {
             val intent = Intent(ctx, WalkScreenActivity::class.java)
             intent.putExtra(CONSTANTS.ScreenView, "2")
             startActivity(intent)
         }
 
         if (isNetworkConnected(activity)) {
-            binding.llsetReminder.visibility = View.VISIBLE
+            binding.llSetReminder.visibility = View.VISIBLE
+            binding.llIndexScore.visibility = View.VISIBLE
+            binding.llSevere.visibility = View.VISIBLE
+            binding.llActivities.visibility = View.VISIBLE
+            binding.llPlayer.visibility = View.VISIBLE
+            binding.llAreaOfFocus.visibility = View.VISIBLE
+            binding.barChart.visibility = View.VISIBLE
         } else {
-            binding.llsetReminder.visibility = View.GONE
+            binding.llSetReminder.visibility = View.GONE
+            binding.llIndexScore.visibility = View.GONE
+            binding.llSevere.visibility = View.GONE
+            binding.llActivities.visibility = View.GONE
+            binding.llPlayer.visibility = View.GONE
+            binding.llAreaOfFocus.visibility = View.GONE
+            binding.barChart.visibility = View.GONE
             showToast(getString(R.string.no_server_found), activity)
         }
         binding.llBottomView.setOnClickListener {
@@ -213,7 +224,7 @@ class HomeFragment : Fragment() {
                 prepareUserData(
                     layoutBinding.rvUserList,
                     layoutBinding.progressBar,
-                    layoutBinding.llAddNewUser
+                    layoutBinding.llAddNewUser, mBottomSheetDialog!!
                 )
                 layoutBinding.llAddNewUser.setOnClickListener {
                     val i = Intent(act, AddProfileActivity::class.java)
@@ -262,7 +273,7 @@ class HomeFragment : Fragment() {
     private fun prepareUserData(
         rvUserList: RecyclerView,
         progressBar: ProgressBar,
-        llAddNewUser: LinearLayout
+        llAddNewUser: LinearLayout, mBottomSheetDialog: BottomSheetDialog
     ) {
         if (isNetworkConnected(act)) {
             progressBar.visibility = View.VISIBLE
@@ -276,7 +287,7 @@ class HomeFragment : Fragment() {
                     try {
                         progressBar.visibility = View.GONE
                         val listModel: AddedUserListModel = response.body()!!
-                        adapter = UserListAdapter(listModel.responseData!!)
+                        adapter = UserListAdapter(listModel.responseData!!, mBottomSheetDialog)
                         rvUserList.adapter = adapter
 
                         if (listModel.responseData!!.coUserList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {
@@ -419,13 +430,13 @@ class HomeFragment : Fragment() {
 
 
                         if (listModel.responseData!!.shouldCheckIndexScore.equals("0", true)) {
-                            binding.llCheckIndexSocre.visibility = View.GONE
+                            binding.llCheckIndexscore.visibility = View.GONE
                         } else if (listModel.responseData!!.shouldCheckIndexScore.equals(
                                 "1",
                                 ignoreCase = true
                             )
                         ) {
-                            binding.llCheckIndexSocre.visibility = View.VISIBLE
+                            binding.llCheckIndexscore.visibility = View.VISIBLE
                         }
 
 
@@ -439,21 +450,21 @@ class HomeFragment : Fragment() {
                             )
                         ) {
                             binding.tvReminder.text = "Set reminder"
-                            binding.llsetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
                                 "1",
                                 ignoreCase = true
                             )
                         ) {
                             binding.tvReminder.text = "Update reminder"
-                            binding.llsetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
                                 "2",
                                 ignoreCase = true
                             )
                         ) {
                             binding.tvReminder.text = "Update reminder"
-                            binding.llsetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                         }
 
                         binding.tvReminder.setOnClickListener {
@@ -467,7 +478,7 @@ class HomeFragment : Fragment() {
                                 )
                             ) {
                                 binding.tvReminder.text = "Set reminder"
-                                binding.llsetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                 getReminderDay(
                                     ctx,
                                     act,
@@ -484,7 +495,7 @@ class HomeFragment : Fragment() {
                                 )
                             ) {
                                 binding.tvReminder.text = "Update reminder"
-                                binding.llsetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                                 getReminderDay(
                                     ctx,
                                     act,
@@ -501,7 +512,7 @@ class HomeFragment : Fragment() {
                                 )
                             ) {
                                 binding.tvReminder.text = "Update reminder"
-                                binding.llsetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                 getReminderDay(
                                     ctx,
                                     act,
@@ -578,11 +589,11 @@ class HomeFragment : Fragment() {
                                                 )
                                                 && player.duration - player.currentPosition <= 20
                                             ) {
-                                                val shared = ctx.getSharedPreferences(
+                                                val sharedd = ctx.getSharedPreferences(
                                                     CONSTANTS.PREF_KEY_PLAYER,
                                                     Context.MODE_PRIVATE
                                                 )
-                                                val editor = shared.edit()
+                                                val editor = sharedd.edit()
                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                                 editor.apply()
                                                 player.seekTo(0, 0)
@@ -1183,7 +1194,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    inner class UserListAdapter(private val model: AddedUserListModel.ResponseData) :
+    inner class UserListAdapter(
+        private val model: AddedUserListModel.ResponseData,
+        val mBottomSheetDialog: BottomSheetDialog
+    ) :
         RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var selectedItem = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -1221,7 +1235,13 @@ class HomeFragment : Fragment() {
             }
 
             holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
-            holder.bind.ivCheck.visibility = View.INVISIBLE
+
+            if (modelList[position].name.equals(UserName, ignoreCase = true)) {
+                holder.bind.ivCheck.visibility = View.VISIBLE
+            }else {
+                holder.bind.ivCheck.visibility = View.INVISIBLE
+            }
+
             if (selectedItem == position) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
             }
@@ -1382,6 +1402,8 @@ class HomeFragment : Fragment() {
                                                     act.startActivity(intent)
                                                     act.finish()
                                                 }
+                                                dialog.dismiss()
+                                                mBottomSheetDialog.hide()
                                                 val shared = act.getSharedPreferences(
                                                     CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
                                                     AppCompatActivity.MODE_PRIVATE
@@ -1459,8 +1481,6 @@ class HomeFragment : Fragment() {
                                                     listModel.responseMessage,
                                                     act
                                                 )
-                                                dialog.dismiss()
-                                                mBottomSheetDialog!!.hide()
 
                                                 analytics.identify(
                                                     Traits()

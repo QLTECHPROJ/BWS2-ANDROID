@@ -359,7 +359,7 @@ public class ViewAllPlaylistFragment extends Fragment {
       Glide.with(requireActivity())
           .load(listModelList.get(position).getPlaylistImage())
           .thumbnail(0.05f)
-          .apply(RequestOptions.bitmapTransform(new RoundedCorners(40)))
+          .apply(RequestOptions.bitmapTransform(new RoundedCorners(42)))
           .priority(Priority.HIGH)
           .diskCacheStrategy(DiskCacheStrategy.ALL)
           .skipMemoryCache(false)

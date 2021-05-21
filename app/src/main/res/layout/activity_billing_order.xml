@@ -1,25 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
         <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/billing_and_order"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/rlMainLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <RelativeLayout
-                android:id="@+id/rlLayout"
+                android:id="@+id/rlLayouts"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_56sdp">
 
                 <LinearLayout
-                    android:id="@+id/llBack"
+                    android:id="@+id/llBacks"
                     android:layout_width="42dp"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -49,7 +81,7 @@
                 android:id="@+id/rlTabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/rlLayout"
+                android:layout_below="@+id/rlLayouts"
                 android:elevation="@dimen/_2sdp"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -75,8 +107,372 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rlMainLayout" />
+            android:layout_below="@id/rlMainLayout"
+            android:visibility="gone" />
 
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rlLayout"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:background="@drawable/rounded_light_gray"
+                    android:backgroundTint="#227681"
+                    tools:targetApi="lollipop">
+
+                    <LinearLayout
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.8"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/_14sdp"
+                        android:paddingTop="@dimen/_18sdp"
+                        android:paddingBottom="@dimen/_20sdp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="One month Subscription, Standard Licensewith Access Intro Session."
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_17sdp"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.1"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_plan_icon"
+                                    app:tint="@color/white" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_weight="0.8"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvTitlePlan"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:ellipsize="end"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:maxLines="1"
+                                    android:text="Plan"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+
+                                <TextView
+                                    android:id="@+id/tvPlan"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="Membership - Six Mont"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_16sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.1"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_price_icon"
+                                    app:tint="@color/white" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_weight="0.8"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvTitlePrice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:ellipsize="end"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:maxLines="1"
+                                    android:text="Price"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+
+                                <TextView
+                                    android:id="@+id/tvPrice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="$29.99 every 1 months"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_16sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.1"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_active_since_icon"
+                                    app:tint="@color/white" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_weight="0.8"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvTitleActive"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:ellipsize="end"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:maxLines="1"
+                                    android:text="Active Since"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+
+                                <TextView
+                                    android:id="@+id/tvActive"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="1st March 2021"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_16sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.1"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_status_icon"
+                                    app:tint="@color/white" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_weight="0.8"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvTitleStatus"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:ellipsize="end"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:maxLines="1"
+                                    android:text="Status"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+
+                                <TextView
+                                    android:id="@+id/tvStatus"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="Active"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+
+                                <TextView
+                                    android:id="@+id/tvStatusRenew"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="(Renew on 1st April 2021)"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_12sdp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:paddingTop="@dimen/_24sdp"
+                        android:paddingRight="@dimen/_16sdp">
+
+                        <CheckBox
+                            android:id="@+id/cbChecked"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:button="@drawable/radio_btn_background"
+                            android:buttonTint="@color/white"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|left"
+                            android:layoutDirection="rtl"
+                            android:overScrollMode="never"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnUpgradePlan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_40sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:background="@drawable/light_green_rounded_filled"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/upgrade_plan"
+                android:textColor="@color/white"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center_horizontal"
+                android:paddingLeft="@dimen/_6sdp"
+                android:paddingBottom="@dimen/_18sdp"
+                android:text="@string/cancel"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/_13sdp"
+                android:visibility="visible" />
+        </LinearLayout>
     </RelativeLayout>
 
 </layout>

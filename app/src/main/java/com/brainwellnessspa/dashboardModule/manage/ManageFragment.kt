@@ -118,7 +118,12 @@ class ManageFragment : Fragment() {
             binding.llSetReminder.visibility = View.VISIBLE
         } else {
             binding.llSetReminder.visibility = View.GONE
-            binding.llSpace
+            val params = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(0, 80, 0, 110)
+            binding.llSpace1.setLayoutParams(params)
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
         binding.llSearch.setOnClickListener {
