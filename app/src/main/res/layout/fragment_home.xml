@@ -9,17 +9,13 @@
         android:background="@color/white"
         tools:context=".dashboardModule.home.HomeFragment">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/manage_bg_banner"
-            android:contentDescription="@string/todo" />
 
         <LinearLayout
             android:id="@+id/llUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="#eeeeee"
             android:paddingBottom="@dimen/_10sdp"
             android:weightSum="1">
 
@@ -150,6 +146,11 @@
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/_80sdp">
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/manage_bg_banner"
+                    android:contentDescription="@string/todo" />
 
                 <LinearLayout
                     android:id="@+id/llPlayer"
