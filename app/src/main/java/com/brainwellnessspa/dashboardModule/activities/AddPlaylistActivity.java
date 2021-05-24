@@ -186,11 +186,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             prepareData(ctx);
                                             String PlaylistID = listsModel.getResponseData().getPlaylistID();
                                             String Created = listsModel.getResponseData().getIscreate();
-                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                                            if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistID)) {
                                                 if (isDisclaimer == 1) {
                                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
                                                 } else {
@@ -321,15 +320,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
                         if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
 //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            if (audioPlay) {
-                                if (AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                            int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                            String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                            if (AudioFlag.equalsIgnoreCase("playList") && pID.equalsIgnoreCase(PlaylistID)) {
                                     Gson gsonx = new Gson();
-                                    String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                                    String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gsonx));
                                     Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                                     }.getType();
                                     ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
@@ -374,19 +371,17 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             break;
                                         }
                                     }
-                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedd.edit();
                                     Gson gson = new Gson();
                                     String jsonx = gson.toJson(mainPlayModelList);
                                     String json1 = gson.toJson(playlistSongs);
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
-                                    editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                                    editor.putInt(CONSTANTS.PREF_KEY_position, pos);
-                                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
-                                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
-                                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                                    editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1);
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
+                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
+                                    editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, PlaylistID);
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created");
+                                    editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                     editor.commit();
 
                                     if (!mainPlayModelList.get(pos).getAudioFile().equals("")) {
@@ -395,7 +390,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                     }
                                 }
-                            }
                           /*  if (comeAddPlaylist == 1) {
                                 final Dialog dialog = new Dialog(ctx);
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -519,11 +513,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 String PlaylistID = listModel.get(position).getId();
                 String Created = listModel.get(position).getCreated();
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
                     } else {

@@ -550,9 +550,9 @@ public class AudioDownloadsFragment extends Fragment {
                 try {
                     if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                         String name = "";
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                         Gson gson = new Gson();
-                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                         }.getType();
                         ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
@@ -862,7 +862,7 @@ public class AudioDownloadsFragment extends Fragment {
 
         private void callSaveToPref(int position, List<DownloadAudioDetails> listModelList) {
 
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json = gson.toJson(listModelList);

@@ -971,9 +971,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             && player.duration - player.currentPosition <= 20
                         ) {
                             val shared =
-                                ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
+                                ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                             val editor = shared.edit()
-                            editor.putInt(CONSTANTS.PREF_KEY_position, 0)
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                             editor.apply()
                             player.seekTo(0, 0)
                             player.playWhenReady = true
@@ -1221,17 +1221,17 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
 
 //                    private fun saveToPref(pos: Int, mData: ArrayList<playlistModel.ResponseData.PlaylistSong>) {
-//                        val shareddd: SharedPreferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
+//                        val shareddd: SharedPreferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
 //                        val editor = shareddd.edit()
 //                        val gson = Gson()
 //                        val json = gson.toJson(mData)
-//                        editor.putString(CONSTANTS.PREF_KEY_modelList, json)
-//                        editor.putInt(CONSTANTS.PREF_KEY_position, pos)
+//                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
+//                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos)
 //                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false)
 //                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true)
 //                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID)
 //                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist")
-//                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "playlist")
+//                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
 //                        editor.commit()
 //                        callAddTransFrag()
 //                    }
@@ -1456,9 +1456,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             && player.duration - player.currentPosition <= 20
                         ) {
                             val shared =
-                                ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
+                                ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                             val editor = shared.edit()
-                            editor.putInt(CONSTANTS.PREF_KEY_position, 0)
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                             editor.commit()
                             player.seekTo(0, 0)
                             player.playWhenReady = true
@@ -1488,7 +1488,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             binding.llDelete.setOnClickListener { v ->
                 val shared: SharedPreferences =
                     ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                val AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0")
+                val AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
                 if (AudioFlag.equals("Downloadlist", ignoreCase = true) && pID.equals(
                         PlaylistID,
@@ -1828,7 +1828,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 downloadAudioDetails.add(mainPlayModel)
             }
             json = gson.toJson(downloadAudioDetails)
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist")
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist")
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         } else {
             json = gson.toJson(listModel)
@@ -2208,7 +2208,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 mainPlayModel1.audioDuration = playlistSongs[position].audioDuration
                 arrayList2.add(mainPlayModel1)
                 val sharedd: SharedPreferences =
-                    getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
+                    getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val editor = sharedd.edit()
                 val gson = Gson()
                 val jsonx = gson.toJson(arrayList2)

@@ -115,7 +115,6 @@ public class CONSTANTS {
     public static final String PREF_KEY_LOGIN = "Login";
     public static final String PREF_KEY_Splash = "Splash";
     public static final String PREF_KEY_SplashKey = "SplashKey";
-    public static final String PREF_KEY_AUDIO = "AUDIO";
     public static final String PREF_KEY_PLAYER = "Player";
     public static final String PREF_KEY_MainAudioList = "MainAudioList";
     public static final String PREF_KEY_PlayerAudioList = "PlayerAudioList";
@@ -144,15 +143,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_DeviceID = "DeviceID";
     public static final String PREF_KEY_IsLock = "IsLock";
     public static final String PREF_KEY_UnLockAudiList = "UnLockAudiList";
-    public static final String PREF_KEY_modelList = "modelList";
-    public static final String PREF_KEY_audioList = "audioList";
-    public static final String PREF_KEY_queueList = "queueList";
-    public static final String PREF_KEY_queuePlay = "queuePlay";
-    public static final String PREF_KEY_position = "position";
-    public static final String PREF_KEY_audioPlay = "audioPlay";
-    public static final String PREF_KEY_AudioFlag = "AudioFlag";
     public static final String PREF_KEY_Cat_Name = "Cat_Name";
-    public static final String PREF_KEY_myPlaylist = "myPlaylist";
     public static final String PREF_KEY_PlaylistId = "PlaylistId";
     public static final String PREF_KEY_DownloadPlaylist = "PlaylistId";
     public static final String PREF_KEY_DownloadName = "Name";

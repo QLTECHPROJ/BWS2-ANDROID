@@ -190,8 +190,8 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
 //        try {
 //            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
 //            globalInitExoPlayer.UpdateMiniPlayer(ctx);
-//            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-//            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+//            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+//            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
 //            if (!AudioFlag.equalsIgnoreCase("0")) {
 //                Fragment fragment = new MiniPlayerFragment();
 //                FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -205,8 +205,8 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
 //            e.printStackTrace();
 //        }
       /*  try {
-            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
             Gson gson1 = new Gson();
@@ -216,9 +216,9 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioID = "";
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
-                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                 }.getType();
                 ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
@@ -230,14 +230,14 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
 
                 if (UnlockAudioList.contains(audioID)) {
                 } else {
-                    SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editorr = sharedm.edit();
-                    editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                    editorr.remove(CONSTANTS.PREF_KEY_audioList);
-                    editorr.remove(CONSTANTS.PREF_KEY_position);
+                    editorr.remove(CONSTANTS.PREF_KEY_MainAudioList);
+                    editorr.remove(CONSTANTS.PREF_KEY_PlayerAudioList);
+                    editorr.remove(CONSTANTS.PREF_KEY_PlayerPosition);
                     editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
                     editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                    editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                    editorr.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag);
                     editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
@@ -247,14 +247,14 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                 }
 
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
-                editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                editorr.remove(CONSTANTS.PREF_KEY_audioList);
-                editorr.remove(CONSTANTS.PREF_KEY_position);
+                editorr.remove(CONSTANTS.PREF_KEY_MainAudioList);
+                editorr.remove(CONSTANTS.PREF_KEY_PlayerAudioList);
+                editorr.remove(CONSTANTS.PREF_KEY_PlayerPosition);
                 editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
                 editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                editorr.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag);
                 editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
@@ -262,8 +262,8 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
 
                 callNewPlayerRelease();
             }
-            SharedPreferences shared22 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            SharedPreferences shared22 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
 

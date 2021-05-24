@@ -19,8 +19,6 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Models.SegmentAudio;
 import com.brainwellnessspa.DashboardOldModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
@@ -171,8 +168,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
        /* try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
             globalInitExoPlayer.UpdateMiniPlayer(ctx);
-            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
                 callAddFrag();
@@ -326,7 +323,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                     ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                 }
                                 if (player != null) {
-                                    callAddFrag();
+//                                    callAddFrag();
                                 }
                             }
                             BWSApplication.showToast(listModels.getResponseMessage(), activity);
@@ -352,11 +349,11 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     }
 
     private void callAddFrag() {
-        Fragment fragment = new MiniPlayerFragment();
+       /* Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getSupportFragmentManager();
         fragmentManager1.beginTransaction()
                 .add(R.id.flContainer, fragment)
-                .commit();
+                .commit();*/
     }
 
     public class AudiosListAdpater extends RecyclerView.Adapter<AudiosListAdpater.MyViewHolder> {
@@ -535,7 +532,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             }
                             callMyPlayer();
                         } else {
-                            callPlayer(0, listModelList2,true);
+                            callPlayer(0, listModelList2, true);
                         }
                     }
                 } else {
@@ -577,7 +574,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         }
                     }
                     listModelList2.add(listModel.get(position));
-                    callPlayer(0, listModelList2,audioc);
+                    callPlayer(0, listModelList2, audioc);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -591,8 +588,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             activity.overridePendingTransition(0, 0);
         }
 
-        private void callPlayer(int position, ArrayList<SuggestedModel.ResponseData> listModel,boolean audioc) {
-            if(audioc) {
+        private void callPlayer(int position, ArrayList<SuggestedModel.ResponseData> listModel, boolean audioc) {
+            if (audioc) {
                 callNewPlayerRelease();
             }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);

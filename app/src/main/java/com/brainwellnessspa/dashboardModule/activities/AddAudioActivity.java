@@ -22,8 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
@@ -87,14 +84,6 @@ public class AddAudioActivity extends AppCompatActivity {
     Activity activity;
     int listSize = 0;
     SuggestedAdpater suggestedAdpater;
-    //    Handler handler3;
-    Properties p;
-    int stackStatus = 0;
-    boolean myBackPress = false;
-    boolean notificationStatus = false;
-    private int numStarted = 0;
-    GsonBuilder gsonBuilder;
-    ArrayList<String> section;
     //    private Runnable UpdateSongTime3;
     private final BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -118,6 +107,14 @@ public class AddAudioActivity extends AppCompatActivity {
             }
         }
     };
+    //    Handler handler3;
+    Properties p;
+    int stackStatus = 0;
+    boolean myBackPress = false;
+    boolean notificationStatus = false;
+    GsonBuilder gsonBuilder;
+    ArrayList<String> section;
+    private int numStarted = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -495,8 +492,6 @@ public class AddAudioActivity extends AppCompatActivity {
                                         GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
                                         ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
                                     }
-                                    callAddFrag();
-
                                 }
                                 if (s.equalsIgnoreCase("1")) {
                                     finish();
@@ -524,11 +519,11 @@ public class AddAudioActivity extends AppCompatActivity {
     }
 
     private void callAddFrag() {
-        Fragment fragment = new MiniPlayerFragment();
+       /* Fragment fragment = new MiniPlayerFragment();
         FragmentManager fragmentManager1 = getSupportFragmentManager();
         fragmentManager1.beginTransaction()
                 .add(R.id.flContainer, fragment)
-                .commit();
+                .commit();*/
     }
 
     public class SerachListAdpater extends RecyclerView.Adapter<SerachListAdpater.MyViewHolder> {
@@ -1212,11 +1207,10 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
                 comefromDownload = "0";
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                if (AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
                     } else {

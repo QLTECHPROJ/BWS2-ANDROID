@@ -76,8 +76,8 @@ class MainPlaylistFragment : Fragment() {
             ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE)
-        AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0")
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+        AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         AudioDownloadsFragment.comefromDownload = "0"
         if (arguments != null) {
             Check = requireArguments().getString("Check")

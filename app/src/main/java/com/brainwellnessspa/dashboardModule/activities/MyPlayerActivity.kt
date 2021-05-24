@@ -23,7 +23,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.Models.AudioInterruptionModel
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel
-import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment
+import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia
@@ -86,7 +86,7 @@ class MyPlayerActivity : AppCompatActivity() {
     var audioFile1 = arrayListOf<String>()
     var playlistDownloadId = arrayListOf<String>()
 
-    private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
+    private val listener: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             getDownloadData()
             if (intent.hasExtra("Progress")) {
@@ -94,10 +94,18 @@ class MyPlayerActivity : AppCompatActivity() {
             }
         }
     }
+    private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.hasExtra("MyReminder")) {
+                audioClick = false
+                makePlayerArray()
+            }
+        }
+    }
 
     override fun onResume() {
         LocalBroadcastManager.getInstance(act)
-            .registerReceiver(listener1, IntentFilter("DownloadProgress"))
+            .registerReceiver(listener, IntentFilter("DownloadProgress"))
         super.onResume()
     }
 
@@ -155,11 +163,11 @@ class MyPlayerActivity : AppCompatActivity() {
         if (intent.hasExtra("notification")) {
             val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
             val UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
-            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE)
-            val xposition = shared.getInt(CONSTANTS.PREF_KEY_position, 0)
+            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val xposition = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             val gson = Gson()
             var mainPlayModelList2 = java.util.ArrayList<MainPlayModel>()
-            val json = shared.getString(CONSTANTS.PREF_KEY_audioList, gson.toString())
+            val json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
             if (!json.equals(gson.toString(), ignoreCase = true)) {
                 val type = object : TypeToken<java.util.ArrayList<MainPlayModel?>?>() {}.type
                 mainPlayModelList2 = gson.fromJson(json, type)
@@ -182,6 +190,9 @@ class MyPlayerActivity : AppCompatActivity() {
             p.putValue("sound", hundredVolume.toString())
             addToSegment("Notification Player Clicked", p, CONSTANTS.track)
         }
+
+        LocalBroadcastManager.getInstance(ctx)
+                .registerReceiver(listener1, IntentFilter("Reminder"))
         exoBinding = DataBindingUtil.inflate(
             LayoutInflater.from(this),
             R.layout.audio_player_new_layout,
@@ -249,7 +260,8 @@ class MyPlayerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        LocalBroadcastManager.getInstance(act).unregisterReceiver(listener1)
+        LocalBroadcastManager.getInstance(act).unregisterReceiver(listener)
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1)
         super.onDestroy()
     }
 
@@ -457,7 +469,7 @@ class MyPlayerActivity : AppCompatActivity() {
     private fun initializePlayerDisclaimer() {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         try {
-            MiniPlayerFragment.isDisclaimer = 1
+            isDisclaimer = 1
             if (audioClick) {
                 val globalInitExoPlayer = GlobalInitExoPlayer()
                 globalInitExoPlayer.GlobleInItDisclaimer(ctx, mainPlayModelList, position)
@@ -469,7 +481,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         if (state == ExoPlayer.STATE_ENDED) {
                             //player back ended
                             audioClick = true
-                            MiniPlayerFragment.isDisclaimer = 0
+                            isDisclaimer = 0
                             val shared =
                                 getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
                             val editor = shared.edit()
@@ -640,7 +652,7 @@ class MyPlayerActivity : AppCompatActivity() {
 //        if(!BWSApplication.isNetworkConnected(ctx)){
         callNewPlayerRelease()
         //        }
-        MiniPlayerFragment.isDisclaimer = 0
+        isDisclaimer = 0
         val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
         val json1 = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
@@ -974,7 +986,7 @@ class MyPlayerActivity : AppCompatActivity() {
     private fun initializePlayer() {
         try {
 //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-            MiniPlayerFragment.isDisclaimer = 0
+            isDisclaimer = 0
             if (audioClick) {
                 val globalInitExoPlayer = GlobalInitExoPlayer()
                 globalInitExoPlayer.GlobleInItPlayer(

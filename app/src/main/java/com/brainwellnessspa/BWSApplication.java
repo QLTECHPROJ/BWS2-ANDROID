@@ -464,126 +464,125 @@ public class BWSApplication extends Application {
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                            try {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar(progressBar, progressBarHolder, act);
-                                    SucessModel listModel = response.body();
-                                    if (AudioFlag.equalsIgnoreCase("playlist")) {
-                                        Gson gson12 = new Gson();
-                                        String json12 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson12));
-                                        Type type1 = new TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>>() {
-                                        }.getType();
-                                        ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> arrayList1 = gson12.fromJson(json12, type1);
-                                        int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                                        if (comeFrom.equalsIgnoreCase("playlist")) {
-                                            mDataPlaylist.remove(position);
-                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                            int oldpos = pos;
-                                            if (pID.equalsIgnoreCase(pids)) {
-                                                if (mDataPlaylist.size() != 0) {
-                                                    if (pos == position && position < mDataPlaylist.size() - 1) {
-                                                        pos = pos;
-                                                    } else if (pos == position && position == mDataPlaylist.size() - 1) {
-                                                        pos = 0;
-                                                    } else if (pos < position && pos < mDataPlaylist.size() - 1) {
-                                                        pos = pos;
-                                                    } else if (pos < position && pos == mDataPlaylist.size() - 1) {
-                                                        pos = pos;
-                                                    } else if (pos > position && pos == mDataPlaylist.size()) {
-                                                        pos = pos - 1;
-                                                    }
-                                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                                                    SharedPreferences.Editor editor = sharedd.edit();
-                                                    Gson gson = new Gson();
-                                                    String json = gson.toJson(mDataPlaylist);
-                                                    editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
-                                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
-                                                    editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, pids);
-                                                    editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
-                                                    editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
-                                                    editor.apply();
-                                                    Type type = new TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>>() {
-                                                    }.getType();
-                                                    ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-                                                    int listSize = arrayList.size();
-                                                    for (int i = 0; i < listSize; i++) {
-                                                        MainPlayModel mainPlayModel = new MainPlayModel();
-                                                        mainPlayModel.setID(arrayList.get(i).getId());
-                                                        mainPlayModel.setName(arrayList.get(i).getName());
-                                                        mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                                                        mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
-                                                        mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                                                        mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                                                        mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                                                        mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                                                        mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                                                        mDataPlayer.add(mainPlayModel);
-                                                    }
-                                                    SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                                    SharedPreferences.Editor editor1 = sharedz.edit();
-                                                    Gson gsonz = new Gson();
-                                                    String jsonz = gsonz.toJson(mDataPlayer);
-                                                    editor1.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonz);
-                                                    editor1.commit();
-                                                    if (player != null) {
-                                                        player.removeMediaItem(oldpos);
-                                                        player.setPlayWhenReady(true);
-                                                    }
-                                                    dialog.dismiss();
+                            if (response.isSuccessful()) {
+                                hideProgressBar(progressBar, progressBarHolder, act);
+                                SucessModel listModel = response.body();
+                                if (AudioFlag.equalsIgnoreCase("playlist")) {
+                                    Gson gson12 = new Gson();
+                                    String json12 = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, String.valueOf(gson12));
+                                    Type type1 = new TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>>() {
+                                    }.getType();
+                                    ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> arrayList1 = gson12.fromJson(json12, type1);
+                                    int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                                    if (comeFrom.equalsIgnoreCase("playlist")) {
+                                        mDataPlaylist.remove(position);
+                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                                        int oldpos = pos;
+                                        if (pID.equalsIgnoreCase(pids)) {
+                                            if (mDataPlaylist.size() != 0) {
+                                                if (pos == position && position < mDataPlaylist.size() - 1) {
+                                                    pos = pos;
+                                                } else if (pos == position && position == mDataPlaylist.size() - 1) {
+                                                    pos = 0;
+                                                } else if (pos < position && pos < mDataPlaylist.size() - 1) {
+                                                    pos = pos;
+                                                } else if (pos < position && pos == mDataPlaylist.size() - 1) {
+                                                    pos = pos;
+                                                } else if (pos > position && pos == mDataPlaylist.size()) {
+                                                    pos = pos - 1;
                                                 }
+                                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedd.edit();
+                                                Gson gson = new Gson();
+                                                String json = gson.toJson(mDataPlaylist);
+                                                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
+                                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
+                                                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, pids);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
+                                                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
+                                                editor.apply();
+                                                Type type = new TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>>() {
+                                                }.getType();
+                                                ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+                                                int listSize = arrayList.size();
+                                                for (int i = 0; i < listSize; i++) {
+                                                    MainPlayModel mainPlayModel = new MainPlayModel();
+                                                    mainPlayModel.setID(arrayList.get(i).getId());
+                                                    mainPlayModel.setName(arrayList.get(i).getName());
+                                                    mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                                                    mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
+                                                    mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                                                    mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                                                    mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                                                    mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                                                    mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                                                    mDataPlayer.add(mainPlayModel);
+                                                }
+                                                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                                                SharedPreferences.Editor editor1 = sharedz.edit();
+                                                Gson gsonz = new Gson();
+                                                String jsonz = gsonz.toJson(mDataPlayer);
+                                                editor1.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonz);
+                                                editor1.commit();
+                                                if (player != null) {
+                                                    player.removeMediaItem(oldpos);
+                                                    player.setPlayWhenReady(true);
+                                                }
+                                                dialog.dismiss();
                                             }
+                                        }
 
-                                            localIntent.putExtra("MyReminder", "update");
-                                            localBroadcastManager.sendBroadcast(localIntent);
-                                            dialog.dismiss();
-                                        } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
-                                            mDataPlayer.remove(pos);
-                                            arrayList1.remove(pos);
-                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                            if (pID.equalsIgnoreCase(pids)) {
-                                                int oldpos = pos;
-                                                if (mDataPlayer.size() != 0) {
-                                                    if (pos < mDataPlayer.size() - 1) {
-                                                        pos = pos;
-                                                    } else if (pos == mDataPlayer.size() - 1) {
-                                                        pos = 0;
-                                                    } else if (pos == mDataPlayer.size()) {
-                                                        pos = 0;
-                                                    } else if (pos > mDataPlayer.size()) {
-                                                        pos = pos - 1;
-                                                    }
-                                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                                    SharedPreferences.Editor editor = sharedd.edit();
-                                                    Gson gson = new Gson();
-                                                    String json = gson.toJson(mDataPlayer);
-                                                    String json1 = gson.toJson(arrayList1);
-                                                    editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1);
-                                                    editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, json);
-                                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
-                                                    editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, pids);
-                                                    editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
-                                                    editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
-                                                    editor.apply();
+                                        localIntent.putExtra("MyReminder", "update");
+                                        localBroadcastManager.sendBroadcast(localIntent);
+                                        dialog.dismiss();
+                                    } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                                        mDataPlayer.remove(pos);
+                                        arrayList1.remove(pos);
+                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                                        if (pID.equalsIgnoreCase(pids)) {
+                                            int oldpos = pos;
+                                            if (mDataPlayer.size() != 0) {
+                                                if (pos < mDataPlayer.size() - 1) {
+                                                    pos = pos;
+                                                } else if (pos == mDataPlayer.size() - 1) {
+                                                    pos = 0;
+                                                } else if (pos == mDataPlayer.size()) {
+                                                    pos = 0;
+                                                } else if (pos > mDataPlayer.size()) {
+                                                    pos = pos - 1;
+                                                }
+                                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedd.edit();
+                                                Gson gson = new Gson();
+                                                String json = gson.toJson(mDataPlayer);
+                                                String json1 = gson.toJson(arrayList1);
+                                                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, json);
+                                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
+                                                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, pids);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
+                                                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
+                                                editor.apply();
 //                                                if(mainPlayModelList.size()==1){
 //                                                    miniPlayer = 1;
 //                                                    audioClick = true;
 //                                                    callNewPlayerRelease();
 //                                                }else {
-                                                    if (player != null) {
-                                                        player.removeMediaItem(oldpos);
-                                                    }
-//                                                }
-                                                    dialog.dismiss();
+                                                if (player != null) {
+                                                    player.removeMediaItem(oldpos);
                                                 }
+//                                                }
+                                                dialog.dismiss();
+                                                localIntent = new Intent("Reminder");
+                                                localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
+                                                localIntent.putExtra("MyReminder", "update");
+                                                localBroadcastManager.sendBroadcast(localIntent);
                                             }
                                         }
                                     }
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
-
                         @Override
                         public void onFailure(Call<SucessModel> call, Throwable t) {
                             hideProgressBar(progressBar, progressBarHolder, act);

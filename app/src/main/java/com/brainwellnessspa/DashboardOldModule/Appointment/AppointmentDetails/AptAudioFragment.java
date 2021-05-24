@@ -94,11 +94,10 @@ public class AptAudioFragment extends Fragment {
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlayz && AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                     if (player != null) {
                         if (data.equalsIgnoreCase("play")) {
 //                    BWSApplication.showToast("Play", getActivity());
@@ -327,10 +326,9 @@ public class AptAudioFragment extends Fragment {
                 }
             };*/
 //            holder.binding.equalizerview.setcolo
-            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
 //            if (audioPlayz && (AudioFlag.equalsIgnoreCase("AppointmentDetailList") ||
 //                    AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
 //                if (myAudioId.equalsIgnoreCase(audiolist.getID())) {
@@ -419,13 +417,12 @@ public class AptAudioFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 comeRefreshData = 1;
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                 IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
-                if (audioPlay && AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
                             if (!player.getPlayWhenReady()) {
@@ -563,17 +560,15 @@ public class AptAudioFragment extends Fragment {
                 if (audioc) {
                     callNewPlayerRelease();
                 }
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
                 String json = gson.toJson(listModelList);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
+                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "AppointmentDetailList");
                 editor.commit();
                 boolean commit = editor.commit();
                 callAddTransFrag();
@@ -624,12 +619,11 @@ public class AptAudioFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            SharedPreferences sharedx1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            String AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            SharedPreferences sharedx1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+            String AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             Gson gsonx = new Gson();
-            String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
-            String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
+            String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gsonx));
+            String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_MainAudioList, String.valueOf(gsonx));
             ArrayList<DownloadAudioDetails> arrayList = new ArrayList<>();
             ArrayList<MainPlayModel> arrayList2 = new ArrayList<>();
             int size = 0;
@@ -643,8 +637,8 @@ public class AptAudioFragment extends Fragment {
                 arrayList2 = gson1.fromJson(json11, type0);
                 size = arrayList2.size();
             }
-            int position = sharedx1.getInt(CONSTANTS.PREF_KEY_position, 0);
-            if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            int position = sharedx1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+            if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 arrayList.add(downloadAudioDetails);
                 MainPlayModel mainPlayModel1 = new MainPlayModel();
                 mainPlayModel1.setID(downloadAudioDetails.getID());
@@ -658,19 +652,17 @@ public class AptAudioFragment extends Fragment {
                 mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
                 mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
                 arrayList2.add(mainPlayModel1);
-                SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedd.edit();
                 Gson gson = new Gson();
                 String jsonx = gson.toJson(arrayList2);
                 String json1q1 = gson.toJson(arrayList);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json1q1);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1q1);
+                editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
+                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
                 editor.commit();
 
                 if (!arrayList2.get(position).getAudioFile().equals("")) {

@@ -821,11 +821,11 @@ class ManageFragment : Fragment() {
                                             && player.duration - player.currentPosition <= 20
                                         ) {
                                             val shared = ctx.getSharedPreferences(
-                                                CONSTANTS.PREF_KEY_AUDIO,
+                                                CONSTANTS.PREF_KEY_PLAYER,
                                                 MODE_PRIVATE
                                             )
                                             val editor = shared.edit()
-                                            editor.putInt(CONSTANTS.PREF_KEY_position, 0)
+                                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                             editor.apply()
                                             player.seekTo(0, 0)
                                             BWSApplication.PlayerAudioId =
@@ -1363,7 +1363,7 @@ class ManageFragment : Fragment() {
         editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         if (MyDownloads.equals("1", ignoreCase = true)) {
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist")
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist")
         } else {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
         }

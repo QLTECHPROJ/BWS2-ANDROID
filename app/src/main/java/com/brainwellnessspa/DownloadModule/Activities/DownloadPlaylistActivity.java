@@ -845,9 +845,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                         player.seekTo(position, 0);
                                         player.setPlayWhenReady(true);
                                         miniPlayer = 1;
-                                        SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                        SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedxx.edit();
-                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
                                         editor.commit();
                                         callAddTranFrag();
                                     }
