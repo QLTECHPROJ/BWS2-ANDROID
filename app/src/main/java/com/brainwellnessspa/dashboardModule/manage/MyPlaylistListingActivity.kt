@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -92,7 +93,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     var currentVolume: Int = 0
     var maxVolume: Int = 0
     var percent: Int = 0
-    var DB: AudioDatabase? = null
+    lateinit var DB: AudioDatabase
     lateinit var searchEditText: EditText
     var touchHelper: ItemTouchHelper? = null
     var listMOdelGloble: PlaylistDetailsModel = PlaylistDetailsModel()
@@ -1523,7 +1524,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         false
                     }
                     Btn.setOnClickListener {
-                        MyPlaylistListingActivity().getDeleteDownloadData()
+                        MyPlaylistListingActivity().getDeleteDownloadData(ctx)
                         MyPlaylistListingActivity().GetPlaylistMedia(PlaylistID!!,ctx)
                         dialog.dismiss()
                         activity.finish()
@@ -1849,14 +1850,21 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             .getInstance(this)
             .getaudioDatabase()
             .taskDao()
-            .getPlaylist1(PlaylistID).removeObserver { }
+            .getPlaylist1(PlaylistID).removeObserver { dc: List<DownloadPlaylistDetails?>? -> }
     }
 
     private fun GetPlaylistDetail(SongListSize: Int): ArrayList<DownloadPlaylistDetails?> {
         try {
+            DB = Room.databaseBuilder(
+                    ctx,
+                    AudioDatabase::class.java,
+                    "Audio_database"
+            )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
             DB!!.taskDao()
                 .getPlaylist1(PlaylistID)
-                .observe(this, { audioList: List<DownloadPlaylistDetails?> ->
+                .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails?> ->
                     downloadPlaylistDetailsList = ArrayList()
                     downloadPlaylistDetailsList.addAll(audioList)
                     if (audioList.isNotEmpty()) {
@@ -1883,29 +1891,36 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun getMediaByPer(PlaylistId: String, totalAudio: Int) {
         try {
+            DB = Room.databaseBuilder(
+                    ctx,
+                    AudioDatabase::class.java,
+                    "Audio_database"
+            )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
             DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
-                .observe(this, { countx: List<DownloadPlaylistDetails?> ->
+                .observe(ctx as (LifecycleOwner), { countx: List<DownloadPlaylistDetails?> ->
                     count = countx.size
                     //                if (downloadPlaylistDetailsList.size() != 0) {
                     if (count <= totalAudio) {
                         if (count == totalAudio) {
-                            binding.pbProgress.visibility = View.GONE
-                            binding.ivDownloads.visibility = View.VISIBLE
+                            binding.pbProgress.setVisibility(View.GONE)
+                            binding.ivDownloads.setVisibility(View.VISIBLE)
                             DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
-                                .removeObserver { }
+                                .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
                         } else {
                             val progressPercent: Long = (count * 100 / totalAudio).toLong()
                             val downloadProgress1 = progressPercent.toInt()
-                            binding.pbProgress.visibility = View.VISIBLE
-                            binding.ivDownloads.visibility = View.GONE
-                            binding.pbProgress.progress = downloadProgress1
+                            binding.pbProgress.setVisibility(View.VISIBLE)
+                            binding.ivDownloads.setVisibility(View.GONE)
+                            binding.pbProgress.setProgress(downloadProgress1)
                             getMediaByPer(PlaylistID!!, SongListSize)
                         }
                     } else {
                         DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
-                            .removeObserver { }
-                        binding.pbProgress.visibility = View.GONE
-                        binding.ivDownloads.visibility = View.VISIBLE
+                            .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
+                        binding.pbProgress.setVisibility(View.GONE)
+                        binding.ivDownloads.setVisibility(View.VISIBLE)
                     }
                     //                } else {
 //                    binding.pbProgress.setVisibility(View.GONE);
@@ -1928,11 +1943,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
             if (!jsony.equals(gson.toString(), ignoreCase = true)) {
                 val type = object : TypeToken<ArrayList<String?>?>() {}.type
-                fileNameList = gson.fromJson(jsony, type)
-                playlistDownloadId = gson.fromJson(jsonq, type)
+                fileNameList = gson.fromJson<ArrayList<String>>(jsony, type)
+                playlistDownloadId = gson.fromJson<ArrayList<String>>(jsonq, type)
             } else {
-                fileNameList = ArrayList()
-                playlistDownloadId = ArrayList()
+                fileNameList = ArrayList<String>()
+                playlistDownloadId = ArrayList<String>()
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -1945,7 +1960,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             .getInstance(this)
             .getaudioDatabase()
             .taskDao()
-            .getPlaylist1(PlaylistID).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
+            .getPlaylist1(PlaylistID).observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails?> ->
                 downloadPlaylistDetailsList = arrayListOf()
                 downloadPlaylistDetailsList = audioList as ArrayList<DownloadPlaylistDetails?>
                 GetMedia()
@@ -1958,7 +1973,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData12().observe(this, { audioList: List<DownloadAudioDetails?>? ->
+                .geAllData12().observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails?>? ->
                     if (audioList != null) {
                         downloadAudioDetailsList = audioList as ArrayList<DownloadAudioDetails?>
                         onlySingleDownloaded = ArrayList()
@@ -1990,7 +2005,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             binding.llDownloads.isClickable = true
             binding.llDownloads.isEnabled = true
             binding.ivDownloads.setColorFilter(
-                ContextCompat.getColor(activity, R.color.white),
+                activity.resources.getColor(R.color.white),
                 PorterDuff.Mode.SRC_IN
             )
         } else {
@@ -1999,13 +2014,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             if (color.equals("gray", ignoreCase = true)) {
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
                 binding.ivDownloads.setColorFilter(
-                    ContextCompat.getColor(activity,R.color.light_gray),
+                    activity.resources.getColor(R.color.light_gray),
                     PorterDuff.Mode.SRC_IN
                 )
             } else if (color.equals("orange", ignoreCase = true)) {
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_done_icon)
                 binding.ivDownloads.setColorFilter(
-                    ContextCompat.getColor(activity,R.color.white),
+                    activity.resources.getColor(R.color.white),
                     PorterDuff.Mode.SRC_IN
                 )
             }
@@ -2293,6 +2308,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             try {
                 AudioDatabase.databaseWriteExecutor.execute {
+                    DB = Room.databaseBuilder(
+                            ctx,
+                            AudioDatabase::class.java,
+                            "Audio_database"
+                    )
+                            .addMigrations(MIGRATION_1_2)
+                            .build()
                     DB!!.taskDao().insertMedia(downloadAudioDetails)
                 }
             } catch (e: java.lang.Exception) {
@@ -2303,6 +2325,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         try {
             AudioDatabase.databaseWriteExecutor.execute {
+                DB = Room.databaseBuilder(
+                        ctx,
+                        AudioDatabase::class.java,
+                        "Audio_database"
+                )
+                        .addMigrations(MIGRATION_1_2)
+                        .build()
                 DB!!.taskDao().insertPlaylist(downloadPlaylistDetails)
                 downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize)
                 getMediaByPer(PlaylistID!!, SongListSize)
@@ -2341,6 +2370,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         downloadAudioDetails.downloadProgress = progress
         try {
+            DB = Room.databaseBuilder(
+                    ctx,
+                    AudioDatabase::class.java,
+                    "Audio_database"
+            )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
             AudioDatabase.databaseWriteExecutor.execute {
                 DB!!.taskDao().insertMedia(downloadAudioDetails)
             }
@@ -2365,7 +2401,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             .getInstance(this)
             .getaudioDatabase()
             .taskDao()
-            .getLastIdByuId1(url).observe(this, { audioList: List<DownloadAudioDetails> ->
+            .getLastIdByuId1(url).observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
                 if (audioList.size != 0) {
                     if (audioList[0].download.equals("1", ignoreCase = true)) {
                         disableDownload(llDownload, ivDownloads)
@@ -2382,7 +2418,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         try {
 //        playlistWiseAudioDetails = new ArrayList<>();
             DB!!.taskDao().getAllAudioByPlaylist1(PlaylistID)
-                .observe(this, { audioList: List<DownloadAudioDetails> ->
+                .observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
                     if (MyDownloads.equals("1", ignoreCase = true)) {
                         if (downloadPlaylistDetailsList.size != 0) {
                             val responseData = PlaylistDetailsModel()
@@ -2434,7 +2470,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         llDownload.isClickable = true
         llDownload.isEnabled = true
         ivDownloads.setColorFilter(
-            ContextCompat.getColor(activity,R.color.black),
+            activity.resources.getColor(R.color.black),
             PorterDuff.Mode.SRC_IN
         )
     }
@@ -2450,8 +2486,15 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     fun GetPlaylistMedia(playlistID: String, ctx: Context) {
-        DB!!.taskDao().getAllAudioByPlaylist1(playlistID)
-            .observe(this, { audioList: List<DownloadAudioDetails> ->
+        DB = Room.databaseBuilder(
+                ctx,
+                AudioDatabase::class.java,
+                "Audio_database"
+        )
+                .addMigrations(MIGRATION_1_2)
+                .build()
+        DB.taskDao().getAllAudioByPlaylist1(playlistID)
+            .observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
                 deleteDownloadFile(ctx, playlistID)
                 if (audioList.isNotEmpty()) {
                     GetSingleMedia(
@@ -2465,11 +2508,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             })
     }
 
-    private fun deleteDownloadFile(applicationContext: Context, PlaylistId: String) {
+    private fun deleteDownloadFile(ctx: Context, PlaylistId: String) {
+        DB = Room.databaseBuilder(
+                ctx,
+                AudioDatabase::class.java,
+                "Audio_database"
+        )
+                .addMigrations(MIGRATION_1_2)
+                .build()
         AudioDatabase.databaseWriteExecutor.execute {
-            DB!!.taskDao().deleteByPlaylistId(PlaylistId)
+            DB.taskDao().deleteByPlaylistId(PlaylistId)
         }
-        deletePlaylist(PlaylistId)
+        deletePlaylist(PlaylistId,ctx)
     }
 
     fun GetSingleMedia(
@@ -2479,8 +2529,15 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         audioList: List<DownloadAudioDetails>,
         i: Int
     ) {
+        DB = Room.databaseBuilder(
+                ctx,
+                AudioDatabase::class.java,
+                "Audio_database"
+        )
+                .addMigrations(MIGRATION_1_2)
+                .build()
         DB!!.taskDao().getLastIdByuId1(AudioFile)
-            .observe(this, { audioList1: List<DownloadAudioDetails> ->
+            .observe(ctx as (LifecycleOwner), { audioList1: List<DownloadAudioDetails> ->
                 try {
                     if (audioList1.isNotEmpty()) {
                         if (audioList1.size == 1) {
@@ -2490,7 +2547,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (i < audioList.size - 1) {
                         GetSingleMedia(
                             audioList[i + 1].audioFile,
-                            ctx,
+                            ctx.applicationContext,
                             playlistID,
                             audioList,
                             i + 1
@@ -2503,14 +2560,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             })
     }
 
-    fun getDeleteDownloadData() {
-        try {
+    fun getDeleteDownloadData(ctx:Context) {
+//        try {
             val fileNameList: List<String>
             val fileNameList1: List<String>
             val audioFile: List<String>
             val playlistDownloadId: List<String>
             val sharedy: SharedPreferences =
-                getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
+                ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
             val gson = Gson()
             val jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
             val json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
@@ -2531,10 +2588,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             }
                         }
                         val shared: SharedPreferences =
-                            getSharedPreferences(
-                                CONSTANTS.PREF_KEY_DownloadPlaylist,
-                                Context.MODE_PRIVATE
-                            )
+                            getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
                         val editor = shared.edit()
                         val nameJson = gson.toJson(fileNameList)
                         val urlJson = gson.toJson(audioFile)
@@ -2554,11 +2608,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                 }
             }
-        } catch (e: java.lang.Exception) {
-//            getDeleteDownloadData();
-            e.printStackTrace()
-            Log.e("Download Playlist ", "Download Playlist remove issue" + e.message)
-        }
+//        } catch (e: java.lang.Exception) {
+//            e.printStackTrace()
+//            Log.e("Download Playlist ", "Download Playlist remove issue" + e.message)
+//        }
     }
 
     private fun getAllCompletedMedia(AudioFlag: String, pID: String, position: Int) {
@@ -2718,7 +2771,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
 
-    private fun deletePlaylist(playlistId: String) {
+    private fun deletePlaylist(playlistId: String,ctx:Context) {
+        DB = Room.databaseBuilder(
+                ctx,
+                AudioDatabase::class.java,
+                "Audio_database"
+        )
+                .addMigrations(MIGRATION_1_2)
+                .build()
         AudioDatabase.databaseWriteExecutor.execute { DB!!.taskDao().deletePlaylist(playlistId) }
     }
 }
