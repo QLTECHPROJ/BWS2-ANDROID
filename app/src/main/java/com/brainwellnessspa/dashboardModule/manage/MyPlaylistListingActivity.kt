@@ -1524,7 +1524,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                     Btn.setOnClickListener { views: View? ->
                         MyPlaylistListingActivity().getDeleteDownloadData()
-                        MyPlaylistListingActivity().GetPlaylistMedia(PlaylistID!!)
+                        MyPlaylistListingActivity().GetPlaylistMedia(PlaylistID!!,ctx)
                         dialog.dismiss()
                         activity.finish()
                     }
@@ -2449,14 +2449,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         llDownload.isEnabled = false
     }
 
-    fun GetPlaylistMedia(playlistID: String) {
+    fun GetPlaylistMedia(playlistID: String, ctx: Context) {
         DB!!.taskDao().getAllAudioByPlaylist1(playlistID)
             .observe(this, { audioList: List<DownloadAudioDetails> ->
-                deleteDownloadFile(this, playlistID)
+                deleteDownloadFile(ctx, playlistID)
                 if (audioList.size != 0) {
                     GetSingleMedia(
                         audioList[0].audioFile,
-                        applicationContext,
+                            ctx,
                         playlistID,
                         audioList,
                         0
@@ -2490,7 +2490,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (i < audioList.size - 1) {
                         GetSingleMedia(
                             audioList[i + 1].audioFile,
-                            ctx.applicationContext,
+                            ctx,
                             playlistID,
                             audioList,
                             i + 1
