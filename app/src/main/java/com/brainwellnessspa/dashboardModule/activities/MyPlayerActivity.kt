@@ -174,14 +174,19 @@ class MyPlayerActivity : AppCompatActivity() {
             }
             val p = Properties()
             p.putValue("userId", UserID)
-            p.putValue("audioId", mainPlayModelList2[xposition].id)
-            p.putValue("audioName", mainPlayModelList2[xposition].name)
-            p.putValue("audioDescription", "")
-            p.putValue("directions", mainPlayModelList2[xposition].audioDirection)
-            p.putValue("masterCategory", mainPlayModelList2[xposition].audiomastercat)
-            p.putValue("subCategory", mainPlayModelList2[xposition].audioSubCategory)
-            p.putValue("audioDuration", mainPlayModelList2[xposition].audioDuration)
-            p.putValue("position", GetCurrentAudioPosition())
+            try {
+                p.putValue("audioId", mainPlayModelList2[xposition].id)
+                p.putValue("audioName", mainPlayModelList2[xposition].name)
+                p.putValue("audioDescription", "")
+                p.putValue("directions", mainPlayModelList2[xposition].audioDirection)
+                p.putValue("masterCategory", mainPlayModelList2[xposition].audiomastercat)
+                p.putValue("subCategory", mainPlayModelList2[xposition].audioSubCategory)
+                p.putValue("audioDuration", mainPlayModelList2[xposition].audioDuration)
+                p.putValue("position", GetCurrentAudioPosition())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
             p.putValue("audioType", "")
             p.putValue("source", GetSourceName(ctx))
             p.putValue("playerType", "Notification Player")
@@ -204,12 +209,12 @@ class MyPlayerActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding.llInfo.setOnClickListener {
-        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-        val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
-        AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        if(AudioPlayerFlag.equals("playlist",true)){
+            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
+            AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+            if (AudioPlayerFlag.equals("playlist", true)) {
 
-        }
+            }
             callAudioDetails(
                 mainPlayModelList[position].id, ctx, act, CoUserID, "audioPlayer",
                 arrayListOf<DownloadAudioDetails>(),

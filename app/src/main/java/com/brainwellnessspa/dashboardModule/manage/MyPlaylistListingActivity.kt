@@ -355,7 +355,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         callObserveMethodGetAllMedia()
                         SongListSize = listModel.responseData!!.playlistSongs!!.size
                         downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize)
-                        binding.llDownloads.setOnClickListener { view1 ->
+                        binding.llDownloads.setOnClickListener {
                             callObserveMethodGetAllMedia()
                             callDownload(
                                 "",
@@ -447,7 +447,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.rlSearch.visibility = View.VISIBLE
                         binding.llMore.visibility = View.VISIBLE
                         binding.llReminder.visibility = View.VISIBLE
-                        binding.llMore.setOnClickListener { view13 ->
+                        binding.llMore.setOnClickListener {
 //            handler2.removeCallbacks(UpdateSongTime2);
                             val fragmentManager1: FragmentManager =
                                 (ctx as FragmentActivity).supportFragmentManager
@@ -1036,7 +1036,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 callRemove(
                                     listModel[position].id.toString(),
                                     listModel,
-                                    holder.adapterPosition,
+                                    holder.absoluteAdapterPosition,
                                     ctx,
                                     activity,
                                     PlaylistID.toString()
@@ -1060,7 +1060,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             callRemove(
                                 listModel[position].id.toString(),
                                 listModel,
-                                holder.adapterPosition,
+                                holder.absoluteAdapterPosition,
                                 ctx,
                                 activity,
                                 PlaylistID.toString()
@@ -1516,13 +1516,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     tvHeader.text =
                         "Are you sure you want to remove the $PlaylistName from downloads??"
                     Btn.text = "Confirm"
-                    dialog.setOnKeyListener { vi: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                             dialog.dismiss()
                         }
                         false
                     }
-                    Btn.setOnClickListener { views: View? ->
+                    Btn.setOnClickListener {
                         MyPlaylistListingActivity().getDeleteDownloadData()
                         MyPlaylistListingActivity().GetPlaylistMedia(PlaylistID!!)
                         dialog.dismiss()
@@ -1849,7 +1849,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             .getInstance(this)
             .getaudioDatabase()
             .taskDao()
-            .getPlaylist1(PlaylistID).removeObserver { dc: List<DownloadPlaylistDetails?>? -> }
+            .getPlaylist1(PlaylistID).removeObserver { }
     }
 
     private fun GetPlaylistDetail(SongListSize: Int): ArrayList<DownloadPlaylistDetails?> {
@@ -1889,23 +1889,23 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     //                if (downloadPlaylistDetailsList.size() != 0) {
                     if (count <= totalAudio) {
                         if (count == totalAudio) {
-                            binding.pbProgress.setVisibility(View.GONE)
-                            binding.ivDownloads.setVisibility(View.VISIBLE)
+                            binding.pbProgress.visibility = View.GONE
+                            binding.ivDownloads.visibility = View.VISIBLE
                             DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
-                                .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
+                                .removeObserver { }
                         } else {
                             val progressPercent: Long = (count * 100 / totalAudio).toLong()
                             val downloadProgress1 = progressPercent.toInt()
-                            binding.pbProgress.setVisibility(View.VISIBLE)
-                            binding.ivDownloads.setVisibility(View.GONE)
-                            binding.pbProgress.setProgress(downloadProgress1)
+                            binding.pbProgress.visibility = View.VISIBLE
+                            binding.ivDownloads.visibility = View.GONE
+                            binding.pbProgress.progress = downloadProgress1
                             getMediaByPer(PlaylistID!!, SongListSize)
                         }
                     } else {
                         DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
-                            .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
-                        binding.pbProgress.setVisibility(View.GONE)
-                        binding.ivDownloads.setVisibility(View.VISIBLE)
+                            .removeObserver { }
+                        binding.pbProgress.visibility = View.GONE
+                        binding.ivDownloads.visibility = View.VISIBLE
                     }
                     //                } else {
 //                    binding.pbProgress.setVisibility(View.GONE);
@@ -1928,11 +1928,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
             if (!jsony.equals(gson.toString(), ignoreCase = true)) {
                 val type = object : TypeToken<ArrayList<String?>?>() {}.type
-                fileNameList = gson.fromJson<ArrayList<String>>(jsony, type)
-                playlistDownloadId = gson.fromJson<ArrayList<String>>(jsonq, type)
+                fileNameList = gson.fromJson(jsony, type)
+                playlistDownloadId = gson.fromJson(jsonq, type)
             } else {
-                fileNameList = ArrayList<String>()
-                playlistDownloadId = ArrayList<String>()
+                fileNameList = ArrayList()
+                playlistDownloadId = ArrayList()
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -1990,7 +1990,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             binding.llDownloads.isClickable = true
             binding.llDownloads.isEnabled = true
             binding.ivDownloads.setColorFilter(
-                activity.resources.getColor(R.color.white),
+                ContextCompat.getColor(activity, R.color.white),
                 PorterDuff.Mode.SRC_IN
             )
         } else {
@@ -1999,13 +1999,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             if (color.equals("gray", ignoreCase = true)) {
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
                 binding.ivDownloads.setColorFilter(
-                    activity.resources.getColor(R.color.light_gray),
+                    ContextCompat.getColor(activity,R.color.light_gray),
                     PorterDuff.Mode.SRC_IN
                 )
             } else if (color.equals("orange", ignoreCase = true)) {
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_done_icon)
                 binding.ivDownloads.setColorFilter(
-                    activity.resources.getColor(R.color.white),
+                    ContextCompat.getColor(activity,R.color.white),
                     PorterDuff.Mode.SRC_IN
                 )
             }
@@ -2434,7 +2434,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         llDownload.isClickable = true
         llDownload.isEnabled = true
         ivDownloads.setColorFilter(
-            activity.resources.getColor(R.color.black),
+            ContextCompat.getColor(activity,R.color.black),
             PorterDuff.Mode.SRC_IN
         )
     }
@@ -2442,7 +2442,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     private fun disableDownload(llDownload: RelativeLayout, ivDownloads: ImageView) {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_done_icon)
         ivDownloads.setColorFilter(
-            activity.resources.getColor(R.color.black),
+            ContextCompat.getColor(activity,R.color.black),
             PorterDuff.Mode.SRC_IN
         )
         llDownload.isClickable = false
@@ -2452,8 +2452,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     fun GetPlaylistMedia(playlistID: String) {
         DB!!.taskDao().getAllAudioByPlaylist1(playlistID)
             .observe(this, { audioList: List<DownloadAudioDetails> ->
-                deleteDownloadFile(this, playlistID)
-                if (audioList.size != 0) {
+                deleteDownloadFile(applicationContext, playlistID)
+                if (audioList.isNotEmpty()) {
                     GetSingleMedia(
                         audioList[0].audioFile,
                         applicationContext,
@@ -2504,13 +2504,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     fun getDeleteDownloadData() {
-        val fileNameList: List<String>
-        val fileNameList1: List<String>
-        val audioFile: List<String>
-        val playlistDownloadId: List<String>
         try {
+            val fileNameList: List<String>
+            val fileNameList1: List<String>
+            val audioFile: List<String>
+            val playlistDownloadId: List<String>
             val sharedy: SharedPreferences =
-                getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
             val gson = Gson()
             val jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
             val json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
@@ -2531,7 +2531,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             }
                         }
                         val shared: SharedPreferences =
-                            getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                            getSharedPreferences(
+                                CONSTANTS.PREF_KEY_DownloadPlaylist,
+                                Context.MODE_PRIVATE
+                            )
                         val editor = shared.edit()
                         val nameJson = gson.toJson(fileNameList)
                         val urlJson = gson.toJson(audioFile)

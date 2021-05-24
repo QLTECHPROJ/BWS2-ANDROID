@@ -1252,6 +1252,7 @@ class HomeFragment : Fragment() {
                     holder.bind.ivCheck.visibility = View.INVISIBLE
                 }
             }
+
             holder.bind.llAddNewCard.setOnClickListener {
                 val previousItem = selectedItem
                 selectedItem = position
