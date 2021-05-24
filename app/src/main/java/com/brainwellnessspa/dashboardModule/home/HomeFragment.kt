@@ -1200,6 +1200,7 @@ class HomeFragment : Fragment() {
     ) :
         RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var selectedItem = -1
+        var pos = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: MultipleProfileChangeLayoutBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -1242,14 +1243,22 @@ class HomeFragment : Fragment() {
                 holder.bind.ivCheck.visibility = View.INVISIBLE
             }
 
-            if (selectedItem == position) {
+            if (selectedItem == position ) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
+            }else{
+                if(CoUSERID!!.equals(modelList[position].coUserId) && pos == 0){
+                    holder.bind.ivCheck.visibility = View.VISIBLE
+                }else{
+                    holder.bind.ivCheck.visibility = View.INVISIBLE
+                }
             }
             holder.bind.llAddNewCard.setOnClickListener {
                 val previousItem = selectedItem
                 selectedItem = position
-                notifyItemChanged(previousItem)
-                notifyItemChanged(position)
+                pos++
+                notifyDataSetChanged()
+//                notifyItemChanged(previousItem)
+//                notifyItemChanged(position)
                 val dialog = Dialog(act)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.comfirm_pin_layout)

@@ -187,8 +187,10 @@ public class CONSTANTS {
     public static final String PREF_KEY_Totalminute = "Totalminute";
     public static final String PREF_KEY_TotalAudio = "TotalAudio";
     public static final String PREF_KEY_ScreenView = "ScreenView";
+    public static final String PREF_KEY_Purchase = "Purchase";
 
     public static final String Token = "Token";
+    public static final String InAppPurchase = "InAppPurchase";
     public static final String RecommendedCatMain = "RecommendedCatMain";
     public static final String selectedCategoriesTitle = "selectedCategoriesTitle";
     public static final String selectedCategoriesName = "selectedCategoriesName";

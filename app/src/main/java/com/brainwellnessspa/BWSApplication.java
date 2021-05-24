@@ -68,11 +68,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.brainwellnessspa.DashboardOldModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
-import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
-import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
-import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
@@ -88,6 +83,11 @@ import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.CryptLib;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
+import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
+import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
+import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
 import com.bumptech.glide.Glide;
@@ -1828,6 +1828,7 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
+/*
     public static void getReminderTime(Context ctx, Activity act, String coUSERID, String playlistID, String playlistName, Dialog dialogOld) {
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1925,6 +1926,7 @@ public class BWSApplication extends Application {
         dialog.show();
         dialog.setCancelable(false);
     }
+*/
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -2484,7 +2486,99 @@ public class BWSApplication extends Application {
             }
         }
     }
+  /*  public static String getRefreshToken(String code)
+    {
 
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/token");
+        try
+        {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+            nameValuePairs.add(new BasicNameValuePair("grant_type",    "authorization_code"));
+            nameValuePairs.add(new BasicNameValuePair("client_id",     GOOGLE_CLIENT_ID));
+            nameValuePairs.add(new BasicNameValuePair("client_secret", GOOGLE_CLIENT_SECRET));
+            nameValuePairs.add(new BasicNameValuePair("code", code));
+            nameValuePairs.add(new BasicNameValuePair("redirect_uri", GOOGLE_REDIRECT_URI));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            org.apache.http.HttpResponse response = client.execute(post);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuffer buffer = new StringBuffer();
+            for (String line = reader.readLine(); line != null; line = reader.readLine())
+            {
+                buffer.append(line);
+            }
+
+            JSONObject json = new JSONObject(buffer.toString());
+            String refreshToken = json.getString("refresh_token");
+            return refreshToken;
+        }
+        catch (Exception e) { e.printStackTrace(); }
+
+        return null;
+    }
+    private static String getAccessToken(String refreshToken) {
+
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/token");
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+            nameValuePairs.add(new BasicNameValuePair("grant_type", "refresh_token"));
+            nameValuePairs.add(new BasicNameValuePair("client_id", GOOGLE_CLIENT_ID));
+            nameValuePairs.add(new BasicNameValuePair("client_secret", GOOGLE_CLIENT_SECRET));
+            nameValuePairs.add(new BasicNameValuePair("refresh_token", refreshToken));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            org.apache.http.HttpResponse response = client.execute(post);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuffer buffer = new StringBuffer();
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                buffer.append(line);
+            }
+
+            JSONObject json = new JSONObject(buffer.toString());
+            String accessToken = json.getString("access_token");
+
+            return accessToken;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    private static String getAccessToken(String refreshToken){
+
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/token");
+        try
+        {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+            nameValuePairs.add(new BasicNameValuePair("grant_type",    "refresh_token"));
+            nameValuePairs.add(new BasicNameValuePair("client_id",     GOOGLE_CLIENT_ID));
+            nameValuePairs.add(new BasicNameValuePair("client_secret", GOOGLE_CLIENT_SECRET));
+            nameValuePairs.add(new BasicNameValuePair("refresh_token", refreshToken));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            org.apache.http.HttpResponse response = client.execute(post);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuffer buffer = new StringBuffer();
+            for (String line = reader.readLine(); line != null; line = reader.readLine())
+            {
+                buffer.append(line);
+            }
+
+            JSONObject json = new JSONObject(buffer.toString());
+            String accessToken = json.getString("access_token");
+
+            return accessToken;
+
+        }
+        catch (IOException | JSONException e) { e.printStackTrace(); }
+
+        return null;
+    }*/
+/*
     private static class ReminderMinutesListAdapter extends RecyclerView.Adapter<ReminderMinutesListAdapter.MyViewHolder> {
         Activity act;
         Context ctx;
@@ -2538,6 +2632,7 @@ public class BWSApplication extends Application {
                 super(binding.getRoot());
                 this.binding = binding;
 
+*/
 /*
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -2550,8 +2645,10 @@ public class BWSApplication extends Application {
                         }
                     });
                 }
-*/
+*//*
+
             }
         }
     }
+*/
 }

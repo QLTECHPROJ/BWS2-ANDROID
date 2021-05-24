@@ -193,6 +193,12 @@ class MyPlayerActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding.llInfo.setOnClickListener {
+        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
+        AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        if(AudioPlayerFlag.equals("playlist",true)){
+
+        }
             callAudioDetails(
                 mainPlayModelList[position].id, ctx, act, CoUserID, "audioPlayer",
                 arrayListOf<DownloadAudioDetails>(),
@@ -421,7 +427,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 mainPlayModel.id = arrayList[i]!!.id
                 mainPlayModel.name = arrayList[i]!!.name
                 mainPlayModel.audioFile = arrayList[i]!!.audioFile
-                mainPlayModel.playlistID = ""
+                mainPlayModel.playlistID = arrayList[i]!!.playlistID
                 mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
                 mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
                 mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory

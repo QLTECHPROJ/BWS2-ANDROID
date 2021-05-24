@@ -1425,7 +1425,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
 
             holder.binding.llMore.setOnClickListener {
-                BWSApplication.callAudioDetails(
+                callAudioDetails(
                     mData[position].id, ctx, activity, CoUserID, "playlist",
                     arrayListOf<DownloadAudioDetails>(),
                     arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(),
