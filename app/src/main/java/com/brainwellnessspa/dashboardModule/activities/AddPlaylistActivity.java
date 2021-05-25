@@ -188,7 +188,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             String Created = listsModel.getResponseData().getIscreate();
                                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                                             if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistID)) {
                                                 if (isDisclaimer == 1) {
                                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
@@ -323,7 +323,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                             int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                            String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                             if (AudioFlag.equalsIgnoreCase("playList") && pID.equalsIgnoreCase(PlaylistID)) {
                                     Gson gsonx = new Gson();
                                     String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gsonx));
@@ -379,7 +379,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1);
                                     editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
-                                    editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, PlaylistID);
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID);
                                     editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                     editor.commit();
@@ -515,7 +515,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 String Created = listModel.get(position).getCreated();
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                 if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);

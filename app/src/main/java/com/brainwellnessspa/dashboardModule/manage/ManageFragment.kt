@@ -365,7 +365,7 @@ class ManageFragment : Fragment() {
         val shared1 =
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
@@ -622,7 +622,7 @@ class ManageFragment : Fragment() {
         }
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         editor.apply()
         audioClick = audioc
@@ -799,7 +799,7 @@ class ManageFragment : Fragment() {
                             val AudioPlayerFlag =
                                 shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             val MyPlaylist =
-                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+                                shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                             val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                             val PlayerPosition =
                                 shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -920,7 +920,7 @@ class ManageFragment : Fragment() {
         val shared1 =
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         if (MyDownloads.equals("1", ignoreCase = true)) {
@@ -1003,7 +1003,7 @@ class ManageFragment : Fragment() {
         val shared: SharedPreferences =
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
@@ -1124,7 +1124,7 @@ class ManageFragment : Fragment() {
     ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         var playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
@@ -1360,7 +1360,7 @@ class ManageFragment : Fragment() {
         val json = gson.toJson(downloadAudioDetails)
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistID)
+        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistID)
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         if (MyDownloads.equals("1", ignoreCase = true)) {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist")

@@ -93,7 +93,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 Log.d("play_pause_Action", data);
                 SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
                         !AudioFlag.equalsIgnoreCase("playlist") &&
                         !AudioFlag.equalsIgnoreCase("TopCategories")) {
@@ -425,7 +425,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                                 if (AudioPlayerFlag.equalsIgnoreCase("playlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
@@ -483,7 +483,7 @@ public class AddAudioActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
                                     editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, PlayerPosition);
-                                    editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, PlaylistID);
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID);
                                     editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                     editor.commit();
@@ -558,7 +558,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.ivLock.setVisibility(View.GONE);
                 SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 String PlayFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
 
@@ -683,7 +683,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                     SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                     String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                    String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                    String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                     String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                     int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     if (AudioPlayerFlag.equalsIgnoreCase("playList") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
@@ -723,7 +723,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 IsPlayDisclimer = (shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("SearchModelAudio")
@@ -810,7 +810,7 @@ public class AddAudioActivity extends AppCompatActivity {
             String json = gson.toJson(listModel);
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Search Audio");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchModelAudio");
             editor.apply();
@@ -875,7 +875,7 @@ public class AddAudioActivity extends AppCompatActivity {
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
             SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-            String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             String PlayFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
 
@@ -985,7 +985,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 IsPlayDisclimer = (shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("SearchAudio")
@@ -1069,7 +1069,7 @@ public class AddAudioActivity extends AppCompatActivity {
             String json = gson.toJson(listModel);
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Recommended Search");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchAudio");
             editor.apply();
@@ -1209,7 +1209,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 comefromDownload = "0";
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                 if (AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);

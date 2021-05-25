@@ -1208,7 +1208,7 @@ Appointment Audios dddd*/
                         editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx);
                         editor.putString(CONSTANTS.PREF_KEY_MainAudioList,json11);
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
@@ -1254,7 +1254,7 @@ Appointment Audios dddd*/
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                         
                         
-                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
@@ -1302,7 +1302,7 @@ Appointment Audios dddd*/
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                         
                         
-                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
@@ -1350,7 +1350,7 @@ Appointment Audios dddd*/
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                         
                         
-                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
@@ -1398,7 +1398,7 @@ Appointment Audios dddd*/
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                         
                         
-                        editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
                         editor.apply();
@@ -1484,7 +1484,7 @@ Appointment Audios dddd*/
         editorr.remove(CONSTANTS.PREF_KEY_MainAudioList);
         editorr.remove(CONSTANTS.PREF_KEY_PlayerPosition);
         editorr.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag);
-        editorr.remove(CONSTANTS.PREF_KEY_PayerPlaylistId);
+        editorr.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId);
         editorr.remove(CONSTANTS.PREF_KEY_PlayFrom);
         editorr.clear();
         editorr.apply();

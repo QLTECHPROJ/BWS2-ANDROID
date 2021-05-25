@@ -446,7 +446,7 @@ public class BWSApplication extends Application {
             String AudioFlag = sharedd.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String myPlaylist = sharedd.getString(CONSTANTS.PREF_KEY_PlayFrom, "0");
             int pos = sharedd.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-            String pID = sharedd.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+            String pID = sharedd.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
             String PlaylistId = "";
 
             if (comeFrom.equalsIgnoreCase("playlist")) {
@@ -476,7 +476,7 @@ public class BWSApplication extends Application {
                                     int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                                     if (comeFrom.equalsIgnoreCase("playlist")) {
                                         mDataPlaylist.remove(position);
-                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                                         int oldpos = pos;
                                         if (pID.equalsIgnoreCase(pids)) {
                                             if (mDataPlaylist.size() != 0) {
@@ -497,7 +497,7 @@ public class BWSApplication extends Application {
                                                 String json = gson.toJson(mDataPlaylist);
                                                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
-                                                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, pids);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, pids);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                                 editor.apply();
@@ -538,7 +538,7 @@ public class BWSApplication extends Application {
                                     } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
                                         mDataPlayer.remove(pos);
                                         arrayList1.remove(pos);
-                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                                         if (pID.equalsIgnoreCase(pids)) {
                                             int oldpos = pos;
                                             if (mDataPlayer.size() != 0) {
@@ -559,7 +559,7 @@ public class BWSApplication extends Application {
                                                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, json);
                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
-                                                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, pids);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, pids);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                                 editor.apply();
@@ -890,7 +890,7 @@ public class BWSApplication extends Application {
                             llDelete.setOnClickListener(view43 -> {
                                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                                String pID = shared.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "0");
+                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                                 if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistId)) {
                                     showToast("Currently this playlist is in player,so you can't delete this playlist as of now", act);
                                 } else {
@@ -1721,7 +1721,7 @@ public class BWSApplication extends Application {
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, PlayerPosition);
 
 
-            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
             editor.commit();

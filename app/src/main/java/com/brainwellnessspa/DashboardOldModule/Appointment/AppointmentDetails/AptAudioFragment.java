@@ -96,7 +96,7 @@ public class AptAudioFragment extends Fragment {
                 Log.d("play_pause_Action", data);
                 SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                  AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                     if (player != null) {
                         if (data.equalsIgnoreCase("play")) {
@@ -328,7 +328,7 @@ public class AptAudioFragment extends Fragment {
 //            holder.binding.equalizerview.setcolo
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
 //            if (audioPlayz && (AudioFlag.equalsIgnoreCase("AppointmentDetailList") ||
 //                    AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
 //                if (myAudioId.equalsIgnoreCase(audiolist.getID())) {
@@ -566,7 +566,7 @@ public class AptAudioFragment extends Fragment {
                 String json = gson.toJson(listModelList);
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "AppointmentDetailList");
                 editor.commit();
@@ -660,7 +660,7 @@ public class AptAudioFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1q1);
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
                 editor.commit();

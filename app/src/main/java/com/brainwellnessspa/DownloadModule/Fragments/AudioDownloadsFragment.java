@@ -702,7 +702,7 @@ public class AudioDownloadsFragment extends Fragment {
                 String json = gson.toJson(listModelList);
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
                 editor.apply();
@@ -868,7 +868,7 @@ public class AudioDownloadsFragment extends Fragment {
             String json = gson.toJson(listModelList);
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
             editor.apply();

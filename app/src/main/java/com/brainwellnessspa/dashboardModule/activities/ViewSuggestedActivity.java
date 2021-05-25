@@ -83,7 +83,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 Log.d("play_pause_Action", data);
                 SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
                         !AudioFlag.equalsIgnoreCase("playlist") &&
                         !AudioFlag.equalsIgnoreCase("TopCategories")) {
@@ -253,7 +253,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             AddToPlaylistModel listModels = response.body();
                             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                             String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                            String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+                            String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                             String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                             int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                             if (AudioPlayerFlag.equalsIgnoreCase("playList") && MyPlaylist.equalsIgnoreCase(playlistId)) {
@@ -312,7 +312,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
                                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, PlayerPosition);
-                                editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, playlistId);
+                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistId);
                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                 editor.commit();
@@ -395,7 +395,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivBackgroundImage);
             SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-            String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            String MyPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             String PlayFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
 
@@ -598,7 +598,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             String json = gson.toJson(listModel);
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-            editor.putString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Recommended Search");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchAudio");
             editor.apply();

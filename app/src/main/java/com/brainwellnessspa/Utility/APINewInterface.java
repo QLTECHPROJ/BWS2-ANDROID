@@ -173,7 +173,7 @@ public interface APINewInterface {
     @POST("sortingplaylistaudio")
     @FormUrlEncoded
     Call<SucessModel> SortAudio(@Field("CoUserId") String CoUserId,
-                                @Field("PlaylistId") String AudioId,
+                                @Field("PlaylistId") String PlaylistId,
                                 @Field("PlaylistAudioId") String PlaylistAudioId);
 
     @POST("suggestedaudio")
