@@ -360,4 +360,6 @@
     <string name="upgrade_plan">Upgrade Plan</string>
     <string name="Upgrade_Plan">Upgrade Plan</string>
     <string name="add_users_in_manage">Add Users in manage</string>
+    <string name="set_reminder">Set reminder</string>
+    <string name="update_reminder">Update reminder</string>
 </resources>

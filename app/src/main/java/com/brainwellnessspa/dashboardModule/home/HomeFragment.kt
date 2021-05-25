@@ -73,11 +73,10 @@ class HomeFragment : Fragment() {
     lateinit var ctx: Context
     lateinit var act: Activity
     var adapter: UserListAdapter? = null
-    var CoUSERID: String? = null
+    var coUserId: String? = null
     var userId: String? = null
-    var UserName: String? = null
-    var UserIMAGE: String? = null
-    var UserID: String? = null
+    var userName: String? = null
+    var userImage: String? = null
     var Download = ""
     var Liked = ""
     var MyDownloads: String? = ""
@@ -120,9 +119,9 @@ class HomeFragment : Fragment() {
         val shared1 =
             ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-        UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
-        UserIMAGE = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+        userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
 
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
@@ -133,7 +132,7 @@ class HomeFragment : Fragment() {
         }
 
         val p = Properties()
-        p.putValue("coUserId", CoUSERID)
+        p.putValue("coUserId", coUserId)
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
 
         if (sleepTime.equals("", true)) {
@@ -151,14 +150,14 @@ class HomeFragment : Fragment() {
             .addMigrations(MIGRATION_1_2)
             .build()
 
-        binding.tvName.text = UserName
+        binding.tvName.text = userName
         val name: String?
-        if (UserIMAGE.equals("", ignoreCase = true)) {
+        if (userImage.equals("", ignoreCase = true)) {
             binding.ivUser.visibility = View.GONE
-            name = if (UserName.equals("", ignoreCase = true)) {
+            name = if (userName.equals("", ignoreCase = true)) {
                 "Guest"
             } else {
-                UserName.toString()
+                userName.toString()
             }
             val Letter = name.substring(0, 1)
             binding.rlLetter.visibility = View.VISIBLE
@@ -166,7 +165,7 @@ class HomeFragment : Fragment() {
         } else {
             binding.ivUser.visibility = View.VISIBLE
             binding.rlLetter.visibility = View.GONE
-            Glide.with(requireActivity()).load(UserIMAGE)
+            Glide.with(requireActivity()).load(userImage)
                 .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
                 .into(binding.ivUser)
         }
@@ -309,7 +308,7 @@ class HomeFragment : Fragment() {
 
                         val p = Properties()
                         val gson = Gson()
-                        p.putValue("coUserId", CoUSERID)
+                        p.putValue("coUserId", coUserId)
                         p.putValue("userId", userId)
                         p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
                         p.putValue("coUserList", gson.toJson(section))
@@ -339,7 +338,7 @@ class HomeFragment : Fragment() {
         Log.e("newToken", fcm_id.toString())
         Log.e("deviceid", DeviceId.toString())
         Log.e("UserID", userId.toString())
-        Log.e("CoUSerID", CoUSERID.toString())
+        Log.e("CoUSerID", coUserId.toString())
         if (TextUtils.isEmpty(fcm_id)) {
             FirebaseInstallations.getInstance().getToken(true)
                 .addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
@@ -356,7 +355,7 @@ class HomeFragment : Fragment() {
         }
         if (isNetworkConnected(act)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.getClient().getHomeScreenData(CoUSERID)
+            val listCall = APINewClient.getClient().getHomeScreenData(coUserId)
             listCall.enqueue(object : Callback<HomeScreenModel?> {
                 @SuppressLint("ResourceAsColor", "SetTextI18n")
                 override fun onResponse(
@@ -482,7 +481,7 @@ class HomeFragment : Fragment() {
                                 getReminderDay(
                                     ctx,
                                     act,
-                                    CoUSERID,
+                                    coUserId,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistName,
                                     activity!!,
@@ -499,7 +498,7 @@ class HomeFragment : Fragment() {
                                 getReminderDay(
                                     ctx,
                                     act,
-                                    CoUSERID,
+                                    coUserId,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistName,
                                     activity!!,
@@ -516,7 +515,7 @@ class HomeFragment : Fragment() {
                                 getReminderDay(
                                     ctx,
                                     act,
-                                    CoUSERID,
+                                    coUserId,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistID,
                                     listModel.responseData!!.suggestedPlaylist!!.playlistName,
                                     activity!!,
@@ -751,7 +750,7 @@ class HomeFragment : Fragment() {
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
 //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-        var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        val PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (MyDownloads.equals("1", true)) {
@@ -1237,7 +1236,7 @@ class HomeFragment : Fragment() {
 
             holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
 
-            if (modelList[position].name.equals(UserName, ignoreCase = true)) {
+            if (modelList[position].name.equals(userName, ignoreCase = true)) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
             }else {
                 holder.bind.ivCheck.visibility = View.INVISIBLE
@@ -1246,7 +1245,7 @@ class HomeFragment : Fragment() {
             if (selectedItem == position ) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
             }else{
-                if(CoUSERID!!.equals(modelList[position].coUserId) && pos == 0){
+                if(coUserId!! == modelList[position].coUserId && pos == 0){
                     holder.bind.ivCheck.visibility = View.VISIBLE
                 }else{
                     holder.bind.ivCheck.visibility = View.INVISIBLE
