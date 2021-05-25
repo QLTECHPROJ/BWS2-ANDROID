@@ -40,8 +40,8 @@
 
                     <RelativeLayout
                         android:id="@+id/rlLetter"
-                        android:layout_width="@dimen/_34sdp"
-                        android:layout_height="@dimen/_34sdp"
+                        android:layout_width="@dimen/_36sdp"
+                        android:layout_height="@dimen/_36sdp"
                         android:background="@drawable/profile_small_drawable"
                         android:padding="@dimen/_4sdp"
                         android:visibility="visible">
@@ -61,8 +61,8 @@
 
                     <com.brainwellnessspa.RoundedImageView
                         android:id="@+id/ivUser"
-                        android:layout_width="@dimen/_34sdp"
-                        android:layout_height="@dimen/_34sdp"
+                        android:layout_width="@dimen/_36sdp"
+                        android:layout_height="@dimen/_36sdp"
                         android:layout_gravity="center"
                         android:background="@drawable/ic_gray_user"
                         android:visibility="gone" />
@@ -92,7 +92,7 @@
                             android:gravity="start"
                             android:paddingStart="@dimen/_12sdp"
                             android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_16sdp"
                             tools:ignore="RtlSymmetry,SpUsage" />
 
                         <ImageView
@@ -122,8 +122,8 @@
 
                     <ImageView
                         android:id="@+id/ivBall"
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_21sdp"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_26sdp"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:contentDescription="@string/todo"

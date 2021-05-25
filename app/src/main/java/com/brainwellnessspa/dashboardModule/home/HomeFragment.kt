@@ -1238,22 +1238,25 @@ class HomeFragment : Fragment() {
 
             if (modelList[position].name.equals(userName, ignoreCase = true)) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
-            }else {
+            } else {
                 holder.bind.ivCheck.visibility = View.INVISIBLE
             }
 
-            if (selectedItem == position ) {
+            if (selectedItem == position) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
-            }else{
-                if(coUserId!! == modelList[position].coUserId && pos == 0){
+            } else {
+                if (coUserId!! == modelList[position].coUserId && pos == 0) {
                     holder.bind.ivCheck.visibility = View.VISIBLE
-                }else{
+                } else {
                     holder.bind.ivCheck.visibility = View.INVISIBLE
                 }
             }
 
             holder.bind.llAddNewCard.setOnClickListener {
-                val previousItem = selectedItem
+                if (coUserId!! == modelList[position].coUserId) {
+                    mBottomSheetDialog.hide()
+                } else {
+            val previousItem = selectedItem
                 selectedItem = position
                 pos++
                 notifyDataSetChanged()
@@ -1366,6 +1369,8 @@ class HomeFragment : Fragment() {
                                                 getString(R.string.ResponseCodesuccess),
                                                 ignoreCase = true
                                             ) -> {
+                                                dialog.dismiss()
+                                                mBottomSheetDialog.hide()
                                                 if (responseData!!.isProfileCompleted.equals(
                                                         "0",
                                                         ignoreCase = true
@@ -1411,8 +1416,6 @@ class HomeFragment : Fragment() {
                                                     act.startActivity(intent)
                                                     act.finish()
                                                 }
-                                                dialog.dismiss()
-                                                mBottomSheetDialog.hide()
                                                 val shared = act.getSharedPreferences(
                                                     CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
                                                     AppCompatActivity.MODE_PRIVATE
@@ -1469,8 +1472,10 @@ class HomeFragment : Fragment() {
                                                     CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                                                     listModel.responseData!!.avgSleepTime
                                                 )
-                                                val selectedCategoriesTitle = arrayListOf<String>()
-                                                val selectedCategoriesName = arrayListOf<String>()
+                                                val selectedCategoriesTitle =
+                                                    arrayListOf<String>()
+                                                val selectedCategoriesName =
+                                                    arrayListOf<String>()
                                                 val gson = Gson()
                                                 for (i in listModel.responseData!!.areaOfFocus!!) {
                                                     selectedCategoriesTitle.add(i.mainCat!!)
@@ -1505,7 +1510,8 @@ class HomeFragment : Fragment() {
                                                             listModel.responseData!!.userID
                                                         )
                                                         .putValue(
-                                                            "deviceId", Settings.Secure.getString(
+                                                            "deviceId",
+                                                            Settings.Secure.getString(
                                                                 act.contentResolver,
                                                                 Settings.Secure.ANDROID_ID
                                                             )
@@ -1560,7 +1566,6 @@ class HomeFragment : Fragment() {
                                                             listModel.responseData!!.avgSleepTime
                                                         )
                                                 )
-
                                             }
                                             listModel.responseCode.equals(
                                                 getString(R.string.ResponseCodefail),
@@ -1579,7 +1584,10 @@ class HomeFragment : Fragment() {
                                     }
                                 }
 
-                                override fun onFailure(call: Call<VerifyPinModel?>, t: Throwable) {
+                                override fun onFailure(
+                                    call: Call<VerifyPinModel?>,
+                                    t: Throwable
+                                ) {
                                     progressBar.visibility = View.GONE
                                 }
                             })
@@ -1589,6 +1597,7 @@ class HomeFragment : Fragment() {
                 dialog.show()
                 dialog.setCanceledOnTouchOutside(true)
                 dialog.setCancelable(true)
+                }
             }
         }
 

@@ -56,7 +56,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -70,14 +69,11 @@ public class ViewAllAudioFragment extends Fragment {
     Activity activity;
 
     @Override
-    public View onCreateView(
-            @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = binding.getRoot();
-
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity();
         activity = getActivity();
         SharedPreferences shared1 =
-                getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE);
+                getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
@@ -87,7 +83,7 @@ public class ViewAllAudioFragment extends Fragment {
             Name = getArguments().getString("Name");
             Category = getArguments().getString("Category");
         }
-
+        View view = binding.getRoot();
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener(
@@ -353,7 +349,7 @@ public class ViewAllAudioFragment extends Fragment {
         public void callMainTransFrag(int position) {
             try {
                 SharedPreferences shared1 =
-                        context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                        context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 //                String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
@@ -378,7 +374,7 @@ public class ViewAllAudioFragment extends Fragment {
                                     player.setPlayWhenReady(true);
                                     SharedPreferences sharedxx =
                                             context.getSharedPreferences(
-                                                    CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
+                                                    CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedxx.edit();
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
                                     editor.apply();
@@ -394,7 +390,7 @@ public class ViewAllAudioFragment extends Fragment {
                         listModelList2.addAll(listModelList);
                         Gson gson = new Gson();
                         SharedPreferences shared12 =
-                                context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                         String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
                         String DisclimerJson =
                                 shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
@@ -455,7 +451,7 @@ public class ViewAllAudioFragment extends Fragment {
                                     player.setPlayWhenReady(true);
                                     SharedPreferences sharedxx =
                                             context.getSharedPreferences(
-                                                    CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
+                                                    CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedxx.edit();
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
                                     editor.apply();
@@ -470,7 +466,7 @@ public class ViewAllAudioFragment extends Fragment {
                         listModelList2.addAll(listModelList);
                         Gson gson = new Gson();
                         SharedPreferences shared12 =
-                                context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                         String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
                         String DisclimerJson =
                                 shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
@@ -533,7 +529,7 @@ public class ViewAllAudioFragment extends Fragment {
                                     player.setPlayWhenReady(true);
                                     SharedPreferences sharedxx =
                                             context.getSharedPreferences(
-                                                    CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE);
+                                                    CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedxx.edit();
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
                                     editor.apply();
@@ -548,7 +544,7 @@ public class ViewAllAudioFragment extends Fragment {
                         listModelList2.addAll(listModelList);
                         Gson gson = new Gson();
                         SharedPreferences shared12 =
-                                context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                         String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
                         String DisclimerJson =
                                 shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
@@ -609,7 +605,7 @@ public class ViewAllAudioFragment extends Fragment {
                 callNewPlayerRelease();
             }
             SharedPreferences shared =
-                    context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                    context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json;
