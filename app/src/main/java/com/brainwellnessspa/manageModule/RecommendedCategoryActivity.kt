@@ -184,13 +184,13 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
     class AllCategory(
         var binding: ActivityRecommendedCategoryBinding,
-        var listModel: List<RecommendedCategoryModel.ResponseData>,
+        var listModel: ArrayList<RecommendedCategoryModel.ResponseData>,
         var ctx: Context,
         var activity: Activity
     ) : RecyclerView.Adapter<AllCategory.MyViewHolder>(), Filterable {
         private lateinit var adapter2: ChildCategory
 
-        private var listFilterData: List<RecommendedCategoryModel.ResponseData> = listModel
+        private var listFilterData: ArrayList<RecommendedCategoryModel.ResponseData> = listModel
 
         inner class MyViewHolder(var bindingAdapter: AllCategoryRawBinding) :
             RecyclerView.ViewHolder(bindingAdapter.root)
@@ -237,29 +237,27 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             return object : Filter() {
                 override fun performFiltering(charSequence: CharSequence): FilterResults {
                     val filterResults = FilterResults()
-                    val charString = charSequence.toString()
-                    if (charString.isEmpty() || charString == "") {
-                        listFilterData = listModel
+                    val filteredList = ArrayList<RecommendedCategoryModel.ResponseData>()
+                    if (charSequence.toString().isEmpty() || charSequence.toString() == "") {
+                        listFilterData.addAll(listModel)
                     } else {
-                        val filteredList = ArrayList<RecommendedCategoryModel.ResponseData>()
                         var filteredListnew = ArrayList<RecommendedCategoryModel.ResponseData>()
                          filteredListnew.addAll(listModel)
-                        for (i1 in filteredListnew.indices) {
-                            val r = arrayListOf<RecommendedCategoryModel.ResponseData.Detail>()
-                            for (i in filteredListnew[i1].details!!.indices) {
-                                if ( filteredListnew[i1].details!![i].problemName!!.toLowerCase(Locale.ROOT).contains(charString.toLowerCase(Locale.ROOT))) {
-                                    r.add( filteredListnew[i1].details!![i])
-                                } else {
-                                    filteredListnew[i1].details!!.drop(i)
+                        for (i1 in filteredListnew) {
+                            var modelFilterList = RecommendedCategoryModel.ResponseData()
+                            val r = ArrayList<RecommendedCategoryModel.ResponseData.Detail>()
+                            for (i in i1.details!!) {
+                                if (i.problemName!!.toLowerCase(Locale.ROOT).contains(charSequence.toString().toLowerCase(Locale.ROOT))) {
+                                    r.add(i)
                                 }
                             }
-                            filteredListnew[i1].details=null
-                            filteredListnew[i1].details=r
-                            filteredList.add(filteredListnew[i1])
+                            modelFilterList.id=i1.id
+                            modelFilterList.view = i1.view
+                            modelFilterList.details=r
+                            filteredList.add(modelFilterList)
                         }
-                        listFilterData = filteredList
                     }
-                    filterResults.values = listFilterData
+                    filterResults.values = filteredList
                     return filterResults
                 }
 
@@ -267,6 +265,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     charSequence: CharSequence,
                     filterResults: FilterResults
                 ) {
+                    listFilterData = filterResults.values as ArrayList<RecommendedCategoryModel.ResponseData>
                     if (listFilterData.isEmpty()) {
 //                        binding.llError.visibility = View.VISIBLE
 //                        binding.tvTag.visibility = View.GONE
@@ -277,12 +276,9 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                        binding.llError.visibility = View.GONE
 //                        binding.tvTag.visibility = View.VISIBLE
 //                        binding.rvPlayLists2.visibility = View.VISIBLE
-                        listFilterData =
-                            filterResults.values as List<RecommendedCategoryModel.ResponseData>
-                        for (i in listFilterData.indices) {
+                        /*for (i in listFilterData.indices) {
                             notifyItemChanged(i)
-                        }
-
+                        }*/
                         notifyDataSetChanged()
 //                        RecommendedCategoryActivity().adapter1 = AllCategory(binding, listModel, ctx,activity)
 //                        binding.rvPerantCat.adapter = RecommendedCategoryActivity().adapter1
@@ -295,7 +291,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     class ChildCategory(
         var binding: ActivityRecommendedCategoryBinding,
         private val responseListModel: List<RecommendedCategoryModel.ResponseData.Detail>?,
-        private val listModel: List<RecommendedCategoryModel.ResponseData>?,
+        private val listModel: ArrayList<RecommendedCategoryModel.ResponseData>?,
         val pos: Int,
         var ctx: Context,
         var activity: Activity

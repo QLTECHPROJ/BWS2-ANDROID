@@ -19,12 +19,13 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.R;
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity;
+import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
-import com.brainwellnessspa.R;
 import com.segment.analytics.Properties;
 
 import java.util.Random;
@@ -144,12 +145,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         try {
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
                 if (!IsLock.equalsIgnoreCase("0")) {
-                    resultIntent = new Intent(this, DashboardActivity.class);
-                    taskStackBuilder.addParentStack(DashboardActivity.class);
+                    resultIntent = new Intent(this, BottomNavigationActivity.class);
+                    taskStackBuilder.addParentStack(BottomNavigationActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
-                    resultIntent = new Intent(this, DashboardActivity.class);
+                    resultIntent = new Intent(this, MyPlaylistListingActivity.class);
                     resultIntent.putExtra("New", "0");
                     resultIntent.putExtra("Goplaylist", "1");
                     resultIntent.putExtra("PlaylistID", id);
@@ -157,13 +158,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     resultIntent.putExtra("notification", "0");
                     resultIntent.putExtra("message", message);
                     resultIntent.putExtra("PlaylistImage", "");
-                    taskStackBuilder.addParentStack(DashboardActivity.class);
+                    taskStackBuilder.addParentStack(BottomNavigationActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 }
             } else {
-                resultIntent = new Intent(this, DashboardActivity.class);
-                taskStackBuilder.addParentStack(DashboardActivity.class);
+                resultIntent = new Intent(this, BottomNavigationActivity.class);
+                taskStackBuilder.addParentStack(BottomNavigationActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
             }

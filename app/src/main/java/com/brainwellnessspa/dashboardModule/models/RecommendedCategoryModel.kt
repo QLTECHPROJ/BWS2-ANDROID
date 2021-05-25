@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 class RecommendedCategoryModel {
     @SerializedName("ResponseData")
     @Expose
-    var responseData: List<ResponseData>? = null
+    var responseData: ArrayList<ResponseData>? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -31,7 +31,7 @@ class RecommendedCategoryModel {
 
         @SerializedName("Details")
         @Expose
-        var details: List<Detail>? = null
+        var details: ArrayList<Detail>? = null
 
         class Detail {
             @SerializedName("ProblemName")
