@@ -30,21 +30,33 @@ class AccountInfoActivity : AppCompatActivity() {
         p.putValue("coUserId", coUserId)
         BWSApplication.addToSegment("Account Info Screen Viewed", p, CONSTANTS.screen)
         binding.llEtProfile.setOnClickListener {
-            val i = Intent(this, EditProfileActivity::class.java)
-            startActivity(i)
-            finish()
+            if (BWSApplication.isNetworkConnected(this)) {
+                val i = Intent(this, EditProfileActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this)
+            }
         }
 
         binding.llChangePswd.setOnClickListener {
-            val i = Intent(this, ChangePasswordActivity::class.java)
-            startActivity(i)
-            finish()
+            if (BWSApplication.isNetworkConnected(this)) {
+                val i = Intent(this, ChangePasswordActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this)
+            }
         }
 
         binding.llChangePin.setOnClickListener {
-            val i = Intent(this, ChangePinActivity::class.java)
-            startActivity(i)
-            finish()
+            if (BWSApplication.isNetworkConnected(this)) {
+                val i = Intent(this, ChangePinActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this)
+            }
         }
     }
 }

@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel
@@ -721,78 +720,75 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     enableDisableDownload(false, "orange")
 //                    binding.ivReminder.setColorFilter(activity.resources.getColor(R.color.gray), PorterDuff.Mode.SRC_IN)
                 } else {
-                    when {
-                        listModel.created.equals("1", ignoreCase = true) -> {
-                            binding.llSuggested.visibility = View.GONE
-                            searchEditText.setHint(R.string.playlist_or_audio_search)
-                            binding.tvSearch.setHint(R.string.playlist_or_audio_search)
-                            binding.tvSearch.visibility = View.VISIBLE
-                            binding.searchView.visibility = View.GONE
-                            binding.llDelete.visibility = View.GONE
-                            binding.rvPlayLists1.visibility = View.VISIBLE
-                            binding.rvPlayLists2.visibility = View.GONE
-                            adpater = PlayListsAdpater(
-                                listModel.playlistSongs!!,
-                                ctx,
-                                CoUserID,
-                                listModel.created,
-                                binding,
-                                activity,
-                                this,
-                                PlaylistID,
-                                PlaylistName
-                            )
-                            val callback: ItemTouchHelper.Callback = ItemMoveCallback(adpater)
-                            touchHelper = ItemTouchHelper(callback)
-                            touchHelper!!.attachToRecyclerView(binding.rvPlayLists1)
-                            binding.rvPlayLists1.adapter = adpater
-                //                                LocalBroadcastManager.getInstance(ctx)
-                //                                        .registerReceiver(listener1, IntentFilter("DownloadProgress"))
-                        }
-                        listModel.created.equals("2") -> {
-                            binding.llSuggested.visibility = View.VISIBLE
-                            searchEditText.hint = "Search for audio"
-                            binding.tvSearch.hint = "Search for audio"
-                            binding.tvSearch.visibility = View.GONE
-                            binding.llDelete.visibility = View.GONE
-                            binding.searchView.visibility = View.VISIBLE
-                            adpater2 = PlayListsAdpater2(
-                                listModel.playlistSongs!!,
-                                ctx,
-                                CoUserID,
-                                listModel.created,
-                                binding,
-                                activity,
-                                PlaylistID,
-                                PlaylistName,
-                                MyDownloads
-                            )
-                            binding.rvPlayLists1.visibility = View.GONE
-                            binding.rvPlayLists2.visibility = View.VISIBLE
-                            binding.rvPlayLists2.adapter = adpater2
-                        }
-                        else -> {
-                            binding.llSuggested.visibility = View.GONE
-                            searchEditText.hint = "Search for audio"
-                            binding.tvSearch.hint = "Search for audio"
-                            binding.tvSearch.visibility = View.GONE
-                            binding.searchView.visibility = View.VISIBLE
-                            binding.llDelete.visibility = View.GONE
-                            adpater2 = PlayListsAdpater2(
-                                listModel.playlistSongs!!,
-                                ctx,
-                                CoUserID,
-                                listModel.created,
-                                binding,
-                                activity,
-                                PlaylistID,
-                                PlaylistName,
-                                MyDownloads
-                            )
-                            binding.rvPlayLists1.visibility = View.GONE
-                            binding.rvPlayLists2.visibility = View.VISIBLE
-                            binding.rvPlayLists2.adapter = adpater2
-                        }
+                    if (listModel.created.equals("1", ignoreCase = true)) {
+                        binding.llSuggested.visibility = View.GONE
+                        searchEditText.setHint(R.string.playlist_or_audio_search)
+                        binding.tvSearch.setHint(R.string.playlist_or_audio_search)
+                        binding.tvSearch.visibility = View.VISIBLE
+                        binding.searchView.visibility = View.GONE
+                        binding.llDelete.visibility = View.GONE
+                        binding.rvPlayLists1.visibility = View.VISIBLE
+                        binding.rvPlayLists2.visibility = View.GONE
+                        adpater = PlayListsAdpater(
+                            listModel.playlistSongs!!,
+                            ctx,
+                            CoUserID,
+                            listModel.created,
+                            binding,
+                            activity,
+                            this,
+                            PlaylistID,
+                            PlaylistName
+                        )
+                        val callback: ItemTouchHelper.Callback = ItemMoveCallback(adpater)
+                        touchHelper = ItemTouchHelper(callback)
+                        touchHelper!!.attachToRecyclerView(binding.rvPlayLists1)
+                        binding.rvPlayLists1.adapter = adpater
+//                                LocalBroadcastManager.getInstance(ctx)
+//                                        .registerReceiver(listener1, IntentFilter("DownloadProgress"))
+                    } else if (listModel.created.equals("2")) {
+                        binding.llSuggested.visibility = View.VISIBLE
+
+                        searchEditText.setHint("Search for audio")
+                        binding.tvSearch.hint = "Search for audio"
+                        binding.tvSearch.visibility = View.GONE
+                        binding.llDelete.visibility = View.GONE
+                        binding.searchView.visibility = View.VISIBLE
+                        adpater2 = PlayListsAdpater2(
+                            listModel.playlistSongs!!,
+                            ctx,
+                            CoUserID,
+                            listModel.created,
+                            binding,
+                            activity,
+                            PlaylistID,
+                            PlaylistName,
+                            MyDownloads
+                        )
+                        binding.rvPlayLists1.visibility = View.GONE
+                        binding.rvPlayLists2.visibility = View.VISIBLE
+                        binding.rvPlayLists2.adapter = adpater2
+                    } else {
+                        binding.llSuggested.visibility = View.GONE
+                        searchEditText.setHint("Search for audio")
+                        binding.tvSearch.hint = "Search for audio"
+                        binding.tvSearch.visibility = View.GONE
+                        binding.searchView.visibility = View.VISIBLE
+                        binding.llDelete.visibility = View.GONE
+                        adpater2 = PlayListsAdpater2(
+                            listModel.playlistSongs!!,
+                            ctx,
+                            CoUserID,
+                            listModel.created,
+                            binding,
+                            activity,
+                            PlaylistID,
+                            PlaylistName,
+                            MyDownloads
+                        )
+                        binding.rvPlayLists1.visibility = View.GONE
+                        binding.rvPlayLists2.visibility = View.VISIBLE
+                        binding.rvPlayLists2.adapter = adpater2
                     }
                 }
 //                } catch (e: java.lang.Exception) {
@@ -1374,7 +1370,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID)
                     editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created")
                     editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playList")
-                    editor.commit()
+                    editor.apply()
                     if (player != null) {
                         player.moveMediaItem(fromPosition, toPosition)
                     }
@@ -1953,12 +1949,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
 
-    private fun removeobserver(ctx:Context) {
+    private fun removeobserver() {
         DatabaseClient
-            .getInstance(ctx)
+            .getInstance(this)
             .getaudioDatabase()
             .taskDao()
-            .getPlaylist1(PlaylistID).removeObserver { }
+            .getPlaylist1(PlaylistID).removeObserver { dc: List<DownloadPlaylistDetails?>? -> }
     }
 
     private fun GetPlaylistDetail(SongListSize: Int,ctx:Context): ArrayList<DownloadPlaylistDetails?> {
@@ -1975,17 +1971,17 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (downloadPlaylistDetailsList.isNotEmpty()) {
                         enableDisableDownload(false, "orange")
                         getMediaByPer(PlaylistID!!, SongListSize,ctx)
-                        removeobserver(ctx)
+                        removeobserver()
                     } else if (SongListSize == 0) {
                         enableDisableDownload(false, "gray")
-                        removeobserver(ctx)
+                        removeobserver()
                     } /*else if (download.equals("1", ignoreCase = true) *//* New.equalsIgnoreCase("1") ||*//*) {
                             enableDisableDownload(false, "orange")
                             getMediaByPer(PlaylistID!!, SongListSize)
                             removeobserver()
                         } */ else {
                         enableDisableDownload(true, "white")
-                        removeobserver(ctx)
+                        removeobserver()
                     }
 //                })
 //        } catch (e: java.lang.Exception) {
