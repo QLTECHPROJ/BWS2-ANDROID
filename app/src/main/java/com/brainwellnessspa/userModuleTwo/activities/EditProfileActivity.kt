@@ -261,8 +261,8 @@ class EditProfileActivity : AppCompatActivity() {
                             }
 
                             if (!viewModel.responseData!!.dob.equals("", ignoreCase = true)) {
-                                binding.etCalendar.isEnabled = true
-                                binding.etCalendar.isClickable = true
+                                binding.etCalendar.isEnabled = false
+                                binding.etCalendar.isClickable = false
                             } else {
                                 binding.etCalendar.isEnabled = true
                                 binding.etCalendar.isClickable = true
