@@ -14,13 +14,13 @@
     <fragment
         android:id="@+id/navigation_Manage"
         android:name="com.brainwellnessspa.dashboardModule.manage.ManageFragment"
-        android:label="@string/title_manage"
+        android:label="@string/title_enrich"
         tools:layout="@layout/fragment_manage" />
 
     <fragment
         android:id="@+id/navigation_Wellness"
         android:name="com.brainwellnessspa.dashboardModule.wellness.WellnessFragment"
-        android:label="@string/title_Wellness"
+        android:label="@string/title_Empower"
         tools:layout="@layout/fragment_wellness" />
 
     <fragment

@@ -39,7 +39,6 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
     var TrialPeriod: String? = null
     var comeFrom: String? = ""
     var UserId: String? = null/* renewPlanFlag, renewPlanId, */
-
     /* renewPlanFlag, renewPlanId, */
     var CoUserID: String? = null
     var ComesTrue: String? = null

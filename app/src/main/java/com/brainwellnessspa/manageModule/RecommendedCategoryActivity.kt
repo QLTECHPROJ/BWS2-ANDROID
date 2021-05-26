@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -43,13 +43,13 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecommendedCategoryBinding
     lateinit var catListadapter: SelectedCategory
     var ctx: Context? = null
-    var USERID: String? = null
-    var BackClick: String? = null
+    var userId: String? = null
+    var backClick: String? = null
     lateinit var gsonBuilder: GsonBuilder
     lateinit var section: java.util.ArrayList<String>
-    var SleepTime: String? = null
-    var CoUserID: String? = null
-    var CoEMAIL: String? = null
+    var sleepTime: String? = null
+    var coUserId: String? = null
+    var coEmail: String? = null
     private lateinit var adapter1: AllCategory
     lateinit var activity: Activity
     var selectedCategoriesTitle = arrayListOf<String>()
@@ -64,18 +64,18 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         ctx = this@RecommendedCategoryActivity
         activity = this@RecommendedCategoryActivity
         if (intent.extras != null) {
-            SleepTime = intent.getStringExtra("SleepTime")
-            BackClick = intent.getStringExtra("BackClick")
+            sleepTime = intent.getStringExtra("SleepTime")
+            backClick = intent.getStringExtra("BackClick")
         }
 
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-        CoEMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
 
         val p = Properties()
-        p.putValue("coUserId", CoUserID)
-        BWSApplication.addToSegment("Recommeded Category Screen Viewed", p, CONSTANTS.screen)
+        p.putValue("coUserId", coUserId)
+        addToSegment("Recommeded Category Screen Viewed", p, CONSTANTS.screen)
 
         val layoutManager = FlexboxLayoutManager(ctx)
         layoutManager.flexWrap = FlexWrap.WRAP
@@ -95,6 +95,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             binding.searchView.clearFocus()
             searchEditText.setText("")
             binding.searchView.setQuery("", false)
+            prepareRecommnedData()
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -105,7 +106,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(search: String): Boolean {
                 try {
-                    adapter1.filter.filter(search)
+                    if (!search.equals("",ignoreCase = true)){
+                        adapter1.filter.filter(search)
+                    }else {
+                        prepareRecommnedData()
+                    }
 //                        SearchFlag = search
                     Log.e("searchsearch", "" + search)
                 } catch (e: java.lang.Exception) {
@@ -129,17 +134,17 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     }
 
     private fun prepareRecommnedData() {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(this)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<RecommendedCategoryModel> =
-                APINewClient.getClient().getRecommendedCategory(CoUserID)
+                APINewClient.getClient().getRecommendedCategory(coUserId)
             listCall.enqueue(object : Callback<RecommendedCategoryModel> {
                 override fun onResponse(
                     call: Call<RecommendedCategoryModel>,
                     response: Response<RecommendedCategoryModel>
                 ) {
                     try {
-                        BWSApplication.hideProgressBar(
+                        hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
                             activity
@@ -170,7 +175,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<RecommendedCategoryModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
+                    hideProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
                         activity
@@ -178,7 +183,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
@@ -241,10 +246,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     if (charSequence.toString().isEmpty() || charSequence.toString() == "") {
                         listFilterData.addAll(listModel)
                     } else {
-                        var filteredListnew = ArrayList<RecommendedCategoryModel.ResponseData>()
+                        val filteredListnew = ArrayList<RecommendedCategoryModel.ResponseData>()
                          filteredListnew.addAll(listModel)
                         for (i1 in filteredListnew) {
-                            var modelFilterList = RecommendedCategoryModel.ResponseData()
+                            val modelFilterList = RecommendedCategoryModel.ResponseData()
                             val r = ArrayList<RecommendedCategoryModel.ResponseData.Detail>()
                             for (i in i1.details!!) {
                                 if (i.problemName!!.toLowerCase(Locale.ROOT).contains(charSequence.toString().toLowerCase(Locale.ROOT))) {
@@ -305,7 +310,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             init {
                 bindingAdapter.llCategory.setOnClickListener {
                     setData()
-                    mSelectedItem = adapterPosition
+                    mSelectedItem = absoluteAdapterPosition
                     if (posItem != -1)
                         notifyItemChanged(posItem)
                     notifyItemChanged(mSelectedItem)
@@ -347,7 +352,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                                        catList.selectedCategoriesSort.add(pos, pos.toString())
 //                                    }
                                 } else {
-                                    BWSApplication.showToast(
+                                    showToast(
                                         "You can Select only three Problems Please unselect Old for new select",
                                         activity
                                     )
@@ -578,7 +583,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
             val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, catList.gson.toString())
             val json5 = shared.getString(CONSTANTS.selectedCategoriesName, catList.gson.toString())
-            catList.SleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+            catList.sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
             if (!json2.equals(catList.gson.toString(), ignoreCase = true)) {
                 val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
                 catList.selectedCategoriesTitle = catList.gson.fromJson(json2, type1)
@@ -604,7 +609,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         val shared = ctx!!.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, gson.toString())
         val json5 = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
-        SleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+        sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         if (!json2.equals(gson.toString(), ignoreCase = true)) {
             val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
             selectedCategoriesTitle = gson.fromJson(json2, type1)
@@ -688,17 +693,17 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     }
 
     private fun sendCategoryData(toJson: String) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<SaveRecommendedCatModel> =
-                APINewClient.getClient().getSaveRecommendedCategory(CoUserID, toJson, SleepTime)
+                APINewClient.getClient().getSaveRecommendedCategory(coUserId, toJson, sleepTime)
             listCall.enqueue(object : Callback<SaveRecommendedCatModel> {
                 override fun onResponse(
                     call: Call<SaveRecommendedCatModel>,
                     response: Response<SaveRecommendedCatModel>
                 ) {
                     try {
-                        BWSApplication.hideProgressBar(
+                        hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
                             activity
@@ -718,10 +723,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                                 listModel.responseData!!.avgSleepTime
                             )
-                            editor.commit()
+                            editor.apply()
 
                             val i = Intent(activity, PreparePlaylistActivity::class.java)
-                            i.putExtra("BackClick", BackClick)
+                            i.putExtra("BackClick", backClick)
                             startActivity(i)
                             section = java.util.ArrayList<String>()
                             gsonBuilder = GsonBuilder()
@@ -731,13 +736,13 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 section.add(listModel.responseData!!.categoryData!!.get(i).recommendedCat.toString())
                             }
                             val p = Properties()
-                            p.putValue("coUserId", CoUserID)
+                            p.putValue("coUserId", coUserId)
                             p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
                             p.putValue("areaOfFocus", gson.toJson(section))
-                            BWSApplication.addToSegment("Area of Focus Savedd", p, CONSTANTS.track)
+                            addToSegment("Area of Focus Savedd", p, CONSTANTS.track)
                             finish()
                         } else {
-                            BWSApplication.showToast(listModel.responseMessage, activity)
+                            showToast(listModel.responseMessage, activity)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -745,7 +750,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SaveRecommendedCatModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
+                    hideProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
                         activity
@@ -753,19 +758,19 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
     override fun onBackPressed() {
         when {
-            BackClick.equals("0", ignoreCase = true) -> {
+            backClick.equals("0", ignoreCase = true) -> {
                 val i = Intent(ctx, SleepTimeActivity::class.java)
-                i.putExtra("SleepTime", SleepTime)
+                i.putExtra("SleepTime", sleepTime)
                 startActivity(i)
                 finish()
             }
-            BackClick.equals("1", ignoreCase = true) -> {
+            backClick.equals("1", ignoreCase = true) -> {
                 finish()
             }
             else -> {

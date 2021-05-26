@@ -9,12 +9,12 @@
     <item
         android:id="@+id/navigation_Manage"
         android:icon="@drawable/ic_manage_icon"
-        android:title="@string/title_manage" />
+        android:title="@string/title_enrich" />
 
     <item
         android:id="@+id/navigation_Wellness"
         android:icon="@drawable/ic_wellness_icon"
-        android:title="@string/title_Wellness" />
+        android:title="@string/title_Empower" />
     <item
         android:id="@+id/navigation_Elevate"
         android:icon="@drawable/ic_elevate_icon"

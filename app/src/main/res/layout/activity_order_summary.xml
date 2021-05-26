@@ -147,7 +147,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.60"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Manage Program"
+                        android:text="Enrich Program"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/_13sdp" />
 

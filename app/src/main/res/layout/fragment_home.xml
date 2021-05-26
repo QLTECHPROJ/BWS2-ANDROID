@@ -14,8 +14,8 @@
             android:id="@+id/llUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="#eeeeee"
+            android:orientation="horizontal"
             android:paddingBottom="@dimen/_10sdp"
             android:weightSum="1">
 
@@ -134,6 +134,9 @@
             </LinearLayout>
         </LinearLayout>
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -147,6 +150,7 @@
                 android:paddingBottom="@dimen/_80sdp">
 
                 <ImageView
+                    android:id="@+id/ivLightBg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/manage_bg_banner"
@@ -163,6 +167,7 @@
                     android:backgroundTint="#1597AA"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     tools:targetApi="lollipop">
 
                     <LinearLayout
@@ -467,10 +472,10 @@
                             android:layout_marginTop="@dimen/_15sdp"
                             android:background="@drawable/round_chip_gray"
                             android:backgroundTint="#DC828E"
+                            android:baselineAligned="false"
                             android:orientation="horizontal"
                             android:weightSum="10"
-                            tools:targetApi="lollipop"
-                            android:baselineAligned="false">
+                            tools:targetApi="lollipop">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -564,9 +569,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/_10sdp"
+                            android:baselineAligned="false"
                             android:orientation="horizontal"
-                            android:weightSum="10"
-                            android:baselineAligned="false">
+                            android:weightSum="10">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -700,9 +705,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_20sdp"
+                                android:baselineAligned="false"
                                 android:gravity="center"
-                                android:weightSum="1"
-                                android:baselineAligned="false">
+                                android:weightSum="1">
 
 
                                 <LinearLayout
@@ -730,10 +735,10 @@
                                         android:layout_width="@dimen/_20sdp"
                                         android:layout_height="@dimen/_20sdp"
                                         android:layout_marginTop="@dimen/_6sdp"
+                                        android:contentDescription="@string/todo"
                                         android:rotation="90"
                                         android:src="@drawable/ic_arrow_blue_icon"
-                                        app:tint="@color/light_black"
-                                        android:contentDescription="@string/todo" />
+                                        app:tint="@color/light_black" />
 
                                 </LinearLayout>
 
@@ -959,8 +964,8 @@
                             android:baselineAligned="false"
                             android:orientation="horizontal"
                             android:weightSum="10"
-                            tools:targetApi="lollipop"
-                            tools:ignore="UselessParent">
+                            tools:ignore="UselessParent"
+                            tools:targetApi="lollipop">
 
                             <LinearLayout
                                 android:layout_width="0dp"

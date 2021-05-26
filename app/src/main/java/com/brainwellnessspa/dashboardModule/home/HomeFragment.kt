@@ -190,6 +190,7 @@ class HomeFragment : Fragment() {
             binding.llIndexScore.visibility = View.VISIBLE
             binding.llSevere.visibility = View.VISIBLE
             binding.llActivities.visibility = View.VISIBLE
+            binding.ivLightBg.visibility = View.VISIBLE
             binding.llPlayer.visibility = View.VISIBLE
             binding.llAreaOfFocus.visibility = View.VISIBLE
             binding.barChart.visibility = View.VISIBLE
@@ -198,6 +199,7 @@ class HomeFragment : Fragment() {
             binding.llIndexScore.visibility = View.GONE
             binding.llSevere.visibility = View.GONE
             binding.llActivities.visibility = View.GONE
+            binding.ivLightBg.visibility = View.GONE
             binding.llPlayer.visibility = View.GONE
             binding.llAreaOfFocus.visibility = View.GONE
             binding.barChart.visibility = View.GONE

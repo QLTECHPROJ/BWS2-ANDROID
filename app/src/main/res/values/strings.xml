@@ -296,7 +296,9 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_manage">Manage</string>
+    <string name="title_enrich">Enrich</string>
     <string name="title_Wellness">Wellness</string>
+    <string name="title_Empower">Empower</string>
     <string name="title_Elevate">Elevate</string>
     <string name="title_Profile">Profile</string>
 
@@ -362,4 +364,5 @@
     <string name="add_users_in_manage">Add Users in manage</string>
     <string name="set_reminder">Set reminder</string>
     <string name="update_reminder">Update reminder</string>
+    <string name="Enrich">Enrich</string>
 </resources>
