@@ -92,9 +92,6 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         val closeButton: ImageView = binding.searchView.findViewById(R.id.search_close_btn)
         binding.searchView.clearFocus()
         closeButton.setOnClickListener {
-            binding.searchView.clearFocus()
-            searchEditText.setText("")
-            binding.searchView.setQuery("", false)
             prepareRecommnedData()
         }
 
@@ -155,6 +152,9 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 ignoreCase = true
                             )
                         ) {
+                            binding.searchView.clearFocus()
+                            searchEditText.setText("")
+                            binding.searchView.setQuery("", false)
                             binding.rvPerantCat.layoutManager = LinearLayoutManager(ctx)
 //                            if(listModel.responseData!!.size > 3) {
 //                                val listModelNew = arrayListOf<RecommendedCategoryModel.ResponseData>()

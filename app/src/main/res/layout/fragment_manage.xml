@@ -15,9 +15,42 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.core.widget.NestedScrollView
+            <LinearLayout
+                android:id="@+id/llNoInternet"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_340sdp"
+                    android:layout_marginHorizontal="36dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="-20dp"
+                    android:src="@drawable/ic_no_active_internet_bg"/>
+
+                <TextView
+                    android:id="@+id/tvNoInterNet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="Whoooops!\nNo active internet :("
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="@dimen/_20sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+            </LinearLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nestedScroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -106,8 +139,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/rounded_light_gray"
-                            android:backgroundTint="#36C2D6"
+                            android:background="@drawable/extra_rounded_light_gray"
                             android:gravity="center"
                             android:orientation="vertical">
 

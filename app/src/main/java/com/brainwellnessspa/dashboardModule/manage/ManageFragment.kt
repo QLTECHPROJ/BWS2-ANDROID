@@ -117,15 +117,19 @@ class ManageFragment : Fragment() {
         binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
         if (BWSApplication.isNetworkConnected(activity)) {
             binding.llSetReminder.visibility = View.VISIBLE
+            binding.nestedScroll.visibility = View.VISIBLE
+            binding.llNoInternet.visibility = View.GONE
         } else {
             binding.llSetReminder.visibility = View.GONE
+            binding.nestedScroll.visibility = View.GONE
+            binding.llNoInternet.visibility = View.VISIBLE
             val params = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             params.setMargins(0, 80, 0, 110)
             binding.llSpace1.setLayoutParams(params)
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+//            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
         binding.llSearch.setOnClickListener {
             if (BWSApplication.isNetworkConnected(activity)) {

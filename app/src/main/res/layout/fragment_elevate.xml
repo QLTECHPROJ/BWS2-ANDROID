@@ -8,6 +8,25 @@
         android:background="@color/white"
         tools:context=".dashboardModule.elevate.ElevateFragment">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvNoInterNet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="Fuctionality on going :("
+                android:layout_marginTop="@dimen/_20sdp"
+                android:textColor="@color/app_theme_color"
+                android:textSize="@dimen/_20sdp"
+                tools:ignore="RtlSymmetry,SpUsage" />
+
+        </RelativeLayout>
 
     </FrameLayout>
 </layout>

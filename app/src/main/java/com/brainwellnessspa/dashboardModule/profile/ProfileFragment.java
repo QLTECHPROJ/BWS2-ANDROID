@@ -150,7 +150,23 @@ public class ProfileFragment extends Fragment {
 
         String Name;
         profilePicPath = userImage;
-        if (profilePicPath.equalsIgnoreCase("")) {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            if (profilePicPath.equalsIgnoreCase("")) {
+                binding.civProfile.setVisibility(View.GONE);
+                if (UserName.equalsIgnoreCase("")) {
+                    Name = "Guest";
+                } else {
+                    Name = UserName;
+                }
+                String Letter = Name.substring(0, 1);
+                binding.rlLetter.setVisibility(View.VISIBLE);
+                binding.tvLetter.setText(Letter);
+            } else {
+                binding.civProfile.setVisibility(View.VISIBLE);
+                binding.rlLetter.setVisibility(View.GONE);
+                setProfilePic(profilePicPath);
+            }
+        } else {
             binding.civProfile.setVisibility(View.GONE);
             if (UserName.equalsIgnoreCase("")) {
                 Name = "Guest";
@@ -160,11 +176,8 @@ public class ProfileFragment extends Fragment {
             String Letter = Name.substring(0, 1);
             binding.rlLetter.setVisibility(View.VISIBLE);
             binding.tvLetter.setText(Letter);
-        } else {
-            binding.civProfile.setVisibility(View.VISIBLE);
-            binding.rlLetter.setVisibility(View.GONE);
-            setProfilePic(profilePicPath);
         }
+
 
         profileViewData(getActivity());
 
