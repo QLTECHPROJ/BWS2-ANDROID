@@ -2200,7 +2200,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     downloadPlaylistId.addAll(playlistId1)
                 }
             }
-            if (url.size != 0) /*{
+            if (url.size != 0) {
                 if (!DownloadMedia.isDownloading) {
                     DownloadMedia.isDownloading = true
                     val downloadMedia =
@@ -2221,7 +2221,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
                 editor.apply()
                 SongListSize = playlistSongs.size
-            }*/
+            }
             saveAllMedia(ctx,playlistSongs)
         } else {
             var downloadOrNot = false
