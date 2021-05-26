@@ -206,6 +206,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             PlaylistName = intent.getStringExtra("PlaylistName")
             MyDownloads = intent.getStringExtra("MyDownloads")
         }
+        DB = Room.databaseBuilder(
+                ctx,
+                AudioDatabase::class.java,
+                "Audio_database"
+        ).addMigrations(MIGRATION_1_2).build()
         callObserveMethodGetAllMedia(ctx)
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
@@ -253,13 +258,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     ctx, activity
             )
         }
-        DB = Room.databaseBuilder(
-                ctx,
-                AudioDatabase::class.java,
-                "Audio_database"
-        )
-            .addMigrations(MIGRATION_1_2)
-            .build()
         binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
         searchEditText.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue_gray))
@@ -1965,19 +1963,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun GetPlaylistDetail(SongListSize: Int,ctx:Context): ArrayList<DownloadPlaylistDetails?> {
 //        try {
-            DB = Room.databaseBuilder(
-                    ctx,
-                    AudioDatabase::class.java,
-                    "Audio_database"
-            )
-                    .addMigrations(MIGRATION_1_2)
-                    .build()
-            DB.taskDao()
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
                 .getPlaylist1(PlaylistID)
                 .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails?> ->
                     downloadPlaylistDetailsList = ArrayList()
                     downloadPlaylistDetailsList.addAll(audioList)
-                    if (audioList.isNotEmpty()) {
+                })
+                    if (downloadPlaylistDetailsList.isNotEmpty()) {
                         enableDisableDownload(false, "orange")
                         getMediaByPer(PlaylistID!!, SongListSize,ctx)
                         removeobserver(ctx)
@@ -1992,7 +1987,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         enableDisableDownload(true, "white")
                         removeobserver(ctx)
                     }
-                })
+//                })
 //        } catch (e: java.lang.Exception) {
 //            e.printStackTrace()
 //        }
@@ -2001,14 +1996,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun getMediaByPer(PlaylistId: String, totalAudio: Int,ctx:Context) {
 //        try {
-            DB = Room.databaseBuilder(
-                    ctx,
-                    AudioDatabase::class.java,
-                    "Audio_database"
-            )
-                    .addMigrations(MIGRATION_1_2)
-                    .build()
-            DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao().getCountDownloadProgress1("Complete", PlaylistId)
                 .observe(ctx as (LifecycleOwner), { countx: List<DownloadPlaylistDetails?> ->
                     count = countx.size
                     //                if (downloadPlaylistDetailsList.size() != 0) {
@@ -2440,9 +2431,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         .addMigrations(MIGRATION_1_2)
                         .build()
                 DB.taskDao().insertPlaylist(downloadPlaylistDetails)
-                downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize,ctx)
-                getMediaByPer(PlaylistID!!, SongListSize,ctx)
             }
+        downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize,ctx)
+        getMediaByPer(PlaylistID!!, SongListSize,ctx)
 //        } catch (e: java.lang.Exception) {
 //            println(e.message)
 //        } catch (e: OutOfMemoryError) {
