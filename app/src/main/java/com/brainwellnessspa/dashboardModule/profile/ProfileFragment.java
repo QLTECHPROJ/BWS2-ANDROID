@@ -86,16 +86,18 @@ import static com.brainwellnessspa.BWSApplication.logout;
 import static com.brainwellnessspa.invoicemodule.activities.InvoiceActivity.invoiceToRecepit;
 
 public class ProfileFragment extends Fragment {
-    private static final int CONTENT_REQUEST = 100;
-    public static int ComeScreenReminder = 0;
     FragmentProfileBinding binding;
+    private long mLastClickTime = 0;
     Dialog logoutDialog;
     File image;
     RequestPermissionHandler mRequestPermissionHandler;
+    private static final int CONTENT_REQUEST = 100;
+    public static int ComeScreenReminder = 0;
     CharSequence[] options;
     String USERID,
             CoUserID,
             UserEmail,
+            userImage,
             DeviceID,
             DeviceType,
             UserName,
@@ -106,7 +108,6 @@ public class ProfileFragment extends Fragment {
             indexScore,
             scoreLevel,
             avgSleepTime;
-    private long mLastClickTime = 0;
     //    areaOfFocus
 
     @SuppressLint("SetTextI18n")
@@ -122,6 +123,7 @@ public class ProfileFragment extends Fragment {
         CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
         UserName = (shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, ""));
         UserEmail = (shared1.getString(CONSTANTS.PREFE_ACCESS_USEREMAIL, ""));
+        userImage = (shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, ""));
         userMobile = (shared1.getString(CONSTANTS.PREFE_ACCESS_MOBILE, ""));
         isProfileCompleted = (shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, ""));
         isAssessmentCompleted = (shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, ""));
@@ -137,7 +139,35 @@ public class ProfileFragment extends Fragment {
         binding.tvName.setText(UserName);
         mRequestPermissionHandler = new RequestPermissionHandler();
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
+
+        if (UserName.equalsIgnoreCase("")
+                || UserName.equalsIgnoreCase(" ")
+                || UserName == null) {
+            binding.tvName.setText(R.string.Guest);
+        } else {
+            binding.tvName.setText(UserName);
+        }
+
+        String Name;
+        profilePicPath = userImage;
+        if (profilePicPath.equalsIgnoreCase("")) {
+            binding.civProfile.setVisibility(View.GONE);
+            if (UserName.equalsIgnoreCase("")) {
+                Name = "Guest";
+            } else {
+                Name = UserName;
+            }
+            String Letter = Name.substring(0, 1);
+            binding.rlLetter.setVisibility(View.VISIBLE);
+            binding.tvLetter.setText(Letter);
+        } else {
+            binding.civProfile.setVisibility(View.VISIBLE);
+            binding.rlLetter.setVisibility(View.GONE);
+            setProfilePic(profilePicPath);
+        }
+
         profileViewData(getActivity());
+
         binding.llImageUpload.setOnClickListener(
                 view15 -> {
                     if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -588,31 +618,31 @@ public class ProfileFragment extends Fragment {
                                         BWSApplication.hideProgressBar(
                                                 binding.progressBar, binding.progressBarHolder, requireActivity());
 
-                                        if (viewModel.getResponseData().getName().equalsIgnoreCase("")
-                                                || viewModel.getResponseData().getName().equalsIgnoreCase(" ")
-                                                || viewModel.getResponseData().getName() == null) {
-                                            binding.tvName.setText(R.string.Guest);
-                                        } else {
-                                            binding.tvName.setText(viewModel.getResponseData().getName());
-                                        }
+                   /* if (viewModel.getResponseData().getName().equalsIgnoreCase("")
+                        || viewModel.getResponseData().getName().equalsIgnoreCase(" ")
+                        || viewModel.getResponseData().getName() == null) {
+                      binding.tvName.setText(R.string.Guest);
+                    } else {
+                      binding.tvName.setText(viewModel.getResponseData().getName());
+                    }
 
-                                        String Name;
-                                        profilePicPath = viewModel.getResponseData().getImage();
-                                        if (profilePicPath.equalsIgnoreCase("")) {
-                                            binding.civProfile.setVisibility(View.GONE);
-                                            if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
-                                                Name = "Guest";
-                                            } else {
-                                                Name = viewModel.getResponseData().getName();
-                                            }
-                                            String Letter = Name.substring(0, 1);
-                                            binding.rlLetter.setVisibility(View.VISIBLE);
-                                            binding.tvLetter.setText(Letter);
-                                        } else {
-                                            binding.civProfile.setVisibility(View.VISIBLE);
-                                            binding.rlLetter.setVisibility(View.GONE);
-                                            setProfilePic(profilePicPath);
-                                        }
+                    String Name;
+                    profilePicPath = viewModel.getResponseData().getImage();
+                    if (profilePicPath.equalsIgnoreCase("")) {
+                      binding.civProfile.setVisibility(View.GONE);
+                      if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
+                        Name = "Guest";
+                      } else {
+                        Name = viewModel.getResponseData().getName();
+                      }
+                      String Letter = Name.substring(0, 1);
+                      binding.rlLetter.setVisibility(View.VISIBLE);
+                      binding.tvLetter.setText(Letter);
+                    } else {
+                      binding.civProfile.setVisibility(View.VISIBLE);
+                      binding.rlLetter.setVisibility(View.GONE);
+                      setProfilePic(profilePicPath);
+                    }*/
                                     } else {
                                         BWSApplication.hideProgressBar(
                                                 binding.progressBar, binding.progressBarHolder, getActivity());

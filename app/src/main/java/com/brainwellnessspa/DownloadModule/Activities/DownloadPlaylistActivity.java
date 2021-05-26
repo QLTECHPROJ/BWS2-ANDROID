@@ -177,14 +177,55 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             Created = getIntent().getStringExtra("Created");
             PlaylistDescription = getIntent().getStringExtra("PlaylistDescription");
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
+
         audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         percent = 100;
         hundredVolume = (int) (currentVolume * percent) / maxVolume;
+
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                5, 4.1f, 1f, 0);
+        binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        MeasureRatio measureRatio1 = BWSApplication.measureRatio(ctx, 0,
+                5, 4.1f, 1f, 0);
+        binding.ivTransBanner.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
+        binding.ivTransBanner.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
+        binding.ivTransBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        MeasureRatio measureRatio2 = BWSApplication.measureRatio(ctx, 0,
+                5, 4.1f, 1f, 0);
+        binding.llPlayer.getLayoutParams().height = (int) (measureRatio2.getHeight() * measureRatio2.getRatio());
+        binding.llPlayer.getLayoutParams().width = (int) (measureRatio2.getWidthImg() * measureRatio2.getRatio());
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            if (!PlaylistImageDetails.equalsIgnoreCase("")) {
+                try {
+//                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
+//                            .placeholder(R.drawable.audio_bg)
+//                            .error(R.drawable.audio_bg)
+//                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+//
+                    binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+                    binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+                binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
+            }
+        } else {
+            binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+            binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
+        }
+
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("playlistId", PlaylistID);
@@ -293,43 +334,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             binding.llPlay.setVisibility(View.VISIBLE);
         }
         binding.tvPlayListName.setText(PlaylistName);
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                5, 4.1f, 1f, 0);
-        binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
 
-        MeasureRatio measureRatio1 = BWSApplication.measureRatio(ctx, 0,
-                5, 4.1f, 1f, 0);
-        binding.ivTransBanner.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
-        binding.ivTransBanner.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
-        binding.ivTransBanner.setScaleType(ImageView.ScaleType.FIT_XY);
-
-        MeasureRatio measureRatio2 = BWSApplication.measureRatio(ctx, 0,
-                5, 4.1f, 1f, 0);
-        binding.llPlayer.getLayoutParams().height = (int) (measureRatio2.getHeight() * measureRatio2.getRatio());
-        binding.llPlayer.getLayoutParams().width = (int) (measureRatio2.getWidthImg() * measureRatio2.getRatio());
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            if (!PlaylistImageDetails.equalsIgnoreCase("")) {
-                try {
-//                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
-//                            .placeholder(R.drawable.audio_bg)
-//                            .error(R.drawable.audio_bg)
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
-//
-                    binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
-                    binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
-                binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
-            }
-        } else {
-            binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
-            binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
-        }
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.dark_blue_gray));
