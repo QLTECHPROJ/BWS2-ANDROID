@@ -608,6 +608,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         Glide.with(ctx).load(listModel.playlistImageDetail).thumbnail(0.05f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                             .into(binding.ivBanner)
+                        binding.ivTransBanner.setImageResource(R.drawable.rounded_light_app_theme)
                     } else {
                         binding.ivCloudBanner.setImageResource(R.drawable.ic_cloud_bg)
                         binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme)

@@ -22,7 +22,7 @@ import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivi
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel;
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel;
+import com.brainwellnessspa.referralModule.models.CheckReferCodeModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding;

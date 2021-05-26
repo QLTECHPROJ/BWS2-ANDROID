@@ -207,13 +207,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (!PlaylistImageDetails.equalsIgnoreCase("")) {
                 try {
-//                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
-//                            .placeholder(R.drawable.audio_bg)
-//                            .error(R.drawable.audio_bg)
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
-//
-                    binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
-                    binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
+                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
+                            .placeholder(R.drawable.audio_bg)
+                            .error(R.drawable.audio_bg)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+                    binding.ivTransBanner.setImageResource(R.drawable.rounded_light_app_theme);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -270,7 +268,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
         ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
-        if(!AudioPlayerFlagx.equals("0")) {
+        if (!AudioPlayerFlagx.equals("0")) {
             if (!json.equalsIgnoreCase(String.valueOf(gson))) {
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                 }.getType();
@@ -547,7 +545,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         Gson gson = new Gson();
         SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
-        String  DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+        String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
         Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
         }.getType();
         HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);

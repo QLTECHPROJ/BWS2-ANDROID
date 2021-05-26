@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ReminderModule.Models
+package com.brainwellnessspa.reminderModule.models
 
 class ReminderSelectionModel(day: String?) {
     var day: String? = null

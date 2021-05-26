@@ -31,7 +31,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.WebView.TncActivity;
+import com.brainwellnessspa.webView.TncActivity;
 import com.brainwellnessspa.databinding.ActivityMembershipBinding;
 import com.brainwellnessspa.databinding.AudioFaqLayoutBinding;
 import com.segment.analytics.Properties;

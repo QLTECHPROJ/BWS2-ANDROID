@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ReferralModule.Activities;
+package com.brainwellnessspa.referralModule.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -38,9 +38,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
-import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
-import com.brainwellnessspa.ReferralModule.Model.FavContactlistModel;
+import com.brainwellnessspa.referralModule.models.AllContactListModel;
+import com.brainwellnessspa.referralModule.models.ContactlistModel;
+import com.brainwellnessspa.referralModule.models.FavContactlistModel;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityContactBookBinding;

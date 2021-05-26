@@ -17,7 +17,7 @@ import com.android.billingclient.api.BillingClient.SkuType
 import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel
+import com.brainwellnessspa.referralModule.models.CheckReferCodeModel
 import com.brainwellnessspa.Utility.APIClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity

@@ -39,7 +39,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
+import com.brainwellnessspa.reminderModule.activities.ReminderDetailsActivity;
 import com.brainwellnessspa.Utility.APIClientProfile;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;

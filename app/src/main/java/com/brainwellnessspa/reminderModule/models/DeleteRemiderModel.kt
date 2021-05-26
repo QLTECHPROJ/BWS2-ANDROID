@@ -1,12 +1,12 @@
-package com.brainwellnessspa.ReminderModule.Models
+package com.brainwellnessspa.reminderModule.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class SetReminderOldModel {
+class DeleteRemiderModel {
     @SerializedName("ResponseData")
     @Expose
-    var responseData: ResponseData? = null
+    var responseData: List<Any>? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -19,10 +19,4 @@ class SetReminderOldModel {
     @SerializedName("ResponseStatus")
     @Expose
     var responseStatus: String? = null
-
-    class ResponseData {
-        @SerializedName("errormsg")
-        @Expose
-        var errormsg: String? = null
-    }
 }

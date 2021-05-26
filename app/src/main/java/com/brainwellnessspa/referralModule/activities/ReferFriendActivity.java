@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ReferralModule.Activities;
+package com.brainwellnessspa.referralModule.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,10 +26,10 @@ import android.widget.ImageView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;
+import com.brainwellnessspa.referralModule.models.ContactlistModel;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.WebView.TncActivity;
+import com.brainwellnessspa.webView.TncActivity;
 import com.brainwellnessspa.databinding.ActivityReferFriendBinding;
 import com.segment.analytics.Properties;
 

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.WebView;
+package com.brainwellnessspa.webView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;

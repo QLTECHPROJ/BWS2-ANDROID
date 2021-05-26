@@ -30,8 +30,8 @@ import com.brainwellnessspa.invoicemodule.models.InvoiceDetailModel;
 import com.brainwellnessspa.invoicemodule.models.InvoiceListModel;
 import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
-import com.brainwellnessspa.ReferralModule.Model.AllContactListModel;
-import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel;
+import com.brainwellnessspa.referralModule.models.AllContactListModel;
+import com.brainwellnessspa.referralModule.models.CheckReferCodeModel;
 
 import retrofit2.Call;
 import retrofit2.http.Field;

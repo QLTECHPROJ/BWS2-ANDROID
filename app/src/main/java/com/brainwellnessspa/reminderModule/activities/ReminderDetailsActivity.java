@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ReminderModule.Activities;
+package com.brainwellnessspa.reminderModule.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,10 +38,10 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReminderModule.Models.DeleteRemiderModel;
-import com.brainwellnessspa.ReminderModule.Models.ReminderListModel;
-import com.brainwellnessspa.ReminderModule.Models.ReminderStatusModel;
-import com.brainwellnessspa.ReminderModule.Models.SegmentReminder;
+import com.brainwellnessspa.reminderModule.models.DeleteRemiderModel;
+import com.brainwellnessspa.reminderModule.models.ReminderListModel;
+import com.brainwellnessspa.reminderModule.models.ReminderStatusModel;
+import com.brainwellnessspa.reminderModule.models.SegmentReminder;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityReminderDetailsBinding;

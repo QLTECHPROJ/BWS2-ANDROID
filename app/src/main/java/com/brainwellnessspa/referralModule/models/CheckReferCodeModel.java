@@ -1,11 +1,9 @@
-package com.brainwellnessspa.ReferralModule.Model;
+package com.brainwellnessspa.referralModule.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class AllContactListModel {
+public class CheckReferCodeModel {
     @SerializedName("ResponseData")
     @Expose
     private ResponseData responseData;
@@ -52,17 +50,16 @@ public class AllContactListModel {
     }
 
     public class ResponseData {
-
-        @SerializedName("Isinsert")
+        @SerializedName("CodeExist")
         @Expose
-        private String isinsert;
+        private String codeExist;
 
-        public String getIsinsert() {
-            return isinsert;
+        public String getCodeExist() {
+            return codeExist;
         }
 
-        public void setIsinsert(String isinsert) {
-            this.isinsert = isinsert;
+        public void setCodeExist(String codeExist) {
+            this.codeExist = codeExist;
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.ReminderModule.Models;
+package com.brainwellnessspa.reminderModule.models;
 
 public class SegmentReminder {
     String reminderId,
