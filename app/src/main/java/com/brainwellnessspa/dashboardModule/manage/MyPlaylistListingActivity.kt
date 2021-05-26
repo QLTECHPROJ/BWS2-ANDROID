@@ -1964,7 +1964,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun GetPlaylistDetail(SongListSize: Int,ctx:Context): ArrayList<DownloadPlaylistDetails?> {
-        try {
+//        try {
             DB = Room.databaseBuilder(
                     ctx,
                     AudioDatabase::class.java,
@@ -1993,14 +1993,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         removeobserver(ctx)
                     }
                 })
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
+//        } catch (e: java.lang.Exception) {
+//            e.printStackTrace()
+//        }
         return downloadPlaylistDetailsList
     }
 
     private fun getMediaByPer(PlaylistId: String, totalAudio: Int,ctx:Context) {
-        try {
+//        try {
             DB = Room.databaseBuilder(
                     ctx,
                     AudioDatabase::class.java,
@@ -2016,7 +2016,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         if (count == totalAudio) {
                             binding.pbProgress.visibility = View.GONE
                             binding.ivDownloads.visibility = View.VISIBLE
-                            DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
+                            DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
                                     .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
                         } else {
                             val progressPercent: Long = (count * 100 / totalAudio).toLong()
@@ -2027,7 +2027,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             getMediaByPer(PlaylistID!!, SongListSize,ctx)
                         }
                     } else {
-                        DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
+                        DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
                                 .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
                         binding.pbProgress.visibility = View.GONE
                         binding.ivDownloads.visibility = View.VISIBLE
@@ -2038,9 +2038,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 //                }
                     callObserveMethodGetAllMedia(ctx)
                 })
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
+//        } catch (e: java.lang.Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     private fun getDownloadData(ctx:Context) {
@@ -2118,6 +2118,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 ContextCompat.getColor(activity, R.color.white),
                 PorterDuff.Mode.SRC_IN
             )
+            Log.e("Download Click","True")
         } else {
             binding.llDownloads.isClickable = false
             binding.llDownloads.isEnabled = false
@@ -2134,6 +2135,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     PorterDuff.Mode.SRC_IN
                 )
             }
+            Log.e("Download Click","false")
         }
     }
 
@@ -2242,7 +2244,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 downloadOrNot = true
             }
             if (downloadOrNot) {
-                disableDownload(llDownload, ivDownloads)
+                enableDisableDownload(false, "orange")
                 val url = arrayListOf<String>()
                 val name = arrayListOf<String>()
                 val downloadPlaylistId = arrayListOf<String>()
@@ -2411,7 +2413,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 downloadAudioDetails.isDownload = "pending"
                 downloadAudioDetails.downloadProgress = 0
             }
-            try {
+//            try {
                 AudioDatabase.databaseWriteExecutor.execute {
                     DB = Room.databaseBuilder(
                             ctx,
@@ -2422,13 +2424,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             .build()
                     DB.taskDao().insertMedia(downloadAudioDetails)
                 }
-            } catch (e: java.lang.Exception) {
-                println(e.message)
-            } catch (e: OutOfMemoryError) {
-                println(e.message)
-            }
+//            } catch (e: java.lang.Exception) {
+//                println(e.message)
+//            } catch (e: OutOfMemoryError) {
+//                println(e.message)
+//            }
         }
-        try {
+//        try {
             AudioDatabase.databaseWriteExecutor.execute {
                 DB = Room.databaseBuilder(
                         ctx,
@@ -2441,11 +2443,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize,ctx)
                 getMediaByPer(PlaylistID!!, SongListSize,ctx)
             }
-        } catch (e: java.lang.Exception) {
-            println(e.message)
-        } catch (e: OutOfMemoryError) {
-            println(e.message)
-        }
+//        } catch (e: java.lang.Exception) {
+//            println(e.message)
+//        } catch (e: OutOfMemoryError) {
+//            println(e.message)
+//        }
     }
 
     private fun SaveMedia(
@@ -2492,7 +2494,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         callObserveMethodGetAllMedia(ctx)
         GetMedia(ctx)
-        disableDownload(llDownload, ivDownloads)
+        enableDisableDownload(false, "orange")
     }
 
   /*  fun GetMedia(
@@ -2571,7 +2573,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
     }
 
-    private fun enableDownload(llDownload: RelativeLayout, ivDownloads: ImageView) {
+  /*  private fun enableDownload(llDownload: RelativeLayout, ivDownloads: ImageView) {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
         llDownload.isClickable = true
         llDownload.isEnabled = true
@@ -2589,7 +2591,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         )
         llDownload.isClickable = false
         llDownload.isEnabled = false
-    }
+    }*/
 
     fun GetPlaylistMedia(playlistID: String, ctx: Context) {
         DB = Room.databaseBuilder(

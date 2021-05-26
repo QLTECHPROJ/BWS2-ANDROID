@@ -104,7 +104,7 @@ class ManageFragment : Fragment() {
         binding.rvMainAudioList.layoutManager =
             LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 
-
+        downloadAudioDetailsList = getDownloadedList(ctx)
         val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
@@ -465,7 +465,22 @@ class ManageFragment : Fragment() {
             }
         }
     }
-
+   private fun getDownloadedList(
+        ctx: Context
+    ): ArrayList<String> {
+       DB = Room.databaseBuilder(
+               ctx,
+               AudioDatabase::class.java,
+               "Audio_database"
+       )
+               .addMigrations(BWSApplication.MIGRATION_1_2)
+               .build()
+       AudioDatabase.databaseWriteExecutor.execute {
+           downloadAudioDetailsList =
+                   DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
+       }
+       return downloadAudioDetailsList
+   }
     private fun getMedia(
         views: String?,
         AudioFlag: String,
