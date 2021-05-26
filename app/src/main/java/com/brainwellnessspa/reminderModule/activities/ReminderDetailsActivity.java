@@ -446,11 +446,15 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 //            }
 
             holder.bind.llMainLayout.setOnClickListener(view -> {
+                if (BWSApplication.isNetworkConnected(activity)) {
                 notificationStatus = true;
                 myBackPress = false;
                 BWSApplication.getReminderDay(ctx, activity, CoUSERID, model.get(position).getPlaylistId(),
                         model.get(position).getPlaylistName(), (FragmentActivity) activity,
                         model.get(position).getReminderTime(), model.get(position).getRDay());
+                 } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
+                    }
               /*  Intent i = new Intent(ctx, ReminderActivity.class);
                 i.putExtra("ComeFrom", "1");
                 i.putExtra("ReminderId", model.get(position).getReminderId());

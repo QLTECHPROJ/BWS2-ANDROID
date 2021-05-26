@@ -10,12 +10,12 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Services.GlobalInitExoPlayer
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityFaqBinding
+import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.segment.analytics.Properties
@@ -64,60 +64,73 @@ class FaqActivity : AppCompatActivity() {
         p!!.putValue("faqCategories", gson.toJson(section))
         BWSApplication.addToSegment("FAQ Viewed", p, CONSTANTS.screen)
         binding.llAudio.setOnClickListener {
-            myBackPress = true
-            try {
-                modelList!!.clear()
-                modelList = ArrayList()
-                for (i in faqListModel!!.responseData!!.indices) {
-                    if (faqListModel!!.responseData!![i].category!!.contains("Audio")) {
-                        modelList!!.add(faqListModel!!.responseData!![i])
+            if (BWSApplication.isNetworkConnected(this@FaqActivity)) {
+                myBackPress = true
+                try {
+                    modelList!!.clear()
+                    modelList = ArrayList()
+                    for (i in faqListModel!!.responseData!!.indices) {
+                        if (faqListModel!!.responseData!![i].category!!.contains("Audio")) {
+                            modelList!!.add(faqListModel!!.responseData!![i])
+                        }
                     }
+                    val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
+                    i.putExtra("Flag", "Audio")
+                    i.putParcelableArrayListExtra("faqListModel", modelList)
+                    startActivity(i)
+                    overridePendingTransition(0, 0)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
-                i.putExtra("Flag", "Audio")
-                i.putParcelableArrayListExtra("faqListModel", modelList)
-                startActivity(i)
-                overridePendingTransition(0, 0)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this@FaqActivity)
             }
         }
         binding.llHelp.setOnClickListener {
-            myBackPress = true
-            try {
-                modelList!!.clear()
-                modelList = ArrayList()
-                for (i in faqListModel!!.responseData!!.indices) {
-                    if (faqListModel!!.responseData!![i].category!!.contains("General")) {
-                        modelList!!.add(faqListModel!!.responseData!![i])
+            if (BWSApplication.isNetworkConnected(this@FaqActivity)) {
+                myBackPress = true
+                try {
+                    modelList!!.clear()
+                    modelList = ArrayList()
+                    for (i in faqListModel!!.responseData!!.indices) {
+                        if (faqListModel!!.responseData!![i].category!!.contains("General")) {
+                            modelList!!.add(faqListModel!!.responseData!![i])
+                        }
                     }
+                    val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
+                    i.putExtra("Flag", "General")
+                    i.putExtra("faqListModel", modelList)
+                    startActivity(i)
+                    overridePendingTransition(0, 0)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
-                i.putExtra("Flag", "General")
-                i.putExtra("faqListModel", modelList)
-                startActivity(i)
-                overridePendingTransition(0, 0)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this@FaqActivity)
             }
         }
+
         binding.llPlaylists.setOnClickListener {
-            myBackPress = true
-            try {
-                modelList!!.clear()
-                modelList = ArrayList()
-                for (i in faqListModel!!.responseData!!.indices) {
-                    if (faqListModel!!.responseData!![i].category!!.contains("Playlist")) {
-                        modelList!!.add(faqListModel!!.responseData!![i])
+            if (BWSApplication.isNetworkConnected(this@FaqActivity)) {
+                myBackPress = true
+                try {
+                    modelList!!.clear()
+                    modelList = ArrayList()
+                    for (i in faqListModel!!.responseData!!.indices) {
+                        if (faqListModel!!.responseData!![i].category!!.contains("Playlist")) {
+                            modelList!!.add(faqListModel!!.responseData!![i])
+                        }
                     }
+                    val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
+                    i.putExtra("Flag", "Playlist")
+                    i.putExtra("faqListModel", modelList)
+                    startActivity(i)
+                    overridePendingTransition(0, 0)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
-                i.putExtra("Flag", "Playlist")
-                i.putExtra("faqListModel", modelList)
-                startActivity(i)
-                overridePendingTransition(0, 0)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this@FaqActivity)
             }
         }
     }
