@@ -206,7 +206,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             PlaylistName = intent.getStringExtra("PlaylistName")
             MyDownloads = intent.getStringExtra("MyDownloads")
         }
-        callObserveMethodGetAllMedia()
+        callObserveMethodGetAllMedia(ctx)
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
@@ -239,6 +239,19 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val i = Intent(activity, RecommendedCategoryActivity::class.java)
             i.putExtra("BackClick", "1")
             startActivity(i)
+        }
+        binding.llDownloads.setOnClickListener {
+            callObserveMethodGetAllMedia(ctx)
+            callDownload(
+                    "",
+                    "",
+                    "",
+                    listMOdelGloble.responseData!!.playlistSongs!!,
+                    0,
+                    binding.llDownloads,
+                    binding.ivDownloads,
+                    ctx, activity
+            )
         }
         DB = Room.databaseBuilder(
                 ctx,
@@ -352,23 +365,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.tvTag.setText(R.string.Audios_in_Playlist)
 
 
-                        getDownloadData()
-                        callObserveMethodGetAllMedia()
+                        getDownloadData(ctx)
+                        callObserveMethodGetAllMedia(ctx)
                         SongListSize = listModel.responseData!!.playlistSongs!!.size
-                        downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize)
-                        binding.llDownloads.setOnClickListener {
-                            callObserveMethodGetAllMedia()
-                            callDownload(
-                                    "",
-                                    "",
-                                    "",
-                                    playlistSongsList,
-                                    0,
-                                    binding.llDownloads,
-                                    binding.ivDownloads,
-                                    ctx, activity
-                            )
-                        }
+                        downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize,ctx)
+
                         if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                                 || listModel.responseData!!.isReminder.equals("", ignoreCase = true)
                         ) {
@@ -858,7 +859,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     class PlayListsAdpater(
-            var listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>,
+            var listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>,
             var ctx: Context,
             var CoUserID: String?,
             var created: String?,
@@ -944,7 +945,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 .into(holder.binding.ivBackgroundImage)
             holder.binding.llMainLayout.setOnClickListener {
                 MyPlaylistListingActivity().callMainPlayer(
-                        position,
+                        holder.absoluteAdapterPosition,
                         "Created",
                         listModel,
                         ctx,
@@ -955,7 +956,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
 
             binding.llPlayPause.setOnClickListener {
-//                MyPlaylistListingActivity().callMainPlayer(position, "", listModel, ctx, activity)
+//                MyPlaylistListingActivity().callMainPlayer(position, "", listModel, ctx,  )
                 if (isPlayPlaylist == 1) {
                     player.playWhenReady = false
                     isPlayPlaylist = 2
@@ -1033,7 +1034,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 )
                             } else {
                                 callRemove(
-                                        listModel[position].id.toString(),
+                                        listModel[holder.absoluteAdapterPosition].id.toString(),
                                         listModel,
                                         holder.absoluteAdapterPosition,
                                         ctx,
@@ -1086,7 +1087,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
         private fun callRemove(
                 id: String,
-                listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>,
+                listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>,
                 position: Int,
                 ctx: Context,
                 activity: Activity,
@@ -1113,7 +1114,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 ////                            handler2.removeCallbacks(UpdateSongTime2);
 //                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder,activity)
                             val listModel1: SucessModel = response.body()!!
-                            listModel.drop(position)
+                            listModel.removeAt(position)
                             if (listModel.isEmpty()) {
                                 MyPlaylistListingActivity().enableDisableDownload(false, "gray")
                             }
@@ -1204,7 +1205,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
                     private fun saveToPref(
                             playerPosition: Int,
-                            listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>
+                            listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>
                     ) {
                         val shared =
                                 ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -1268,6 +1269,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             callDragApi()
             notifyItemMoved(fromPosition, toPosition)
+
             /*  val p = Properties()
             val shared =
                     ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -1402,7 +1404,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     class PlayListsAdpater2(
-            var listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>,
+            var listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>,
             var ctx: Context,
             var CoUserID: String?,
             var created: String?,
@@ -1413,7 +1415,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             var MyDownloads: String?
     ) : RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder>(), Filterable {
 
-        private var listFilterData: List<PlaylistDetailsModel.ResponseData.PlaylistSong> = listModel
+        private var listFilterData: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> = listModel
 
         inner class MyViewHolder(var binding: MyPlaylistLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
@@ -1680,7 +1682,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.tvTag.visibility = View.VISIBLE
                         binding.rvPlayLists2.visibility = View.VISIBLE
                         listFilterData =
-                            filterResults.values as List<PlaylistDetailsModel.ResponseData.PlaylistSong>
+                            filterResults.values as ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>
                         notifyDataSetChanged()
                     }
                 }
@@ -1704,7 +1706,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (MyDownloads.equals("1", true)) {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+            if (isNetworkConnected(ctx)) {
                 if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
                                 playlistID,
                                 ignoreCase = true
@@ -1807,7 +1809,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     )
                 }
             } else {
-                getAllCompletedMedia(AudioPlayerFlag!!, MyPlaylist!!, 0)
+                getAllCompletedMedia(AudioPlayerFlag!!, MyPlaylist!!, 0,ctx)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
@@ -1944,15 +1946,15 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
 
-    private fun removeobserver() {
+    private fun removeobserver(ctx:Context) {
         DatabaseClient
-            .getInstance(this)
+            .getInstance(ctx)
             .getaudioDatabase()
             .taskDao()
             .getPlaylist1(PlaylistID).removeObserver { dc: List<DownloadPlaylistDetails?>? -> }
     }
 
-    private fun GetPlaylistDetail(SongListSize: Int): ArrayList<DownloadPlaylistDetails?> {
+    private fun GetPlaylistDetail(SongListSize: Int,ctx:Context): ArrayList<DownloadPlaylistDetails?> {
         try {
             DB = Room.databaseBuilder(
                     ctx,
@@ -1968,18 +1970,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     downloadPlaylistDetailsList.addAll(audioList)
                     if (audioList.isNotEmpty()) {
                         enableDisableDownload(false, "orange")
-                        getMediaByPer(PlaylistID!!, this.SongListSize)
-                        removeobserver()
+                        getMediaByPer(PlaylistID!!, SongListSize,ctx)
+                        removeobserver(ctx)
                     } else if (SongListSize == 0) {
                         enableDisableDownload(false, "gray")
-                        removeobserver()
+                        removeobserver(ctx)
                     } /*else if (download.equals("1", ignoreCase = true) *//* New.equalsIgnoreCase("1") ||*//*) {
                             enableDisableDownload(false, "orange")
                             getMediaByPer(PlaylistID!!, SongListSize)
                             removeobserver()
                         } */ else {
                         enableDisableDownload(true, "white")
-                        removeobserver()
+                        removeobserver(ctx)
                     }
                 })
         } catch (e: java.lang.Exception) {
@@ -1988,7 +1990,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         return downloadPlaylistDetailsList
     }
 
-    private fun getMediaByPer(PlaylistId: String, totalAudio: Int) {
+    private fun getMediaByPer(PlaylistId: String, totalAudio: Int,ctx:Context) {
         try {
             DB = Room.databaseBuilder(
                     ctx,
@@ -2003,36 +2005,36 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     //                if (downloadPlaylistDetailsList.size() != 0) {
                     if (count <= totalAudio) {
                         if (count == totalAudio) {
-                            binding.pbProgress.setVisibility(View.GONE)
-                            binding.ivDownloads.setVisibility(View.VISIBLE)
+                            binding.pbProgress.visibility = View.GONE
+                            binding.ivDownloads.visibility = View.VISIBLE
                             DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
                                     .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
                         } else {
                             val progressPercent: Long = (count * 100 / totalAudio).toLong()
                             val downloadProgress1 = progressPercent.toInt()
-                            binding.pbProgress.setVisibility(View.VISIBLE)
-                            binding.ivDownloads.setVisibility(View.GONE)
+                            binding.pbProgress.visibility = View.VISIBLE
+                            binding.ivDownloads.visibility = View.GONE
                             binding.pbProgress.setProgress(downloadProgress1)
-                            getMediaByPer(PlaylistID!!, SongListSize)
+                            getMediaByPer(PlaylistID!!, SongListSize,ctx)
                         }
                     } else {
                         DB!!.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
                                 .removeObserver { cs: List<DownloadPlaylistDetails?>? -> }
-                        binding.pbProgress.setVisibility(View.GONE)
-                        binding.ivDownloads.setVisibility(View.VISIBLE)
+                        binding.pbProgress.visibility = View.GONE
+                        binding.ivDownloads.visibility = View.VISIBLE
                     }
                     //                } else {
 //                    binding.pbProgress.setVisibility(View.GONE);
 //                    binding.ivDownloads.setVisibility(View.VISIBLE);
 //                }
-                    callObserveMethodGetAllMedia()
+                    callObserveMethodGetAllMedia(ctx)
                 })
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun getDownloadData() {
+    private fun getDownloadData(ctx:Context) {
         try {
             val sharedy: SharedPreferences =
                 getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
@@ -2042,11 +2044,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
             if (!jsony.equals(gson.toString(), ignoreCase = true)) {
                 val type = object : TypeToken<ArrayList<String?>?>() {}.type
-                fileNameList = gson.fromJson<ArrayList<String>>(jsony, type)
-                playlistDownloadId = gson.fromJson<ArrayList<String>>(jsonq, type)
+                fileNameList = gson.fromJson(jsony, type)
+                playlistDownloadId = gson.fromJson(jsonq, type)
             } else {
-                fileNameList = ArrayList<String>()
-                playlistDownloadId = ArrayList<String>()
+                fileNameList = ArrayList()
+                playlistDownloadId = ArrayList()
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -2062,14 +2064,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             .getPlaylist1(PlaylistID).observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails?> ->
                     downloadPlaylistDetailsList = arrayListOf()
                     downloadPlaylistDetailsList = audioList as ArrayList<DownloadPlaylistDetails?>
-                    GetMedia()
+                    GetMedia(ctx)
                 })
     }
 
-    private fun callObserveMethodGetAllMedia() {
+    private fun callObserveMethodGetAllMedia(ctx:Context) {
         try {
             DatabaseClient
-                .getInstance(this)
+                .getInstance(ctx)
                 .getaudioDatabase()
                 .taskDao()
                 .geAllData12().observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails?>? ->
@@ -2148,8 +2150,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (playlistSongs2.size == 0) {
                         break
                     } else {
-                        for (x in playlistSongs2.indices) {
-                            if (playlistSongs2.size != 0) {
+                        for (x in 0 until playlistSongs2.size) if (playlistSongs2.size != 0) {
+                            if (x < playlistSongs2.size) {
                                 if (playlistSongs2[x].audioFile.equals(
                                                 downloadAudioDetailsList[y]!!.audioFile,
                                                 ignoreCase = true
@@ -2157,11 +2159,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 ) {
                                     playlistSongs2.removeAt(x)
                                 }
-                                if (playlistSongs2.size == 0) {
-                                    break
-                                }
-                            } else break
-                        }
+                            }
+                            if (playlistSongs2.size == 0) {
+                                break
+                            }
+                        } else break
                     }
                 }
             }
@@ -2189,7 +2191,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     downloadPlaylistId.addAll(playlistId1)
                 }
             }
-            if (url.size != 0) {
+            if (url.size != 0) /*{
                 if (!DownloadMedia.isDownloading) {
                     DownloadMedia.isDownloading = true
                     val downloadMedia =
@@ -2210,8 +2212,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
                 editor.apply()
                 SongListSize = playlistSongs.size
-            }
-            saveAllMedia(playlistSongs)
+            }*/
+            saveAllMedia(ctx,playlistSongs)
         } else {
             var downloadOrNot = false
             if (downloadAudioDetailsList.size != 0) {
@@ -2277,9 +2279,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     fileNameList = name
                     playlistDownloadId = downloadPlaylistId
                 }
-                SaveMedia(playlistSongs, position, llDownload, ivDownloads, 0)
+                SaveMedia(playlistSongs, position, llDownload, ivDownloads, 0,ctx)
             } else {
-                SaveMedia(playlistSongs, position, llDownload, ivDownloads, 100)
+                SaveMedia(playlistSongs, position, llDownload, ivDownloads, 100,ctx)
             }
             val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
             val AudioPlayerFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -2344,12 +2346,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
     }
 
-    private fun savePlaylist() {
-//        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
-//        downloadPlaylistDetailsList = GetPlaylistDetail("1");
-    }
-
-    private fun saveAllMedia(playlistSongs: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>) {
+    private fun saveAllMedia(ctx:Context,playlistSongs: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>) {
         /*   p = Properties()
            p.putValue("userId", UserID)
            p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID())
@@ -2432,15 +2429,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         .addMigrations(MIGRATION_1_2)
                         .build()
                 DB!!.taskDao().insertPlaylist(downloadPlaylistDetails)
-                downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize)
-                getMediaByPer(PlaylistID!!, SongListSize)
+                downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize,ctx)
+                getMediaByPer(PlaylistID!!, SongListSize,ctx)
             }
         } catch (e: java.lang.Exception) {
             println(e.message)
         } catch (e: OutOfMemoryError) {
             println(e.message)
         }
-//        savePlaylist();
     }
 
     private fun SaveMedia(
@@ -2448,7 +2444,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             i: Int,
             llDownload: RelativeLayout,
             ivDownloads: ImageView,
-            progress: Int
+            progress: Int,
+            ctx:Context
     ) {
         val downloadAudioDetails = DownloadAudioDetails()
         downloadAudioDetails.id = playlistSongs[i].id
@@ -2484,17 +2481,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         } catch (e: OutOfMemoryError) {
             println(e.message)
         }
-        callObserveMethodGetAllMedia()
-        GetMedia()
+        callObserveMethodGetAllMedia(ctx)
+        GetMedia(ctx)
         disableDownload(llDownload, ivDownloads)
     }
 
-    fun GetMedia(
+  /*  fun GetMedia(
             url: String?,
             ctx: Context?,
             download: String,
             llDownload: RelativeLayout,
-            ivDownloads: ImageView
+            ivDownloads: ImageView,
+            ctx:Context
     ) {
         DatabaseClient
             .getInstance(this)
@@ -2511,9 +2509,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         enableDownload(llDownload, ivDownloads)
                     }
                 })
-    }
+    }*/
 
-    fun GetMedia() {
+    fun GetMedia(ctx:Context) {
         try {
 //        playlistWiseAudioDetails = new ArrayList<>();
             DB!!.taskDao().getAllAudioByPlaylist1(PlaylistID)
@@ -2713,7 +2711,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 //        }
     }
 
-    private fun getAllCompletedMedia(AudioFlag: String, pID: String, position: Int) {
+    private fun getAllCompletedMedia(AudioFlag: String, pID: String, position: Int,ctx:Context) {
         var pos = 0
         val shared: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)

@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -494,19 +495,21 @@ class ManageFragment : Fragment() {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", act)
             } else {
                 val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
-                for (i in listModelList.indices) {
-                    if (downloadAudioDetailsList.contains(listModelList[i].name)) {
-                        listModelList2.add(listModelList[i])
+                for (i in listModelList) {
+                    if (downloadAudioDetailsList.contains(i.name)) {
+                        listModelList2.add(i)
                     }
                 }
-                if (downloadAudioDetailsList.contains(listModelList[position].id)) {
+                if (downloadAudioDetailsList.contains(listModelList[position].name)) {
                     pos = position
                 } else {
+                    Log.e("else","1")
                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                 }
                 if (listModelList2.size != 0) {
                     callPlayer(pos, views!!, listModelList2, ctx, act, true)
                 } else {
+                    Log.e("else","2")
                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
@@ -514,9 +517,9 @@ class ManageFragment : Fragment() {
             val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
             val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
             val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
-            for (i in listModelList.indices) {
-                if (downloadAudioDetailsList.contains(listModelList[i].name)) {
-                    listModelList2.add(listModelList.get(i))
+            for (i in listModelList) {
+                if (downloadAudioDetailsList.contains(i.name)) {
+                    listModelList2.add(i)
                 }
             }
             if (downloadAudioDetailsList.contains(listModelList[position].name)) {
@@ -559,20 +562,19 @@ class ManageFragment : Fragment() {
                 }
                 if (listModelList2.size != 0) {
                     if (!listModelList2[pos].id.equals("0")) {
-                        if (listModelList2.size != 0) {
-                            callPlayer(pos, views!!, listModelList2, ctx, act, audioc)
-                        } else {
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
-                        }
+                        callPlayer(pos, views!!, listModelList2, ctx, act, audioc)
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
                         callPlayer(pos, views!!, listModelList2, ctx, act, audioc)
                     } else {
+                        Log.e("else","3")
                         BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 } else {
+                    Log.e("else","4")
                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
                 }
             } else {
+                Log.e("else","5")
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
@@ -791,16 +793,11 @@ class ManageFragment : Fragment() {
                     LocalBroadcastManager.getInstance(ctx)
                         .registerReceiver(listener, IntentFilter("play_pause_Action"))
                     binding.llPlayPause.setOnClickListener {
-                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                        if (BWSApplication.isNetworkConnected(activity)) {
                             val shared1 = ctx.getSharedPreferences(
                                 CONSTANTS.PREF_KEY_PLAYER,
                                 AppCompatActivity.MODE_PRIVATE
                             )
-                            val AudioPlayerFlag =
-                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                            val MyPlaylist =
-                                shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                             val PlayerPosition =
                                 shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                             when (isPlayPlaylist) {
@@ -920,9 +917,7 @@ class ManageFragment : Fragment() {
         val shared1 =
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") 
         if (MyDownloads.equals("1", ignoreCase = true)) {
             if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
                     homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
@@ -1024,10 +1019,9 @@ class ManageFragment : Fragment() {
             } else {
                 val listModelList2 =
                     arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
-                var view = ""
-                for (i in listModel.indices) {
-                    if (downloadAudioDetailsList.contains(listModel[i].name)) {
-                        listModelList2.add(listModel[i])
+                for (i in listModel) {
+                    if (downloadAudioDetailsList.contains(i.name)) {
+                        listModelList2.add(i)
                     }
                 }
                 if (position != positionSaved) {
@@ -1049,9 +1043,9 @@ class ManageFragment : Fragment() {
         } else {
             val listModelList2 =
                 arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
-            for (i in listModel.indices) {
-                if (downloadAudioDetailsList.contains(listModel[i].name)) {
-                    listModelList2.add(listModel[i])
+            for (i in listModel) {
+                if (downloadAudioDetailsList.contains(i.name)) {
+                    listModelList2.add(i)
                 }
             }
             if (downloadAudioDetailsList.contains(listModel[position].name)) {
@@ -1115,17 +1109,16 @@ class ManageFragment : Fragment() {
     }
 
     private fun callMainPlayerSuggested(
-        position: Int,
-        view: String?,
-        listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
-        ctx: Context,
-        act: Activity,
-        playlistID: String
+            position: Int,
+            views: String?,
+            listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+            ctx: Context,
+            act: Activity,
+            playlistID: String
     ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         var playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
@@ -1167,7 +1160,7 @@ class ManageFragment : Fragment() {
                         } else {
                             callPlayerSuggested(
                                 position,
-                                view,
+                                views,
                                 listModel,
                                 ctx,
                                 act,
@@ -1221,7 +1214,7 @@ class ManageFragment : Fragment() {
                     }
                     callPlayerSuggested(
                         position,
-                        view,
+                        views,
                         listModelList2,
                         ctx,
                         act,
@@ -1264,7 +1257,7 @@ class ManageFragment : Fragment() {
                         }
                         callMyPlayer(ctx, act)
                     } else {
-                        callPlayerSuggested(position, view, listModel, ctx, act, playlistID, true)
+                        callPlayerSuggested(position, views, listModel, ctx, act, playlistID, true)
                     }
                 }
             } else {
@@ -1307,7 +1300,7 @@ class ManageFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayerSuggested(position, view, listModelList2, ctx, act, playlistID, audioc)
+                callPlayerSuggested(position, views, listModelList2, ctx, act, playlistID, audioc)
             }
         }
     }

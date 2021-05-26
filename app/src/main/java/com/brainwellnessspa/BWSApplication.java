@@ -69,6 +69,7 @@ import com.brainwellnessspa.DashboardOldModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.ReminderModule.Models.ReminderMinutesListModel;
 import com.brainwellnessspa.ReminderModule.Models.ReminderSelectionModel;
 import com.brainwellnessspa.ReminderModule.Models.SetReminderOldModel;
@@ -2484,6 +2485,70 @@ public class BWSApplication extends Application {
 */
             }
         }
+    }
+    public static void callObserve2(Context ctx) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe((LifecycleOwner) ctx , audioList -> {
+            List<String> fileNameList = new ArrayList<>();
+            List<String> audioFile = new ArrayList<>();
+            List<String> playlistDownloadId = new ArrayList<>();
+
+            if (audioList.size() != 0) {
+                for (int i = 0; i < audioList.size(); i++) {
+                    if (audioList.get(i).getDownloadProgress() < 100) {
+                        fileNameList.add(audioList.get(i).getName());
+                        audioFile.add(audioList.get(i).getAudioFile());
+                        playlistDownloadId.add(audioList.get(i).getPlaylistId());
+                    }
+                }
+            }
+            Gson gson = new Gson();
+            SharedPreferences sharedxc = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editorxc = sharedxc.edit();
+            String nameJson = gson.toJson(fileNameList);
+            String urlJson = gson.toJson(audioFile);
+            String playlistIdJson = gson.toJson(playlistDownloadId);
+            editorxc.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editorxc.commit();
+            isDownloading = false;
+        });
+    }
+
+    public static void callObserve1(Context ctx) {
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllData12().observe((LifecycleOwner) ctx, audioList -> {
+            if (audioList.size() != 0) {
+                for (int i = 0; i < audioList.size(); i++) {
+                    FileUtils.deleteDownloadedFile(ctx, audioList.get(i).getName());
+                }
+            }
+            SharedPreferences preferences11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit1 = preferences11.edit();
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadName);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadUrl);
+            edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId);
+            edit1.clear();
+            edit1.commit();
+            AudioDatabase DB = Room.databaseBuilder(ctx,
+                    AudioDatabase.class,
+                    "Audio_database")
+                    .addMigrations(MIGRATION_1_2)
+                    .build();
+            AudioDatabase.databaseWriteExecutor.execute(() -> {
+                    DB.taskDao().deleteAll();
+                });
+                AudioDatabase.databaseWriteExecutor.execute(() -> {
+                    DB.taskDao().deleteAllPlalist();
+                });
+        });
     }
   /*  public static String getRefreshToken(String code)
     {

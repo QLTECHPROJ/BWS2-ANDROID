@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -22,7 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.analytics
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.manageModule.SleepTimeActivity
@@ -56,11 +57,13 @@ class UserListActivity : AppCompatActivity() {
     private lateinit var editTexts: Array<EditText>
     var tvSendOTPool: Boolean = true
     lateinit var activity: Activity
+    lateinit var ctx: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_list)
         activity = this@UserListActivity
+        ctx = this@UserListActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
@@ -103,6 +106,7 @@ class UserListActivity : AppCompatActivity() {
     class UserListAdapter(
         listModel: AddedUserListModel.ResponseData,
         private var activity: Activity,
+        private var ctx: Context,
         var binding: ActivityUserListBinding,
         var USERID: String,
         var CoUserID: String,
@@ -304,6 +308,19 @@ class UserListActivity : AppCompatActivity() {
                                                 listModel.responseData!!.userID.toString()
                                             val CoUserId: String =
                                                 listModel.responseData!!.coUserId.toString()
+                                            val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, MODE_PRIVATE)
+                                            val Logout_UserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
+                                            val Logout_CoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
+
+                                            if (!listModel.responseData!!.userID.equals(Logout_UserID, ignoreCase = true)
+                                                    && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
+                                                callObserve1(ctx)
+                                            } else {
+                                                callObserve2(ctx)
+                                            }
+                                            Log.e("New UserId MobileNo", listModel.responseData!!.userID + "....." + listModel.responseData!!.coUserId)
+                                            Log.e("Old UserId MobileNo", "$Logout_UserID.....$Logout_CoUserId")
+                                            BWSApplication.logout = false
                                             UserListActivity().getUserDetails(UserID, CoUserId)
                                             val listCall: Call<CoUserDetailsModel> =
                                                 APINewClient.getClient()
@@ -753,6 +770,7 @@ class UserListActivity : AppCompatActivity() {
                             adapter = UserListAdapter(
                                 listModel.responseData!!,
                                 activity,
+                                    ctx,
                                 binding,
                                 USERID.toString(),
                                 CoUserID.toString(),

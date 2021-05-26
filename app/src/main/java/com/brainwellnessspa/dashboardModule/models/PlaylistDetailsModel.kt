@@ -54,7 +54,7 @@ class PlaylistDetailsModel {
 
         @SerializedName("PlaylistSongs")
         @Expose
-        var playlistSongs: List<PlaylistSong>? = null
+        var playlistSongs: ArrayList<PlaylistSong>? = null
 
         @SerializedName("Created")
         @Expose

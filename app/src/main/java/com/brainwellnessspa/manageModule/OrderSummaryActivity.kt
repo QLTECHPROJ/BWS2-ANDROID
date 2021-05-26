@@ -9,17 +9,19 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient.SkuType
+import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
-import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
-import com.brainwellnessspa.MembershipModule.Activities.ThankYouMpActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.ReferralModule.Model.CheckReferCodeModel
 import com.brainwellnessspa.Utility.APIClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
+import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding
 import com.google.gson.Gson
@@ -32,29 +34,31 @@ import retrofit2.Response
 import java.util.*
 
 
-class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,PurchaseHistoryResponseListener{
+class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,PurchaseHistoryResponseListener,ConsumeResponseListener ,AcknowledgePurchaseResponseListener {
     var binding: ActivityOrderSummaryBinding? = null
     var TrialPeriod: String? = null
-    var comeFrom:String? = ""
-    var UserId:String? = null/* renewPlanFlag, renewPlanId, */
+    var comeFrom: String? = ""
+    var UserId: String? = null/* renewPlanFlag, renewPlanId, */
+
     /* renewPlanFlag, renewPlanId, */
     var CoUserID: String? = null
     var ComesTrue: String? = null
-    var Promocode:String? = ""
-    var OldPromocode:String? = ""
+    var Promocode: String? = ""
+    var OldPromocode: String? = ""
     var listModelList: ArrayList<PlanlistInappModel.ResponseData.Plan>? = null
     var listModelList2: ArrayList<PlanListBillingModel.ResponseData.Plan>? = null
     var position = 0
     val mLastClickTime: Long = 0
-    var ctx: Context? = null
+    lateinit var ctx: Context
     var json = ""
-    var sku=""
-    lateinit var billingClient:BillingClient
+    var sku = ""
+    lateinit var billingClient: BillingClient
     val gson = Gson()
-    //TODO : Oth Client ID
+
+    //TODO : Oauth Client ID
     //861076939494-lg98i6qsqreefk9ftjslerikvtj0ot34.apps.googleusercontent.com
 //ids
- /*   MD5: 4D:09:22:47:FD:AD:E3:8B:DD:61:4F:65:BA:66:99:37
+    /*   MD5: 4D:09:22:47:FD:AD:E3:8B:DD:61:4F:65:BA:66:99:37
     SHA1: F5:37:43:D2:FC:73:4E:6C:51:8C:D7:E7:BE:88:D7:3A:4E:BC:37:4F
     SHA-256: 2C:B7:55:77:AC:97:75:10:90:1A:F4:B4:84:33:89:A6:24:56:CF:47:61:F1:D1:46:F7:87:38:71:E4:94:21:23
 */
@@ -67,7 +71,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
             "six_monthly_3_profile",
             "annual_2_profile",
             "annual_3_profile")
-    var activity: Activity? = null
+    lateinit var activity: Activity
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +79,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary)
         val shared1: SharedPreferences =
                 getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        UserId= shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         ctx = this@OrderSummaryActivity
         activity = this@OrderSummaryActivity
@@ -104,7 +108,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
         }
         binding!!.edtCode.addTextChangedListener(promoCodeTextWatcher)
         val p = Properties()
-        p.putValue("coUserId",CoUserID)
+        p.putValue("coUserId", CoUserID)
         if (!comeFrom.equals("", ignoreCase = true)) {
             val gson: Gson
             val gsonBuilder = GsonBuilder()
@@ -138,11 +142,11 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                 binding!!.tvPlanAmount.text = "$" + listModelList2!![position].planAmount
                 binding!!.tvPlanAmount1.text = "$" + listModelList2!![position].planAmount
                 binding!!.tvTotalAmount.text = "$" + listModelList2!![position].planAmount
-                if(listModelList2!![position].planInterval.equals("Annualy")){
-                    sku = "annual_" + listModelList!![position].profileCount!! + "_"+"profile"
-                }else{
+                if (listModelList2!![position].planInterval.equals("Annualy")) {
+                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
+                } else {
                     sku = listModelList!![position].planInterval!!.replace("-", "_").toLowerCase(Locale.getDefault()) +
-                            "_" + listModelList!![position].profileCount!! + "_"+"profile"
+                            "_" + listModelList!![position].profileCount!! + "_" + "profile"
                 }
             } else {
                 binding!!.tvTrialPeriod.visibility = View.VISIBLE
@@ -156,11 +160,11 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                 binding!!.tvPlanAmount1.text = "$" + listModelList!![position].planAmount
                 binding!!.tvTotalAmount.text = "$" + listModelList!![position].planAmount
 
-                if(listModelList!![position].planInterval.equals("Annualy")){
-                    sku = "annual_" + listModelList!![position].profileCount!! + "_"+"profile"
-                }else{
+                if (listModelList!![position].planInterval.equals("Annualy")) {
+                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
+                } else {
                     sku = listModelList!![position].planInterval!!.replace("-", "_").toLowerCase(Locale.getDefault()) +
-                            "_" + listModelList!![position].profileCount!! + "_"+"profile"
+                            "_" + listModelList!![position].profileCount!! + "_" + "profile"
                 }
             }
         } catch (e: Exception) {
@@ -196,7 +200,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                           p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
                           p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
                         */
-            /*  Intent i = new Intent(ctx, PaymentActivity.class);
+        /*  Intent i = new Intent(ctx, PaymentActivity.class);
                                    i.putExtra("ComesTrue", ComesTrue);
                                    i.putExtra("comeFrom", "membership");
                                    i.putParcelableArrayListExtra("PlanData", listModelList2);
@@ -204,7 +208,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                                    i.putExtra("position", position);
                                    startActivity(i);
                                    finish();*/
-            /*
+        /*
                                } else {
                                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                        return;
@@ -258,7 +262,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                                                            p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
                                                            p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
                                                         */
-            /*   Intent i = new Intent(ctx, PaymentActivity.class);
+        /*   Intent i = new Intent(ctx, PaymentActivity.class);
                                                            i.putExtra("ComesTrue", ComesTrue);
                                                            i.putExtra("comeFrom", "membership");
                                                            i.putParcelableArrayListExtra("PlanData", listModelList2);
@@ -266,7 +270,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                                                            i.putExtra("position", position);
                                                            startActivity(i);
                                                            finish();*/
-            /*
+        /*
                                                        } else {
                                                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                                                return;
@@ -314,6 +318,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
 
         }*/
     }
+
     private fun setupBillingClient() {
         billingClient = BillingClient.newBuilder(this)
                 .enablePendingPurchases()
@@ -324,6 +329,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is setup
                     Log.e("Setup Billing Done", "")
+//                    checkPurchases()
                     loadAllSKUs()
                 }
             }
@@ -336,47 +342,50 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
     }
     private fun loadAllSKUs() =
             if (billingClient.isReady) {
-        val params = SkuDetailsParams
-                .newBuilder()
-                .setSkusList(skuList)
-                .setType(BillingClient.SkuType.SUBS)
-                .build()
-        billingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
-            // Process the result.
+                val params = SkuDetailsParams
+                        .newBuilder()
+                        .setSkusList(skuList)
+                        .setType(BillingClient.SkuType.SUBS)
+                        .build()
+                billingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
+                    // Process the result.
 
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
-                for (skuDetails in skuDetailsList) {
-                    if (skuDetails.sku == sku)
-                    binding!!.btnCheckout.setOnClickListener {
-                            val billingFlowParams = BillingFlowParams
-                                    .newBuilder()
-                                    .setSkuDetails(skuDetails)
-                                    .build()
-                            billingClient.launchBillingFlow(this, billingFlowParams)
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
+                        for (skuDetails in skuDetailsList) {
+                            if (skuDetails.sku == sku)
+                                binding!!.btnCheckout.setOnClickListener {
+                                    val billingFlowParams = BillingFlowParams
+                                            .newBuilder()
+                                            .setSkuDetails(skuDetails)
+//                                    .setOldSku(skuList[1],sku)
+//                                    .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
+                                            .build()
+                                    billingClient.launchBillingFlow(this, billingFlowParams)
 
-                        val p = Properties()
-                        p.putValue("coUserId",CoUserID)
-                        if (!comeFrom.equals("", ignoreCase = true)) {
-                            val gson: Gson
-                            val gsonBuilder = GsonBuilder()
-                            gson = gsonBuilder.create()
-                            p.putValue("plan", gson.toJson(listModelList2))
-                        } else {
-                            val gson: Gson
-                            val gsonBuilder = GsonBuilder()
-                            gson = gsonBuilder.create()
-                            p.putValue("plan", gson.toJson(listModelList))
+                                    val p = Properties()
+                                    p.putValue("coUserId", CoUserID)
+                                    if (!comeFrom.equals("", ignoreCase = true)) {
+                                        val gson: Gson
+                                        val gsonBuilder = GsonBuilder()
+                                        gson = gsonBuilder.create()
+                                        p.putValue("plan", gson.toJson(listModelList2))
+                                    } else {
+                                        val gson: Gson
+                                        val gsonBuilder = GsonBuilder()
+                                        gson = gsonBuilder.create()
+                                        p.putValue("plan", gson.toJson(listModelList))
+                                    }
+                                    BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
+                                }
                         }
-                        BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
-                        }
+                    }
                 }
-            }
-        }
 
-    } else {
-        println("Billing Client not ready")
-    }
-        override fun onBackPressed() {
+            } else {
+                println("Billing Client not ready")
+            }
+
+    override fun onBackPressed() {
         if (!comeFrom.equals("", ignoreCase = true)) {
             val i = Intent(ctx, MembershipChangeActivity::class.java)
             i.putExtra("ComeFrom", ComesTrue)
@@ -436,9 +445,15 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
-                acknowledgePurchase(purchase.purchaseToken)
+                val gson = Gson()
+                val shared = ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
+                val editor = shared.edit()
+                editor.putString(CONSTANTS.PREF_KEY_Purchase, gson.toJson(purchase))
+                editor.commit()
+                purchase.originalJson
+                Log.e("purchase Original json", gson.toJson(purchase.originalJson))
+                acknowledgePurchase(purchase.purchaseToken, purchases)
                 Log.e("Purchase Token", purchase.purchaseToken)
-
             }
         } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
@@ -448,13 +463,14 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
         }
     }
 
-    private fun acknowledgePurchase(purchaseToken: String) {
+    private fun acknowledgePurchase(purchaseToken: String, purchase: MutableList<Purchase>?) {
         val params = AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchaseToken)
                 .build()
+        billingClient.acknowledgePurchase(params, this)
         billingClient.acknowledgePurchase(params) { billingResult ->
-
-         /*   val responseCode = billingResult.responseCode
+            checkPurchases()
+            /*   val responseCode = billingResult.responseCode
             val debugMessage = billingResult.debugMessage
             val i = Intent(ctx, ThankYouMpActivity::class.java)
             i.putExtra("Name", "")
@@ -468,7 +484,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
             finish()*/
 
             val p = Properties()
-            p.putValue("coUserId",CoUserID)
+            p.putValue("coUserId", CoUserID)
             if (!comeFrom.equals("", ignoreCase = true)) {
                 val gson: Gson
                 val gsonBuilder = GsonBuilder()
@@ -484,7 +500,113 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
         }
     }
 
+    private fun checkPurchases() {
+        val client = BillingClient.newBuilder(application)
+                .enablePendingPurchases()
+                .setListener { billingResult, list -> }
+                .build()
+        client.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(@NonNull billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    client.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS) { billingResult, list ->
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                            loadAllSKUsUpdate(list!![0].skus.toString(),list!![0].purchaseToken)
+//                            consumePurchases(list!![0].purchaseToken)
+                            val gson = Gson()
+                            Log.e("purchase list", gson.toJson(list))
+                        }
+                    }
+                }
+            }
+
+            override fun onBillingServiceDisconnected() {}
+        })
+    }
+    private fun loadAllSKUsUpdate(oldsku:String,token: String) =
+            if (billingClient.isReady) {
+                val params = SkuDetailsParams
+                        .newBuilder()
+                        .setSkusList(skuList)
+                        .setType(BillingClient.SkuType.SUBS)
+                        .build()
+                billingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
+                    // Process the result.
+
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
+                        for (skuDetails in skuDetailsList) {
+                            if (skuDetails.sku == sku)
+                                binding!!.btnCheckout.setOnClickListener {
+// Retrieve a value for "skuDetails" by calling querySkuDetailsAsync()
+                                    val flowParams = BillingFlowParams.newBuilder()
+                                                .setSubscriptionUpdateParams(BillingFlowParams.SubscriptionUpdateParams
+                                                    .newBuilder().setOldSkuPurchaseToken(token)
+                                                    .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
+                                                        .build())
+                                            .setSkuDetails(skuDetails)
+                                            .build()
+                                    billingClient.launchBillingFlow(activity, flowParams)
+                              /*      val billingFlowParams = BillingFlowParams
+                                            .newBuilder()
+                                            .setSkuDetails(skuDetails)
+                                            .setOldSku(oldsku, sku)
+                                            .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
+                                            .build()*/
+//                                    billingClient.launchBillingFlow(this, billingFlowParams)
+
+                                    val p = Properties()
+                                    p.putValue("coUserId", CoUserID)
+                                    if (!comeFrom.equals("", ignoreCase = true)) {
+                                        val gson: Gson
+                                        val gsonBuilder = GsonBuilder()
+                                        gson = gsonBuilder.create()
+                                        p.putValue("plan", gson.toJson(listModelList2))
+                                    } else {
+                                        val gson: Gson
+                                        val gsonBuilder = GsonBuilder()
+                                        gson = gsonBuilder.create()
+                                        p.putValue("plan", gson.toJson(listModelList))
+                                    }
+                                    BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
+                                }
+                        }
+                    }
+                }
+
+            } else {
+                println("Billing Client not ready")
+            }
+    private fun consumePurchases(purchaseToken: String) {
+        val consumeParams = ConsumeParams
+                .newBuilder()
+                .setPurchaseToken(purchaseToken)
+                .build()
+        Log.e("consumes", consumeParams.purchaseToken)
+        billingClient.consumeAsync(consumeParams, this)
+
+        val acknowledgePurchaseParams =
+        AcknowledgePurchaseParams.newBuilder()
+                .setPurchaseToken(consumeParams.purchaseToken)
+                .build();
+        billingClient.acknowledgePurchase(acknowledgePurchaseParams, this);
+
+    }
     override fun onPurchaseHistoryResponse(p0: BillingResult, p1: MutableList<PurchaseHistoryRecord>?) {
 
+    }
+
+    override fun onConsumeResponse(billingResult: BillingResult, p1: String) {
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            Log.e("Consume", p1)
+        } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+
+            Log.e("Consume canceled", p1)
+        }
+    }
+
+    override fun onAcknowledgePurchaseResponse(billingResult: BillingResult) {
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            Log.e("Consume aaa ", billingResult.debugMessage)
+        }
     }
 }
