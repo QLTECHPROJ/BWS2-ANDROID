@@ -78,6 +78,8 @@
                             android:layout_height="wrap_content"
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:listitem="@layout/selected_category_raw" />
 
                         <RelativeLayout
@@ -123,8 +125,28 @@
                             android:orientation="vertical"
                             android:overScrollMode="never"
                             tools:itemCount="3"
+                            android:visibility="visible"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:listitem="@layout/all_category_raw" />
+                        <LinearLayout
+                            android:id="@+id/llError"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:visibility="gone"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/tvFound"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="left"
+                                android:lineSpacingExtra="@dimen/_4sdp"
+                                android:paddingTop="@dimen/_12sdp"
+                                android:textColor="@color/light_gray"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

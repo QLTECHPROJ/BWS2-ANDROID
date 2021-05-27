@@ -135,7 +135,7 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
         relesePlayer(BottomNavigationActivity.this);
-        unregisterReceiver(myNetworkReceiver);
+//        unregisterReceiver(myNetworkReceiver);
         deleteCache(BottomNavigationActivity.this);
         super.onDestroy();
     }

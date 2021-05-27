@@ -18,6 +18,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -105,7 +106,7 @@ class ManageFragment : Fragment() {
         binding.rvMainAudioList.layoutManager =
             LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 
-        downloadAudioDetailsList = getDownloadedList(ctx)
+        getDownloadedList(ctx)
         val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
@@ -323,7 +324,7 @@ class ManageFragment : Fragment() {
         super.onDestroy()
     }
 
-    private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>) {
+    private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>,act: Activity) {
         DatabaseClient
             .getInstance(act)
             .getaudioDatabase()
@@ -420,6 +421,7 @@ class ManageFragment : Fragment() {
                 }
             } else {
                 if (views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
+                    Log.e("download audio in gm",downloadAudioDetailsList.toString())
                     getMedia(views!!, AudioPlayerFlag!!, position, listModel, ctx, act)
                 }
             }
@@ -474,17 +476,15 @@ class ManageFragment : Fragment() {
     private fun getDownloadedList(
         ctx: Context
     ): ArrayList<String> {
-        DB = Room.databaseBuilder(
-            ctx,
-            AudioDatabase::class.java,
-            "Audio_database"
-        )
-            .addMigrations(BWSApplication.MIGRATION_1_2)
-            .build()
-        AudioDatabase.databaseWriteExecutor.execute {
-            downloadAudioDetailsList =
-                DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
-        }
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllLiveDataBYDownloaded("Complete")
+                .observe(ctx as(LifecycleOwner), { audioList: List<String> ->
+                    downloadAudioDetailsList = audioList as ArrayList<String>
+                    Log.e("download audio in fun",downloadAudioDetailsList.toString())
+                })
         return downloadAudioDetailsList
     }
 
@@ -496,17 +496,14 @@ class ManageFragment : Fragment() {
         ctx: Context,
         act: Activity
     ) {
-        DB = Room.databaseBuilder(
-            ctx,
-            AudioDatabase::class.java,
-            "Audio_database"
-        )
-            .addMigrations(BWSApplication.MIGRATION_1_2)
-            .build()
-        AudioDatabase.databaseWriteExecutor.execute {
-            downloadAudioDetailsList =
-                DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
-        }
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllLiveDataBYDownloaded("Complete")
+                .observe(ctx as(LifecycleOwner), { audioList: List<String> ->
+                    downloadAudioDetailsList = audioList as ArrayList<String>
+                    Log.e("download audio in fun",downloadAudioDetailsList.toString())
         var pos = 0
         if (AudioFlag.equals("DownloadListAudio", ignoreCase = true)) {
             if (isDisclaimer == 1) {
@@ -526,6 +523,7 @@ class ManageFragment : Fragment() {
                         listModelList2.add(i)
                     }
                 }
+                Log.e("downloadded audio",downloadAudioDetailsList.toString())
                 if (downloadAudioDetailsList.contains(listModelList[position].name)) {
                     pos = position
                 } else {
@@ -548,6 +546,7 @@ class ManageFragment : Fragment() {
                     listModelList2.add(i)
                 }
             }
+            Log.e("downloadded audio",downloadAudioDetailsList.toString())
             if (downloadAudioDetailsList.contains(listModelList[position].name)) {
                 pos = position
                 val gson = Gson()
@@ -604,6 +603,7 @@ class ManageFragment : Fragment() {
                 showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
+                })
     }
 
     private fun callMyPlayer(ctx: Context, act: Activity) {
@@ -675,6 +675,8 @@ class ManageFragment : Fragment() {
 
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
+                    getDownloadedList(ctx)
+                    Log.e("download audio",downloadAudioDetailsList.toString())
                     binding.llMainLayout.visibility = View.VISIBLE
                     binding.llSpace.visibility = View.VISIBLE
                     binding.llPlayer.visibility = View.VISIBLE
@@ -815,7 +817,6 @@ class ManageFragment : Fragment() {
                     }
 
                     setPlayPauseIcon()
-
                     LocalBroadcastManager.getInstance(ctx)
                         .registerReceiver(listener, IntentFilter("play_pause_Action"))
                     binding.llPlayPause.setOnClickListener {
@@ -882,7 +883,7 @@ class ManageFragment : Fragment() {
                         }
                     }
 
-                    callObserverMethod(listModel.responseData!!.audio)
+                    callObserverMethod(listModel.responseData!!.audio,act)
                 }
 
                 private fun callPlaylistDetails() {
@@ -934,7 +935,7 @@ class ManageFragment : Fragment() {
             listModel.coUserId = CoUserID
             listModel.userID = USERID
             responseData.add(listModel)
-            callObserverMethod(responseData)
+            callObserverMethod(responseData,act)
             showToast(getString(R.string.no_server_found), act)
         }
     }
@@ -1009,129 +1010,127 @@ class ManageFragment : Fragment() {
         ctx: Context,
         act: Activity
     ) {
-        DB = Room.databaseBuilder(
-            ctx,
-            AudioDatabase::class.java,
-            "Audio_database"
-        )
-            .addMigrations(BWSApplication.MIGRATION_1_2)
-            .build()
-        AudioDatabase.databaseWriteExecutor.execute {
-            downloadAudioDetailsList =
-                DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
-        }
-        var pos = 0
-        val shared: SharedPreferences =
-            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-        var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
-        if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
-                pID,
-                ignoreCase = true
-            )
-        ) {
-            if (isDisclaimer == 1) {
-                if (player != null) {
-                    if (!player.playWhenReady) {
-                        player.playWhenReady = true
-                    } else player.playWhenReady = true
-                } else {
-                    audioClick = true
-                }
-                callMyPlayer(ctx, act)
-                showToast("The audio shall start playing after the disclaimer", act)
-            } else {
-                val listModelList2 =
-                    arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
-                for (i in listModel) {
-                    if (downloadAudioDetailsList.contains(i.name)) {
-                        listModelList2.add(i)
-                    }
-                }
-                if (position != positionSaved) {
-                    if (downloadAudioDetailsList.contains(listModel[position].name)) {
-                        positionSaved = position
-                        BWSApplication.PlayerAudioId = listModel[position].id
-                        if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, true)
+        DatabaseClient
+                .getInstance(ctx)
+                .getaudioDatabase()
+                .taskDao()
+                .geAllLiveDataBYDownloaded("Complete")
+                .observe(ctx as(LifecycleOwner), { audioList: List<String> ->
+                    downloadAudioDetailsList = audioList as ArrayList<String>
+                    Log.e("download audio in fun", downloadAudioDetailsList.toString())
+                    var pos = 0
+                    val shared: SharedPreferences =
+                            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                    val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                    val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                    val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                    if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
+                                    pID,
+                                    ignoreCase = true
+                            )
+                    ) {
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                if (!player.playWhenReady) {
+                                    player.playWhenReady = true
+                                } else player.playWhenReady = true
+                            } else {
+                                audioClick = true
+                            }
+                            callMyPlayer(ctx, act)
+                            showToast("The audio shall start playing after the disclaimer", act)
                         } else {
-                            showToast(ctx.getString(R.string.no_server_found), act)
-                        }
-                    } else {
+                            val listModelList2 =
+                                    arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                            for (i in listModel) {
+                                if (downloadAudioDetailsList.contains(i.name)) {
+                                    listModelList2.add(i)
+                                }
+                            }
+                            if (position != positionSaved) {
+                                if (downloadAudioDetailsList.contains(listModel[position].name)) {
+                                    positionSaved = position
+                                    BWSApplication.PlayerAudioId = listModel[position].id
+                                    if (listModelList2.size != 0) {
+                                        callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, true)
+                                    } else {
+                                        showToast(ctx.getString(R.string.no_server_found), act)
+                                    }
+                                } else {
 //                                pos = 0;
-                        showToast(ctx.getString(R.string.no_server_found), act)
-                    }
-                }
+                                    showToast(ctx.getString(R.string.no_server_found), act)
+                                }
+                            }
 //                SegmentTag()
-            }
-        } else {
-            val listModelList2 =
-                arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
-            for (i in listModel) {
-                if (downloadAudioDetailsList.contains(i.name)) {
-                    listModelList2.add(i)
-                }
-            }
-            if (downloadAudioDetailsList.contains(listModel[position].name)) {
-                pos = position
-                val gson = Gson()
-                val DisclimerJson =
-                    shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
-                val type =
-                    object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
-                val arrayList =
-                    gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
-                val mainPlayModel = HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
-                mainPlayModel.id = arrayList.id
-                mainPlayModel.name = arrayList.name
-                mainPlayModel.audioFile = arrayList.audioFile
-                mainPlayModel.audioDirection = arrayList.audioDirection
-                mainPlayModel.audiomastercat = arrayList.audiomastercat
-                mainPlayModel.audioSubCategory = arrayList.audioSubCategory
-                mainPlayModel.imageFile = arrayList.imageFile
-                mainPlayModel.audioDuration = arrayList.audioDuration
-                var audioc = true
-                if (isDisclaimer == 1) {
-                    if (player != null) {
-                        player.playWhenReady = true
-                        audioc = false
-                        listModelList2.add(pos, mainPlayModel)
-                    } else {
-                        isDisclaimer = 0
-                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
-                            audioc = true
-                            listModelList2.add(pos, mainPlayModel)
                         }
-                    }
-                } else {
-                    isDisclaimer = 0
-                    if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
-                        audioc = true
-                        listModelList2.add(pos, mainPlayModel)
-                    }
-                }
-                if (listModelList2.size != 0) {
-                    if (!listModelList2[pos].id.equals("0")) {
-                        if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
+                    } else {
+                        val listModelList2 =
+                                arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                        for (i in listModel) {
+                            if (downloadAudioDetailsList.contains(i.name)) {
+                                listModelList2.add(i)
+                            }
+                        }
+                        if (downloadAudioDetailsList.contains(listModel[position].name)) {
+                            pos = position
+                            val gson = Gson()
+                            val DisclimerJson =
+                                    shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                            val type =
+                                    object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                            val arrayList =
+                                    gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
+                            val mainPlayModel = HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
+                            mainPlayModel.id = arrayList.id
+                            mainPlayModel.name = arrayList.name
+                            mainPlayModel.audioFile = arrayList.audioFile
+                            mainPlayModel.audioDirection = arrayList.audioDirection
+                            mainPlayModel.audiomastercat = arrayList.audiomastercat
+                            mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                            mainPlayModel.imageFile = arrayList.imageFile
+                            mainPlayModel.audioDuration = arrayList.audioDuration
+                            var audioc = true
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    player.playWhenReady = true
+                                    audioc = false
+                                    listModelList2.add(pos, mainPlayModel)
+                                } else {
+                                    isDisclaimer = 0
+                                    if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                                        audioc = true
+                                        listModelList2.add(pos, mainPlayModel)
+                                    }
+                                }
+                            } else {
+                                isDisclaimer = 0
+                                if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                                    audioc = true
+                                    listModelList2.add(pos, mainPlayModel)
+                                }
+                            }
+                            if (listModelList2.size != 0) {
+                                if (!listModelList2[pos].id.equals("0")) {
+                                    if (listModelList2.size != 0) {
+                                        callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
+                                    } else {
+                                        showToast(ctx.getString(R.string.no_server_found), act)
+                                    }
+                                } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
+                                    callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
+                                } else {
+                                    showToast(ctx.getString(R.string.no_server_found), act)
+                                }
+                            } else {
+                                showToast(ctx.getString(R.string.no_server_found), act)
+                            }
                         } else {
                             showToast(ctx.getString(R.string.no_server_found), act)
                         }
-                    } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
-                        callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
-                    } else {
-                        showToast(ctx.getString(R.string.no_server_found), act)
-                    }
-                } else {
-                    showToast(ctx.getString(R.string.no_server_found), act)
-                }
-            } else {
-                showToast(ctx.getString(R.string.no_server_found), act)
-            }
 //            SegmentTag()
-        }
+                    }
+                                    })
     }
 
     private fun callMainPlayerSuggested(
@@ -1708,8 +1707,8 @@ class ManageFragment : Fragment() {
     }
 
     class RecommendedAdapter(
-        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-        private val ctx: Context,
+            val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        val ctx: Context,
         var binding: FragmentManageBinding,
         val act: Activity,
         var view: String?
@@ -1868,8 +1867,8 @@ class ManageFragment : Fragment() {
     }
 
     class DownloadAdapter(
-        private val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
-        private val ctx: Context,
+            val listModel: List<HomeDataModel.ResponseData.Audio.Detail>,
+        val ctx: Context,
         var binding: FragmentManageBinding,
         val act: Activity,
         var view: String?

@@ -1568,7 +1568,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     listFilterData,
                     ctx,
                     activity,
-                    listModel[0].playlistID!!,
+                    PlaylistID!!,
                     created
                 )
             }

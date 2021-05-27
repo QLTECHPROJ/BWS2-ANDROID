@@ -164,6 +164,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
 //                                binding.rvPerantCat.adapter = adapter1
 //                            }else{
+                            binding.llError.visibility = View.GONE
+                            binding.rvPerantCat.visibility = View.VISIBLE
                             adapter1 =
                                 AllCategory(binding, listModel.responseData!!, ctx!!, activity)
                             binding.rvPerantCat.adapter = adapter1
@@ -212,14 +214,18 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-            holder.bindingAdapter.tvHeader.text = listFilterData[position].view
-            val layoutManager = FlexboxLayoutManager(ctx)
-            layoutManager.flexWrap = FlexWrap.WRAP
-            layoutManager.alignItems = AlignItems.STRETCH
-            layoutManager.flexDirection = FlexDirection.ROW
-            layoutManager.justifyContent = JustifyContent.FLEX_START
-            holder.bindingAdapter.rvChildCategory.layoutManager = layoutManager
-            callAdapter(position, holder, position)
+//            if(listFilterData[position].details!!.size!=0) {
+                holder.bindingAdapter.tvHeader.text = listFilterData[position].view
+                val layoutManager = FlexboxLayoutManager(ctx)
+                layoutManager.flexWrap = FlexWrap.WRAP
+                layoutManager.alignItems = AlignItems.STRETCH
+                layoutManager.flexDirection = FlexDirection.ROW
+                layoutManager.justifyContent = JustifyContent.FLEX_START
+                holder.bindingAdapter.rvChildCategory.layoutManager = layoutManager
+                callAdapter(position, holder, position)
+         /*   }else{
+                holder.bindingAdapter.llMainLayout.visibility = View.GONE
+            }*/
         }
 
         private fun callAdapter(position: Int, holder: MyViewHolder, pos: Int) {
@@ -258,8 +264,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             }
                             modelFilterList.id=i1.id
                             modelFilterList.view = i1.view
-                            modelFilterList.details=r
-                            filteredList.add(modelFilterList)
+                            if(r.size!=0) {
+                                modelFilterList.details = r
+                                filteredList.add(modelFilterList)
+                            }
                         }
                     }
                     filterResults.values = filteredList
@@ -272,21 +280,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 ) {
                     listFilterData = filterResults.values as ArrayList<RecommendedCategoryModel.ResponseData>
                     if (listFilterData.isEmpty()) {
-//                        binding.llError.visibility = View.VISIBLE
-//                        binding.tvTag.visibility = View.GONE
-//                        binding.rvPlayLists2.visibility = View.GONE
-//                        binding.tvFound.setText("No result found")
-//                        Log.e("search", SearchFlag)
+                        binding.llError.visibility = View.VISIBLE
+                        binding.rvPerantCat.visibility = View.GONE
+                        binding.tvFound.text = "No result found"
                     } else {
-//                        binding.llError.visibility = View.GONE
-//                        binding.tvTag.visibility = View.VISIBLE
-//                        binding.rvPlayLists2.visibility = View.VISIBLE
-                        /*for (i in listFilterData.indices) {
-                            notifyItemChanged(i)
-                        }*/
+                        binding.llError.visibility = View.GONE
+                        binding.tvFound.visibility = View.VISIBLE
+                        binding.rvPerantCat.visibility = View.VISIBLE
                         notifyDataSetChanged()
-//                        RecommendedCategoryActivity().adapter1 = AllCategory(binding, listModel, ctx,activity)
-//                        binding.rvPerantCat.adapter = RecommendedCategoryActivity().adapter1
                     }
                 }
             }
@@ -445,7 +446,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                         catList.selectedCategoriesName
                                 )
                                 binding.rvSelectedCategory.adapter = catList.catListadapter
-
+                                binding.llError.visibility = View.GONE
+                                binding.rvPerantCat.visibility = View.VISIBLE
                                 catList.adapter1 =
                                         AllCategory(binding, listModel, ctx, activity)
                                 binding.rvPerantCat.adapter = catList.adapter1
