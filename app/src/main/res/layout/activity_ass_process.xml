@@ -170,7 +170,7 @@
                         android:layout_marginLeft="4dp"
                         android:layout_marginBottom="@dimen/_118sdp"
                         android:layout_toRightOf="@id/ivFifth"
-                        android:visibility="visible"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow"
                         android:rotation="370" />
 
@@ -196,6 +196,7 @@
                             android:textSize="@dimen/_36sdp" />
 
                         <TextView
+                            android:id="@+id/tvTag"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/_12sdp"

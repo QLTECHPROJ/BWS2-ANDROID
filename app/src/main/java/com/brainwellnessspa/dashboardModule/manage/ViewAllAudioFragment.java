@@ -385,7 +385,7 @@ public class ViewAllAudioFragment extends Fragment {
                             }
                         }
                     } else {
-                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 =new ArrayList<>();
+                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
 
                         listModelList2.addAll(listModelList);
                         Gson gson = new Gson();

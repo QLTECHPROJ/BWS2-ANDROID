@@ -209,6 +209,7 @@ class MyPlayerActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding.llInfo.setOnClickListener {
+            if (isNetworkConnected(ctx)) {
             val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
             val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
             AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -222,6 +223,9 @@ class MyPlayerActivity : AppCompatActivity() {
                 arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
                 mainPlayModelList, position
             )
+            } else {
+                showToast(getString(R.string.no_server_found), act)
+            }
         }
 
         binding.llBack.setOnClickListener {

@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.isPlayPlaylist
+import com.brainwellnessspa.BWSApplication.showToast
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.R
@@ -137,16 +138,20 @@ class ManageFragment : Fragment() {
                 i.putExtra("PlaylistID", "")
                 startActivity(i)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
 
         binding.tvViewAll.setOnClickListener {
-            val audioFragment: Fragment = MainPlaylistFragment()
-            val fragmentManager1 = requireActivity().supportFragmentManager
-            fragmentManager1.beginTransaction()
-                .replace(R.id.flContainer, audioFragment)
-                .commit()
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                val audioFragment: Fragment = MainPlaylistFragment()
+                val fragmentManager1 = requireActivity().supportFragmentManager
+                fragmentManager1.beginTransaction()
+                    .replace(R.id.flContainer, audioFragment)
+                    .commit()
+            } else {
+                showToast(getString(R.string.no_server_found), act)
+            }
         }
         DB = Room.databaseBuilder(
             ctx,
@@ -245,7 +250,7 @@ class ManageFragment : Fragment() {
                                             ignoreCase = true
                                         )
                                     ) {
-                                        BWSApplication.showToast(
+                                        showToast(
                                             listModel.responseMessage,
                                             act
                                         )
@@ -296,7 +301,7 @@ class ManageFragment : Fragment() {
                         }
                     })
                 } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
             tvCancel.setOnClickListener { v: View? -> dialog.dismiss() }
@@ -391,7 +396,7 @@ class ManageFragment : Fragment() {
                         audioClick = true
                     }
                     callMyPlayer(ctx, act)
-                    BWSApplication.showToast(
+                    showToast(
                         "The audio shall start playing after the disclaimer",
                         act
                     )
@@ -465,22 +470,24 @@ class ManageFragment : Fragment() {
             }
         }
     }
-   private fun getDownloadedList(
+
+    private fun getDownloadedList(
         ctx: Context
     ): ArrayList<String> {
-       DB = Room.databaseBuilder(
-               ctx,
-               AudioDatabase::class.java,
-               "Audio_database"
-       )
-               .addMigrations(BWSApplication.MIGRATION_1_2)
-               .build()
-       AudioDatabase.databaseWriteExecutor.execute {
-           downloadAudioDetailsList =
-                   DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
-       }
-       return downloadAudioDetailsList
-   }
+        DB = Room.databaseBuilder(
+            ctx,
+            AudioDatabase::class.java,
+            "Audio_database"
+        )
+            .addMigrations(BWSApplication.MIGRATION_1_2)
+            .build()
+        AudioDatabase.databaseWriteExecutor.execute {
+            downloadAudioDetailsList =
+                DB!!.taskDao().geAllDataBYDownloaded("Complete") as ArrayList<String>
+        }
+        return downloadAudioDetailsList
+    }
+
     private fun getMedia(
         views: String?,
         AudioFlag: String,
@@ -511,7 +518,7 @@ class ManageFragment : Fragment() {
                     audioClick = true
                 }
                 callMyPlayer(ctx, act)
-                BWSApplication.showToast("The audio shall start playing after the disclaimer", act)
+                showToast("The audio shall start playing after the disclaimer", act)
             } else {
                 val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
                 for (i in listModelList) {
@@ -522,14 +529,14 @@ class ManageFragment : Fragment() {
                 if (downloadAudioDetailsList.contains(listModelList[position].name)) {
                     pos = position
                 } else {
-                    Log.e("else","1")
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                    Log.e("else", "1")
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
                 if (listModelList2.size != 0) {
                     callPlayer(pos, views!!, listModelList2, ctx, act, true)
                 } else {
-                    Log.e("else","2")
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                    Log.e("else", "2")
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
         } else {
@@ -585,16 +592,16 @@ class ManageFragment : Fragment() {
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
                         callPlayer(pos, views!!, listModelList2, ctx, act, audioc)
                     } else {
-                        Log.e("else","3")
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                        Log.e("else", "3")
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 } else {
-                    Log.e("else","4")
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                    Log.e("else", "4")
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             } else {
-                Log.e("else","5")
-                BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                Log.e("else", "5")
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
     }
@@ -871,7 +878,7 @@ class ManageFragment : Fragment() {
                                 }
                             }
                         } else {
-                            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                            showToast(getString(R.string.no_server_found), activity)
                         }
                     }
 
@@ -905,7 +912,7 @@ class ManageFragment : Fragment() {
                             e.printStackTrace()
                         }
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                        showToast(getString(R.string.no_server_found), activity)
                     }
                 }
 
@@ -928,7 +935,7 @@ class ManageFragment : Fragment() {
             listModel.userID = USERID
             responseData.add(listModel)
             callObserverMethod(responseData)
-            BWSApplication.showToast(getString(R.string.no_server_found), act)
+            showToast(getString(R.string.no_server_found), act)
         }
     }
 
@@ -936,7 +943,7 @@ class ManageFragment : Fragment() {
         val shared1 =
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") 
+        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         if (MyDownloads.equals("1", ignoreCase = true)) {
             if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
                     homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
@@ -1034,7 +1041,7 @@ class ManageFragment : Fragment() {
                     audioClick = true
                 }
                 callMyPlayer(ctx, act)
-                BWSApplication.showToast("The audio shall start playing after the disclaimer", act)
+                showToast("The audio shall start playing after the disclaimer", act)
             } else {
                 val listModelList2 =
                     arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
@@ -1050,11 +1057,11 @@ class ManageFragment : Fragment() {
                         if (listModelList2.size != 0) {
                             callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, true)
                         } else {
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else {
 //                                pos = 0;
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 }
 //                SegmentTag()
@@ -1110,30 +1117,30 @@ class ManageFragment : Fragment() {
                         if (listModelList2.size != 0) {
                             callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
                         } else {
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
                         callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, audioc)
                     } else {
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             } else {
-                BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
 //            SegmentTag()
         }
     }
 
     private fun callMainPlayerSuggested(
-            position: Int,
-            views: String?,
-            listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
-            ctx: Context,
-            act: Activity,
-            playlistID: String
+        position: Int,
+        views: String?,
+        listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity,
+        playlistID: String
     ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -1157,7 +1164,7 @@ class ManageFragment : Fragment() {
                             audioClick = true
                         }
                         callMyPlayer(ctx, act)
-                        BWSApplication.showToast(
+                        showToast(
                             "The audio shall start playing after the disclaimer",
                             act
                         )
@@ -1259,7 +1266,7 @@ class ManageFragment : Fragment() {
                         audioClick = true
                     }
                     callMyPlayer(ctx, act)
-                    BWSApplication.showToast(
+                    showToast(
                         "The audio shall start playing after the disclaimer",
                         act
                     )
@@ -1407,16 +1414,20 @@ class ManageFragment : Fragment() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvViewAll.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putString("ID", listModel[position].homeAudioID)
-                bundle.putString("Name", listModel[position].view)
-                bundle.putString("Category", "")
-                val viewAllAudioFragment: Fragment =
-                    ViewAllAudioFragment()
-                viewAllAudioFragment.arguments = bundle
-                fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, viewAllAudioFragment)
-                    .commit()
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    val bundle = Bundle()
+                    bundle.putString("ID", listModel[position].homeAudioID)
+                    bundle.putString("Name", listModel[position].view)
+                    bundle.putString("Category", "")
+                    val viewAllAudioFragment: Fragment =
+                        ViewAllAudioFragment()
+                    viewAllAudioFragment.arguments = bundle
+                    fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, viewAllAudioFragment)
+                        .commit()
+                } else {
+                    showToast(ctx.getString(R.string.no_server_found), act)
+                }
             }
 
             if (listModel[position].details!!.isEmpty()) {
@@ -1667,20 +1678,24 @@ class ManageFragment : Fragment() {
 
 
             holder.binding.rlMainLayout.setOnClickListener {
-                try {
-                    val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-                    i.putExtra("New", "0")
-                    i.putExtra("PlaylistID", listModel.details!![position].playlistID)
-                    i.putExtra("PlaylistName", listModel.details!![position].playlistName)
-                    i.putExtra("PlaylistImage", listModel.details!![position].playlistImage)
-                    i.putExtra("PlaylistSource", "")
-                    i.putExtra("MyDownloads", "0")
-                    i.putExtra("ScreenView", "")
-                    i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                    ctx.startActivity(i)
-                    act.overridePendingTransition(0, 0)
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    try {
+                        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                        i.putExtra("New", "0")
+                        i.putExtra("PlaylistID", listModel.details!![position].playlistID)
+                        i.putExtra("PlaylistName", listModel.details!![position].playlistName)
+                        i.putExtra("PlaylistImage", listModel.details!![position].playlistImage)
+                        i.putExtra("PlaylistSource", "")
+                        i.putExtra("MyDownloads", "0")
+                        i.putExtra("ScreenView", "")
+                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        ctx.startActivity(i)
+                        act.overridePendingTransition(0, 0)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
         }
@@ -2088,16 +2103,20 @@ class ManageFragment : Fragment() {
                 .into(holder.binding.ivRestaurantImage)
 
             holder.binding.llMainLayout.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putString("ID", homeView)
-                bundle.putString("Name", viewString)
-                bundle.putString("Category", listModel[position].categoryName)
-                val viewAllAudioFragment: Fragment =
-                    ViewAllAudioFragment()
-                viewAllAudioFragment.arguments = bundle
-                fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, viewAllAudioFragment)
-                    .commit()
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    val bundle = Bundle()
+                    bundle.putString("ID", homeView)
+                    bundle.putString("Name", viewString)
+                    bundle.putString("Category", listModel[position].categoryName)
+                    val viewAllAudioFragment: Fragment =
+                        ViewAllAudioFragment()
+                    viewAllAudioFragment.arguments = bundle
+                    fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, viewAllAudioFragment)
+                        .commit()
+                } else {
+                    showToast(ctx.getString(R.string.no_server_found), act)
+                }
             }
         }
 
