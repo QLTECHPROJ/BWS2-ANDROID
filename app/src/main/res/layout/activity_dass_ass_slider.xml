@@ -169,6 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvText"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:overScrollMode="never"
                 android:layout_marginBottom="@dimen/_60sdp"
                 tools:listitem="@layout/form_fill_sub" />
 

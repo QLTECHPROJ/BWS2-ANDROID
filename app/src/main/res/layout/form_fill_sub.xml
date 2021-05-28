@@ -27,6 +27,7 @@
             android:layout_below="@id/tvSecond"
             android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="3"
             tools:listitem="@layout/form_fill_layout" />

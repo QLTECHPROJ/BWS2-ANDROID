@@ -144,7 +144,7 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_340sdp"
+                android:layout_height="@dimen/_310sdp"
                 android:layout_marginHorizontal="36dp"
                 android:scaleType="fitXY"
                 android:layout_marginTop="-20dp"
@@ -195,7 +195,7 @@
                     android:backgroundTint="#1597AA"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     tools:targetApi="lollipop">
 
                     <LinearLayout

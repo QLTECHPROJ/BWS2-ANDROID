@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".manageModule.SleepTimeActivity">
@@ -21,10 +21,10 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="-10dp"
                     android:layout_alignParentRight="true"
+                    android:layout_marginLeft="-10dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/sleep_time_banner"/>
+                    android:src="@drawable/sleep_time_banner" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -45,9 +45,10 @@
                     android:layout_marginTop="@dimen/_28sdp"
                     android:nestedScrollingEnabled="true"
                     android:overScrollMode="never"
-                    tools:listitem="@layout/sleep_time_raw"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="2"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+                    tools:listitem="@layout/sleep_time_raw"
+                    tools:targetApi="lollipop" />
 
 
             </LinearLayout>

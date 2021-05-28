@@ -385,7 +385,8 @@
                             android:layout_marginTop="@dimen/_10sdp"
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never"
-                            tools:listitem="@layout/selected_category_raw" />
+                            tools:listitem="@layout/selected_category_raw"
+                            tools:targetApi="lollipop" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -532,7 +533,8 @@
                                         android:nestedScrollingEnabled="false"
                                         android:overScrollMode="never"
                                         android:paddingBottom="@dimen/_26sdp"
-                                        android:visibility="visible" />
+                                        android:visibility="visible"
+                                        tools:targetApi="lollipop" />
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/rvPlayLists2"
@@ -542,7 +544,8 @@
                                         android:overScrollMode="never"
                                         android:paddingBottom="@dimen/_26sdp"
                                         android:visibility="gone"
-                                        tools:listitem="@layout/my_playlist_layout" />
+                                        tools:listitem="@layout/my_playlist_layout"
+                                        tools:targetApi="lollipop" />
                                 </LinearLayout>
 
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -28,18 +28,18 @@
                     app:tint="@color/black" />
             </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/montserrat_bold"
-            android:gravity="center"
-            android:text="@string/Invite_Friends"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_15sdp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/Invite_Friends"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
 
 
-    </RelativeLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rlSearch"
@@ -80,15 +80,15 @@
                 app:searchIcon="@null" />
         </RelativeLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/rlSearch">
-
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_below="@id/rlSearch">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvFavorites"
@@ -100,18 +100,19 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
                     android:text="@string/Favourites"
-                    android:visibility="gone"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvFavContactList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:nestedScrollingEnabled="true"
-                android:overScrollMode="never"
-                android:visibility="gone" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvFavContactList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:nestedScrollingEnabled="true"
+                    android:overScrollMode="never"
+                    android:visibility="gone"
+                    tools:targetApi="lollipop" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvContactList"
@@ -121,16 +122,17 @@
                     android:nestedScrollingEnabled="true"
                     android:overScrollMode="never"
                     android:visibility="visible"
-                    tools:listitem="@layout/contact_list_layout" />
+                    tools:listitem="@layout/contact_list_layout"
+                    tools:targetApi="lollipop" />
 
-            <LinearLayout
-                android:id="@+id/llError"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/llError"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tvFound"

@@ -2,24 +2,21 @@ package com.brainwellnessspa.manageModule
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
 import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
@@ -28,15 +25,11 @@ import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityManageBinding
 import com.brainwellnessspa.databinding.MembershipFaqLayoutBinding
 import com.brainwellnessspa.databinding.PlanListFilteredLayoutBinding
-import com.brainwellnessspa.databinding.VideoSeriesBoxLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.youtube.player.YouTubeBaseActivity
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
 import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit2.Call
@@ -44,11 +37,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
+class ManageActivity : AppCompatActivity() {
     lateinit var binding: ActivityManageBinding
     lateinit var adapter: MembershipFaqAdapter
     lateinit var subscriptionAdapter: SubscriptionAdapter
-    lateinit var videoListAdapter: VideoListAdapter
     lateinit var planListAdapter: PlanListAdapter
     lateinit var activity: Activity
     lateinit var i: Intent
@@ -201,7 +193,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
 
                             binding.rvVideoList.layoutManager =
                                 LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                            videoListAdapter = VideoListAdapter(
+                            val videoListAdapter: VideoSeriesListAdapter = VideoSeriesListAdapter(
                                 listModel.responseData!!.testminialVideo!!, ctx
                             )
                             binding.rvVideoList.adapter = videoListAdapter
@@ -237,84 +229,100 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
     }
 
 
-    class VideoListAdapter(
-        private val listModelList: List<PlanlistInappModel.ResponseData.TestminialVideo>,
-        var ctx: Context
-    ) :
-        RecyclerView.Adapter<VideoListAdapter.MyViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: VideoSeriesBoxLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context), R.layout.video_series_box_layout, parent, false
-            )
-            return MyViewHolder(v)
-        }
-
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-//            val mediaController = MediaController(ctx)
-//            mediaController.setAnchorView(holder.binding.videoView)
-
-            //specify the location of media file
-
-            //specify the location of media file
-//            val uri: Uri =
-//                Uri.parse(listModelList[position].videoLink)
-
-            //Setting MediaController and URI, then starting the videoView
-
-            //Setting MediaController and URI, then starting the videoView
-//            holder.binding.videoView.setMediaController(mediaController)
-//            holder.binding.videoView.setVideoURI(uri)
-//            holder.binding.videoView.requestFocus()
-//            holder.binding.videoView.start()
-            holder.binding.tvHeadingTwo.text = listModelList[position].videoDesc
-            holder.binding.tvName.text = listModelList[position].userName
-            holder.binding.tvReadMore.visibility = View.GONE
-            /*   val linecount: Int = holder.binding.tvHeadingTwo.getLineCount()
-               if (linecount >= 4) {
-                   holder.binding.tvReadMore.setVisibility(View.VISIBLE)
-               } else {
-                   holder.binding.tvReadMore.setVisibility(View.GONE)
-               }*/
-
-            holder.binding.tvReadMore.setOnClickListener {
-                val dialog1 = Dialog(ctx)
-                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog1.setContentView(R.layout.full_desc_layout)
-                dialog1.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog1.window!!
-                    .setLayout(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                val tvDesc = dialog1.findViewById<TextView>(R.id.tvDesc)
-                val tvClose = dialog1.findViewById<RelativeLayout>(R.id.tvClose)
-                tvDesc.text = listModelList[position].videoDesc
-                dialog1.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog1.dismiss()
-                        return@setOnKeyListener true
-                    }
-                    false
-                }
-                tvClose.setOnClickListener { dialog1.dismiss() }
-                dialog1.show()
-                dialog1.setCancelable(false)
-            }
-
-            /* binding.youtubeView.initialize(CancelMembershipActivity.API_KEY, this) */
-
-            fun getYouTubePlayerProvider(): YouTubePlayer.Provider {
-                return holder.binding.youtubeView
-            }
-        }
-
-        override fun getItemCount(): Int {
-            return listModelList.size
-        }
-
-        inner class MyViewHolder(var binding: VideoSeriesBoxLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root)
-    }
+//    class VideoListAdapter(
+//        private val listModelList: List<PlanlistInappModel.ResponseData.TestminialVideo>,
+//        var ctx: Context
+//    ) :
+//        RecyclerView.Adapter<VideoListAdapter.MyViewHolder>() {
+//
+//        private var displayMetrics = DisplayMetrics()
+//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+//            val v: VideoSeriesBoxLayoutBinding = DataBindingUtil.inflate(
+//                LayoutInflater.from(parent.context), R.layout.video_series_box_layout, parent, false
+//            )
+//            return MyViewHolder(v)
+//        }
+//
+//        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+//            (holder.itemView.context as Activity).windowManager
+//                .defaultDisplay
+//                .getMetrics(displayMetrics)
+//            val width: Int = displayMetrics.widthPixels
+//
+////            if (listModelList[position].videoLink != null) {
+//                Glide.with(holder.itemView.context)
+//                    .load("https://i.ytimg.com/vi/S84Fuo2rGoY/maxresdefault.jpg")
+//                    .apply(RequestOptions().override(width - 36, 200))
+//                    .into(holder.binding.imageViewItem)
+////            }
+//            holder.binding.imageViewItem.visibility = View.VISIBLE
+//            holder.binding.btnPlay.visibility = View.VISIBLE
+//            holder.binding.youTubePlayerView.visibility = View.VISIBLE
+//
+//            holder.binding.tvName.text = listModelList[position].userName
+//            holder.binding.tvHeadingTwo.text = listModelList[position].videoDesc
+//            holder.binding.tvReadMore.visibility = View.GONE
+//              /* val linecount: Int = holder.binding.tvHeadingTwo.lineCount
+//               if (linecount >= 4) {
+//                   holder.binding.tvReadMore.visibility = View.VISIBLE
+//               } else {
+//                   holder.binding.tvReadMore.visibility = View.GONE
+//               }*/
+//
+//            holder.binding.btnPlay.setOnClickListener {
+//                holder.binding.imageViewItem.visibility = View.GONE
+//                holder.binding.youTubePlayerView.visibility = View.VISIBLE
+//                holder.binding.btnPlay.visibility = View.GONE
+//                holder.binding.youTubePlayerView.initialize(
+//                    { initializedYouTubePlayer ->
+//                        initializedYouTubePlayer.addListener(
+//                            object : AbstractYouTubePlayerListener() {
+//                                override fun onReady() {
+//                                    initializedYouTubePlayer.loadVideo(
+//                                        "8czMWUH7vW4",
+//                                        0F
+//                                    )
+//                                }
+//                            })
+//                    }, true
+//                )
+//            }
+//
+//            holder.binding.tvReadMore.setOnClickListener {
+//                val dialog1 = Dialog(ctx)
+//                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE)
+//                dialog1.setContentView(R.layout.full_desc_layout)
+//                dialog1.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//                dialog1.window!!
+//                    .setLayout(
+//                        ViewGroup.LayoutParams.MATCH_PARENT,
+//                        ViewGroup.LayoutParams.MATCH_PARENT
+//                    )
+//                val tvDesc = dialog1.findViewById<TextView>(R.id.tvDesc)
+//                val tvClose = dialog1.findViewById<RelativeLayout>(R.id.tvClose)
+//                tvDesc.text = listModelList[position].videoDesc
+//                dialog1.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+//                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+//                        dialog1.dismiss()
+//                        return@setOnKeyListener true
+//                    }
+//                    false
+//                }
+//                tvClose.setOnClickListener { dialog1.dismiss() }
+//                dialog1.show()
+//                dialog1.setCancelable(false)
+//            }
+//        }
+//
+//
+//        override fun getItemCount(): Int {
+//            return listModelList.size
+//        }
+//
+//        inner class MyViewHolder(var binding: VideoSeriesBoxLayoutBinding) :
+//            RecyclerView.ViewHolder(binding.root) {
+//        }
+//    }
 
     class PlanListAdapter(
         var listModelList: List<PlanlistInappModel.ResponseData.Plan>,
@@ -338,6 +346,7 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
         "PlanCurrency":"Aus","PlanInterval":"Weekly","PlanImage":"",
         "PlanTenure":"1 Week","PlanNextRenewal":"17 May, 2021",
         "FreeTrial":"TRY 14 DAYS FOR FREE","SubName":"Week \/ Per 3 User","RecommendedFlag":"0","PlanFlag":"1"}*/
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
             holder.binding.tvTilte.text = listModelList[position].planInterval
@@ -445,38 +454,6 @@ class ManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListene
 
         inner class MyViewHolder(var binding: PlanListFilteredLayoutBinding) :
             RecyclerView.ViewHolder(binding.root)
-    }
-
-    override fun onInitializationSuccess(
-        provider: YouTubePlayer.Provider?,
-        youTubePlayer: YouTubePlayer,
-        wasRestored: Boolean
-    ) {
-        if (!wasRestored) {
-            youTubePlayer.loadVideo(CancelMembershipActivity.VIDEO_ID)
-            youTubePlayer.setShowFullscreenButton(true)
-        }
-    }
-
-    override fun onInitializationFailure(
-        provider: YouTubePlayer.Provider?,
-        errorReason: YouTubeInitializationResult
-    ) {
-        if (errorReason.isUserRecoverableError) {
-            errorReason.getErrorDialog(this, CancelMembershipActivity.RECOVERY_DIALOG_REQUEST)
-                .show()
-        } else {
-            val errorMessage = String.format(
-                getString(R.string.error_player), errorReason.toString()
-            )
-            BWSApplication.showToast(errorMessage, activity)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CancelMembershipActivity.RECOVERY_DIALOG_REQUEST) {
-//            getYouTubePlayerProvider().initialize(CancelMembershipActivity.API_KEY, this)
-        }
     }
 
     class MembershipFaqAdapter(

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -398,7 +398,8 @@
                                         android:overScrollMode="never"
                                         android:paddingBottom="@dimen/_26sdp"
                                         android:visibility="gone"
-                                        tools:listitem="@layout/my_playlist_layout_sorting1" />
+                                        tools:listitem="@layout/my_playlist_layout_sorting1"
+                                        tools:targetApi="lollipop" />
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/rvPlayLists1"
@@ -409,7 +410,8 @@
                                         android:overScrollMode="never"
                                         android:paddingBottom="@dimen/_26sdp"
                                         android:visibility="gone"
-                                        tools:listitem="@layout/my_playlist_layout_sorting2" />
+                                        tools:listitem="@layout/my_playlist_layout_sorting2"
+                                        tools:targetApi="lollipop" />
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/rvPlayLists2"
@@ -420,7 +422,8 @@
                                         android:overScrollMode="never"
                                         android:paddingBottom="@dimen/_26sdp"
                                         android:visibility="gone"
-                                        tools:listitem="@layout/my_playlist_layout_sorting2" />
+                                        tools:listitem="@layout/my_playlist_layout_sorting2"
+                                        tools:targetApi="lollipop" />
 
                                 </LinearLayout>
                             </LinearLayout>

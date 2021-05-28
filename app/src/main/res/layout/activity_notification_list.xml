@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -45,12 +45,13 @@
             android:id="@+id/rvNotiList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/rlMainLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:nestedScrollingEnabled="true"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_below="@id/rlMainLayout"
             android:overScrollMode="never"
-            tools:listitem="@layout/notification_list_layout" />
+            tools:listitem="@layout/notification_list_layout"
+            tools:targetApi="lollipop" />
 
         <LinearLayout
             android:id="@+id/llError"

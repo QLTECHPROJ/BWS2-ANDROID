@@ -161,6 +161,17 @@
                         android:visibility="invisible"
                         android:src="@drawable/ic_score_arrow"
                         android:rotation="356" />
+                    <ImageView
+                        android:id="@+id/ivThirTeen"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="-22dp"
+                        android:layout_marginBottom="@dimen/_110sdp"
+                        android:layout_toRightOf="@id/ivForth"
+                        android:visibility="visible"
+                        android:src="@drawable/ic_score_arrow"
+                        android:rotation="348" />
 
                     <ImageView
                         android:id="@+id/ivSixth"
@@ -199,12 +210,11 @@
                             android:id="@+id/tvTag"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
-                            android:text="Severe"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_11sdp" />
+                            android:textSize="@dimen/_10sdp" />
 
                     </LinearLayout>
 

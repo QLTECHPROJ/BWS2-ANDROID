@@ -1632,7 +1632,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     dialog.setContentView(R.layout.custom_popup_layout)
-                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
+                    dialog.window!!.setBackgroundDrawable(
+                        ColorDrawable(
+                            ContextCompat.getColor(
+                                activity,
+                                R.color.dark_blue_gray
+                            )
+                        )
+                    )
                     dialog.window!!.setLayout(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
@@ -2045,7 +2052,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                 } else {
                     DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId)
-                        .removeObserver { _ : List<DownloadPlaylistDetails?>? -> }
+                        .removeObserver { _: List<DownloadPlaylistDetails?>? -> }
                     binding.pbProgress.visibility = View.GONE
                     binding.ivDownloads.visibility = View.VISIBLE
                 }

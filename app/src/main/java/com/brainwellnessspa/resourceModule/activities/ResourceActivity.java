@@ -226,17 +226,21 @@ public class ResourceActivity extends AppCompatActivity {
         rvFilterList.setLayoutManager(mLayoutManager);
         rvFilterList.setItemAnimator(new DefaultItemAnimator());
         binding.ivFilter.setOnClickListener(view -> {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
+            if (BWSApplication.isNetworkConnected(activity)) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                prepareData(rvFilterList, dialogBox, tvAll, ivFilter);
+                tvAll.setOnClickListener(view1 -> {
+                    Category = "";
+                    setAdapter();
+                    dialogBox.dismiss();
+                });
+                dialogBox.show();
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), activity);
             }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            prepareData(rvFilterList, dialogBox, tvAll, ivFilter);
-            tvAll.setOnClickListener(view1 -> {
-                Category = "";
-                setAdapter();
-                dialogBox.dismiss();
-            });
-            dialogBox.show();
         });
     }
 

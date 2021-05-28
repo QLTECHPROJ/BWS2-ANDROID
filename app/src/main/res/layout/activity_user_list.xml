@@ -74,7 +74,8 @@
                     android:layout_marginTop="@dimen/_28sdp"
                     android:nestedScrollingEnabled="true"
                     android:overScrollMode="never"
-                    tools:listitem="@layout/screen_user_list_layout" />
+                    tools:listitem="@layout/screen_user_list_layout"
+                    tools:targetApi="lollipop" />
 
                 <LinearLayout
                     android:id="@+id/llAddNewUser"

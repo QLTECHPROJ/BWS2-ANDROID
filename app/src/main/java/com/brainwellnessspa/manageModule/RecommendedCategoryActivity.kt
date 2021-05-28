@@ -87,8 +87,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         prepareRecommnedData()
         binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
-        searchEditText.setTextColor(ContextCompat.getColor(activity,R.color.dark_blue_gray))
-        searchEditText.setHintTextColor(ContextCompat.getColor(activity,R.color.gray))
+        searchEditText.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue_gray))
+        searchEditText.setHintTextColor(ContextCompat.getColor(activity, R.color.gray))
         val closeButton: ImageView = binding.searchView.findViewById(R.id.search_close_btn)
         binding.searchView.clearFocus()
         closeButton.setOnClickListener {
@@ -103,9 +103,9 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(search: String): Boolean {
                 try {
-                    if (!search.equals("",ignoreCase = true)){
+                    if (!search.equals("", ignoreCase = true)) {
                         adapter1.filter.filter(search)
-                    }else {
+                    } else {
                         prepareRecommnedData()
                     }
 //                        SearchFlag = search
@@ -253,12 +253,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         listFilterData.addAll(listModel)
                     } else {
                         val filteredListnew = ArrayList<RecommendedCategoryModel.ResponseData>()
-                         filteredListnew.addAll(listModel)
+                        filteredListnew.addAll(listModel)
                         for (i1 in filteredListnew) {
                             val modelFilterList = RecommendedCategoryModel.ResponseData()
                             val r = ArrayList<RecommendedCategoryModel.ResponseData.Detail>()
                             for (i in i1.details!!) {
-                                if (i.problemName!!.toLowerCase(Locale.ROOT).contains(charSequence.toString().toLowerCase(Locale.ROOT))) {
+                                if (i.problemName!!.toLowerCase(Locale.ROOT)
+                                        .contains(charSequence.toString().toLowerCase(Locale.ROOT))
+                                ) {
                                     r.add(i)
                                 }
                             }
@@ -278,7 +280,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     charSequence: CharSequence,
                     filterResults: FilterResults
                 ) {
-                    listFilterData = filterResults.values as ArrayList<RecommendedCategoryModel.ResponseData>
+                    listFilterData =
+                        filterResults.values as ArrayList<RecommendedCategoryModel.ResponseData>
                     if (listFilterData.isEmpty()) {
                         binding.llError.visibility = View.VISIBLE
                         binding.rvPerantCat.visibility = View.GONE
@@ -411,26 +414,26 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 catList.selectedCategoriesTitle.removeAt(i)
                                 catList.selectedCategoriesName.removeAt(i)
                                 catList.editor = ctx.getSharedPreferences(
-                                        CONSTANTS.RecommendedCatMain,
-                                        MODE_PRIVATE
+                                    CONSTANTS.RecommendedCatMain,
+                                    MODE_PRIVATE
                                 ).edit()
                                 catList.editor.putString(
-                                        CONSTANTS.selectedCategoriesTitle,
-                                        catList.gson.toJson(catList.selectedCategoriesTitle)
+                                    CONSTANTS.selectedCategoriesTitle,
+                                    catList.gson.toJson(catList.selectedCategoriesTitle)
                                 ) //Friend
                                 catList.editor.putString(
-                                        CONSTANTS.selectedCategoriesName,
-                                        catList.gson.toJson(catList.selectedCategoriesName)
+                                    CONSTANTS.selectedCategoriesName,
+                                    catList.gson.toJson(catList.selectedCategoriesName)
                                 ) //Friend
                                 catList.editor.apply()
                                 catList.editor.commit()
                                 Log.e(
-                                        "selectedCategoriesTitle",
-                                        catList.selectedCategoriesTitle.toString()
+                                    "selectedCategoriesTitle",
+                                    catList.selectedCategoriesTitle.toString()
                                 )
                                 Log.e(
-                                        "selectedCategoriesName",
-                                        catList.selectedCategoriesName.toString()
+                                    "selectedCategoriesName",
+                                    catList.selectedCategoriesName.toString()
                                 )
                                 Log.e("posItem", posItem.toString())
 
@@ -441,21 +444,21 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 layoutManager.justifyContent = JustifyContent.FLEX_START
                                 binding.rvSelectedCategory.layoutManager = layoutManager
                                 catList.catListadapter = SelectedCategory(
-                                        binding,
-                                        ctx,
-                                        catList.selectedCategoriesName
+                                    binding,
+                                    ctx,
+                                    catList.selectedCategoriesName
                                 )
                                 binding.rvSelectedCategory.adapter = catList.catListadapter
                                 binding.llError.visibility = View.GONE
                                 binding.rvPerantCat.visibility = View.VISIBLE
                                 catList.adapter1 =
-                                        AllCategory(binding, listModel, ctx, activity)
+                                    AllCategory(binding, listModel, ctx, activity)
                                 binding.rvPerantCat.adapter = catList.adapter1
-                                if(catList.selectedCategoriesTitle.size>0) {
+                                if (catList.selectedCategoriesTitle.size > 0) {
                                     binding.btnContinue.isEnabled = true
                                     binding.btnContinue.isClickable = true
                                     binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
-                                }else {
+                                } else {
                                     binding.btnContinue.isEnabled = false
                                     binding.btnContinue.isClickable = false
                                     binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -591,11 +594,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 catList.selectedCategoriesTitle = catList.gson.fromJson(json2, type1)
                 catList.selectedCategoriesName = catList.gson.fromJson(json5, type1)
             }
-            if(catList.selectedCategoriesTitle.size>0) {
+            if (catList.selectedCategoriesTitle.size > 0) {
                 binding.btnContinue.isEnabled = true
                 binding.btnContinue.isClickable = true
                 binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
-            }else {
+            } else {
                 binding.btnContinue.isEnabled = false
                 binding.btnContinue.isClickable = false
                 binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -626,12 +629,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             binding.rvSelectedCategory.layoutManager = layoutManager
             catListadapter = SelectedCategory(binding, ctx!!, selectedCategoriesName)
             binding.rvSelectedCategory.adapter = catListadapter
-            binding.btnContinue.isEnabled=true
-            binding.btnContinue.isClickable=true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.isClickable = true
             binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
-        }else{
-            binding.btnContinue.isEnabled=false
-            binding.btnContinue.isClickable=false
+        } else {
+            binding.btnContinue.isEnabled = false
+            binding.btnContinue.isClickable = false
             binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
         }
     }

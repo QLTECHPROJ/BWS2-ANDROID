@@ -216,11 +216,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     e.printStackTrace();
                 }
             } else {
-                binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+                binding.ivCloudBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
                 binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
             }
         } else {
-            binding.ivBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
+            binding.ivCloudBanner.setBackground(getResources().getDrawable(R.drawable.ic_cloud_bg));
             binding.ivTransBanner.setImageResource(R.drawable.rounded_dark_app_theme);
         }
 

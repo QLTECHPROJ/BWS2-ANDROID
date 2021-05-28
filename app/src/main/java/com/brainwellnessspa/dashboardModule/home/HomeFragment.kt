@@ -196,31 +196,8 @@ class HomeFragment : Fragment() {
             intent.putExtra(CONSTANTS.ScreenView, "2")
             startActivity(intent)
         }
+        networkCheck()
 
-        if (isNetworkConnected(activity)) {
-            binding.llSetReminder.visibility = View.VISIBLE
-            binding.llIndexScore.visibility = View.VISIBLE
-            binding.llSevere.visibility = View.VISIBLE
-            binding.llActivities.visibility = View.VISIBLE
-            binding.llUser.visibility = View.VISIBLE
-            binding.ivLightBg.visibility = View.VISIBLE
-            binding.llNoInternet.visibility = View.GONE
-            binding.llPlayer.visibility = View.VISIBLE
-            binding.llAreaOfFocus.visibility = View.VISIBLE
-            binding.barChart.visibility = View.VISIBLE
-        } else {
-            binding.llSetReminder.visibility = View.GONE
-            binding.llIndexScore.visibility = View.GONE
-            binding.llUser.visibility = View.GONE
-            binding.llSevere.visibility = View.GONE
-            binding.llActivities.visibility = View.GONE
-            binding.ivLightBg.visibility = View.GONE
-            binding.llNoInternet.visibility = View.VISIBLE
-            binding.llPlayer.visibility = View.GONE
-            binding.llAreaOfFocus.visibility = View.GONE
-            binding.barChart.visibility = View.GONE
-//            showToast(getString(R.string.no_server_found), activity)
-        }
         binding.llBottomView.setOnClickListener {
             if (isNetworkConnected(activity)) {
                 val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(
@@ -279,6 +256,38 @@ class HomeFragment : Fragment() {
         prepareHomeData()
 
         return view
+    }
+
+    override fun onResume() {
+        networkCheck()
+        super.onResume()
+    }
+
+    fun networkCheck() {
+        if (isNetworkConnected(activity)) {
+            binding.llSetReminder.visibility = View.VISIBLE
+            binding.llIndexScore.visibility = View.VISIBLE
+            binding.llSevere.visibility = View.VISIBLE
+            binding.llActivities.visibility = View.VISIBLE
+            binding.llUser.visibility = View.VISIBLE
+            binding.ivLightBg.visibility = View.VISIBLE
+            binding.llNoInternet.visibility = View.GONE
+            binding.llPlayer.visibility = View.VISIBLE
+            binding.llAreaOfFocus.visibility = View.VISIBLE
+            binding.barChart.visibility = View.VISIBLE
+        } else {
+            binding.llSetReminder.visibility = View.GONE
+            binding.llIndexScore.visibility = View.GONE
+            binding.llUser.visibility = View.VISIBLE
+            binding.llSevere.visibility = View.GONE
+            binding.llActivities.visibility = View.GONE
+            binding.ivLightBg.visibility = View.GONE
+            binding.llNoInternet.visibility = View.VISIBLE
+            binding.llPlayer.visibility = View.GONE
+            binding.llAreaOfFocus.visibility = View.GONE
+            binding.barChart.visibility = View.GONE
+//            showToast(getString(R.string.no_server_found), activity)
+        }
     }
 
     override fun onDestroy() {

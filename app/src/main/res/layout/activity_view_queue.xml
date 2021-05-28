@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -184,7 +184,8 @@
                     android:nestedScrollingEnabled="true"
                     android:overScrollMode="never"
                     android:paddingTop="@dimen/_8sdp"
-                    android:paddingBottom="@dimen/_8sdp" />
+                    android:paddingBottom="@dimen/_8sdp"
+                    tools:targetApi="lollipop" />
 
             </LinearLayout>
         </LinearLayout>

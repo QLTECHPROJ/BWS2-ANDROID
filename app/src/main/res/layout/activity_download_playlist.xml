@@ -50,6 +50,13 @@
                             android:background="@drawable/rounded_light_app_theme"
                             android:scaleType="fitXY" />
 
+                        <ImageView
+                            android:id="@+id/ivCloudBanner"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/todo"
+                            android:scaleType="fitXY" />
+
                         <LinearLayout
                             android:id="@+id/llToolBar"
                             android:layout_width="match_parent"

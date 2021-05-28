@@ -12,19 +12,80 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tvNoInterNet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_bold"
+            <LinearLayout
+                android:id="@+id/llNoInternet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_310sdp"
+                    android:layout_marginHorizontal="36dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="-20dp"
+                    android:src="@drawable/ic_no_active_internet_bg"/>
+
+                <TextView
+                    android:id="@+id/tvNoInterNet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="Whoooops!\nNo active internet :("
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="@dimen/_20sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llRemainDev"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:layout_centerInParent="true"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Fuctionality on going :("
-                android:layout_marginTop="@dimen/_20sdp"
-                android:textColor="@color/app_theme_color"
-                android:textSize="@dimen/_20sdp"
-                tools:ignore="RtlSymmetry,SpUsage" />
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_310sdp"
+                    android:layout_marginHorizontal="36dp"
+                    android:layout_marginTop="-20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_under_construction_bg" />
+
+                <TextView
+                    android:id="@+id/tvRemainDev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="This page is under construction"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvRemainDevWork"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="we're working on it"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 

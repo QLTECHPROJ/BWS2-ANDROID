@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,8 @@
             android:gravity="start"
             android:text="Mental Health"
             android:textColor="@color/black"
-            android:textSize="@dimen/_18sdp" />
+            android:textSize="@dimen/_18sdp"
+            tools:ignore="SpUsage" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvChildCategory"
@@ -28,7 +29,8 @@
             android:nestedScrollingEnabled="true"
             android:orientation="horizontal"
             android:overScrollMode="never"
-            tools:listitem="@layout/all_cat_data_raw" />
+            tools:listitem="@layout/all_cat_data_raw"
+            tools:targetApi="lollipop" />
     </LinearLayout>
 
 </layout>
