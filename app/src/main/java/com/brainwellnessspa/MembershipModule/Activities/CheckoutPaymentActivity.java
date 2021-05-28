@@ -33,7 +33,7 @@ import com.brainwellnessspa.MembershipModule.Models.MembershipPlanListModel;
 import com.brainwellnessspa.MembershipModule.Models.RegisterModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -54,7 +54,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+
+import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planFlag;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.planId;
 import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapter.price;
@@ -72,7 +74,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     int year, month;
     YeardialogBinding binding1;
     String strToken;
-    AudioDatabase DB;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     private long mLastClickTime = 0;
     private TextWatcher addCardTextWatcher = new TextWatcher() {
@@ -120,11 +121,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             position = getIntent().getIntExtra("position", 0);
         }
 
-        DB = Room.databaseBuilder(CheckoutPaymentActivity.this,
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
+        DB = getAudioDataBase(context);
 
         binding.llBack.setOnClickListener(view -> {
 //            Intent i = new Intent(context, OrderSummaryActivity.class);
@@ -320,7 +317,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                 editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_SearchFirstLogin, "1");
                                                 editor.commit();
-                                                GetAllMedia();
+//                                                GetAllMedia();
                                                 Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
                                                 startActivity(i);
                                                 finish();
@@ -351,11 +348,11 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     }
 
     public void GetAllMedia() {
-        DatabaseClient
+  /*      DatabaseClient
                 .getInstance(this)
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData12().observe(this, audioList -> {
+                .geAllData12(CO).observe(this, audioList -> {
             if (audioList.size() != 0) {
                 for (int i = 0; i < audioList.size(); i++) {
                     FileUtils.deleteDownloadedFile(getApplicationContext(), audioList.get(i).getName());
@@ -370,16 +367,16 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             edit1.commit();
             DeletallLocalCart();
 
-        });
+        });*/
     }
 
     private void DeletallLocalCart() {
-        AudioDatabase.databaseWriteExecutor.execute(() -> {
+      /*  AudioDatabase.databaseWriteExecutor.execute(() -> {
             DB.taskDao().deleteAll();
         });
         AudioDatabase.databaseWriteExecutor.execute(() -> {
             DB.taskDao().deleteAllPlalist();
-        });
+        });*/
     }
 
     @Override

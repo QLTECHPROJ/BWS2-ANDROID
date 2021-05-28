@@ -285,7 +285,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     if (listFilterData.isEmpty()) {
                         binding.llError.visibility = View.VISIBLE
                         binding.rvPerantCat.visibility = View.GONE
-                        binding.tvFound.text = "No result found"
+                        binding.tvFound.text = "Couldn't find " + charSequence.toString() +"Try searching again"
                     } else {
                         binding.llError.visibility = View.GONE
                         binding.tvFound.visibility = View.VISIBLE

@@ -53,22 +53,6 @@ public class MainPlayModel {
         this.name = name;
     }
 
-    public String getLike() {
-        return like;
-    }
-
-    public void setLike(String like) {
-        this.like = like;
-    }
-
-    public String getDownload() {
-        return download;
-    }
-
-    public void setDownload(String download) {
-        this.download = download;
-    }
-
     public String getAudioFile() {
         return audioFile;
     }

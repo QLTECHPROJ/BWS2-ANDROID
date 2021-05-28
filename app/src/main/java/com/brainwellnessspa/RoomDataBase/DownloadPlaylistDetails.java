@@ -11,6 +11,9 @@ public class DownloadPlaylistDetails implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int uid;
 
+    @ColumnInfo(name = "UserID")
+    private String userId;
+
     @ColumnInfo(name = "PlaylistID")
     private String playlistID;
 
@@ -62,6 +65,14 @@ public class DownloadPlaylistDetails implements Serializable {
 
     public void setUid(int uid) {
         this.uid = uid;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPlaylistID() {

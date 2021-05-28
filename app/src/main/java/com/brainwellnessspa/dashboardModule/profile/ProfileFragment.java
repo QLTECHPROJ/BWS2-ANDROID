@@ -931,8 +931,12 @@ public class ProfileFragment extends Fragment {
                                     binding.progressBar, binding.progressBarHolder, getActivity());
                             BWSApplication.hideProgressBar(progressBar, progressBarHolder, getActivity());
                             dialog.hide();
-                            analytics.flush();
-                            analytics.reset();
+                            try {
+                                analytics.flush();
+                                analytics.reset();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                             Intent i = new Intent(getActivity(), GetStartedActivity.class);
                             startActivity(i);
                             requireActivity().finish();

@@ -24,9 +24,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.DB
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.RoomDataBase.DatabaseClient
+
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetailsUnique
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -217,11 +218,9 @@ class MainPlaylistFragment : Fragment() {
     }
 
     private fun GetPlaylistDetail(responseData: ArrayList<MainPlaylistLibraryModel.ResponseData>) {
-        DatabaseClient
-            .getInstance(activity)
-            .getaudioDatabase()
-            .taskDao()
-            .allPlaylist1.observe(
+        DB.taskDao()
+            .getAllPlaylist1(CoUserID)
+        .observe(
                 requireActivity(),
                 { audioList: List<DownloadPlaylistDetailsUnique> ->
                     val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()

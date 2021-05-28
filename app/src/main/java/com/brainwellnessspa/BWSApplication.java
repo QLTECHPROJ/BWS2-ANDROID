@@ -69,7 +69,6 @@ import com.brainwellnessspa.DashboardOldModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.reminderModule.models.ReminderMinutesListModel;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
@@ -109,6 +108,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.google.android.exoplayer2.C;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Analytics;
@@ -150,6 +150,13 @@ public class BWSApplication extends Application {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
         }
     };
+    public static final Migration MIGRATION_2_3 = new Migration(2,3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'UserID' TEXT");
+            database.execSQL("ALTER TABLE 'audio_table' ADD COLUMN 'UserID' TEXT");
+        }
+    };
     public static String BatteryStatus = "", IsLock;
     public static long oldSongPos = 0;
     public static String PlayerAudioId = "";
@@ -164,6 +171,7 @@ public class BWSApplication extends Application {
     static String currantTime = "", am_pm, hourString, minuteSting;
     static int Chour, Cminute;
     static TextView tvTime;
+    public static AudioDatabase DB;
     public static int comeReminder = 0, isPlayPlaylist = 0;
 
     public static LocalBroadcastManager localBroadcastManager;
@@ -192,28 +200,28 @@ public class BWSApplication extends Application {
     }
 
     public static List<String> GetAllMediaDownload(Context ctx) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .geAllDataBYDownloaded1("Complete").observe((LifecycleOwner) ctx, audioList -> {
+        SharedPreferences shared1 =
+            ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        DB = getAudioDataBase(ctx);
+        DB.taskDao()
+                .geAllDataBYDownloadedForAll("Complete").observe((LifecycleOwner) ctx, audioList -> {
             downloadAudioDetailsList = audioList;
-            DatabaseClient
-                    .getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
-                    .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+            DB.taskDao().geAllDataBYDownloadedForAll("Complete").removeObserver(audioListx -> {
             });
         });
         return downloadAudioDetailsList;
     }
 
     private static void CallObserverMethodGetAllMedia(Context ctx) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .geAllData12().observe((LifecycleOwner) ctx, audioList -> {
+        SharedPreferences shared1 =
+            ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        DB = getAudioDataBase(ctx);
+        DB.taskDao()
+                .geAllData1ForAll().observe((LifecycleOwner) ctx, audioList -> {
             playlistDownloadAudioDetailsList = audioList;
 
         });
@@ -221,11 +229,13 @@ public class BWSApplication extends Application {
 
     private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID,
                                           LinearLayout llDownload, ImageView ivDownloads, int songSize) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getPlaylist1(PlaylistID).observe((LifecycleOwner) ctx, audioList -> {
+        SharedPreferences shared1 =
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        DB = getAudioDataBase(ctx);
+        DB.taskDao()
+                .getPlaylist1(PlaylistID,CoUserID).observe((LifecycleOwner) ctx, audioList -> {
 
             if (audioList.size() != 0) {
                 ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
@@ -1267,12 +1277,12 @@ public class BWSApplication extends Application {
     }
 
     private static void savePlaylist(Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
-        AudioDatabase DB;
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
+        DB = getAudioDataBase(ctx);
+        SharedPreferences shared1 =
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        downloadPlaylistDetails.setUserId(CoUserID);
         try {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
         } catch (Exception | OutOfMemoryError e) {
@@ -1280,15 +1290,19 @@ public class BWSApplication extends Application {
         }
     }
 
-    private static void saveAllMedia(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs,
-                                     String PlaylistID, String CoUserId, Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
-        AudioDatabase DB;
+    public static AudioDatabase getAudioDataBase(Context ctx){
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
                 "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
-        Properties p = new Properties();
+                .addMigrations(MIGRATION_2_3)
+               .build();
+       return DB;
+    }
+    private static void saveAllMedia(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs,
+                                     String PlaylistID, String CoUserId, Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
+        DB = getAudioDataBase(ctx);
+        downloadPlaylistDetails.setUserId(CoUserId);
+         Properties p = new Properties();
         p.putValue("userId", CoUserId);
         p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
         p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
@@ -1314,6 +1328,7 @@ public class BWSApplication extends Application {
         addToSegment("Playlist Download Started", p, CONSTANTS.track);
         for (int i = 0; i < playlistSongs.size(); i++) {
             DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+            downloadAudioDetails.setUserId(CoUserId);
             downloadAudioDetails.setID(playlistSongs.get(i).getId());
             downloadAudioDetails.setName(playlistSongs.get(i).getName());
             downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
@@ -1322,7 +1337,6 @@ public class BWSApplication extends Application {
             downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
             downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
             downloadAudioDetails.setPlaylistId(PlaylistID);
-            downloadAudioDetails.setDownload("1");
             downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
             downloadAudioDetails.setIsSingle("0");
             if (playlistDownloadAudioDetailsList.size() != 0) {
@@ -1351,11 +1365,13 @@ public class BWSApplication extends Application {
 
     public static void GetMedia(String AudioFile, Context ctx, String audioFileName,
                                 ImageView ivDownloads, TextView tvDownloads, LinearLayout llDownload) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getaudioByPlaylist1(AudioFile, "").observe((LifecycleOwner) ctx, audioList -> {
+        DB=getAudioDataBase(ctx);
+        SharedPreferences shared1 =
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        DB.taskDao()
+                .getaudioByPlaylist1(AudioFile, "",CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile1 = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();
@@ -1615,13 +1631,13 @@ public class BWSApplication extends Application {
                                   List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
                                   List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
                                   List<MainPlayModel> mDataPlayer, Context ctx) {
-        AudioDatabase DB;
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
+        DB = getAudioDataBase(ctx);
         DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+        SharedPreferences shared1 =
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        downloadAudioDetails.setUserId(CoUserID);
         if (comeFrom.equalsIgnoreCase("downloadList")) {
             downloadAudioDetails.setID(mDataDownload.get(i).getID());
             downloadAudioDetails.setName(mDataDownload.get(i).getName());
@@ -1663,7 +1679,6 @@ public class BWSApplication extends Application {
             downloadAudioDetails.setImageFile(mDataPlayer.get(i).getImageFile());
             downloadAudioDetails.setAudioDuration(mDataPlayer.get(i).getAudioDuration());
         }
-        downloadAudioDetails.setDownload("1");
         downloadAudioDetails.setIsSingle("1");
         downloadAudioDetails.setPlaylistId("");
         if (progress == 0) {
@@ -1708,8 +1723,6 @@ public class BWSApplication extends Application {
             mainPlayModel1.setAudiomastercat(downloadAudioDetails.getAudiomastercat());
             mainPlayModel1.setAudioSubCategory(downloadAudioDetails.getAudioSubCategory());
             mainPlayModel1.setImageFile(downloadAudioDetails.getImageFile());
-            mainPlayModel1.setLike(downloadAudioDetails.getLike());
-            mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
             mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
             arrayList2.add(mainPlayModel1);
             SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
@@ -2015,6 +2028,9 @@ public class BWSApplication extends Application {
         properties.putValue("batteryState", BatteryStatus);
         properties.putValue("internetDownSpeed", downSpeed + " Mbps");
         properties.putValue("internetUpSpeed", upSpeed + " Mbps");
+        if(analytics==null){
+
+        }
         try {
             if (methodName.equalsIgnoreCase("track")) {
                 analytics.track(TagName, properties);
@@ -2487,11 +2503,12 @@ public class BWSApplication extends Application {
         }
     }
     public static void callObserve2(Context ctx) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .geAllData12().observe((LifecycleOwner) ctx , audioList -> {
+        SharedPreferences shared1 =
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        DB.taskDao()
+                .geAllData12(CoUserID).observe((LifecycleOwner) ctx , audioList -> {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();
@@ -2519,12 +2536,16 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void callObserve1(Context ctx) {
+ /*   public static void callObserve1(Context ctx) {
+        SharedPreferences shared1 =
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DatabaseClient
                 .getInstance(ctx)
                 .getaudioDatabase()
                 .taskDao()
-                .geAllData12().observe((LifecycleOwner) ctx, audioList -> {
+                .geAllData12(CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             if (audioList.size() != 0) {
                 for (int i = 0; i < audioList.size(); i++) {
                     FileUtils.deleteDownloadedFile(ctx, audioList.get(i).getName());
@@ -2549,7 +2570,7 @@ public class BWSApplication extends Application {
                     DB.taskDao().deleteAllPlalist();
                 });
         });
-    }
+      }*/
   /*  public static String getRefreshToken(String code)
     {
 

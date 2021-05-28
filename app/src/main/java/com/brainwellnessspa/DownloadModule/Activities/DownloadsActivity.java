@@ -26,7 +26,7 @@ import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -41,8 +41,10 @@ import java.util.List;
 import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
-import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+
+import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.IsLock;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
@@ -57,7 +59,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
     String UserID, CoUserID;
     Context ctx;
     Properties p;
-    AudioDatabase DB;
     private int numStarted = 0;
     int stackStatus = 0;
     boolean myBackPress = false;
@@ -74,11 +75,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
         UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
+        DB = getAudioDataBase(ctx);
         p = new Properties();
         binding.llBack.setOnClickListener(view -> {
             myBackPress = true;
@@ -298,7 +295,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                 })
                 .setNotificationCancelable(false)
                 .build();
-        DB.taskDao().geAllDataz("").observe(this, audioList -> {
+        DB.taskDao().geAllDataz("",CoUserID).observe(this, audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
                     List<DownloadAudioDetails> audioList1 = new ArrayList<>();
@@ -311,8 +308,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                         dad.setAudiomastercat(audioList.get(i).getAudiomastercat());
                         dad.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
                         dad.setImageFile(audioList.get(i).getImageFile());
-                        dad.setLike(audioList.get(i).getLike());
-                        dad.setDownload(audioList.get(i).getDownload());
                         dad.setAudioDuration(audioList.get(i).getAudioDuration());
                         dad.setPlaylistId(audioList.get(i).getPlaylistId());
                         dad.setIsSingle(audioList.get(i).getIsSingle());
@@ -325,14 +320,11 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                 }
             } else {
             }
-            DB.taskDao().geAllDataz("").removeObserver(audioListx -> {
+            DB.taskDao().geAllDataz("",CoUserID).removeObserver(audioListx -> {
             });
         });
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getAllPlaylist1().observe(this, audioList -> {
+        DB.taskDao()
+                .getAllPlaylist1(CoUserID).observe(this, audioList -> {
 
             if (audioList != null) {
                 if (audioList.size() != 0) {
@@ -352,8 +344,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                         detail.setTotalhour(audioList.get(i).getTotalhour());
                         detail.setTotalminute(audioList.get(i).getTotalminute());
                         detail.setCreated(audioList.get(i).getCreated());
-                        detail.setDownload(audioList.get(i).getDownload());
-                        detail.setLike(audioList.get(i).getLike());
                         audioList1.add(detail);
                         playlistList = audioList1;
                     }

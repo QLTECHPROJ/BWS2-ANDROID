@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
@@ -61,9 +62,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
+import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.appStatus;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
@@ -85,7 +88,6 @@ public class AudioDownloadsFragment extends Fragment {
     //    Runnable UpdateSongTime1;
     View view;
     List<String> downloadAudioDetailsList = new ArrayList<>();
-    AudioDatabase DB;
     //    private Handler handler1;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -142,12 +144,7 @@ public class AudioDownloadsFragment extends Fragment {
         percent = 100;
         hundredVolume = (int) (currentVolume * percent) / maxVolume;
 //        handler1 = new Handler();
-
-        DB = Room.databaseBuilder(getActivity(),
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
+        DB = getAudioDataBase(getActivity());
 
 //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
@@ -159,7 +156,7 @@ public class AudioDownloadsFragment extends Fragment {
     }
 
     public void callObserverMethod() {
-        DB.taskDao().geAllDataz("").observe(getActivity(), audioList -> {
+        DB.taskDao().geAllDataz("",CoUserID).observe(getActivity(), audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
                     List<DownloadAudioDetails> audioList1 = new ArrayList<>();
@@ -172,8 +169,6 @@ public class AudioDownloadsFragment extends Fragment {
                         dad.setAudiomastercat(audioList.get(i).getAudiomastercat());
                         dad.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
                         dad.setImageFile(audioList.get(i).getImageFile());
-                        dad.setLike(audioList.get(i).getLike());
-                        dad.setDownload(audioList.get(i).getDownload());
                         dad.setAudioDuration(audioList.get(i).getAudioDuration());
                         dad.setPlaylistId(audioList.get(i).getPlaylistId());
                         dad.setIsSingle(audioList.get(i).getIsSingle());
@@ -192,7 +187,7 @@ public class AudioDownloadsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
-            DB.taskDao().geAllDataz("").removeObserver(audioListx -> {
+            DB.taskDao().geAllDataz("",CoUserID).removeObserver(audioListx -> {
             });
         });
 
@@ -367,7 +362,7 @@ public class AudioDownloadsFragment extends Fragment {
 */
             if (position == 0) {
                 AudioDatabase.databaseWriteExecutor.execute(() -> {
-                    downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete");
+                    downloadAudioDetailsList = DB.taskDao().    geAllDataBYDownloaded("Complete",CoUserID);
                 });
             }
             if (fileNameList.size() != 0) {
@@ -487,6 +482,8 @@ public class AudioDownloadsFragment extends Fragment {
                                             player.setPlayWhenReady(true);
                                             callTransFrag(position,listModelList,false);
                                         }
+                                    }else{
+                                        callAddTransFrag();
                                     }
                                 } else {
                                     callTransFrag(position, listModelList, true);
@@ -635,17 +632,26 @@ public class AudioDownloadsFragment extends Fragment {
                 }
                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                     pos = position;
-                    DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
+                    Gson gson = new Gson();
+                    SharedPreferences shared12 =
+                            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                    String DisclimerJson =
+                            shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                    Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                    }.getType();
+                    HomeScreenModel.ResponseData.DisclaimerAudio arrayList =
+                            gson.fromJson(DisclimerJson, type);
+                    DownloadAudioDetails mainPlayModel=
+                            new DownloadAudioDetails();
+                    mainPlayModel.setID(arrayList.getId());
+                    mainPlayModel.setName(arrayList.getName());
+                    mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                    mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                    mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                    mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                    mainPlayModel.setImageFile(arrayList.getImageFile());
+                    mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                     boolean audioc = true;
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -877,10 +883,10 @@ public class AudioDownloadsFragment extends Fragment {
         private void deleteDownloadFile(String audioFile, String audioName, int position) {
 
             AudioDatabase.databaseWriteExecutor.execute(() -> {
-                DB.taskDao().deleteByAudioFile(audioFile, "");
+                DB.taskDao().deleteByAudioFile(audioFile, "",CoUserID);
             });
 
-            DB.taskDao().getLastIdByuId1(audioFile).observe((LifecycleOwner) ctx, audioList -> {
+            DB.taskDao().getLastIdByuIdForAll(audioFile).observe((LifecycleOwner) ctx, audioList -> {
                 if (audioList.size() == 0 || audioList == null) {
                     try {
                         FileUtils.deleteDownloadedFile(ctx, audioName);
@@ -889,7 +895,7 @@ public class AudioDownloadsFragment extends Fragment {
                     }
                 }
                 callObserverMethod();
-                DB.taskDao().getLastIdByuId1(audioFile).removeObserver(audioListx -> {
+                DB.taskDao().getLastIdByuIdForAll(audioFile).removeObserver(audioListx -> {
                 });
             });
         }

@@ -25,7 +25,7 @@ import com.brainwellnessspa.DashboardOldModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -48,6 +48,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
+import static com.brainwellnessspa.BWSApplication.DB;
+
 public class ViewAllPlaylistFragment extends Fragment {
   public static String GetPlaylistLibraryID = "";
   FragmentViewAllPlaylistBinding binding;
@@ -69,7 +72,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     SharedPreferences shared =
         requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-
+      DB = getAudioDataBase(getActivity());
     if (getArguments() != null) {
       GetLibraryID = getArguments().getString("GetLibraryID");
       Name = getArguments().getString("Name");
@@ -98,10 +101,8 @@ public class ViewAllPlaylistFragment extends Fragment {
 
   @SuppressLint("SetTextI18n")
   private void GetAllMedia() {
-    DatabaseClient.getInstance(getActivity())
-        .getaudioDatabase()
-        .taskDao()
-        .getAllPlaylist1()
+    DB.taskDao()
+        .getAllPlaylist1(coUserId)
         .observe(
             requireActivity(),
             audioList -> {

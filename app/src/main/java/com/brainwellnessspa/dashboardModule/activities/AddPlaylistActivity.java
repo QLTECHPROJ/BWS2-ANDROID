@@ -345,8 +345,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
                                         mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
                                         mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
-                                        mainPlayModel.setLike(listModels.getResponseData().get(i).getLike());
-                                        mainPlayModel.setDownload(listModels.getResponseData().get(i).getDownload());
                                         mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
                                         mainPlayModelList.add(mainPlayModel);
                                     }
@@ -360,8 +358,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
                                         mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
                                         mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
-                                        mainPlayModel.setLike(listModels.getResponseData().get(i).getLike());
-                                        mainPlayModel.setDownload(listModels.getResponseData().get(i).getDownload());
                                         mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
                                         playlistSongs.add(mainPlayModel);
                                     }

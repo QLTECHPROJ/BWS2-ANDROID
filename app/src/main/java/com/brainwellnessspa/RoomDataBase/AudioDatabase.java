@@ -10,7 +10,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {DownloadAudioDetails.class,DownloadPlaylistDetails.class}, version = 2, exportSchema = false)
+@Database(entities = {DownloadAudioDetails.class,DownloadPlaylistDetails.class}, version = 3, exportSchema = false)
 public abstract class AudioDatabase extends RoomDatabase {
 
     private static volatile AudioDatabase INSTANCE;

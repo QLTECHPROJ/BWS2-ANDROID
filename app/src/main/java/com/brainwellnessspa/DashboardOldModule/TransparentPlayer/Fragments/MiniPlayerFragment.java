@@ -39,7 +39,7 @@ import com.brainwellnessspa.dashboardModule.models.SuggestedModel;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.APIClient;
@@ -75,6 +75,8 @@ import retrofit2.Response;
 import static android.content.Context.BATTERY_SERVICE;
 import static com.brainwellnessspa.BWSApplication.BatteryStatus;
 import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
+import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.oldSongPos;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.miniPlayer;
@@ -150,6 +152,7 @@ public class MiniPlayerFragment extends Fragment {
         view = binding.getRoot();
         ctx = getActivity();
         activity = getActivity();
+        DB = getAudioDataBase(ctx);
         PlayerStatus = "Mini";
         mainPlayModelList = new ArrayList<>();
         mainPlayModelList2 = new ArrayList<>();
@@ -1186,19 +1189,13 @@ public class MiniPlayerFragment extends Fragment {
 
     public List<String> GetAllMedia() {
         try {
-            DatabaseClient
-                    .getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
-                    .geAllDataBYDownloaded1("Complete").observe(getActivity(), audioList -> {
+            DB.taskDao()
+                    .geAllDataBYDownloaded1("Complete",UserID).observe(getActivity(), audioList -> {
                 downloadAudioDetailsList = audioList;
 //            audioClick = true;
                 MakeArray();
-                DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                DB.taskDao()
+                        .geAllDataBYDownloaded1("Complete",UserID).removeObserver(audioListx -> {
                 });
             });
         } catch (Exception | OutOfMemoryError e) {
@@ -1210,17 +1207,11 @@ public class MiniPlayerFragment extends Fragment {
 
     public List<String> GetAllMedia1() {
         try {
-            DatabaseClient
-                    .getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
-                    .geAllDataBYDownloaded1("Complete").observe(getActivity(), audioList -> {
+            DB.taskDao()
+                    .geAllDataBYDownloaded1("Complete",UserID).observe(getActivity(), audioList -> {
                 downloadAudioDetailsList = audioList;
-                DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .geAllDataBYDownloaded1("Complete").removeObserver(audioListx -> {
+                DB.taskDao()
+                        .geAllDataBYDownloaded1("Complete",UserID).removeObserver(audioListx -> {
                 });
             });
         } catch (Exception | OutOfMemoryError e) {
@@ -1261,9 +1252,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1313,9 +1302,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1341,9 +1328,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1369,9 +1354,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1397,9 +1380,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1425,9 +1406,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1453,9 +1432,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1480,9 +1457,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1533,8 +1508,6 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1587,8 +1560,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1615,8 +1587,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1643,8 +1614,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1670,9 +1640,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1699,8 +1667,6 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1727,8 +1693,6 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1753,9 +1717,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1813,9 +1775,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1872,8 +1832,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1903,8 +1862,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1934,8 +1892,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1964,9 +1921,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -1994,9 +1949,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile()); 
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -2025,8 +1978,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
@@ -2055,8 +2007,7 @@ public class MiniPlayerFragment extends Fragment {
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                 mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }

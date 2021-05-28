@@ -144,12 +144,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         try {
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
-                if (!IsLock.equalsIgnoreCase("0")) {
+               /* if (!IsLock.equalsIgnoreCase("0")) {
                     resultIntent = new Intent(this, BottomNavigationActivity.class);
                     taskStackBuilder.addParentStack(BottomNavigationActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
-                } else {
+                } else {*/
                     resultIntent = new Intent(this, MyPlaylistListingActivity.class);
                     resultIntent.putExtra("New", "0");
                     resultIntent.putExtra("Goplaylist", "1");
@@ -158,10 +158,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     resultIntent.putExtra("notification", "0");
                     resultIntent.putExtra("message", message);
                     resultIntent.putExtra("PlaylistImage", "");
-                    taskStackBuilder.addParentStack(BottomNavigationActivity.class);
+                    taskStackBuilder.addParentStack(MyPlaylistListingActivity.class);
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
-                }
+//                }
             } else {
                 resultIntent = new Intent(this, BottomNavigationActivity.class);
                 taskStackBuilder.addParentStack(BottomNavigationActivity.class);

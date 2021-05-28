@@ -26,6 +26,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -44,7 +45,7 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APINewClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -88,9 +89,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.BatteryStatus;
+import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.oldSongPos;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.BWSApplication.IsLock;
@@ -1190,8 +1193,7 @@ Appointment Audios dddd*/
                             mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                             mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                             mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                            mainPlayModel.setLike(arrayList.get(i).getLike());
-                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            
                             mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                             arrayList1.add(mainPlayModel);
                         }
@@ -1282,8 +1284,7 @@ Appointment Audios dddd*/
                             mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                             mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                             mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                            mainPlayModel.setLike(arrayList.get(i).getLike());
-                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            
                             mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                             arrayList1.add(mainPlayModel);
                         }
@@ -1330,8 +1331,7 @@ Appointment Audios dddd*/
                             mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                             mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                             mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                            mainPlayModel.setLike(arrayList.get(i).getLike());
-                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            
                             mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                             arrayList1.add(mainPlayModel);
                         }
@@ -1378,8 +1378,7 @@ Appointment Audios dddd*/
                             mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                             mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
                             mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                            mainPlayModel.setLike(arrayList.get(i).getLike());
-                            mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                            
                             mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                             arrayList1.add(mainPlayModel);
                         }
@@ -1420,18 +1419,16 @@ Appointment Audios dddd*/
     }
 
     private void getPending(Context ctx,Activity activity) {
-        DatabaseClient
-                .getInstance(ctx)
-                .getaudioDatabase()
-                .taskDao()
-                .getNotDownloadData("Complete").observe((LifecycleOwner) ctx, audioList -> {
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+        String UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        DB = getAudioDataBase(ctx);
+        DB.taskDao()
+                .getNotDownloadData("Complete",CoUserID).observe((LifecycleOwner) ctx, audioList -> {
 
             notDownloadedData = new ArrayList<>();
-            DatabaseClient
-                    .getInstance(ctx)
-                    .getaudioDatabase()
-                    .taskDao()
-                    .getNotDownloadData("Complete").removeObserver(audioListx -> {
+            DB.taskDao()
+                    .getNotDownloadData("Complete",CoUserID).removeObserver(audioListx -> {
             });
             if (audioList != null) {
                 notDownloadedData.addAll(audioList);
@@ -1457,8 +1454,8 @@ Appointment Audios dddd*/
                                 }
                             }
                         }
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
+                        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared1.edit();
                         String nameJson = gson.toJson(fileNameList);
                         String urlJson = gson.toJson(audioFile);
                         String playlistIdJson = gson.toJson(playlistDownloadId);

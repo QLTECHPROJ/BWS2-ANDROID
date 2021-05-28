@@ -11,6 +11,9 @@ public class DownloadAudioDetails implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int uid;
 
+    @ColumnInfo(name = "UserID")
+    private String UserId;
+
     @ColumnInfo(name = "ID")
     private String ID;
 
@@ -52,6 +55,14 @@ public class DownloadAudioDetails implements Serializable {
 
     @ColumnInfo(name = "DownloadProgress")
     private int DownloadProgress;
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(String userId) {
+        UserId = userId;
+    }
 
     public int getUid() {
         return uid;

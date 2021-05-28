@@ -312,12 +312,12 @@ class UserListActivity : AppCompatActivity() {
                                             val Logout_UserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
                                             val Logout_CoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
 
-                                            if (!listModel.responseData!!.userID.equals(Logout_UserID, ignoreCase = true)
+                                         /*   if (!listModel.responseData!!.userID.equals(Logout_UserID, ignoreCase = true)
                                                     && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
                                                 callObserve1(ctx)
                                             } else {
                                                 callObserve2(ctx)
-                                            }
+                                            }*/
                                             Log.e("New UserId MobileNo", listModel.responseData!!.userID + "....." + listModel.responseData!!.coUserId)
                                             Log.e("Old UserId MobileNo", "$Logout_UserID.....$Logout_CoUserId")
                                             BWSApplication.logout = false

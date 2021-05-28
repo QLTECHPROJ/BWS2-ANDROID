@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Room;
@@ -31,8 +32,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+
+import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.appStatus;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.logout;
 import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
@@ -49,10 +52,10 @@ public class DownloadMedia implements OnDownloadListener {
     List<DownloadAudioDetails> Myaudiolist;
     Context ctx;
     Activity act;
+    String CoUserID;
     byte[] encodedBytes;
     Properties p;
     String UserID;
-    AudioDatabase DB;
     LocalBroadcastManager lBM;
     Intent localIntent;
     MyNetworkReceiver myNetworkReceiver;
@@ -72,14 +75,12 @@ public class DownloadMedia implements OnDownloadListener {
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
         BWSApplication.showToast("Downloading file...",act);
         Log.e("Downloading file..", String.valueOf(downloadProgress));
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
+        DB = getAudioDataBase(ctx);
         localIntent = new Intent("DownloadProgress");
         ctx.registerReceiver(myNetworkReceiver = new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
+        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+        UserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         lBM = LocalBroadcastManager.getInstance(ctx);
 // Setting timeout globally for the download network requests:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
@@ -361,8 +362,9 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
+        DB = getAudioDataBase(ctx);
         try {
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename));
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().updateMediaByDownloadProgress(Status, progress, PlaylistId, filename,CoUserID));
             localIntent.putExtra("Progress", downloadProgress);
             lBM.sendBroadcast(localIntent);
         } catch (Exception | OutOfMemoryError e) {
@@ -371,8 +373,12 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     private void getPending(Context ctx) {
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        DB = getAudioDataBase(ctx);
         DB.taskDao()
-                .getNotDownloadData("Complete").observe((LifecycleOwner) ctx, audioList -> {
+                .getNotDownloadData("Complete",CoUserID).observe((LifecycleOwner) ctx, audioList -> {
 
             notDownloadedData = new ArrayList<>();
             if (audioList != null) {
@@ -387,8 +393,8 @@ public class DownloadMedia implements OnDownloadListener {
                         fileNameList.add(notDownloadedData.get(i).getName());
                         playlistDownloadId.add(notDownloadedData.get(i).getPlaylistId());
                     }
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
+                    SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedx.edit();
                     Gson gson = new Gson();
                     String nameJson = gson.toJson(fileNameList);
                     String urlJson = gson.toJson(audioFile);
@@ -405,7 +411,7 @@ public class DownloadMedia implements OnDownloadListener {
                 }
             }
             DB.taskDao()
-                    .getNotDownloadData("Complete").removeObserver(audioListx -> {
+                    .getNotDownloadData("Complete",CoUserID).removeObserver(audioListx -> {
             });
         });
     }

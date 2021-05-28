@@ -7,14 +7,13 @@ import java.io.Serializable;
 
 public class DownloadAudioDetailsUniq  implements Serializable {
     private String ID;
+    private String UserId;
     private String Name;
     private String AudioFile;
     private String AudioDirection;
     private String Audiomastercat;
     private String AudioSubCategory;
     private String ImageFile;
-    private String Like;
-    private String Download;
     private String AudioDuration;
     private String PlaylistId;
     private String IsSingle;
@@ -27,6 +26,14 @@ public class DownloadAudioDetailsUniq  implements Serializable {
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(String userId) {
+        UserId = userId;
     }
 
     public String getName() {
@@ -75,22 +82,6 @@ public class DownloadAudioDetailsUniq  implements Serializable {
 
     public void setImageFile(String imageFile) {
         ImageFile = imageFile;
-    }
-
-    public String getLike() {
-        return Like;
-    }
-
-    public void setLike(String like) {
-        Like = like;
-    }
-
-    public String getDownload() {
-        return Download;
-    }
-
-    public void setDownload(String download) {
-        Download = download;
     }
 
     public String getAudioDuration() {

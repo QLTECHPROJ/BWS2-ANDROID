@@ -3,12 +3,8 @@ package com.brainwellnessspa.RoomDataBase;
 import android.content.Context;
 
 import androidx.room.Room;
-import androidx.room.RoomDatabase;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.MIGRATION_2_3;
 
 public class DatabaseClient {
     private Context Ctx;
@@ -25,7 +21,7 @@ public class DatabaseClient {
         cart = Room.databaseBuilder(Ctx,
                 AudioDatabase.class,
                 "Audio_database")
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
                 .build();
     }
 

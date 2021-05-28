@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 public class DownloadPlaylistDetailsUnique implements Serializable {
+    private String UserId;
     private String PlaylistID;
     private String PlaylistName;
     private String PlaylistDesc;
@@ -19,8 +20,14 @@ public class DownloadPlaylistDetailsUnique implements Serializable {
     private String Totalhour;
     private String Totalminute;
     private String Created;
-    private String Download;
-    private String Like;
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(String userId) {
+        UserId = userId;
+    }
 
     public String getPlaylistID() {
         return PlaylistID;
@@ -124,21 +131,5 @@ public class DownloadPlaylistDetailsUnique implements Serializable {
 
     public void setCreated(String created) {
         Created = created;
-    }
-
-    public String getDownload() {
-        return Download;
-    }
-
-    public void setDownload(String download) {
-        Download = download;
-    }
-
-    public String getLike() {
-        return Like;
-    }
-
-    public void setLike(String like) {
-        Like = like;
     }
 }

@@ -35,11 +35,11 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.databinding.AudioAptListLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentAptAudioBinding;
 import com.bumptech.glide.Glide;
@@ -56,7 +56,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
+import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.miniPlayer;
 
@@ -84,7 +85,6 @@ public class AptAudioFragment extends Fragment {
     long myProgress = 0;
     Properties p;
 //    private Handler handler1;
-    AudioDatabase DB;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
     private long currentDuration = 0;
     //    private Runnable UpdateSongTime3;
@@ -139,11 +139,7 @@ public class AptAudioFragment extends Fragment {
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelableArrayList("AppointmentDetailList");
         }
-        DB = Room.databaseBuilder(getActivity(),
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_1_2)
-                .build();
+        DB = getAudioDataBase(getActivity());
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -208,16 +204,18 @@ public class AptAudioFragment extends Fragment {
 
 
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
+        SharedPreferences shared1 =
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
 
-        DatabaseClient
-                .getInstance(getActivity())
-                .getaudioDatabase()
-                .taskDao()
-                .getLastIdByuId1(AudioFile).observe(getActivity(), audioList -> {
+        DB = getAudioDataBase(ctx);
+        DB.taskDao()
+                .getLastIdByuId1(AudioFile,CoUserID).observe(getActivity(), audioList -> {
             if (audioList.size() != 0) {
-                if (audioList.get(0).getDownload().equalsIgnoreCase("1")) {
+//                if (audioList.get(0).getDownload().equalsIgnoreCase("1")) {
                     disableDownload(llDownload, ivDownload);
-                }
+//                }
             } else if (download.equalsIgnoreCase("1")) {
                 disableDownload(llDownload, ivDownload);
             } else {
@@ -442,17 +440,26 @@ public class AptAudioFragment extends Fragment {
                 } else {
                     ArrayList<AppointmentDetailModel.Audio> listModelList2 = new ArrayList<>();
                     listModelList2.add(listModelList.get(position));
-                    AppointmentDetailModel.Audio mainPlayModel = new AppointmentDetailModel.Audio();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
+                    Gson gson = new Gson();
+                    SharedPreferences shared12 =
+                            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                    String DisclimerJson =
+                            shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                    Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                    }.getType();
+                    HomeScreenModel.ResponseData.DisclaimerAudio arrayList =
+                            gson.fromJson(DisclimerJson, type);
+                    AppointmentDetailModel.Audio mainPlayModel=
+                            new AppointmentDetailModel.Audio();
+                    mainPlayModel.setID(arrayList.getId());
+                    mainPlayModel.setName(arrayList.getName());
+                    mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                    mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                    mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                    mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                    mainPlayModel.setImageFile(arrayList.getImageFile());
+                    mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                     boolean audioc = true;
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -578,7 +585,13 @@ public class AptAudioFragment extends Fragment {
         }
 
         private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, RelativeLayout llDownload) {
+            SharedPreferences shared1 =
+                    ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+            String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+            String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+
             DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+            downloadAudioDetails.setUserId(CoUserID);
             downloadAudioDetails.setID(audio.getID());
             downloadAudioDetails.setName(audio.getName());
             downloadAudioDetails.setAudioFile(audio.getAudioFile());
@@ -587,8 +600,6 @@ public class AptAudioFragment extends Fragment {
             downloadAudioDetails.setAudiomastercat(audio.getAudiomastercat());
             downloadAudioDetails.setAudioSubCategory(audio.getAudioSubCategory());
             downloadAudioDetails.setImageFile(audio.getImageFile());
-            downloadAudioDetails.setLike(audio.getLike());
-            downloadAudioDetails.setDownload("1");
             downloadAudioDetails.setAudioDuration(audio.getAudioDuration());
             downloadAudioDetails.setIsSingle("1");
             downloadAudioDetails.setPlaylistId("");
@@ -648,8 +659,6 @@ public class AptAudioFragment extends Fragment {
                 mainPlayModel1.setAudiomastercat(downloadAudioDetails.getAudiomastercat());
                 mainPlayModel1.setAudioSubCategory(downloadAudioDetails.getAudioSubCategory());
                 mainPlayModel1.setImageFile(downloadAudioDetails.getImageFile());
-                mainPlayModel1.setLike(downloadAudioDetails.getLike());
-                mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
                 mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
                 arrayList2.add(mainPlayModel1);
                 SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
@@ -673,6 +682,7 @@ public class AptAudioFragment extends Fragment {
                 }
                 callAddTransFrag();
             }
+            DB = getAudioDataBase(ctx);
             try {
                 AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertMedia(downloadAudioDetails));
             }catch(Exception|OutOfMemoryError e) {
