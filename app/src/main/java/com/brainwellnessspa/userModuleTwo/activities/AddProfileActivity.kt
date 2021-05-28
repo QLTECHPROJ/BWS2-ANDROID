@@ -292,50 +292,46 @@ class AddProfileActivity : AppCompatActivity() {
                         call: Call<SucessModel>,
                         response: Response<SucessModel>
                     ) {
-                        try {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
-                            val listModel: SucessModel = response.body()!!
-                            when {
-                                listModel.responseCode.equals(
-                                    activity.getString(R.string.ResponseCodesuccess),
-                                    ignoreCase = true
-                                ) -> {
-                                    val i = Intent(activity, UserListActivity::class.java)
-                                    startActivity(i)
-                                    finish()
-                                    activity.overridePendingTransition(0, 0)
-                                    BWSApplication.showToast(
-                                        listModel.responseMessage,
-                                        activity
-                                    )
-                                    val p = Properties()
-                                    p.putValue("userId", userID)
-                                    p.putValue("coUserId", coUserID)
-                                    p.putValue("name", coName)
-                                    p.putValue("mobileNo", coNumber)
-                                    p.putValue("email", coEMAIL)
-                                    BWSApplication.addToSegment(
-                                        "Send New Pin Clicked",
-                                        p,
-                                        CONSTANTS.track
-                                    )
-                                }
-                                listModel.responseCode.equals(
-                                    activity.getString(R.string.ResponseCodefail),
-                                    ignoreCase = true
-                                ) -> {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
-                                }
-                                else -> {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
-                                }
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            activity
+                        )
+                        val listModel: SucessModel = response.body()!!
+                        when {
+                            listModel.responseCode.equals(
+                                activity.getString(R.string.ResponseCodesuccess),
+                                ignoreCase = true
+                            ) -> {
+                                val i = Intent(activity, UserListActivity::class.java)
+                                startActivity(i)
+                                finish()
+                                activity.overridePendingTransition(0, 0)
+                                BWSApplication.showToast(
+                                    listModel.responseMessage,
+                                    activity
+                                )
+                                val p = Properties()
+                                p.putValue("userId", userID)
+                                p.putValue("coUserId", coUserID)
+                                p.putValue("name", coName)
+                                p.putValue("mobileNo", coNumber)
+                                p.putValue("email", coEMAIL)
+                                BWSApplication.addToSegment(
+                                    "Send New Pin Clicked",
+                                    p,
+                                    CONSTANTS.track
+                                )
                             }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                            listModel.responseCode.equals(
+                                activity.getString(R.string.ResponseCodefail),
+                                ignoreCase = true
+                            ) -> {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            }
+                            else -> {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            }
                         }
                     }
 
