@@ -105,7 +105,7 @@ class ManageFragment : Fragment() {
             LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 
         DB = getAudioDataBase(ctx)
-        getDownloadedList(ctx,DB)
+        getDownloadedList(ctx, DB)
         val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
         SLEEPTIME = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
@@ -313,8 +313,8 @@ class ManageFragment : Fragment() {
             binding.llPlayer.visibility = View.GONE
             binding.llNoInternet.visibility = View.VISIBLE
             val params = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
             )
             params.setMargins(0, 80, 0, 110)
             binding.llSpace1.layoutParams = params
@@ -328,7 +328,7 @@ class ManageFragment : Fragment() {
         super.onDestroy()
     }
 
-    private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>, act: Activity,DB:AudioDatabase) {
+    private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>, act: Activity, DB: AudioDatabase) {
         DB.taskDao()
             .geAllDataz("", CoUserID)
             .observe(requireActivity(), { downloadAudioDetails: List<DownloadAudioDetailsUniq> ->
@@ -354,13 +354,13 @@ class ManageFragment : Fragment() {
                     val fragmentManager1: FragmentManager =
                             (ctx as FragmentActivity).supportFragmentManager
 
-                    audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1,DB)
+                    audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1, DB)
                     binding.rvMainAudioList.adapter = audioAdapter
                 } else {
                     if (BWSApplication.isNetworkConnected(act)) {
                         val fragmentManager1: FragmentManager =
                                 (ctx as FragmentActivity).supportFragmentManager
-                        audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1,DB)
+                        audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1, DB)
                         binding.rvMainAudioList.adapter = audioAdapter
                     }
                 }
@@ -424,7 +424,7 @@ class ManageFragment : Fragment() {
             } else {
                 if (views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
                     Log.e("download audio in gm", downloadAudioDetailsList.toString())
-                    getMedia(views!!, AudioPlayerFlag!!, position, listModel, ctx, act,DB)
+                    getMedia(views!!, AudioPlayerFlag!!, position, listModel, ctx, act, DB,playerPosition)
                 }
             }
         } else {
@@ -469,7 +469,7 @@ class ManageFragment : Fragment() {
                 callPlayer(position, views, listModelList2, ctx, act, audioc)
             } else {
                 if (views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
-                    getMedia(views!!, AudioPlayerFlag!!, position, listModel, ctx, act,DB)
+                    getMedia(views!!, AudioPlayerFlag!!, position, listModel, ctx, act, DB,playerPosition)
                 }
             }
         }
@@ -479,6 +479,12 @@ class ManageFragment : Fragment() {
             ctx: Context,
             DB: AudioDatabase
     ): ArrayList<String> {
+        val shared = ctx.getSharedPreferences(
+                CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                AppCompatActivity.MODE_PRIVATE
+        )
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         DB.taskDao()
                 .geAllLiveDataBYDownloaded("Complete", CoUserID)
                 .observe(ctx as (LifecycleOwner), { audioList: List<String> ->
@@ -494,8 +500,16 @@ class ManageFragment : Fragment() {
             position: Int,
             listModelList: List<HomeDataModel.ResponseData.Audio.Detail>,
             ctx: Context,
-            act: Activity,DB: AudioDatabase
+            act: Activity,
+            DB: AudioDatabase,
+            playerPosition: Int
     ) {
+        val shared = ctx.getSharedPreferences(
+                CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                AppCompatActivity.MODE_PRIVATE
+        )
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         DB.taskDao()
                 .geAllLiveDataBYDownloaded("Complete", CoUserID)
                 .observe(ctx as (LifecycleOwner), { audioList: List<String> ->
@@ -520,12 +534,30 @@ class ManageFragment : Fragment() {
                                     listModelList2.add(i)
                                 }
                             }
-                            Log.e("downloadded audio", downloadAudioDetailsList.toString())
-                            if (downloadAudioDetailsList.contains(listModelList[position].name)) {
-                                pos = position
+                            if (player != null) {
+                                if (position != playerPosition) {
+                                    if (downloadAudioDetailsList.contains(listModelList[position].name)) {
+                                        pos = position
+                                        callPlayer(pos, views!!, listModelList2, ctx, act, true)
+                                    } else {
+//                                pos = 0;
+                                        showToast(ctx.getString(R.string.no_server_found), act)
+                                    }
+                                } else {
+                                    callMyPlayer(ctx, act)
+                                }
+                                if (listModelList2.size == 0) {
+//                                callTransFrag(pos, listModelList2, true);
+                                    showToast(ctx.getString(R.string.no_server_found), act)
+                                }
                             } else {
-                                Log.e("else", "1")
-                                showToast(ctx.getString(R.string.no_server_found), act)
+                                if (downloadAudioDetailsList.contains(listModelList[position].name)) {
+                                    pos = position
+                                    callPlayer(pos, views!!, listModelList2, ctx, act, true)
+                                } else {
+//                                pos = 0;
+                                    showToast(ctx.getString(R.string.no_server_found), act)
+                                }
                             }
                             if (listModelList2.size != 0) {
                                 callPlayer(pos, views!!, listModelList2, ctx, act, true)
@@ -600,6 +632,7 @@ class ManageFragment : Fragment() {
                             showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     }
+
                 })
     }
 
@@ -707,7 +740,7 @@ class ManageFragment : Fragment() {
                             .into(binding.ivCreatePlaylist)
 
                     playlistAdapter =
-                            PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act,DB)
+                            PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act, DB)
                     binding.rvMainPlayList.adapter = playlistAdapter
 
                     if (listModel.responseData!!.playlist[0].details!!.size > 4) {
@@ -715,7 +748,7 @@ class ManageFragment : Fragment() {
                     } else {
                         binding.tvViewAll.visibility = View.GONE
                     }
-                    getPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!,DB)
+                    getPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!, DB)
                     LocalBroadcastManager.getInstance(ctx)
                             .registerReceiver(listener1, IntentFilter("Reminder"))
                     binding.llPlayerView1.setOnClickListener {
@@ -880,7 +913,7 @@ class ManageFragment : Fragment() {
                         }
                     }
 
-                    callObserverMethod(listModel.responseData!!.audio, act,DB)
+                    callObserverMethod(listModel.responseData!!.audio, act, DB)
                 }
 
                 private fun callPlaylistDetails() {
@@ -932,7 +965,7 @@ class ManageFragment : Fragment() {
             listModel.coUserId = CoUserID
             listModel.userID = USERID
             responseData.add(listModel)
-            callObserverMethod(responseData, act,DB)
+            callObserverMethod(responseData, act, DB)
 //            showToast(getString(R.string.no_server_found), act)
         }
     }
@@ -1014,15 +1047,15 @@ class ManageFragment : Fragment() {
                     Log.e("download audio in fun", downloadAudioDetailsList.toString())
                     var pos = 0
                     val shared: SharedPreferences =
-                        ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                     var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                     val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                     val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
                     val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
                     if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
-                            pID,
-                            ignoreCase = true
-                        )
+                                    pID,
+                                    ignoreCase = true
+                            )
                     ) {
                         if (isDisclaimer == 1) {
                             if (player != null) {
@@ -1036,7 +1069,7 @@ class ManageFragment : Fragment() {
                             showToast("The audio shall start playing after the disclaimer", act)
                         } else {
                             val listModelList2 =
-                                arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                                    arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                             for (i in listModel) {
                                 if (downloadAudioDetailsList.contains(i.name)) {
                                     listModelList2.add(i)
@@ -1048,13 +1081,13 @@ class ManageFragment : Fragment() {
                                     BWSApplication.PlayerAudioId = listModel[position].id
                                     if (listModelList2.size != 0) {
                                         callPlayerSuggested(
-                                            pos,
-                                            "",
-                                            listModelList2,
-                                            ctx,
-                                            act,
-                                            pID,
-                                            true
+                                                pos,
+                                                "",
+                                                listModelList2,
+                                                ctx,
+                                                act,
+                                                pID,
+                                                true
                                         )
                                     } else {
                                         showToast(ctx.getString(R.string.no_server_found), act)
@@ -1068,7 +1101,7 @@ class ManageFragment : Fragment() {
                         }
                     } else {
                         val listModelList2 =
-                            arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
+                                arrayListOf<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                         for (i in listModel) {
                             if (downloadAudioDetailsList.contains(i.name)) {
                                 listModelList2.add(i)
@@ -1078,17 +1111,17 @@ class ManageFragment : Fragment() {
                             pos = position
                             val gson = Gson()
                             val DisclimerJson =
-                                shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                                    shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                             val type =
-                                object :
-                                    TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
+                                    object :
+                                            TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                             val arrayList =
-                                gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(
-                                    DisclimerJson,
-                                    type
-                                )
+                                    gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(
+                                            DisclimerJson,
+                                            type
+                                    )
                             val mainPlayModel =
-                                HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
+                                    HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                             mainPlayModel.id = arrayList.id
                             mainPlayModel.name = arrayList.name
                             mainPlayModel.audioFile = arrayList.audioFile
@@ -1121,6 +1154,19 @@ class ManageFragment : Fragment() {
                                 if (!listModelList2[pos].id.equals("0")) {
                                     if (listModelList2.size != 0) {
                                         callPlayerSuggested(
+                                                pos,
+                                                "",
+                                                listModelList2,
+                                                ctx,
+                                                act,
+                                                pID,
+                                                audioc
+                                        )
+                                    } else {
+                                        showToast(ctx.getString(R.string.no_server_found), act)
+                                    }
+                                } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
+                                    callPlayerSuggested(
                                             pos,
                                             "",
                                             listModelList2,
@@ -1128,19 +1174,6 @@ class ManageFragment : Fragment() {
                                             act,
                                             pID,
                                             audioc
-                                        )
-                                    } else {
-                                        showToast(ctx.getString(R.string.no_server_found), act)
-                                    }
-                                } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
-                                    callPlayerSuggested(
-                                        pos,
-                                        "",
-                                        listModelList2,
-                                        ctx,
-                                        act,
-                                        pID,
-                                        audioc
                                     )
                                 } else {
                                     showToast(ctx.getString(R.string.no_server_found), act)
@@ -1271,7 +1304,7 @@ class ManageFragment : Fragment() {
                     )
                 }
             } else {
-                getAllCompletedMedia(AudioPlayerFlag, playlistID, position, listModel, ctx, act,DB)
+                getAllCompletedMedia(AudioPlayerFlag, playlistID, position, listModel, ctx, act, DB)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
@@ -1353,7 +1386,7 @@ class ManageFragment : Fragment() {
         }
     }
 
-    private fun getPlaylistDetail(PlaylistID: String,DB: AudioDatabase) {
+    private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
         try {
             DB!!.taskDao()
                 .getPlaylist1(PlaylistID, CoUserID)
@@ -1468,7 +1501,7 @@ class ManageFragment : Fragment() {
                             ctx,
                             binding,
                             act,
-                            listModel[position].view,DB
+                            listModel[position].view, DB
                     )
                     holder.binding.rvMainAudio.adapter = myDownloadsAdapter
                     if (listModel[position].details != null &&
@@ -1488,7 +1521,7 @@ class ManageFragment : Fragment() {
                             ctx,
                             binding,
                             act,
-                            listModel[position].view,DB
+                            listModel[position].view, DB
                     )
                     val recommended: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1523,7 +1556,7 @@ class ManageFragment : Fragment() {
                             ctx,
                             binding,
                             act,
-                            listModel[position].view,DB
+                            listModel[position].view, DB
                     )
                     val recentlyPlayed: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1545,7 +1578,7 @@ class ManageFragment : Fragment() {
                             ctx,
                             binding,
                             act,
-                            listModel[position].view,DB
+                            listModel[position].view, DB
                     )
                     val inspired: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1567,7 +1600,7 @@ class ManageFragment : Fragment() {
                             ctx,
                             binding,
                             act,
-                            listModel[position].view,DB
+                            listModel[position].view, DB
                     )
                     val inspired: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1589,7 +1622,7 @@ class ManageFragment : Fragment() {
                             ctx,
                             binding,
                             act,
-                            listModel[position].view,DB
+                            listModel[position].view, DB
                     )
                     val recentlyPlayed: RecyclerView.LayoutManager =
                         LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
@@ -1635,7 +1668,7 @@ class ManageFragment : Fragment() {
             private val listModel: HomeDataModel.ResponseData.Play,
             private val ctx: Context,
             var binding: FragmentManageBinding,
-            val act: Activity,var DB: AudioDatabase
+            val act: Activity, var DB: AudioDatabase
     ) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
         var index = -1
 
@@ -1735,7 +1768,7 @@ class ManageFragment : Fragment() {
             val ctx: Context,
             var binding: FragmentManageBinding,
             val act: Activity,
-            var view: String?,var DB: AudioDatabase
+            var view: String?, var DB: AudioDatabase
     ) : RecyclerView.Adapter<RecommendedAdapter.MyViewHolder>() {
         var index = -1
 
@@ -1796,7 +1829,7 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act,DB)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
             }
         }
 
@@ -1877,7 +1910,7 @@ class ManageFragment : Fragment() {
                 .into(holder.binding.ivRestaurantImage)
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act,DB)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
             }
 
         }
@@ -1896,7 +1929,7 @@ class ManageFragment : Fragment() {
             val ctx: Context,
             var binding: FragmentManageBinding,
             val act: Activity,
-            var view: String?,var DB: AudioDatabase
+            var view: String?, var DB: AudioDatabase
     ) : RecyclerView.Adapter<DownloadAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: BigBoxLayoutBinding) :
@@ -1925,7 +1958,7 @@ class ManageFragment : Fragment() {
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
                 .into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act,DB)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
             }
         }
 
@@ -1943,7 +1976,7 @@ class ManageFragment : Fragment() {
             private val ctx: Context,
             var binding: FragmentManageBinding,
             val act: Activity,
-            var view: String?,var DB: AudioDatabase
+            var view: String?, var DB: AudioDatabase
     ) : RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder>() {
         var index = -1
 
@@ -2003,7 +2036,7 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act,DB)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
             }
         }
 
@@ -2021,7 +2054,7 @@ class ManageFragment : Fragment() {
             private val ctx: Context,
             var binding: FragmentManageBinding,
             val act: Activity,
-            var view: String?,var DB: AudioDatabase
+            var view: String?, var DB: AudioDatabase
     ) : RecyclerView.Adapter<PopularPlayedAdapter.MyViewHolder>() {
         var index = -1
 
@@ -2082,7 +2115,7 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act,DB)
+                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
             }
         }
 

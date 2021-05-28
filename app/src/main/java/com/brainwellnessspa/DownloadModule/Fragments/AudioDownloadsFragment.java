@@ -481,6 +481,7 @@ public class AudioDownloadsFragment extends Fragment {
                                             player.seekTo(position, 0);
                                             player.setPlayWhenReady(true);
                                             callTransFrag(position,listModelList,false);
+                                            callAddTransFrag();
                                         }
                                     }else{
                                         callAddTransFrag();
@@ -609,7 +610,23 @@ public class AudioDownloadsFragment extends Fragment {
                             listModelList2.add(listModelList.get(i));
                         }
                     }
-                    if (position != PlayerPosition) {
+                    if(player!= null) {
+                        if (position != PlayerPosition) {
+                            if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
+                                pos = position;
+                                callTransFrag(pos, listModelList2, true);
+                            } else {
+//                                pos = 0;
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
+                        } else {
+                            callAddTransFrag();
+                        }
+                        if (listModelList2.size() == 0) {
+//                                callTransFrag(pos, listModelList2, true);
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
+                    }else{
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
                             callTransFrag(pos, listModelList2, true);
@@ -617,10 +634,6 @@ public class AudioDownloadsFragment extends Fragment {
 //                                pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
-                    }
-                    if (listModelList2.size() == 0) {
-//                                callTransFrag(pos, listModelList2, true);
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                     }
                 }
             } else {
