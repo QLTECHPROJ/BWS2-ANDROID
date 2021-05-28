@@ -1,6 +1,7 @@
 package com.brainwellnessspa.userModuleTwo.activities
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
@@ -12,11 +13,11 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModuleTwo.models.AddUserModel
-import com.brainwellnessspa.userModuleTwo.models.ForgotPinModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityAddProfileBinding
+import com.brainwellnessspa.userModuleTwo.models.AddUserModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -165,7 +166,13 @@ class AddProfileActivity : AppCompatActivity() {
         }
 
         binding.llBack.setOnClickListener {
-            finish()
+            if (addProfile.equals("Add", ignoreCase = true)) {
+                finish()
+            } else if (addProfile.equals("Forgot", ignoreCase = true)) {
+                val i = Intent(activity, UserListActivity::class.java)
+                startActivity(i)
+                finish()
+            }
         }
         val measureRatio = BWSApplication.measureRatio(this, 0f, 1f, 1f, 0.32f, 0f)
         binding.civProfile.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
@@ -278,12 +285,12 @@ class AddProfileActivity : AppCompatActivity() {
                     binding.progressBarHolder,
                     activity
                 )
-                val listCall: Call<ForgotPinModel> =
+                val listCall: Call<SucessModel> =
                     APINewClient.getClient().getForgotPin(userID, coUserID, coEMAIL)
-                listCall.enqueue(object : Callback<ForgotPinModel> {
+                listCall.enqueue(object : Callback<SucessModel> {
                     override fun onResponse(
-                        call: Call<ForgotPinModel>,
-                        response: Response<ForgotPinModel>
+                        call: Call<SucessModel>,
+                        response: Response<SucessModel>
                     ) {
                         try {
                             BWSApplication.hideProgressBar(
@@ -291,12 +298,16 @@ class AddProfileActivity : AppCompatActivity() {
                                 binding.progressBarHolder,
                                 activity
                             )
-                            val listModel: ForgotPinModel = response.body()!!
+                            val listModel: SucessModel = response.body()!!
                             when {
                                 listModel.responseCode.equals(
                                     activity.getString(R.string.ResponseCodesuccess),
                                     ignoreCase = true
                                 ) -> {
+                                    val i = Intent(activity, UserListActivity::class.java)
+                                    startActivity(i)
+                                    finish()
+                                    activity.overridePendingTransition(0, 0)
                                     BWSApplication.showToast(
                                         listModel.responseMessage,
                                         activity
@@ -307,8 +318,11 @@ class AddProfileActivity : AppCompatActivity() {
                                     p.putValue("name", coName)
                                     p.putValue("mobileNo", coNumber)
                                     p.putValue("email", coEMAIL)
-                                    BWSApplication.addToSegment("Send New Pin Clicked", p, CONSTANTS.track)
-                                    finish()
+                                    BWSApplication.addToSegment(
+                                        "Send New Pin Clicked",
+                                        p,
+                                        CONSTANTS.track
+                                    )
                                 }
                                 listModel.responseCode.equals(
                                     activity.getString(R.string.ResponseCodefail),
@@ -325,7 +339,7 @@ class AddProfileActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<ForgotPinModel>, t: Throwable) {
+                    override fun onFailure(call: Call<SucessModel>, t: Throwable) {
                         BWSApplication.hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
@@ -345,6 +359,12 @@ class AddProfileActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
+        if (addProfile.equals("Add", ignoreCase = true)) {
+            finish()
+        } else if (addProfile.equals("Forgot", ignoreCase = true)) {
+            val i = Intent(activity, UserListActivity::class.java)
+            startActivity(i)
+            finish()
+        }
     }
 }

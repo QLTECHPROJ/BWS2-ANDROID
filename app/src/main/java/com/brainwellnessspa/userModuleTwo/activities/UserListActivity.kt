@@ -638,6 +638,7 @@ class UserListActivity : AppCompatActivity() {
                 i.putExtra("CoName", coUsersModel!![position].name.toString())
                 i.putExtra("CoNumber", coUsersModel!![position].mobile.toString())
                 activity.startActivity(i)
+                activity.finish()
             }
         }
 

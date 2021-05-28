@@ -112,7 +112,7 @@ public interface APINewInterface {
 
     @POST("forgotpin")
     @FormUrlEncoded
-    Call<ForgotPinModel> getForgotPin(@Field("UserID") String userID,
+    Call<SucessModel> getForgotPin(@Field("UserID") String userID,
                                       @Field("CoUserId") String CoUserId,
                                       @Field("Email") String email);
 

@@ -490,7 +490,21 @@ class DassAssSliderActivity : AppCompatActivity() {
                             edited1.remove(CONSTANTS.AssSort)
                             edited1.clear()
                             edited1.apply()
-
+                            val shared =
+                                activity.getSharedPreferences(
+                                    CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                                    MODE_PRIVATE
+                                )
+                            val editor = shared.edit()
+                            editor.putString(
+                                CONSTANTS.PREFE_ACCESS_INDEXSCORE,
+                                listModel.getResponseData()?.indexScore
+                            )
+                            editor.putString(
+                                CONSTANTS.PREFE_ACCESS_SCORELEVEL,
+                                listModel.getResponseData()?.scoreLevel
+                            )
+                            editor.apply()
                             val p = Properties()
                             p.putValue("userId", USERID)
                             p.putValue("coUserId", CoUserID)
