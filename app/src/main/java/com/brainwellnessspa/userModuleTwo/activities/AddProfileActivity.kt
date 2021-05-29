@@ -306,7 +306,6 @@ class AddProfileActivity : AppCompatActivity() {
                                 val i = Intent(activity, UserListActivity::class.java)
                                 startActivity(i)
                                 finish()
-                                activity.overridePendingTransition(0, 0)
                                 BWSApplication.showToast(
                                     listModel.responseMessage,
                                     activity

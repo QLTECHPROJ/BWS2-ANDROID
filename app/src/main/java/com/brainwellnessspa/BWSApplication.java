@@ -2062,7 +2062,7 @@ public class BWSApplication extends Application {
             toast.setView(view);
             toast.show();
         } else {
-            final Dialog dialog = new Dialog(context);
+            /*final Dialog dialog = new Dialog(getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.toast_above_version_layout);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -2081,9 +2081,9 @@ public class BWSApplication extends Application {
                 dialog.hide();
             }, 2 * 600);
 
-            dialog.setCancelable(true);
-//            Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-//            toast.show();
+            dialog.setCancelable(true);*/
+            Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
