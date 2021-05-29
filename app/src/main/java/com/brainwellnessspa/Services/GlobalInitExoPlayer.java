@@ -168,7 +168,7 @@ public class GlobalInitExoPlayer extends Service {
             @Override
             protected Bitmap doInBackground(String... params) {
                 if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {
-                    myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
                 } else {
                     try {
                         URL url = new URL(songImg);
@@ -179,7 +179,7 @@ public class GlobalInitExoPlayer extends Service {
                         myBitmap = BitmapFactory.decodeStream(is);
                     } catch (IOException | OutOfMemoryError e) {
                         if (e.getMessage().equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/")) {
-                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
                         } else {
                             System.out.println(e);
                         }
@@ -197,7 +197,7 @@ public class GlobalInitExoPlayer extends Service {
 
         AudioDatabase.databaseWriteExecutor1.execute(() -> {
             if (songImg.equalsIgnoreCase("") || !BWSApplication.isNetworkConnected(ctx)) {
-                myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
             } else {
                 try {
                     URL url = new URL(songImg);
@@ -207,7 +207,7 @@ public class GlobalInitExoPlayer extends Service {
                     myBitmap = BitmapFactory.decodeStream(is);
                 } catch (IOException e) {
                     if (e.getMessage().equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/")) {
-                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                        myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
                     } else {
                         System.out.println(e);
                     }
@@ -975,7 +975,7 @@ Appointment Audios dddd*/
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-                        return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                        return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
                     }
                 },
 
@@ -1029,7 +1029,7 @@ Appointment Audios dddd*/
                     builder.putString(MediaMetadata.METADATA_KEY_ARTIST, "The audio shall start playing after the disclaimer");
                     builder.putString(MediaMetadata.METADATA_KEY_TITLE, "Disclaimer");
                 }
-                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer)));
+                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon)));
                 builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "0");
 
                 if (duration > 0) {
@@ -1038,7 +1038,7 @@ Appointment Audios dddd*/
 
                 try {
                     Bitmap icon;
-                    icon = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
+                    icon = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
                     builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon);
                 } catch (OutOfMemoryError e) {
                     e.printStackTrace();
