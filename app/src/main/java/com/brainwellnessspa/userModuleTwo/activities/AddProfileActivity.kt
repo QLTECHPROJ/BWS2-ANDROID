@@ -26,7 +26,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AddProfileActivity : AppCompatActivity() {
+class   AddProfileActivity : AppCompatActivity() {
     var userID: String? = null
     var coUserID: String? = null
     var coEMAIL: String? = null

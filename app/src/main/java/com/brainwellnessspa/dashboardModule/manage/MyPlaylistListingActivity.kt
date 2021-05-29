@@ -22,7 +22,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel
@@ -85,7 +84,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     lateinit var adpater: PlayListsAdpater
     lateinit var adpater2: PlayListsAdpater2
     lateinit var binding: ActivityMyPlaylistListingBinding
-    var SongListSize: Int = 0
     var count: Int = 0
     var hundredVolume: Int = 0
     var currentVolume: Int = 0
@@ -358,8 +356,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
                         getDownloadData(ctx,DB)
                         callObserveMethodGetAllMedia(ctx,DB)
-                        SongListSize = listModel.responseData!!.playlistSongs!!.size
-                        downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize, ctx,DB)
+                        downloadPlaylistDetailsList = GetPlaylistDetail( listModel.responseData!!.playlistSongs!!.size, ctx,DB)
 
                         if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true)
                                 || listModel.responseData!!.isReminder.equals("", ignoreCase = true)
@@ -468,8 +465,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 showToast(getString(R.string.no_server_found), activity)
                             }
                         }
-                        playlistSongsList = arrayListOf()
-                        playlistSongsList.addAll(listModel.responseData!!.playlistSongs!!)
                         downloadPlaylistDetails = DownloadPlaylistDetails()
                         downloadPlaylistDetails.playlistID = listModel.responseData!!.playlistID
                         downloadPlaylistDetails.playlistName = listModel.responseData!!.playlistName
@@ -502,10 +497,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                 })
             } else {
-                GetPlaylistDetail2(ctx,DB)
+                GetPlaylistDetail2(ctx,DB,CoUserID!!,PlaylistID!!)
             }
         } else {
-            GetPlaylistDetail2(ctx,DB)
+            GetPlaylistDetail2(ctx,DB,CoUserID!!,PlaylistID!!)
             showToast(getString(R.string.no_server_found), activity)
         }
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -1650,9 +1645,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         }
                         false
                     }
+                    val shared = ctx.getSharedPreferences(
+                            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                            AppCompatActivity.MODE_PRIVATE
+                    )
+                    CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
                     Btn.setOnClickListener {
-                        MyPlaylistListingActivity().getDeleteDownloadData(ctx)
-                        MyPlaylistListingActivity().GetPlaylistMedia(PlaylistID!!, ctx,DB)
+                        getDeleteDownloadData(ctx)
+                        GetPlaylistMedia(PlaylistID!!, ctx,DB,CoUserID)
                         dialog.dismiss()
                         activity.finish()
                     }
@@ -1662,6 +1662,116 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 }
             }
 
+        }
+
+        fun getDeleteDownloadData(ctx: Context) {
+//        try {
+            val fileNameList: List<String>
+            val fileNameList1: List<String>
+            val audioFile: List<String>
+            val playlistDownloadId: List<String>
+            val sharedy: SharedPreferences =
+                    ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+            val gson = Gson()
+            val jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
+            val json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
+            val jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
+            if (!jsony.equals(gson.toString(), ignoreCase = true)) {
+                val type = object : TypeToken<List<String?>?>() {}.type
+                fileNameList = gson.fromJson(jsony, type)
+                fileNameList1 = gson.fromJson(jsony, type)
+                audioFile = gson.fromJson(json1, type)
+                playlistDownloadId = gson.fromJson(jsonq, type)
+                if (playlistDownloadId.isNotEmpty()) {
+                    if (playlistDownloadId.contains(PlaylistID)) {
+                        for (i in 1 until fileNameList1.size - 1) {
+                            if (playlistDownloadId[i].equals(PlaylistID, ignoreCase = true)) {
+                                fileNameList.drop(i)
+                                audioFile.drop(i)
+                                playlistDownloadId.drop(i)
+                            }
+                        }
+                        val shared: SharedPreferences =
+                                ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                        val editor = shared.edit()
+                        val nameJson = gson.toJson(fileNameList)
+                        val urlJson = gson.toJson(audioFile)
+                        val playlistIdJson = gson.toJson(playlistDownloadId)
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson)
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
+                        editor.commit()
+                        if (fileNameList[0].equals(
+                                        DownloadMedia.filename,
+                                        ignoreCase = true
+                                ) && playlistDownloadId[0].equals(PlaylistID, ignoreCase = true)
+                        ) {
+                            PRDownloader.cancel(DownloadMedia.downloadIdOne)
+                            DownloadMedia.filename = ""
+                        }
+                    }
+                }
+            }
+//        } catch (e: java.lang.Exception) {
+//            e.printStackTrace()
+//            Log.e("Download Playlist ", "Download Playlist remove issue" + e.message)
+//        }
+        }
+        fun GetPlaylistMedia(playlistID: String, ctx: Context, DB: AudioDatabase, CoUserID: String?) {
+            DB.taskDao().getAllAudioByPlaylist1(playlistID, CoUserID)
+                    .observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
+                        deleteDownloadFile(ctx, playlistID,DB,CoUserID)
+                        if (audioList.isNotEmpty()) {
+                            GetSingleMedia(
+                                    audioList[0].audioFile,
+                                    ctx,
+                                    playlistID,
+                                    audioList,
+                                    0,DB,CoUserID
+                            )
+                        }
+                    })
+        }
+        private fun deleteDownloadFile(ctx: Context, PlaylistId: String,DB: AudioDatabase, CoUserID: String?) {
+            AudioDatabase.databaseWriteExecutor.execute {
+                DB.taskDao().deleteByPlaylistId(PlaylistId,CoUserID)
+            }
+            deletePlaylist(PlaylistId, ctx,DB,CoUserID)
+        }
+
+        private fun deletePlaylist(playlistId: String, ctx: Context,DB: AudioDatabase,CoUserID: String?) {
+            AudioDatabase.databaseWriteExecutor.execute { DB.taskDao().deletePlaylist(playlistId,CoUserID) }
+        }
+
+        fun GetSingleMedia(
+                AudioFile: String?,
+                ctx: Context,
+                playlistID: String?,
+                audioList: List<DownloadAudioDetails>,
+                i: Int,DB: AudioDatabase,CoUserID: String?
+        ) {
+            DB.taskDao().getLastIdByuId1(AudioFile,CoUserID)
+                    .observe(ctx as (LifecycleOwner), { audioList1: List<DownloadAudioDetails> ->
+                        try {
+                            if (audioList1.isNotEmpty()) {
+                                if (audioList1.size == 1) {
+                                    FileUtils.deleteDownloadedFile(ctx, audioList1[0].name)
+                                }
+                            }
+                            if (i < audioList.size - 1) {
+                                GetSingleMedia(
+                                        audioList[i + 1].audioFile,
+                                        ctx.applicationContext,
+                                        playlistID,
+                                        audioList,
+                                        i + 1,DB,CoUserID
+                                )
+                                Log.e("DownloadMedia Call", (i + 1).toString())
+                            }
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
+                        }
+                    })
         }
 
         override fun getItemCount(): Int {
@@ -1974,7 +2084,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun removeobserver(DB:AudioDatabase) {
         DB.taskDao()
-            .getPlaylist1(PlaylistID,CoUserID).removeObserver { _: List<DownloadPlaylistDetails?>? -> }
+            .getPlaylist1(PlaylistID,CoUserID).removeObserver {}
     }
 
     private fun GetPlaylistDetail(
@@ -1987,26 +2097,26 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails> ->
                 downloadPlaylistDetailsList = ArrayList()
                 downloadPlaylistDetailsList.addAll(audioList)
-            })
-        when {
-            downloadPlaylistDetailsList.isNotEmpty() -> {
-                enableDisableDownload(false, "orange")
-                getMediaByPer(PlaylistID!!, SongListSize, ctx,DB)
-                removeobserver(DB)
-            }
-            SongListSize == 0 -> {
-                enableDisableDownload(false, "gray")
-                removeobserver(DB)
-            } /*else if (download.equals("1", ignoreCase = true) *//* New.equalsIgnoreCase("1") ||*//*) {
+                when {
+                    downloadPlaylistDetailsList.isNotEmpty() -> {
+                        enableDisableDownload(false, "orange")
+                        getMediaByPer(PlaylistID!!, SongListSize, ctx, DB)
+                        removeobserver(DB)
+                    }
+                    SongListSize == 0 -> {
+                        enableDisableDownload(false, "gray")
+                        removeobserver(DB)
+                    } /*else if (download.equals("1", ignoreCase = true) *//* New.equalsIgnoreCase("1") ||*//*) {
                                 enableDisableDownload(false, "orange")
                                 getMediaByPer(PlaylistID!!, SongListSize)
                                 removeobserver()
                             } */
-            else -> {
-                enableDisableDownload(true, "white")
-                removeobserver(DB)
-            }
-        }
+                    else -> {
+                        enableDisableDownload(true, "white")
+                        removeobserver(DB)
+                    }
+                }
+            })
 //                })
 //        } catch (e: java.lang.Exception) {
 //            e.printStackTrace()
@@ -2032,7 +2142,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.pbProgress.visibility = View.VISIBLE
                         binding.ivDownloads.visibility = View.GONE
                         binding.pbProgress.progress = downloadProgress1
-                        getMediaByPer(PlaylistID!!, SongListSize, ctx,DB)
+                        getMediaByPer(PlaylistID!!, totalAudio, ctx,DB)
                     }
                 } else {
                     DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId,CoUserID)
@@ -2073,7 +2183,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
 
-    private fun GetPlaylistDetail2(ctx:Context,DB: AudioDatabase) {
+    private fun GetPlaylistDetail2(ctx:Context,DB: AudioDatabase,CoUserID: String,PlaylistID: String) {
         DB.taskDao()
             .getPlaylist1(PlaylistID,CoUserID)
             .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails> ->
@@ -2158,7 +2268,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         DB.taskDao()
                 .geAllData1ForAll().observe(this, { audioList ->
                     downloadAudioDetailsListGloble = audioList as ArrayList<DownloadAudioDetails>
-                })
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             val url = arrayListOf<String>()
             val name = arrayListOf<String>()
@@ -2231,7 +2340,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
                 editor.apply()
-                SongListSize = playlistSongs.size
             }
             saveAllMedia(ctx, playlistSongs, DB)
         } else {
@@ -2364,6 +2472,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             //            handler2.postDelayed(UpdateSongTime2, 3000);
         }
+                })
     }
 
     private fun saveAllMedia(
@@ -2440,8 +2549,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         AudioDatabase.databaseWriteExecutor.execute {
             DB.taskDao().insertPlaylist(downloadPlaylistDetails)
         }
-        downloadPlaylistDetailsList = GetPlaylistDetail(SongListSize, ctx,DB)
-        getMediaByPer(PlaylistID!!, SongListSize, ctx,DB)
+        downloadPlaylistDetailsList = GetPlaylistDetail(playlistSongs.size, ctx,DB)
+        getMediaByPer(PlaylistID!!, playlistSongs.size, ctx,DB)
 //        } catch (e: java.lang.Exception) {
 //            println(e.message)
 //        } catch (e: OutOfMemoryError) {
@@ -2585,114 +2694,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
           llDownload.isClickable = false
           llDownload.isEnabled = false
       }*/
-
-    fun GetPlaylistMedia(playlistID: String, ctx: Context,DB: AudioDatabase) {
-        DB.taskDao().getAllAudioByPlaylist1(playlistID,CoUserID)
-            .observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
-                deleteDownloadFile(ctx, playlistID,DB)
-                if (audioList.isNotEmpty()) {
-                    GetSingleMedia(
-                            audioList[0].audioFile,
-                            ctx,
-                            playlistID,
-                            audioList,
-                            0,DB
-                    )
-                }
-            })
-    }
-
-    private fun deleteDownloadFile(ctx: Context, PlaylistId: String,DB: AudioDatabase) {
-        AudioDatabase.databaseWriteExecutor.execute {
-            DB.taskDao().deleteByPlaylistId(PlaylistId,CoUserID)
-        }
-        deletePlaylist(PlaylistId, ctx,DB)
-    }
-
-    fun GetSingleMedia(
-            AudioFile: String?,
-            ctx: Context,
-            playlistID: String?,
-            audioList: List<DownloadAudioDetails>,
-            i: Int,DB: AudioDatabase
-    ) {
-        DB.taskDao().getLastIdByuId1(AudioFile,CoUserID)
-            .observe(ctx as (LifecycleOwner), { audioList1: List<DownloadAudioDetails> ->
-                try {
-                    if (audioList1.isNotEmpty()) {
-                        if (audioList1.size == 1) {
-                            FileUtils.deleteDownloadedFile(ctx, audioList1[0].name)
-                        }
-                    }
-                    if (i < audioList.size - 1) {
-                        GetSingleMedia(
-                                audioList[i + 1].audioFile,
-                                ctx.applicationContext,
-                                playlistID,
-                                audioList,
-                                i + 1,DB
-                        )
-                        Log.e("DownloadMedia Call", (i + 1).toString())
-                    }
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                }
-            })
-    }
-
-    fun getDeleteDownloadData(ctx: Context) {
-//        try {
-        val fileNameList: List<String>
-        val fileNameList1: List<String>
-        val audioFile: List<String>
-        val playlistDownloadId: List<String>
-        val sharedy: SharedPreferences =
-            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
-        val gson = Gson()
-        val jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
-        val json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
-        val jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
-        if (!jsony.equals(gson.toString(), ignoreCase = true)) {
-            val type = object : TypeToken<List<String?>?>() {}.type
-            fileNameList = gson.fromJson(jsony, type)
-            fileNameList1 = gson.fromJson(jsony, type)
-            audioFile = gson.fromJson(json1, type)
-            playlistDownloadId = gson.fromJson(jsonq, type)
-            if (playlistDownloadId.isNotEmpty()) {
-                if (playlistDownloadId.contains(PlaylistID)) {
-                    for (i in 1 until fileNameList1.size - 1) {
-                        if (playlistDownloadId[i].equals(PlaylistID, ignoreCase = true)) {
-                            fileNameList.drop(i)
-                            audioFile.drop(i)
-                            playlistDownloadId.drop(i)
-                        }
-                    }
-                    val shared: SharedPreferences =
-                        getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
-                    val editor = shared.edit()
-                    val nameJson = gson.toJson(fileNameList)
-                    val urlJson = gson.toJson(audioFile)
-                    val playlistIdJson = gson.toJson(playlistDownloadId)
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson)
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
-                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
-                    editor.commit()
-                    if (fileNameList[0].equals(
-                                    DownloadMedia.filename,
-                                    ignoreCase = true
-                            ) && playlistDownloadId[0].equals(PlaylistID, ignoreCase = true)
-                    ) {
-                        PRDownloader.cancel(DownloadMedia.downloadIdOne)
-                        DownloadMedia.filename = ""
-                    }
-                }
-            }
-        }
-//        } catch (e: java.lang.Exception) {
-//            e.printStackTrace()
-//            Log.e("Download Playlist ", "Download Playlist remove issue" + e.message)
-//        }
-    }
 
     private fun getAllCompletedMedia(AudioFlag: String, pID: String, position: Int, ctx: Context) {
         var pos = 0
@@ -2850,8 +2851,4 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
     }
 
-
-    private fun deletePlaylist(playlistId: String, ctx: Context,DB: AudioDatabase) {
-        AudioDatabase.databaseWriteExecutor.execute { DB.taskDao().deletePlaylist(playlistId,CoUserID) }
-    }
 }

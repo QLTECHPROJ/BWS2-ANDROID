@@ -807,6 +807,8 @@ class MyPlayerActivity : AppCompatActivity() {
 //            LocalBroadcastManager.getInstance(ctx!!)
 //                    .registerReceiver(listener1, IntentFilter("descIssue"))
             initializePlayerDisclaimer()
+            val globalInitExoPlayer = GlobalInitExoPlayer()
+            globalInitExoPlayer.InitNotificationAudioPLayerD(ctx)
         } else {
             val globalInitExoPlayer = GlobalInitExoPlayer()
             globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)

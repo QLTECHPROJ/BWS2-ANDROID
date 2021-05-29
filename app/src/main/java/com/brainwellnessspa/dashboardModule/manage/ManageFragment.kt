@@ -322,6 +322,13 @@ class ManageFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        DB.taskDao()
+                .geAllDataz("", CoUserID).removeObserver {}
+        DB.taskDao()
+                .geAllLiveDataBYDownloaded("Complete", CoUserID).removeObserver {}
+        super.onPause()
+    }
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener)
         LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener1)
@@ -1388,7 +1395,7 @@ class ManageFragment : Fragment() {
 
     private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
         try {
-            DB!!.taskDao()
+            DB.taskDao()
                 .getPlaylist1(PlaylistID, CoUserID)
                 .observe(this, { audioList: List<DownloadPlaylistDetails?> ->
                     MyDownloads = if (audioList.isNotEmpty()) {
