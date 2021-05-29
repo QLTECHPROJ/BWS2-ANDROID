@@ -504,6 +504,10 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 CONSTANTS.PREFE_ACCESS_SCORELEVEL,
                                 listModel.getResponseData()?.scoreLevel
                             )
+                            editor.putString(
+                                CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
+                                CONSTANTS.FLAG_ONE
+                            )
                             editor.apply()
                             val p = Properties()
                             p.putValue("userId", USERID)

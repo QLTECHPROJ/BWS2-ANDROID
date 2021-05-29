@@ -75,13 +75,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     var MyDownloads: String? = ""
     var fileNameList = arrayListOf<String>()
     var playlistSongsList = arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>()
-    var playListSongListForDownload = arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong?>()
     var onlySingleDownloaded = arrayListOf<String>()
     var playlistDownloadId = arrayListOf<String>()
     var downloadPlaylistDetails = DownloadPlaylistDetails()
-    var downloadPlaylistDetailsList = arrayListOf<DownloadPlaylistDetails?>()
+    var downloadPlaylistDetailsList = arrayListOf<DownloadPlaylistDetails>()
     var downloadAudios: List<String> = java.util.ArrayList()
-    var downloadAudioDetailsList = arrayListOf<DownloadAudioDetails?>()
+    var downloadAudioDetailsList = arrayListOf<DownloadAudioDetails>()
     var downloadAudioDetailsListGloble = arrayListOf<DownloadAudioDetails>()
     lateinit var adpater: PlayListsAdpater
     lateinit var adpater2: PlayListsAdpater2
@@ -758,7 +757,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     } else if (listModel.created.equals("2")) {
                         binding.llSuggested.visibility = View.VISIBLE
 
-                        searchEditText.setHint("Search for audio")
+                        searchEditText.hint = "Search for audio"
                         binding.tvSearch.hint = "Search for audio"
                         binding.tvSearch.visibility = View.GONE
                         binding.llDelete.visibility = View.GONE
@@ -779,7 +778,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.rvPlayLists2.adapter = adpater2
                     } else {
                         binding.llSuggested.visibility = View.GONE
-                        searchEditText.setHint("Search for audio")
+                        searchEditText.hint = "Search for audio"
                         binding.tvSearch.hint = "Search for audio"
                         binding.tvSearch.visibility = View.GONE
                         binding.searchView.visibility = View.VISIBLE
@@ -1336,7 +1335,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 pos = pos - 1;
                             }
                         }*/ else if (fromPosition < pos && toPosition > pos) {
-                        pos = pos - 1
+                        pos -= 1
                         val one = "2"
                         Log.e("one", one)
                     } else if (fromPosition > pos && toPosition > pos || fromPosition < pos && toPosition < pos) {
@@ -1981,11 +1980,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     private fun GetPlaylistDetail(
             SongListSize: Int,
             ctx: Context,DB: AudioDatabase
-    ): ArrayList<DownloadPlaylistDetails?> {
+    ): ArrayList<DownloadPlaylistDetails> {
 //        try {
        DB.taskDao()
             .getPlaylist1(PlaylistID,CoUserID)
-            .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails?> ->
+            .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails> ->
                 downloadPlaylistDetailsList = ArrayList()
                 downloadPlaylistDetailsList.addAll(audioList)
             })
@@ -2077,9 +2076,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     private fun GetPlaylistDetail2(ctx:Context,DB: AudioDatabase) {
         DB.taskDao()
             .getPlaylist1(PlaylistID,CoUserID)
-            .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails?> ->
+            .observe(ctx as (LifecycleOwner), { audioList: List<DownloadPlaylistDetails> ->
                 downloadPlaylistDetailsList = arrayListOf()
-                downloadPlaylistDetailsList = audioList as ArrayList<DownloadPlaylistDetails?>
+                downloadPlaylistDetailsList = audioList as ArrayList<DownloadPlaylistDetails>
                 GetMedia(ctx,DB)
             })
     }
@@ -2088,9 +2087,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         try {
            DB.taskDao()
                 .geAllData12(CoUserID)
-                .observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails?>? ->
+                .observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails>? ->
                     if (audioList != null) {
-                        downloadAudioDetailsList = audioList as ArrayList<DownloadAudioDetails?>
+                        downloadAudioDetailsList = audioList as ArrayList<DownloadAudioDetails>
                         onlySingleDownloaded = ArrayList()
                         if (audioList.isNotEmpty()) {
                             for (i in audioList) {
@@ -2174,7 +2173,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         for (x in 0 until playlistSongs2.size) if (playlistSongs2.size != 0) {
                             if (x < playlistSongs2.size) {
                                 if (playlistSongs2[x].audioFile.equals(
-                                                y!!.audioFile,
+                                                y.audioFile,
                                                 ignoreCase = true
                                         )
                                 ) {
@@ -2239,7 +2238,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             var downloadOrNot = false
             if (downloadAudioDetailsListGloble.size != 0) {
                 for (i in downloadAudioDetailsListGloble.indices) {
-                    if (downloadAudioDetailsListGloble[i]!!.audioFile.equals(
+                    if (downloadAudioDetailsListGloble[i].audioFile.equals(
                                     audioFile,
                                     ignoreCase = true
                             )
@@ -2312,11 +2311,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val gsonx = Gson()
             val json = sharedx.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gsonx.toString())
             val jsonw = sharedx.getString(CONSTANTS.PREF_KEY_MainAudioList, gsonx.toString())
-            var arrayList = ArrayList<DownloadAudioDetails?>()
+            var arrayList = ArrayList<DownloadAudioDetails>()
             var arrayList2 = ArrayList<MainPlayModel>()
             var size = 0
             if (!jsonw.equals(gsonx.toString(), ignoreCase = true)) {
-                val type1 = object : TypeToken<ArrayList<DownloadAudioDetails?>?>() {}.type
+                val type1 = object : TypeToken<ArrayList<DownloadAudioDetails>?>() {}.type
                 val type0 = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
                 val gson1 = Gson()
                 arrayList = gson1.fromJson(jsonw, type1)
@@ -2410,7 +2409,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             if (downloadAudioDetailsListGloble.size != 0) {
                 for (y in downloadAudioDetailsListGloble) {
                     if (i.audioFile.equals(
-                                    y!!.audioFile,
+                                    y.audioFile,
                                     ignoreCase = true
                             )
                     ) {
@@ -2527,21 +2526,21 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             val details =
                                     ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>()
                             val listModel = PlaylistDetailsModel.ResponseData()
-                            listModel.playlistID = downloadPlaylistDetailsList[0]!!.playlistID
-                            listModel.playlistName = downloadPlaylistDetailsList[0]!!.playlistName
-                            listModel.playlistDesc = downloadPlaylistDetailsList[0]!!.playlistDesc
+                            listModel.playlistID = downloadPlaylistDetailsList[0].playlistID
+                            listModel.playlistName = downloadPlaylistDetailsList[0].playlistName
+                            listModel.playlistDesc = downloadPlaylistDetailsList[0].playlistDesc
                             listModel.playlistMastercat =
-                                    downloadPlaylistDetailsList[0]!!.playlistMastercat
+                                    downloadPlaylistDetailsList[0].playlistMastercat
                             listModel.playlistSubcat =
-                                    downloadPlaylistDetailsList[0]!!.playlistSubcat
-                            listModel.playlistImage = downloadPlaylistDetailsList[0]!!.playlistImage
+                                    downloadPlaylistDetailsList[0].playlistSubcat
+                            listModel.playlistImage = downloadPlaylistDetailsList[0].playlistImage
                             listModel.playlistImageDetail =
-                                    downloadPlaylistDetailsList[0]!!.playlistImageDetails
-                            listModel.totalAudio = downloadPlaylistDetailsList[0]!!.totalAudio
-                            listModel.totalDuration = downloadPlaylistDetailsList[0]!!.totalDuration
-                            listModel.totalhour = downloadPlaylistDetailsList[0]!!.totalhour
-                            listModel.totalminute = downloadPlaylistDetailsList[0]!!.totalminute
-                            listModel.created = downloadPlaylistDetailsList[0]!!.created
+                                    downloadPlaylistDetailsList[0].playlistImageDetails
+                            listModel.totalAudio = downloadPlaylistDetailsList[0].totalAudio
+                            listModel.totalDuration = downloadPlaylistDetailsList[0].totalDuration
+                            listModel.totalhour = downloadPlaylistDetailsList[0].totalhour
+                            listModel.totalminute = downloadPlaylistDetailsList[0].totalminute
+                            listModel.created = downloadPlaylistDetailsList[0].created
 //                        listModel.isReminder = downloadPlaylistDetailsList[0]!!.isReminder
                             if (audioList.isNotEmpty()) {
                                 for (i in audioList.indices) {

@@ -11,7 +11,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
@@ -140,7 +140,7 @@ class AddProfileActivity : AppCompatActivity() {
             binding.etEmail.isEnabled = true
 
             val p = Properties()
-            BWSApplication.addToSegment("Add Couser Screen Viewed", p, CONSTANTS.screen)
+            addToSegment("Add Couser Screen Viewed", p, CONSTANTS.screen)
         } else if (addProfile.equals("Forgot", ignoreCase = true)) {
             binding.btnSendPin.visibility = View.GONE
             binding.btnSendNewPin.visibility = View.VISIBLE
@@ -162,7 +162,7 @@ class AddProfileActivity : AppCompatActivity() {
             p.putValue("name", coName)
             p.putValue("mobileNo", coNumber)
             p.putValue("email", coEMAIL)
-            BWSApplication.addToSegment("Forgot Pin Screen Viewed", p, CONSTANTS.screen)
+            addToSegment("Forgot Pin Screen Viewed", p, CONSTANTS.screen)
         }
 
         binding.llBack.setOnClickListener {
@@ -174,7 +174,7 @@ class AddProfileActivity : AppCompatActivity() {
                 finish()
             }
         }
-        val measureRatio = BWSApplication.measureRatio(this, 0f, 1f, 1f, 0.32f, 0f)
+        val measureRatio = measureRatio(this, 0f, 1f, 1f, 0.32f, 0f)
         binding.civProfile.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
         binding.civProfile.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.rlLetter.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
@@ -218,8 +218,8 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.flMobileNumber.error = ""
                 binding.flEmail.error = "Valid Email address is required"
             } else {
-                if (BWSApplication.isNetworkConnected(this)) {
-                    BWSApplication.showProgressBar(
+                if (isNetworkConnected(this)) {
+                    showProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
                         activity
@@ -235,7 +235,7 @@ class AddProfileActivity : AppCompatActivity() {
                         ) {
                             try {
                                 binding.flEmail.error = ""
-                                BWSApplication.hideProgressBar(
+                                hideProgressBar(
                                     binding.progressBar,
                                     binding.progressBarHolder,
                                     activity
@@ -246,17 +246,17 @@ class AddProfileActivity : AppCompatActivity() {
                                         ignoreCase = true
                                     )
                                 ) {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, activity)
                                     val p = Properties()
                                     p.putValue("userId", userID)
                                     p.putValue("coUserId", listModel.responseData!!.coUserId)
                                     p.putValue("name", listModel.responseData!!.name)
                                     p.putValue("mobileNo", binding.etMobileNumber.text.toString())
                                     p.putValue("email", listModel.responseData!!.email)
-                                    BWSApplication.addToSegment("Couser Added", p, CONSTANTS.track)
+                                    addToSegment("Couser Added", p, CONSTANTS.track)
                                     finish()
                                 } else {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, activity)
                                 }
 
                             } catch (e: Exception) {
@@ -265,7 +265,7 @@ class AddProfileActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<AddUserModel>, t: Throwable) {
-                            BWSApplication.hideProgressBar(
+                            hideProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,
                                 activity
@@ -273,14 +273,14 @@ class AddProfileActivity : AppCompatActivity() {
                         }
                     })
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), this)
+                    showToast(getString(R.string.no_server_found), this)
                 }
             }
         }
 
         binding.btnSendNewPin.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(activity)) {
-                BWSApplication.showProgressBar(
+            if (isNetworkConnected(activity)) {
+                showProgressBar(
                     binding.progressBar,
                     binding.progressBarHolder,
                     activity
@@ -292,7 +292,7 @@ class AddProfileActivity : AppCompatActivity() {
                         call: Call<SucessModel>,
                         response: Response<SucessModel>
                     ) {
-                        BWSApplication.hideProgressBar(
+                        hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
                             activity
@@ -306,7 +306,7 @@ class AddProfileActivity : AppCompatActivity() {
                                 val i = Intent(activity, UserListActivity::class.java)
                                 startActivity(i)
                                 finish()
-                                BWSApplication.showToast(
+                                showToast(
                                     listModel.responseMessage,
                                     activity
                                 )
@@ -316,7 +316,7 @@ class AddProfileActivity : AppCompatActivity() {
                                 p.putValue("name", coName)
                                 p.putValue("mobileNo", coNumber)
                                 p.putValue("email", coEMAIL)
-                                BWSApplication.addToSegment(
+                                addToSegment(
                                     "Send New Pin Clicked",
                                     p,
                                     CONSTANTS.track
@@ -326,16 +326,16 @@ class AddProfileActivity : AppCompatActivity() {
                                 activity.getString(R.string.ResponseCodefail),
                                 ignoreCase = true
                             ) -> {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, activity)
                             }
                             else -> {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, activity)
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<SucessModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(
+                        hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
                             activity
@@ -343,7 +343,7 @@ class AddProfileActivity : AppCompatActivity() {
                     }
                 })
             } else {
-                BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+                showToast(activity.getString(R.string.no_server_found), activity)
             }
         }
     }

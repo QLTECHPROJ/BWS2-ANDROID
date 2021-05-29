@@ -179,12 +179,12 @@ class SplashActivity : AppCompatActivity() {
                 ) {
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
-//                        isProfileCompleted =
-//                            coUserDetailsModel.responseData!!.isProfileCompleted.toString()
-//                        isAssessmentCompleted =
-//                            coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
+                        isProfileCompleted =
+                            coUserDetailsModel.responseData!!.isProfileCompleted.toString()
+                        isAssessmentCompleted =
+                            coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
                         indexScore = coUserDetailsModel.responseData!!.indexScore.toString()
-//                        avgSleepTime = coUserDetailsModel.responseData!!.avgSleepTime.toString()
+                        avgSleepTime = coUserDetailsModel.responseData!!.avgSleepTime.toString()
                         val shared = getSharedPreferences(
                             CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
                             Context.MODE_PRIVATE
