@@ -1014,7 +1014,7 @@ Appointment Audios dddd*/
         mediaSession.setActive(true);
         playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
         //aa comment delete na krvi
-      /*  if(player!= null) {
+        if(player!= null) {
             mediaSessionConnector = new MediaSessionConnector(mediaSession);
            mediaSessionConnector.setPlayer(player);
             mediaSessionConnector.setMediaMetadataProvider(player -> {
@@ -1032,9 +1032,10 @@ Appointment Audios dddd*/
                 builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon)));
                 builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "0");
 
-                if (duration > 0) {
-                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,  player.getDuration() == C.TIME_UNSET ? -1 : player.getDuration());
-                }
+//                if (duration > 0) {
+//                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,  player.getDuration() == C.TIME_UNSET ? -1 : player.getDuration());
+//                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,  -1);
+//                }
 
                 try {
                     Bitmap icon;
@@ -1046,7 +1047,7 @@ Appointment Audios dddd*/
 
                 return builder.build();
             });
-        }*/
+        }
         playerNotificationManager.setUseNextAction(false);
         playerNotificationManager.setUsePreviousAction(false);
         playerNotificationManager.setUseNextActionInCompactView(false);

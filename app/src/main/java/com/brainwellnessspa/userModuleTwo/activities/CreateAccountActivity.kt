@@ -414,11 +414,10 @@ class CreateAccountActivity : AppCompatActivity() {
         dialog: Dialog,
         searchFilter: String,
         private var binding: ActivityCreateAccountBinding,
-        modelList: List<CountryListModel.ResponseData>,
+        private val modelList: List<CountryListModel.ResponseData>,
         rvCountryList: RecyclerView,
         tvFound: TextView
     ) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
-        private val modelList: List<CountryListModel.ResponseData>
         private var listFilterData: List<CountryListModel.ResponseData>
         private var rvCountryList: RecyclerView
         private var tvFound: TextView
@@ -436,7 +435,6 @@ class CreateAccountActivity : AppCompatActivity() {
         }
 
         init {
-            this.modelList = modelList
             this.rvCountryList = rvCountryList
             this.tvFound = tvFound
             this.searchFilter = searchFilter

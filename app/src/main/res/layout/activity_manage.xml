@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="@string/Enrich"
+                android:text="@string/Enhance"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 tools:ignore="SpUsage" />

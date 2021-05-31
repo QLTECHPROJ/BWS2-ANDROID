@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -25,11 +25,13 @@
                     android:layout_width="42dp"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:gravity="center">
+                    android:gravity="center"
+                    tools:ignore="UselessParent">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/todo"
                         android:src="@drawable/ic_arrow_left_icon_two"
                         app:tint="@color/black" />
 
@@ -40,7 +42,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/rlLayout"
                 android:orientation="vertical"
                 android:weightSum="1">
 
@@ -59,23 +60,25 @@
                         android:gravity="top"
                         android:text="@string/welcome_quotes"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_24sdp" />
+                        android:textSize="@dimen/_24sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:paddingTop="@dimen/_8sdp"
                         android:text="@string/create_ac_qutoes"
                         android:textColor="@color/light_gray"
-                        android:textSize="@dimen/_11sdp" />
+                        android:textSize="@dimen/_11sdp"
+                        tools:ignore="SpUsage" />
 
                     <LinearLayout
                         android:id="@+id/llName"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_72sdp"
+                        android:layout_height="@dimen/_74sdp"
                         android:layout_marginTop="@dimen/_18sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
@@ -95,7 +98,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etUser"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/_34sdp"
+                                android:layout_height="@dimen/_31sdp"
                                 android:background="@null"
                                 android:backgroundTint="@color/black"
                                 android:cursorVisible="true"
@@ -107,7 +110,9 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/dim_light_gray"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_13sdp" />
+                                android:textSize="@dimen/_13sdp"
+                                tools:ignore="SpUsage"
+                                tools:targetApi="lollipop" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -115,7 +120,7 @@
                     <LinearLayout
                         android:id="@+id/llNumber"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_72sdp"
+                        android:layout_height="@dimen/_74sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="horizontal">
@@ -134,10 +139,11 @@
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
                                 android:lineSpacingExtra="@dimen/_4sdp"
-                                android:paddingLeft="@dimen/_13sdp"
-                                android:text="AU"
+                                android:paddingStart="@dimen/_13sdp"
+                                android:text="@string/au"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_15sdp"
+                                tools:ignore="RtlSymmetry,SpUsage" />
 
                             <TextView
                                 android:id="@+id/tvCountry"
@@ -147,10 +153,11 @@
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
                                 android:lineSpacingExtra="@dimen/_4sdp"
-                                android:paddingLeft="@dimen/_13sdp"
-                                android:text=" +61"
+                                android:paddingStart="@dimen/_13sdp"
+                                android:text="@string/_61"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_15sdp"
+                                tools:ignore="RtlSymmetry,SpUsage" />
                         </LinearLayout>
 
 
@@ -158,7 +165,7 @@
                             android:layout_width="1.5dp"
                             android:layout_height="match_parent"
                             android:layout_marginVertical="@dimen/_16sdp"
-                            android:layout_marginLeft="@dimen/_13sdp"
+                            android:layout_marginStart="@dimen/_13sdp"
                             android:background="@color/dim_light_gray" />
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -176,7 +183,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etNumber"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/_34sdp"
+                                android:layout_height="@dimen/_31sdp"
                                 android:background="@null"
                                 android:backgroundTint="@color/black"
                                 android:cursorVisible="true"
@@ -189,7 +196,9 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/dim_light_gray"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_13sdp" />
+                                android:textSize="@dimen/_13sdp"
+                                tools:ignore="SpUsage"
+                                tools:targetApi="lollipop" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -197,7 +206,7 @@
                     <LinearLayout
                         android:id="@+id/llEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_72sdp"
+                        android:layout_height="@dimen/_74sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
@@ -217,7 +226,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etEmail"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/_34sdp"
+                                android:layout_height="@dimen/_31sdp"
                                 android:background="@null"
                                 android:backgroundTint="@color/black"
                                 android:cursorVisible="true"
@@ -229,7 +238,9 @@
                                 android:singleLine="true"
                                 android:textColorHint="@color/dim_light_gray"
                                 android:textCursorDrawable="@null"
-                                android:textSize="@dimen/_13sdp" />
+                                android:textSize="@dimen/_13sdp"
+                                tools:ignore="SpUsage"
+                                tools:targetApi="lollipop" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -237,22 +248,23 @@
                     <LinearLayout
                         android:id="@+id/llPassword"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_72sdp"
+                        android:layout_height="@dimen/_74sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            tools:ignore="UselessParent">
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/flPassword"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/_12sdp"
+                                android:layout_marginStart="@dimen/_12sdp"
                                 android:layout_marginTop="@dimen/_6sdp"
-                                android:layout_marginRight="@dimen/_48sdp"
+                                android:layout_marginEnd="@dimen/_48sdp"
                                 android:focusableInTouchMode="true"
                                 android:textColorHint="@color/black"
                                 app:errorEnabled="true"
@@ -262,7 +274,7 @@
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etPassword"
                                     android:layout_width="match_parent"
-                                    android:layout_height="@dimen/_34sdp"
+                                    android:layout_height="@dimen/_31sdp"
                                     android:background="@null"
                                     android:backgroundTint="@color/black"
                                     android:cursorVisible="true"
@@ -273,7 +285,9 @@
                                     android:singleLine="true"
                                     android:textColorHint="@color/dim_light_gray"
                                     android:textCursorDrawable="@null"
-                                    android:textSize="@dimen/_13sdp" />
+                                    android:textSize="@dimen/_13sdp"
+                                    tools:ignore="SpUsage"
+                                    tools:targetApi="lollipop" />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -281,24 +295,26 @@
                                 android:id="@+id/ivVisible"
                                 android:layout_width="@dimen/_25sdp"
                                 android:layout_height="@dimen/_25sdp"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="@dimen/_16sdp"
+                                android:layout_marginEnd="@dimen/_16sdp"
+                                android:layout_toStartOf="@id/flPassword"
+                                android:contentDescription="@string/todo"
+                                android:src="@drawable/ic_visibility_icon"
                                 android:visibility="visible"
-                                app:tint="@color/black"
-                                android:layout_toLeftOf="@id/flPassword"
-                                android:src="@drawable/ic_visibility_icon" />
+                                app:tint="@color/black" />
 
                             <ImageView
                                 android:id="@+id/ivInVisible"
                                 android:layout_width="@dimen/_25sdp"
                                 android:layout_height="@dimen/_25sdp"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:visibility="gone"
-                                android:layout_marginRight="@dimen/_16sdp"
-                                android:layout_toLeftOf="@id/flPassword"
-                                android:src="@drawable/ic_visible_pswd_icon" />
+                                android:layout_marginEnd="@dimen/_16sdp"
+                                android:layout_toStartOf="@id/flPassword"
+                                android:contentDescription="@string/todo"
+                                android:src="@drawable/ic_visible_pswd_icon"
+                                android:visibility="gone" />
                         </RelativeLayout>
 
                     </LinearLayout>
@@ -313,7 +329,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        tools:ignore="UselessParent">
 
                         <Button
                             android:id="@+id/btnCreateAc"
@@ -322,11 +339,11 @@
                             android:layout_gravity="center"
                             android:layout_marginHorizontal="@dimen/_30sdp"
                             android:background="@drawable/gray_round_cornor"
+                            android:enabled="false"
                             android:fontFamily="@font/montserrat_medium"
                             android:paddingHorizontal="@dimen/_55sdp"
                             android:paddingVertical="@dimen/_4sdp"
                             android:text="@string/Create_Account"
-                            android:enabled="false"
                             android:textColor="@color/white" />
 
                         <LinearLayout
@@ -346,7 +363,8 @@
                                 android:paddingTop="@dimen/_26sdp"
                                 android:text="@string/privacy_policy_t_n_c"
                                 android:textColor="@color/light_gray"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -363,7 +381,8 @@
                                     android:paddingTop="@dimen/_2sdp"
                                     android:text="@string/t_n_cs"
                                     android:textColor="@color/light_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvPrivacyPolicys"
@@ -374,31 +393,34 @@
                                     android:paddingTop="@dimen/_2sdp"
                                     android:text="@string/privacy_policys"
                                     android:textColor="@color/light_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvAnd"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/_3sdp"
+                                    android:layout_marginStart="@dimen/_3sdp"
                                     android:fontFamily="@font/montserrat_regular"
                                     android:gravity="center"
                                     android:paddingTop="@dimen/_2sdp"
                                     android:text="@string/and"
                                     android:textColor="@color/light_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvDisclaimers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/_3sdp"
+                                    android:layout_marginStart="@dimen/_3sdp"
                                     android:fontFamily="@font/montserrat_regular"
                                     android:gravity="center"
                                     android:paddingTop="@dimen/_2sdp"
                                     android:text="@string/disclaimers"
                                     android:textColor="@color/light_gray"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
 
                             </LinearLayout>
 
@@ -413,7 +435,8 @@
                                 android:paddingTop="@dimen/_20sdp"
                                 android:text="@string/info_bwa_two"
                                 android:textColor="@color/light_gray"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
                     </RelativeLayout>
@@ -433,7 +456,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

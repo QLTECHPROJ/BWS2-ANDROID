@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -66,8 +66,8 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
-                        android:text="@string/get_started_subtitle_quotes"
                         android:lineSpacingExtra="@dimen/_4sdp"
+                        android:text="@string/get_started_subtitle_quotes"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sdp" />
 
@@ -77,13 +77,15 @@
                         android:layout_height="wrap_content"
                         android:layout_above="@id/btnAlreadyAc"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginHorizontal="@dimen/_33sdp"
+                        android:layout_marginHorizontal="@dimen/_24sdp"
                         android:layout_marginBottom="@dimen/_25sdp"
                         android:background="@drawable/light_green_rounded_filled"
                         android:fontFamily="@font/montserrat_medium"
                         android:paddingVertical="@dimen/_2sdp"
                         android:text="Get Started"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage" />
 
                     <Button
                         android:id="@+id/btnAlreadyAc"
@@ -91,13 +93,15 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginHorizontal="@dimen/_33sdp"
+                        android:layout_marginHorizontal="@dimen/_24sdp"
                         android:layout_marginBottom="@dimen/_25sdp"
                         android:background="@drawable/light_green_rounded_unfilled"
                         android:fontFamily="@font/montserrat_medium"
                         android:paddingVertical="@dimen/_2sdp"
                         android:text="I Already Have an account"
-                        android:textColor="@color/app_theme_color" />
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage" />
 
                 </RelativeLayout>
 

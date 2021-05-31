@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_Manage"
         android:name="com.brainwellnessspa.dashboardModule.manage.ManageFragment"
-        android:label="@string/title_enrich"
+        android:label="@string/title_enhance"
         tools:layout="@layout/fragment_manage" />
 
     <fragment
