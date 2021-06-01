@@ -373,4 +373,13 @@
     <string name="do_the_assessment">Do the Assessment</string>
     <string name="your_index_score_is">Your index score is</string>
     <string name="great">Great!</string>
+    <string name="select_number_of_profile">Select Number of Profile</string>
+    <string name="payment_plan">Payment plan</string>
+    <string name="start_at_9_99_week">START AT $9.99 / Week</string>
+    <string name="weekly">Weekly</string>
+    <string name="access_more_than_65_audio_programs">Access More Than 65 Audio Programs.</string>
+    <string name="introductory_session">Introductory Session</string>
+    <string name="see_real_testimonials_nfrom_real_customers">SEE REAL TESTIMONIALS \nFROM REAL CUSTOMERS</string>
+    <string name="frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="no_result_found">No Result Found</string>
 </resources>

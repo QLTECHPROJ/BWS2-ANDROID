@@ -94,6 +94,7 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:text="Most Popular"
                     android:textColor="@color/white"
+                    android:textAllCaps="true"
                     android:textSize="@dimen/_8sdp"
                     tools:ignore="SpUsage" />
 

@@ -34,7 +34,7 @@ import java.util.*
 class AudioFaqActivity : AppCompatActivity() {
     lateinit var binding: ActivityAudioFaqBinding
     lateinit var ctx: Context
-    var adapter: AudioFaqAdapter? = null
+    lateinit var adapter: AudioFaqAdapter
     private var faqListModel: ArrayList<FaqListModel.ResponseData>? = null
     var flag: String? = null
     var userID: String? = null
@@ -137,6 +137,7 @@ class AudioFaqActivity : AppCompatActivity() {
             }
             p.putValue("FAQs ", gson!!.toJson(section))
             BWSApplication.addToSegment("FAQ Clicked", p, CONSTANTS.screen)
+
             holder.binding.tvTitle.text = modelList[position].title
             holder.binding.tvDesc.text = modelList[position].desc
             holder.binding.ivClickRight.setOnClickListener {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -24,6 +24,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/ic_left_arrow_icon"
                     app:tint="@color/black" />
 
@@ -60,6 +61,7 @@
                     android:id="@+id/ivRestaurantImage"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_300sdp"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/manage_bg" />
 
                 <LinearLayout
@@ -103,11 +105,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
                             android:layout_marginTop="@dimen/_16sdp"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            tools:ignore="UseCompoundDrawables">
 
                             <ImageView
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_40sdp"
+                                android:contentDescription="@string/todo"
                                 android:padding="@dimen/_12sdp"
                                 android:src="@drawable/ic_orange_check_icon" />
 
@@ -127,11 +131,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            tools:ignore="UseCompoundDrawables">
 
                             <ImageView
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_40sdp"
+                                android:contentDescription="@string/todo"
                                 android:padding="@dimen/_12sdp"
                                 android:src="@drawable/ic_orange_check_icon" />
 
@@ -151,11 +157,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            tools:ignore="UseCompoundDrawables">
 
                             <ImageView
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_40sdp"
+                                android:contentDescription="@string/todo"
                                 android:padding="@dimen/_12sdp"
                                 android:src="@drawable/ic_orange_check_icon" />
 
@@ -175,11 +183,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            tools:ignore="UseCompoundDrawables">
 
                             <ImageView
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_40sdp"
+                                android:contentDescription="@string/todo"
                                 android:padding="@dimen/_12sdp"
                                 android:src="@drawable/ic_orange_check_icon" />
 
@@ -204,7 +214,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="Profile"
+                        android:text="@string/profile"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp"
                         tools:ignore="SpUsage" />
@@ -223,9 +233,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_13sdp"
                             android:fontFamily="@font/montserrat_medium"
-                            android:text="Select Number of Profile"
+                            android:text="@string/select_number_of_profile"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_10sdp"
+                            android:textSize="@dimen/_13sdp"
                             tools:ignore="SpUsage" />
 
                         <LinearLayout
@@ -247,10 +257,10 @@
                                 android:id="@+id/tvNoOfPerson"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.1"
                                 android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_weight="0.1"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:text="2"
+                                android:text="@string/_2"
                                 android:textColor="@color/step_one_bg"
                                 android:textSize="@dimen/_36sdp"
                                 tools:ignore="SpUsage" />
@@ -266,7 +276,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="Payment plan"
+                        android:text="@string/payment_plan"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp"
                         tools:ignore="SpUsage" />
@@ -279,7 +289,7 @@
                         android:nestedScrollingEnabled="true"
                         android:overScrollMode="never"
                         tools:targetApi="lollipop" />
-                    
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -300,7 +310,7 @@
                                 android:fontFamily="@font/montserrat_bold"
                                 android:paddingHorizontal="@dimen/_55sdp"
                                 android:paddingVertical="@dimen/_4sdp"
-                                android:text="START AT $9.99 / Week"
+                                android:text="@string/start_at_9_99_week"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_13sdp"
                                 android:visibility="visible"
@@ -317,6 +327,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
+                                android:contentDescription="@string/todo"
                                 android:src="@drawable/ic_red_rounded_icon" />
 
                             <TextView
@@ -340,10 +351,10 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:visibility="gone"
-                        android:text="Payment plan"
+                        android:text="@string/payment_plan"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp"
+                        android:visibility="gone"
                         tools:ignore="SpUsage" />
 
                     <LinearLayout
@@ -351,9 +362,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_30sdp"
-                        android:visibility="gone"
                         android:background="@drawable/account_gray_bg"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -361,7 +372,8 @@
                             android:orientation="horizontal"
                             android:paddingVertical="@dimen/_30sdp"
                             android:paddingStart="@dimen/_16sdp"
-                            android:weightSum="1">
+                            android:weightSum="1"
+                            tools:ignore="RtlSymmetry">
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
@@ -374,7 +386,7 @@
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
-                                    android:text="Weekly"
+                                    android:text="@string/weekly"
                                     android:textColor="@color/dark_blue_gray"
                                     android:textSize="@dimen/_16sdp"
                                     tools:ignore="SpUsage" />
@@ -477,7 +489,8 @@
                             android:orientation="horizontal"
                             android:paddingVertical="@dimen/_30sdp"
                             android:paddingStart="@dimen/_16sdp"
-                            android:weightSum="1">
+                            android:weightSum="1"
+                            tools:ignore="RtlSymmetry">
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
@@ -532,7 +545,7 @@
                         android:layout_marginTop="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
-                        android:text="Access More Than 65 Audio Programs."
+                        android:text="@string/access_more_than_65_audio_programs"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_20sdp" />
 
@@ -552,10 +565,10 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
-                        android:visibility="gone"
-                        android:text="Introductory Session"
+                        android:text="@string/introductory_session"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tvSessionSubTitle"
@@ -566,11 +579,11 @@
                         android:layout_marginBottom="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
-                        android:visibility="gone"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:text="Self reported date of 2173 clients before and after the introductory session"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tvHeadingOne"
@@ -581,7 +594,7 @@
                         android:layout_marginBottom="@dimen/_10sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
-                        android:text="SEE REAL TESTIMONIALS \nFROM REAL CUSTOMERS"
+                        android:text="@string/see_real_testimonials_nfrom_real_customers"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_24sdp"
                         tools:ignore="SpUsage" />
@@ -590,8 +603,8 @@
                         android:id="@+id/rvVideoList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_20sdp"
                         android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
                         android:overScrollMode="never" />
 
                     <LinearLayout
@@ -607,9 +620,10 @@
                             android:layout_marginTop="@dimen/_16sdp"
                             android:fontFamily="@font/montserrat_semi_bold"
                             android:gravity="start"
-                            android:text="Frequently Asked Questions"
+                            android:text="@string/frequently_asked_questions"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_17sdp" />
+                            android:textSize="@dimen/_17sdp"
+                            tools:ignore="SpUsage" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvFaqList"
@@ -626,7 +640,7 @@
                             android:layout_marginHorizontal="@dimen/_16sdp"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center"
-                            android:text="No Result Found"
+                            android:text="@string/no_result_found"
                             android:textSize="@dimen/_16sdp"
                             android:visibility="gone"
                             tools:ignore="SpUsage" />
