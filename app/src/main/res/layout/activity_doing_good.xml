@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
         android:background="@color/white">
 
         <LinearLayout
@@ -28,7 +26,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/search_ce_icon" />
+                    android:src="@drawable/search_ce_icon"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
 
@@ -42,7 +41,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    tools:ignore="UselessParent">
 
                     <TextView
                         android:id="@+id/tvCETitle"
@@ -55,7 +55,8 @@
                         android:gravity="center"
                         android:text="@string/good_quotes"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvCESubTitle"
@@ -66,10 +67,11 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
-                        android:text="@string/doing_good_quotes"
                         android:lineSpacingExtra="@dimen/_4sdp"
+                        android:text="@string/doing_good_quotes"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -86,7 +88,7 @@
             android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_medium"
             android:paddingVertical="@dimen/_2sdp"
-            android:text="Continue"
+            android:text="continue"
             android:textColor="@color/white" />
 
 

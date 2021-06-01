@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -24,6 +24,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/ic_left_arrow_icon"
                     app:tint="@color/black" />
 
@@ -35,9 +36,10 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Edit Profile"
+                android:text="@string/edit_profile"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -54,20 +56,22 @@
                 android:layout_marginTop="@dimen/_30sdp"
                 android:layout_marginRight="@dimen/_16sdp"
                 android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
+                android:weightSum="1"
+                tools:ignore="DisableBaselineAlignment">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
+                    android:layout_weight="0.13"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/ivUser"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_18sdp"
                         android:layout_gravity="center"
+                        android:contentDescription="@string/todo"
                         android:src="@drawable/ic_user_icon" />
                 </LinearLayout>
 
@@ -80,7 +84,7 @@
                         android:id="@+id/flUser"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:focusableInTouchMode="true"
                         android:textColorHint="@color/black"
@@ -98,12 +102,14 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:hint="@string/Full_Name"
                             android:imeOptions="actionNext"
-                            android:maxLength="25"
+                            android:maxLength="16"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -116,21 +122,23 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginRight="@dimen/_16sdp"
                 android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
+                android:weightSum="1"
+                tools:ignore="DisableBaselineAlignment">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
+                    android:layout_weight="0.13"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/ivCalendar"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_18sdp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_calendar_icon" />
+                        android:src="@drawable/ic_calendar_icon"
+                        android:contentDescription="@string/todo" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,7 +150,7 @@
                         android:id="@+id/tlCalendar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:focusableInTouchMode="true"
                         android:textColorHint="@color/black"
@@ -166,7 +174,9 @@
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:targetApi="lollipop"
+                            tools:ignore="SpUsage" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -179,21 +189,23 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginRight="@dimen/_16sdp"
                 android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
+                android:weightSum="1"
+                tools:ignore="DisableBaselineAlignment">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
+                    android:layout_weight="0.13"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/ivMobileNumber"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_18sdp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_mobile_icon" />
+                        android:src="@drawable/ic_mobile_icon"
+                        android:contentDescription="@string/todo" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -205,7 +217,7 @@
                         android:id="@+id/tlMobileNumber"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:focusableInTouchMode="true"
                         android:textColorHint="@color/black"
@@ -228,7 +240,9 @@
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:targetApi="lollipop"
+                            tools:ignore="SpUsage" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -245,9 +259,10 @@
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:src="@drawable/ic_check_icon"
                         android:visibility="gone"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:src="@drawable/ic_check_icon" />
+                        android:contentDescription="@string/todo" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -261,21 +276,23 @@
                 android:layout_marginRight="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_60sdp"
                 android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1">
+                android:weightSum="1"
+                tools:ignore="DisableBaselineAlignment">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="0.13">
+                    android:layout_weight="0.13"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/ivEmail"
                         android:layout_width="@dimen/_18sdp"
                         android:layout_height="@dimen/_16sdp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_email_icon" />
+                        android:src="@drawable/ic_email_icon"
+                        android:contentDescription="@string/todo" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -287,7 +304,7 @@
                         android:id="@+id/tlEmail"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:focusableInTouchMode="true"
                         android:textColorHint="@color/black"
@@ -313,7 +330,9 @@
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:targetApi="lollipop"
+                            tools:ignore="SpUsage" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -330,9 +349,10 @@
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:src="@drawable/ic_check_icon"
                         android:visibility="gone"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:src="@drawable/ic_check_icon" />
+                        android:contentDescription="@string/todo" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -349,7 +369,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 
@@ -374,7 +395,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="@color/white" />
 
     </RelativeLayout>

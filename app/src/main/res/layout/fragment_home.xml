@@ -91,7 +91,7 @@
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
                             android:paddingStart="@dimen/_12sdp"
-                            android:maxLength="25"
+                            android:maxLength="16"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_16sdp"
                             tools:ignore="RtlSymmetry,SpUsage" />
@@ -105,7 +105,6 @@
                             android:contentDescription="@string/todo"
                             android:src="@drawable/ic_down_arrow"
                             app:tint="@color/gray" />
-
 
                     </LinearLayout>
                 </LinearLayout>
@@ -149,7 +148,8 @@
                 android:layout_marginHorizontal="36dp"
                 android:scaleType="fitXY"
                 android:layout_marginTop="-20dp"
-                android:src="@drawable/ic_no_active_internet_bg"/>
+                android:src="@drawable/ic_no_active_internet_bg"
+                android:contentDescription="@string/todo" />
 
             <TextView
                 android:id="@+id/tvNoInterNet"
@@ -756,7 +756,7 @@
                                         android:text="@string/today"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/_13sdp"
-                                        tools:ignore="SpUsage" />
+                                        tools:ignore="SpUsage,TooManyViews" />
 
                                     <ImageView
                                         android:id="@+id/ivToday"

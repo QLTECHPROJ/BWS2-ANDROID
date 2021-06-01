@@ -367,5 +367,10 @@
     <string name="Enhance">Enhance</string>
     <string name="au">AU</string>
     <string name="_61">+61</string>
-    <string name="read_more">Read More...</string>
+    <string name="read_more">Read More…</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save">Save</string>
+    <string name="do_the_assessment">Do the Assessment</string>
+    <string name="your_index_score_is">Your index score is</string>
+    <string name="great">Great!</string>
 </resources>
