@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.webkit.WebSettings
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityManageBinding
 import com.brainwellnessspa.databinding.MembershipFaqLayoutBinding
 import com.brainwellnessspa.databinding.PlanListFilteredLayoutBinding
+import com.brainwellnessspa.databinding.VideoSeriesBoxLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -117,11 +119,8 @@ class ManageActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
-    }
 
-    override fun onResume() {
         prepareUserData()
-        super.onResume()
     }
 
     private fun prepareUserData() {
@@ -193,11 +192,10 @@ class ManageActivity : AppCompatActivity() {
 
                             binding.rvVideoList.layoutManager =
                                 LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                            val videoListAdapter: VideoSeriesListAdapter = VideoSeriesListAdapter(
+                            val videoListAdapter = VideoSeriesListAdapter(
                                 listModel.responseData!!.testminialVideo!!, ctx
                             )
                             binding.rvVideoList.adapter = videoListAdapter
-
 
                             binding.rvFaqList.layoutManager =
                                 LinearLayoutManager(this@ManageActivity)
@@ -229,100 +227,38 @@ class ManageActivity : AppCompatActivity() {
     }
 
 
-//    class VideoListAdapter(
-//        private val listModelList: List<PlanlistInappModel.ResponseData.TestminialVideo>,
-//        var ctx: Context
-//    ) :
-//        RecyclerView.Adapter<VideoListAdapter.MyViewHolder>() {
-//
-//        private var displayMetrics = DisplayMetrics()
-//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-//            val v: VideoSeriesBoxLayoutBinding = DataBindingUtil.inflate(
-//                LayoutInflater.from(parent.context), R.layout.video_series_box_layout, parent, false
-//            )
-//            return MyViewHolder(v)
-//        }
-//
-//        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-//            (holder.itemView.context as Activity).windowManager
-//                .defaultDisplay
-//                .getMetrics(displayMetrics)
-//            val width: Int = displayMetrics.widthPixels
-//
-////            if (listModelList[position].videoLink != null) {
-//                Glide.with(holder.itemView.context)
-//                    .load("https://i.ytimg.com/vi/S84Fuo2rGoY/maxresdefault.jpg")
-//                    .apply(RequestOptions().override(width - 36, 200))
-//                    .into(holder.binding.imageViewItem)
-////            }
-//            holder.binding.imageViewItem.visibility = View.VISIBLE
-//            holder.binding.btnPlay.visibility = View.VISIBLE
-//            holder.binding.youTubePlayerView.visibility = View.VISIBLE
-//
-//            holder.binding.tvName.text = listModelList[position].userName
-//            holder.binding.tvHeadingTwo.text = listModelList[position].videoDesc
-//            holder.binding.tvReadMore.visibility = View.GONE
-//              /* val linecount: Int = holder.binding.tvHeadingTwo.lineCount
-//               if (linecount >= 4) {
-//                   holder.binding.tvReadMore.visibility = View.VISIBLE
-//               } else {
-//                   holder.binding.tvReadMore.visibility = View.GONE
-//               }*/
-//
-//            holder.binding.btnPlay.setOnClickListener {
-//                holder.binding.imageViewItem.visibility = View.GONE
-//                holder.binding.youTubePlayerView.visibility = View.VISIBLE
-//                holder.binding.btnPlay.visibility = View.GONE
-//                holder.binding.youTubePlayerView.initialize(
-//                    { initializedYouTubePlayer ->
-//                        initializedYouTubePlayer.addListener(
-//                            object : AbstractYouTubePlayerListener() {
-//                                override fun onReady() {
-//                                    initializedYouTubePlayer.loadVideo(
-//                                        "8czMWUH7vW4",
-//                                        0F
-//                                    )
-//                                }
-//                            })
-//                    }, true
-//                )
-//            }
-//
-//            holder.binding.tvReadMore.setOnClickListener {
-//                val dialog1 = Dialog(ctx)
-//                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                dialog1.setContentView(R.layout.full_desc_layout)
-//                dialog1.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//                dialog1.window!!
-//                    .setLayout(
-//                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                        ViewGroup.LayoutParams.MATCH_PARENT
-//                    )
-//                val tvDesc = dialog1.findViewById<TextView>(R.id.tvDesc)
-//                val tvClose = dialog1.findViewById<RelativeLayout>(R.id.tvClose)
-//                tvDesc.text = listModelList[position].videoDesc
-//                dialog1.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-//                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-//                        dialog1.dismiss()
-//                        return@setOnKeyListener true
-//                    }
-//                    false
-//                }
-//                tvClose.setOnClickListener { dialog1.dismiss() }
-//                dialog1.show()
-//                dialog1.setCancelable(false)
-//            }
-//        }
-//
-//
-//        override fun getItemCount(): Int {
-//            return listModelList.size
-//        }
-//
-//        inner class MyViewHolder(var binding: VideoSeriesBoxLayoutBinding) :
-//            RecyclerView.ViewHolder(binding.root) {
-//        }
-//    }
+    class VideoSeriesListAdapter(
+        private val model: List<PlanlistInappModel.ResponseData.TestminialVideo>,
+        var ctx: Context
+    ) :
+        RecyclerView.Adapter<VideoSeriesListAdapter.MyViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: VideoSeriesBoxLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context), R.layout.video_series_box_layout, parent, false
+            )
+            return MyViewHolder(v)
+        }
+
+        @SuppressLint("SetJavaScriptEnabled")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.bind.tvHeadingTwo.text = model[position].videoDesc
+            holder.bind.tvName.text = model[position].userName
+            val videoUrl = model[position].videoLink!!.split("=").toTypedArray()
+            val myYouTubeVideoUrl = "https://www.youtube.com/embed/" + videoUrl[1]
+            val webSettings: WebSettings = holder.bind.webView.settings
+            webSettings.javaScriptEnabled = true
+            holder.bind.webView.settings.loadWithOverviewMode = true
+            holder.bind.webView.settings.useWideViewPort = true
+            holder.bind.webView.loadUrl(myYouTubeVideoUrl)
+        }
+
+        override fun getItemCount(): Int {
+            return model.size
+        }
+
+        inner class MyViewHolder(var bind: VideoSeriesBoxLayoutBinding) :
+            RecyclerView.ViewHolder(bind.root)
+    }
 
     class PlanListAdapter(
         var listModelList: List<PlanlistInappModel.ResponseData.Plan>,

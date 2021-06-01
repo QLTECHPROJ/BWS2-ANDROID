@@ -1,93 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_180sdp"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/_8sdp"
         android:orientation="vertical">
 
-        <WebView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/videoWeb"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"/>
         <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <WebView
+                android:id="@+id/webView"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="240dp" />
 
-                <ImageView
-                    android:id="@+id/thumbnail"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    android:scaleType="matrix" />
-
-             <!--   <com.google.android.youtube.player.YouTubePlayerView
-                    android:id="@+id/youTubePlayerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
--->
-                <ImageView
-                    android:id="@+id/btnPlay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:visibility="gone"
-                    android:layout_marginBottom="8dp"
-                    app:srcCompat="@drawable/ic_play_white_icon"
-                    tools:ignore="VectorDrawableCompat" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/tvHeadingTwo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:fontFamily="@font/montserrat_medium"
-                android:gravity="center"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_16sdp" />
-
-            <TextView
-                android:id="@+id/tvReadMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_4sdp"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:fontFamily="@font/montserrat_bold"
-                android:maxLines="3"
-                android:text="Read More..."
-                android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_16sdp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_6sdp"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_16sdp"
-                tools:ignore="SpUsage" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvHeadingTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="center"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:textColor="@color/dark_blue_gray"
+            android:textSize="@dimen/_16sdp"
+            tools:ignore="SpUsage"
+            tools:targetApi="o" />
+
+        <TextView
+            android:id="@+id/tvReadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:maxLines="3"
+            android:text="@string/read_more"
+            android:textColor="@color/dark_blue_gray"
+            android:textSize="@dimen/_16sdp"
+            android:visibility="gone"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:textColor="@color/dark_blue_gray"
+            android:textSize="@dimen/_16sdp"
+            tools:ignore="SpUsage" />
 
     </LinearLayout>
 
