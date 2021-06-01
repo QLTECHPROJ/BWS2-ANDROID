@@ -423,7 +423,7 @@ Appointment Audios dddd*/
             p.putValue("audioType", "Streaming");
         }
         p.putValue("source", GetSourceName(ctx));
-        p.putValue("playerType", "Mini");
+        p.putValue("playerType", "Main");
         p.putValue("audioService", appStatus(ctx));
         p.putValue("bitRate", "");
         p.putValue("sound", String.valueOf(hundredVolume));

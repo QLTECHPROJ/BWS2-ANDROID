@@ -963,6 +963,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 //                                pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                         }
+                    }else{
+                        callAddTranFrag();
                     }
                     SegmentTag();
 

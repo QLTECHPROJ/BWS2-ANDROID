@@ -4,34 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_180sdp"
         android:layout_margin="@dimen/_8sdp"
         android:orientation="vertical">
 
+        <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/videoWeb"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"/>
         <LinearLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
                 <ImageView
-                    android:id="@+id/imageViewItem"
+                    android:id="@+id/thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:visibility="gone"
                     android:scaleType="matrix" />
 
-                <VideoView
-                    android:id="@+id/videoView"
+             <!--   <com.google.android.youtube.player.YouTubePlayerView
+                    android:id="@+id/youTubePlayerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible" />
-
+                    android:layout_height="wrap_content"/>
+-->
                 <ImageView
                     android:id="@+id/btnPlay"
                     android:layout_width="wrap_content"
@@ -86,4 +90,5 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </layout>

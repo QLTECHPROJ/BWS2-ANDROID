@@ -22,7 +22,11 @@ public interface AudioDetailsDao {
     LiveData<List<DownloadAudioDetails>> geAllData12(String UserID);
     @Query("SELECT * FROM audio_table ORDER BY uid DESC")
 // ORDER BY uid ASC
-    LiveData<List<DownloadAudioDetails>> geAllData1ForAll();
+    LiveData<List<DownloadAudioDetails>> geAllData1LiveForAll();
+
+    @Query("SELECT * FROM audio_table ORDER BY uid DESC")
+// ORDER BY uid ASC
+    List<DownloadAudioDetails> geAllData1ForAll();
 
 //    @Query("SELECT * FROM audio_table  ORDER BY uid DESC")// ORDER BY uid ASC
 //    List<DownloadAudioDetails> geAllData1();

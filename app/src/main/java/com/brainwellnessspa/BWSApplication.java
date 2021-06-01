@@ -22,8 +22,6 @@ import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Editable;
@@ -73,7 +71,6 @@ import com.brainwellnessspa.reminderModule.models.ReminderMinutesListModel;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.Services.GlobalInitExoPlayer;
@@ -108,7 +105,6 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.google.android.exoplayer2.C;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Analytics;
@@ -221,7 +217,7 @@ public class BWSApplication extends Application {
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao()
-                .geAllData1ForAll().observe((LifecycleOwner) ctx, audioList -> {
+                .geAllData1LiveForAll().observe((LifecycleOwner) ctx, audioList -> {
             playlistDownloadAudioDetailsList = audioList;
 
         });

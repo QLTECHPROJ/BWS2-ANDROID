@@ -80,7 +80,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     var downloadPlaylistDetailsList = arrayListOf<DownloadPlaylistDetails>()
     var downloadAudios: List<String> = java.util.ArrayList()
     var downloadAudioDetailsList = arrayListOf<DownloadAudioDetails>()
-    var downloadAudioDetailsListGloble = arrayListOf<DownloadAudioDetails>()
+    var downloadAudioDetailsListGloble = ArrayList<DownloadAudioDetails>()
     lateinit var adpater: PlayListsAdpater
     lateinit var adpater2: PlayListsAdpater2
     lateinit var binding: ActivityMyPlaylistListingBinding
@@ -2099,7 +2099,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 downloadPlaylistDetailsList.addAll(audioList)
                 when {
                     downloadPlaylistDetailsList.isNotEmpty() -> {
-                        enableDisableDownload(false, "orange")
                         getMediaByPer(PlaylistID!!, SongListSize, ctx, DB)
                         removeobserver(DB)
                     }
@@ -2134,8 +2133,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (count == totalAudio) {
                         binding.pbProgress.visibility = View.GONE
                         binding.ivDownloads.visibility = View.VISIBLE
+
+                        enableDisableDownload(false, "orange")
                         DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId,CoUserID)
-                                .removeObserver { _: List<DownloadPlaylistDetails?>? -> }
+                                .removeObserver {}
                     } else {
                         val progressPercent: Long = (count * 100 / totalAudio).toLong()
                         val downloadProgress1 = progressPercent.toInt()
@@ -2146,9 +2147,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                 } else {
                     DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId,CoUserID)
-                            .removeObserver { _: List<DownloadPlaylistDetails?>? -> }
+                            .removeObserver {}
                     binding.pbProgress.visibility = View.GONE
                     binding.ivDownloads.visibility = View.VISIBLE
+                    enableDisableDownload(false, "orange")
                 }
                 //                } else {
 //                    binding.pbProgress.setVisibility(View.GONE);
@@ -2265,9 +2267,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             act: Activity,
             DB: AudioDatabase
     ) {
-        DB.taskDao()
-                .geAllData1ForAll().observe(this, { audioList ->
-                    downloadAudioDetailsListGloble = audioList as ArrayList<DownloadAudioDetails>
+        AudioDatabase.databaseWriteExecutor.execute {
+            downloadAudioDetailsListGloble = DB.taskDao().geAllData1ForAll() as ArrayList<DownloadAudioDetails>
+        }
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             val url = arrayListOf<String>()
             val name = arrayListOf<String>()
@@ -2279,7 +2281,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     if (playlistSongs2.size == 0) {
                         break
                     } else {
-                        for (x in 0 until playlistSongs2.size) if (playlistSongs2.size != 0) {
+                        for (x in 0 until playlistSongs2.size)
+                            if (playlistSongs2.size != 0) {
                             if (x < playlistSongs2.size) {
                                 if (playlistSongs2[x].audioFile.equals(
                                                 y.audioFile,
@@ -2361,7 +2364,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 downloadOrNot = true
             }
             if (downloadOrNot) {
-                enableDisableDownload(false, "orange")
                 val url = arrayListOf<String>()
                 val name = arrayListOf<String>()
                 val downloadPlaylistId = arrayListOf<String>()
@@ -2472,7 +2474,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             //            handler2.postDelayed(UpdateSongTime2, 3000);
         }
-                })
     }
 
     private fun saveAllMedia(
@@ -2596,7 +2597,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         callObserveMethodGetAllMedia(ctx,DB)
         GetMedia(ctx,DB)
-        enableDisableDownload(false, "orange")
     }
 
     /*  fun GetMedia(
@@ -2752,6 +2752,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 //                                pos = 0;
                         showToast(ctx.getString(R.string.no_server_found), activity)
                     }
+                }else{
+                    callMyPlayer(ctx,activity)
                 }
 //                SegmentTag()
             }
