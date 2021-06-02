@@ -23,13 +23,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="-10dp"
+                        android:layout_marginStart="-10dp"
+                        android:contentDescription="@string/todo"
                         android:scaleType="fitXY"
                         android:src="@drawable/category_banner" />
 
@@ -47,40 +48,44 @@
                             android:layout_marginTop="@dimen/_20sdp"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
-                            android:text="Recommended Category"
+                            android:text="@string/recommended_category"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_18sdp" />
+                            android:textSize="@dimen/_18sdp"
+                            tools:ignore="SpUsage" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_regular"
-                            android:gravity="left"
+                            android:gravity="start"
                             android:lineSpacingExtra="@dimen/_4sdp"
                             android:paddingTop="@dimen/_12sdp"
-                            android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
+                            android:text="@string/you_can_select_upto_three_areas_of_focus_to_further_customise_your_journey_towards_mental_transformation"
                             android:textColor="@color/light_gray"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_20sdp"
                             android:fontFamily="@font/montserrat_bold"
-                            android:gravity="left"
-                            android:text="Area of focus"
+                            android:gravity="start"
+                            android:text="@string/area_of_focus"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_18sdp" />
+                            android:textSize="@dimen/_18sdp"
+                            tools:ignore="SpUsage" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvSelectedCategory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:nestedScrollingEnabled="true"
-                            android:overScrollMode="never"
                             android:orientation="horizontal"
+                            android:overScrollMode="never"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/selected_category_raw" />
+                            tools:listitem="@layout/selected_category_raw"
+                            tools:targetApi="lollipop" />
 
                         <RelativeLayout
                             android:id="@+id/rlSearch"
@@ -95,7 +100,8 @@
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/_14sdp"
+                                android:layout_marginStart="@dimen/_14sdp"
+                                android:contentDescription="@string/todo"
                                 android:src="@drawable/ic_search_icon"
                                 app:tint="@color/dim_light_gray" />
 
@@ -104,7 +110,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/button1"
+                                android:layout_toEndOf="@id/button1"
                                 android:focusable="true"
                                 android:iconifiedByDefault="false"
                                 android:singleLine="true"
@@ -124,27 +130,31 @@
                             android:nestedScrollingEnabled="true"
                             android:orientation="vertical"
                             android:overScrollMode="never"
-                            tools:itemCount="3"
                             android:visibility="visible"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/all_category_raw" />
+                            tools:itemCount="3"
+                            tools:listitem="@layout/all_category_raw"
+                            tools:targetApi="lollipop" />
+
                         <LinearLayout
                             android:id="@+id/llError"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:visibility="gone"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:visibility="gone">
+
                             <TextView
                                 android:id="@+id/tvFound"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:gravity="left"
+                                android:gravity="start"
                                 android:lineSpacingExtra="@dimen/_4sdp"
                                 android:paddingTop="@dimen/_12sdp"
                                 android:textColor="@color/light_gray"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
 
@@ -179,7 +189,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

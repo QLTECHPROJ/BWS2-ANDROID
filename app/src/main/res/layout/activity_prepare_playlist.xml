@@ -1,60 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/light_red_theme"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_20sdp"
         tools:context=".dashboardModule.manage.PreparePlaylistActivity">
 
-        <RelativeLayout
-            android:id="@+id/rlWelcome"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/light_red_theme"
-            android:visibility="visible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_100sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="@string/preparing_your_personalised_playlist"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp"
+            tools:ignore="SpUsage" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/_20sdp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:text="@string/thank_you_for_providing_us_with_the_information_we_are_preparing_personlalised_playlists_for_you"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp"
+            tools:ignore="SpUsage" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_100sdp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:text="Preparing your personalised playlist"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="@dimen/_18sdp" />
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:src="@drawable/playlist_progress_bar" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_40sdp"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:lineSpacingExtra="@dimen/_4sdp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_18sdp" />
-
-                <pl.droidsonroids.gif.GifImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_30sdp"
-                    android:src="@drawable/playlist_progress_bar" />
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

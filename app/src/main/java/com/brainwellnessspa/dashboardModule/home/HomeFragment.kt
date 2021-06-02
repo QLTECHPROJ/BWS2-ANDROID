@@ -977,7 +977,7 @@ class HomeFragment : Fragment() {
     ) {
         AudioDatabase.databaseWriteExecutor.execute {
             downloadAudioDetailsList =
-                DB!!.taskDao().geAllDataBYDownloaded("Complete", coUserId) as ArrayList<String>
+                DB.taskDao().geAllDataBYDownloaded("Complete", coUserId) as ArrayList<String>
         }
         var pos = 0
         val shared: SharedPreferences =

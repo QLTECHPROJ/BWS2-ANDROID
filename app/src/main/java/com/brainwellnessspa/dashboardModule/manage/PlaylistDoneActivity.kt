@@ -29,7 +29,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
         BWSApplication.addToSegment("Suggested Playlist Created", p, CONSTANTS.screen)
 
         binding.tvTitle.text = "You playlist is ready"
-        binding.tvSubTitle.text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"
+        binding.tvSubTitle.text = "We recommend that you listen to the audios while going to sleep to experience to get the maximum benefits from the program."
 
         binding.btnContinue.setOnClickListener {
             if (intent.extras != null) {

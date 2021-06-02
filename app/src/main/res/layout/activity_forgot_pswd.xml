@@ -1,41 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".userModuleTwo.activities.ForgotPswdActivity">
 
-        <RelativeLayout
-            android:id="@+id/rlLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_56sdp">
+        <LinearLayout
+            android:id="@+id/llBack"
+            android:layout_width="42dp"
+            android:layout_height="@dimen/_56sdp"
+            android:gravity="center">
 
-            <LinearLayout
-                android:id="@+id/llBack"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_arrow_left_icon_two"
+                app:tint="@color/black" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_left_icon_two"
-                    app:tint="@color/black" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llForgotPswd"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/rlLayout"
+            android:layout_below="@id/llBack"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/_18sdp"
             android:visibility="visible">
@@ -48,18 +41,20 @@
                 android:gravity="top"
                 android:text="@string/Forgot_paswd_quotes"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_26sdp" />
+                android:textSize="@dimen/_26sdp"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
-                android:gravity="left"
+                android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:paddingTop="@dimen/_12sdp"
                 android:text="@string/forgot_quotes"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="SpUsage" />
 
             <LinearLayout
                 android:id="@+id/llEmail"
@@ -97,7 +92,9 @@
                         android:singleLine="true"
                         android:textColorHint="@color/dim_light_gray"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        tools:targetApi="lollipop"
+                        tools:ignore="SpUsage" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -110,11 +107,11 @@
                 android:layout_marginHorizontal="@dimen/_30sdp"
                 android:layout_marginTop="@dimen/_46sdp"
                 android:background="@drawable/gray_round_cornor"
+                android:enabled="false"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingHorizontal="@dimen/_55sdp"
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/Done"
-                android:enabled="false"
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -131,7 +128,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 
