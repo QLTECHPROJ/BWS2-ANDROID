@@ -92,7 +92,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="left"
-                android:text="How You Are Feeling?"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp" />
         </LinearLayout>
@@ -128,7 +128,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="The rating scale is as follows:"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp" />
             <TextView

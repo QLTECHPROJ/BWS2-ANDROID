@@ -211,6 +211,8 @@ class DassAssSliderActivity : AppCompatActivity() {
                             for (i in 0 until listModel.responseData!!.content?.size!!) {
                                 condition += listModel.responseData!!.content!![i].condition + "\n"
                             }
+                            binding.tvQus.text = listModel.responseData!!.toptitle
+                            binding.tvText1.text = listModel.responseData!!.subtitle
                             binding.tvText.text = condition
                             binding.lpIndicator.max = listModel.responseData!!.questions!!.size
                             binding.lpIndicator.progress = 0

@@ -29,6 +29,7 @@ public class CONSTANTS {
         return bm;
     }*/
 
+    public static final String SERVICE_ACCOUNT_EMAIL = "service-861076939494@gcp-sa-pubsub.iam.gserviceaccount.com";
     public static final String track = "track";
     public static final String screen = "screen";
     public static final String FLAG_ZERO = "0";
@@ -180,6 +181,8 @@ public class CONSTANTS {
     public static final String PREF_KEY_TotalAudio = "TotalAudio";
     public static final String PREF_KEY_ScreenView = "ScreenView";
     public static final String PREF_KEY_Purchase = "Purchase";
+    public static final String PREF_KEY_PurchaseID = "PurchaseID";
+    public static final String PREF_KEY_PurchaseToken = "PurchaseToken";
 
     public static final String Token = "Token";
     public static final String InAppPurchase = "InAppPurchase";
