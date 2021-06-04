@@ -863,6 +863,7 @@ public class ProfileFragment extends Fragment {
         edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList);
         edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag);
         edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId);
+        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName);
         edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition);
         edited2.remove(CONSTANTS.PREF_KEY_Cat_Name);
         edited2.remove(CONSTANTS.PREF_KEY_PlayFrom);

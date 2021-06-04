@@ -115,6 +115,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+                String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
                 String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
@@ -302,6 +303,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
         String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
         String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+        String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
         String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
         int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
@@ -350,6 +352,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             SharedPreferences shared11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             String AudioPlayerFlag1 = shared11.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist1 = shared11.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            String MyPlaylistName1 = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             String PlayFrom1 = shared11.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition1 = shared11.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             if (AudioPlayerFlag1.equalsIgnoreCase("Downloadlist") && MyPlaylist1.equalsIgnoreCase(PlaylistID)) {
@@ -569,6 +572,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID);
+        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, PlaylistName);
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist");
         editor.commit();
@@ -687,6 +691,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
@@ -928,6 +933,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             int pos = 0;

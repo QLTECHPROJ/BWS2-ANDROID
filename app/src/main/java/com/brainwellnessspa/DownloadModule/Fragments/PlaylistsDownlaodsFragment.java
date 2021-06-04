@@ -394,6 +394,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+                String MyPlaylistName = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
                 if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
                     BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
                 } else {

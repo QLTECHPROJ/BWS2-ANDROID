@@ -121,6 +121,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_PlayerAudioList = "PlayerAudioList";
     public static final String PREF_KEY_AudioPlayerFlag = "AudioPlayerFlag";
     public static final String PREF_KEY_PlayerPlaylistId = "PayerPlaylistId";
+    public static final String PREF_KEY_PlayerPlaylistName = "PayerPlaylistName";
     public static final String PREF_KEY_PlayerPosition = "PlayerPosition";
     public static final String PREF_KEY_PlayFrom = "PlayFrom";
     public static final String PREF_KEY_UserID = "UserID";

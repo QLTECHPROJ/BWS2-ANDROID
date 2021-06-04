@@ -339,7 +339,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
             }
         })
     }
-    private fun loadAllSKUs() =
+    private fun  loadAllSKUs() =
             if (billingClient.isReady) {
                 val params = SkuDetailsParams
                         .newBuilder()
@@ -448,6 +448,8 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                 val shared = ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
                 val editor = shared.edit()
                 editor.putString(CONSTANTS.PREF_KEY_Purchase, gson.toJson(purchase))
+                editor.putString(CONSTANTS.PREF_KEY_PurchaseToken,purchase.purchaseToken)
+                editor.putString(CONSTANTS.PREF_KEY_PurchaseID,sku)
                 editor.commit()
                 purchase.originalJson
                 Log.e("purchase Original json", gson.toJson(purchase.originalJson))

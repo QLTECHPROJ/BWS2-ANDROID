@@ -1255,8 +1255,6 @@ Appointment Audios dddd*/
                         editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx);
                         editor.putString(CONSTANTS.PREF_KEY_MainAudioList,json11);
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                        
-                        
                         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);
@@ -1396,8 +1394,6 @@ Appointment Audios dddd*/
                         editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList,jsonx );
                         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                        
-                        
                         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""));
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag);

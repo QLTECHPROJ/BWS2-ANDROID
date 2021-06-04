@@ -392,6 +392,7 @@ class ManageFragment : Fragment() {
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
@@ -467,7 +468,7 @@ class ManageFragment : Fragment() {
             mainPlayModel.imageFile = arrayList.imageFile
             mainPlayModel.audioDuration = arrayList.audioDuration
             var audioc = true
-
+            IsPlayDisclimer = "1"
             if (isDisclaimer == 1) {
                 if (player != null) {
                     player.playWhenReady = true
@@ -937,7 +938,8 @@ class ManageFragment : Fragment() {
                                         listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
                                         ctx,
                                         act,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].playlistID!!
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistID!!,
+                                        listModel.responseData!!.suggestedPlaylist!!.playlistName!!
                                     )
                                     binding.llPlay.visibility = View.GONE
                                     binding.llPause.visibility = View.VISIBLE
@@ -1010,6 +1012,7 @@ class ManageFragment : Fragment() {
             ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         if (MyDownloads.equals("1", ignoreCase = true)) {
             if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
                     homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
@@ -1070,6 +1073,7 @@ class ManageFragment : Fragment() {
     private fun getAllCompletedMedia(
         AudioFlag: String?,
         pID: String,
+        pName: String,
         position: Int,
         listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
         ctx: Context,
@@ -1121,7 +1125,7 @@ class ManageFragment : Fragment() {
                                         listModelList2,
                                         ctx,
                                         act,
-                                        pID,
+                                        pID,pName,
                                         true
                                     )
                                 } else {
@@ -1194,7 +1198,7 @@ class ManageFragment : Fragment() {
                                         listModelList2,
                                         ctx,
                                         act,
-                                        pID,
+                                        pID,pName,
                                         audioc
                                     )
                                 } else {
@@ -1207,7 +1211,7 @@ class ManageFragment : Fragment() {
                                     listModelList2,
                                     ctx,
                                     act,
-                                    pID,
+                                    pID,pName,
                                     audioc
                                 )
                             } else {
@@ -1230,11 +1234,13 @@ class ManageFragment : Fragment() {
         listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
         ctx: Context,
         act: Activity,
-        playlistID: String
+        playlistID: String,
+        playlistName: String
     ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         var playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
@@ -1280,7 +1286,7 @@ class ManageFragment : Fragment() {
                                 listModel,
                                 ctx,
                                 act,
-                                playlistID,
+                                playlistID,playlistName,
                                 true
                             )
                         }
@@ -1334,12 +1340,12 @@ class ManageFragment : Fragment() {
                         listModelList2,
                         ctx,
                         act,
-                        playlistID,
+                        playlistID,playlistName,
                         audioc
                     )
                 }
             } else {
-                getAllCompletedMedia(AudioPlayerFlag, playlistID, position, listModel, ctx, act, DB)
+                getAllCompletedMedia(AudioPlayerFlag, playlistID,playlistName, position, listModel, ctx, act, DB)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
@@ -1373,7 +1379,7 @@ class ManageFragment : Fragment() {
                         }
                         callMyPlayer(ctx, act)
                     } else {
-                        callPlayerSuggested(position, views, listModel, ctx, act, playlistID, true)
+                        callPlayerSuggested(position, views, listModel, ctx, act, playlistID,playlistName, true)
                     }
                 }
             } else {
@@ -1416,7 +1422,7 @@ class ManageFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayerSuggested(position, views, listModelList2, ctx, act, playlistID, audioc)
+                callPlayerSuggested(position, views, listModelList2, ctx, act, playlistID,playlistName, audioc)
             }
         }
     }
@@ -1444,6 +1450,7 @@ class ManageFragment : Fragment() {
         ctx: Context,
         act: Activity,
         playlistID: String,
+        playlistName: String,
         audioc: Boolean
     ) {
         if (audioc) {
@@ -1470,6 +1477,7 @@ class ManageFragment : Fragment() {
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistID)
+        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, playlistName)
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         if (MyDownloads.equals("1", ignoreCase = true)) {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist")

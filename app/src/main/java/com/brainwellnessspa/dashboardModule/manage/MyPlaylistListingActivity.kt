@@ -960,6 +960,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         ctx,
                         activity,
                         listModel[0].playlistID!!,
+                        PlaylistName!!,
                         created,
                         "0"
                 )
@@ -1002,6 +1003,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             ctx,
                             activity,
                             listModel[0].playlistID!!,
+                            PlaylistName!!,
                             created,"0"
                     )
                     binding.llPlay.visibility = View.GONE
@@ -1017,8 +1019,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                     val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                     val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                    val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                    var PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                     if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
                                     PlaylistID,
                                     ignoreCase = true
@@ -1166,6 +1166,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                                     ctx,
                                                     activity,
                                                     listModel[0].playlistID!!,
+                                                    PlaylistName!!,
                                                     created,"0"
                                             )
                                         }
@@ -1187,6 +1188,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                                     ctx,
                                                     activity,
                                                     listModel[0].playlistID!!,
+                                                    PlaylistName!!,
                                                     created,"0"
                                             )
                                         }
@@ -1223,6 +1225,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, playerPosition)
                         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID)
+                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, PlaylistName)
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created")
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
                         editor.apply()
@@ -1375,6 +1378,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonz)
                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos)
                     editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID)
+                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, PlaylistName)
                     editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created")
                     editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playList")
                     editor.apply()
@@ -1550,13 +1554,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
+                var playfrom:String=""
+                if(created.equals("2")){
+                    playfrom = "suggested"
+                }
                 MyPlaylistListingActivity().callMainPlayer(
                         position,
-                        "",
+                        playfrom,
                         listFilterData,
                         ctx,
                         activity,
                         PlaylistID!!,
+                        PlaylistName!!,
                         created,MyDownloads
                 )
             }
@@ -1588,13 +1597,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.llPause.visibility = View.VISIBLE
                 } else {
                     PlayerAudioId = mData[0].id
+                      var playfrom:String=""
+                if(created.equals("2")){
+                    playfrom = "suggested"
+                }
                     MyPlaylistListingActivity().callMainPlayer(
                             0,
-                            "",
+                            playfrom,
                             listModel,
                             ctx,
                             activity,
                             listModel[0].playlistID!!,
+                            PlaylistName!!,
                             created,MyDownloads
                     )
                     binding.llPlay.visibility = View.GONE
@@ -1833,6 +1847,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             ctx: Context,
             act: Activity,
             playlistID: String,
+            playlistName: String,
             created: String?,
             MyDownloads:String?
     ) {
@@ -1886,6 +1901,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     ctx,
                                     act,
                                     playlistID,
+                                    playlistName,
                                     created,
                                     true,MyDownloads
                             )
@@ -1941,12 +1957,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             ctx,
                             act,
                             playlistID,
+                            playlistName,
                             created,
                             audioc,MyDownloads
                     )
                 }
             } else {
-                getAllCompletedMedia(AudioPlayerFlag!!, MyPlaylist!!, 0, ctx)
+                getAllCompletedMedia(AudioPlayerFlag!!, MyPlaylist!!, 0, ctx,playlistID,playlistName)
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
@@ -1980,7 +1997,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         }
                         callMyPlayer(ctx, act)
                     } else {
-                        callPlayer(position, view, listModel, ctx, act, playlistID, created, true,MyDownloads)
+                        callPlayer(position, view, listModel, ctx, act, playlistID,
+                                playlistName, created, true,MyDownloads)
                     }
                 }
             } else {
@@ -2022,7 +2040,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayer(position, view, listModelList2, ctx, act, playlistID, created, audioc,MyDownloads)
+                callPlayer(position, view, listModelList2, ctx, act, playlistID,
+                        playlistName, created, audioc,MyDownloads)
             }
         }
     }
@@ -2041,6 +2060,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             ctx: Context,
             act: Activity,
             playlistID: String,
+            playlistName: String,
             created: String?,
             audioc: Boolean,MyDownloads: String?
     ) {
@@ -2076,6 +2096,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistID)
+        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, playlistName)
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         editor.apply()
         audioClick = audioc
@@ -2416,8 +2437,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
             val AudioPlayerFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-            val MyPlaylist = sharedx.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-            val PlayFrom = sharedx.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
             var PlayerPosition: Int = sharedx.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             val gsonx = Gson()
             val json = sharedx.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gsonx.toString())
@@ -2696,7 +2715,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
           llDownload.isEnabled = false
       }*/
 
-    private fun getAllCompletedMedia(AudioFlag: String, pID: String, position: Int, ctx: Context) {
+    private fun getAllCompletedMedia(AudioFlag: String, pID: String, position: Int, ctx: Context, playlistID: String, playlistName: String) {
         var pos = 0
         val shared: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -2742,7 +2761,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     listModelList2,
                                     ctx,
                                     activity,
-                                    PlaylistID!!,
+                                    playlistID,
+                                    playlistName,
                                     listMOdelGloble.responseData!!.created,
                                     true,MyDownloads
                             )
@@ -2818,7 +2838,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     listModelList2,
                                     ctx,
                                     activity,
-                                    PlaylistID!!,
+                                    playlistID,
+                                    playlistName,
                                     listMOdelGloble.responseData!!.created,
                                     audioc,MyDownloads
                             )
@@ -2837,7 +2858,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 listModelList2,
                                 ctx,
                                 activity,
-                                PlaylistID!!,
+                                playlistID,
+                                playlistName,
                                 listMOdelGloble.responseData!!.created,
                                 audioc,MyDownloads
                         )

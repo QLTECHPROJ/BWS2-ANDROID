@@ -854,10 +854,11 @@ class MyPlayerActivity : AppCompatActivity() {
                 BWSApplication.showToast(getString(R.string.no_server_found), act)
             }
         }
+        val gson = Gson()
+        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val json2 = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
+        val PlaylistName = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         if (!isNetworkConnected(ctx)) {
-            val gson = Gson()
-            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-            val json2 = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
             if (!json2.equals(gson.toString(), ignoreCase = true)) {
                 val type1 = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
                 mainPlayModelList = gson.fromJson(json2, type1)
@@ -867,7 +868,7 @@ class MyPlayerActivity : AppCompatActivity() {
         id = mainPlayModelList[ps].id
         PlayerAudioId = id
         name = mainPlayModelList[ps].name
-
+        binding.tvPlaylistName.text = (PlaylistName)
         getDownloadData()
         GetMediaPer()
         GetMedia2()

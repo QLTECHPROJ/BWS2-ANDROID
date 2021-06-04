@@ -454,6 +454,7 @@ public class BWSApplication extends Application {
             String myPlaylist = sharedd.getString(CONSTANTS.PREF_KEY_PlayFrom, "0");
             int pos = sharedd.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             String pID = sharedd.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
+            String pName = sharedd.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             String PlaylistId = "";
 
             if (comeFrom.equalsIgnoreCase("playlist")) {
@@ -505,6 +506,7 @@ public class BWSApplication extends Application {
                                                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, pids);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, pName);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                                 editor.apply();
@@ -567,6 +569,7 @@ public class BWSApplication extends Application {
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, json);
                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, pids);
+                                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, pName);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                                 editor.apply();
@@ -1729,8 +1732,6 @@ public class BWSApplication extends Application {
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1q1);
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, PlayerPosition);
-
-
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
