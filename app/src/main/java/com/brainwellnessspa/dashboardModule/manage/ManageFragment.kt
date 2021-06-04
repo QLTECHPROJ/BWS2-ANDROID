@@ -468,7 +468,6 @@ class ManageFragment : Fragment() {
             mainPlayModel.imageFile = arrayList.imageFile
             mainPlayModel.audioDuration = arrayList.audioDuration
             var audioc = true
-            IsPlayDisclimer = "1"
             if (isDisclaimer == 1) {
                 if (player != null) {
                     player.playWhenReady = true

@@ -858,6 +858,7 @@ class MyPlayerActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
         val PlaylistName = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+        val AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         if (!isNetworkConnected(ctx)) {
             if (!json2.equals(gson.toString(), ignoreCase = true)) {
                 val type1 = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
@@ -929,12 +930,11 @@ class MyPlayerActivity : AppCompatActivity() {
         if (mainPlayModelList[ps].playlistID == null) {
             mainPlayModelList[ps].playlistID = ""
         }
-        if (PlaylistName.equals("", ignoreCase = true)) {
-            binding.tvPlaylistName.visibility = View.GONE
-        } else {
+        if (AudioPlayerFlag.equals("playlist", ignoreCase = true) || AudioPlayerFlag.equals("Downloadlist",ignoreCase = true)) {
             binding.tvPlaylistName.visibility = View.VISIBLE
-            binding.tvPlaylistName.text = (PlaylistName)
-
+            binding.tvPlaylistName.text = PlaylistName
+        } else {
+            binding.tvPlaylistName.visibility = View.GONE
         }
         binding.tvAudioName.text = (name)
         if (player == null) {
