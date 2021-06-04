@@ -868,7 +868,6 @@ class MyPlayerActivity : AppCompatActivity() {
         id = mainPlayModelList[ps].id
         PlayerAudioId = id
         name = mainPlayModelList[ps].name
-        binding.tvPlaylistName.text = (PlaylistName)
         getDownloadData()
         GetMediaPer()
         GetMedia2()
@@ -930,11 +929,11 @@ class MyPlayerActivity : AppCompatActivity() {
         if (mainPlayModelList[ps].playlistID == null) {
             mainPlayModelList[ps].playlistID = ""
         }
-        if ("PlaylistName".equals("", ignoreCase = true)) {
+        if (PlaylistName.equals("", ignoreCase = true)) {
             binding.tvPlaylistName.visibility = View.GONE
         } else {
             binding.tvPlaylistName.visibility = View.VISIBLE
-            binding.tvPlaylistName.text = ("PlaylistName")
+            binding.tvPlaylistName.text = (PlaylistName)
 
         }
         binding.tvAudioName.text = (name)
